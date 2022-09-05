@@ -17,16 +17,16 @@ export function isNotReferenceObject<
 >(obj: T): obj is Exclude<T, OpenAPIV3.ReferenceObject> {
   return !isReferenceObject(obj);
 }
-export function schemaIsOrSchemaHasReferenceObject(
+export function schemaIsOrHasReferenceObject(
   a: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
 ): boolean {
   return (
     isReferenceObject(a) ||
     ('properties' in a &&
-      Object.values(a.properties).some(schemaIsOrSchemaHasReferenceObject)) ||
-    ('anyOf' in a && a.anyOf.some(schemaIsOrSchemaHasReferenceObject)) ||
-    ('allOf' in a && a.allOf.some(schemaIsOrSchemaHasReferenceObject)) ||
-    ('oneOf' in a && a.oneOf.some(schemaIsOrSchemaHasReferenceObject))
+      Object.values(a.properties).some(schemaIsOrHasReferenceObject)) ||
+    ('anyOf' in a && a.anyOf.some(schemaIsOrHasReferenceObject)) ||
+    ('allOf' in a && a.allOf.some(schemaIsOrHasReferenceObject)) ||
+    ('oneOf' in a && a.oneOf.some(schemaIsOrHasReferenceObject))
   );
 }
 

@@ -12,7 +12,7 @@ import {
 import { processSchemaObject } from './process-schema.js';
 import {
   maybeJsDocDescription,
-  schemaIsOrSchemaHasReferenceObject,
+  schemaIsOrHasReferenceObject,
 } from './utils.js';
 
 export async function processOpenApiDocument(
@@ -28,17 +28,11 @@ export async function processOpenApiDocument(
   for (const [schemaName, schemaObject] of Object.entries(
     schema.components?.schemas || {},
   ).sort(([, a], [, b]) => {
-    if (
-      !schemaIsOrSchemaHasReferenceObject(a) &&
-      schemaIsOrSchemaHasReferenceObject(b)
-    ) {
+    if (!schemaIsOrHasReferenceObject(a) && schemaIsOrHasReferenceObject(b)) {
       return -1;
     }
 
-    if (
-      schemaIsOrSchemaHasReferenceObject(a) &&
-      !schemaIsOrSchemaHasReferenceObject(b)
-    ) {
+    if (schemaIsOrHasReferenceObject(a) && !schemaIsOrHasReferenceObject(b)) {
       return 1;
     }
 
