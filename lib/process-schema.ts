@@ -194,18 +194,33 @@ export function registerTypesFromSchema(
 
   // deal with objects
   else if (!schemaObject.type || schemaObject.type === 'object') {
-    const newIf = typesFile.addInterface({
+    const newIf = typesFile.addTypeAlias({
       name: schemaName,
       isExported: true,
-      properties: Object.entries(schemaObject.properties || {}).map(
-        ([propertyName, propertySchema]) =>
-          schemaToType(
-            typesAndInterfaces,
-            schemaObject,
-            propertyName,
-            propertySchema,
-          ),
-      ),
+      type: Writers.objectType({
+        properties: Object.entries(schemaObject.properties || {}).map(
+          ([propertyName, propertySchema]) => {
+            const type = schemaToType(
+              typesAndInterfaces,
+              schemaObject,
+              propertyName,
+              propertySchema,
+            );
+
+            return type;
+          },
+        ),
+      }),
+
+      // properties: Object.entries(schemaObject.properties || {}).map(
+      //   ([propertyName, propertySchema]) =>
+      //     schemaToType(
+      //       typesAndInterfaces,
+      //       schemaObject,
+      //       propertyName,
+      //       propertySchema,
+      //     ),
+      // ),
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, newIf);
