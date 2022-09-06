@@ -64,8 +64,8 @@ export function processSchemaObject(
       );
 
     const writerType = union
-      ? Writers.unionType.bind(Writers)
-      : Writers.intersectionType.bind(Writers);
+      ? Writers.intersectionType.bind(Writers)
+      : Writers.unionType.bind(Writers);
 
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),

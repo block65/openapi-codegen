@@ -20,6 +20,63 @@ export async function processOpenApiDocument(
   typesFile: SourceFile,
   schema: OpenAPIV3.Document,
 ): Promise<void> {
+  typesFile.addImportDeclaration({
+    namedImports: ['JsonObject', 'JsonValue'],
+    moduleSpecifier: 'type-fest',
+    isTypeOnly: true,
+  });
+
+  typesFile.addTypeAlias({
+    name: 'RequestMethod',
+    isExported: true,
+    typeParameters: [{ name: 'T', default: 'any' /* , constraint: 'void'  */ }],
+    type: '(params: RequestParams) => Promise<T>',
+  });
+
+  const httpMethodType = typesFile.addTypeAlias({
+    name: 'HttpMethod',
+    isExported: true,
+    type: Writers.unionType("'get'", "'post'", "'put'", "'delete'", "'head'"),
+  });
+
+  typesFile.addTypeAlias({
+    name: 'RequestParams',
+    isExported: true,
+    typeParameters: [
+      { name: 'Q', default: 'Record<string, string>', constraint: 'never' },
+      { name: 'B', default: 'JsonValue', constraint: 'never' },
+    ],
+
+    type: Writers.objectType({
+      properties: [
+        { name: 'pathname', type: 'string' },
+        { name: 'method', type: httpMethodType.getName() },
+        // { name: 'params', type: 'string', hasQuestionToken: true },
+        { name: 'query', type: 'Q', hasQuestionToken: true },
+        { name: 'body', type: 'JsonValue', hasQuestionToken: true },
+        {
+          name: 'headers',
+          type: 'Record<string, string>',
+          hasQuestionToken: true,
+        },
+      ],
+    }),
+  });
+
+  const typesModuleSpecifier =
+    `./${typesFile.getBaseNameWithoutExtension()}.js` ||
+    relative(entryFile.getDirectoryPath(), typesFile.getFilePath());
+
+  const typesImportDecl =
+    entryFile.getImportDeclaration(
+      (decl) =>
+        decl.getModuleSpecifier().getLiteralValue() === typesModuleSpecifier,
+    ) ||
+    entryFile.addImportDeclaration({
+      moduleSpecifier: typesModuleSpecifier,
+      namedImports: ['RequestMethod'],
+    });
+
   const typesAndInterfaces = new Map<
     string,
     InterfaceDeclaration | TypeAliasDeclaration
@@ -53,12 +110,11 @@ export async function processOpenApiDocument(
           typeof operationObject === 'object' &&
           'operationId' in operationObject
         ) {
-          const func = entryFile
-            .addFunction({
-              name: camelcase(operationObject.operationId),
-              isExported: true,
-            })
-            .setIsAsync(true);
+          const func = entryFile.addFunction({
+            name: camelcase(operationObject.operationId),
+            isExported: true,
+            isAsync: false,
+          });
 
           const jsdoc = func.addJsDoc({
             description: `${
@@ -100,20 +156,17 @@ export async function processOpenApiDocument(
             }
           }
 
-          if (
-            !operationObject.responses ||
-            Object.keys(operationObject.responses).length === 0
-          ) {
-            func.setReturnType('Promise<void>');
-          }
+          // const restParam = func.addParameter({
+          //   name: 'rest',
+          //   // type: queryType.getName(),
+          //   // hasQuestionToken: true,
+          //   initializer: Writers.object({}),
+          // });
 
-          const index =
-            entryFile
-              .getFunction(func.getName() || 'INVALID')
-              ?.getChildIndex() || 0;
+          // restParam.getType().set.
 
           if (queryParameters.length > 0) {
-            const queryType = entryFile.insertTypeAlias(index, {
+            const queryType = typesFile.addTypeAlias({
               name: camelcase(`${func.getName() || 'INVALID'}Query`, {
                 pascalCase: true,
               }),
@@ -130,6 +183,8 @@ export async function processOpenApiDocument(
                 })),
               }),
             });
+
+            typesImportDecl.addNamedImport(queryType.getName());
 
             func.addParameter({
               name: 'query',
@@ -148,84 +203,115 @@ export async function processOpenApiDocument(
               } {String} ${maybeJsDocDescription(
                 queryParam.deprecated && 'DEPRECATED',
                 queryParam.description,
-                String(queryParam.example),
+                String(queryParam.example || ''),
               )}`.trim(),
             });
           }
 
-          for (const [contentType, response] of Object.entries(
+          if (
+            !operationObject.responses ||
+            Object.keys(operationObject.responses).length === 0
+          ) {
+            func.setReturnType('Promise<unknown>');
+          }
+
+          for (const [statusCode, response] of Object.entries(
             operationObject.responses,
           )) {
-            // we dont support refs as operations
+            // early out if response is 204
+            // if (statusCode === '204') {
+            //   func.setReturnType('Promise<void>');
+            //   break;
+            // }
+
+            // we dont support refs as response objects
             if ('$ref' in response) {
               break;
             }
 
-            // we only support json right now
-            if (contentType !== 'application/json') {
-              break;
-            }
+            const jsonResponse = response.content?.['application/json'];
 
-            const jsonResponse = response.content?.[contentType];
+            // this can happen if there is no response at all
+            // because an empty response does not have a content type
+            // if (!jsonResponse) {
+            //   func.setReturnType('Promise<void>');
+            // }
 
-            if (!jsonResponse) {
-              func.setReturnType('Promise<void>');
-            }
+            const arrayRef =
+              jsonResponse?.schema &&
+              'items' in jsonResponse.schema &&
+              '$ref' in jsonResponse.schema.items &&
+              jsonResponse.schema.items.$ref;
 
-            if (jsonResponse?.schema && '$ref' in jsonResponse.schema) {
-              const type = typesAndInterfaces.get(jsonResponse.schema.$ref);
+            const regularRef =
+              jsonResponse?.schema &&
+              '$ref' in jsonResponse.schema &&
+              jsonResponse.schema.$ref;
 
-              const retVal = `Promise<${type?.getName() || 'void'}>`;
+            const theRef = arrayRef || regularRef;
+
+            if (theRef) {
+              const type = typesAndInterfaces.get(theRef);
+
+              if (type) {
+                // add the import if its not already added
+                if (
+                  !typesImportDecl
+                    .getNamedImports()
+                    .find((i) => i.getName() === type.getName())
+                ) {
+                  typesImportDecl?.addNamedImport(type.getName());
+                  // .setIsTypeOnly(true);
+
+                  typesImportDecl.setIsTypeOnly(true);
+                }
+              }
+
+              const typeName = `${type?.getName() || 'void'}${
+                arrayRef ? '[]' : ''
+              }`;
+
+              const retVal = `(requestMethod: RequestMethod<${typeName}>) => Promise<${typeName}>`;
 
               func.setReturnType(retVal);
 
               jsdoc.addTag({
                 tagName: 'returns',
-                text: `{${retVal}}`,
+                text: `{${retVal}} HTTP ${statusCode}`,
               });
+            } else {
+              const retVal =
+                '(requestMethod: RequestMethod<void>) => Promise<void>';
 
-              if (type) {
-                entryFile.addImportDeclaration({
-                  moduleSpecifier: relative(
-                    entryFile.getFilePath(),
-                    typesFile.getFilePath(),
-                  ),
-                  namedImports: [type.getName()],
-                });
+              func.setReturnType(retVal);
 
-                func.addVariableStatement({
-                  declarationKind: VariableDeclarationKind.Const,
-                  declarations: [
-                    {
-                      name: 'req1',
-                      initializer: Writers.object({
-                        method: (writer) => writer.quote(method),
-                        url: (writer) => writer.quote(path),
-                        params: () =>
-                          Writers.object({
-                            one: (writer) => writer.quote('1'),
-                          }),
-                        // query: {},
-                        // body: {},
-                      }),
-                    },
-                    {
-                      name: 'req',
-                      initializer: Writers.object({
-                        method: (writer) => writer.quote(method),
-                        url: (writer) => writer.quote(path),
-                        params: () =>
-                          Writers.object({
-                            one: (writer) => writer.quote('1'),
-                          }),
-                        // query: {},
-                        // body: {},
-                      }),
-                    },
-                  ],
-                });
-              }
+              jsdoc.addTag({
+                tagName: 'returns',
+                text: `{${retVal}} HTTP ${statusCode}`,
+              });
             }
+
+            func.addVariableStatement({
+              declarationKind: VariableDeclarationKind.Const,
+              declarations: [
+                {
+                  name: 'req',
+                  initializer: Writers.object({
+                    method: Writers.assertion((w) => w.quote(method), 'const'),
+                    pathname: `\`${path.replaceAll(/\{/g, '${')}\``,
+                    query: Writers.object({
+                      one: (writer) => writer.quote('1'),
+                    }),
+                    // query: {},
+                    // body: {},
+                  }),
+                },
+              ],
+            });
+
+            func.addStatements((writer) => {
+              writer.writeLine('return (requestMethod) => requestMethod(req);');
+            });
           }
         }
       }
