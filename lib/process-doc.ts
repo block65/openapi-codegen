@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { relative } from 'node:path';
 import camelcase from 'camelcase';
+import $RefParser from 'json-schema-ref-parser';
 import type { OpenAPIV3 } from 'openapi-types';
 import {
   InterfaceDeclaration,
@@ -9,7 +10,7 @@ import {
   VariableDeclarationKind,
   Writers,
 } from 'ts-morph';
-import { processSchemaObject } from './process-schema.js';
+import { registerTypesFromSchema } from './process-schema.js';
 import {
   maybeJsDocDescription,
   schemaIsOrHasReferenceObject,
@@ -20,48 +21,10 @@ export async function processOpenApiDocument(
   typesFile: SourceFile,
   schema: OpenAPIV3.Document,
 ): Promise<void> {
-  typesFile.addImportDeclaration({
-    namedImports: ['JsonObject', 'JsonValue'],
-    moduleSpecifier: 'type-fest',
-    isTypeOnly: true,
-  });
-
-  typesFile.addTypeAlias({
-    name: 'RequestMethod',
-    isExported: true,
-    typeParameters: [{ name: 'T', default: 'any' /* , constraint: 'void'  */ }],
-    type: '(params: RequestParams) => Promise<T>',
-  });
-
-  const httpMethodType = typesFile.addTypeAlias({
-    name: 'HttpMethod',
-    isExported: true,
-    type: Writers.unionType("'get'", "'post'", "'put'", "'delete'", "'head'"),
-  });
-
-  typesFile.addTypeAlias({
-    name: 'RequestParams',
-    isExported: true,
-    typeParameters: [
-      { name: 'Q', default: 'Record<string, string>', constraint: 'never' },
-      { name: 'B', default: 'JsonValue', constraint: 'never' },
-    ],
-
-    type: Writers.objectType({
-      properties: [
-        { name: 'pathname', type: 'string' },
-        { name: 'method', type: httpMethodType.getName() },
-        // { name: 'params', type: 'string', hasQuestionToken: true },
-        { name: 'query', type: 'Q', hasQuestionToken: true },
-        { name: 'body', type: 'JsonValue', hasQuestionToken: true },
-        {
-          name: 'headers',
-          type: 'Record<string, string>',
-          hasQuestionToken: true,
-        },
-      ],
-    }),
-  });
+  const refs = await $RefParser.default.resolve(schema);
+  // const schema = (await $RefParser.default.dereference(
+  //   rawSchema,
+  // )) as OpenAPIV3.Document;
 
   const typesModuleSpecifier =
     `./${typesFile.getBaseNameWithoutExtension()}.js` ||
@@ -74,8 +37,96 @@ export async function processOpenApiDocument(
     ) ||
     entryFile.addImportDeclaration({
       moduleSpecifier: typesModuleSpecifier,
-      namedImports: ['RequestMethod'],
+      namedImports: [],
     });
+
+  const ensureImport = (
+    ...types: (TypeAliasDeclaration | InterfaceDeclaration | undefined)[]
+  ) => {
+    for (const type of types) {
+      if (type) {
+        // add the import if its not already added
+        if (
+          !typesImportDecl
+            .getNamedImports()
+            .find((i) => i.getName() === type.getName())
+        ) {
+          typesImportDecl?.addNamedImport(type.getName());
+          // .setIsTypeOnly(true);
+
+          typesImportDecl.setIsTypeOnly(true);
+        }
+      }
+    }
+  };
+
+  // typesFile.addImportDeclaration({
+  //   namedImports: [/* 'JsonObject',  */ 'JsonValue'],
+  //   moduleSpecifier: 'type-fest',
+  //   isTypeOnly: true,
+  // });
+
+  entryFile.addImportDeclaration({
+    namedImports: ['Simplify'],
+    moduleSpecifier: 'type-fest',
+    isTypeOnly: true,
+  });
+
+  const httpMethodType = typesFile.addTypeAlias({
+    name: 'HttpMethod',
+    isExported: true,
+    type: Writers.unionType("'get'", "'post'", "'put'", "'delete'", "'head'"),
+  });
+
+  const requestParamsType = typesFile.addTypeAlias({
+    name: 'RequestParams',
+    isExported: true,
+    type: Writers.objectType({
+      properties: [
+        { name: 'pathname', type: 'string' },
+        { name: 'method', type: httpMethodType.getName() },
+        {
+          name: 'query',
+          type: 'Record<string, string | number> | undefined',
+          hasQuestionToken: true,
+        },
+        { name: 'body', type: 'unknown', hasQuestionToken: true },
+        {
+          name: 'headers',
+          type: 'Record<string, string>',
+          hasQuestionToken: true,
+        },
+      ],
+    }),
+  });
+
+  const runtimeOptionsType = typesFile.addTypeAlias({
+    name: 'RuntimeOptions',
+    isExported: true,
+    type: Writers.objectType({
+      properties: [
+        { name: 'signal', type: 'AbortSignal', hasQuestionToken: true },
+      ],
+    }),
+  });
+
+  const requestMethodType = typesFile.addTypeAlias({
+    name: 'RequestMethod',
+    isExported: true,
+    typeParameters: [{ name: 'T', default: 'any' /* , constraint: 'void'  */ }],
+    type: `(params: ${requestParamsType.getName()}, options?: ${runtimeOptionsType.getName()}) => Promise<T>`,
+  });
+
+  const requestMethodCaller = typesFile.addTypeAlias({
+    name: 'RequestMethodCaller',
+    isExported: true,
+    typeParameters: [
+      { name: 'T', default: 'unknown' /* , constraint: 'void'  */ },
+    ],
+    type: `(requestMethod: ${requestMethodType.getName()}<T>, options?: ${runtimeOptionsType.getName()}) => Promise<T>`,
+  });
+
+  ensureImport(/* requestParamsType */ requestMethodCaller);
 
   const typesAndInterfaces = new Map<
     string,
@@ -95,17 +146,24 @@ export async function processOpenApiDocument(
 
     return 0;
   })) {
-    processSchemaObject(
+    registerTypesFromSchema(
       typesAndInterfaces,
       typesFile,
       schemaName,
       schemaObject,
+      refs,
     );
   }
 
-  for (const [path, pathItemObject] of Object.entries(schema.paths)) {
+  for (const [path, pathItemObject] of Object.entries(schema.paths || {})) {
     if (pathItemObject) {
-      for (const [method, operationObject] of Object.entries(pathItemObject)) {
+      for (const [method, operationObject] of Object.entries(
+        pathItemObject,
+      ).filter(([, o]) =>
+        typeof o === 'object' && 'tags' in o
+          ? o.tags.includes('tipping')
+          : false,
+      )) {
         if (
           typeof operationObject === 'object' &&
           'operationId' in operationObject
@@ -127,6 +185,21 @@ export async function processOpenApiDocument(
               tagName: 'deprecated',
             });
           }
+
+          const requestBodyObject =
+            operationObject.requestBody &&
+            !('$ref' in operationObject.requestBody)
+              ? operationObject.requestBody
+              : undefined;
+
+          const requestBodyObjectJson =
+            requestBodyObject?.content['application/json'];
+
+          const requestBodyObjectJsonSchemaRef =
+            requestBodyObjectJson?.schema &&
+            '$ref' in requestBodyObjectJson.schema
+              ? requestBodyObjectJson?.schema
+              : undefined;
 
           const queryParameters: OpenAPIV3.ParameterObject[] = [];
 
@@ -165,31 +238,81 @@ export async function processOpenApiDocument(
 
           // restParam.getType().set.
 
-          if (queryParameters.length > 0) {
-            const queryType = typesFile.addTypeAlias({
-              name: camelcase(`${func.getName() || 'INVALID'}Query`, {
-                pascalCase: true,
-              }),
-              isExported: true,
-              type: Writers.objectType({
-                properties: queryParameters.map((qp) => ({
-                  name: camelcase(qp.name),
-                  hasQuestionToken: !qp.required,
-                  type:
-                    (qp.schema &&
-                      '$ref' in qp.schema &&
-                      typesAndInterfaces.get(qp.schema.$ref)?.getName()) ||
-                    'never',
-                })),
-              }),
-            });
+          const queryType =
+            queryParameters.length > 0
+              ? typesFile.addTypeAlias({
+                  name: camelcase(`${func.getName() || 'INVALID'}Query`, {
+                    pascalCase: true,
+                  }),
+                  isExported: true,
+                  type: Writers.objectType({
+                    properties: queryParameters.map((qp) => ({
+                      name: camelcase(qp.name),
+                      hasQuestionToken: !qp.required,
+                      type:
+                        (qp.schema &&
+                          '$ref' in qp.schema &&
+                          typesAndInterfaces.get(qp.schema.$ref)?.getName()) ||
+                        'never',
+                    })),
+                  }),
+                })
+              : undefined;
 
-            typesImportDecl.addNamedImport(queryType.getName());
+          ensureImport(queryType);
+          // if (queryType) {
+          //   // func.addParameter({
+          //   //   name: 'query',
+          //   //   type: queryType.getName(),
+          //   //   hasQuestionToken: true,
+          //   // });
+          // }
 
-            func.addParameter({
-              name: 'query',
-              type: queryType.getName(),
-              hasQuestionToken: true,
+          const hasRequiredQueryParam = queryParameters.some((p) => p.required);
+
+          const bodyType =
+            requestBodyObjectJsonSchemaRef &&
+            typesAndInterfaces.get(requestBodyObjectJsonSchemaRef.$ref);
+
+          ensureImport(bodyType);
+
+          const paramsParam =
+            bodyType || queryType
+              ? func.addParameter({
+                  name: 'params',
+                  hasQuestionToken: !bodyType && !hasRequiredQueryParam,
+                  type: Writers.objectType({
+                    properties: [
+                      ...(bodyType
+                        ? [
+                            {
+                              name: 'body',
+                              type: `Simplify<${bodyType.getName()}>`,
+                              hasQuestionToken: false,
+                            },
+                          ]
+                        : []),
+                      ...(queryType
+                        ? [
+                            {
+                              name: 'query',
+                              type: queryType.getName(),
+                              hasQuestionToken: !hasRequiredQueryParam,
+                            },
+                          ]
+                        : []),
+                    ],
+                  }),
+                  // type: `${commandParamsType.getName()}<${
+                  //   bodyType?.getName() || 'never'
+                  // }, ${queryType?.getName() || 'never'}>`,
+                })
+              : undefined;
+
+          if (bodyType) {
+            jsdoc.addTag({
+              tagName: 'param',
+              text: `${paramsParam?.getName()}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`.trim(),
             });
           }
 
@@ -198,7 +321,7 @@ export async function processOpenApiDocument(
 
             jsdoc.addTag({
               tagName: 'param',
-              text: `query.${queryParameterName}${
+              text: `${paramsParam?.getName()}.query.${queryParameterName}${
                 queryParam.required ? '' : '?'
               } {String} ${maybeJsDocDescription(
                 queryParam.deprecated && 'DEPRECATED',
@@ -248,30 +371,18 @@ export async function processOpenApiDocument(
               '$ref' in jsonResponse.schema &&
               jsonResponse.schema.$ref;
 
-            const theRef = arrayRef || regularRef;
+            const responseRef = arrayRef || regularRef;
 
-            if (theRef) {
-              const type = typesAndInterfaces.get(theRef);
+            if (responseRef) {
+              const type = typesAndInterfaces.get(responseRef);
 
-              if (type) {
-                // add the import if its not already added
-                if (
-                  !typesImportDecl
-                    .getNamedImports()
-                    .find((i) => i.getName() === type.getName())
-                ) {
-                  typesImportDecl?.addNamedImport(type.getName());
-                  // .setIsTypeOnly(true);
-
-                  typesImportDecl.setIsTypeOnly(true);
-                }
-              }
+              ensureImport(type);
 
               const typeName = `${type?.getName() || 'void'}${
                 arrayRef ? '[]' : ''
               }`;
 
-              const retVal = `(requestMethod: RequestMethod<${typeName}>) => Promise<${typeName}>`;
+              const retVal = `RequestMethodCaller<${typeName}>`;
 
               func.setReturnType(retVal);
 
@@ -280,8 +391,7 @@ export async function processOpenApiDocument(
                 text: `{${retVal}} HTTP ${statusCode}`,
               });
             } else {
-              const retVal =
-                '(requestMethod: RequestMethod<void>) => Promise<void>';
+              const retVal = 'RequestMethodCaller<void>';
 
               func.setReturnType(retVal);
 
@@ -290,29 +400,32 @@ export async function processOpenApiDocument(
                 text: `{${retVal}} HTTP ${statusCode}`,
               });
             }
-
-            func.addVariableStatement({
-              declarationKind: VariableDeclarationKind.Const,
-              declarations: [
-                {
-                  name: 'req',
-                  initializer: Writers.object({
-                    method: Writers.assertion((w) => w.quote(method), 'const'),
-                    pathname: `\`${path.replaceAll(/\{/g, '${')}\``,
-                    query: Writers.object({
-                      one: (writer) => writer.quote('1'),
-                    }),
-                    // query: {},
-                    // body: {},
-                  }),
-                },
-              ],
-            });
-
-            func.addStatements((writer) => {
-              writer.writeLine('return (requestMethod) => requestMethod(req);');
-            });
           }
+
+          func.addVariableStatement({
+            declarationKind: VariableDeclarationKind.Const,
+            declarations: [
+              {
+                name: 'req',
+                initializer: Writers.object({
+                  method: Writers.assertion((w) => w.quote(method), 'const'),
+                  pathname: `\`${path.replaceAll(/\{/g, '${')}\``,
+                  ...(queryType &&
+                    paramsParam && {
+                      query: `${paramsParam.getName()}?.query`,
+                    }),
+                  ...(bodyType &&
+                    paramsParam && { body: `${paramsParam.getName()}.body` }),
+                }),
+              },
+            ],
+          });
+
+          func.addStatements((writer) => {
+            writer.writeLine(
+              'return (requestMethod, options) => requestMethod(req, options);',
+            );
+          });
         }
       }
     }

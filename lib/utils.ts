@@ -1,5 +1,5 @@
 import camelcase from 'camelcase';
-import type { OpenAPIV3 } from 'openapi-types';
+import type { OpenAPIV3_1 } from 'openapi-types';
 
 export function maybeJsDocDescription(
   ...str: (string | undefined | false | null)[]
@@ -9,16 +9,16 @@ export function maybeJsDocDescription(
 
 export function isReferenceObject(
   obj: unknown,
-): obj is OpenAPIV3.ReferenceObject {
+): obj is OpenAPIV3_1.ReferenceObject {
   return typeof obj === 'object' && obj !== null && '$ref' in obj;
 }
 export function isNotReferenceObject<
-  T extends OpenAPIV3.ReferenceObject | unknown,
->(obj: T): obj is Exclude<T, OpenAPIV3.ReferenceObject> {
+  T extends OpenAPIV3_1.ReferenceObject | unknown,
+>(obj: T): obj is Exclude<T, OpenAPIV3_1.ReferenceObject> {
   return !isReferenceObject(obj);
 }
 export function schemaIsOrHasReferenceObject(
-  a: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject,
+  a: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
 ): boolean {
   return (
     isReferenceObject(a) ||

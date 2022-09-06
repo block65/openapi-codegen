@@ -1,7 +1,11 @@
 import camelcase from 'camelcase';
+import type $RefParser from 'json-schema-ref-parser';
 import type { OpenAPIV3 } from 'openapi-types';
 import {
+  EnumDeclaration,
   InterfaceDeclaration,
+  OptionalKind,
+  PropertySignatureStructure,
   SourceFile,
   TypeAliasDeclaration,
   Writers,
@@ -10,15 +14,116 @@ import {
   isNotReferenceObject,
   isReferenceObject,
   pascalCase,
-  refToName,
 } from './utils.js';
 
-export function processSchemaObject(
-  typesAndInterfaces: Map<string, InterfaceDeclaration | TypeAliasDeclaration>,
+function withNullUnion(type: string, nullable = false) {
+  return nullable ? Writers.unionType(type, 'null') : type;
+}
+
+function schemaToType(
+  typesAndInterfaces: Map<
+    string,
+    InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration
+  >,
+  parentSchema: OpenAPIV3.SchemaObject,
+  propertyName: string,
+  propertySchema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+): OptionalKind<PropertySignatureStructure> {
+  const name = camelcase(propertyName);
+  const hasQuestionToken = !parentSchema.required?.includes(propertyName);
+
+  if ('$ref' in propertySchema) {
+    const existingSchema = typesAndInterfaces.get(propertySchema.$ref);
+
+    if (!existingSchema) {
+      throw new Error(`ref used before available: ${propertySchema.$ref}`);
+    }
+
+    return {
+      name,
+      hasQuestionToken,
+      type: existingSchema.getName(),
+    };
+  }
+
+  if (propertySchema.type === 'array') {
+    const type = schemaToType(
+      typesAndInterfaces,
+      propertySchema,
+      propertyName,
+      propertySchema.items,
+    );
+
+    return {
+      name,
+      hasQuestionToken,
+      type: `${type.type}[]`,
+    };
+
+    // if ('$ref' in propertySchema.items) {
+    //   const existingSchema = typesAndInterfaces.get(propertySchema.items.$ref);
+
+    //   if (!existingSchema) {
+    //     throw new Error(
+    //       `ref used before available: ${propertySchema.items.$ref}`,
+    //     );
+    //   }
+
+    //   return {
+    //     name,
+    //     hasQuestionToken,
+    //     type: `${withNullUnion(
+    //       existingSchema.getName(),
+    //       'nullable' in propertySchema && propertySchema.nullable,
+    //     )}[]`,
+    //   };
+    // }
+
+    // return {
+    //   name,
+    //   hasQuestionToken,
+    //   type: withNullUnion(
+    //     'never',
+    //     'nullable' in propertySchema && propertySchema.nullable,
+    //   ),
+    // };
+  }
+
+  if (propertySchema.type === 'integer') {
+    return {
+      name,
+      hasQuestionToken,
+      type: withNullUnion(
+        'number',
+        'nullable' in propertySchema && propertySchema.nullable,
+      ),
+    };
+  }
+
+  return {
+    name,
+    hasQuestionToken,
+    type: withNullUnion(
+      propertySchema.type === 'string' &&
+        propertySchema.format?.includes('date')
+        ? 'Date'
+        : propertySchema.type?.toString() || 'never',
+      'nullable' in propertySchema && propertySchema.nullable,
+    ),
+  };
+}
+
+export function registerTypesFromSchema(
+  typesAndInterfaces: Map<
+    string,
+    InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration
+  >,
   typesFile: SourceFile,
   schemaName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+  _refs: $RefParser.$Refs,
 ) {
+  // deal with refs
   if ('$ref' in schemaObject) {
     const iface = typesAndInterfaces.get(schemaObject.$ref);
 
@@ -27,22 +132,26 @@ export function processSchemaObject(
     }
 
     const typeAlias = typesFile.addTypeAlias({
-      name: refToName(schemaObject.$ref),
+      name: schemaName,
       isExported: true,
       type: iface.getName(),
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
-  } else if (
+  }
+
+  // deal with unions and intersections
+  else if (
     'allOf' in schemaObject ||
     'oneOf' in schemaObject ||
     'anyOf' in schemaObject
   ) {
-    const schemas =
+    const schemaItems =
       schemaObject.allOf || schemaObject.oneOf || schemaObject.anyOf || [];
 
     const union = 'allOf' in schemaObject;
-    const typeAliases = schemas.filter(isReferenceObject).map((s) => {
+
+    const typeAliases = schemaItems.filter(isReferenceObject).map((s) => {
       const alias = typesAndInterfaces.get(s.$ref);
       if (!alias) {
         throw new Error(`ref used before available: ${s.$ref}`);
@@ -50,15 +159,18 @@ export function processSchemaObject(
       return alias;
     });
 
-    const objectTypesFromNonRefSchemas = schemas
+    const objectTypesFromNonRefSchemas = schemaItems
       .filter(isNotReferenceObject)
-      .map((s: OpenAPIV3.SchemaObject) =>
+      .map((subSchemaObject) =>
         Writers.objectType({
-          properties: Object.entries(s.properties || {}).map(
-            ([name, prop]) => ({
-              name: camelcase(name),
-              type: '$ref' in prop ? 'never' : prop.type || 'never',
-            }),
+          properties: Object.entries(subSchemaObject.properties || {}).map(
+            ([propertyName, propertySchema]) =>
+              schemaToType(
+                typesAndInterfaces,
+                subSchemaObject,
+                propertyName,
+                propertySchema,
+              ),
           ),
         }),
       );
@@ -78,53 +190,79 @@ export function processSchemaObject(
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
-  } else if (schemaObject.type === 'object') {
+  }
+
+  // deal with objects
+  else if (!schemaObject.type || schemaObject.type === 'object') {
     const newIf = typesFile.addInterface({
       name: schemaName,
       isExported: true,
       properties: Object.entries(schemaObject.properties || {}).map(
-        ([k, p]) => {
-          const name = camelcase(k);
-
-          if ('$ref' in p) {
-            const existingSchema = typesAndInterfaces.get(p.$ref);
-
-            if (!existingSchema) {
-              throw new Error(`ref used before available: ${p.$ref}`);
-            }
-
-            return {
-              name,
-              type: existingSchema.getName(),
-            };
-          }
-
-          return {
-            name,
-            type: p.type || 'never',
-          };
-        },
+        ([propertyName, propertySchema]) =>
+          schemaToType(
+            typesAndInterfaces,
+            schemaObject,
+            propertyName,
+            propertySchema,
+          ),
       ),
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, newIf);
-  } else if (schemaObject.type === 'string') {
+  }
+
+  // deal with non-enum strings
+  else if (schemaObject.type === 'string' && !schemaObject.enum) {
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: 'string',
+      type: withNullUnion(
+        schemaObject.format?.includes('date') ? 'Date' : 'string',
+        schemaObject.nullable,
+      ),
+    });
+
+    typeAlias.addJsDoc({
+      description: schemaObject.description || '',
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
-  } else if (schemaObject.type === 'number') {
+  }
+
+  // deal with enums strings
+  else if (schemaObject.type === 'string' && schemaObject.enum) {
+    const enumDeclaration = typesFile.addEnum({
+      name: pascalCase(schemaName),
+      isExported: true,
+      members: schemaObject.enum.map((e: string) => ({
+        name: pascalCase(e),
+        value: e,
+      })),
+    });
+
+    enumDeclaration.addJsDoc({
+      description: schemaObject.description || '',
+    });
+
+    typesAndInterfaces.set(
+      `#/components/schemas/${schemaName}`,
+      enumDeclaration,
+    );
+  }
+
+  // deal with numberish things
+  else if (schemaObject.type === 'number' || schemaObject.type === 'integer') {
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: 'number',
+      type: withNullUnion('number', schemaObject.nullable),
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
-  } else {
-    throw new Error('unsupported');
+  }
+
+  // not supported yet
+  else {
+    throw new Error(`unsupported ${schemaObject.type}`);
   }
 }
