@@ -27,16 +27,16 @@ function schemaToType(
   >,
   parentSchema: OpenAPIV3.SchemaObject,
   propertyName: string,
-  propertySchema: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+  schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
 ): OptionalKind<PropertySignatureStructure> {
   const name = camelcase(propertyName);
   const hasQuestionToken = !parentSchema.required?.includes(propertyName);
 
-  if ('$ref' in propertySchema) {
-    const existingSchema = typesAndInterfaces.get(propertySchema.$ref);
+  if ('$ref' in schemaObject) {
+    const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
     if (!existingSchema) {
-      throw new Error(`ref used before available: ${propertySchema.$ref}`);
+      throw new Error(`ref used before available: ${schemaObject.$ref}`);
     }
 
     return {
@@ -46,12 +46,12 @@ function schemaToType(
     };
   }
 
-  if (propertySchema.type === 'array') {
+  if (schemaObject.type === 'array') {
     const type = schemaToType(
       typesAndInterfaces,
-      propertySchema,
+      schemaObject,
       propertyName,
-      propertySchema.items,
+      schemaObject.items,
     );
 
     return {
@@ -89,14 +89,36 @@ function schemaToType(
     // };
   }
 
-  if (propertySchema.type === 'integer') {
+  if (schemaObject.type === 'integer') {
     return {
       name,
       hasQuestionToken,
       type: withNullUnion(
         'number',
-        'nullable' in propertySchema && propertySchema.nullable,
+        'nullable' in schemaObject && schemaObject.nullable,
       ),
+    };
+  }
+
+  if (schemaObject.type === 'object') {
+    return {
+      name,
+      hasQuestionToken,
+      // WARN: Duplicated code - recursion beat me
+      type: Writers.objectType({
+        properties: Object.entries(schemaObject.properties || {}).map(
+          ([propertyName, propertySchema]) => {
+            const type = schemaToType(
+              typesAndInterfaces,
+              schemaObject,
+              propertyName,
+              propertySchema,
+            );
+
+            return type;
+          },
+        ),
+      }),
     };
   }
 
@@ -104,11 +126,10 @@ function schemaToType(
     name,
     hasQuestionToken,
     type: withNullUnion(
-      propertySchema.type === 'string' &&
-        propertySchema.format?.includes('date')
+      schemaObject.type === 'string' && schemaObject.format?.includes('date')
         ? 'Date'
-        : propertySchema.type?.toString() || 'never',
-      'nullable' in propertySchema && propertySchema.nullable,
+        : schemaObject.type?.toString() || 'never',
+      'nullable' in schemaObject && schemaObject.nullable,
     ),
   };
 }
@@ -197,6 +218,7 @@ export function registerTypesFromSchema(
     const newIf = typesFile.addTypeAlias({
       name: schemaName,
       isExported: true,
+      // WARN: Duplicated code - recursion beat me
       type: Writers.objectType({
         properties: Object.entries(schemaObject.properties || {}).map(
           ([propertyName, propertySchema]) => {

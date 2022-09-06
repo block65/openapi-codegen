@@ -159,10 +159,11 @@ export async function processOpenApiDocument(
     if (pathItemObject) {
       for (const [method, operationObject] of Object.entries(
         pathItemObject,
-      ).filter(([, o]) =>
-        typeof o === 'object' && 'tags' in o
-          ? o.tags.includes('tipping')
-          : false,
+      ).filter(
+        ([, _o]) =>
+          // fake for now as we just want to generate some types to test with
+          true,
+        // typeof o === 'object' && 'tags' in o ? o.tags.includes('user') : false,
       )) {
         if (
           typeof operationObject === 'object' &&
