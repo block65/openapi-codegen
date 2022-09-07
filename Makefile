@@ -9,6 +9,7 @@ deps: node_modules
 .PHONY: clean
 clean:
 	yarn tsc -b --clean
+	rm -rf dist
 
 .PHONY: test
 test:

@@ -20,6 +20,7 @@ export async function processOpenApiDocument(
   entryFile: SourceFile,
   typesFile: SourceFile,
   schema: OpenAPIV3.Document,
+  tags?: string[] | undefined,
 ): Promise<void> {
   const refs = await $RefParser.default.resolve(schema);
   // const schema = (await $RefParser.default.dereference(
@@ -160,10 +161,11 @@ export async function processOpenApiDocument(
       for (const [method, operationObject] of Object.entries(
         pathItemObject,
       ).filter(
-        ([, _o]) =>
-          // fake for now as we just want to generate some types to test with
-          true,
-        // typeof o === 'object' && 'tags' in o ? o.tags.includes('user') : false,
+        ([, o]) =>
+          !tags ||
+          (typeof o === 'object' && 'tags' in o
+            ? o.tags.some((t) => tags.includes(t))
+            : false),
       )) {
         if (
           typeof operationObject === 'object' &&

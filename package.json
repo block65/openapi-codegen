@@ -1,6 +1,6 @@
 {
   "name": "@block65/openapi-codegen",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "private": false,
   "license": "UNLICENSED",
   "sideEffects": false,
@@ -11,28 +11,37 @@
       "default": "./dist/lib/index.js"
     }
   },
+  "bin": {
+    "openapi-codegen": "./dist/bin/index.js"
+  },
   "files": [
+    "dist/bin/*.js",
+    "dist/bin/*.d.ts",
+    "dist/src/*.js",
+    "dist/src/*.d.ts",
     "dist/lib/*.js",
     "dist/lib/*.d.ts"
   ],
   "dependencies": {
     "camelcase": "^7.0.0",
+    "eslint": ">=8.23.0",
     "json-schema-ref-parser": "^9.0.9",
     "ts-morph": "^16.0.0",
-    "type-fest": "^2.19.0"
+    "type-fest": "^2.19.0",
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.13",
-    "@babel/preset-env": "^7.18.10",
+    "@babel/core": "^7.19.0",
+    "@babel/preset-env": "^7.19.0",
     "@babel/preset-typescript": "^7.18.6",
     "@block65/eslint-config": "^8.0.0",
     "@block65/rest-client": "^1.1.1",
     "@jest/globals": "^29.0.2",
     "@types/eslint": "^8.4.6",
     "@types/jest": "^29.0.0",
-    "@types/node": "^18.7.14",
-    "@typescript-eslint/eslint-plugin": ">=5.36.1",
-    "@typescript-eslint/parser": ">=5.36.1",
+    "@types/node": "^18.7.15",
+    "@typescript-eslint/eslint-plugin": ">=5.36.2",
+    "@typescript-eslint/parser": ">=5.36.2",
     "eslint": ">=8.23.0",
     "eslint-plugin-import": ">=2.26.0",
     "eslint-plugin-prettier": ">=4.2.1",

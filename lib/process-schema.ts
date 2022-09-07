@@ -153,7 +153,7 @@ export function registerTypesFromSchema(
     }
 
     const typeAlias = typesFile.addTypeAlias({
-      name: schemaName,
+      name: pascalCase(schemaName),
       isExported: true,
       type: iface.getName(),
     });
@@ -216,7 +216,7 @@ export function registerTypesFromSchema(
   // deal with objects
   else if (!schemaObject.type || schemaObject.type === 'object') {
     const newIf = typesFile.addTypeAlias({
-      name: schemaName,
+      name: pascalCase(schemaName),
       isExported: true,
       // WARN: Duplicated code - recursion beat me
       type: Writers.objectType({
@@ -293,6 +293,23 @@ export function registerTypesFromSchema(
       name: pascalCase(schemaName),
       isExported: true,
       type: withNullUnion('number', schemaObject.nullable),
+    });
+
+    typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
+  }
+
+  // deal with arrays of refs
+  else if (schemaObject.type === 'array' && '$ref' in schemaObject.items) {
+    const iface = typesAndInterfaces.get(schemaObject.items.$ref);
+
+    if (!iface) {
+      throw new Error(`ref used before available: ${schemaObject.items.$ref}`);
+    }
+
+    const typeAlias = typesFile.addTypeAlias({
+      name: pascalCase(schemaName),
+      isExported: true,
+      type: `${iface.getName()}[]`,
     });
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
