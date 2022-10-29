@@ -285,13 +285,6 @@ export async function processOpenApiDocument(
               : undefined;
 
           ensureImport(queryType);
-          // if (queryType) {
-          //   // func.addParameter({
-          //   //   name: 'query',
-          //   //   type: queryType.getName(),
-          //   //   hasQuestionToken: true,
-          //   // });
-          // }
 
           const hasRequiredQueryParam = queryParameters.some((p) => p.required);
 
