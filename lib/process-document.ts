@@ -358,7 +358,7 @@ export async function processOpenApiDocument(
 
           for (const [statusCode, response] of Object.entries(
             operationObject.responses,
-          )) {
+          ).filter(([statusCode]) => statusCode.startsWith('2'))) {
             // early out if response is 204
             // if (statusCode === '204') {
             //   func.setReturnType('Promise<void>');
