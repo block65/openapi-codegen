@@ -24,3 +24,10 @@ dist: node_modules tsconfig.json $(SRCS)
 .PHONY: dev
 dev:
 	yarn tsc -w
+
+.PHONY: fixtures
+fixtures: __tests__/fixtures/petstore.json
+	node dist/bin/index.js \
+		-i __tests__/fixtures/petstore.json \
+		-o __tests__/fixtures/petstore
+	yarn prettier --write __tests__/fixtures/petstore
