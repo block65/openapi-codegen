@@ -10,7 +10,7 @@ import {
   VariableDeclarationKind,
   Writers,
 } from 'ts-morph';
-import { registerTypesFromSchema } from './process-schema.js';
+import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
   maybeJsDocDescription,
   schemaIsOrHasReferenceObject,
@@ -45,18 +45,14 @@ export async function processOpenApiDocument(
     ...types: (TypeAliasDeclaration | InterfaceDeclaration | undefined)[]
   ) => {
     for (const type of types) {
-      if (type) {
-        // add the import if its not already added
-        if (
-          !typesImportDecl
-            .getNamedImports()
-            .find((i) => i.getName() === type.getName())
-        ) {
-          typesImportDecl?.addNamedImport(type.getName());
-          // .setIsTypeOnly(true);
-
-          typesImportDecl.setIsTypeOnly(true);
-        }
+      if (
+        type &&
+        !typesImportDecl
+          .getNamedImports()
+          .some((namedImport) => namedImport.getName() === type.getName())
+      ) {
+        typesImportDecl?.addNamedImport(type.getName());
+        typesImportDecl.setIsTypeOnly(true);
       }
     }
   };
@@ -115,7 +111,7 @@ export async function processOpenApiDocument(
     name: 'RequestMethod',
     isExported: true,
     typeParameters: [{ name: 'T', default: 'any' /* , constraint: 'void'  */ }],
-    type: `(params: ${requestParamsType.getName()}, options?: ${runtimeOptionsType.getName()}) => Promise<T>`,
+    type: `(params: ${requestParametersType.getName()}, options?: ${runtimeOptionsType.getName()}) => Promise<T>`,
   });
 
   const requestMethodCaller = typesFile.addTypeAlias({
@@ -180,7 +176,7 @@ export async function processOpenApiDocument(
           const jsdoc = func.addJsDoc({
             description: `${
               operationObject.description || operationObject.operationId
-            }\n`,
+            }\n\n`,
           });
 
           if (operationObject.deprecated) {
@@ -290,7 +286,7 @@ export async function processOpenApiDocument(
           const paramsParam =
             bodyType || queryType
               ? func.addParameter({
-                  name: 'params',
+                  name: 'parameters',
                   hasQuestionToken: !bodyType && !hasRequiredQueryParam,
                   type: Writers.objectType({
                     properties: [
