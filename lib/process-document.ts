@@ -140,10 +140,17 @@ export async function processOpenApiDocument(
   for (const [schemaName, schemaObject] of Object.entries(
     schema.components?.schemas || {},
   )
-    .sort(([, a]) => (schemaIsOrHasReferenceObject(a) ? 1 : 0))
-    .sort(([, a]) => (schemaIsOrHasReferenceObjectsExclusively(a) ? 1 : 0))) {
-    console.log({ schemaObject });
+    .sort(([, a], [, b]) => {
+      if (schemaIsOrHasReferenceObject(a) && !schemaIsOrHasReferenceObject(b)) {
+        return 1;
+      }
+      if (!schemaIsOrHasReferenceObject(a) && schemaIsOrHasReferenceObject(b)) {
+        return -1;
+      }
 
+      return 0;
+    })
+    .sort(([, a]) => (schemaIsOrHasReferenceObjectsExclusively(a) ? 1 : 0))) {
     registerTypesFromSchema(
       typesAndInterfaces,
       typesFile,
