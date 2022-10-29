@@ -987,10 +987,10 @@
     eslint-config-prettier "^8.5.0"
     eslint-import-resolver-typescript "^3.5.2"
 
-"@block65/rest-client@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@block65/rest-client/-/rest-client-2.0.3.tgz#371e09451067cc2bcbcc28021fbfcf088cd3cd15"
-  integrity sha512-PDi38VtNGm2GsVuyaBFHu4blwNSzjGOWNjEk+eEpWhgZMS4HbfrMb6ut1bk+Dw+gqlRQJ5SGAtg1Q9ha9XOnHg==
+"@block65/rest-client@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@block65/rest-client/-/rest-client-2.2.0.tgz#c84ac15068d5d629c5c2917a5ec6b54c62903d65"
+  integrity sha512-HRFjvvEyPgbeziWrvFx7IxvjiwwBad4K3uIspxHGo/dNthNlbOxtAt57WH+aRu+zOq55Sepxp4kTAqn0A9nW4g==
   dependencies:
     "@block65/custom-error" "^11.0.1"
 
