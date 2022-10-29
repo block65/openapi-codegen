@@ -24,6 +24,7 @@ export function schemaIsOrHasReferenceObject(
     isReferenceObject(a) ||
     ('properties' in a &&
       Object.values(a.properties).some(schemaIsOrHasReferenceObject)) ||
+    ('items' in a && isReferenceObject(a.items)) ||
     ('anyOf' in a && a.anyOf.some(schemaIsOrHasReferenceObject)) ||
     ('allOf' in a && a.allOf.some(schemaIsOrHasReferenceObject)) ||
     ('oneOf' in a && a.oneOf.some(schemaIsOrHasReferenceObject))
@@ -37,6 +38,7 @@ export function schemaIsOrHasReferenceObjectsExclusively(
     isReferenceObject(a) ||
     ('properties' in a &&
       Object.values(a.properties).every(schemaIsOrHasReferenceObject)) ||
+    ('items' in a && isReferenceObject(a.items)) ||
     ('anyOf' in a && a.anyOf.every(schemaIsOrHasReferenceObject)) ||
     ('allOf' in a && a.allOf.every(schemaIsOrHasReferenceObject)) ||
     ('oneOf' in a && a.oneOf.every(schemaIsOrHasReferenceObject))
