@@ -27,7 +27,7 @@ dev:
 
 .PHONY: fixtures
 fixtures: __tests__/fixtures/petstore.json
-	node dist/bin/index.js \
+	node --enable-source-maps dist/bin/index.js \
 		-i __tests__/fixtures/petstore.json \
 		-o __tests__/fixtures/petstore
 	yarn prettier --write __tests__/fixtures/petstore
