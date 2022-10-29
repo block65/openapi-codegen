@@ -210,14 +210,20 @@ export async function processOpenApiDocument(
 
           const queryParameters: OpenAPIV3.ParameterObject[] = [];
 
-          for (const parameter of operationObject.parameters || []) {
-            if ('$ref' in parameter) {
-              break;
-            }
+          const parameters = [
+            ...(operationObject.parameters || []),
+            ...(pathItemObject.parameters || []),
+          ];
 
-            const parameterName = camelcase(parameter.name);
+          for (const parameter of parameters) {
+            const resolvedParameter =
+              '$ref' in parameter
+                ? (refs.get(parameter.$ref) as any)
+                : parameter;
 
-            if (parameter.in === 'path') {
+            const parameterName = camelcase(resolvedParameter.name);
+
+            if (resolvedParameter.in === 'path') {
               func.addParameter({
                 name: parameterName,
                 type: 'string',
@@ -233,8 +239,8 @@ export async function processOpenApiDocument(
               });
             }
 
-            if (parameter.in === 'query') {
-              queryParameters.push(parameter);
+            if (resolvedParameter.in === 'query') {
+              queryParameters.push(resolvedParameter);
             }
           }
 
