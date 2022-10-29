@@ -66,6 +66,7 @@ export async function build(
   const results = await eslint
     .lintFiles([entryFile.getFilePath(), typesFile.getFilePath()])
     .catch((err) => {
+      // eslint-disable-next-line no-console
       console.error(err);
       return [];
     });

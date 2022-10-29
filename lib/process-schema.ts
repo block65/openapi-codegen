@@ -107,12 +107,12 @@ export function schemaToType(
       // WARN: Duplicated code - recursion beat me
       type: Writers.objectType({
         properties: Object.entries(schemaObject.properties || {}).map(
-          ([propertyName, propertySchema]) => {
+          ([schemaPropertyName, schemaPropertySchema]) => {
             const type = schemaToType(
               typesAndInterfaces,
               schemaObject,
-              propertyName,
-              propertySchema,
+              schemaPropertyName,
+              schemaPropertySchema,
             );
 
             return type;

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { join } from 'path';
+import { join } from 'node:path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { build } from '../src/build.js';

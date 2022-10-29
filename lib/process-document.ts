@@ -358,7 +358,7 @@ export async function processOpenApiDocument(
 
           for (const [statusCode, response] of Object.entries(
             operationObject.responses,
-          ).filter(([statusCode]) => statusCode.startsWith('2'))) {
+          ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             // if (statusCode === '204') {
             //   func.setReturnType('Promise<void>');
@@ -427,7 +427,7 @@ export async function processOpenApiDocument(
                 name: 'req',
                 initializer: Writers.object({
                   method: Writers.assertion((w) => w.quote(method), 'const'),
-                  pathname: `\`${path.replaceAll(/\{/g, '${')}\``,
+                  pathname: `\`${path.replaceAll(/{/g, '${')}\``,
                   ...(queryType &&
                     paramsParam && {
                       query: `${paramsParam.getName()}?.query`,
