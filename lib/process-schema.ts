@@ -20,7 +20,7 @@ function withNullUnion(type: string, nullable = false) {
   return nullable ? Writers.unionType(type, 'null') : type;
 }
 
-function schemaToType(
+export function schemaToType(
   typesAndInterfaces: Map<
     string,
     InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration

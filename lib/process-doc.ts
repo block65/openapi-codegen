@@ -249,15 +249,23 @@ export async function processOpenApiDocument(
                   }),
                   isExported: true,
                   type: Writers.objectType({
-                    properties: queryParameters.map((qp) => ({
-                      name: camelcase(qp.name),
-                      hasQuestionToken: !qp.required,
-                      type:
-                        (qp.schema &&
-                          '$ref' in qp.schema &&
-                          typesAndInterfaces.get(qp.schema.$ref)?.getName()) ||
-                        'never',
-                    })),
+                    properties: queryParameters.map((qp) => {
+                      if (!qp.schema) {
+                        return {
+                          name: camelcase(qp.name),
+                          hasQuestionToken: false,
+                        };
+                      }
+
+                      const type = schemaToType(
+                        typesAndInterfaces,
+                        qp.required ? { required: [qp.name] } : {},
+                        qp.name,
+                        qp.schema,
+                      );
+
+                      return type;
+                    }),
                   }),
                 })
               : undefined;
