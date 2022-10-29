@@ -84,7 +84,7 @@ export async function processOpenApiDocument(
         { name: 'method', type: httpMethodType.getName() },
         {
           name: 'query',
-          type: 'Record<string, string | number> | undefined',
+          type: 'Record<string, string | number | string[] | number[]> | undefined',
           hasQuestionToken: true,
         },
         { name: 'body', type: 'unknown', hasQuestionToken: true },
