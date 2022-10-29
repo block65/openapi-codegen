@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /// <reference lib="dom" />
 
-import { listPets } from './fixtures/petstore/methods.js';
+import { findPets } from './fixtures/petstore/methods.js';
 import type {
   RequestMethod,
   RequestMethodCaller,
@@ -43,4 +43,4 @@ const client = new ReferenceServiceClient({
   },
 });
 
-await client.send(listPets());
+await client.send(findPets());
