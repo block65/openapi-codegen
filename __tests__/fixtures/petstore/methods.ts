@@ -3,14 +3,13 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2022-10-29T11:20:35.437Z
+ * Generated on 2022-10-29T14:54:27.697Z
  *
  */
 import type {
   RequestMethodCaller,
   FindPetsQuery,
   Pet,
-  Error,
   NewPet,
 } from './models.js';
 import type { Simplify } from 'type-fest';
@@ -42,11 +41,10 @@ import type { Simplify } from 'type-fest';
  * @param parameters.query.tags? {String} tags to filter by
  * @param parameters.query.limit? {String} maximum number of results to return
  * @returns {RequestMethodCaller<Pet[]>} HTTP 200
- * @returns {RequestMethodCaller<Error>} HTTP default
  */
 export function findPets(parameters?: {
   query?: FindPetsQuery;
-}): RequestMethodCaller<Error> {
+}): RequestMethodCaller<Pet[]> {
   const req = {
     method: 'get' as const,
     pathname: `/pets`,
@@ -59,11 +57,10 @@ export function findPets(parameters?: {
  * Creates a new pet in the store. Duplicates are allowed
  * @param parameters.body {NewPet}
  * @returns {RequestMethodCaller<Pet>} HTTP 200
- * @returns {RequestMethodCaller<Error>} HTTP default
  */
 export function addPet(parameters: {
   body: Simplify<NewPet>;
-}): RequestMethodCaller<Error> {
+}): RequestMethodCaller<Pet> {
   const req = {
     method: 'post' as const,
     pathname: `/pets`,
@@ -77,9 +74,8 @@ export function addPet(parameters: {
  * the pet
  * @param id {String} ID of pet to fetch
  * @returns {RequestMethodCaller<Pet>} HTTP 200
- * @returns {RequestMethodCaller<Error>} HTTP default
  */
-export function findPetById(id: string): RequestMethodCaller<Error> {
+export function findPetById(id: string): RequestMethodCaller<Pet> {
   const req = {
     method: 'get' as const,
     pathname: `/pets/${id}`,
@@ -91,9 +87,8 @@ export function findPetById(id: string): RequestMethodCaller<Error> {
  * deletes a single pet based on the ID supplied
  * @param id {String} ID of pet to delete
  * @returns {RequestMethodCaller<void>} HTTP 204
- * @returns {RequestMethodCaller<Error>} HTTP default
  */
-export function deletePet(id: string): RequestMethodCaller<Error> {
+export function deletePet(id: string): RequestMethodCaller<void> {
   const req = {
     method: 'delete' as const,
     pathname: `/pets/${id}`,

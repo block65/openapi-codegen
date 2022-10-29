@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2022-10-29T10:44:17.417Z
+ * Generated on 2022-10-29T14:54:27.697Z
  *
  */
 export type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'head';
