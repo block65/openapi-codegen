@@ -30,6 +30,19 @@ export function schemaIsOrHasReferenceObject(
   );
 }
 
+export function schemaIsOrHasReferenceObjectsExclusively(
+  a: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
+): boolean {
+  return (
+    isReferenceObject(a) ||
+    ('properties' in a &&
+      Object.values(a.properties).every(schemaIsOrHasReferenceObject)) ||
+    ('anyOf' in a && a.anyOf.every(schemaIsOrHasReferenceObject)) ||
+    ('allOf' in a && a.allOf.every(schemaIsOrHasReferenceObject)) ||
+    ('oneOf' in a && a.oneOf.every(schemaIsOrHasReferenceObject))
+  );
+}
+
 export function refToName(ref: string): string {
   const name = ref.split('/').at(-1);
   if (!name) {

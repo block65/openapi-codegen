@@ -15,6 +15,7 @@ import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
   maybeJsDocDescription,
   schemaIsOrHasReferenceObject,
+  schemaIsOrHasReferenceObjectsExclusively,
 } from './utils.js';
 
 function wordWrap(text: string) {
@@ -138,17 +139,11 @@ export async function processOpenApiDocument(
 
   for (const [schemaName, schemaObject] of Object.entries(
     schema.components?.schemas || {},
-  ).sort(([, a], [, b]) => {
-    if (!schemaIsOrHasReferenceObject(a) && schemaIsOrHasReferenceObject(b)) {
-      return -1;
-    }
+  )
+    .sort(([, a]) => (schemaIsOrHasReferenceObject(a) ? 1 : 0))
+    .sort(([, a]) => (schemaIsOrHasReferenceObjectsExclusively(a) ? 1 : 0))) {
+    console.log({ schemaObject });
 
-    if (schemaIsOrHasReferenceObject(a) && !schemaIsOrHasReferenceObject(b)) {
-      return 1;
-    }
-
-    return 0;
-  })) {
     registerTypesFromSchema(
       typesAndInterfaces,
       typesFile,
