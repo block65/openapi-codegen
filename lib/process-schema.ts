@@ -100,6 +100,43 @@ export function schemaToType(
     };
   }
 
+  if (
+    'allOf' in schemaObject ||
+    'oneOf' in schemaObject ||
+    'anyOf' in schemaObject
+  ) {
+    const schemaItems =
+      schemaObject.allOf || schemaObject.oneOf || schemaObject.anyOf || [];
+
+    const union = 'allOf' in schemaObject;
+
+    const types = schemaItems
+      .map((schema) =>
+        schemaToType(typesAndInterfaces, parentSchema, propertyName, schema),
+      )
+      .map((t) => t.type);
+
+    const nullable = 'nullable' in schemaObject && schemaObject.nullable;
+
+    if (!nullable && types.length === 1 && types[0]) {
+      return {
+        name,
+        hasQuestionToken,
+        type: types[0],
+      };
+    }
+
+    return {
+      name,
+      hasQuestionToken,
+      type: union
+        ? // @ts-expect-error -> bad type in ts-morph (arguably)
+          Writers.unionType(...types, 'null')
+        : // @ts-expect-error -> bad type in ts-morph (arguably)
+          Writers.intersectionType(...types, 'null'),
+    };
+  }
+
   if (schemaObject.type === 'object') {
     return {
       name,
@@ -122,13 +159,20 @@ export function schemaToType(
     };
   }
 
+  const type =
+    schemaObject.type === 'string' && schemaObject.format?.includes('date')
+      ? 'Date'
+      : schemaObject.type?.toString() || 'never';
+
+  if (type === 'never') {
+    console.warn('WARNING: unknown type', schemaObject);
+  }
+
   return {
     name,
     hasQuestionToken,
     type: withNullUnion(
-      schemaObject.type === 'string' && schemaObject.format?.includes('date')
-        ? 'Date'
-        : schemaObject.type?.toString() || 'never',
+      type,
       'nullable' in schemaObject && schemaObject.nullable,
     ),
   };
