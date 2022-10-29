@@ -2,7 +2,7 @@ import { join } from 'node:path';
 import { ESLint } from 'eslint';
 import type { OpenAPIV3 } from 'openapi-types';
 import { IndentationText, Project, QuoteKind, ScriptTarget } from 'ts-morph';
-import { processOpenApiDocument } from '../lib/process-document.js';
+import { processOpenApiDocument } from '../lib/process-doc.js';
 
 export async function build(
   inputFile: string,
