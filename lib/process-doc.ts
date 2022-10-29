@@ -75,8 +75,8 @@ export async function processOpenApiDocument(
     type: Writers.unionType("'get'", "'post'", "'put'", "'delete'", "'head'"),
   });
 
-  const requestParamsType = typesFile.addTypeAlias({
-    name: 'RequestParams',
+  const requestParametersType = typesFile.addTypeAlias({
+    name: 'RequestParameters',
     isExported: true,
     type: Writers.objectType({
       properties: [
