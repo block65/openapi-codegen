@@ -10,11 +10,17 @@ import {
   VariableDeclarationKind,
   Writers,
 } from 'ts-morph';
+import wrap from 'word-wrap';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
   maybeJsDocDescription,
   schemaIsOrHasReferenceObject,
 } from './utils.js';
+
+function wordWrap(text: string) {
+  // max width is 75 as it will be indented already inside a multi-line comment
+  return wrap(text, { width: 75, indent: '' });
+}
 
 export async function processOpenApiDocument(
   entryFile: SourceFile,
@@ -174,9 +180,11 @@ export async function processOpenApiDocument(
           });
 
           const jsdoc = func.addJsDoc({
-            description: `${
-              operationObject.description || operationObject.operationId
-            }\n\n`,
+            description: wordWrap(
+              `\n${
+                operationObject.description || operationObject.operationId
+              }\n\n`,
+            ),
           });
 
           if (operationObject.deprecated) {
@@ -217,9 +225,11 @@ export async function processOpenApiDocument(
 
               jsdoc.addTag({
                 tagName: 'param',
-                text: `${parameterName} {String} ${
-                  parameter.description || ''
-                }`.trim(),
+                text: wordWrap(
+                  `${parameterName} {String} ${
+                    resolvedParameter.description || ''
+                  }`,
+                ).trim(),
               });
             }
 
