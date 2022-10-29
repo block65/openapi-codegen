@@ -5,7 +5,7 @@ import { ReferenceServiceClient } from './reference.js';
 
 export const client = new ReferenceServiceClient({
   requestMethod() {
-    return Promise.resolve();
+    return Promise.resolve(true);
   },
 });
 

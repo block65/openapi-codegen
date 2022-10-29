@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /// <reference lib="dom" />
 
-import { findPets } from './fixtures/petstore/methods.js';
 import type {
   RequestMethod,
   RequestMethodCaller,
@@ -22,25 +21,3 @@ export class ReferenceServiceClient {
     return fn(this.#requestMethod, options);
   }
 }
-
-const client = new ReferenceServiceClient({
-  requestMethod: (params, { signal } = {}) => {
-    const { pathname, method, query, body, headers = {} } = params;
-
-    const url = new URL(pathname, 'https://api.example.com');
-    url.search = query
-      ? new URLSearchParams(
-          Object.entries(query).map(([k, v]) => [k, v.toString()]),
-        ).toString()
-      : '';
-
-    return fetch(url, {
-      method,
-      body: JSON.stringify(body) || null,
-      headers,
-      signal: signal || null,
-    });
-  },
-});
-
-await client.send(findPets());
