@@ -24,7 +24,8 @@
     "noUnusedParameters": true,
     "importsNotUsedAsValues": "error",
     "removeComments": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "sourceMap": true
   },
   "include": ["./src", "./lib", "./bin", "./__tests__"],
   "exclude": ["./dist", "node_modules"]
