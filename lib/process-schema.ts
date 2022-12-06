@@ -342,6 +342,17 @@ export function registerTypesFromSchema(
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
 
+  // deal with boolean things
+  else if (schemaObject.type === 'boolean') {
+    const typeAlias = typesFile.addTypeAlias({
+      name: pascalCase(schemaName),
+      isExported: true,
+      type: withNullUnion('boolean', schemaObject.nullable),
+    });
+
+    typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
+  }
+
   // deal with arrays of refs
   else if (schemaObject.type === 'array' && '$ref' in schemaObject.items) {
     const iface = typesAndInterfaces.get(schemaObject.items.$ref);
