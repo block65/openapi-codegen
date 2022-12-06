@@ -24,8 +24,8 @@
   ],
   "dependencies": {
     "camelcase": "^7.0.0",
-    "eslint": "^8.26.0",
     "json-schema-ref-parser": "^9.0.9",
+    "prettier": "^2.7.1",
     "ts-morph": "^16.0.0",
     "type-fest": "^3.1.0",
     "word-wrap": "^1.2.3",

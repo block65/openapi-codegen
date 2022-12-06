@@ -1,6 +1,7 @@
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { ESLint } from 'eslint';
 import type { OpenAPIV3 } from 'openapi-types';
+import { format } from 'prettier';
 import { IndentationText, Project, QuoteKind, ScriptTarget } from 'ts-morph';
 import { processOpenApiDocument } from '../lib/process-document.js';
 
@@ -59,17 +60,12 @@ export async function build(
   await entryFile.save();
   await typesFile.save();
 
-  const eslint = new ESLint({
-    cwd: process.cwd(),
-  });
-
-  const results = await eslint
-    .lintFiles([entryFile.getFilePath(), typesFile.getFilePath()])
-    .catch((err) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-      return [];
-    });
-
-  await ESLint.outputFixes(results);
+  await Promise.all(
+    [entryFile, entryFile].map((file) =>
+      writeFile(
+        file.getFilePath(),
+        format(entryFile.getText(), { parser: 'typescript' }),
+      ),
+    ),
+  );
 }
