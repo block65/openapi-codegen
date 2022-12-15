@@ -126,6 +126,18 @@ export function schemaToType(
       };
     }
 
+    // already got a nullable type, no need to add null
+    if (types.some((t) => t === 'null')) {
+      return {
+        name,
+        hasQuestionToken,
+        type: intersect
+          ? // @ts-expect-error -> bad type in ts-morph (arguably)
+            Writers.intersectionType(...types)
+          : // @ts-expect-error -> bad type in ts-morph (arguably)
+            Writers.unionType(...types),
+      };
+    }
     return {
       name,
       hasQuestionToken,
