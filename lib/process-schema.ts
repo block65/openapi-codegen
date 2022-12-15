@@ -118,6 +118,7 @@ export function schemaToType(
 
     const nullable = 'nullable' in schemaObject && schemaObject.nullable;
 
+    // not nullable, and only one type, so just return that type
     if (!nullable && types.length === 1 && types[0]) {
       return {
         name,
@@ -138,6 +139,8 @@ export function schemaToType(
             Writers.unionType(...types),
       };
     }
+
+    // add null
     return {
       name,
       hasQuestionToken,
