@@ -1,0 +1,48 @@
+{
+  "components": {
+    "schemas": {
+      "BadRequest": {
+        "type": "object",
+        "properties": {
+          "violations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "required": ["field", "description"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["violations"],
+        "description": "Describes violations in a client request",
+        "additionalProperties": false
+      },
+      "UpdateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "minProperties": 1,
+        "description": "",
+        "additionalProperties": false
+      }
+    }
+  }
+}
