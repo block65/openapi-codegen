@@ -201,15 +201,6 @@ export async function processOpenApiDocument(
               ? operationObject.requestBody
               : undefined;
 
-          const requestBodyObjectJson =
-            requestBodyObject?.content['application/json'];
-
-          const requestBodyObjectJsonSchemaRef =
-            requestBodyObjectJson?.schema &&
-            '$ref' in requestBodyObjectJson.schema
-              ? requestBodyObjectJson?.schema
-              : undefined;
-
           const queryParameters: OpenAPIV3.ParameterObject[] = [];
 
           const parameters = [
@@ -284,53 +275,72 @@ export async function processOpenApiDocument(
                 })
               : undefined;
 
-          ensureImport(queryType);
-
           const hasRequiredQueryParam = queryParameters.some((p) => p.required);
 
+          ensureImport(queryType);
+
+          const requestBodyObjectJson =
+            requestBodyObject?.content['application/json'];
+
+          const requestBodyIsArray =
+            requestBodyObjectJson?.schema &&
+            'type' in requestBodyObjectJson.schema &&
+            requestBodyObjectJson.schema?.type === 'array';
+
+          // get the ref from the schema or the array items
+          const requestBodyObjectJsonSchema =
+            (requestBodyObjectJson?.schema &&
+              (('$ref' in requestBodyObjectJson.schema &&
+                requestBodyObjectJson?.schema) ||
+                (requestBodyIsArray &&
+                  'items' in requestBodyObjectJson.schema &&
+                  '$ref' in requestBodyObjectJson.schema.items &&
+                  requestBodyObjectJson.schema.items))) ||
+            undefined;
+
           const bodyType =
-            requestBodyObjectJsonSchemaRef &&
-            typesAndInterfaces.get(requestBodyObjectJsonSchemaRef.$ref);
+            requestBodyObjectJsonSchema &&
+            typesAndInterfaces.get(requestBodyObjectJsonSchema.$ref);
 
           ensureImport(bodyType);
 
-          const paramsParam =
-            bodyType || queryType
-              ? func.addParameter({
-                  name: 'parameters',
-                  hasQuestionToken: !bodyType && !hasRequiredQueryParam,
-                  type: Writers.objectType({
-                    properties: [
-                      ...(bodyType
-                        ? [
-                            {
-                              name: 'body',
-                              type: `Simplify<${bodyType.getName()}>`,
-                              hasQuestionToken: false,
-                            },
-                          ]
-                        : []),
-                      ...(queryType
-                        ? [
-                            {
-                              name: 'query',
-                              type: queryType.getName(),
-                              hasQuestionToken: !hasRequiredQueryParam,
-                            },
-                          ]
-                        : []),
-                    ],
-                  }),
-                  // type: `${commandParamsType.getName()}<${
-                  //   bodyType?.getName() || 'never'
-                  // }, ${queryType?.getName() || 'never'}>`,
-                })
-              : undefined;
+          const paramsParamName = 'parameters';
+
+          if (bodyType || queryType) {
+            func.addParameter({
+              name: paramsParamName,
+              hasQuestionToken: !bodyType && !hasRequiredQueryParam,
+              type: Writers.objectType({
+                properties: [
+                  ...(bodyType
+                    ? [
+                        {
+                          name: 'body',
+                          type: `Simplify<${bodyType.getName()}>${
+                            requestBodyIsArray ? '[]' : ''
+                          }`,
+                          hasQuestionToken: false,
+                        },
+                      ]
+                    : []),
+                  ...(queryType
+                    ? [
+                        {
+                          name: 'query',
+                          type: queryType.getName(),
+                          hasQuestionToken: !hasRequiredQueryParam,
+                        },
+                      ]
+                    : []),
+                ],
+              }),
+            });
+          }
 
           if (bodyType) {
             jsdoc.addTag({
               tagName: 'param',
-              text: `${paramsParam?.getName()}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`.trim(),
+              text: `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`.trim(),
             });
           }
 
@@ -339,7 +349,7 @@ export async function processOpenApiDocument(
 
             jsdoc.addTag({
               tagName: 'param',
-              text: `${paramsParam?.getName()}.query.${queryParameterName}${
+              text: `${paramsParamName}.query.${queryParameterName}${
                 queryParam.required ? '' : '?'
               } {String} ${maybeJsDocDescription(
                 queryParam.deprecated && 'DEPRECATED',
@@ -428,12 +438,10 @@ export async function processOpenApiDocument(
                 initializer: Writers.object({
                   method: Writers.assertion((w) => w.quote(method), 'const'),
                   pathname: `\`${path.replaceAll(/{/g, '${')}\``,
-                  ...(queryType &&
-                    paramsParam && {
-                      query: `${paramsParam.getName()}?.query`,
-                    }),
-                  ...(bodyType &&
-                    paramsParam && { body: `${paramsParam.getName()}.body` }),
+                  ...(queryType && {
+                    query: `${paramsParamName}?.query`,
+                  }),
+                  ...(bodyType && { body: `${paramsParamName}.body` }),
                 }),
               },
             ],
