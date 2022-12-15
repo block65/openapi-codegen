@@ -108,7 +108,7 @@ export function schemaToType(
     const schemaItems =
       schemaObject.allOf || schemaObject.oneOf || schemaObject.anyOf || [];
 
-    const union = 'allOf' in schemaObject;
+    const intersect = 'allOf' in schemaObject;
 
     const types = schemaItems
       .map((schema) =>
@@ -144,11 +144,11 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: union
+      type: intersect
         ? // @ts-expect-error -> bad type in ts-morph (arguably)
-          Writers.unionType(...types, 'null')
+          Writers.intersectionType(...types, 'null')
         : // @ts-expect-error -> bad type in ts-morph (arguably)
-          Writers.intersectionType(...types, 'null'),
+          Writers.unionType(...types, 'null'),
     };
   }
 
@@ -229,7 +229,7 @@ export function registerTypesFromSchema(
     const schemaItems =
       schemaObject.allOf || schemaObject.oneOf || schemaObject.anyOf || [];
 
-    const union = 'allOf' in schemaObject;
+    const intersect = 'allOf' in schemaObject;
 
     const typeAliases = schemaItems.filter(isReferenceObject).map((s) => {
       const alias = typesAndInterfaces.get(s.$ref);
@@ -255,7 +255,7 @@ export function registerTypesFromSchema(
         }),
       );
 
-    const writerType = union
+    const writerType = intersect
       ? Writers.intersectionType.bind(Writers)
       : Writers.unionType.bind(Writers);
 
