@@ -1,18 +1,10 @@
-/**
- * This file is auto generated.
- *
- * WARN: Do not edit directly.
- *
- * Generated on 2022-10-29T14:54:27.697Z
- *
- */
-import type { Simplify } from 'type-fest';
 import type {
   RequestMethodCaller,
   FindPetsQuery,
   Pet,
   NewPet,
 } from './models.js';
+import type { Simplify } from 'type-fest';
 
 /**
  * Returns all pets from the system that the user has access to
@@ -47,7 +39,7 @@ export function findPets(parameters?: {
 }): RequestMethodCaller<Pet[]> {
   const req = {
     method: 'get' as const,
-    pathname: '/pets',
+    pathname: `/pets`,
     query: parameters?.query,
   };
   return (requestMethod, options) => requestMethod(req, options);
@@ -63,7 +55,7 @@ export function addPet(parameters: {
 }): RequestMethodCaller<Pet> {
   const req = {
     method: 'post' as const,
-    pathname: '/pets',
+    pathname: `/pets`,
     body: parameters.body,
   };
   return (requestMethod, options) => requestMethod(req, options);
