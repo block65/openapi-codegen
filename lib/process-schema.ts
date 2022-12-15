@@ -188,6 +188,21 @@ export function schemaToType(
     };
   }
 
+  if (schemaObject.type === 'string' && 'enum' in schemaObject) {
+    return {
+      name,
+      hasQuestionToken,
+
+      type:
+        schemaObject.enum.length === 1
+          ? JSON.stringify(schemaObject.enum[0])
+          : Writers.unionType(
+              // @ts-expect-error
+              ...schemaObject.enum.map((e) => JSON.stringify(e)),
+            ),
+    };
+  }
+
   const type =
     schemaObject.type === 'string' && schemaObject.format?.includes('date')
       ? 'Date'
