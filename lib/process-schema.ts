@@ -2,6 +2,7 @@ import camelcase from 'camelcase';
 import type $RefParser from 'json-schema-ref-parser';
 import type { OpenAPIV3 } from 'openapi-types';
 import {
+  CodeBlockWriter,
   EnumDeclaration,
   InterfaceDeclaration,
   OptionalKind,
@@ -53,6 +54,19 @@ export function schemaToType(
       propertyName,
       schemaObject.items,
     );
+
+    if (type.type instanceof Function) {
+      const typeWriter = type.type;
+      return {
+        name,
+        hasQuestionToken,
+        type: (writer: CodeBlockWriter) => {
+          writer.write('Array<');
+          typeWriter(writer);
+          writer.write('>');
+        },
+      };
+    }
 
     return {
       name,
