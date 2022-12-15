@@ -28,5 +28,5 @@
     "sourceMap": true
   },
   "include": ["./src", "./lib", "./bin", "./__tests__"],
-  "exclude": ["./dist", "node_modules"]
+  "exclude": ["./dist", "node_modules", "./__tests__/fixtures"]
 }
