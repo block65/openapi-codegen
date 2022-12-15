@@ -26,8 +26,18 @@ dev:
 	yarn tsc -w
 
 .PHONY: fixtures
-fixtures: __tests__/fixtures/petstore.json
+fixtures: petstore test1
+
+.PHONY: petstore
+petstore: __tests__/fixtures/petstore.json
 	node --enable-source-maps dist/bin/index.js \
 		-i __tests__/fixtures/petstore.json \
 		-o __tests__/fixtures/petstore
 	yarn prettier --write __tests__/fixtures/petstore
+
+.PHONY: test1
+test1: __tests__/fixtures/test1.json
+	node --enable-source-maps dist/bin/index.js \
+		-i __tests__/fixtures/test1.json \
+		-o __tests__/fixtures/test1
+	yarn prettier --write __tests__/fixtures/test1
