@@ -26,7 +26,7 @@ dev:
 	yarn tsc -w
 
 .PHONY: fixtures
-fixtures: petstore test1
+fixtures: dist petstore test1
 
 .PHONY: petstore
 petstore: __tests__/fixtures/petstore.json
