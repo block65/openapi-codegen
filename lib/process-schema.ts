@@ -167,6 +167,14 @@ export function schemaToType(
   }
 
   if (schemaObject.type === 'object') {
+    if (schemaObject.enum?.every((e) => e === null)) {
+      return {
+        name,
+        hasQuestionToken: true,
+        type: 'null',
+      };
+    }
+
     return {
       name,
       hasQuestionToken,
