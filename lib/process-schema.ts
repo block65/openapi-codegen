@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { OpenAPIV3 } from 'openapi-types';
 import {
   Writers,
@@ -314,7 +315,6 @@ export function registerTypesFromSchema(
   typesFile: SourceFile,
   schemaName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
-  _refs: $RefParser.$Refs,
 ) {
   // deal with refs
   if ('$ref' in schemaObject) {
@@ -396,7 +396,7 @@ export function registerTypesFromSchema(
     const newIf = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      // WARN: Duplicated code - recursion beat me
+      // WARN: Duplicated code - the recursion beat me
       type: Writers.objectType({
         properties: Object.entries(schemaObject.properties || {}).map(
           ([propertyName, propertySchema]) => {
@@ -411,16 +411,6 @@ export function registerTypesFromSchema(
           },
         ),
       }),
-
-      // properties: Object.entries(schemaObject.properties || {}).map(
-      //   ([propertyName, propertySchema]) =>
-      //     schemaToType(
-      //       typesAndInterfaces,
-      //       schemaObject,
-      //       propertyName,
-      //       propertySchema,
-      //     ),
-      // ),
     });
 
     if (schemaObject.description) {
