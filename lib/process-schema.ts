@@ -107,7 +107,7 @@ export function schemaToType(
 
   const maybeJsDoc = {
     ...(schemaObject.description && {
-      description: wordWrap('\n' + schemaObject.description),
+      description: wordWrap(`\n${schemaObject.description}`),
     }),
     ...(jsdocTags.length > 0 && { tags: jsdocTags }),
   };
@@ -241,7 +241,8 @@ export function schemaToType(
       return {
         name,
         hasQuestionToken: true,
-        type: 'null',
+        type: maybeWithUndefined('null', true),
+        docs,
       };
     }
 
@@ -503,6 +504,7 @@ export function registerTypesFromSchema(
       name: pascalCase(schemaName),
       isExported: true,
       type: withNullUnion(
+        // eslint-disable-next-line no-template-curly-in-string
         options?.integerAsStringish ? '`${number}`' : schemaObject.type,
         schemaObject.nullable,
       ),

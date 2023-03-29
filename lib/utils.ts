@@ -1,6 +1,6 @@
 import camelcase from 'camelcase';
-import wrap from 'word-wrap';
 import type { OpenAPIV3_1 } from 'openapi-types';
+import wrap from 'word-wrap';
 
 export function maybeJsDocDescription(
   ...str: (string | undefined | false | null)[]
