@@ -288,11 +288,14 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: withNullUnion(
-        options.booleanAsStringish
-          ? Writers.unionType('"true"', '"false"')
-          : 'boolean',
-        schemaObject.nullable,
+      type: maybeWithUndefined(
+        withNullUnion(
+          options.booleanAsStringish
+            ? Writers.unionType('"true"', '"false"')
+            : 'boolean',
+          schemaObject.nullable,
+        ),
+        hasQuestionToken,
       ),
       docs,
     };
