@@ -39,7 +39,18 @@ export function schemaToType(
     const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
     if (!existingSchema) {
-      throw new Error(`ref used before available: ${schemaObject.$ref}`);
+      // throw new Error(`ref used before available: ${schemaObject.$ref}`);
+      console.warn(`ref used before available: ${schemaObject.$ref}`);
+      return {
+        name,
+        hasQuestionToken,
+        type: 'unknown',
+        docs: [
+          {
+            description: `WARN: $ref used before available - ${schemaObject.$ref}`,
+          },
+        ],
+      };
     }
 
     return {
