@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-03-29T04:57:18.928Z
+ * Generated on 2023-03-29T05:05:21.979Z
  *
  */
 export type NewPet = {

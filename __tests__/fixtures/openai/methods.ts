@@ -1,3 +1,5 @@
+import type { RequestMethodCaller } from '@block65/rest-client';
+import type { Simplify } from 'type-fest';
 import type {
   ListEnginesResponse,
   Engine,
@@ -33,8 +35,6 @@ import type {
   CreateModerationRequest,
   CreateModerationResponse,
 } from './models.js';
-import type { Simplify } from 'type-fest';
-import type { RequestMethodCaller } from '@block65/rest-client';
 
 /**
  * listEngines

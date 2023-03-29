@@ -25,9 +25,18 @@ export async function processOpenApiDocument(
   tags?: string[] | undefined,
 ): Promise<void> {
   const refs = await $RefParser.default.resolve(schema);
-  // const schema = (await $RefParser.default.dereference(
-  //   rawSchema,
-  // )) as OpenAPIV3.Document;
+
+  entryFile.addImportDeclaration({
+    namedImports: ['RequestMethodCaller'],
+    moduleSpecifier: '@block65/rest-client',
+    isTypeOnly: true,
+  });
+
+  entryFile.addImportDeclaration({
+    namedImports: ['Simplify'],
+    moduleSpecifier: 'type-fest',
+    isTypeOnly: true,
+  });
 
   const typesModuleSpecifier =
     `./${typesFile.getBaseNameWithoutExtension()}.js` ||
@@ -58,18 +67,6 @@ export async function processOpenApiDocument(
       }
     }
   };
-
-  entryFile.addImportDeclaration({
-    namedImports: ['Simplify'],
-    moduleSpecifier: 'type-fest',
-    isTypeOnly: true,
-  });
-
-  entryFile.addImportDeclaration({
-    namedImports: ['RequestMethodCaller'],
-    moduleSpecifier: '@block65/rest-client',
-    isTypeOnly: true,
-  });
 
   const typesAndInterfaces = new Map<
     string,

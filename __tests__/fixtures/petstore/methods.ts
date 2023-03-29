@@ -1,6 +1,6 @@
-import type { FindPetsCommandQuery, Pet, NewPet } from './models.js';
-import type { Simplify } from 'type-fest';
 import type { RequestMethodCaller } from '@block65/rest-client';
+import type { Simplify } from 'type-fest';
+import type { FindPetsCommandQuery, Pet, NewPet } from './models.js';
 
 /**
  * Returns all pets from the system that the user has access to
