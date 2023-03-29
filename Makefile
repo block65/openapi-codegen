@@ -26,7 +26,7 @@ dev:
 	yarn tsc -w
 
 .PHONY: fixtures
-fixtures: dist petstore test1
+fixtures: dist petstore test1 openai
 
 .PHONY: petstore
 petstore: __tests__/fixtures/petstore.json
@@ -41,3 +41,11 @@ test1: __tests__/fixtures/test1.json
 		-i __tests__/fixtures/test1.json \
 		-o __tests__/fixtures/test1
 	yarn prettier --write __tests__/fixtures/test1
+.PHONY: openai
+openai: __tests__/fixtures/openai.yaml dist
+	mkdir -p $(@D)
+	npx js-yaml $< > $(@D)/openai.json
+	node --enable-source-maps dist/bin/index.js \
+		-i $(@D)/openai.json \
+		-o __tests__/fixtures/openai
+	yarn prettier --write __tests__/fixtures/openai
