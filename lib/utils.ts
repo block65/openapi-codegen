@@ -1,4 +1,5 @@
 import camelcase from 'camelcase';
+import wrap from 'word-wrap';
 import type { OpenAPIV3_1 } from 'openapi-types';
 
 export function maybeJsDocDescription(
@@ -55,4 +56,9 @@ export function refToName(ref: string): string {
 
 export function pascalCase(str: string): string {
   return camelcase(str, { pascalCase: true });
+}
+
+export function wordWrap(text: string) {
+  // max width is 75 as it will be indented already inside a multi-line comment
+  return wrap(text, { width: 75, indent: '' });
 }
