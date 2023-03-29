@@ -31,7 +31,9 @@ export function schemaToType(
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
 ): OptionalKind<PropertySignatureStructure> {
   const name = camelcase(propertyName);
-  const hasQuestionToken = !parentSchema.required?.includes(propertyName);
+  const hasQuestionToken =
+    parentSchema.type === 'object' &&
+    !parentSchema.required?.includes(propertyName);
 
   if ('$ref' in schemaObject) {
     const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
