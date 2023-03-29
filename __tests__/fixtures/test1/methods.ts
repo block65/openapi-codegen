@@ -20,11 +20,7 @@ import type {
   UpdateBillingSubscriptionPromoCodeRequest,
 } from './models.js';
 import type { Simplify } from 'type-fest';
-import type {
-  RuntimeOptions,
-  RequestMethod,
-  RequestMethodCaller,
-} from '@block65/rest-client';
+import type { RequestMethodCaller } from '@block65/rest-client';
 
 /**
  * getOperationCommand

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-03-29T03:51:28.816Z
+ * Generated on 2023-03-29T04:57:23.895Z
  *
  */
 export type DeleteModelResponse = {
@@ -76,9 +76,9 @@ export type CreateCompletionRequest = {
    * @example 1
    */
   n?: number | null;
-  stream?: boolean | null;
+  stream?: boolean | null | undefined;
   logprobs?: number | null;
-  echo?: boolean | null;
+  echo?: boolean | null | undefined;
   stop?: string | null | undefined | string[] | null | undefined;
   presence_penalty?: number | null;
   frequency_penalty?: number | null;
@@ -407,7 +407,7 @@ export type CreateSearchRequest = {
    * @default 200
    */
   max_rerank?: number | null;
-  return_metadata?: boolean | null;
+  return_metadata?: boolean | null | undefined;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -491,8 +491,8 @@ export type CreateAnswerRequest = {
    */
   n?: number | null;
   logit_bias?: {} | undefined;
-  return_metadata?: boolean | null;
-  return_prompt?: boolean | null;
+  return_metadata?: boolean | null | undefined;
+  return_prompt?: boolean | null | undefined;
   /**
    * If an object name is in the list, we provide the full information of the
    * object; otherwise, we only provide the object ID. Currently we support
@@ -563,8 +563,8 @@ export type CreateClassificationRequest = {
    */
   max_examples?: number | null;
   logit_bias?: {} | undefined;
-  return_prompt?: boolean | null;
-  return_metadata?: boolean | null;
+  return_prompt?: boolean | null | undefined;
+  return_metadata?: boolean | null | undefined;
   /**
    * If an object name is in the list, we provide the full information of the
    * object; otherwise, we only provide the object ID. Currently we support
@@ -655,7 +655,7 @@ export type CreateFineTuneRequest = {
    * @default 0.01
    */
   prompt_loss_weight?: number | null;
-  compute_classification_metrics?: boolean | null;
+  compute_classification_metrics?: boolean | null | undefined;
   classification_n_classes?: number | null;
   classification_positive_class?: string | null | undefined;
   /**
@@ -800,7 +800,7 @@ export type CreateChatCompletionRequest = {
    * @example 1
    */
   n?: number | null;
-  stream?: boolean | null;
+  stream?: boolean | null | undefined;
   stop?: string | null | undefined | string[] | null | undefined;
   /**
    * The maximum number of tokens allowed for the generated answer. By default,
