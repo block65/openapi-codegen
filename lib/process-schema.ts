@@ -1,13 +1,15 @@
 import type { OpenAPIV3 } from 'openapi-types';
 import {
-  CodeBlockWriter,
-  EnumDeclaration,
-  InterfaceDeclaration,
-  OptionalKind,
-  PropertySignatureStructure,
-  SourceFile,
-  TypeAliasDeclaration,
   Writers,
+  type CodeBlockWriter,
+  type EnumDeclaration,
+  type InterfaceDeclaration,
+  type JSDocStructure,
+  type OptionalKind,
+  type PropertySignatureStructure,
+  type SourceFile,
+  type TypeAliasDeclaration,
+  type WriterFunction,
 } from 'ts-morph';
 import {
   isNotReferenceObject,
