@@ -66,7 +66,7 @@ export async function processOpenApiDocument(
   });
 
   entryFile.addImportDeclaration({
-    namedImports: ['RuntimeOptions', 'RequestMethod', 'RequestMethodCaller'],
+    namedImports: ['RequestMethodCaller'],
     moduleSpecifier: '@block65/rest-client',
     isTypeOnly: true,
   });
