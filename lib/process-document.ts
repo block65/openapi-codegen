@@ -59,73 +59,17 @@ export async function processOpenApiDocument(
     }
   };
 
-  // typesFile.addImportDeclaration({
-  //   namedImports: [/* 'JsonObject',  */ 'JsonValue'],
-  //   moduleSpecifier: 'type-fest',
-  //   isTypeOnly: true,
-  // });
-
   entryFile.addImportDeclaration({
     namedImports: ['Simplify'],
     moduleSpecifier: 'type-fest',
     isTypeOnly: true,
   });
 
-  const httpMethodType = typesFile.addTypeAlias({
-    name: 'HttpMethod',
-    isExported: true,
-    type: Writers.unionType("'get'", "'post'", "'put'", "'delete'", "'head'"),
+  entryFile.addImportDeclaration({
+    namedImports: ['RuntimeOptions', 'RequestMethod', 'RequestMethodCaller'],
+    moduleSpecifier: '@block65/rest-client',
+    isTypeOnly: true,
   });
-
-  const requestParametersType = typesFile.addTypeAlias({
-    name: 'RequestParameters',
-    isExported: true,
-    type: Writers.objectType({
-      properties: [
-        { name: 'pathname', type: 'string' },
-        { name: 'method', type: httpMethodType.getName() },
-        {
-          name: 'query',
-          type: 'Record<string, string | number | string[] | number[]> | undefined',
-          hasQuestionToken: true,
-        },
-        { name: 'body', type: 'unknown', hasQuestionToken: true },
-        {
-          name: 'headers',
-          type: 'Record<string, string>',
-          hasQuestionToken: true,
-        },
-      ],
-    }),
-  });
-
-  const runtimeOptionsType = typesFile.addTypeAlias({
-    name: 'RuntimeOptions',
-    isExported: true,
-    type: Writers.objectType({
-      properties: [
-        { name: 'signal', type: 'AbortSignal', hasQuestionToken: true },
-      ],
-    }),
-  });
-
-  const requestMethodType = typesFile.addTypeAlias({
-    name: 'RequestMethod',
-    isExported: true,
-    typeParameters: [{ name: 'T', default: 'any' /* , constraint: 'void'  */ }],
-    type: `(params: ${requestParametersType.getName()}, options?: ${runtimeOptionsType.getName()}) => Promise<T>`,
-  });
-
-  const requestMethodCaller = typesFile.addTypeAlias({
-    name: 'RequestMethodCaller',
-    isExported: true,
-    typeParameters: [
-      { name: 'T', default: 'unknown' /* , constraint: 'void'  */ },
-    ],
-    type: `(requestMethod: ${requestMethodType.getName()}<T>, options?: ${runtimeOptionsType.getName()}) => Promise<T>`,
-  });
-
-  ensureImport(/* requestParamsType */ requestMethodCaller);
 
   const typesAndInterfaces = new Map<
     string,
@@ -151,7 +95,6 @@ export async function processOpenApiDocument(
       typesFile,
       schemaName,
       schemaObject,
-      refs,
     );
   }
 
@@ -171,17 +114,35 @@ export async function processOpenApiDocument(
           'operationId' in operationObject
         ) {
           const func = entryFile.addFunction({
-            name: camelcase(operationObject.operationId),
+            name: camelcase(
+              `${operationObject.operationId.replace(/command$/i, '')} Command`,
+            ),
             isExported: true,
             isAsync: false,
           });
 
           const jsdoc = func.addJsDoc({
-            description: wordWrap(
-              `\n${
-                operationObject.description || operationObject.operationId
-              }\n\n`,
-            ),
+            description: `\n${wordWrap(
+              operationObject.description || operationObject.operationId,
+            )}\n\n`,
+
+            tags: [
+              ...(operationObject.summary
+                ? [
+                    {
+                      tagName: 'summary',
+                      text: wordWrap(operationObject.summary),
+                    },
+                  ]
+                : []),
+              ...(operationObject.deprecated
+                ? [
+                    {
+                      tagName: 'deprecated',
+                    },
+                  ]
+                : []),
+            ],
           });
 
           if (operationObject.deprecated) {
@@ -262,6 +223,11 @@ export async function processOpenApiDocument(
                         qp.required ? { required: [qp.name] } : {},
                         qp.name,
                         qp.schema,
+                        {
+                          // query parameters can't be strictly "boolean"
+                          booleanAsStringish: true,
+                          integerAsStringish: true,
+                        },
                       );
 
                       return type;
@@ -302,9 +268,10 @@ export async function processOpenApiDocument(
           const paramsParamName = 'parameters';
 
           if (bodyType || queryType) {
+            const paramsHasQuestionToken = !bodyType && !hasRequiredQueryParam;
             func.addParameter({
               name: paramsParamName,
-              hasQuestionToken: !bodyType && !hasRequiredQueryParam,
+              hasQuestionToken: paramsHasQuestionToken,
               type: Writers.objectType({
                 properties: [
                   ...(bodyType
@@ -335,7 +302,9 @@ export async function processOpenApiDocument(
           if (bodyType) {
             jsdoc.addTag({
               tagName: 'param',
-              text: `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`.trim(),
+              text: wordWrap(
+                `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`,
+              ).trim(),
             });
           }
 
@@ -344,13 +313,15 @@ export async function processOpenApiDocument(
 
             jsdoc.addTag({
               tagName: 'param',
-              text: `${paramsParamName}.query.${queryParameterName}${
-                queryParam.required ? '' : '?'
-              } {String} ${maybeJsDocDescription(
-                queryParam.deprecated && 'DEPRECATED',
-                queryParam.description,
-                String(queryParam.example || ''),
-              )}`.trim(),
+              text: wordWrap(
+                `${paramsParamName}.query.${queryParameterName}${
+                  queryParam.required ? '' : '?'
+                } {String} ${maybeJsDocDescription(
+                  queryParam.deprecated && 'DEPRECATED',
+                  queryParam.description,
+                  String(queryParam.example || ''),
+                )}`,
+              ).trim(),
             });
           }
 
@@ -365,10 +336,10 @@ export async function processOpenApiDocument(
             operationObject.responses,
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
-            // if (statusCode === '204') {
-            //   func.setReturnType('Promise<void>');
-            //   break;
-            // }
+            if (statusCode === '204') {
+              func.setReturnType('RequestMethodCaller<void>');
+              break;
+            }
 
             // we dont support refs as response objects
             if ('$ref' in response) {
@@ -432,7 +403,9 @@ export async function processOpenApiDocument(
                 name: 'req',
                 initializer: Writers.object({
                   method: Writers.assertion((w) => w.quote(method), 'const'),
-                  pathname: `\`${path.replaceAll(/{/g, '${')}\``,
+                  pathname: `\`${path
+                    .replaceAll(/\{(\w+)\}/g, camelcase)
+                    .replaceAll(/{/g, '${')}\``,
                   ...(queryType && {
                     query: `${paramsParamName}?.query`,
                   }),
