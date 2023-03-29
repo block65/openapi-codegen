@@ -10,18 +10,13 @@ import {
   VariableDeclarationKind,
   Writers,
 } from 'ts-morph';
-import wrap from 'word-wrap';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
   maybeJsDocDescription,
   schemaIsOrHasReferenceObject,
   schemaIsOrHasReferenceObjectsExclusively,
+  wordWrap,
 } from './utils.js';
-
-function wordWrap(text: string) {
-  // max width is 75 as it will be indented already inside a multi-line comment
-  return wrap(text, { width: 75, indent: '' });
-}
 
 export async function processOpenApiDocument(
   entryFile: SourceFile,
