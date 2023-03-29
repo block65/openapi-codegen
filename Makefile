@@ -29,18 +29,19 @@ dev:
 fixtures: dist petstore test1 openai
 
 .PHONY: petstore
-petstore: __tests__/fixtures/petstore.json
+petstore:  __tests__/fixtures/petstore.json dist
 	node --enable-source-maps dist/bin/index.js \
-		-i __tests__/fixtures/petstore.json \
+		-i $< \
 		-o __tests__/fixtures/petstore
 	yarn prettier --write __tests__/fixtures/petstore
 
 .PHONY: test1
-test1: __tests__/fixtures/test1.json
+test1:  __tests__/fixtures/test1.json dist
 	node --enable-source-maps dist/bin/index.js \
-		-i __tests__/fixtures/test1.json \
+		-i $< \
 		-o __tests__/fixtures/test1
 	yarn prettier --write __tests__/fixtures/test1
+
 .PHONY: openai
 openai: __tests__/fixtures/openai.yaml dist
 	mkdir -p $(@D)
