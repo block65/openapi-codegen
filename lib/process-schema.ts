@@ -45,7 +45,10 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: existingSchema.getName(),
+      type: maybeWithUndefined(
+        existingSchema.getName(),
+        !options.disallowUndefined && hasQuestionToken,
+      ),
     };
   }
 
@@ -178,7 +181,10 @@ export function schemaToType(
       return {
         name,
         hasQuestionToken,
-        type: types[0],
+        type: maybeWithUndefined(
+          types[0],
+          !options.disallowUndefined && hasQuestionToken,
+        ),
       };
     }
 
@@ -187,11 +193,14 @@ export function schemaToType(
       return {
         name,
         hasQuestionToken,
-        type: intersect
-          ? // @ts-expect-error -> bad type in ts-morph (arguably)
-            Writers.intersectionType(...types)
-          : // @ts-expect-error -> bad type in ts-morph (arguably)
-            Writers.unionType(...types),
+        type: maybeWithUndefined(
+          intersect
+            ? // @ts-expect-error -> bad type in ts-morph (arguably)
+              Writers.intersectionType(...types)
+            : // @ts-expect-error -> bad type in ts-morph (arguably)
+              Writers.unionType(...types),
+          !options.disallowUndefined && hasQuestionToken,
+        ),
       };
     }
 
@@ -199,11 +208,14 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: intersect
-        ? // @ts-expect-error -> bad type in ts-morph (arguably)
-          Writers.intersectionType(...types, 'null')
-        : // @ts-expect-error -> bad type in ts-morph (arguably)
-          Writers.unionType(...types, 'null'),
+      type: maybeWithUndefined(
+        intersect
+          ? // @ts-expect-error -> bad type in ts-morph (arguably)
+            Writers.intersectionType(...types, 'null')
+          : // @ts-expect-error -> bad type in ts-morph (arguably)
+            Writers.unionType(...types, 'null'),
+        !options.disallowUndefined && hasQuestionToken,
+      ),
     };
   }
 
@@ -220,20 +232,23 @@ export function schemaToType(
       name,
       hasQuestionToken,
       // WARN: Duplicated code - recursion beat me
-      type: Writers.objectType({
-        properties: Object.entries(schemaObject.properties || {}).map(
-          ([schemaPropertyName, schemaPropertySchema]) => {
-            const type = schemaToType(
-              typesAndInterfaces,
-              schemaObject,
-              schemaPropertyName,
-              schemaPropertySchema,
-            );
+      type: maybeWithUndefined(
+        Writers.objectType({
+          properties: Object.entries(schemaObject.properties || {}).map(
+            ([schemaPropertyName, schemaPropertySchema]) => {
+              const type = schemaToType(
+                typesAndInterfaces,
+                schemaObject,
+                schemaPropertyName,
+                schemaPropertySchema,
+              );
 
-            return type;
-          },
-        ),
-      }),
+              return type;
+            },
+          ),
+        }),
+        !options.disallowUndefined && hasQuestionToken,
+      ),
     };
   }
 
@@ -264,9 +279,9 @@ export function schemaToType(
   return {
     name,
     hasQuestionToken,
-    type: withNullUnion(
-      type,
-      'nullable' in schemaObject && schemaObject.nullable,
+    type: maybeWithUndefined(
+      withNullUnion(type, 'nullable' in schemaObject && schemaObject.nullable),
+      !options.disallowUndefined && hasQuestionToken,
     ),
   };
 }
