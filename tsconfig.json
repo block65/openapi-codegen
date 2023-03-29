@@ -4,10 +4,11 @@
     "target": "es2022",
     "lib": ["es2022"],
     "module": "esnext",
+    "composite": true,
     "incremental": true,
     "strict": true,
     "declaration": true,
-    "outDir": "dist",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "skipLibCheck": true,
@@ -27,6 +28,7 @@
     "resolveJsonModule": true,
     "sourceMap": true
   },
-  "include": ["./src", "./lib", "./bin", "./__tests__"],
-  "exclude": ["./dist", "node_modules", "./__tests__/fixtures"]
+  "include": ["./src", "./lib", "./bin", "__tests__/logger.ts"],
+  "exclude": ["./dist", "node_modules"],
+  "references": [{ "path": "./__tests__" }]
 }
