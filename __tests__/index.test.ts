@@ -1,6 +1,6 @@
 import { describe, test } from '@jest/globals';
-import { logger } from '../lib/logger.js';
-import { findPets } from './fixtures/petstore/methods.js';
+import { logger } from './logger.js';
+import { findPetsCommand } from './fixtures/petstore/methods.js';
 import { ReferenceServiceClient } from './reference.js';
 
 export const client = new ReferenceServiceClient({
@@ -13,9 +13,9 @@ describe('Basic', () => {
   test('Nothing', async () => {
     const result = await client
       .send(
-        findPets({
+        findPetsCommand({
           query: {
-            limit: 10,
+            // limit: 10,
           },
         }),
       )
