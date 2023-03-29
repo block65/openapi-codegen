@@ -1,5 +1,3 @@
-import camelcase from 'camelcase';
-import type $RefParser from 'json-schema-ref-parser';
 import type { OpenAPIV3 } from 'openapi-types';
 import {
   CodeBlockWriter,
@@ -30,7 +28,7 @@ export function schemaToType(
   propertyName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
 ): OptionalKind<PropertySignatureStructure> {
-  const name = camelcase(propertyName);
+  const name = `"${propertyName}"`;
   const hasQuestionToken =
     parentSchema.type === 'object' &&
     !parentSchema.required?.includes(propertyName);
