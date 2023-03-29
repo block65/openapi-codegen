@@ -196,6 +196,7 @@ export function schemaToType(
           types[0],
           !options.disallowUndefined && hasQuestionToken,
         ),
+        docs,
       };
     }
 
@@ -212,6 +213,7 @@ export function schemaToType(
               Writers.unionType(...types),
           !options.disallowUndefined && hasQuestionToken,
         ),
+        docs,
       };
     }
 
@@ -227,6 +229,7 @@ export function schemaToType(
             Writers.unionType(...types, 'null'),
         !options.disallowUndefined && hasQuestionToken,
       ),
+      docs,
     };
   }
 
@@ -267,14 +270,19 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
+      docs,
+    };
 
       type:
+      docs,
+    };
         schemaObject.enum.length === 1
           ? JSON.stringify(schemaObject.enum[0])
           : Writers.unionType(
               // @ts-expect-error
               ...schemaObject.enum.map((e) => JSON.stringify(e)),
             ),
+      docs,
     };
   }
 
@@ -294,6 +302,7 @@ export function schemaToType(
       withNullUnion(type, 'nullable' in schemaObject && schemaObject.nullable),
       !options.disallowUndefined && hasQuestionToken,
     ),
+    docs,
   };
 }
 
