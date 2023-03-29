@@ -990,10 +990,10 @@
     eslint-config-prettier "^8.5.0"
     eslint-import-resolver-typescript "^3.5.2"
 
-"@block65/rest-client@^4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@block65/rest-client/-/rest-client-4.2.0.tgz#6b122300959746b9edb64408dec23a2927635b5f"
-  integrity sha512-pX04RJkiLAX5mzhvsh7GmkZT43ZQTqVxsm1MV0FMhv0p3ZkT6eT7cXg1X1NUJV/djEa+e7Sd2WuRXJYn5URVTw==
+"@block65/rest-client@^5.0.1":
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@block65/rest-client/-/rest-client-5.0.1.tgz#8dabbc910d9a54b77666573ca0fc2fb998fcfbd9"
+  integrity sha512-/rZQn6V7UgtGaqex7tgWiQPhReweJRj7M2aGA3jF1Gu6VLlmkbsYNd7oM/oY+ZeSCOrO6ai61ycrsDTOJC8YTg==
   dependencies:
     "@block65/custom-error" "^11.0.1"
 
@@ -1035,6 +1035,11 @@
   version "8.37.0"
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.37.0.tgz#cf1b5fa24217fe007f6487a26d765274925efa7d"
   integrity sha512-x5vzdtOOGgFVDCUs81QRB2+liax8rFg3+7hqM+QhBG0/G3F1ZsoYl97UrqgHgQ9KKT7G6c4V+aTUCgu/n22v1A==
+
+"@hapi/bourne@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@hapi/bourne/-/bourne-3.0.0.tgz#f11fdf7dda62fe8e336fa7c6642d9041f30356d7"
+  integrity sha512-Waj1cwPXJDucOib4a3bAISsKJVb15MKi9IvmTI/7ssVEm6sywXGjVJDhl6/umt1pK1ZS7PacXU3A1PmFKHEZ2w==
 
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
