@@ -47,6 +47,43 @@ export function schemaToType(
     };
   }
 
+  const jsdocTags = [
+    ...(schemaObject.default
+      ? [{ tagName: 'default', text: String(schemaObject.default) }]
+      : []),
+    ...(schemaObject.enum
+      ? [{ tagName: 'enum', text: schemaObject.enum.join(',') }]
+      : []),
+    ...(schemaObject.externalDocs
+      ? [
+          {
+            tagName: 'see',
+            text: wordWrap(
+              [
+                schemaObject.externalDocs.description,
+                schemaObject.externalDocs.url,
+              ]
+                .filter(Boolean)
+                .join(' - '),
+            ),
+          },
+        ]
+      : []),
+    ...(schemaObject.example
+      ? [{ tagName: 'example', text: String(schemaObject.example) }]
+      : []),
+    ...(schemaObject.deprecated ? [{ tagName: 'deprecated' }] : []),
+  ];
+
+  const maybeJsDoc = {
+    ...(schemaObject.description && {
+      description: wordWrap('\n' + schemaObject.description),
+    }),
+    ...(jsdocTags.length > 0 && { tags: jsdocTags }),
+  };
+
+  const docs: (OptionalKind<JSDocStructure> | string)[] =
+    Object.keys(maybeJsDoc).length > 1 ? [maybeJsDoc] : [];
   if (schemaObject.type === 'array') {
     const type = schemaToType(
       typesAndInterfaces,
@@ -65,6 +102,7 @@ export function schemaToType(
           typeWriter(writer);
           writer.write('>');
         },
+        docs,
       };
     }
 
@@ -72,6 +110,7 @@ export function schemaToType(
       name,
       hasQuestionToken,
       type: `${type.type}[]`,
+      docs,
     };
 
     // if ('$ref' in propertySchema.items) {
@@ -306,6 +345,12 @@ export function registerTypesFromSchema(
       ),
     });
 
+    if (schemaObject.description) {
+      typeAlias.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
+
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
 
@@ -341,6 +386,12 @@ export function registerTypesFromSchema(
       // ),
     });
 
+    if (schemaObject.description) {
+      newIf.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
+
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, newIf);
   }
 
@@ -355,9 +406,11 @@ export function registerTypesFromSchema(
       ),
     });
 
-    typeAlias.addJsDoc({
-      description: schemaObject.description || '',
-    });
+    if (schemaObject.description) {
+      typeAlias.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
@@ -373,9 +426,11 @@ export function registerTypesFromSchema(
       })),
     });
 
-    enumDeclaration.addJsDoc({
-      description: schemaObject.description || '',
-    });
+    if (schemaObject.description) {
+      enumDeclaration.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
 
     typesAndInterfaces.set(
       `#/components/schemas/${schemaName}`,
@@ -391,6 +446,12 @@ export function registerTypesFromSchema(
       type: withNullUnion('number', schemaObject.nullable),
     });
 
+    if (schemaObject.description) {
+      typeAlias.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
+
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
 
@@ -401,6 +462,12 @@ export function registerTypesFromSchema(
       isExported: true,
       type: withNullUnion('boolean', schemaObject.nullable),
     });
+
+    if (schemaObject.description) {
+      typeAlias.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
@@ -418,6 +485,12 @@ export function registerTypesFromSchema(
       isExported: true,
       type: `${iface.getName()}[]`,
     });
+
+    if (schemaObject.description) {
+      typeAlias.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
 
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
