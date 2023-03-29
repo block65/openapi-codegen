@@ -5,7 +5,7 @@ import type {
   RequestMethod,
   RequestMethodCaller,
   RuntimeOptions,
-} from './fixtures/petstore/models.js';
+} from '@block65/rest-client';
 
 export class ReferenceServiceClient {
   #requestMethod: RequestMethod;
