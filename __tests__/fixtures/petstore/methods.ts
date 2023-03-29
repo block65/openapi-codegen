@@ -1,10 +1,10 @@
-import type {
-  RequestMethodCaller,
-  FindPetsQuery,
-  Pet,
-  NewPet,
-} from './models.js';
+import type { FindPetsCommandQuery, Pet, NewPet } from './models.js';
 import type { Simplify } from 'type-fest';
+import type {
+  RuntimeOptions,
+  RequestMethod,
+  RequestMethodCaller,
+} from '@block65/rest-client';
 
 /**
  * Returns all pets from the system that the user has access to
@@ -34,8 +34,8 @@ import type { Simplify } from 'type-fest';
  * @param parameters.query.limit? {String} maximum number of results to return
  * @returns {RequestMethodCaller<Pet[]>} HTTP 200
  */
-export function findPets(parameters?: {
-  query?: FindPetsQuery;
+export function findPetsCommand(parameters?: {
+  query?: FindPetsCommandQuery;
 }): RequestMethodCaller<Pet[]> {
   const req = {
     method: 'get' as const,
@@ -50,7 +50,7 @@ export function findPets(parameters?: {
  * @param parameters.body {NewPet}
  * @returns {RequestMethodCaller<Pet>} HTTP 200
  */
-export function addPet(parameters: {
+export function addPetCommand(parameters: {
   body: Simplify<NewPet>;
 }): RequestMethodCaller<Pet> {
   const req = {
@@ -67,7 +67,7 @@ export function addPet(parameters: {
  * @param id {String} ID of pet to fetch
  * @returns {RequestMethodCaller<Pet>} HTTP 200
  */
-export function findPetById(id: string): RequestMethodCaller<Pet> {
+export function findPetByIdCommand(id: string): RequestMethodCaller<Pet> {
   const req = {
     method: 'get' as const,
     pathname: `/pets/${id}`,
@@ -78,9 +78,8 @@ export function findPetById(id: string): RequestMethodCaller<Pet> {
 /**
  * deletes a single pet based on the ID supplied
  * @param id {String} ID of pet to delete
- * @returns {RequestMethodCaller<void>} HTTP 204
  */
-export function deletePet(id: string): RequestMethodCaller<void> {
+export function deletePetCommand(id: string): RequestMethodCaller<void> {
   const req = {
     method: 'delete' as const,
     pathname: `/pets/${id}`,
