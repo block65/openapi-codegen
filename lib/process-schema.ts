@@ -16,10 +16,18 @@ import {
   isNotReferenceObject,
   isReferenceObject,
   pascalCase,
+  wordWrap,
 } from './utils.js';
 
-function withNullUnion(type: string, nullable = false) {
+function withNullUnion(type: string | WriterFunction, nullable = false) {
   return nullable ? Writers.unionType(type, 'null') : type;
+}
+
+function maybeWithUndefined(
+  type: string | WriterFunction,
+  withUndefined: boolean,
+) {
+  return withUndefined ? Writers.unionType(type, 'undefined') : type;
 }
 
 export function schemaToType(
@@ -30,6 +38,11 @@ export function schemaToType(
   parentSchema: OpenAPIV3.SchemaObject,
   propertyName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+  options: {
+    disallowUndefined?: boolean;
+    booleanAsStringish?: boolean;
+    integerAsStringish?: boolean;
+  } = {},
 ): OptionalKind<PropertySignatureStructure> {
   const name = `"${propertyName}"`;
   const hasQuestionToken =
@@ -159,17 +172,6 @@ export function schemaToType(
     // };
   }
 
-  if (schemaObject.type === 'integer') {
-    return {
-      name,
-      hasQuestionToken,
-      type: withNullUnion(
-        'number',
-        'nullable' in schemaObject && schemaObject.nullable,
-      ),
-    };
-  }
-
   if (
     'allOf' in schemaObject ||
     'oneOf' in schemaObject ||
@@ -264,6 +266,34 @@ export function schemaToType(
         }),
         !options.disallowUndefined && hasQuestionToken,
       ),
+      docs,
+    };
+  }
+
+  if (schemaObject.type === 'integer' || schemaObject.type === 'number') {
+    return {
+      name,
+      hasQuestionToken,
+      type: withNullUnion(
+        // eslint-disable-next-line no-template-curly-in-string
+        options.integerAsStringish ? '`${number}`' : 'number',
+        schemaObject.nullable,
+      ),
+      docs,
+    };
+  }
+
+  if (schemaObject.type === 'boolean') {
+    return {
+      name,
+      hasQuestionToken,
+      type: withNullUnion(
+        options.booleanAsStringish
+          ? Writers.unionType('"true"', '"false"')
+          : 'boolean',
+        schemaObject.nullable,
+      ),
+      docs,
     };
   }
 
@@ -271,18 +301,15 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      docs,
-    };
-
-      type:
-      docs,
-    };
+      type: maybeWithUndefined(
         schemaObject.enum.length === 1
           ? JSON.stringify(schemaObject.enum[0])
           : Writers.unionType(
               // @ts-expect-error
               ...schemaObject.enum.map((e) => JSON.stringify(e)),
             ),
+        !options.disallowUndefined && hasQuestionToken,
+      ),
       docs,
     };
   }
@@ -315,6 +342,11 @@ export function registerTypesFromSchema(
   typesFile: SourceFile,
   schemaName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+  options: {
+    disallowUndefined?: boolean;
+    booleanAsStringish?: boolean;
+    integerAsStringish?: boolean;
+  } = {},
 ) {
   // deal with refs
   if ('$ref' in schemaObject) {
@@ -470,7 +502,10 @@ export function registerTypesFromSchema(
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion('number', schemaObject.nullable),
+      type: withNullUnion(
+        options?.integerAsStringish ? '`${number}`' : schemaObject.type,
+        schemaObject.nullable,
+      ),
     });
 
     if (schemaObject.description) {
@@ -487,7 +522,12 @@ export function registerTypesFromSchema(
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion('boolean', schemaObject.nullable),
+      type: withNullUnion(
+        options?.booleanAsStringish
+          ? Writers.unionType('"true"', '"false"')
+          : schemaObject.type,
+        schemaObject.nullable,
+      ),
     });
 
     if (schemaObject.description) {
