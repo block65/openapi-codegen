@@ -9,7 +9,6 @@ import type {
   BillingAccountPortalRequest,
   BillingAccountPortal,
   LinkBillingAccountRequest,
-  LinkBillingAccount,
   PaymentMethods,
   PaymentMethodIntendedLro,
   PaymentMethod,
@@ -124,14 +123,13 @@ export function getBillingAccountPortalCommand(
  * linkBillingAccountCommand
  * @param billingAccountId {String}
  * @param parameters.body {LinkBillingAccountRequest}
- * @returns {RequestMethodCaller<LinkBillingAccount>} HTTP 200
  */
 export function linkBillingAccountCommand(
   billingAccountId: string,
   parameters: {
     body: Simplify<LinkBillingAccountRequest>;
   },
-): RequestMethodCaller<LinkBillingAccount> {
+): RequestMethodCaller<void> {
   const req = {
     method: 'post' as const,
     pathname: `/billing-accounts/${billingAccountId}/link`,

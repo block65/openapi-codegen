@@ -985,7 +985,7 @@
           }
         },
         "responses": {
-          "200": {
+          "204": {
             "description": "Link Billing Account 200 response",
             "content": {
               "application/json": {
