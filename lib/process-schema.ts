@@ -237,11 +237,12 @@ export function schemaToType(
   }
 
   if (schemaObject.type === 'object') {
+    // type=object and enum null is common openapi nullable workaround
     if (schemaObject.enum?.every((e) => e === null)) {
       return {
         name,
-        hasQuestionToken: true,
-        type: maybeWithUndefined('null', true),
+        hasQuestionToken: false,
+        type: maybeWithUndefined('null', false),
         docs,
       };
     }

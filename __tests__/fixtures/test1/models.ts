@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-03-29T05:05:24.080Z
+ * Generated on 2023-04-01T07:54:08.728Z
  *
  */
 export type Uuid = string;
@@ -130,9 +130,9 @@ export type BillingAccountCreateRequest = {
   country: BillingCountry;
   timeZone: TimeZone;
   currency: Currency;
-  locale?: BillingLocale | undefined | null | undefined | null | undefined;
-  purchaseOrder?: StringU8 | undefined | null | undefined | null | undefined;
-  taxId?: StringU8 | undefined | null | undefined | null | undefined;
+  locale?: BillingLocale | undefined | null | undefined;
+  purchaseOrder?: StringU8 | undefined | null | undefined;
+  taxId?: StringU8 | undefined | null | undefined;
 };
 export type BillingAccountUpdateRequest = {
   name?: Name | undefined;
@@ -140,9 +140,9 @@ export type BillingAccountUpdateRequest = {
   country?: BillingCountry | undefined;
   timeZone?: TimeZone | undefined;
   currency?: Currency | undefined;
-  locale?: BillingLocale | undefined | null | undefined | null | undefined;
-  purchaseOrder?: StringU8 | undefined | null | undefined | null | undefined;
-  taxId?: StringU8 | undefined | null | undefined | null | undefined;
+  locale?: BillingLocale | undefined | null | undefined;
+  purchaseOrder?: StringU8 | undefined | null | undefined;
+  taxId?: StringU8 | undefined | null | undefined;
 };
 export type BillingAccountList = BillingAccount[];
 export type BillingAccountPortalRequest = {
@@ -221,7 +221,7 @@ export type UpdateBillingSubscriptionRequest = {
   trialEndTime?: DateTime | undefined;
 };
 export type UpdateBillingSubscriptionPromoCodeRequest = {
-  promoCode: StringU8 | null | undefined | null;
+  promoCode: StringU8 | null;
 };
 export type BillingSubscriptionPromoCodeLongRunningOperationSuccess = {
   operationId: Uuid;
