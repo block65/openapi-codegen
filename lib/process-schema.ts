@@ -328,7 +328,7 @@ export function schemaToType(
       : schemaObject.type?.toString() || 'never';
 
   if (type === 'never') {
-    console.warn('WARNING: unknown type', schemaObject);
+    console.warn('unknown type in %j', schemaObject);
   }
 
   return {
