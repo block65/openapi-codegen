@@ -184,7 +184,10 @@ export function schemaToType(
 
     const types = schemaItems
       .map((schema) =>
-        schemaToType(typesAndInterfaces, parentSchema, propertyName, schema),
+        schemaToType(typesAndInterfaces, parentSchema, propertyName, schema, {
+          // forcibly disallow undefined, we will handle it later
+          disallowUndefined: true,
+        }),
       )
       .map((t) => t.type);
 
@@ -203,7 +206,7 @@ export function schemaToType(
       };
     }
 
-    // already got a nullable type, no need to add null
+    // already got a nullable type, no need to add another null
     if (types.some((t) => t === 'null')) {
       return {
         name,
@@ -242,7 +245,7 @@ export function schemaToType(
       return {
         name,
         hasQuestionToken: false,
-        type: maybeWithUndefined('null', false),
+        type: 'null',
         docs,
       };
     }
@@ -405,18 +408,27 @@ export function registerTypesFromSchema(
         }),
       );
 
-    const writerType = intersect
-      ? Writers.intersectionType.bind(Writers)
-      : Writers.unionType.bind(Writers);
+    // concat and dedupe
+    const typeArgs = [
+      ...new Set([
+        ...typeAliases.map((t) => t.getName()),
+        ...objectTypesFromNonRefSchemas.filter(Boolean),
+      ]),
+    ];
+
+    const writerType = intersect ? Writers.intersectionType : Writers.unionType;
+
+    // gets around picky types for writerType
+    const [firstType = 'never', secondType, ...restTypes] = typeArgs;
+
 
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: writerType(
-        // @ts-expect-error -> bad type in ts-morph (arguably)
-        ...typeAliases.map((t) => t.getName()),
-        ...objectTypesFromNonRefSchemas,
-      ),
+      type:
+        firstType && secondType
+          ? writerType.call(Writers, firstType, secondType, ...restTypes)
+          : firstType,
     });
 
     if (schemaObject.description) {

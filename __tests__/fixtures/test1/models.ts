@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-01T07:54:08.728Z
+ * Generated on 2023-04-01T08:21:57.383Z
  *
  */
 export type Uuid = string;
@@ -130,9 +130,9 @@ export type BillingAccountCreateRequest = {
   country: BillingCountry;
   timeZone: TimeZone;
   currency: Currency;
-  locale?: BillingLocale | undefined | null | undefined;
-  purchaseOrder?: StringU8 | undefined | null | undefined;
-  taxId?: StringU8 | undefined | null | undefined;
+  locale?: BillingLocale | null | undefined;
+  purchaseOrder?: StringU8 | null | undefined;
+  taxId?: StringU8 | null | undefined;
 };
 export type BillingAccountUpdateRequest = {
   name?: Name | undefined;
@@ -140,9 +140,9 @@ export type BillingAccountUpdateRequest = {
   country?: BillingCountry | undefined;
   timeZone?: TimeZone | undefined;
   currency?: Currency | undefined;
-  locale?: BillingLocale | undefined | null | undefined;
-  purchaseOrder?: StringU8 | undefined | null | undefined;
-  taxId?: StringU8 | undefined | null | undefined;
+  locale?: BillingLocale | null | undefined;
+  purchaseOrder?: StringU8 | null | undefined;
+  taxId?: StringU8 | null | undefined;
 };
 export type BillingAccountList = BillingAccount[];
 export type BillingAccountPortalRequest = {
