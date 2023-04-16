@@ -50,3 +50,11 @@ openai: __tests__/fixtures/openai.yaml dist
 		-i $(@D)/openai.json \
 		-o __tests__/fixtures/openai
 	yarn prettier --write __tests__/fixtures/openai
+
+
+.PHONY: cloudflare
+cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
+	node --enable-source-maps dist/bin/index.js \
+		-i __tests__/fixtures/cloudflare/openapi.json \
+		-o __tests__/fixtures/cloudflare
+	yarn prettier --write __tests__/fixtures/cloudflare
