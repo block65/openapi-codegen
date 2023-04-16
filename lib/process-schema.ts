@@ -119,7 +119,7 @@ export function schemaToType(
       typesAndInterfaces,
       schemaObject,
       propertyName,
-      schemaObject.items,
+      schemaObject.items || {},
     );
 
     if (type.type instanceof Function) {
@@ -421,7 +421,6 @@ export function registerTypesFromSchema(
     // gets around picky types for writerType
     const [firstType = 'never', secondType, ...restTypes] = typeArgs;
 
-
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
@@ -496,9 +495,9 @@ export function registerTypesFromSchema(
     const enumDeclaration = typesFile.addEnum({
       name: pascalCase(schemaName),
       isExported: true,
-      members: schemaObject.enum.map((e: string) => ({
-        name: pascalCase(e),
-        value: e,
+      members: schemaObject.enum.map((e: unknown) => ({
+        name: typeof e === 'string' ? pascalCase(e) : String(e),
+        value: String(e),
       })),
     });
 
@@ -558,7 +557,11 @@ export function registerTypesFromSchema(
   }
 
   // deal with arrays of refs
-  else if (schemaObject.type === 'array' && '$ref' in schemaObject.items) {
+  else if (
+    schemaObject.type === 'array' &&
+    schemaObject.items &&
+    '$ref' in schemaObject.items
+  ) {
     const iface = typesAndInterfaces.get(schemaObject.items.$ref);
 
     if (!iface) {
@@ -582,6 +585,7 @@ export function registerTypesFromSchema(
 
   // not supported yet
   else {
-    throw new Error(`unsupported ${schemaObject.type}`);
+    console.warn(`unsupported type "${schemaObject.type}"`);
+    // throw new Error(`unsupported type "${schemaObject.type}"`);
   }
 }
