@@ -60,7 +60,7 @@
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
-    "@block65/rest-client": "^5.0.0"
+    "@block65/rest-client": "^6.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
