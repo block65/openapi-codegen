@@ -30,5 +30,5 @@
   },
   "include": ["./src", "./lib", "./bin", "__tests__/logger.ts"],
   "exclude": ["./dist", "node_modules"],
-  "references": [{ "path": "./__tests__" }]
+  "references": [{ "path": "./__tests__/tsconfig.json" }]
 }

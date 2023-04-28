@@ -61,5 +61,5 @@ cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
 
 .PHONY: pretty
 pretty: node_modules
-	pnpm eslint --fix .
+	pnpm eslint --fix . || true
 	pnpm prettier --write .

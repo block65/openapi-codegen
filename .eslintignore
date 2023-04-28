@@ -2,3 +2,5 @@ dist
 node_modules
 build
 tmp
+jest.config.js
+babel.config.js
