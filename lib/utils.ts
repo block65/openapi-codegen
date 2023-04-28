@@ -54,7 +54,7 @@ export function refToName(ref: string): string {
   return name;
 }
 
-export function pascalCase(str: string): string {
+export function pascalCase(...str: string[]): string {
   return camelcase(str, { pascalCase: true });
 }
 
