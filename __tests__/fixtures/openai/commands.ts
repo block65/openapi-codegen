@@ -1,5 +1,6 @@
 import { Command } from '@block65/rest-client';
 import type { RequestMethodCaller } from '@block65/rest-client';
+import type { Jsonifiable } from 'type-fest';
 import type {
   ListEnginesCommandInput,
   ListEnginesCommandBody,
@@ -119,15 +120,15 @@ export function listEnginesCommand(): RequestMethodCaller<ListEnginesResponse> {
  * @deprecated
  */
 export class ListEnginesCommand extends Command<
-  ListEnginesCommandInput,
+  void,
   ListEnginesResponse,
   ListEnginesCommandBody
 > {
   public override method = 'get' as const;
 
-  constructor(input: ListEnginesCommandInput) {
-    const { ...rest } = input;
-    super(`/engines`, rest);
+  constructor() {
+    //no input parameters
+    super(`/engines`);
   }
 }
 
@@ -168,8 +169,8 @@ export class RetrieveEngineCommand extends Command<
   public override method = 'get' as const;
 
   constructor(input: RetrieveEngineCommandInput) {
-    const { engineId, ...rest } = input;
-    super(`/engines/${engineId}`, rest);
+    const { engineId } = input;
+    super(`/engines/${engineId}`);
   }
 }
 
@@ -206,7 +207,7 @@ export class CreateCompletionCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateCompletionCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/completions`, rest);
   }
 }
@@ -244,7 +245,7 @@ export class CreateChatCompletionCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateChatCompletionCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/chat/completions`, rest);
   }
 }
@@ -282,7 +283,7 @@ export class CreateEditCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateEditCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/edits`, rest);
   }
 }
@@ -320,7 +321,7 @@ export class CreateImageCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateImageCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/images/generations`, rest);
   }
 }
@@ -347,15 +348,15 @@ export function createImageEditCommand(): RequestMethodCaller<ImagesResponse> {
  * @summary Creates an edited or extended image given an original image and a prompt.
  */
 export class CreateImageEditCommand extends Command<
-  CreateImageEditCommandInput,
+  void,
   ImagesResponse,
   CreateImageEditCommandBody
 > {
   public override method = 'post' as const;
 
-  constructor(input: CreateImageEditCommandInput) {
-    const { ...rest } = input;
-    super(`/images/edits`, rest);
+  constructor() {
+    //no input parameters
+    super(`/images/edits`);
   }
 }
 
@@ -381,15 +382,15 @@ export function createImageVariationCommand(): RequestMethodCaller<ImagesRespons
  * @summary Creates a variation of a given image.
  */
 export class CreateImageVariationCommand extends Command<
-  CreateImageVariationCommandInput,
+  void,
   ImagesResponse,
   CreateImageVariationCommandBody
 > {
   public override method = 'post' as const;
 
-  constructor(input: CreateImageVariationCommandInput) {
-    const { ...rest } = input;
-    super(`/images/variations`, rest);
+  constructor() {
+    //no input parameters
+    super(`/images/variations`);
   }
 }
 
@@ -426,7 +427,7 @@ export class CreateEmbeddingCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateEmbeddingCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/embeddings`, rest);
   }
 }
@@ -453,15 +454,15 @@ export function createTranscriptionCommand(): RequestMethodCaller<CreateTranscri
  * @summary Transcribes audio into the input language.
  */
 export class CreateTranscriptionCommand extends Command<
-  CreateTranscriptionCommandInput,
+  void,
   CreateTranscriptionResponse,
   CreateTranscriptionCommandBody
 > {
   public override method = 'post' as const;
 
-  constructor(input: CreateTranscriptionCommandInput) {
-    const { ...rest } = input;
-    super(`/audio/transcriptions`, rest);
+  constructor() {
+    //no input parameters
+    super(`/audio/transcriptions`);
   }
 }
 
@@ -487,15 +488,15 @@ export function createTranslationCommand(): RequestMethodCaller<CreateTranslatio
  * @summary Translates audio into into English.
  */
 export class CreateTranslationCommand extends Command<
-  CreateTranslationCommandInput,
+  void,
   CreateTranslationResponse,
   CreateTranslationCommandBody
 > {
   public override method = 'post' as const;
 
-  constructor(input: CreateTranslationCommandInput) {
-    const { ...rest } = input;
-    super(`/audio/translations`, rest);
+  constructor() {
+    //no input parameters
+    super(`/audio/translations`);
   }
 }
 
@@ -564,7 +565,7 @@ export class CreateSearchCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateSearchCommandInput) {
-    const { engineId, parameters, ...rest } = input;
+    const { engineId, ...rest } = input;
     super(`/engines/${engineId}/search`, rest);
   }
 }
@@ -591,15 +592,15 @@ export function listFilesCommand(): RequestMethodCaller<ListFilesResponse> {
  * @summary Returns a list of files that belong to the user's organization.
  */
 export class ListFilesCommand extends Command<
-  ListFilesCommandInput,
+  void,
   ListFilesResponse,
   ListFilesCommandBody
 > {
   public override method = 'get' as const;
 
-  constructor(input: ListFilesCommandInput) {
-    const { ...rest } = input;
-    super(`/files`, rest);
+  constructor() {
+    //no input parameters
+    super(`/files`);
   }
 }
 
@@ -631,15 +632,15 @@ export function createFileCommand(): RequestMethodCaller<OpenAiFile> {
  * the storage limit.
  */
 export class CreateFileCommand extends Command<
-  CreateFileCommandInput,
+  void,
   OpenAiFile,
   CreateFileCommandBody
 > {
   public override method = 'post' as const;
 
-  constructor(input: CreateFileCommandInput) {
-    const { ...rest } = input;
-    super(`/files`, rest);
+  constructor() {
+    //no input parameters
+    super(`/files`);
   }
 }
 
@@ -675,8 +676,8 @@ export class DeleteFileCommand extends Command<
   public override method = 'delete' as const;
 
   constructor(input: DeleteFileCommandInput) {
-    const { fileId, ...rest } = input;
-    super(`/files/${fileId}`, rest);
+    const { fileId } = input;
+    super(`/files/${fileId}`);
   }
 }
 
@@ -712,8 +713,8 @@ export class RetrieveFileCommand extends Command<
   public override method = 'get' as const;
 
   constructor(input: RetrieveFileCommandInput) {
-    const { fileId, ...rest } = input;
-    super(`/files/${fileId}`, rest);
+    const { fileId } = input;
+    super(`/files/${fileId}`);
   }
 }
 
@@ -741,13 +742,14 @@ export function downloadFileCommand(fileId: string): RequestMethodCaller<void> {
  */
 export class DownloadFileCommand extends Command<
   DownloadFileCommandInput,
-  void
+  void,
+  DownloadFileCommandBody
 > {
   public override method = 'get' as const;
 
   constructor(input: DownloadFileCommandInput) {
-    const { fileId, ...rest } = input;
-    super(`/files/${fileId}/content`, rest);
+    const { fileId } = input;
+    super(`/files/${fileId}/content`);
   }
 }
 
@@ -797,7 +799,7 @@ export class CreateAnswerCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateAnswerCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/answers`, rest);
   }
 }
@@ -864,7 +866,7 @@ export class CreateClassificationCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateClassificationCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/classifications`, rest);
   }
 }
@@ -912,7 +914,7 @@ export class CreateFineTuneCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateFineTuneCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/fine-tunes`, rest);
   }
 }
@@ -939,15 +941,15 @@ export function listFineTunesCommand(): RequestMethodCaller<ListFineTunesRespons
  * @summary List your organization's fine-tuning jobs
  */
 export class ListFineTunesCommand extends Command<
-  ListFineTunesCommandInput,
+  void,
   ListFineTunesResponse,
   ListFineTunesCommandBody
 > {
   public override method = 'get' as const;
 
-  constructor(input: ListFineTunesCommandInput) {
-    const { ...rest } = input;
-    super(`/fine-tunes`, rest);
+  constructor() {
+    //no input parameters
+    super(`/fine-tunes`);
   }
 }
 
@@ -987,8 +989,8 @@ export class RetrieveFineTuneCommand extends Command<
   public override method = 'get' as const;
 
   constructor(input: RetrieveFineTuneCommandInput) {
-    const { fineTuneId, ...rest } = input;
-    super(`/fine-tunes/${fineTuneId}`, rest);
+    const { fineTuneId } = input;
+    super(`/fine-tunes/${fineTuneId}`);
   }
 }
 
@@ -1024,8 +1026,8 @@ export class CancelFineTuneCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CancelFineTuneCommandInput) {
-    const { fineTuneId, ...rest } = input;
-    super(`/fine-tunes/${fineTuneId}/cancel`, rest);
+    const { fineTuneId } = input;
+    super(`/fine-tunes/${fineTuneId}/cancel`);
   }
 }
 
@@ -1075,7 +1077,7 @@ export class ListFineTuneEventsCommand extends Command<
   public override method = 'get' as const;
 
   constructor(input: ListFineTuneEventsCommandInput) {
-    const { fineTuneId, parameters, ...rest } = input;
+    const { fineTuneId, ...rest } = input;
     super(`/fine-tunes/${fineTuneId}/events`, rest);
   }
 }
@@ -1104,15 +1106,15 @@ export function listModelsCommand(): RequestMethodCaller<ListModelsResponse> {
  * each one such as the owner and availability.
  */
 export class ListModelsCommand extends Command<
-  ListModelsCommandInput,
+  void,
   ListModelsResponse,
   ListModelsCommandBody
 > {
   public override method = 'get' as const;
 
-  constructor(input: ListModelsCommandInput) {
-    const { ...rest } = input;
-    super(`/models`, rest);
+  constructor() {
+    //no input parameters
+    super(`/models`);
   }
 }
 
@@ -1150,8 +1152,8 @@ export class RetrieveModelCommand extends Command<
   public override method = 'get' as const;
 
   constructor(input: RetrieveModelCommandInput) {
-    const { model, ...rest } = input;
-    super(`/models/${model}`, rest);
+    const { model } = input;
+    super(`/models/${model}`);
   }
 }
 
@@ -1189,8 +1191,8 @@ export class DeleteModelCommand extends Command<
   public override method = 'delete' as const;
 
   constructor(input: DeleteModelCommandInput) {
-    const { model, ...rest } = input;
-    super(`/models/${model}`, rest);
+    const { model } = input;
+    super(`/models/${model}`);
   }
 }
 
@@ -1227,7 +1229,7 @@ export class CreateModerationCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateModerationCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/moderations`, rest);
   }
 }

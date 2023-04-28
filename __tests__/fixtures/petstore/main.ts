@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T04:48:42.883Z
+ * Generated on 2023-04-28T11:02:47.794Z
  *
  */
 import {
@@ -11,10 +11,12 @@ import {
   type AddPetCommandInput,
   type FindPetByIdCommandInput,
   type DeletePetCommandInput,
+  type Pet,
 } from './types.js';
 import {
   RestServiceClient,
   createIsomorphicFetcher,
+  type RestServiceClientConfig,
 } from '@block65/rest-client';
 
 type AllInputs =
@@ -22,3 +24,16 @@ type AllInputs =
   | AddPetCommandInput
   | FindPetByIdCommandInput
   | DeletePetCommandInput;
+type AllOutputs = Pet | Pet | Pet;
+
+export class SwaggerPetstoreRestClient extends RestServiceClient<
+  AllInputs,
+  AllOutputs
+> {
+  constructor(
+    fetcher = createIsomorphicFetcher(),
+    config?: RestServiceClientConfig,
+  ) {
+    super(new URL('http://petstore.swagger.io/api/'), fetcher, config);
+  }
+}

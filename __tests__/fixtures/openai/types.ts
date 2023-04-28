@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T07:02:50.040Z
+ * Generated on 2023-04-28T11:02:54.186Z
  *
  */
 export type DeleteModelResponse = {
@@ -839,117 +839,94 @@ export type FineTune = {
   result_files: OpenAiFile[];
   events: FineTuneEvent[];
 };
-export type ListEnginesCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type ListEnginesCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveEngineCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveEngineCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateCompletionCommandInput = CreateCompletionRequest &
-  Record<string, unknown>;
-export type CreateCompletionCommandBody = CreateCompletionRequest &
-  Record<string, unknown>;
-export type CreateChatCompletionCommandInput = CreateChatCompletionRequest &
-  Record<string, unknown>;
-export type CreateChatCompletionCommandBody = CreateChatCompletionRequest &
-  Record<string, unknown>;
-export type CreateEditCommandInput = CreateEditRequest &
-  Record<string, unknown>;
-export type CreateEditCommandBody = CreateEditRequest & Record<string, unknown>;
-export type CreateImageCommandInput = CreateImageRequest &
-  Record<string, unknown>;
-export type CreateImageCommandBody = CreateImageRequest &
-  Record<string, unknown>;
-export type CreateImageEditCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateImageEditCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateImageVariationCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateImageVariationCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateEmbeddingCommandInput = CreateEmbeddingRequest &
-  Record<string, unknown>;
-export type CreateEmbeddingCommandBody = CreateEmbeddingRequest &
-  Record<string, unknown>;
-export type CreateTranscriptionCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateTranscriptionCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateTranslationCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateTranslationCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type ListEnginesCommandInput = void;
+export type ListEnginesCommandBody = void;
+export type RetrieveEngineCommandParams = {
+  engineId: string;
+};
+export type RetrieveEngineCommandInput = RetrieveEngineCommandParams;
+export type RetrieveEngineCommandBody = void;
+export type CreateCompletionCommandInput = CreateCompletionRequest;
+export type CreateCompletionCommandBody = CreateCompletionRequest;
+export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
+export type CreateChatCompletionCommandBody = CreateChatCompletionRequest;
+export type CreateEditCommandInput = CreateEditRequest;
+export type CreateEditCommandBody = CreateEditRequest;
+export type CreateImageCommandInput = CreateImageRequest;
+export type CreateImageCommandBody = CreateImageRequest;
+export type CreateImageEditCommandInput = void;
+export type CreateImageEditCommandBody = void;
+export type CreateImageVariationCommandInput = void;
+export type CreateImageVariationCommandBody = void;
+export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
+export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
+export type CreateTranscriptionCommandInput = void;
+export type CreateTranscriptionCommandBody = void;
+export type CreateTranslationCommandInput = void;
+export type CreateTranslationCommandBody = void;
+export type CreateSearchCommandParams = {
+  engineId: string;
+};
 export type CreateSearchCommandInput = CreateSearchRequest &
-  Record<string, unknown>;
-export type CreateSearchCommandBody = CreateSearchRequest &
-  Record<string, unknown>;
-export type ListFilesCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type ListFilesCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateFileCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateFileCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type DeleteFileCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type DeleteFileCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveFileCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveFileCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type DownloadFileCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type DownloadFileCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateAnswerCommandInput = CreateAnswerRequest &
-  Record<string, unknown>;
-export type CreateAnswerCommandBody = CreateAnswerRequest &
-  Record<string, unknown>;
-export type CreateClassificationCommandInput = CreateClassificationRequest &
-  Record<string, unknown>;
-export type CreateClassificationCommandBody = CreateClassificationRequest &
-  Record<string, unknown>;
-export type CreateFineTuneCommandInput = CreateFineTuneRequest &
-  Record<string, unknown>;
-export type CreateFineTuneCommandBody = CreateFineTuneRequest &
-  Record<string, unknown>;
-export type ListFineTunesCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type ListFineTunesCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveFineTuneCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveFineTuneCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CancelFineTuneCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type CancelFineTuneCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+  CreateSearchCommandParams;
+export type CreateSearchCommandBody = CreateSearchRequest;
+export type ListFilesCommandInput = void;
+export type ListFilesCommandBody = void;
+export type CreateFileCommandInput = void;
+export type CreateFileCommandBody = void;
+export type DeleteFileCommandParams = {
+  fileId: string;
+};
+export type DeleteFileCommandInput = DeleteFileCommandParams;
+export type DeleteFileCommandBody = void;
+export type RetrieveFileCommandParams = {
+  fileId: string;
+};
+export type RetrieveFileCommandInput = RetrieveFileCommandParams;
+export type RetrieveFileCommandBody = void;
+export type DownloadFileCommandParams = {
+  fileId: string;
+};
+export type DownloadFileCommandInput = DownloadFileCommandParams;
+export type DownloadFileCommandBody = void;
+export type CreateAnswerCommandInput = CreateAnswerRequest;
+export type CreateAnswerCommandBody = CreateAnswerRequest;
+export type CreateClassificationCommandInput = CreateClassificationRequest;
+export type CreateClassificationCommandBody = CreateClassificationRequest;
+export type CreateFineTuneCommandInput = CreateFineTuneRequest;
+export type CreateFineTuneCommandBody = CreateFineTuneRequest;
+export type ListFineTunesCommandInput = void;
+export type ListFineTunesCommandBody = void;
+export type RetrieveFineTuneCommandParams = {
+  fineTuneId: string;
+};
+export type RetrieveFineTuneCommandInput = RetrieveFineTuneCommandParams;
+export type RetrieveFineTuneCommandBody = void;
+export type CancelFineTuneCommandParams = {
+  fineTuneId: string;
+};
+export type CancelFineTuneCommandInput = CancelFineTuneCommandParams;
+export type CancelFineTuneCommandBody = void;
 export type ListFineTuneEventsCommandQuery = {
   stream: 'true' | 'false';
 };
-export type ListFineTuneEventsCommandInput = Record<string, unknown> &
-  ListFineTuneEventsCommandQuery;
-export type ListFineTuneEventsCommandBody = Record<string, unknown> &
-  ListFineTuneEventsCommandQuery;
-export type ListModelsCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type ListModelsCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveModelCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type RetrieveModelCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type DeleteModelCommandInput = Record<string, unknown> &
-  Record<string, unknown>;
-export type DeleteModelCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateModerationCommandInput = CreateModerationRequest &
-  Record<string, unknown>;
-export type CreateModerationCommandBody = CreateModerationRequest &
-  Record<string, unknown>;
+export type ListFineTuneEventsCommandParams = {
+  fineTuneId: string;
+};
+export type ListFineTuneEventsCommandInput = ListFineTuneEventsCommandQuery &
+  ListFineTuneEventsCommandParams;
+export type ListFineTuneEventsCommandBody = ListFineTuneEventsCommandQuery;
+export type ListModelsCommandInput = void;
+export type ListModelsCommandBody = void;
+export type RetrieveModelCommandParams = {
+  model: string;
+};
+export type RetrieveModelCommandInput = RetrieveModelCommandParams;
+export type RetrieveModelCommandBody = void;
+export type DeleteModelCommandParams = {
+  model: string;
+};
+export type DeleteModelCommandInput = DeleteModelCommandParams;
+export type DeleteModelCommandBody = void;
+export type CreateModerationCommandInput = CreateModerationRequest;
+export type CreateModerationCommandBody = CreateModerationRequest;

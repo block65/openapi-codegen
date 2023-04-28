@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T04:48:45.313Z
+ * Generated on 2023-04-28T11:02:50.181Z
  *
  */
 import {
@@ -25,10 +25,21 @@ import {
   type UpdateBillingSubscriptionCommandInput,
   type CancelSubscriptionCommandInput,
   type UpdateBillingSubscriptionPromoCodeCommandInput,
+  type LongRunningOperation,
+  type BillingAccountList,
+  type BillingAccount,
+  type BillingAccountPortal,
+  type PaymentMethods,
+  type PaymentMethodIntendedLro,
+  type PaymentMethod,
+  type PaymentMethodDeletedLro,
+  type BillingSubscriptions,
+  type BillingSubscriptionLro,
 } from './types.js';
 import {
   RestServiceClient,
   createIsomorphicFetcher,
+  type RestServiceClientConfig,
 } from '@block65/rest-client';
 
 type AllInputs =
@@ -50,3 +61,30 @@ type AllInputs =
   | UpdateBillingSubscriptionCommandInput
   | CancelSubscriptionCommandInput
   | UpdateBillingSubscriptionPromoCodeCommandInput;
+type AllOutputs =
+  | LongRunningOperation
+  | BillingAccountList
+  | BillingAccount
+  | BillingAccount
+  | BillingAccount
+  | BillingAccountPortal
+  | PaymentMethods
+  | PaymentMethodIntendedLro
+  | PaymentMethod
+  | PaymentMethod
+  | PaymentMethodDeletedLro
+  | BillingSubscriptions
+  | BillingSubscriptionLro
+  | BillingSubscriptionLro;
+
+export class BillingServiceRestApiRestClient extends RestServiceClient<
+  AllInputs,
+  AllOutputs
+> {
+  constructor(
+    fetcher = createIsomorphicFetcher(),
+    config?: RestServiceClientConfig,
+  ) {
+    super(new URL('https://api.example.com/'), fetcher, config);
+  }
+}

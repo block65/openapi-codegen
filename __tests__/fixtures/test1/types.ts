@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T04:48:45.313Z
+ * Generated on 2023-04-28T11:02:50.181Z
  *
  */
 export type Uuid = string;
@@ -240,159 +240,104 @@ export type BillingSubscriptions = BillingSubscription[];
 export type GetOperationCommandParams = {
   operationId: string;
 };
-export type GetOperationCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  GetOperationCommandParams;
-export type GetOperationCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type ListBillingAccountsCommandParams = {};
-export type ListBillingAccountsCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  ListBillingAccountsCommandParams;
-export type ListBillingAccountsCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
-export type CreateBillingAccountCommandParams = {
-  parameters: string;
-};
-export type CreateBillingAccountCommandInput = BillingAccountCreateRequest &
-  Record<string, unknown> &
-  CreateBillingAccountCommandParams;
-export type CreateBillingAccountCommandBody = BillingAccountCreateRequest &
-  Record<string, unknown>;
+export type GetOperationCommandInput = GetOperationCommandParams;
+export type GetOperationCommandBody = void;
+export type ListBillingAccountsCommandInput = void;
+export type ListBillingAccountsCommandBody = void;
+export type CreateBillingAccountCommandInput = BillingAccountCreateRequest;
+export type CreateBillingAccountCommandBody = BillingAccountCreateRequest;
 export type GetBillingAccountCommandParams = {
   billingAccountId: string;
 };
-export type GetBillingAccountCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  GetBillingAccountCommandParams;
-export type GetBillingAccountCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type GetBillingAccountCommandInput = GetBillingAccountCommandParams;
+export type GetBillingAccountCommandBody = void;
 export type UpdateBillingAccountCommandParams = {
   billingAccountId: string;
-  parameters: string;
 };
 export type UpdateBillingAccountCommandInput = BillingAccountUpdateRequest &
-  Record<string, unknown> &
   UpdateBillingAccountCommandParams;
-export type UpdateBillingAccountCommandBody = BillingAccountUpdateRequest &
-  Record<string, unknown>;
+export type UpdateBillingAccountCommandBody = BillingAccountUpdateRequest;
 export type GetBillingAccountPortalCommandParams = {
   billingAccountId: string;
-  parameters: string;
 };
 export type GetBillingAccountPortalCommandInput = BillingAccountPortalRequest &
-  Record<string, unknown> &
   GetBillingAccountPortalCommandParams;
-export type GetBillingAccountPortalCommandBody = BillingAccountPortalRequest &
-  Record<string, unknown>;
+export type GetBillingAccountPortalCommandBody = BillingAccountPortalRequest;
 export type LinkBillingAccountCommandParams = {
   billingAccountId: string;
-  parameters: string;
 };
 export type LinkBillingAccountCommandInput = LinkBillingAccountRequest &
-  Record<string, unknown> &
   LinkBillingAccountCommandParams;
-export type LinkBillingAccountCommandBody = LinkBillingAccountRequest &
-  Record<string, unknown>;
+export type LinkBillingAccountCommandBody = LinkBillingAccountRequest;
 export type ListPaymentMethodsCommandParams = {
   billingAccountId: string;
 };
-export type ListPaymentMethodsCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  ListPaymentMethodsCommandParams;
-export type ListPaymentMethodsCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type ListPaymentMethodsCommandInput = ListPaymentMethodsCommandParams;
+export type ListPaymentMethodsCommandBody = void;
 export type CreatePaymentMethodCommandParams = {
   billingAccountId: string;
 };
-export type CreatePaymentMethodCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  CreatePaymentMethodCommandParams;
-export type CreatePaymentMethodCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type CreatePaymentMethodCommandInput = CreatePaymentMethodCommandParams;
+export type CreatePaymentMethodCommandBody = void;
 export type GetPaymentMethodFromStripeCommandParams = {
   billingAccountId: string;
   stripePaymentMethodId: string;
 };
-export type GetPaymentMethodFromStripeCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
+export type GetPaymentMethodFromStripeCommandInput =
   GetPaymentMethodFromStripeCommandParams;
-export type GetPaymentMethodFromStripeCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type GetPaymentMethodFromStripeCommandBody = void;
 export type GetPaymentMethodCommandParams = {
   billingAccountId: string;
   paymentMethodId: string;
 };
-export type GetPaymentMethodCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  GetPaymentMethodCommandParams;
-export type GetPaymentMethodCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type GetPaymentMethodCommandInput = GetPaymentMethodCommandParams;
+export type GetPaymentMethodCommandBody = void;
 export type UpdatePaymentMethodCommandParams = {
   billingAccountId: string;
   paymentMethodId: string;
-  parameters: string;
 };
 export type UpdatePaymentMethodCommandInput = UpdatePaymentMethodRequest &
-  Record<string, unknown> &
   UpdatePaymentMethodCommandParams;
-export type UpdatePaymentMethodCommandBody = UpdatePaymentMethodRequest &
-  Record<string, unknown>;
+export type UpdatePaymentMethodCommandBody = UpdatePaymentMethodRequest;
 export type DeletePaymentMethodCommandParams = {
   billingAccountId: string;
   paymentMethodId: string;
 };
-export type DeletePaymentMethodCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  DeletePaymentMethodCommandParams;
-export type DeletePaymentMethodCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type DeletePaymentMethodCommandInput = DeletePaymentMethodCommandParams;
+export type DeletePaymentMethodCommandBody = void;
 export type ListBillingSubscriptionsCommandParams = {
   billingAccountId: string;
 };
-export type ListBillingSubscriptionsCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
+export type ListBillingSubscriptionsCommandInput =
   ListBillingSubscriptionsCommandParams;
-export type ListBillingSubscriptionsCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type ListBillingSubscriptionsCommandBody = void;
 export type CreateBillingSubscriptionCommandParams = {
   billingAccountId: string;
-  parameters: string;
 };
 export type CreateBillingSubscriptionCommandInput =
-  CreateBillingSubscriptionRequest &
-    Record<string, unknown> &
-    CreateBillingSubscriptionCommandParams;
+  CreateBillingSubscriptionRequest & CreateBillingSubscriptionCommandParams;
 export type CreateBillingSubscriptionCommandBody =
-  CreateBillingSubscriptionRequest & Record<string, unknown>;
+  CreateBillingSubscriptionRequest;
 export type UpdateBillingSubscriptionCommandParams = {
   billingAccountId: string;
   subscriptionId: string;
-  parameters: string;
 };
 export type UpdateBillingSubscriptionCommandInput =
-  UpdateBillingSubscriptionRequest &
-    Record<string, unknown> &
-    UpdateBillingSubscriptionCommandParams;
+  UpdateBillingSubscriptionRequest & UpdateBillingSubscriptionCommandParams;
 export type UpdateBillingSubscriptionCommandBody =
-  UpdateBillingSubscriptionRequest & Record<string, unknown>;
+  UpdateBillingSubscriptionRequest;
 export type CancelSubscriptionCommandParams = {
   billingAccountId: string;
   subscriptionId: string;
 };
-export type CancelSubscriptionCommandInput = Record<string, unknown> &
-  Record<string, unknown> &
-  CancelSubscriptionCommandParams;
-export type CancelSubscriptionCommandBody = Record<string, unknown> &
-  Record<string, unknown>;
+export type CancelSubscriptionCommandInput = CancelSubscriptionCommandParams;
+export type CancelSubscriptionCommandBody = void;
 export type UpdateBillingSubscriptionPromoCodeCommandParams = {
   billingAccountId: string;
   subscriptionId: string;
-  parameters: string;
 };
 export type UpdateBillingSubscriptionPromoCodeCommandInput =
   UpdateBillingSubscriptionPromoCodeRequest &
-    Record<string, unknown> &
     UpdateBillingSubscriptionPromoCodeCommandParams;
 export type UpdateBillingSubscriptionPromoCodeCommandBody =
-  UpdateBillingSubscriptionPromoCodeRequest & Record<string, unknown>;
+  UpdateBillingSubscriptionPromoCodeRequest;

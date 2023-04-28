@@ -1,10 +1,11 @@
 import { Command } from '@block65/rest-client';
 import type { RequestMethodCaller } from '@block65/rest-client';
+import type { Jsonifiable } from 'type-fest';
 import type {
   FindPetsCommandQuery,
   FindPetsCommandInput,
   FindPetsCommandBody,
-  Pet as PetOutput,
+  Pet,
   NewPet,
   AddPetCommandInput,
   AddPetCommandBody,
@@ -40,11 +41,11 @@ import type {
  * Pellentesque vitae felis pretium, pulvinar elit eu, euismod sapien.
  * @param parameters.query.tags? {String} tags to filter by
  * @param parameters.query.limit? {String} maximum number of results to return
- * @returns {RequestMethodCaller<PetOutput[]>} HTTP 200
+ * @returns {RequestMethodCaller<Pet[]>} HTTP 200
  */
 export function findPetsCommand(parameters?: {
   query?: FindPetsCommandQuery;
-}): RequestMethodCaller<PetOutput[]> {
+}): RequestMethodCaller<Pet[]> {
   const req = {
     method: 'get' as const,
     pathname: `/pets`,
@@ -82,13 +83,13 @@ export function findPetsCommand(parameters?: {
  */
 export class FindPetsCommand extends Command<
   FindPetsCommandInput,
-  PetOutput[],
+  Pet[],
   FindPetsCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: FindPetsCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/pets`, rest);
   }
 }
@@ -96,11 +97,11 @@ export class FindPetsCommand extends Command<
 /**
  * Creates a new pet in the store. Duplicates are allowed
  * @param parameters.body {NewPet}
- * @returns {RequestMethodCaller<PetOutput>} HTTP 200
+ * @returns {RequestMethodCaller<Pet>} HTTP 200
  */
 export function addPetCommand(parameters: {
   body: NewPet;
-}): RequestMethodCaller<PetOutput> {
+}): RequestMethodCaller<Pet> {
   const req = {
     method: 'post' as const,
     pathname: `/pets`,
@@ -116,13 +117,13 @@ export function addPetCommand(parameters: {
  */
 export class AddPetCommand extends Command<
   AddPetCommandInput,
-  PetOutput,
+  Pet,
   AddPetCommandBody
 > {
-  override method = 'post' as const;
+  public override method = 'post' as const;
 
   constructor(input: AddPetCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/pets`, rest);
   }
 }
@@ -131,9 +132,9 @@ export class AddPetCommand extends Command<
  * Returns a user based on a single ID, if the user does not have access to
  * the pet
  * @param id {String} ID of pet to fetch
- * @returns {RequestMethodCaller<PetOutput>} HTTP 200
+ * @returns {RequestMethodCaller<Pet>} HTTP 200
  */
-export function findPetByIdCommand(id: string): RequestMethodCaller<PetOutput> {
+export function findPetByIdCommand(id: string): RequestMethodCaller<Pet> {
   const req = {
     method: 'get' as const,
     pathname: `/pets/${id}`,
@@ -149,14 +150,14 @@ export function findPetByIdCommand(id: string): RequestMethodCaller<PetOutput> {
  */
 export class FindPetByIdCommand extends Command<
   FindPetByIdCommandInput,
-  PetOutput,
+  Pet,
   FindPetByIdCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: FindPetByIdCommandInput) {
-    const { id, ...rest } = input;
-    super(`/pets/${id}`, rest);
+    const { id } = input;
+    super(`/pets/${id}`);
   }
 }
 
@@ -177,18 +178,15 @@ export function deletePetCommand(id: string): RequestMethodCaller<void> {
  *
  *
  */
-export class DeletePetCommand extends Command<DeletePetCommandInput, void> {
-  override method = 'delete' as const;
+export class DeletePetCommand extends Command<
+  DeletePetCommandInput,
+  void,
+  DeletePetCommandBody
+> {
+  public override method = 'delete' as const;
 
   constructor(input: DeletePetCommandInput) {
-    const { id, ...rest } = input;
-    super(`/pets/${id}`, rest);
-  }
-}
-
-export class OpenAiClient extends RestServiceClient<AllInputs, void> {
-  constructor() {
-    const;
-    super();
+    const { id } = input;
+    super(`/pets/${id}`);
   }
 }

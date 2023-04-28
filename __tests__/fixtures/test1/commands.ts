@@ -1,16 +1,17 @@
 import { Command } from '@block65/rest-client';
 import type { RequestMethodCaller } from '@block65/rest-client';
+import type { Jsonifiable } from 'type-fest';
 import type {
   GetOperationCommandInput,
   GetOperationCommandBody,
-  LongRunningOperation as LongRunningOperationOutput,
+  LongRunningOperation,
   ListBillingAccountsCommandInput,
   ListBillingAccountsCommandBody,
-  BillingAccountList as BillingAccountListOutput,
+  BillingAccountList,
   BillingAccountCreateRequest,
   CreateBillingAccountCommandInput,
   CreateBillingAccountCommandBody,
-  BillingAccount as BillingAccountOutput,
+  BillingAccount,
   GetBillingAccountCommandInput,
   GetBillingAccountCommandBody,
   BillingAccountUpdateRequest,
@@ -19,19 +20,19 @@ import type {
   BillingAccountPortalRequest,
   GetBillingAccountPortalCommandInput,
   GetBillingAccountPortalCommandBody,
-  BillingAccountPortal as BillingAccountPortalOutput,
+  BillingAccountPortal,
   LinkBillingAccountRequest,
   LinkBillingAccountCommandInput,
   LinkBillingAccountCommandBody,
   ListPaymentMethodsCommandInput,
   ListPaymentMethodsCommandBody,
-  PaymentMethods as PaymentMethodsOutput,
+  PaymentMethods,
   CreatePaymentMethodCommandInput,
   CreatePaymentMethodCommandBody,
-  PaymentMethodIntendedLro as PaymentMethodIntendedLroOutput,
+  PaymentMethodIntendedLro,
   GetPaymentMethodFromStripeCommandInput,
   GetPaymentMethodFromStripeCommandBody,
-  PaymentMethod as PaymentMethodOutput,
+  PaymentMethod,
   GetPaymentMethodCommandInput,
   GetPaymentMethodCommandBody,
   UpdatePaymentMethodRequest,
@@ -39,14 +40,14 @@ import type {
   UpdatePaymentMethodCommandBody,
   DeletePaymentMethodCommandInput,
   DeletePaymentMethodCommandBody,
-  PaymentMethodDeletedLro as PaymentMethodDeletedLroOutput,
+  PaymentMethodDeletedLro,
   ListBillingSubscriptionsCommandInput,
   ListBillingSubscriptionsCommandBody,
-  BillingSubscriptions as BillingSubscriptionsOutput,
+  BillingSubscriptions,
   CreateBillingSubscriptionRequest,
   CreateBillingSubscriptionCommandInput,
   CreateBillingSubscriptionCommandBody,
-  BillingSubscriptionLro as BillingSubscriptionLroOutput,
+  BillingSubscriptionLro,
   UpdateBillingSubscriptionRequest,
   UpdateBillingSubscriptionCommandInput,
   UpdateBillingSubscriptionCommandBody,
@@ -60,11 +61,11 @@ import type {
 /**
  * getOperationCommand
  * @param operationId {String}
- * @returns {RequestMethodCaller<LongRunningOperationOutput>} HTTP 200
+ * @returns {RequestMethodCaller<LongRunningOperation>} HTTP 200
  */
 export function getOperationCommand(
   operationId: string,
-): RequestMethodCaller<LongRunningOperationOutput> {
+): RequestMethodCaller<LongRunningOperation> {
   const req = {
     method: 'get' as const,
     pathname: `/operations/${operationId}`,
@@ -79,22 +80,22 @@ export function getOperationCommand(
  */
 export class GetOperationCommand extends Command<
   GetOperationCommandInput,
-  LongRunningOperationOutput,
+  LongRunningOperation,
   GetOperationCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: GetOperationCommandInput) {
-    const { operationId, ...rest } = input;
-    super(`/operations/${operationId}`, rest);
+    const { operationId } = input;
+    super(`/operations/${operationId}`);
   }
 }
 
 /**
  * listBillingAccountsCommand
- * @returns {RequestMethodCaller<BillingAccountListOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingAccountList>} HTTP 200
  */
-export function listBillingAccountsCommand(): RequestMethodCaller<BillingAccountListOutput> {
+export function listBillingAccountsCommand(): RequestMethodCaller<BillingAccountList> {
   const req = {
     method: 'get' as const,
     pathname: `/billing-accounts`,
@@ -108,26 +109,26 @@ export function listBillingAccountsCommand(): RequestMethodCaller<BillingAccount
  *
  */
 export class ListBillingAccountsCommand extends Command<
-  ListBillingAccountsCommandInput,
-  BillingAccountListOutput,
+  void,
+  BillingAccountList,
   ListBillingAccountsCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
-  constructor(input: ListBillingAccountsCommandInput) {
-    const { ...rest } = input;
-    super(`/billing-accounts`, rest);
+  constructor() {
+    //no input parameters
+    super(`/billing-accounts`);
   }
 }
 
 /**
  * createBillingAccountCommand
  * @param parameters.body {BillingAccountCreateRequest}
- * @returns {RequestMethodCaller<BillingAccountOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingAccount>} HTTP 200
  */
 export function createBillingAccountCommand(parameters: {
   body: BillingAccountCreateRequest;
-}): RequestMethodCaller<BillingAccountOutput> {
+}): RequestMethodCaller<BillingAccount> {
   const req = {
     method: 'post' as const,
     pathname: `/billing-accounts`,
@@ -143,13 +144,13 @@ export function createBillingAccountCommand(parameters: {
  */
 export class CreateBillingAccountCommand extends Command<
   CreateBillingAccountCommandInput,
-  BillingAccountOutput,
+  BillingAccount,
   CreateBillingAccountCommandBody
 > {
-  override method = 'post' as const;
+  public override method = 'post' as const;
 
   constructor(input: CreateBillingAccountCommandInput) {
-    const { parameters, ...rest } = input;
+    const { ...rest } = input;
     super(`/billing-accounts`, rest);
   }
 }
@@ -157,11 +158,11 @@ export class CreateBillingAccountCommand extends Command<
 /**
  * getBillingAccountCommand
  * @param billingAccountId {String}
- * @returns {RequestMethodCaller<BillingAccountOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingAccount>} HTTP 200
  */
 export function getBillingAccountCommand(
   billingAccountId: string,
-): RequestMethodCaller<BillingAccountOutput> {
+): RequestMethodCaller<BillingAccount> {
   const req = {
     method: 'get' as const,
     pathname: `/billing-accounts/${billingAccountId}`,
@@ -176,14 +177,14 @@ export function getBillingAccountCommand(
  */
 export class GetBillingAccountCommand extends Command<
   GetBillingAccountCommandInput,
-  BillingAccountOutput,
+  BillingAccount,
   GetBillingAccountCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: GetBillingAccountCommandInput) {
-    const { billingAccountId, ...rest } = input;
-    super(`/billing-accounts/${billingAccountId}`, rest);
+    const { billingAccountId } = input;
+    super(`/billing-accounts/${billingAccountId}`);
   }
 }
 
@@ -191,14 +192,14 @@ export class GetBillingAccountCommand extends Command<
  * updateBillingAccountCommand
  * @param billingAccountId {String}
  * @param parameters.body {BillingAccountUpdateRequest}
- * @returns {RequestMethodCaller<BillingAccountOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingAccount>} HTTP 200
  */
 export function updateBillingAccountCommand(
   billingAccountId: string,
   parameters: {
     body: BillingAccountUpdateRequest;
   },
-): RequestMethodCaller<BillingAccountOutput> {
+): RequestMethodCaller<BillingAccount> {
   const req = {
     method: 'put' as const,
     pathname: `/billing-accounts/${billingAccountId}`,
@@ -214,13 +215,13 @@ export function updateBillingAccountCommand(
  */
 export class UpdateBillingAccountCommand extends Command<
   UpdateBillingAccountCommandInput,
-  BillingAccountOutput,
+  BillingAccount,
   UpdateBillingAccountCommandBody
 > {
-  override method = 'put' as const;
+  public override method = 'put' as const;
 
   constructor(input: UpdateBillingAccountCommandInput) {
-    const { billingAccountId, parameters, ...rest } = input;
+    const { billingAccountId, ...rest } = input;
     super(`/billing-accounts/${billingAccountId}`, rest);
   }
 }
@@ -229,14 +230,14 @@ export class UpdateBillingAccountCommand extends Command<
  * getBillingAccountPortalCommand
  * @param billingAccountId {String}
  * @param parameters.body {BillingAccountPortalRequest}
- * @returns {RequestMethodCaller<BillingAccountPortalOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingAccountPortal>} HTTP 200
  */
 export function getBillingAccountPortalCommand(
   billingAccountId: string,
   parameters: {
     body: BillingAccountPortalRequest;
   },
-): RequestMethodCaller<BillingAccountPortalOutput> {
+): RequestMethodCaller<BillingAccountPortal> {
   const req = {
     method: 'post' as const,
     pathname: `/billing-accounts/${billingAccountId}/portal`,
@@ -252,13 +253,13 @@ export function getBillingAccountPortalCommand(
  */
 export class GetBillingAccountPortalCommand extends Command<
   GetBillingAccountPortalCommandInput,
-  BillingAccountPortalOutput,
+  BillingAccountPortal,
   GetBillingAccountPortalCommandBody
 > {
-  override method = 'post' as const;
+  public override method = 'post' as const;
 
   constructor(input: GetBillingAccountPortalCommandInput) {
-    const { billingAccountId, parameters, ...rest } = input;
+    const { billingAccountId, ...rest } = input;
     super(`/billing-accounts/${billingAccountId}/portal`, rest);
   }
 }
@@ -289,12 +290,13 @@ export function linkBillingAccountCommand(
  */
 export class LinkBillingAccountCommand extends Command<
   LinkBillingAccountCommandInput,
-  void
+  void,
+  LinkBillingAccountCommandBody
 > {
-  override method = 'post' as const;
+  public override method = 'post' as const;
 
   constructor(input: LinkBillingAccountCommandInput) {
-    const { billingAccountId, parameters, ...rest } = input;
+    const { billingAccountId, ...rest } = input;
     super(`/billing-accounts/${billingAccountId}/link`, rest);
   }
 }
@@ -302,11 +304,11 @@ export class LinkBillingAccountCommand extends Command<
 /**
  * listPaymentMethodsCommand
  * @param billingAccountId {String}
- * @returns {RequestMethodCaller<PaymentMethodsOutput>} HTTP 200
+ * @returns {RequestMethodCaller<PaymentMethods>} HTTP 200
  */
 export function listPaymentMethodsCommand(
   billingAccountId: string,
-): RequestMethodCaller<PaymentMethodsOutput> {
+): RequestMethodCaller<PaymentMethods> {
   const req = {
     method: 'get' as const,
     pathname: `/billing-accounts/${billingAccountId}/payment-methods`,
@@ -321,25 +323,25 @@ export function listPaymentMethodsCommand(
  */
 export class ListPaymentMethodsCommand extends Command<
   ListPaymentMethodsCommandInput,
-  PaymentMethodsOutput,
+  PaymentMethods,
   ListPaymentMethodsCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: ListPaymentMethodsCommandInput) {
-    const { billingAccountId, ...rest } = input;
-    super(`/billing-accounts/${billingAccountId}/payment-methods`, rest);
+    const { billingAccountId } = input;
+    super(`/billing-accounts/${billingAccountId}/payment-methods`);
   }
 }
 
 /**
  * createPaymentMethodCommand
  * @param billingAccountId {String}
- * @returns {RequestMethodCaller<PaymentMethodIntendedLroOutput>} HTTP 200
+ * @returns {RequestMethodCaller<PaymentMethodIntendedLro>} HTTP 200
  */
 export function createPaymentMethodCommand(
   billingAccountId: string,
-): RequestMethodCaller<PaymentMethodIntendedLroOutput> {
+): RequestMethodCaller<PaymentMethodIntendedLro> {
   const req = {
     method: 'post' as const,
     pathname: `/billing-accounts/${billingAccountId}/payment-methods`,
@@ -354,14 +356,14 @@ export function createPaymentMethodCommand(
  */
 export class CreatePaymentMethodCommand extends Command<
   CreatePaymentMethodCommandInput,
-  PaymentMethodIntendedLroOutput,
+  PaymentMethodIntendedLro,
   CreatePaymentMethodCommandBody
 > {
-  override method = 'post' as const;
+  public override method = 'post' as const;
 
   constructor(input: CreatePaymentMethodCommandInput) {
-    const { billingAccountId, ...rest } = input;
-    super(`/billing-accounts/${billingAccountId}/payment-methods`, rest);
+    const { billingAccountId } = input;
+    super(`/billing-accounts/${billingAccountId}/payment-methods`);
   }
 }
 
@@ -369,12 +371,12 @@ export class CreatePaymentMethodCommand extends Command<
  * getPaymentMethodFromStripeCommand
  * @param billingAccountId {String}
  * @param stripePaymentMethodId {String}
- * @returns {RequestMethodCaller<PaymentMethodOutput>} HTTP 200
+ * @returns {RequestMethodCaller<PaymentMethod>} HTTP 200
  */
 export function getPaymentMethodFromStripeCommand(
   billingAccountId: string,
   stripePaymentMethodId: string,
-): RequestMethodCaller<PaymentMethodOutput> {
+): RequestMethodCaller<PaymentMethod> {
   const req = {
     method: 'get' as const,
     pathname: `/billing-accounts/${billingAccountId}/payment-methods/stripe/${stripePaymentMethodId}`,
@@ -389,16 +391,15 @@ export function getPaymentMethodFromStripeCommand(
  */
 export class GetPaymentMethodFromStripeCommand extends Command<
   GetPaymentMethodFromStripeCommandInput,
-  PaymentMethodOutput,
+  PaymentMethod,
   GetPaymentMethodFromStripeCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: GetPaymentMethodFromStripeCommandInput) {
-    const { billingAccountId, stripePaymentMethodId, ...rest } = input;
+    const { billingAccountId, stripePaymentMethodId } = input;
     super(
       `/billing-accounts/${billingAccountId}/payment-methods/stripe/${stripePaymentMethodId}`,
-      rest,
     );
   }
 }
@@ -407,12 +408,12 @@ export class GetPaymentMethodFromStripeCommand extends Command<
  * getPaymentMethodCommand
  * @param billingAccountId {String}
  * @param paymentMethodId {String}
- * @returns {RequestMethodCaller<PaymentMethodOutput>} HTTP 200
+ * @returns {RequestMethodCaller<PaymentMethod>} HTTP 200
  */
 export function getPaymentMethodCommand(
   billingAccountId: string,
   paymentMethodId: string,
-): RequestMethodCaller<PaymentMethodOutput> {
+): RequestMethodCaller<PaymentMethod> {
   const req = {
     method: 'get' as const,
     pathname: `/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
@@ -427,16 +428,15 @@ export function getPaymentMethodCommand(
  */
 export class GetPaymentMethodCommand extends Command<
   GetPaymentMethodCommandInput,
-  PaymentMethodOutput,
+  PaymentMethod,
   GetPaymentMethodCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: GetPaymentMethodCommandInput) {
-    const { billingAccountId, paymentMethodId, ...rest } = input;
+    const { billingAccountId, paymentMethodId } = input;
     super(
       `/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
-      rest,
     );
   }
 }
@@ -469,12 +469,13 @@ export function updatePaymentMethodCommand(
  */
 export class UpdatePaymentMethodCommand extends Command<
   UpdatePaymentMethodCommandInput,
-  void
+  void,
+  UpdatePaymentMethodCommandBody
 > {
-  override method = 'put' as const;
+  public override method = 'put' as const;
 
   constructor(input: UpdatePaymentMethodCommandInput) {
-    const { billingAccountId, paymentMethodId, parameters, ...rest } = input;
+    const { billingAccountId, paymentMethodId, ...rest } = input;
     super(
       `/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
       rest,
@@ -486,12 +487,12 @@ export class UpdatePaymentMethodCommand extends Command<
  * deletePaymentMethodCommand
  * @param billingAccountId {String}
  * @param paymentMethodId {String}
- * @returns {RequestMethodCaller<PaymentMethodDeletedLroOutput>} HTTP 200
+ * @returns {RequestMethodCaller<PaymentMethodDeletedLro>} HTTP 200
  */
 export function deletePaymentMethodCommand(
   billingAccountId: string,
   paymentMethodId: string,
-): RequestMethodCaller<PaymentMethodDeletedLroOutput> {
+): RequestMethodCaller<PaymentMethodDeletedLro> {
   const req = {
     method: 'delete' as const,
     pathname: `/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
@@ -506,16 +507,15 @@ export function deletePaymentMethodCommand(
  */
 export class DeletePaymentMethodCommand extends Command<
   DeletePaymentMethodCommandInput,
-  PaymentMethodDeletedLroOutput,
+  PaymentMethodDeletedLro,
   DeletePaymentMethodCommandBody
 > {
-  override method = 'delete' as const;
+  public override method = 'delete' as const;
 
   constructor(input: DeletePaymentMethodCommandInput) {
-    const { billingAccountId, paymentMethodId, ...rest } = input;
+    const { billingAccountId, paymentMethodId } = input;
     super(
       `/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
-      rest,
     );
   }
 }
@@ -523,11 +523,11 @@ export class DeletePaymentMethodCommand extends Command<
 /**
  * listBillingSubscriptionsCommand
  * @param billingAccountId {String}
- * @returns {RequestMethodCaller<BillingSubscriptionsOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingSubscriptions>} HTTP 200
  */
 export function listBillingSubscriptionsCommand(
   billingAccountId: string,
-): RequestMethodCaller<BillingSubscriptionsOutput> {
+): RequestMethodCaller<BillingSubscriptions> {
   const req = {
     method: 'get' as const,
     pathname: `/billing-accounts/${billingAccountId}/subscriptions`,
@@ -542,14 +542,14 @@ export function listBillingSubscriptionsCommand(
  */
 export class ListBillingSubscriptionsCommand extends Command<
   ListBillingSubscriptionsCommandInput,
-  BillingSubscriptionsOutput,
+  BillingSubscriptions,
   ListBillingSubscriptionsCommandBody
 > {
-  override method = 'get' as const;
+  public override method = 'get' as const;
 
   constructor(input: ListBillingSubscriptionsCommandInput) {
-    const { billingAccountId, ...rest } = input;
-    super(`/billing-accounts/${billingAccountId}/subscriptions`, rest);
+    const { billingAccountId } = input;
+    super(`/billing-accounts/${billingAccountId}/subscriptions`);
   }
 }
 
@@ -557,14 +557,14 @@ export class ListBillingSubscriptionsCommand extends Command<
  * createBillingSubscriptionCommand
  * @param billingAccountId {String}
  * @param parameters.body {CreateBillingSubscriptionRequest}
- * @returns {RequestMethodCaller<BillingSubscriptionLroOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingSubscriptionLro>} HTTP 200
  */
 export function createBillingSubscriptionCommand(
   billingAccountId: string,
   parameters: {
     body: CreateBillingSubscriptionRequest;
   },
-): RequestMethodCaller<BillingSubscriptionLroOutput> {
+): RequestMethodCaller<BillingSubscriptionLro> {
   const req = {
     method: 'post' as const,
     pathname: `/billing-accounts/${billingAccountId}/subscriptions`,
@@ -580,13 +580,13 @@ export function createBillingSubscriptionCommand(
  */
 export class CreateBillingSubscriptionCommand extends Command<
   CreateBillingSubscriptionCommandInput,
-  BillingSubscriptionLroOutput,
+  BillingSubscriptionLro,
   CreateBillingSubscriptionCommandBody
 > {
-  override method = 'post' as const;
+  public override method = 'post' as const;
 
   constructor(input: CreateBillingSubscriptionCommandInput) {
-    const { billingAccountId, parameters, ...rest } = input;
+    const { billingAccountId, ...rest } = input;
     super(`/billing-accounts/${billingAccountId}/subscriptions`, rest);
   }
 }
@@ -619,12 +619,13 @@ export function updateBillingSubscriptionCommand(
  */
 export class UpdateBillingSubscriptionCommand extends Command<
   UpdateBillingSubscriptionCommandInput,
-  void
+  void,
+  UpdateBillingSubscriptionCommandBody
 > {
-  override method = 'put' as const;
+  public override method = 'put' as const;
 
   constructor(input: UpdateBillingSubscriptionCommandInput) {
-    const { billingAccountId, subscriptionId, parameters, ...rest } = input;
+    const { billingAccountId, subscriptionId, ...rest } = input;
     super(
       `/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
       rest,
@@ -655,15 +656,15 @@ export function cancelSubscriptionCommand(
  */
 export class CancelSubscriptionCommand extends Command<
   CancelSubscriptionCommandInput,
-  void
+  void,
+  CancelSubscriptionCommandBody
 > {
-  override method = 'delete' as const;
+  public override method = 'delete' as const;
 
   constructor(input: CancelSubscriptionCommandInput) {
-    const { billingAccountId, subscriptionId, ...rest } = input;
+    const { billingAccountId, subscriptionId } = input;
     super(
       `/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
-      rest,
     );
   }
 }
@@ -673,7 +674,7 @@ export class CancelSubscriptionCommand extends Command<
  * @param billingAccountId {String}
  * @param subscriptionId {String}
  * @param parameters.body {UpdateBillingSubscriptionPromoCodeRequest}
- * @returns {RequestMethodCaller<BillingSubscriptionLroOutput>} HTTP 200
+ * @returns {RequestMethodCaller<BillingSubscriptionLro>} HTTP 200
  */
 export function updateBillingSubscriptionPromoCodeCommand(
   billingAccountId: string,
@@ -681,7 +682,7 @@ export function updateBillingSubscriptionPromoCodeCommand(
   parameters: {
     body: UpdateBillingSubscriptionPromoCodeRequest;
   },
-): RequestMethodCaller<BillingSubscriptionLroOutput> {
+): RequestMethodCaller<BillingSubscriptionLro> {
   const req = {
     method: 'put' as const,
     pathname: `/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}/promo-code`,
@@ -697,23 +698,16 @@ export function updateBillingSubscriptionPromoCodeCommand(
  */
 export class UpdateBillingSubscriptionPromoCodeCommand extends Command<
   UpdateBillingSubscriptionPromoCodeCommandInput,
-  BillingSubscriptionLroOutput,
+  BillingSubscriptionLro,
   UpdateBillingSubscriptionPromoCodeCommandBody
 > {
-  override method = 'put' as const;
+  public override method = 'put' as const;
 
   constructor(input: UpdateBillingSubscriptionPromoCodeCommandInput) {
-    const { billingAccountId, subscriptionId, parameters, ...rest } = input;
+    const { billingAccountId, subscriptionId, ...rest } = input;
     super(
       `/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}/promo-code`,
       rest,
     );
-  }
-}
-
-export class OpenAiClient extends RestServiceClient<AllInputs, void> {
-  constructor() {
-    const;
-    super();
   }
 }
