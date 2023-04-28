@@ -8,22 +8,22 @@ deps: node_modules
 
 .PHONY: clean
 clean:
-	yarn tsc -b --clean
+	pnpm tsc -b --clean
 	rm -rf dist
 
 .PHONY: test
 test:
-	NODE_OPTIONS=--experimental-vm-modules yarn jest
+	NODE_OPTIONS=--experimental-vm-modules pnpm jest
 
 node_modules: package.json
-	yarn install
+	pnpm install
 
 dist: node_modules tsconfig.json $(SRCS)
-	yarn tsc
+	pnpm tsc
 
 .PHONY: dev
 dev:
-	yarn tsc -w
+	pnpm tsc -w
 
 .PHONY: fixtures
 fixtures: dist petstore test1 openai
@@ -33,14 +33,14 @@ petstore:  __tests__/fixtures/petstore.json dist
 	node --enable-source-maps dist/bin/index.js \
 		-i $< \
 		-o __tests__/fixtures/petstore
-	yarn prettier --write __tests__/fixtures/petstore
+	pnpm prettier --write __tests__/fixtures/petstore
 
 .PHONY: test1
 test1:  __tests__/fixtures/test1.json dist
 	node --enable-source-maps dist/bin/index.js \
 		-i $< \
 		-o __tests__/fixtures/test1
-	yarn prettier --write __tests__/fixtures/test1
+	pnpm prettier --write __tests__/fixtures/test1
 
 .PHONY: openai
 openai: __tests__/fixtures/openai.yaml dist
@@ -49,7 +49,7 @@ openai: __tests__/fixtures/openai.yaml dist
 	node --enable-source-maps dist/bin/index.js \
 		-i $(@D)/openai.json \
 		-o __tests__/fixtures/openai
-	yarn prettier --write __tests__/fixtures/openai
+	pnpm prettier --write __tests__/fixtures/openai
 
 
 .PHONY: cloudflare
@@ -57,4 +57,5 @@ cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
 	node --enable-source-maps dist/bin/index.js \
 		-i __tests__/fixtures/cloudflare/openapi.json \
 		-o __tests__/fixtures/cloudflare
-	yarn prettier --write __tests__/fixtures/cloudflare
+	pnpm prettier --write __tests__/fixtures/cloudflare
+
