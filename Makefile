@@ -59,3 +59,7 @@ cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
 		-o __tests__/fixtures/cloudflare
 	pnpm prettier --write __tests__/fixtures/cloudflare
 
+.PHONY: pretty
+pretty: node_modules
+	pnpm eslint --fix .
+	pnpm prettier --write .
