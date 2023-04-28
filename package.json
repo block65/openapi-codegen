@@ -25,11 +25,11 @@
   "dependencies": {
     "camelcase": "^7.0.1",
     "json-schema-ref-parser": "^9.0.9",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "ts-morph": "^18.0.0",
-    "type-fest": "^3.7.1",
+    "type-fest": "^3.9.0",
     "word-wrap": "^1.2.3",
-    "yargs": "^17.7.1"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
