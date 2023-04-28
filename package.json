@@ -32,19 +32,19 @@
     "yargs": "^17.7.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
-    "@babel/preset-env": "^7.20.2",
-    "@babel/preset-typescript": "^7.21.0",
-    "@block65/eslint-config": "^9.0.0-alpha.0",
-    "@block65/rest-client": "^5.0.1",
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-typescript": "^7.21.4",
+    "@block65/eslint-config": "^9.0.0",
+    "@block65/rest-client": "^6.0.0",
     "@hapi/bourne": "^3.0.0",
     "@jest/globals": "^29.5.0",
-    "@types/eslint": "^8.21.3",
-    "@types/jest": "^29.5.0",
-    "@types/node": "^18.15.11",
-    "@typescript-eslint/eslint-plugin": "^5.57.0",
-    "@typescript-eslint/parser": "^5.57.0",
-    "eslint": "^8.37.0",
+    "@types/eslint": "^8.37.0",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^18.16.2",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-prettier": "^4.2.1",
@@ -55,9 +55,9 @@
     "ky": "^0.33.3",
     "ky-universal": "^0.11.0",
     "openapi-types": "^12.1.0",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.4"
   },
   "peerDependencies": {
     "@block65/rest-client": "^5.0.0"
