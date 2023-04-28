@@ -1,50 +1,30 @@
 import { test } from '@jest/globals';
-import {
-  FindPetsCommand,
-  findPetsCommand,
-} from './fixtures/petstore/methods.js';
-import { LegacyRestClient } from './legacy.js';
+import { CreateModerationCommand } from './fixtures/openai/commands.js';
+import { OpenAiApiRestClient } from './fixtures/openai/main.js';
+import { FindPetsCommand } from './fixtures/petstore/commands.js';
+import { SwaggerPetstoreRestClient } from './fixtures/petstore/main.js';
 import { logger } from './logger.js';
-import { NewClient } from './reference.js';
 
-export const legacyClient = new LegacyRestClient({
-  requestMethod() {
-    return Promise.resolve(true);
-  },
-});
+export const petStoreClient = new SwaggerPetstoreRestClient();
+export const openAiClient = new OpenAiApiRestClient();
 
-export const client = new NewClient({
-  requestMethod() {
-    return Promise.resolve(true);
-  },
-});
+test('PetStore FindPets', async () => {
+  const command = new FindPetsCommand({
+    limit: '10',
+    tags: ['tag1', 'tag2'],
+  });
 
-test('Legacy', async () => {
-  const result = await legacyClient
-    .send(
-      findPetsCommand({
-        query: {
-          limit: '10',
-          tags: ['tag1', 'tag2'],
-        },
-      }),
-    )
-    .catch(logger.error);
+  const result = await petStoreClient.send(command).catch(logger.error);
 
   expect(result).toBeTruthy();
 });
 
-test('Basic', async () => {
-  const command = new FindPetsCommand({
-    query: {
-      limit: '10',
-      tags: ['tag1', 'tag2'],
-    },
+test('PetStore FindPets', async () => {
+  const command = new CreateModerationCommand({
+    input: 'This is a test',
   });
 
-  const serialized = command.serialize();
-
-  const result = await client.send(command).catch(logger.error);
+  const result = await openAiClient.send(command).catch(logger.error);
 
   expect(result).toBeTruthy();
 });
