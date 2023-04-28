@@ -127,7 +127,7 @@ export class ListEnginesCommand extends Command<
   public override method = 'get' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/engines`);
   }
 }
@@ -207,8 +207,8 @@ export class CreateCompletionCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateCompletionCommandInput) {
-    const { ...rest } = input;
-    super(`/completions`, rest);
+    const body = input;
+    super(`/completions`, body);
   }
 }
 
@@ -245,8 +245,8 @@ export class CreateChatCompletionCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateChatCompletionCommandInput) {
-    const { ...rest } = input;
-    super(`/chat/completions`, rest);
+    const body = input;
+    super(`/chat/completions`, body);
   }
 }
 
@@ -283,8 +283,8 @@ export class CreateEditCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateEditCommandInput) {
-    const { ...rest } = input;
-    super(`/edits`, rest);
+    const body = input;
+    super(`/edits`, body);
   }
 }
 
@@ -321,8 +321,8 @@ export class CreateImageCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateImageCommandInput) {
-    const { ...rest } = input;
-    super(`/images/generations`, rest);
+    const body = input;
+    super(`/images/generations`, body);
   }
 }
 
@@ -355,7 +355,7 @@ export class CreateImageEditCommand extends Command<
   public override method = 'post' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/images/edits`);
   }
 }
@@ -389,7 +389,7 @@ export class CreateImageVariationCommand extends Command<
   public override method = 'post' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/images/variations`);
   }
 }
@@ -427,8 +427,8 @@ export class CreateEmbeddingCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateEmbeddingCommandInput) {
-    const { ...rest } = input;
-    super(`/embeddings`, rest);
+    const body = input;
+    super(`/embeddings`, body);
   }
 }
 
@@ -461,7 +461,7 @@ export class CreateTranscriptionCommand extends Command<
   public override method = 'post' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/audio/transcriptions`);
   }
 }
@@ -495,7 +495,7 @@ export class CreateTranslationCommand extends Command<
   public override method = 'post' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/audio/translations`);
   }
 }
@@ -565,8 +565,8 @@ export class CreateSearchCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateSearchCommandInput) {
-    const { engineId, ...rest } = input;
-    super(`/engines/${engineId}/search`, rest);
+    const { engineId, ...body } = input;
+    super(`/engines/${engineId}/search`, body);
   }
 }
 
@@ -599,7 +599,7 @@ export class ListFilesCommand extends Command<
   public override method = 'get' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/files`);
   }
 }
@@ -639,7 +639,7 @@ export class CreateFileCommand extends Command<
   public override method = 'post' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/files`);
   }
 }
@@ -799,8 +799,8 @@ export class CreateAnswerCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateAnswerCommandInput) {
-    const { ...rest } = input;
-    super(`/answers`, rest);
+    const body = input;
+    super(`/answers`, body);
   }
 }
 
@@ -866,8 +866,8 @@ export class CreateClassificationCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateClassificationCommandInput) {
-    const { ...rest } = input;
-    super(`/classifications`, rest);
+    const body = input;
+    super(`/classifications`, body);
   }
 }
 
@@ -914,8 +914,8 @@ export class CreateFineTuneCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateFineTuneCommandInput) {
-    const { ...rest } = input;
-    super(`/fine-tunes`, rest);
+    const body = input;
+    super(`/fine-tunes`, body);
   }
 }
 
@@ -948,7 +948,7 @@ export class ListFineTunesCommand extends Command<
   public override method = 'get' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/fine-tunes`);
   }
 }
@@ -1072,13 +1072,14 @@ export function listFineTuneEventsCommand(
 export class ListFineTuneEventsCommand extends Command<
   ListFineTuneEventsCommandInput,
   ListFineTuneEventsResponse,
-  ListFineTuneEventsCommandBody
+  ListFineTuneEventsCommandBody,
+  ListFineTuneEventsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListFineTuneEventsCommandInput) {
-    const { fineTuneId, ...rest } = input;
-    super(`/fine-tunes/${fineTuneId}/events`, rest);
+    const { fineTuneId, stream, ...body } = input;
+    super(`/fine-tunes/${fineTuneId}/events`, undefined, { stream });
   }
 }
 
@@ -1113,7 +1114,7 @@ export class ListModelsCommand extends Command<
   public override method = 'get' as const;
 
   constructor() {
-    //no input parameters
+    // no input parameters
     super(`/models`);
   }
 }
@@ -1229,7 +1230,7 @@ export class CreateModerationCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateModerationCommandInput) {
-    const { ...rest } = input;
-    super(`/moderations`, rest);
+    const body = input;
+    super(`/moderations`, body);
   }
 }

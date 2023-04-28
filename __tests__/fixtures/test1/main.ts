@@ -3,9 +3,14 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T11:02:50.181Z
+ * Generated on 2023-04-28T12:24:53.479Z
  *
  */
+import {
+  RestServiceClient,
+  createIsomorphicFetcher,
+  type RestServiceClientConfig,
+} from '@block65/rest-client';
 import {
   type GetOperationCommandInput,
   type ListBillingAccountsCommandInput,
@@ -36,11 +41,6 @@ import {
   type BillingSubscriptions,
   type BillingSubscriptionLro,
 } from './types.js';
-import {
-  RestServiceClient,
-  createIsomorphicFetcher,
-  type RestServiceClientConfig,
-} from '@block65/rest-client';
 
 type AllInputs =
   | GetOperationCommandInput
@@ -65,16 +65,12 @@ type AllOutputs =
   | LongRunningOperation
   | BillingAccountList
   | BillingAccount
-  | BillingAccount
-  | BillingAccount
   | BillingAccountPortal
   | PaymentMethods
   | PaymentMethodIntendedLro
   | PaymentMethod
-  | PaymentMethod
   | PaymentMethodDeletedLro
   | BillingSubscriptions
-  | BillingSubscriptionLro
   | BillingSubscriptionLro;
 
 export class BillingServiceRestApiRestClient extends RestServiceClient<

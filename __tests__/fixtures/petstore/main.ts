@@ -3,9 +3,14 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T11:02:47.794Z
+ * Generated on 2023-04-28T12:24:51.108Z
  *
  */
+import {
+  RestServiceClient,
+  createIsomorphicFetcher,
+  type RestServiceClientConfig,
+} from '@block65/rest-client';
 import {
   type FindPetsCommandInput,
   type AddPetCommandInput,
@@ -13,18 +18,13 @@ import {
   type DeletePetCommandInput,
   type Pet,
 } from './types.js';
-import {
-  RestServiceClient,
-  createIsomorphicFetcher,
-  type RestServiceClientConfig,
-} from '@block65/rest-client';
 
 type AllInputs =
   | FindPetsCommandInput
   | AddPetCommandInput
   | FindPetByIdCommandInput
   | DeletePetCommandInput;
-type AllOutputs = Pet | Pet | Pet;
+type AllOutputs = Pet;
 
 export class SwaggerPetstoreRestClient extends RestServiceClient<
   AllInputs,

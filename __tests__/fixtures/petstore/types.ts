@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T11:02:47.794Z
+ * Generated on 2023-04-28T12:24:51.108Z
  *
  */
 export type NewPet = {
@@ -22,7 +22,7 @@ export type FindPetsCommandQuery = {
   limit: `${number}`;
 };
 export type FindPetsCommandInput = FindPetsCommandQuery;
-export type FindPetsCommandBody = FindPetsCommandQuery;
+export type FindPetsCommandBody = void;
 export type AddPetCommandInput = NewPet;
 export type AddPetCommandBody = NewPet;
 export type FindPetByIdCommandParams = {

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T11:02:54.186Z
+ * Generated on 2023-04-28T12:24:57.414Z
  *
  */
 export type DeleteModelResponse = {
@@ -915,7 +915,7 @@ export type ListFineTuneEventsCommandParams = {
 };
 export type ListFineTuneEventsCommandInput = ListFineTuneEventsCommandQuery &
   ListFineTuneEventsCommandParams;
-export type ListFineTuneEventsCommandBody = ListFineTuneEventsCommandQuery;
+export type ListFineTuneEventsCommandBody = void;
 export type ListModelsCommandInput = void;
 export type ListModelsCommandBody = void;
 export type RetrieveModelCommandParams = {

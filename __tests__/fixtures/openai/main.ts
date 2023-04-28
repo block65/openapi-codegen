@@ -3,9 +3,14 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T11:02:54.186Z
+ * Generated on 2023-04-28T12:24:57.414Z
  *
  */
+import {
+  RestServiceClient,
+  createIsomorphicFetcher,
+  type RestServiceClientConfig,
+} from '@block65/rest-client';
 import {
   type ListEnginesCommandInput,
   type RetrieveEngineCommandInput,
@@ -58,11 +63,6 @@ import {
   type DeleteModelResponse,
   type CreateModerationResponse,
 } from './types.js';
-import {
-  RestServiceClient,
-  createIsomorphicFetcher,
-  type RestServiceClientConfig,
-} from '@block65/rest-client';
 
 type AllInputs =
   | ListEnginesCommandInput
@@ -100,8 +100,6 @@ type AllOutputs =
   | CreateChatCompletionResponse
   | CreateEditResponse
   | ImagesResponse
-  | ImagesResponse
-  | ImagesResponse
   | CreateEmbeddingResponse
   | CreateTranscriptionResponse
   | CreateTranslationResponse
@@ -109,13 +107,10 @@ type AllOutputs =
   | ListFilesResponse
   | OpenAiFile
   | DeleteFileResponse
-  | OpenAiFile
   | CreateAnswerResponse
   | CreateClassificationResponse
   | FineTune
   | ListFineTunesResponse
-  | FineTune
-  | FineTune
   | ListFineTuneEventsResponse
   | ListModelsResponse
   | Model

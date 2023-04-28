@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T11:02:50.181Z
+ * Generated on 2023-04-28T12:24:53.479Z
  *
  */
 export type Uuid = string;

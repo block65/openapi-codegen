@@ -84,13 +84,14 @@ export function findPetsCommand(parameters?: {
 export class FindPetsCommand extends Command<
   FindPetsCommandInput,
   Pet[],
-  FindPetsCommandBody
+  FindPetsCommandBody,
+  FindPetsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: FindPetsCommandInput) {
-    const { ...rest } = input;
-    super(`/pets`, rest);
+    const { tags, limit, ...body } = input;
+    super(`/pets`, undefined, { tags, limit });
   }
 }
 
@@ -123,8 +124,8 @@ export class AddPetCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: AddPetCommandInput) {
-    const { ...rest } = input;
-    super(`/pets`, rest);
+    const body = input;
+    super(`/pets`, body);
   }
 }
 
