@@ -17,8 +17,6 @@
   "files": [
     "dist/bin/*.js",
     "dist/bin/*.d.ts",
-    "dist/src/*.js",
-    "dist/src/*.d.ts",
     "dist/lib/*.js",
     "dist/lib/*.d.ts"
   ],
