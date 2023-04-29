@@ -21,8 +21,8 @@
     "dist/lib/*.d.ts"
   ],
   "dependencies": {
+    "@apidevtools/json-schema-ref-parser": "^10.1.0",
     "camelcase": "^7.0.1",
-    "json-schema-ref-parser": "^9.0.9",
     "prettier": "^2.8.8",
     "ts-morph": "^18.0.0",
     "type-fest": "^3.9.0",

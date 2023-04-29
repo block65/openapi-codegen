@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { join, relative } from 'node:path';
+import $RefParser from '@apidevtools/json-schema-ref-parser';
 import camelcase from 'camelcase';
-import $RefParser from 'json-schema-ref-parser';
 import type { OpenAPIV3 } from 'openapi-types';
 import {
   IndentationText,
