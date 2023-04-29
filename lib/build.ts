@@ -1,7 +1,7 @@
 import { writeFile } from 'node:fs/promises';
 import type { OpenAPIV3 } from 'openapi-types';
 import { format } from 'prettier';
-import { processOpenApiDocument } from '../lib/process-document.js';
+import { processOpenApiDocument } from './process-document.js';
 
 export async function build(
   inputFile: string,

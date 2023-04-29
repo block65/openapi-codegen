@@ -2,7 +2,7 @@
 import { join } from 'node:path';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
-import { build } from '../src/build.js';
+import { build } from '../lib/build.js';
 
 const cliArgs = await yargs(hideBin(process.argv))
   .usage('Usage: $0 -i [string] -o [string]')
