@@ -675,6 +675,13 @@ export async function processOpenApiDocument(
 
   const ctor = clientClassDeclaration.addConstructor();
 
+  const baseUrl = ctor.addParameter({
+    name: 'baseUrl',
+    initializer: `new URL('${new URL(
+      `${schema.servers?.[0]?.url || 'https://api.example.com'}/`,
+    )}')`,
+  });
+
   const fetcherParam = ctor.addParameter({
     name: 'fetcher',
     // type: fetcherMethodType,
@@ -694,9 +701,7 @@ export async function processOpenApiDocument(
     SyntaxKind.CallExpression,
   );
   callExpr?.addArguments([
-    `new URL('${new URL(
-      `${schema.servers?.[0]?.url || 'https://api.example.com'}/`,
-    )}')`,
+    baseUrl.getName(),
     fetcherParam.getName(),
     configParam.getName(),
   ]);

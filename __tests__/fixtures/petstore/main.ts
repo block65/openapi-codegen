@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T12:24:51.108Z
+ * Generated on 2023-04-29T03:20:23.373Z
  *
  */
 import {
@@ -31,9 +31,10 @@ export class SwaggerPetstoreRestClient extends RestServiceClient<
   AllOutputs
 > {
   constructor(
+    baseUrl = new URL('http://petstore.swagger.io/api/'),
     fetcher = createIsomorphicFetcher(),
     config?: RestServiceClientConfig,
   ) {
-    super(new URL('http://petstore.swagger.io/api/'), fetcher, config);
+    super(baseUrl, fetcher, config);
   }
 }

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T12:24:53.479Z
+ * Generated on 2023-04-29T03:20:25.967Z
  *
  */
 import {
@@ -78,9 +78,10 @@ export class BillingServiceRestApiRestClient extends RestServiceClient<
   AllOutputs
 > {
   constructor(
+    baseUrl = new URL('https://api.example.com/'),
     fetcher = createIsomorphicFetcher(),
     config?: RestServiceClientConfig,
   ) {
-    super(new URL('https://api.example.com/'), fetcher, config);
+    super(baseUrl, fetcher, config);
   }
 }

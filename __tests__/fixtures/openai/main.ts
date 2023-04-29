@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T12:24:57.414Z
+ * Generated on 2023-04-29T03:20:30.391Z
  *
  */
 import {
@@ -122,9 +122,10 @@ export class OpenAiApiRestClient extends RestServiceClient<
   AllOutputs
 > {
   constructor(
+    baseUrl = new URL('https://api.openai.com/v1/'),
     fetcher = createIsomorphicFetcher(),
     config?: RestServiceClientConfig,
   ) {
-    super(new URL('https://api.openai.com/v1/'), fetcher, config);
+    super(baseUrl, fetcher, config);
   }
 }
