@@ -32,11 +32,11 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.4",
-    "@babel/preset-env": "^7.21.4",
-    "@babel/preset-typescript": "^7.21.4",
+    "@babel/core": "^7.21.5",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-typescript": "^7.21.5",
     "@block65/eslint-config": "^9.0.0",
-    "@block65/rest-client": "^6.0.0",
+    "@block65/rest-client": "^6.1.0",
     "@hapi/bourne": "^3.0.0",
     "@jest/globals": "^29.5.0",
     "@types/eslint": "^8.37.0",
@@ -60,7 +60,7 @@
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
-    "@block65/rest-client": "^6.0.0"
+    "@block65/rest-client": "^6.1.0"
   },
   "engines": {
     "node": ">=16.0.0"
