@@ -43,7 +43,7 @@ function createUnion(...types: (string | undefined)[]) {
   return type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1;
 }
 
-function isVoid(type: TypeAliasDeclaration | null) {
+function isVoidKeyword(type: TypeAliasDeclaration) {
   return type?.getTypeNode()?.getKindName() === 'VoidKeyword';
 }
 
@@ -80,6 +80,10 @@ export async function processOpenApiDocument(
       overwrite: true,
     },
   );
+
+  const clientFile = project.createSourceFile(join(outputDir, 'main.ts'), '', {
+    overwrite: true,
+  });
 
   const outputTypes: (InterfaceDeclaration | TypeAliasDeclaration)[] = [];
 
@@ -428,7 +432,7 @@ export async function processOpenApiDocument(
 
           const inputBodyType = typesFile.addTypeAlias({
             name: pascalCase(`${classDeclaration.getName() || 'INVALID'}Body`),
-            type: createIntersection(bodyType?.getName(), queryType?.getName()),
+            type: bodyType?.getName() || 'void', // createIntersection(bodyType?.getName(), queryType?.getName()),
             isExported: true,
           });
 
@@ -438,14 +442,23 @@ export async function processOpenApiDocument(
           // CommandInput
           classDeclaration
             .getExtends()
-            ?.addTypeArgument(isVoid(inputType) ? 'void' : inputType.getName());
+            ?.addTypeArgument(
+              isVoidKeyword(inputType) ? 'void' : inputType.getName(),
+            );
 
-          if (!isVoid(inputType)) {
+          if (!isVoidKeyword(inputType)) {
             ctor.addParameter({
               name: 'input',
               type: inputType.getName(),
             });
           }
+
+          // if (queryType && !isVoidKeyword(queryType)) {
+          //   ctor.addParameter({
+          //     name: 'query',
+          //     type: queryType.getName(),
+          //   });
+          // }
 
           for (const queryParam of queryParameters) {
             const queryParameterName = camelcase(queryParam.name);
@@ -546,10 +559,17 @@ export async function processOpenApiDocument(
               });
             }
           }
+
           // body
           classDeclaration
             .getExtends()
             ?.addTypeArgument(inputBodyType.getName());
+
+          // query
+          if (queryType) {
+            classDeclaration.getExtends()?.addTypeArgument(queryType.getName());
+          }
+
           const pathname = `\`${path
             .replaceAll(/\{(\w+)\}/g, camelcase)
             .replaceAll(/{/g, '${')}\``;
@@ -577,13 +597,21 @@ export async function processOpenApiDocument(
             );
           });
 
-          const restName = 'rest';
+          const bodyName = 'body';
           const ctorArgName = ctor.getParameters()[0]?.getName() || 'never';
-          const hasParams = !isVoid(paramsType);
-          const hasRest = !isVoid(inputBodyType);
+          // const hasParams = paramsType && !isVoidKeyword(paramsType);
+          const hasBody = !isVoidKeyword(inputBodyType);
+          const hasQuery = queryType && !isVoidKeyword(queryType);
+
+          const queryParameterNames = queryParameters.map((q) => q.name);
+
+          const varsToDestructure = [
+            ...pathParameterNames,
+            ...queryParameterNames,
+          ];
 
           ctor.addStatements([
-            !isVoid(inputType)
+            !isVoidKeyword(inputType)
               ? {
                   kind: StructureKind.VariableStatement,
                   declarationKind: VariableDeclarationKind.Const,
@@ -591,26 +619,37 @@ export async function processOpenApiDocument(
                     {
                       kind: StructureKind.VariableDeclaration,
                       initializer: ctorArgName,
-                      name: hasParams
-                        ? `{${[
-                            ...pathParameterNames,
-                            hasRest ? `...${restName}` : '',
-                          ].join(',')} }`
-                        : restName,
+                      name:
+                        varsToDestructure.length > 0
+                          ? `{${[
+                              ...varsToDestructure,
+                              hasBody || hasQuery ? `...${bodyName}` : '',
+                            ].join(',')} }`
+                          : bodyName,
                     },
                   ],
                 }
-              : '//no input parameters',
+              : '// no input parameters',
             'super();',
           ]);
 
           const superKeyword = ctor.getFirstDescendantByKind(
             SyntaxKind.SuperKeyword,
           );
+
           const callExpr = superKeyword?.getParentIfKindOrThrow(
             SyntaxKind.CallExpression,
           );
-          callExpr?.addArguments(hasRest ? [pathname, restName] : [pathname]);
+
+          callExpr?.addArguments(
+            hasBody || hasQuery
+              ? [
+                  pathname,
+                  hasBody ? bodyName : 'undefined',
+                  ...(hasQuery ? [`{${queryParameterNames.join(', ')}}`] : []),
+                ]
+              : [pathname],
+          );
         }
       }
     }
@@ -621,17 +660,12 @@ export async function processOpenApiDocument(
   // const isOutput = (t: string) => t.endsWith('Output');
 
   const inputTypes = typesFile.getTypeAliases().filter((t) => isInput(t));
-
-  clientFile.addImportDeclaration({
-    moduleSpecifier: typesModuleSpecifier,
-    namedImports: [...new Set([...inputTypes, ...outputTypes])].map((t) => ({
-      name: t.getName(),
-      isTypeOnly: true,
-    })),
-  });
-
-  const inputUnion = createUnion(...inputTypes.map((t) => t.getName()));
-  const outputUnion = createUnion(...outputTypes.map((t) => t.getName()));
+  const inputUnion = createUnion(
+    ...new Set(inputTypes.map((t) => t.getName())),
+  );
+  const outputUnion = createUnion(
+    ...new Set(outputTypes.map((t) => t.getName())),
+  );
 
   const allInputs = inputUnion
     ? clientFile.addTypeAlias({
@@ -664,6 +698,14 @@ export async function processOpenApiDocument(
       ],
     },
   ]);
+
+  clientFile.addImportDeclaration({
+    moduleSpecifier: typesModuleSpecifier,
+    namedImports: [...new Set([...inputTypes, ...outputTypes])].map((t) => ({
+      name: t.getName(),
+      isTypeOnly: true,
+    })),
+  });
 
   const clientClassDeclaration = clientFile.addClass({
     name: pascalCase(schema.info.title, 'RestClient'),
@@ -706,5 +748,5 @@ export async function processOpenApiDocument(
     configParam.getName(),
   ]);
 
-  return { entryFile: commandsFile, typesFile, clientFile };
+  return { commandsFile, typesFile, clientFile };
 }
