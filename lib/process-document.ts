@@ -15,6 +15,7 @@ import {
   VariableDeclarationKind,
   Writers,
   Scope,
+  Node,
 } from 'ts-morph';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
@@ -641,15 +642,20 @@ export async function processOpenApiDocument(
             SyntaxKind.CallExpression,
           );
 
-          callExpr?.addArguments(
-            hasBody || hasQuery
-              ? [
-                  pathname,
-                  hasBody ? bodyName : 'undefined',
-                  ...(hasQuery ? [`{${queryParameterNames.join(', ')}}`] : []),
-                ]
-              : [pathname],
-          );
+          // type narrowing
+          if (Node.isCallExpression(callExpr)) {
+            callExpr.addArguments(
+              hasBody || hasQuery
+                ? [
+                    pathname,
+                    hasBody ? bodyName : 'undefined',
+                    ...(hasQuery
+                      ? [`{${queryParameterNames.join(', ')}}`]
+                      : []),
+                  ]
+                : [pathname],
+            );
+          }
         }
       }
     }
@@ -742,11 +748,15 @@ export async function processOpenApiDocument(
   const callExpr = superKeyword?.getParentIfKindOrThrow(
     SyntaxKind.CallExpression,
   );
-  callExpr?.addArguments([
-    baseUrl.getName(),
-    fetcherParam.getName(),
-    configParam.getName(),
-  ]);
+
+  // type narrowing
+  if (Node.isCallExpression(callExpr)) {
+    callExpr?.addArguments([
+      baseUrl.getName(),
+      fetcherParam.getName(),
+      configParam.getName(),
+    ]);
+  }
 
   return { commandsFile, typesFile, clientFile };
 }
