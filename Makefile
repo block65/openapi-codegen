@@ -23,7 +23,7 @@ dist: node_modules tsconfig.json $(SRCS)
 
 .PHONY: dev
 dev:
-	pnpm tsc -w
+	pnpm tsc -b -w
 
 .PHONY: fixtures
 fixtures: dist petstore test1 openai
