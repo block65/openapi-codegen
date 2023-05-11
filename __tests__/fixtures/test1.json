@@ -387,14 +387,6 @@
           }
         }
       },
-      "LinkBillingAccount": {
-        "type": "object",
-        "properties": {
-          "__ignoreThisModel": {
-            "type": "string"
-          }
-        }
-      },
       "PaymentMethodIdentifiers": {
         "type": "object",
         "required": ["billingAccountId", "paymentMethodId"],
@@ -984,18 +976,7 @@
             }
           }
         },
-        "responses": {
-          "204": {
-            "description": "Link Billing Account 200 response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LinkBillingAccount"
-                }
-              }
-            }
-          }
-        }
+        "responses": {}
       },
       "parameters": [
         {

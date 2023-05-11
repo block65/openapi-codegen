@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T12:24:53.479Z
+ * Generated on 2023-05-11T01:54:56.588Z
  *
  */
 export type Uuid = string;
@@ -50,9 +50,6 @@ export enum Currency {
 }
 
 export type TimeZone = string;
-export type LinkBillingAccount = {
-  __ignoreThisModel?: string | undefined;
-};
 export type StripeId = string;
 
 export enum PaymentMethodBrand {
