@@ -28,7 +28,7 @@
     "resolveJsonModule": true,
     "sourceMap": true
   },
-  "include": ["./src", "./lib", "./bin", "__tests__/logger.ts"],
+  "include": ["./lib", "./bin"],
   "exclude": ["./dist", "node_modules"],
-  "references": [{ "path": "./__tests__/tsconfig.json" }]
+  "references": [{ "path": "./__tests__" }]
 }
