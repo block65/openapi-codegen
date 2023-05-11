@@ -13,6 +13,7 @@ clean:
 
 .PHONY: test
 test:
+	pnpm tsc -b
 	NODE_OPTIONS=--experimental-vm-modules pnpm jest
 
 node_modules: package.json
