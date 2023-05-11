@@ -45,7 +45,7 @@ test1:  __tests__/fixtures/test1.json dist
 .PHONY: openai
 openai: __tests__/fixtures/openai.yaml dist
 	mkdir -p $(@D)
-	npx js-yaml $< > $(@D)/openai.json
+	pnpm js-yaml $< > $(@D)/openai.json
 	node --enable-source-maps dist/bin/index.js \
 		-i $(@D)/openai.json \
 		-o __tests__/fixtures/openai
