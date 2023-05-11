@@ -10,6 +10,9 @@ dependencies:
   prettier:
     specifier: ^2.8.8
     version: 2.8.8
+  toposort:
+    specifier: ^2.0.2
+    version: 2.0.2
   ts-morph:
     specifier: ^18.0.0
     version: 18.0.0
@@ -54,6 +57,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.1.2
     version: 20.1.2
+  '@types/toposort':
+    specifier: ^2.0.3
+    version: 2.0.3
   '@types/yargs':
     specifier: ^17.0.24
     version: 17.0.24
@@ -1996,6 +2002,10 @@ packages:
 
   /@types/stack-utils@2.0.1:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
+    dev: true
+
+  /@types/toposort@2.0.3:
+    resolution: {integrity: sha512-jRtyvEu0Na/sy0oIxBW0f6wPQjidgVqlmCTJVHEGTNEUdL1f0YSvdPzHY7nX7MUWAZS6zcAa0KkqofHjy/xDZQ==}
     dev: true
 
   /@types/yargs-parser@21.0.0:
@@ -5290,6 +5300,10 @@ packages:
     engines: {node: '>=8.0'}
     dependencies:
       is-number: 7.0.0
+
+  /toposort@2.0.2:
+    resolution: {integrity: sha512-0a5EOkAUp8D4moMi2W8ZF8jcga7BgZd91O/yabJCFY8az+XSzeGyTKs0Aoo897iV1Nj6guFq8orWDS96z91oGg==}
+    dev: false
 
   /ts-morph@18.0.0:
     resolution: {integrity: sha512-Kg5u0mk19PIIe4islUI/HWRvm9bC1lHejK4S0oh1zaZ77TMZAEmQC0sHQYiu2RgCQFZKXz1fMVi/7nOOeirznA==}

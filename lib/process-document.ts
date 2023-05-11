@@ -3,6 +3,7 @@ import { join, relative } from 'node:path';
 import $RefParser from '@apidevtools/json-schema-ref-parser';
 import camelcase from 'camelcase';
 import type { OpenAPIV3 } from 'openapi-types';
+import toposort from 'toposort';
 import {
   IndentationText,
   InterfaceDeclaration,
@@ -19,10 +20,9 @@ import {
 } from 'ts-morph';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
+  getDependents,
   maybeJsDocDescription,
   pascalCase,
-  schemaIsOrHasReferenceObject,
-  schemaIsOrHasReferenceObjectsExclusively,
   wordWrap,
 } from './utils.js';
 
@@ -150,20 +150,29 @@ export async function processOpenApiDocument(
     InterfaceDeclaration | TypeAliasDeclaration
   >();
 
-  for (const [schemaName, schemaObject] of Object.entries(
-    schema.components?.schemas || {},
-  )
-    .sort(([, a], [, b]) => {
-      if (schemaIsOrHasReferenceObject(a) && !schemaIsOrHasReferenceObject(b)) {
-        return 1;
-      }
-      if (!schemaIsOrHasReferenceObject(a) && schemaIsOrHasReferenceObject(b)) {
-        return -1;
-      }
+  const schemaGraph = Object.entries(schema.components?.schemas || {}).flatMap(
+    ([schemaName, schemaObject]) => {
+      const deps = getDependents(schemaObject);
+      return deps.map((dep): [string, string] => [
+        `#/components/schemas/${schemaName}`,
+        dep,
+      ]);
+    },
+  );
 
-      return 0;
-    })
-    .sort(([, a]) => (schemaIsOrHasReferenceObjectsExclusively(a) ? 1 : 0))) {
+  const sorted = toposort(schemaGraph).reverse();
+
+  const sortedSchemas = Object.entries(schema.components?.schemas || {}).sort(
+    ([a], [b]) =>
+      sorted.findIndex(
+        (schemaName) => schemaName === `#/components/schemas/${a}`,
+      ) -
+      sorted.findIndex(
+        (schemaName) => schemaName === `#/components/schemas/${b}`,
+      ),
+  );
+
+  for (const [schemaName, schemaObject] of sortedSchemas) {
     registerTypesFromSchema(
       typesAndInterfaces,
       typesFile,

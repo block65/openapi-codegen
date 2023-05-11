@@ -13,37 +13,50 @@ export function isReferenceObject(
 ): obj is OpenAPIV3_1.ReferenceObject {
   return typeof obj === 'object' && obj !== null && '$ref' in obj;
 }
+
+export function getDependency(obj: unknown): string | undefined {
+  return isReferenceObject(obj) ? obj.$ref : undefined;
+}
+
 export function isNotReferenceObject<
   T extends OpenAPIV3_1.ReferenceObject | unknown,
 >(obj: T): obj is Exclude<T, OpenAPIV3_1.ReferenceObject> {
   return !isReferenceObject(obj);
 }
-export function schemaIsOrHasReferenceObject(
-  a: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
-): boolean {
-  return (
-    isReferenceObject(a) ||
-    ('properties' in a &&
-      Object.values(a.properties).some(schemaIsOrHasReferenceObject)) ||
-    ('items' in a && isReferenceObject(a.items)) ||
-    ('anyOf' in a && a.anyOf.some(schemaIsOrHasReferenceObject)) ||
-    ('allOf' in a && a.allOf.some(schemaIsOrHasReferenceObject)) ||
-    ('oneOf' in a && a.oneOf.some(schemaIsOrHasReferenceObject))
-  );
-}
 
-export function schemaIsOrHasReferenceObjectsExclusively(
-  a: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
-): boolean {
-  return (
-    isReferenceObject(a) ||
-    ('properties' in a &&
-      Object.values(a.properties).every(schemaIsOrHasReferenceObject)) ||
-    ('items' in a && isReferenceObject(a.items)) ||
-    ('anyOf' in a && a.anyOf.every(schemaIsOrHasReferenceObject)) ||
-    ('allOf' in a && a.allOf.every(schemaIsOrHasReferenceObject)) ||
-    ('oneOf' in a && a.oneOf.every(schemaIsOrHasReferenceObject))
-  );
+export function getDependents(
+  obj: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
+): string[] {
+  const strOnly = (x: string | undefined): x is string => typeof x === 'string';
+
+  if (isReferenceObject(obj)) {
+    return [getDependency(obj)].filter(strOnly);
+  }
+
+  if ('properties' in obj) {
+    const properties = Object.values(obj.properties);
+    return properties.flatMap(getDependents).filter(strOnly);
+  }
+
+  if ('items' in obj) {
+    if (isReferenceObject(obj.items)) {
+      return [getDependency(obj.items)].filter(strOnly);
+    }
+  }
+
+  if ('anyOf' in obj) {
+    return obj.anyOf.flatMap(getDependents).filter(strOnly);
+  }
+
+  if ('allOf' in obj) {
+    return obj.allOf.flatMap(getDependents).filter(strOnly);
+  }
+
+  if ('oneOf' in obj) {
+    return obj.oneOf.flatMap(getDependents).filter(strOnly);
+  }
+
+  return [];
 }
 
 export function refToName(ref: string): string {
