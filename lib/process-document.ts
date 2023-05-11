@@ -113,6 +113,18 @@ export async function processOpenApiDocument(
     isTypeOnly: true,
   });
 
+  typesFile.addImportDeclaration({
+    namedImports: ['Jsonifiable'],
+    moduleSpecifier: 'type-fest',
+    isTypeOnly: true,
+  });
+
+  typesFile.addImportDeclaration({
+    namedImports: ['JsonifiableObject'],
+    moduleSpecifier: 'type-fest/source/jsonifiable.js',
+    isTypeOnly: true,
+  });
+
   const typesModuleSpecifier =
     `./${typesFile.getBaseNameWithoutExtension()}.js` ||
     relative(commandsFile.getDirectoryPath(), typesFile.getFilePath());

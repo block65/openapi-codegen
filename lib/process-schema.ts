@@ -244,8 +244,17 @@ export function schemaToType(
     if (schemaObject.enum?.every((e) => e === null)) {
       return {
         name,
-        hasQuestionToken: false,
+        hasQuestionToken,
         type: 'null',
+        docs,
+      };
+    }
+
+    if (!schemaObject.properties) {
+      return {
+        name,
+        hasQuestionToken,
+        type: withNullUnion('JsonifiableObject', schemaObject.nullable),
         docs,
       };
     }
@@ -322,13 +331,33 @@ export function schemaToType(
     };
   }
 
+  // empty schemaObject
+  if (Object.keys(schemaObject).length === 0) {
+    return {
+      name,
+      hasQuestionToken,
+      type: maybeWithUndefined(
+        withNullUnion(
+          'Jsonifiable',
+          'nullable' in schemaObject && schemaObject.nullable,
+        ),
+        !options.disallowUndefined && hasQuestionToken,
+      ),
+      docs,
+    };
+  }
+
   const type =
     schemaObject.type === 'string' && schemaObject.format?.includes('date')
       ? 'Date'
       : schemaObject.type?.toString() || 'never';
 
   if (type === 'never') {
-    console.warn('unknown type in %j', schemaObject);
+    console.warn(
+      'unsupported type in %j with parent %j',
+      schemaObject,
+      parentSchema,
+    );
   }
 
   return {
