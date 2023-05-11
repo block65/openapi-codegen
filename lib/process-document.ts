@@ -478,12 +478,13 @@ export async function processOpenApiDocument(
             });
           }
 
+          // this is just like a 204 response.
           if (
             !operationObject.responses ||
             Object.keys(operationObject.responses).length === 0
           ) {
-            func.setReturnType('Promise<unknown>');
-            classDeclaration.getExtends()?.addTypeArgument('unknown');
+            func.setReturnType('RequestMethodCaller<void>');
+            classDeclaration.getExtends()?.addTypeArgument('void');
           }
 
           for (const [statusCode, response] of Object.entries(
@@ -502,12 +503,6 @@ export async function processOpenApiDocument(
             }
 
             const jsonResponse = response.content?.['application/json'];
-
-            // this can happen if there is no response at all
-            // because an empty response does not have a content type
-            // if (!jsonResponse) {
-            //   func.setReturnType('Promise<void>');
-            // }
 
             const arrayRef =
               jsonResponse?.schema &&
