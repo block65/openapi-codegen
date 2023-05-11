@@ -3,9 +3,12 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T12:24:57.414Z
+ * Generated on 2023-05-11T04:29:04.091Z
  *
  */
+import type { Jsonifiable } from 'type-fest';
+import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
+
 export type DeleteModelResponse = {
   id: string;
   object: string;
@@ -88,7 +91,7 @@ export type CreateCompletionRequest = {
    * @default 1
    */
   best_of?: number | null;
-  logit_bias?: {} | undefined;
+  logit_bias?: JsonifiableObject | null;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -109,7 +112,7 @@ export type CreateCompletionResponse = {
       | {
           tokens?: string[];
           token_logprobs?: number[];
-          top_logprobs?: Array<{}>;
+          top_logprobs?: JsonifiableObject[];
           text_offset?: number[];
         }
       | undefined;
@@ -122,15 +125,6 @@ export type CreateCompletionResponse = {
         total_tokens: number;
       }
     | undefined;
-};
-export type ChatCompletionRequestMessage = {
-  /**
-   * The role of the author of this message.
-   * @enum system,user,assistant
-   */
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-  name?: string | undefined;
 };
 export type ChatCompletionResponseMessage = {
   /**
@@ -208,7 +202,7 @@ export type CreateEditResponse = {
       | {
           tokens?: string[];
           token_logprobs?: number[];
-          top_logprobs?: Array<{}>;
+          top_logprobs?: JsonifiableObject[];
           text_offset?: number[];
         }
       | undefined;
@@ -483,7 +477,7 @@ export type CreateAnswerRequest = {
    * @default 1
    */
   n?: number | null;
-  logit_bias?: {} | undefined;
+  logit_bias?: JsonifiableObject | null;
   return_metadata?: boolean | null | undefined;
   return_prompt?: boolean | null | undefined;
   /**
@@ -492,7 +486,7 @@ export type CreateAnswerRequest = {
    * `completion` and `file` objects for expansion.
    * @default
    */
-  expand?: never[];
+  expand?: Jsonifiable[];
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -555,7 +549,7 @@ export type CreateClassificationRequest = {
    * @default 200
    */
   max_examples?: number | null;
-  logit_bias?: {} | undefined;
+  logit_bias?: JsonifiableObject | null;
   return_prompt?: boolean | null | undefined;
   return_metadata?: boolean | null | undefined;
   /**
@@ -564,7 +558,7 @@ export type CreateClassificationRequest = {
    * `completion` and `file` objects for expansion.
    * @default
    */
-  expand?: never[];
+  expand?: Jsonifiable[];
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -727,17 +721,15 @@ export type CreateTranslationRequest = {
 export type CreateTranslationResponse = {
   text: string;
 };
-export type Engine = {
-  id: string;
+export type FineTuneEvent = {
   object: string;
-  created: number | null;
-  ready: boolean;
+  created_at: number;
+  level: string;
+  message: string;
 };
-export type Model = {
-  id: string;
+export type ListFineTuneEventsResponse = {
   object: string;
-  created: number;
-  owned_by: string;
+  data: FineTuneEvent[];
 };
 export type OpenAiFile = {
   id: string;
@@ -747,21 +739,39 @@ export type OpenAiFile = {
   filename: string;
   purpose: string;
   status: string;
-  status_details: {};
+  status_details: JsonifiableObject | null;
 };
-export type FineTuneEvent = {
+export type FineTune = {
+  id: string;
   object: string;
   created_at: number;
-  level: string;
-  message: string;
+  updated_at: number;
+  model: string;
+  fine_tuned_model: string | null;
+  organization_id: string;
+  status: string;
+  hyperparams: JsonifiableObject;
+  training_files: OpenAiFile[];
+  validation_files: OpenAiFile[];
+  result_files: OpenAiFile[];
+  events: FineTuneEvent[];
 };
-export type ListEnginesResponse = {
+export type ListFineTunesResponse = {
   object: string;
-  data: Engine[];
+  data: FineTune[];
 };
-export type ListModelsResponse = {
+export type ListFilesResponse = {
   object: string;
-  data: Model[];
+  data: OpenAiFile[];
+};
+export type ChatCompletionRequestMessage = {
+  /**
+   * The role of the author of this message.
+   * @enum system,user,assistant
+   */
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+  name?: string | undefined;
 };
 export type CreateChatCompletionRequest = {
   model: string;
@@ -803,7 +813,7 @@ export type CreateChatCompletionRequest = {
   max_tokens?: number;
   presence_penalty?: number | null;
   frequency_penalty?: number | null;
-  logit_bias?: {} | undefined;
+  logit_bias?: JsonifiableObject | null;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -812,32 +822,25 @@ export type CreateChatCompletionRequest = {
    */
   user?: string | undefined;
 };
-export type ListFilesResponse = {
-  object: string;
-  data: OpenAiFile[];
-};
-export type ListFineTunesResponse = {
-  object: string;
-  data: unknown[];
-};
-export type ListFineTuneEventsResponse = {
-  object: string;
-  data: FineTuneEvent[];
-};
-export type FineTune = {
+export type Model = {
   id: string;
   object: string;
-  created_at: number;
-  updated_at: number;
-  model: string;
-  fine_tuned_model: string | null;
-  organization_id: string;
-  status: string;
-  hyperparams: {};
-  training_files: OpenAiFile[];
-  validation_files: OpenAiFile[];
-  result_files: OpenAiFile[];
-  events: FineTuneEvent[];
+  created: number;
+  owned_by: string;
+};
+export type ListModelsResponse = {
+  object: string;
+  data: Model[];
+};
+export type Engine = {
+  id: string;
+  object: string;
+  created: number | null;
+  ready: boolean;
+};
+export type ListEnginesResponse = {
+  object: string;
+  data: Engine[];
 };
 export type ListEnginesCommandInput = void;
 export type ListEnginesCommandBody = void;

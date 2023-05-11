@@ -3,16 +3,19 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-04-28T12:24:51.108Z
+ * Generated on 2023-05-11T04:28:59.980Z
  *
  */
-export type NewPet = {
-  name: string;
-  tag?: string | undefined;
-};
+import type { Jsonifiable } from 'type-fest';
+import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
+
 export type Error = {
   code: number;
   message: string;
+};
+export type NewPet = {
+  name: string;
+  tag?: string | undefined;
 };
 export type Pet = NewPet & {
   id: number;
