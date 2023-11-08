@@ -1,6 +1,6 @@
 {
   "name": "@block65/openapi-codegen",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": false,
   "license": "UNLICENSED",
   "sideEffects": false,
