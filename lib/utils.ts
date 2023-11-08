@@ -24,6 +24,10 @@ export function isNotReferenceObject<
   return !isReferenceObject(obj);
 }
 
+export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
+  return obj !== null && typeof obj !== undefined;
+}
+
 export function getDependents(
   obj: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
 ): string[] {
