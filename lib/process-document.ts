@@ -86,7 +86,8 @@ export async function processOpenApiDocument(
     overwrite: true,
   });
 
-  const outputTypes: (InterfaceDeclaration | TypeAliasDeclaration)[] = [];
+  const outputTypes: (InterfaceDeclaration | TypeAliasDeclaration | 'void')[] =
+    [];
 
   const refs = await $RefParser.default.resolve(schema);
 
@@ -570,6 +571,8 @@ export async function processOpenApiDocument(
               func.setReturnType(retVal);
               classDeclaration.getExtends()?.addTypeArgument('void');
 
+              outputTypes.push('void');
+
               jsdoc.addTag({
                 tagName: 'returns',
                 text: `{${retVal}} HTTP ${statusCode}`,
@@ -686,7 +689,9 @@ export async function processOpenApiDocument(
     ...new Set(inputTypes.map((t) => t.getName())),
   );
   const outputUnion = createUnion(
-    ...new Set(outputTypes.map((t) => t.getName())),
+    ...new Set(
+      outputTypes.map((t) => (typeof t === 'string' ? t : t.getName())),
+    ),
   );
 
   const allInputs = inputUnion
@@ -723,10 +728,12 @@ export async function processOpenApiDocument(
 
   clientFile.addImportDeclaration({
     moduleSpecifier: typesModuleSpecifier,
-    namedImports: [...new Set([...inputTypes, ...outputTypes])].map((t) => ({
-      name: t.getName(),
-      isTypeOnly: true,
-    })),
+    namedImports: [...new Set([...inputTypes, ...outputTypes])]
+      .filter(<T>(t: T | 'void'): t is T => t !== 'void')
+      .map((t) => ({
+        name: t.getName(),
+        isTypeOnly: true,
+      })),
   });
 
   const clientClassDeclaration = clientFile.addClass({

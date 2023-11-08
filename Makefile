@@ -10,9 +10,10 @@ deps: node_modules
 clean:
 	pnpm tsc -b --clean
 	rm -rf dist
+	rm -rf __tests__/dist
 
 .PHONY: test
-test:
+test: node_modules
 	pnpm tsc -b
 	NODE_OPTIONS=--experimental-vm-modules pnpm jest
 
@@ -53,12 +54,12 @@ openai: __tests__/fixtures/openai.yaml dist
 	pnpm prettier --write __tests__/fixtures/openai
 
 
-.PHONY: cloudflare
-cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
-	node --enable-source-maps dist/bin/index.js \
-		-i __tests__/fixtures/cloudflare/openapi.json \
-		-o __tests__/fixtures/cloudflare
-	pnpm prettier --write __tests__/fixtures/cloudflare
+# .PHONY: cloudflare
+# cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
+# 	node --enable-source-maps dist/bin/index.js \
+# 		-i __tests__/fixtures/cloudflare/openapi.json \
+# 		-o __tests__/fixtures/cloudflare
+# 	pnpm prettier --write __tests__/fixtures/cloudflare
 
 .PHONY: pretty
 pretty: node_modules

@@ -3,7 +3,7 @@
     "moduleResolution": "node16",
     "target": "es2022",
     "lib": ["es2022"],
-    "module": "esnext",
+    "module": "node16",
     "composite": true,
     "incremental": true,
     "strict": true,
@@ -29,6 +29,5 @@
     "sourceMap": true
   },
   "include": ["./lib", "./bin"],
-  "exclude": ["./dist", "node_modules"],
-  "references": [{ "path": "./__tests__" }]
+  "exclude": ["./dist", "node_modules"]
 }

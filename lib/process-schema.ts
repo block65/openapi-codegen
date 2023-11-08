@@ -13,6 +13,7 @@ import {
   type WriterFunction,
 } from 'ts-morph';
 import {
+  isNotNullOrUndefined,
   isNotReferenceObject,
   isReferenceObject,
   pascalCase,
@@ -20,14 +21,16 @@ import {
 } from './utils.js';
 
 function withNullUnion(type: string | WriterFunction, nullable = false) {
-  return nullable ? Writers.unionType(type, 'null') : type;
+  return nullable && type !== 'null' ? Writers.unionType(type, 'null') : type;
 }
 
 function maybeWithUndefined(
   type: string | WriterFunction,
   withUndefined: boolean,
 ) {
-  return withUndefined ? Writers.unionType(type, 'undefined') : type;
+  return withUndefined && type !== 'undefined'
+    ? Writers.unionType(type, 'undefined')
+    : type;
 }
 
 export function schemaToType(
@@ -114,6 +117,7 @@ export function schemaToType(
 
   const docs: (OptionalKind<JSDocStructure> | string)[] =
     Object.keys(maybeJsDoc).length > 1 ? [maybeJsDoc] : [];
+
   if (schemaObject.type === 'array') {
     const type = schemaToType(
       typesAndInterfaces,
@@ -348,13 +352,13 @@ export function schemaToType(
   }
 
   const type =
-    schemaObject.type === 'string' && schemaObject.format?.includes('date')
-      ? 'Date'
-      : schemaObject.type?.toString() || 'never';
+    schemaObject.type?.toString() ||
+    ('nullable' in schemaObject && 'null') ||
+    'never';
 
   if (type === 'never') {
     console.warn(
-      'unsupported type in %j with parent %j',
+      'WARN: unsupported type in %j with parent %j',
       schemaObject,
       parentSchema,
     );
@@ -423,6 +427,7 @@ export function registerTypesFromSchema(
 
     const objectTypesFromNonRefSchemas = schemaItems
       .filter(isNotReferenceObject)
+      .filter((schema) => schema.type === 'object')
       .map((subSchemaObject) =>
         Writers.objectType({
           properties: Object.entries(subSchemaObject.properties || {}).map(
@@ -435,13 +440,29 @@ export function registerTypesFromSchema(
               ),
           ),
         }),
-      );
+      )
+      .filter(isNotNullOrUndefined);
+
+    const nonObjectTypesFromNonRefSchemas = schemaItems
+      .filter(isNotReferenceObject)
+      .filter((schema) => schema.type !== 'object')
+      .map(
+        (subSchemaObject) =>
+          schemaToType(
+            typesAndInterfaces,
+            {}, // no parent schema
+            schemaName,
+            subSchemaObject,
+          ).type,
+      )
+      .filter(isNotNullOrUndefined);
 
     // concat and dedupe
     const typeArgs = [
       ...new Set([
         ...typeAliases.map((t) => t.getName()),
-        ...objectTypesFromNonRefSchemas.filter(Boolean),
+        ...objectTypesFromNonRefSchemas,
+        ...nonObjectTypesFromNonRefSchemas,
       ]),
     ];
 
@@ -453,10 +474,9 @@ export function registerTypesFromSchema(
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type:
-        firstType && secondType
-          ? writerType.call(Writers, firstType, secondType, ...restTypes)
-          : firstType,
+      type: secondType
+        ? writerType.call(Writers, firstType, secondType, ...restTypes)
+        : firstType,
     });
 
     if (schemaObject.description) {
