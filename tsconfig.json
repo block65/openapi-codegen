@@ -29,6 +29,5 @@
     "sourceMap": true
   },
   "include": ["./lib", "./bin"],
-  "exclude": ["./dist", "node_modules"],
-  "references": [{ "path": "./__tests__" }]
+  "exclude": ["./dist", "node_modules"]
 }

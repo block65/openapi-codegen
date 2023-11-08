@@ -4,5 +4,6 @@
     "outDir": "./dist",
     "noUnusedLocals": false
   },
-  "include": ["./**/*"]
+  "include": ["./**/*"],
+  "references": [{ "path": "../tsconfig.json" }]
 }
