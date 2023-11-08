@@ -9,7 +9,7 @@ export async function build(
   tags?: string[],
 ) {
   const apischema = (await import(inputFile, {
-    assert: { type: 'json' },
+    with: { type: 'json' },
   })) as { default: OpenAPIV3.Document };
 
   const banner = `
@@ -41,10 +41,10 @@ export async function build(
   await clientFile.save();
 
   await Promise.all(
-    [commandsFile, commandsFile].map((file) =>
+    [commandsFile, commandsFile].map(async (file) =>
       writeFile(
         file.getFilePath(),
-        format(commandsFile.getText(), { parser: 'typescript' }),
+        await format(commandsFile.getText(), { parser: 'typescript' }),
       ),
     ),
   );

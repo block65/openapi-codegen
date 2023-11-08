@@ -10,9 +10,10 @@ deps: node_modules
 clean:
 	pnpm tsc -b --clean
 	rm -rf dist
+	rm -rf __tests__/dist
 
 .PHONY: test
-test:
+test: node_modules
 	pnpm tsc -b
 	NODE_OPTIONS=--experimental-vm-modules pnpm jest
 
