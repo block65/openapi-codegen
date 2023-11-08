@@ -347,10 +347,7 @@ export function schemaToType(
     };
   }
 
-  const type =
-    schemaObject.type === 'string' && schemaObject.format?.includes('date')
-      ? 'Date'
-      : schemaObject.type?.toString() || 'never';
+  const type = schemaObject.type?.toString() || ('never' as const);
 
   if (type === 'never') {
     console.warn(
