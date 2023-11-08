@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-11-08T04:59:11.818Z
+ * Generated on 2023-11-08T05:04:09.190Z
  *
  */
 import type { Jsonifiable } from 'type-fest';
@@ -11,11 +11,23 @@ import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type DeleteModelResponse = {
   id: string;
-  object: string;
   deleted: boolean;
+  object: string;
 };
 export type CreateCompletionRequest = {
-  model: string;
+  model:
+    | string
+    | 'babbage-002'
+    | 'davinci-002'
+    | 'gpt-3.5-turbo-instruct'
+    | 'text-davinci-003'
+    | 'text-davinci-002'
+    | 'text-davinci-001'
+    | 'code-davinci-002'
+    | 'text-curie-001'
+    | 'text-babbage-001'
+    | 'text-ada-001'
+    | null;
   /**
    * The prompt(s) to generate completions for, encoded as a string, array of
    * strings, array of tokens, or array of token arrays.
@@ -25,22 +37,54 @@ export type CreateCompletionRequest = {
    * if from the beginning of a new document.
    * @default <|endoftext|>
    */
-  prompt?: string | string[] | number[] | number[][] | null | undefined;
+  prompt: string | string[] | number[] | number[][] | null;
+  /**
+   * Generates `best_of` completions server-side and returns the "best" (the one
+   * with the highest log probability per token). Results cannot be streamed.
+   *
+   * When used with `n`, `best_of` controls the number of candidate completions
+   * and `n` specifies how many to return – `best_of` must be greater than `n`.
+   *
+   * **Note:** Because this parameter generates many completions, it can quickly
+   * consume your token quota. Use carefully and ensure that you have reasonable
+   * settings for `max_tokens` and `stop`.
+   * @default 1
+   */
+  best_of?: number | null;
+  echo?: boolean | null | undefined;
+  frequency_penalty?: number | null;
+  logit_bias?: JsonifiableObject | null;
+  logprobs?: number | null;
+  /**
+   * The maximum number of [tokens](/tokenizer) to generate in the completion.
+   *
+   * The token count of your prompt plus `max_tokens` cannot exceed the model's
+   * context length. [Example Python
+   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
+   * for counting tokens.
+   * @default 16
+   * @example 16
+   */
+  max_tokens?: number | null;
+  /**
+   * How many completions to generate for each prompt.
+   *
+   * **Note:** Because this parameter generates many completions, it can quickly
+   * consume your token quota. Use carefully and ensure that you have reasonable
+   * settings for `max_tokens` and `stop`.
+   * @default 1
+   * @example 1
+   */
+  n?: number | null;
+  presence_penalty?: number | null;
+  seed?: number | null;
+  stop?: string | null | string[] | null | undefined;
+  stream?: boolean | null | undefined;
   /**
    * The suffix that comes after a completion of inserted text.
    * @example test.
    */
   suffix?: string | null | undefined;
-  /**
-   * The maximum number of [tokens](/tokenizer) to generate in the completion.
-   *
-   * The token count of your prompt plus `max_tokens` cannot exceed the model's
-   * context length. Most models have a context length of 2048 tokens (except
-   * for the newest models, which support 4096).
-   * @default 16
-   * @example 16
-   */
-  max_tokens?: number | null;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -63,36 +107,6 @@ export type CreateCompletionRequest = {
    */
   top_p?: number | null;
   /**
-   * How many completions to generate for each prompt.
-   *
-   * **Note:** Because this parameter generates many completions, it can quickly
-   * consume your token quota. Use carefully and ensure that you have reasonable
-   * settings for `max_tokens` and `stop`.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  stream?: boolean | null | undefined;
-  logprobs?: number | null;
-  echo?: boolean | null | undefined;
-  stop?: string | null | string[] | null | undefined;
-  presence_penalty?: number | null;
-  frequency_penalty?: number | null;
-  /**
-   * Generates `best_of` completions server-side and returns the "best" (the one
-   * with the highest log probability per token). Results cannot be streamed.
-   *
-   * When used with `n`, `best_of` controls the number of candidate completions
-   * and `n` specifies how many to return – `best_of` must be greater than `n`.
-   *
-   * **Note:** Because this parameter generates many completions, it can quickly
-   * consume your token quota. Use carefully and ensure that you have reasonable
-   * settings for `max_tokens` and `stop`.
-   * @default 1
-   */
-  best_of?: number | null;
-  logit_bias?: JsonifiableObject | null;
-  /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
@@ -100,70 +114,74 @@ export type CreateCompletionRequest = {
    */
   user?: string | undefined;
 };
-export type CreateCompletionResponse = {
+
+/** The role of the author of a message */
+export enum ChatCompletionRole {
+  System = 'system',
+  User = 'user',
+  Assistant = 'assistant',
+  Tool = 'tool',
+  Function = 'function',
+}
+
+/**
+ * Represents a streamed chunk of a chat completion response returned by
+ * model, based on the provided input.
+ */
+export type CreateChatCompletionStreamResponse = {
   id: string;
-  object: string;
+  choices: Array<{
+    /** WARN: $ref used before available - #/components/schemas/ChatCompletionStreamResponseDelta */
+    delta: unknown;
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the
+     * model hit a natural stop point or a provided stop sequence,
+     * `length` if the maximum number of tokens specified in the request was
+     * reached,
+     * `content_filter` if content was omitted due to a flag from our content
+     * filters,
+     * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+     * the model called a function.
+     * @enum stop,length,tool_calls,content_filter,function_call
+     */
+    finish_reason:
+      | 'stop'
+      | 'length'
+      | 'tool_calls'
+      | 'content_filter'
+      | 'function_call';
+    index: number;
+  }>;
   created: number;
   model: string;
-  choices: Array<{
-    text?: string | undefined;
-    index?: number;
-    logprobs?:
-      | {
-          tokens?: string[];
-          token_logprobs?: number[];
-          top_logprobs?: JsonifiableObject[];
-          text_offset?: number[];
-        }
-      | undefined;
-    finish_reason?: string | undefined;
-  }>;
-  usage?:
-    | {
-        prompt_tokens: number;
-        completion_tokens: number;
-        total_tokens: number;
-      }
-    | undefined;
-};
-export type ChatCompletionResponseMessage = {
   /**
-   * The role of the author of this message.
-   * @enum system,user,assistant
+   * The object type, which is always `chat.completion.chunk`.
+   * @enum chat.completion.chunk
    */
-  role: 'system' | 'user' | 'assistant';
-  content: string;
+  object: 'chat.completion.chunk';
 };
-export type CreateChatCompletionResponse = {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: Array<{
-    index?: number;
-    message?: ChatCompletionResponseMessage | undefined;
-    finish_reason?: string | undefined;
-  }>;
-  usage?:
-    | {
-        prompt_tokens: number;
-        completion_tokens: number;
-        total_tokens: number;
-      }
-    | undefined;
-};
+/**
+ * Represents a streamed chunk of a chat completion response returned by
+ * model, based on the provided input.
+ */
+export type CreateChatCompletionImageResponse = {};
 export type CreateEditRequest = {
-  model: string;
-  /**
-   * The input text to use as a starting point for the edit.
-   * @example What day of the wek is it?
-   */
-  input?: string | null | undefined;
   /**
    * The instruction that tells the model how to edit the prompt.
    * @example Fix the spelling mistakes.
    */
   instruction: string;
+  /**
+   * ID of the model to use. You can use the `text-davinci-edit-001` or
+   * `code-davinci-edit-001` model with this endpoint.
+   * @example text-davinci-edit-001
+   */
+  model: string | 'text-davinci-edit-001' | 'code-davinci-edit-001' | null;
+  /**
+   * The input text to use as a starting point for the edit.
+   * @example What day of the wek is it?
+   */
+  input?: string | null | undefined;
   /**
    * How many edits to generate for the input and instruction.
    * @default 1
@@ -192,49 +210,35 @@ export type CreateEditRequest = {
    */
   top_p?: number | null;
 };
-export type CreateEditResponse = {
-  object: string;
-  created: number;
-  choices: Array<{
-    text?: string | undefined;
-    index?: number;
-    logprobs?:
-      | {
-          tokens?: string[];
-          token_logprobs?: number[];
-          top_logprobs?: JsonifiableObject[];
-          text_offset?: number[];
-        }
-      | undefined;
-    finish_reason?: string | undefined;
-  }>;
-  usage: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-  };
-};
 export type CreateImageRequest = {
   /**
    * A text description of the desired image(s). The maximum length is 1000
-   * characters.
+   * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
    * @example A cute baby sea otter
    */
   prompt: string;
   /**
-   * The number of images to generate. Must be between 1 and 10.
+   * The model to use for image generation.
+   * @default dall-e-2
+   * @example dall-e-3
+   */
+  model?: string | 'dall-e-2' | 'dall-e-3' | null | undefined;
+  /**
+   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
+   * only `n=1` is supported.
    * @default 1
    * @example 1
    */
   n?: number | null;
   /**
-   * The size of the generated images. Must be one of `256x256`, `512x512`, or
-   * `1024x1024`.
-   * @default 1024x1024
-   * @enum 256x256,512x512,1024x1024
-   * @example 1024x1024
+   * The quality of the image that will be generated. `hd` creates images with
+   * finer details and greater consistency across the image. This param is only
+   * supported for `dall-e-3`.
+   * @default standard
+   * @enum standard,hd
+   * @example standard
    */
-  size?: '256x256' | '512x512' | '1024x1024' | undefined;
+  quality?: 'standard' | 'hd' | undefined;
   /**
    * The format in which the generated images are returned. Must be one of `url`
    * or `b64_json`.
@@ -244,6 +248,31 @@ export type CreateImageRequest = {
    */
   response_format?: 'url' | 'b64_json' | undefined;
   /**
+   * The size of the generated images. Must be one of `256x256`, `512x512`, or
+   * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
+   * `1024x1792` for `dall-e-3` models.
+   * @default 1024x1024
+   * @enum 256x256,512x512,1024x1024,1792x1024,1024x1792
+   * @example 1024x1024
+   */
+  size?:
+    | '256x256'
+    | '512x512'
+    | '1024x1024'
+    | '1792x1024'
+    | '1024x1792'
+    | undefined;
+  /**
+   * The style of the generated images. Must be one of `vivid` or `natural`.
+   * Vivid causes the model to lean towards generating hyper-real and dramatic
+   * images. Natural causes the model to produce more natural, less hyper-real
+   * looking images. This param is only supported for `dall-e-3`.
+   * @default vivid
+   * @enum vivid,natural
+   * @example vivid
+   */
+  style?: 'vivid' | 'natural' | undefined;
+  /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
@@ -251,22 +280,22 @@ export type CreateImageRequest = {
    */
   user?: string | undefined;
 };
-export type ImagesResponse = {
-  created: number;
-  data: Array<{
-    url?: string | undefined;
-    b64_json?: string | undefined;
-  }>;
-};
 export type CreateImageEditRequest = {
   image: string;
-  mask?: string | undefined;
   /**
    * A text description of the desired image(s). The maximum length is 1000
    * characters.
    * @example A cute baby sea otter wearing a beret
    */
   prompt: string;
+  mask?: string | undefined;
+  /**
+   * The model to use for image generation. Only `dall-e-2` is supported at this
+   * time.
+   * @default dall-e-2
+   * @example dall-e-2
+   */
+  model?: string | 'dall-e-2' | null | undefined;
   /**
    * The number of images to generate. Must be between 1 and 10.
    * @default 1
@@ -300,19 +329,19 @@ export type CreateImageEditRequest = {
 export type CreateImageVariationRequest = {
   image: string;
   /**
-   * The number of images to generate. Must be between 1 and 10.
+   * The model to use for image generation. Only `dall-e-2` is supported at this
+   * time.
+   * @default dall-e-2
+   * @example dall-e-2
+   */
+  model?: string | 'dall-e-2' | null | undefined;
+  /**
+   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
+   * only `n=1` is supported.
    * @default 1
    * @example 1
    */
   n?: number | null;
-  /**
-   * The size of the generated images. Must be one of `256x256`, `512x512`, or
-   * `1024x1024`.
-   * @default 1024x1024
-   * @enum 256x256,512x512,1024x1024
-   * @example 1024x1024
-   */
-  size?: '256x256' | '512x512' | '1024x1024' | undefined;
   /**
    * The format in which the generated images are returned. Must be one of `url`
    * or `b64_json`.
@@ -321,6 +350,14 @@ export type CreateImageVariationRequest = {
    * @example url
    */
   response_format?: 'url' | 'b64_json' | undefined;
+  /**
+   * The size of the generated images. Must be one of `256x256`, `512x512`, or
+   * `1024x1024`.
+   * @default 1024x1024
+   * @enum 256x256,512x512,1024x1024
+   * @example 1024x1024
+   */
+  size?: '256x256' | '512x512' | '1024x1024' | undefined;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -343,8 +380,17 @@ export type CreateModerationRequest = {
    * @default text-moderation-latest
    * @example text-moderation-stable
    */
-  model?: string | undefined;
+  model?:
+    | string
+    | 'text-moderation-latest'
+    | 'text-moderation-stable'
+    | null
+    | undefined;
 };
+/**
+ * Represents policy compliance report by OpenAI's content moderation model
+ * against a given input.
+ */
 export type CreateModerationResponse = {
   id: string;
   model: string;
@@ -353,7 +399,11 @@ export type CreateModerationResponse = {
     categories: {
       hate: boolean;
       'hate/threatening': boolean;
+      harassment: boolean;
+      'harassment/threatening': boolean;
       'self-harm': boolean;
+      'self-harm/intent': boolean;
+      'self-harm/instructions': boolean;
       sexual: boolean;
       'sexual/minors': boolean;
       violence: boolean;
@@ -362,7 +412,11 @@ export type CreateModerationResponse = {
     category_scores: {
       hate: number;
       'hate/threatening': number;
+      harassment: number;
+      'harassment/threatening': number;
       'self-harm': number;
+      'self-harm/intent': number;
+      'self-harm/instructions': number;
       sexual: number;
       'sexual/minors': number;
       violence: number;
@@ -370,214 +424,85 @@ export type CreateModerationResponse = {
     };
   }>;
 };
-export type CreateSearchRequest = {
-  /**
-   * Query to search against the documents.
-   * @example the president
-   */
-  query: string;
-  /**
-   * Up to 200 documents to search over, provided as a list of strings.
-   *
-   * The maximum document length (in tokens) is 2034 minus the number of tokens
-   * in the query.
-   *
-   * You should specify either `documents` or a `file`, but not both.
-   * @example ['White House', 'hospital', 'school']
-   */
-  documents?: string[];
-  file?: string | null | undefined;
-  /**
-   * The maximum number of documents to be re-ranked and returned by search.
-   *
-   * This flag only takes effect when `file` is set.
-   * @default 200
-   */
-  max_rerank?: number | null;
-  return_metadata?: boolean | null | undefined;
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string | undefined;
-};
-export type CreateSearchResponse = {
-  object?: string | undefined;
-  model?: string | undefined;
-  data?: Array<{
-    object?: string | undefined;
-    document?: number;
-    score?: number;
-  }>;
-};
 export type CreateFileRequest = {
   file: string;
-  purpose: string;
+  /**
+   * The intended purpose of the uploaded file.
+   *
+   * Use "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning) and
+   * "assistants" for [Assistants](/docs/api-reference/assistants) and
+   * [Messages](/docs/api-reference/messages). This allows us to validate the
+   * format of the uploaded file is correct for fine-tuning.
+   * @enum fine-tune,assistants
+   */
+  purpose: 'fine-tune' | 'assistants';
 };
 export type DeleteFileResponse = {
   id: string;
-  object: string;
+  object: 'file';
   deleted: boolean;
 };
-export type CreateAnswerRequest = {
-  model: string;
+export type CreateFineTuningJobRequest = {
   /**
-   * Question to get answered.
-   * @example What is the capital of Japan?
+   * The name of the model to fine-tune. You can select one of the
+   * [supported models](/docs/guides/fine-tuning/what-models-can-be-fine-tuned).
+   * @example gpt-3.5-turbo
    */
-  question: string;
+  model: string | 'babbage-002' | 'davinci-002' | 'gpt-3.5-turbo' | null;
   /**
-   * List of (question, answer) pairs that will help steer the model towards the
-   * tone and answer format you'd like. We recommend adding 2 to 3 examples.
-   * @example [['What is the capital of Canada?', 'Ottawa'], ['Which province is Ottawa in?', 'Ontario']]
-   */
-  examples: string[][];
-  /**
-   * A text snippet containing the contextual information used to generate the
-   * answers for the `examples` you provide.
-   * @example Ottawa, Canada's capital, is located in the east of southern Ontario, near the city of Montréal and the U.S. border.
-   */
-  examples_context: string;
-  /**
-   * List of documents from which the answer for the input `question` should be
-   * derived. If this is an empty list, the question will be answered based on
-   * the question-answer examples.
+   * The ID of an uploaded file that contains training data.
    *
-   * You should specify either `documents` or a `file`, but not both.
-   * @example ['Japan is an island country in East Asia, located in the northwest Pacific Ocean.', 'Tokyo is the capital and most populous prefecture of Japan.']
-   */
-  documents?: string[];
-  file?: string | null | undefined;
-  /**
-   * ID of the model to use for [Search](/docs/api-reference/searches/create).
-   * You can select one of `ada`, `babbage`, `curie`, or `davinci`.
-   * @default ada
-   */
-  search_model?: string | null | undefined;
-  /**
-   * The maximum number of documents to be ranked by
-   * [Search](/docs/api-reference/searches/create) when using `file`. Setting it
-   * to a higher value leads to improved accuracy but with increased latency and
-   * cost.
-   * @default 200
-   */
-  max_rerank?: number | null;
-  temperature?: number | null;
-  logprobs?: number | null;
-  /**
-   * The maximum number of tokens allowed for the generated answer
-   * @default 16
-   */
-  max_tokens?: number | null;
-  stop?: string | string[] | null | undefined;
-  /**
-   * How many answers to generate for each question.
-   * @default 1
-   */
-  n?: number | null;
-  logit_bias?: JsonifiableObject | null;
-  return_metadata?: boolean | null | undefined;
-  return_prompt?: boolean | null | undefined;
-  /**
-   * If an object name is in the list, we provide the full information of the
-   * object; otherwise, we only provide the object ID. Currently we support
-   * `completion` and `file` objects for expansion.
-   * @default
-   */
-  expand?: Jsonifiable[];
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string | undefined;
-};
-export type CreateAnswerResponse = {
-  object?: string | undefined;
-  model?: string | undefined;
-  search_model?: string | undefined;
-  completion?: string | undefined;
-  answers?: string[];
-  selected_documents?: Array<{
-    document?: number;
-    text?: string | undefined;
-  }>;
-};
-export type CreateClassificationRequest = {
-  model: string;
-  /**
-   * Query to be classified.
-   * @example The plot is not very attractive.
-   */
-  query: string;
-  /**
-   * A list of examples with labels, in the following format:
+   * See [upload file](/docs/api-reference/files/upload) for how to upload a
+   * file.
    *
-   * `[["The movie is so interesting.", "Positive"], ["It is quite boring.",
-   * "Negative"], ...]`
+   * Your dataset must be formatted as a JSONL file. Additionally, you must
+   * upload your file with the purpose `fine-tune`.
    *
-   * All the label strings will be normalized to be capitalized.
+   * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+   * @example file-abc123
+   */
+  training_file: string;
+  hyperparameters?:
+    | {
+        /**
+         * Number of examples in each batch. A larger batch size means that model
+         * parameters
+         * are updated less frequently, but with lower variance.
+         * @default auto
+         */
+        batch_size?: 'auto' | number | null | undefined;
+        /**
+         * Scaling factor for the learning rate. A smaller learning rate may be useful
+         * to avoid
+         * overfitting.
+         * @default auto
+         */
+        learning_rate_multiplier?: 'auto' | number | null | undefined;
+        /**
+         * The number of epochs to train the model for. An epoch refers to one full
+         * cycle
+         * through the training dataset.
+         * @default auto
+         */
+        n_epochs?: 'auto' | number | null | undefined;
+      }
+    | undefined;
+  suffix?: string | null | undefined;
+  /**
+   * The ID of an uploaded file that contains validation data.
    *
-   * You should specify either `examples` or `file`, but not both.
-   * @example [['Do not see this film.', 'Negative'], ['Smart, provocative and blisteringly funny.', 'Positive']]
+   * If you provide this file, the data is used to generate validation
+   * metrics periodically during fine-tuning. These metrics can be viewed in
+   * the fine-tuning results file.
+   * The same data should not be present in both train and validation files.
+   *
+   * Your dataset must be formatted as a JSONL file. You must upload your file
+   * with the purpose `fine-tune`.
+   *
+   * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+   * @example file-abc123
    */
-  examples?: string[][];
-  file?: string | null | undefined;
-  /**
-   * The set of categories being classified. If not specified, candidate labels
-   * will be automatically collected from the examples you provide. All the
-   * label strings will be normalized to be capitalized.
-   * @example Positive,Negative
-   */
-  labels?: string[];
-  /**
-   * ID of the model to use for [Search](/docs/api-reference/searches/create).
-   * You can select one of `ada`, `babbage`, `curie`, or `davinci`.
-   * @default ada
-   */
-  search_model?: string | null | undefined;
-  temperature?: number | null;
-  logprobs?: number | null;
-  /**
-   * The maximum number of examples to be ranked by
-   * [Search](/docs/api-reference/searches/create) when using `file`. Setting it
-   * to a higher value leads to improved accuracy but with increased latency and
-   * cost.
-   * @default 200
-   */
-  max_examples?: number | null;
-  logit_bias?: JsonifiableObject | null;
-  return_prompt?: boolean | null | undefined;
-  return_metadata?: boolean | null | undefined;
-  /**
-   * If an object name is in the list, we provide the full information of the
-   * object; otherwise, we only provide the object ID. Currently we support
-   * `completion` and `file` objects for expansion.
-   * @default
-   */
-  expand?: Jsonifiable[];
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string | undefined;
-};
-export type CreateClassificationResponse = {
-  object?: string | undefined;
-  model?: string | undefined;
-  search_model?: string | undefined;
-  completion?: string | undefined;
-  label?: string | undefined;
-  selected_examples?: Array<{
-    document?: number;
-    text?: string | undefined;
-    label?: string | undefined;
-  }>;
+  validation_file?: string | null | undefined;
 };
 export type CreateFineTuneRequest = {
   /**
@@ -591,60 +516,12 @@ export type CreateFineTuneRequest = {
    * Additionally, you must upload your file with the purpose `fine-tune`.
    *
    * See the [fine-tuning
-   * guide](/docs/guides/fine-tuning/creating-training-data) for more details.
-   * @example file-ajSREls59WBbvgSzJSVWxMCB
+   * guide](/docs/guides/legacy-fine-tuning/creating-training-data) for more
+   * details.
+   * @example file-abc123
    */
   training_file: string;
-  /**
-   * The ID of an uploaded file that contains validation data.
-   *
-   * If you provide this file, the data is used to generate validation
-   * metrics periodically during fine-tuning. These metrics can be viewed in
-   * the [fine-tuning results
-   * file](/docs/guides/fine-tuning/analyzing-your-fine-tuned-model).
-   * Your train and validation data should be mutually exclusive.
-   *
-   * Your dataset must be formatted as a JSONL file, where each validation
-   * example is a JSON object with the keys "prompt" and "completion".
-   * Additionally, you must upload your file with the purpose `fine-tune`.
-   *
-   * See the [fine-tuning
-   * guide](/docs/guides/fine-tuning/creating-training-data) for more details.
-   * @example file-XjSREls59WBbvgSzJSVWxMCa
-   */
-  validation_file?: string | null | undefined;
-  /**
-   * The name of the base model to fine-tune. You can select one of "ada",
-   * "babbage", "curie", "davinci", or a fine-tuned model created after
-   * 2022-04-21.
-   * To learn more about these models, see the
-   * [Models](https://platform.openai.com/docs/models) documentation.
-   * @default curie
-   */
-  model?: string | null | undefined;
-  /**
-   * The number of epochs to train the model for. An epoch refers to one
-   * full cycle through the training dataset.
-   * @default 4
-   */
-  n_epochs?: number | null;
   batch_size?: number | null;
-  learning_rate_multiplier?: number | null;
-  /**
-   * The weight to use for loss on the prompt tokens. This controls how
-   * much the model tries to learn to generate the prompt (as compared
-   * to the completion which always has a weight of 1.0), and can add
-   * a stabilizing effect to training when completions are short.
-   *
-   * If prompts are extremely long (relative to completions), it may make
-   * sense to reduce this weight so as to avoid over-prioritizing
-   * learning the prompt.
-   * @default 0.01
-   */
-  prompt_loss_weight?: number | null;
-  compute_classification_metrics?: boolean | null | undefined;
-  classification_n_classes?: number | null;
-  classification_positive_class?: string | null | undefined;
   /**
    * If this is provided, we calculate F-beta scores at the specified
    * beta values. The F-beta score is a generalization of F-1 score.
@@ -657,18 +534,91 @@ export type CreateFineTuneRequest = {
    * @example 0.6,1,1.5,2
    */
   classification_betas?: number[];
+  classification_n_classes?: number | null;
+  classification_positive_class?: string | null | undefined;
+  compute_classification_metrics?: boolean | null | undefined;
+  hyperparameters?:
+    | {
+        /**
+         * The number of epochs to train the model for. An epoch refers to one
+         * full cycle through the training dataset.
+         * @default auto
+         */
+        n_epochs?: 'auto' | number | null | undefined;
+      }
+    | undefined;
+  learning_rate_multiplier?: number | null;
+  /**
+   * The name of the base model to fine-tune. You can select one of "ada",
+   * "babbage", "curie", "davinci", or a fine-tuned model created after
+   * 2022-04-21 and before 2023-08-22.
+   * To learn more about these models, see the
+   * [Models](/docs/models) documentation.
+   * @default curie
+   * @example curie
+   */
+  model?: string | 'ada' | 'babbage' | 'curie' | 'davinci' | null | undefined;
+  /**
+   * The weight to use for loss on the prompt tokens. This controls how
+   * much the model tries to learn to generate the prompt (as compared
+   * to the completion which always has a weight of 1.0), and can add
+   * a stabilizing effect to training when completions are short.
+   *
+   * If prompts are extremely long (relative to completions), it may make
+   * sense to reduce this weight so as to avoid over-prioritizing
+   * learning the prompt.
+   * @default 0.01
+   */
+  prompt_loss_weight?: number | null;
   suffix?: string | null | undefined;
+  /**
+   * The ID of an uploaded file that contains validation data.
+   *
+   * If you provide this file, the data is used to generate validation
+   * metrics periodically during fine-tuning. These metrics can be viewed in
+   * the [fine-tuning results
+   * file](/docs/guides/legacy-fine-tuning/analyzing-your-fine-tuned-model).
+   * Your train and validation data should be mutually exclusive.
+   *
+   * Your dataset must be formatted as a JSONL file, where each validation
+   * example is a JSON object with the keys "prompt" and "completion".
+   * Additionally, you must upload your file with the purpose `fine-tune`.
+   *
+   * See the [fine-tuning
+   * guide](/docs/guides/legacy-fine-tuning/creating-training-data) for more
+   * details.
+   * @example file-abc123
+   */
+  validation_file?: string | null | undefined;
 };
 export type CreateEmbeddingRequest = {
-  model: string;
   /**
-   * Input text to get embeddings for, encoded as a string or array of tokens.
-   * To get embeddings for multiple inputs in a single request, pass an array of
-   * strings or array of token arrays. Each input must not exceed 8192 tokens in
-   * length.
+   * Input text to embed, encoded as a string or array of tokens. To embed
+   * multiple inputs in a single request, pass an array of strings or array of
+   * token arrays. The input must not exceed the max input tokens for the model
+   * (8192 tokens for `text-embedding-ada-002`) and cannot be an empty string.
+   * [Example Python
+   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
+   * for counting tokens.
    * @example The quick brown fox jumped over the lazy dog
    */
   input: string | string[] | number[] | number[][] | null;
+  /**
+   * ID of the model to use. You can use the [List
+   * models](/docs/api-reference/models/list) API to see all of your available
+   * models, or see our [Model overview](/docs/models/overview) for descriptions
+   * of them.
+   * @example text-embedding-ada-002
+   */
+  model: string | 'text-embedding-ada-002' | null;
+  /**
+   * The format to return the embeddings in. Can be either `float` or
+   * [`base64`](https://pypi.org/project/pybase64/).
+   * @default float
+   * @enum float,base64
+   * @example float
+   */
+  encoding_format?: 'float' | 'base64' | undefined;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -677,42 +627,44 @@ export type CreateEmbeddingRequest = {
    */
   user?: string | undefined;
 };
-export type CreateEmbeddingResponse = {
-  object: string;
-  model: string;
-  data: Array<{
-    index: number;
-    object: string;
-    embedding: number[];
-  }>;
-  usage: {
-    prompt_tokens: number;
-    total_tokens: number;
-  };
-};
 export type CreateTranscriptionRequest = {
   file: string;
-  model: string;
+  /**
+   * ID of the model to use. Only `whisper-1` is currently available.
+   * @example whisper-1
+   */
+  model: string | 'whisper-1' | null;
+  language?: string | undefined;
   prompt?: string | undefined;
   /**
-   * The format of the transcript output, in one of these options: json, text,
-   * srt, verbose_json, or vtt.
+   * The format of the transcript output, in one of these options: `json`,
+   * `text`, `srt`, `verbose_json`, or `vtt`.
    * @default json
+   * @enum json,text,srt,verbose_json,vtt
    */
-  response_format?: string | undefined;
+  response_format?:
+    | 'json'
+    | 'text'
+    | 'srt'
+    | 'verbose_json'
+    | 'vtt'
+    | undefined;
   temperature?: number;
-  language?: string | undefined;
 };
 export type CreateTranscriptionResponse = {
   text: string;
 };
 export type CreateTranslationRequest = {
   file: string;
-  model: string;
+  /**
+   * ID of the model to use. Only `whisper-1` is currently available.
+   * @example whisper-1
+   */
+  model: string | 'whisper-1' | null;
   prompt?: string | undefined;
   /**
-   * The format of the transcript output, in one of these options: json, text,
-   * srt, verbose_json, or vtt.
+   * The format of the transcript output, in one of these options: `json`,
+   * `text`, `srt`, `verbose_json`, or `vtt`.
    * @default json
    */
   response_format?: string | undefined;
@@ -721,61 +673,1100 @@ export type CreateTranslationRequest = {
 export type CreateTranslationResponse = {
   text: string;
 };
-export type FineTuneEvent = {
+export type CreateSpeechRequest = {
+  model: string | 'tts-1' | 'tts-1-hd' | null;
+  input: string;
+  /**
+   * The voice to use when generating the audio. Supported voices are `alloy`,
+   * `echo`, `fable`, `onyx`, `nova`, and `shimmer`.
+   * @enum alloy,echo,fable,onyx,nova,shimmer
+   */
+  voice: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
+  /**
+   * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, and
+   * `flac`.
+   * @default mp3
+   * @enum mp3,opus,aac,flac
+   */
+  response_format?: 'mp3' | 'opus' | 'aac' | 'flac' | undefined;
+  /**
+   * The speed of the generated audio. Select a value from `0.25` to `4.0`.
+   * `1.0` is the default.
+   * @default 1
+   */
+  speed?: number;
+};
+export type CreateAssistantRequest = {
+  model: string;
+  name?: string | null | undefined;
+  description?: string | null | undefined;
+  instructions?: string | null | undefined;
+  /**
+   * A list of tool enabled on the assistant. There can be a maximum of 128
+   * tools per assistant. Tools can be of types `code_interpreter`, `retrieval`,
+   * or `function`.
+   * @default
+   */
+  tools?: Array<unknown | unknown | unknown | null>;
+  /**
+   * A list of [file](/docs/api-reference/files) IDs attached to this assistant.
+   * There can be a maximum of 20 files attached to the assistant. Files are
+   * ordered by their creation date in ascending order.
+   * @default
+   */
+  file_ids?: string[];
+  metadata?: JsonifiableObject | null;
+};
+export type ModifyAssistantRequest = {
+  model?: string | undefined;
+  name?: string | null | undefined;
+  description?: string | null | undefined;
+  instructions?: string | null | undefined;
+  /**
+   * A list of tool enabled on the assistant. There can be a maximum of 128
+   * tools per assistant. Tools can be of types `code_interpreter`, `retrieval`,
+   * or `function`.
+   * @default
+   */
+  tools?: Array<unknown | unknown | unknown | null>;
+  /**
+   * A list of [File](/docs/api-reference/files) IDs attached to this assistant.
+   * There can be a maximum of 20 files attached to the assistant. Files are
+   * ordered by their creation date in ascending order. If a file was previosuly
+   * attached to the list but does not show up in the list, it will be deleted
+   * from the assistant.
+   * @default
+   */
+  file_ids?: string[];
+  metadata?: JsonifiableObject | null;
+};
+export type DeleteAssistantResponse = {
+  id: string;
+  deleted: boolean;
+  object: 'assistant.deleted';
+};
+export type AssistantToolsCode = {
+  /**
+   * The type of tool being defined: `code_interpreter`
+   * @enum code_interpreter
+   */
+  type: 'code_interpreter';
+};
+export type AssistantToolsRetrieval = {
+  /**
+   * The type of tool being defined: `retrieval`
+   * @enum retrieval
+   */
+  type: 'retrieval';
+};
+export type CreateRunRequest = {
+  assistant_id: string;
+  model?: string | null | undefined;
+  instructions?: string | null | undefined;
+  tools?: Array<AssistantToolsCode | AssistantToolsRetrieval | unknown | null>;
+  metadata?: JsonifiableObject | null;
+};
+export type ModifyRunRequest = {
+  metadata?: JsonifiableObject | null;
+};
+export type SubmitToolOutputsRunRequest = {
+  tool_outputs: Array<{
+    tool_call_id?: string | undefined;
+    output?: string | undefined;
+  }>;
+};
+export type ModifyThreadRequest = {
+  metadata?: JsonifiableObject | null;
+};
+export type DeleteThreadResponse = {
+  id: string;
+  deleted: boolean;
+  object: 'thread.deleted';
+};
+export type ModifyMessageRequest = {
+  metadata?: JsonifiableObject | null;
+};
+export type DeleteMessageResponse = {
+  id: string;
+  deleted: boolean;
+  object: 'thread.message.deleted';
+};
+/**
+ * References an image [File](/docs/api-reference/files) in the content of a
+ * message.
+ */
+export type MessageContentImageFileObject = {
+  /**
+   * Always `image_file`.
+   * @enum image_file
+   */
+  type: 'image_file';
+  image_file: {
+    file_id: string;
+  };
+};
+/** The text content that is part of a message. */
+export type MessageContentTextObject = {
+  /**
+   * Always `text`.
+   * @enum text
+   */
+  type: 'text';
+  text: {
+    value: string;
+    annotations: Array<unknown | unknown | null>;
+  };
+};
+/**
+ * A citation within the message that points to a specific quote from a
+ * specific File associated with the assistant or the message. Generated when
+ * the assistant uses the "retrieval" tool to search files.
+ */
+export type MessageContentTextAnnotationsFileCitationObject = {
+  /**
+   * Always `file_citation`.
+   * @enum file_citation
+   */
+  type: 'file_citation';
+  text: string;
+  file_citation: {
+    file_id: string;
+    quote: string;
+  };
+  start_index: number;
+  end_index: number;
+};
+/**
+ * A URL for the file that's generated when the assistant used the
+ * `code_interpreter` tool to generate a file.
+ */
+export type MessageContentTextAnnotationsFilePathObject = {
+  /**
+   * Always `file_path`.
+   * @enum file_path
+   */
+  type: 'file_path';
+  text: string;
+  file_path: {
+    file_id: string;
+  };
+  start_index: number;
+  end_index: number;
+};
+/** Details of the Code Interpreter tool call the run step was involved in. */
+export type RunStepDetailsToolCallsCodeObject = {
+  id: string;
+  /**
+   * The type of tool call. This is always going to be `code_interpreter` for
+   * this type of tool call.
+   * @enum code_interpreter
+   */
+  type: 'code_interpreter';
+  code_interpreter: {
+    input: string;
+    outputs: Array<unknown | unknown | null>;
+  };
+};
+/** Text output from the Code Interpreter tool call as part of a run step. */
+export type RunStepDetailsToolCallsCodeOutputLogsObject = {
+  /**
+   * Always `logs`.
+   * @enum logs
+   */
+  type: 'logs';
+  logs: string;
+};
+export type RunStepDetailsToolCallsCodeOutputImageObject = {
+  /**
+   * Always `image`.
+   * @enum image
+   */
+  type: 'image';
+  image: {
+    file_id: string;
+  };
+};
+export type RunStepDetailsToolCallsRetrievalObject = {
+  id: string;
+  /**
+   * The type of tool call. This is always going to be `retrieval` for this type
+   * of tool call.
+   * @enum retrieval
+   */
+  type: 'retrieval';
+  retrieval: JsonifiableObject;
+};
+export type RunStepDetailsToolCallsFunctionObject = {
+  id: string;
+  /**
+   * The type of tool call. This is always going to be `function` for this type
+   * of tool call.
+   * @enum function
+   */
+  type: 'function';
+  function: {
+    name: string;
+    arguments: string;
+    output: string | null;
+  };
+};
+export type CreateAssistantFileRequest = {
+  file_id: string;
+};
+/**
+ * Deletes the association between the assistant and the file, but does not
+ * delete the [File](/docs/api-reference/files) object itself.
+ */
+export type DeleteAssistantFileResponse = {
+  id: string;
+  deleted: boolean;
+  object: 'assistant.file.deleted';
+};
+/** A list of files attached to a `message`. */
+export type MessageFileObject = {
+  id: string;
+  /**
+   * The object type, which is always `thread.message.file`.
+   * @enum thread.message.file
+   */
+  object: 'thread.message.file';
+  created_at: number;
+  message_id: string;
+};
+export type ListMessageFilesResponse = {
   object: string;
+  data: MessageFileObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+/** A list of [Files](/docs/api-reference/files) attached to an `assistant`. */
+export type AssistantFileObject = {
+  id: string;
+  /**
+   * The object type, which is always `assistant.file`.
+   * @enum assistant.file
+   */
+  object: 'assistant.file';
+  created_at: number;
+  assistant_id: string;
+};
+export type ListAssistantFilesResponse = {
+  object: string;
+  data: AssistantFileObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+/** Details of the tool call. */
+export type RunStepDetailsToolCallsObject = {
+  /**
+   * Always `tool_calls`.
+   * @enum tool_calls
+   */
+  type: 'tool_calls';
+  tool_calls: Array<
+    | RunStepDetailsToolCallsCodeObject
+    | RunStepDetailsToolCallsRetrievalObject
+    | RunStepDetailsToolCallsFunctionObject
+    | null
+  >;
+};
+/** Details of the message creation by the run step. */
+export type RunStepDetailsMessageCreationObject = {
+  /**
+   * Always `message_creation``.
+   * @enum message_creation
+   */
+  type: 'message_creation';
+  message_creation: {
+    message_id: string;
+  };
+};
+/** Represents a step in execution of a run. */
+export type RunStepObject = {
+  id: string;
+  /**
+   * The object type, which is always `assistant.run.step``.
+   * @enum assistant.run.step
+   */
+  object: 'assistant.run.step';
+  created_at: number;
+  assistant_id: string;
+  thread_id: string;
+  run_id: string;
+  /**
+   * The type of run step, which can be either `message_creation` or
+   * `tool_calls`.
+   * @enum message_creation,tool_calls
+   */
+  type: 'message_creation' | 'tool_calls';
+  /**
+   * The status of the run, which can be either `in_progress`, `cancelled`,
+   * `failed`, `completed`, or `expired`.
+   * @enum in_progress,cancelled,failed,completed,expired
+   */
+  status: 'in_progress' | 'cancelled' | 'failed' | 'completed' | 'expired';
+  step_details:
+    | RunStepDetailsMessageCreationObject
+    | RunStepDetailsToolCallsObject
+    | null;
+  last_error: {
+    /**
+     * One of `server_error` or `rate_limit_exceeded`.
+     * @enum server_error,rate_limit_exceeded
+     */
+    code: 'server_error' | 'rate_limit_exceeded';
+    message: string;
+  };
+  expired_at: number | null;
+  cancelled_at: number | null;
+  failed_at: number | null;
+  completed_at: number | null;
+  metadata: JsonifiableObject | null;
+};
+export type ListRunStepsResponse = {
+  object: string;
+  data: RunStepObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+/** Represents a message within a [thread](/docs/api-reference/threads). */
+export type MessageObject = {
+  id: string;
+  /**
+   * The object type, which is always `thread.message`.
+   * @enum thread.message
+   */
+  object: 'thread.message';
+  created_at: number;
+  thread_id: string;
+  /**
+   * The entity that produced the message. One of `user` or `assistant`.
+   * @enum user,assistant
+   */
+  role: 'user' | 'assistant';
+  content: Array<
+    MessageContentImageFileObject | MessageContentTextObject | null
+  >;
+  assistant_id: string | null;
+  run_id: string | null;
+  /**
+   * A list of [file](/docs/api-reference/files) IDs that the assistant should
+   * use. Useful for tools like retrieval and code_interpreter that can access
+   * files. A maximum of 10 files can be attached to a message.
+   * @default
+   */
+  file_ids: string[];
+  metadata: JsonifiableObject | null;
+};
+export type ListMessagesResponse = {
+  object: string;
+  data: MessageObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+/** Represents a thread that contains [messages](/docs/api-reference/messages). */
+export type ThreadObject = {
+  id: string;
+  /**
+   * The object type, which is always `thread`.
+   * @enum thread
+   */
+  object: 'thread';
+  created_at: number;
+  metadata: JsonifiableObject | null;
+};
+export type ListThreadsResponse = {
+  object: string;
+  data: ThreadObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+export type CreateMessageRequest = {
+  /**
+   * The role of the entity that is creating the message. Currently only `user`
+   * is supported.
+   * @enum user
+   */
+  role: 'user';
+  content: string;
+  /**
+   * A list of [File](/docs/api-reference/files) IDs that the message should
+   * use. There can be a maximum of 10 files attached to a message. Useful for
+   * tools like `retrieval` and `code_interpreter` that can access and use
+   * files.
+   * @default
+   */
+  file_ids?: string[];
+  metadata?: JsonifiableObject | null;
+};
+export type CreateThreadRequest = {
+  messages?: CreateMessageRequest[];
+  metadata?: JsonifiableObject | null;
+};
+export type CreateThreadAndRunRequest = {
+  assistant_id: string;
+  thread?: CreateThreadRequest | undefined;
+  model?: string | null | undefined;
+  instructions?: string | null | undefined;
+  tools?: Array<AssistantToolsCode | AssistantToolsRetrieval | unknown | null>;
+  metadata?: JsonifiableObject | null;
+};
+/** Tool call objects */
+export type RunToolCallObject = {
+  id: string;
+  /**
+   * The type of tool call the output is required for. For now, this is always
+   * `function`.
+   * @enum function
+   */
+  type: 'function';
+  function: {
+    name: string;
+    arguments: string;
+  };
+};
+/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+export type RunObject = {
+  id: string;
+  /**
+   * The object type, which is always `assistant.run`.
+   * @enum assistant.run
+   */
+  object: 'assistant.run';
+  created_at: number;
+  thread_id: string;
+  assistant_id: string;
+  /**
+   * The status of the run, which can be either `queued`, `in_progress`,
+   * `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`, or
+   * `expired`.
+   * @enum queued,in_progress,requires_action,cancelling,cancelled,failed,completed,expired
+   */
+  status:
+    | 'queued'
+    | 'in_progress'
+    | 'requires_action'
+    | 'cancelling'
+    | 'cancelled'
+    | 'failed'
+    | 'completed'
+    | 'expired';
+  required_action: {
+    /**
+     * For now, this is always `submit_tool_outputs`.
+     * @enum submit_tool_outputs
+     */
+    type: 'submit_tool_outputs';
+    submit_tool_outputs: {
+      tool_calls: RunToolCallObject[];
+    };
+  };
+  last_error: {
+    /**
+     * One of `server_error` or `rate_limit_exceeded`.
+     * @enum server_error,rate_limit_exceeded
+     */
+    code: 'server_error' | 'rate_limit_exceeded';
+    message: string;
+  };
+  expires_at: number;
+  started_at: number | null;
+  cancelled_at: number | null;
+  failed_at: number | null;
+  completed_at: number | null;
+  model: string;
+  instructions: string;
+  /**
+   * The list of tools that the [assistant](/docs/api-reference/assistants) used
+   * for this run.
+   * @default
+   */
+  tools: Array<AssistantToolsCode | AssistantToolsRetrieval | unknown | null>;
+  /**
+   * The list of [File](/docs/api-reference/files) IDs the
+   * [assistant](/docs/api-reference/assistants) used for this run.
+   * @default
+   */
+  file_ids: string[];
+  metadata: JsonifiableObject | null;
+};
+export type ListRunsResponse = {
+  object: string;
+  data: RunObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+/**
+ * The parameters the functions accepts, described as a JSON Schema object.
+ * See the [guide](/docs/guides/gpt/function-calling) for examples, and the
+ * [JSON Schema reference](https://json-schema.org/understanding-json-schema/)
+ * for documentation about the format.
+ *
+ * To describe a function that accepts no parameters, provide the value
+ * `{"type": "object", "properties": {}}`.
+ */
+export type ChatCompletionFunctionParameters = {};
+export type AssistantToolsFunction = {
+  /**
+   * The type of tool being defined: `function`
+   * @enum function
+   */
+  type: 'function';
+  function: {
+    description: string;
+    name: string;
+    parameters: ChatCompletionFunctionParameters;
+  };
+};
+/** Represents an `assistant` that can call the model and use tools. */
+export type AssistantObject = {
+  id: string;
+  /**
+   * The object type, which is always `assistant`.
+   * @enum assistant
+   */
+  object: 'assistant';
+  created_at: number;
+  name: string | null;
+  description: string | null;
+  model: string;
+  instructions: string | null;
+  /**
+   * A list of tool enabled on the assistant. There can be a maximum of 128
+   * tools per assistant. Tools can be of types `code_interpreter`, `retrieval`,
+   * or `function`.
+   * @default
+   */
+  tools: Array<
+    AssistantToolsCode | AssistantToolsRetrieval | AssistantToolsFunction | null
+  >;
+  /**
+   * A list of [file](/docs/api-reference/files) IDs attached to this assistant.
+   * There can be a maximum of 20 files attached to the assistant. Files are
+   * ordered by their creation date in ascending order.
+   * @default
+   */
+  file_ids: string[];
+  metadata: JsonifiableObject | null;
+};
+export type ListAssistantsResponse = {
+  object: string;
+  data: AssistantObject[];
+  first_id: string;
+  last_id: string;
+  has_more: boolean;
+};
+/** Represents an embedding vector returned by embedding endpoint. */
+export type Embedding = {
+  index: number;
+  embedding: number[];
+  /**
+   * The object type, which is always "embedding".
+   * @enum embedding
+   */
+  object: 'embedding';
+};
+export type CreateEmbeddingResponse = {
+  data: Embedding[];
+  model: string;
+  /**
+   * The object type, which is always "embedding".
+   * @enum embedding
+   */
+  object: 'embedding';
+  usage: {
+    prompt_tokens: number;
+    total_tokens: number;
+  };
+};
+/** Fine-tune event object */
+export type FineTuneEvent = {
   created_at: number;
   level: string;
   message: string;
+  object: 'fine-tune-event';
 };
 export type ListFineTuneEventsResponse = {
-  object: string;
   data: FineTuneEvent[];
+  object: 'list';
 };
+/** The `File` object represents a document that has been uploaded to OpenAI. */
 export type OpenAiFile = {
   id: string;
-  object: string;
   bytes: number;
   created_at: number;
   filename: string;
-  purpose: string;
-  status: string;
-  status_details: JsonifiableObject | null;
+  /**
+   * The object type, which is always `file`.
+   * @enum file
+   */
+  object: 'file';
+  /**
+   * The intended purpose of the file. Supported values are `fine-tune`,
+   * `fine-tune-results`, `assistants`, and `assistants_output`.
+   * @enum fine-tune,fine-tune-results,assistants,assistants_output
+   */
+  purpose:
+    | 'fine-tune'
+    | 'fine-tune-results'
+    | 'assistants'
+    | 'assistants_output';
+  /**
+   * Deprecated. The current status of the file, which can be either `uploaded`,
+   * `processed`, or `error`.
+   * @enum uploaded,processed,error
+   * @deprecated
+   */
+  status: 'uploaded' | 'processed' | 'error';
+  /**
+   * Deprecated. For details on why a fine-tuning training file failed
+   * validation, see the `error` field on `fine_tuning.job`.
+   * @deprecated
+   */
+  status_details: string;
 };
+/**
+ * The `FineTune` object represents a legacy fine-tune job that has been
+ * created through the API.
+ */
 export type FineTune = {
   id: string;
-  object: string;
   created_at: number;
-  updated_at: number;
-  model: string;
+  events?: FineTuneEvent[];
   fine_tuned_model: string | null;
+  hyperparams: {
+    batch_size: number;
+    classification_n_classes?: number;
+    classification_positive_class?: string | undefined;
+    compute_classification_metrics?: boolean | undefined;
+    learning_rate_multiplier: number;
+    n_epochs: number;
+    prompt_loss_weight: number;
+  };
+  model: string;
+  /**
+   * The object type, which is always "fine-tune".
+   * @enum fine-tune
+   */
+  object: 'fine-tune';
   organization_id: string;
-  status: string;
-  hyperparams: JsonifiableObject;
-  training_files: OpenAiFile[];
-  validation_files: OpenAiFile[];
   result_files: OpenAiFile[];
-  events: FineTuneEvent[];
+  status: string;
+  training_files: OpenAiFile[];
+  updated_at: number;
+  validation_files: OpenAiFile[];
 };
 export type ListFineTunesResponse = {
-  object: string;
   data: FineTune[];
+  object: 'list';
+};
+/** Fine-tuning job event object */
+export type FineTuningJobEvent = {
+  id: string;
+  created_at: number;
+  level: 'info' | 'warn' | 'error';
+  message: string;
+  object: 'fine_tuning.job.event';
+};
+export type ListFineTuningJobEventsResponse = {
+  data: FineTuningJobEvent[];
+  object: 'list';
 };
 export type ListFilesResponse = {
-  object: string;
   data: OpenAiFile[];
+  object: 'list';
 };
-export type ChatCompletionRequestMessage = {
+/** Represents the url or the content of an image generated by the OpenAI API. */
+export type Image = {
+  b64_json?: string | undefined;
+  url?: string | undefined;
+  revised_prompt?: string | undefined;
+};
+export type ImagesResponse = {
+  created: number;
+  data: Image[];
+};
+/** Usage statistics for the completion request. */
+export type CompletionUsage = {
+  completion_tokens: number;
+  prompt_tokens: number;
+  total_tokens: number;
+};
+export type CreateEditResponse = {
+  choices: Array<{
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the
+     * model hit a natural stop point or a provided stop sequence,
+     * `length` if the maximum number of tokens specified in the request was
+     * reached,
+     * or `content_filter` if content was omitted due to a flag from our content
+     * filters.
+     * @enum stop,length
+     */
+    finish_reason: 'stop' | 'length';
+    index: number;
+    text: string;
+  }>;
   /**
-   * The role of the author of this message.
-   * @enum system,user,assistant
+   * The object type, which is always `edit`.
+   * @enum edit
    */
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-  name?: string | undefined;
+  object: 'edit';
+  created: number;
+  usage: CompletionUsage;
 };
-export type CreateChatCompletionRequest = {
+/**
+ * The `fine_tuning.job` object represents a fine-tuning job that has been
+ * created through the API.
+ */
+export type FineTuningJob = {
+  id: string;
+  created_at: number;
+  error: {
+    code: string;
+    message: string;
+    param: string | null;
+  };
+  fine_tuned_model: string | null;
+  finished_at: number | null;
+  hyperparameters: {
+    /**
+     * The number of epochs to train the model for. An epoch refers to one full
+     * cycle through the training dataset.
+     * "auto" decides the optimal number of epochs based on the size of the
+     * dataset. If setting the number manually, we support any number between 1
+     * and 50 epochs.
+     * @default auto
+     */
+    n_epochs: 'auto' | number | null;
+  };
   model: string;
+  /**
+   * The object type, which is always "fine_tuning.job".
+   * @enum fine_tuning.job
+   */
+  object: 'fine_tuning.job';
+  organization_id: string;
+  result_files: string[];
+  /**
+   * The current status of the fine-tuning job, which can be either
+   * `validating_files`, `queued`, `running`, `succeeded`, `failed`, or
+   * `cancelled`.
+   * @enum validating_files,queued,running,succeeded,failed,cancelled
+   */
+  status:
+    | 'validating_files'
+    | 'queued'
+    | 'running'
+    | 'succeeded'
+    | 'failed'
+    | 'cancelled';
+  trained_tokens: number | null;
+  training_file: string;
+  validation_file: string | null;
+};
+export type ListPaginatedFineTuningJobsResponse = {
+  data: FineTuningJob[];
+  has_more: boolean;
+  object: 'list';
+};
+/**
+ * Represents a chat completion response returned by model, based on the
+ * provided input.
+ */
+export type CreateChatCompletionFunctionResponse = {
+  id: string;
+  choices: Array<{
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the
+     * model hit a natural stop point or a provided stop sequence, `length` if the
+     * maximum number of tokens specified in the request was reached,
+     * `content_filter` if content was omitted due to a flag from our content
+     * filters, or `function_call` if the model called a function.
+     * @enum stop,length,function_call,content_filter
+     */
+    finish_reason: 'stop' | 'length' | 'function_call' | 'content_filter';
+    index: number;
+    /** WARN: $ref used before available - #/components/schemas/ChatCompletionResponseMessage */
+    message: unknown;
+  }>;
+  created: number;
+  model: string;
+  system_fingerprint?: string | undefined;
+  /**
+   * The object type, which is always `chat.completion`.
+   * @enum chat.completion
+   */
+  object: 'chat.completion';
+  usage?: CompletionUsage | undefined;
+};
+/**
+ * Represents a chat completion response returned by model, based on the
+ * provided input.
+ */
+export type CreateChatCompletionResponse = {
+  id: string;
+  choices: Array<{
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the
+     * model hit a natural stop point or a provided stop sequence,
+     * `length` if the maximum number of tokens specified in the request was
+     * reached,
+     * `content_filter` if content was omitted due to a flag from our content
+     * filters,
+     * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+     * the model called a function.
+     * @enum stop,length,tool_calls,content_filter,function_call
+     */
+    finish_reason:
+      | 'stop'
+      | 'length'
+      | 'tool_calls'
+      | 'content_filter'
+      | 'function_call';
+    index: number;
+    /** WARN: $ref used before available - #/components/schemas/ChatCompletionResponseMessage */
+    message: unknown;
+  }>;
+  created: number;
+  model: string;
+  system_fingerprint?: string | undefined;
+  /**
+   * The object type, which is always `chat.completion`.
+   * @enum chat.completion
+   */
+  object: 'chat.completion';
+  usage?: CompletionUsage | undefined;
+};
+/**
+ * Specifying a particular function via `{"name": "my_function"}` forces the
+ * model to call that function.
+ */
+export type ChatCompletionFunctionCallOption = {
+  name: string;
+};
+export type ChatCompletionFunctions = {
+  description?: string | undefined;
+  name: string;
+  parameters: ChatCompletionFunctionParameters;
+};
+/**
+ * Specifies a tool the model should use. Use to force the model to call a
+ * specific function.
+ */
+export type ChatCompletionNamedToolChoice = {
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   * @enum function
+   */
+  type?: 'function' | undefined;
+  function?:
+    | {
+        name: string;
+      }
+    | undefined;
+};
+/**
+ * Controls which (if any) function is called by the model.
+ * `none` means the model will not call a function and instead generates a
+ * message.
+ * `auto` means the model can pick between generating a message or calling a
+ * function.
+ * Specifying a particular function via `{"type: "function", "function":
+ * {"name": "my_function"}}` forces the model to call that function.
+ *
+ * `none` is the default when no functions are present. `auto` is the default
+ * if functions are present.
+ */
+export type ChatCompletionToolChoiceOption =
+  | ChatCompletionNamedToolChoice
+  | 'none'
+  | 'auto';
+export type ChatCompletionTool = {
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   * @enum function
+   */
+  type: 'function';
+  function: {
+    description?: string | undefined;
+    name: string;
+    parameters: ChatCompletionFunctionParameters;
+  };
+};
+export type ChatCompletionRequestFunctionMessage = {
+  /**
+   * The role of the messages author, in this case `function`.
+   * @enum function
+   */
+  role: 'function';
+  content: string | null;
+  name: string;
+};
+export type ChatCompletionRequestToolMessage = {
+  /**
+   * The role of the messages author, in this case `tool`.
+   * @enum tool
+   */
+  role: 'tool';
+  content: string | null;
+  tool_call_id: string;
+};
+export type ChatCompletionMessageToolCall = {
+  id: string;
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   * @enum function
+   */
+  type: 'function';
+  function: {
+    name: string;
+    arguments: string;
+  };
+};
+/** The tool calls generated by the model, such as function calls. */
+export type ChatCompletionMessageToolCalls = ChatCompletionMessageToolCall[];
+export type ChatCompletionRequestAssistantMessage = {
+  content: string | null;
+  /**
+   * The role of the messages author, in this case `assistant`.
+   * @enum assistant
+   */
+  role: 'assistant';
+  tool_calls?: ChatCompletionMessageToolCalls | undefined;
+  /**
+   * Deprecated and replaced by `tool_calls`. The name and arguments of a
+   * function that should be called, as generated by the model.
+   * @deprecated
+   */
+  function_call?:
+    | {
+        arguments: string;
+        name: string;
+      }
+    | undefined;
+};
+export type ChatCompletionRequestMessageContentPartImage = {
+  /**
+   * The type of the content part.
+   * @enum image_url
+   */
+  type: 'image_url';
+  image_url: {
+    url?: string | undefined;
+    /**
+     * Specifies the detail level of the image.
+     * @default auto
+     * @enum auto,low,high
+     */
+    detail?: 'auto' | 'low' | 'high' | undefined;
+  };
+};
+export type ChatCompletionRequestMessageContentPartText = {
+  /**
+   * The type of the content part.
+   * @enum text
+   */
+  type: 'text';
+  text: string;
+};
+export type ChatCompletionRequestMessageContentPart =
+  | ChatCompletionRequestMessageContentPartText
+  | ChatCompletionRequestMessageContentPartImage;
+export type ChatCompletionRequestUserMessage = {
+  content: string | ChatCompletionRequestMessageContentPart[] | null;
+  /**
+   * The role of the messages author, in this case `user`.
+   * @enum user
+   */
+  role: 'user';
+};
+export type ChatCompletionRequestSystemMessage = {
+  content: string | null;
+  /**
+   * The role of the messages author, in this case `system`.
+   * @enum system
+   */
+  role: 'system';
+};
+export type ChatCompletionRequestMessage =
+  | ChatCompletionRequestSystemMessage
+  | ChatCompletionRequestUserMessage
+  | ChatCompletionRequestAssistantMessage
+  | ChatCompletionRequestToolMessage
+  | ChatCompletionRequestFunctionMessage;
+export type CreateChatCompletionRequest = {
   messages: ChatCompletionRequestMessage[];
+  /**
+   * ID of the model to use. See the [model endpoint
+   * compatibility](/docs/models/model-endpoint-compatibility) table for details
+   * on which models work with the Chat API.
+   * @example gpt-3.5-turbo
+   */
+  model:
+    | string
+    | 'gpt-4'
+    | 'gpt-4-0314'
+    | 'gpt-4-0613'
+    | 'gpt-4-32k'
+    | 'gpt-4-32k-0314'
+    | 'gpt-4-32k-0613'
+    | 'gpt-3.5-turbo'
+    | 'gpt-3.5-turbo-16k'
+    | 'gpt-3.5-turbo-0301'
+    | 'gpt-3.5-turbo-0613'
+    | 'gpt-3.5-turbo-16k-0613'
+    | null;
+  frequency_penalty?: number | null;
+  logit_bias?: JsonifiableObject | null;
+  /**
+   * The maximum number of [tokens](/tokenizer) to generate in the chat
+   * completion.
+   *
+   * The total length of input tokens and generated tokens is limited by the
+   * model's context length. [Example Python
+   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
+   * for counting tokens.
+   * @default inf
+   */
+  max_tokens?: number | null;
+  /**
+   * How many chat completion choices to generate for each input message.
+   * @default 1
+   * @example 1
+   */
+  n?: number | null;
+  presence_penalty?: number | null;
+  response_format?:
+    | {
+        /**
+         * Setting to `json_object` enables JSON mode. This guarantees that the
+         * message the model generates is valid JSON.
+         *
+         * Note that your system prompt must still instruct the model to produce JSON,
+         * and to help ensure you don't forget, the API will throw an error if the
+         * string `JSON` does not appear in your system message. Also note that the
+         * message content may be partial (i.e. cut off) if `finish_reason="length"`,
+         * which indicates the generation exceeded `max_tokens` or the conversation
+         * exceeded the max context length.
+         *
+         * Must be one of `text` or `json_object`.
+         * @default text
+         * @enum text,json_object
+         * @example json_object
+         */
+        type?: 'text' | 'json_object' | undefined;
+      }
+    | undefined;
+  seed?: number | null;
+  stop?: string | null | string[] | null | undefined;
+  stream?: boolean | null | undefined;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -797,23 +1788,8 @@ export type CreateChatCompletionRequest = {
    * @example 1
    */
   top_p?: number | null;
-  /**
-   * How many chat completion choices to generate for each input message.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  stream?: boolean | null | undefined;
-  stop?: string | null | string[] | null | undefined;
-  /**
-   * The maximum number of tokens allowed for the generated answer. By default,
-   * the number of tokens the model can return will be (4096 - prompt tokens).
-   * @default inf
-   */
-  max_tokens?: number;
-  presence_penalty?: number | null;
-  frequency_penalty?: number | null;
-  logit_bias?: JsonifiableObject | null;
+  tools?: ChatCompletionTool[];
+  tool_choice?: ChatCompletionToolChoiceOption | undefined;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -821,38 +1797,157 @@ export type CreateChatCompletionRequest = {
    * @example user-1234
    */
   user?: string | undefined;
+  /**
+   * Deprecated in favor of `tool_choice`.
+   *
+   * Controls which (if any) function is called by the model.
+   * `none` means the model will not call a function and instead generates a
+   * message.
+   * `auto` means the model can pick between generating a message or calling a
+   * function.
+   * Specifying a particular function via `{"name": "my_function"}` forces the
+   * model to call that function.
+   *
+   * `none` is the default when no functions are present. `auto`` is the default
+   * if functions are present.
+   * @deprecated
+   */
+  function_call?:
+    | 'none'
+    | 'auto'
+    | ChatCompletionFunctionCallOption
+    | null
+    | undefined;
+  /**
+   * Deprecated in favor of `tools`.
+   *
+   * A list of functions the model may generate JSON inputs for.
+   * @deprecated
+   */
+  functions?: ChatCompletionFunctions[];
 };
+export type ChatCompletionMessageToolCallChunk = {
+  index: number;
+  id?: string | undefined;
+  /**
+   * The type of the tool. Currently, only `function` is supported.
+   * @enum function
+   */
+  type?: 'function' | undefined;
+  function?:
+    | {
+        name?: string | undefined;
+        arguments?: string | undefined;
+      }
+    | undefined;
+};
+/** A chat completion delta generated by streamed model responses. */
+export type ChatCompletionStreamResponseDelta = {
+  content?: string | null | undefined;
+  /**
+   * Deprecated and replaced by `tool_calls`. The name and arguments of a
+   * function that should be called, as generated by the model.
+   * @deprecated
+   */
+  function_call?:
+    | {
+        arguments?: string | undefined;
+        name?: string | undefined;
+      }
+    | undefined;
+  tool_calls?: ChatCompletionMessageToolCallChunk[];
+  /**
+   * The role of the author of this message.
+   * @enum system,user,assistant,tool
+   */
+  role?: 'system' | 'user' | 'assistant' | 'tool' | undefined;
+};
+/** A chat completion message generated by the model. */
+export type ChatCompletionResponseMessage = {
+  content: string | null;
+  tool_calls?: ChatCompletionMessageToolCalls | undefined;
+  /**
+   * The role of the author of this message.
+   * @enum assistant
+   */
+  role: 'assistant';
+  /**
+   * Deprecated and replaced by `tool_calls`. The name and arguments of a
+   * function that should be called, as generated by the model.
+   * @deprecated
+   */
+  function_call?:
+    | {
+        arguments: string;
+        name: string;
+      }
+    | undefined;
+};
+/**
+ * Represents a completion response from the API. Note: both the streamed and
+ * non-streamed response objects share the same shape (unlike the chat
+ * endpoint).
+ */
+export type CreateCompletionResponse = {
+  id: string;
+  choices: Array<{
+    /**
+     * The reason the model stopped generating tokens. This will be `stop` if the
+     * model hit a natural stop point or a provided stop sequence,
+     * `length` if the maximum number of tokens specified in the request was
+     * reached,
+     * or `content_filter` if content was omitted due to a flag from our content
+     * filters.
+     * @enum stop,length,content_filter
+     */
+    finish_reason: 'stop' | 'length' | 'content_filter';
+    index: number;
+    logprobs: {
+      text_offset?: number[];
+      token_logprobs?: number[];
+      tokens?: string[];
+      top_logprobs?: JsonifiableObject[];
+    };
+    text: string;
+  }>;
+  created: number;
+  model: string;
+  system_fingerprint?: string | undefined;
+  /**
+   * The object type, which is always "text_completion"
+   * @enum text_completion
+   */
+  object: 'text_completion';
+  usage?: CompletionUsage | undefined;
+};
+/** Describes an OpenAI model offering that can be used with the API. */
 export type Model = {
   id: string;
-  object: string;
   created: number;
+  /**
+   * The object type, which is always "model".
+   * @enum model
+   */
+  object: 'model';
   owned_by: string;
 };
 export type ListModelsResponse = {
-  object: string;
+  object: 'list';
   data: Model[];
 };
-export type Engine = {
-  id: string;
-  object: string;
-  created: number | null;
-  ready: boolean;
+export type Error = {
+  code: string | null;
+  message: string;
+  param: string | null;
+  type: string;
 };
-export type ListEnginesResponse = {
-  object: string;
-  data: Engine[];
+export type ErrorResponse = {
+  error: Error;
 };
-export type ListEnginesCommandInput = void;
-export type ListEnginesCommandBody = void;
-export type RetrieveEngineCommandParams = {
-  engineId: string;
-};
-export type RetrieveEngineCommandInput = RetrieveEngineCommandParams;
-export type RetrieveEngineCommandBody = void;
-export type CreateCompletionCommandInput = CreateCompletionRequest;
-export type CreateCompletionCommandBody = CreateCompletionRequest;
 export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
 export type CreateChatCompletionCommandBody = CreateChatCompletionRequest;
+export type CreateCompletionCommandInput = CreateCompletionRequest;
+export type CreateCompletionCommandBody = CreateCompletionRequest;
 export type CreateEditCommandInput = CreateEditRequest;
 export type CreateEditCommandBody = CreateEditRequest;
 export type CreateImageCommandInput = CreateImageRequest;
@@ -863,17 +1958,16 @@ export type CreateImageVariationCommandInput = void;
 export type CreateImageVariationCommandBody = void;
 export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
 export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
+export type CreateSpeechCommandInput = CreateSpeechRequest;
+export type CreateSpeechCommandBody = CreateSpeechRequest;
 export type CreateTranscriptionCommandInput = void;
 export type CreateTranscriptionCommandBody = void;
 export type CreateTranslationCommandInput = void;
 export type CreateTranslationCommandBody = void;
-export type CreateSearchCommandParams = {
-  engineId: string;
+export type ListFilesCommandQuery = {
+  purpose: string;
 };
-export type CreateSearchCommandInput = CreateSearchRequest &
-  CreateSearchCommandParams;
-export type CreateSearchCommandBody = CreateSearchRequest;
-export type ListFilesCommandInput = void;
+export type ListFilesCommandInput = ListFilesCommandQuery;
 export type ListFilesCommandBody = void;
 export type CreateFileCommandInput = void;
 export type CreateFileCommandBody = void;
@@ -892,10 +1986,36 @@ export type DownloadFileCommandParams = {
 };
 export type DownloadFileCommandInput = DownloadFileCommandParams;
 export type DownloadFileCommandBody = void;
-export type CreateAnswerCommandInput = CreateAnswerRequest;
-export type CreateAnswerCommandBody = CreateAnswerRequest;
-export type CreateClassificationCommandInput = CreateClassificationRequest;
-export type CreateClassificationCommandBody = CreateClassificationRequest;
+export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
+export type CreateFineTuningJobCommandBody = CreateFineTuningJobRequest;
+export type ListPaginatedFineTuningJobsCommandQuery = {
+  after: string;
+  limit: `${number}`;
+};
+export type ListPaginatedFineTuningJobsCommandInput =
+  ListPaginatedFineTuningJobsCommandQuery;
+export type ListPaginatedFineTuningJobsCommandBody = void;
+export type RetrieveFineTuningJobCommandParams = {
+  fineTuningJobId: string;
+};
+export type RetrieveFineTuningJobCommandInput =
+  RetrieveFineTuningJobCommandParams;
+export type RetrieveFineTuningJobCommandBody = void;
+export type ListFineTuningEventsCommandQuery = {
+  after: string;
+  limit: `${number}`;
+};
+export type ListFineTuningEventsCommandParams = {
+  fineTuningJobId: string;
+};
+export type ListFineTuningEventsCommandInput =
+  ListFineTuningEventsCommandQuery & ListFineTuningEventsCommandParams;
+export type ListFineTuningEventsCommandBody = void;
+export type CancelFineTuningJobCommandParams = {
+  fineTuningJobId: string;
+};
+export type CancelFineTuningJobCommandInput = CancelFineTuningJobCommandParams;
+export type CancelFineTuningJobCommandBody = void;
 export type CreateFineTuneCommandInput = CreateFineTuneRequest;
 export type CreateFineTuneCommandBody = CreateFineTuneRequest;
 export type ListFineTunesCommandInput = void;
@@ -933,3 +2053,191 @@ export type DeleteModelCommandInput = DeleteModelCommandParams;
 export type DeleteModelCommandBody = void;
 export type CreateModerationCommandInput = CreateModerationRequest;
 export type CreateModerationCommandBody = CreateModerationRequest;
+export type ListAssistantsCommandQuery = {
+  limit: `${number}`;
+  order: 'asc' | 'desc';
+  after: string;
+  before: string;
+};
+export type ListAssistantsCommandInput = ListAssistantsCommandQuery;
+export type ListAssistantsCommandBody = void;
+export type CreateAssistantCommandInput = CreateAssistantRequest;
+export type CreateAssistantCommandBody = CreateAssistantRequest;
+export type GetAssistantCommandParams = {
+  assistantId: string;
+};
+export type GetAssistantCommandInput = GetAssistantCommandParams;
+export type GetAssistantCommandBody = void;
+export type ModifyAssistantCommandParams = {
+  assistantId: string;
+};
+export type ModifyAssistantCommandInput = ModifyAssistantRequest &
+  ModifyAssistantCommandParams;
+export type ModifyAssistantCommandBody = ModifyAssistantRequest;
+export type DeleteAssistantCommandParams = {
+  assistantId: string;
+};
+export type DeleteAssistantCommandInput = DeleteAssistantCommandParams;
+export type DeleteAssistantCommandBody = void;
+export type CreateThreadCommandInput = CreateThreadRequest;
+export type CreateThreadCommandBody = CreateThreadRequest;
+export type GetThreadCommandParams = {
+  threadId: string;
+};
+export type GetThreadCommandInput = GetThreadCommandParams;
+export type GetThreadCommandBody = void;
+export type ModifyThreadCommandParams = {
+  threadId: string;
+};
+export type ModifyThreadCommandInput = ModifyThreadRequest &
+  ModifyThreadCommandParams;
+export type ModifyThreadCommandBody = ModifyThreadRequest;
+export type DeleteThreadCommandParams = {
+  threadId: string;
+};
+export type DeleteThreadCommandInput = DeleteThreadCommandParams;
+export type DeleteThreadCommandBody = void;
+export type ListMessagesCommandQuery = {
+  limit: `${number}`;
+  order: 'asc' | 'desc';
+  after: string;
+  before: string;
+};
+export type ListMessagesCommandParams = {
+  threadId: string;
+};
+export type ListMessagesCommandInput = ListMessagesCommandQuery &
+  ListMessagesCommandParams;
+export type ListMessagesCommandBody = void;
+export type CreateMessageCommandParams = {
+  threadId: string;
+};
+export type CreateMessageCommandInput = CreateMessageRequest &
+  CreateMessageCommandParams;
+export type CreateMessageCommandBody = CreateMessageRequest;
+export type GetMessageCommandParams = {
+  threadId: string;
+  messageId: string;
+};
+export type GetMessageCommandInput = GetMessageCommandParams;
+export type GetMessageCommandBody = void;
+export type ModifyMessageCommandParams = {
+  threadId: string;
+  messageId: string;
+};
+export type ModifyMessageCommandInput = ModifyMessageRequest &
+  ModifyMessageCommandParams;
+export type ModifyMessageCommandBody = ModifyMessageRequest;
+export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
+export type CreateThreadAndRunCommandBody = CreateThreadAndRunRequest;
+export type ListRunsCommandQuery = {
+  limit: `${number}`;
+  order: 'asc' | 'desc';
+  after: string;
+  before: string;
+};
+export type ListRunsCommandParams = {
+  threadId: string;
+};
+export type ListRunsCommandInput = ListRunsCommandQuery & ListRunsCommandParams;
+export type ListRunsCommandBody = void;
+export type CreateRunCommandParams = {
+  threadId: string;
+};
+export type CreateRunCommandInput = CreateRunRequest & CreateRunCommandParams;
+export type CreateRunCommandBody = CreateRunRequest;
+export type GetRunCommandParams = {
+  threadId: string;
+  runId: string;
+};
+export type GetRunCommandInput = GetRunCommandParams;
+export type GetRunCommandBody = void;
+export type ModifyRunCommandParams = {
+  threadId: string;
+  runId: string;
+};
+export type ModifyRunCommandInput = ModifyRunRequest & ModifyRunCommandParams;
+export type ModifyRunCommandBody = ModifyRunRequest;
+export type SubmitToolOuputsToRunCommandParams = {
+  threadId: string;
+  runId: string;
+};
+export type SubmitToolOuputsToRunCommandInput = SubmitToolOutputsRunRequest &
+  SubmitToolOuputsToRunCommandParams;
+export type SubmitToolOuputsToRunCommandBody = SubmitToolOutputsRunRequest;
+export type CancelRunCommandParams = {
+  threadId: string;
+  runId: string;
+};
+export type CancelRunCommandInput = CancelRunCommandParams;
+export type CancelRunCommandBody = void;
+export type ListRunStepsCommandQuery = {
+  limit: `${number}`;
+  order: 'asc' | 'desc';
+  after: string;
+  before: string;
+};
+export type ListRunStepsCommandParams = {
+  threadId: string;
+  runId: string;
+};
+export type ListRunStepsCommandInput = ListRunStepsCommandQuery &
+  ListRunStepsCommandParams;
+export type ListRunStepsCommandBody = void;
+export type GetRunStepCommandParams = {
+  threadId: string;
+  runId: string;
+  stepId: string;
+};
+export type GetRunStepCommandInput = GetRunStepCommandParams;
+export type GetRunStepCommandBody = void;
+export type ListAssistantFilesCommandQuery = {
+  limit: `${number}`;
+  order: 'asc' | 'desc';
+  after: string;
+  before: string;
+};
+export type ListAssistantFilesCommandParams = {
+  assistantId: string;
+};
+export type ListAssistantFilesCommandInput = ListAssistantFilesCommandQuery &
+  ListAssistantFilesCommandParams;
+export type ListAssistantFilesCommandBody = void;
+export type CreateAssistantFileCommandParams = {
+  assistantId: string;
+};
+export type CreateAssistantFileCommandInput = CreateAssistantFileRequest &
+  CreateAssistantFileCommandParams;
+export type CreateAssistantFileCommandBody = CreateAssistantFileRequest;
+export type GetAssistantFileCommandParams = {
+  assistantId: string;
+  fileId: string;
+};
+export type GetAssistantFileCommandInput = GetAssistantFileCommandParams;
+export type GetAssistantFileCommandBody = void;
+export type DeleteAssistantFileCommandParams = {
+  assistantId: string;
+  fileId: string;
+};
+export type DeleteAssistantFileCommandInput = DeleteAssistantFileCommandParams;
+export type DeleteAssistantFileCommandBody = void;
+export type ListMessageFilesCommandQuery = {
+  limit: `${number}`;
+  order: 'asc' | 'desc';
+  after: string;
+  before: string;
+};
+export type ListMessageFilesCommandParams = {
+  threadId: string;
+  messageId: string;
+};
+export type ListMessageFilesCommandInput = ListMessageFilesCommandQuery &
+  ListMessageFilesCommandParams;
+export type ListMessageFilesCommandBody = void;
+export type GetMessageFileCommandParams = {
+  threadId: string;
+  messageId: string;
+  fileId: string;
+};
+export type GetMessageFileCommandInput = GetMessageFileCommandParams;
+export type GetMessageFileCommandBody = void;
