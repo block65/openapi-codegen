@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-11-08T04:59:08.534Z
+ * Generated on 2023-12-14T06:34:24.294Z
  *
  */
 import type { Jsonifiable } from 'type-fest';
