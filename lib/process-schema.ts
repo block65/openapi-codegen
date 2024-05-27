@@ -61,7 +61,7 @@ export function schemaToType(
       return {
         name,
         hasQuestionToken,
-        type: 'unknown',
+        type: 'never',
         docs: [
           {
             description: `WARN: $ref used before available - ${schemaObject.$ref}`,
