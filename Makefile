@@ -11,6 +11,7 @@ clean:
 	pnpm tsc -b --clean
 	rm -rf dist
 	rm -rf __tests__/dist
+	rm __tests__/fixtures/*/*.ts
 
 .PHONY: test
 test: node_modules
