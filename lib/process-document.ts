@@ -709,7 +709,7 @@ export async function processOpenApiDocument(
     : undefined;
 
   const serviceClientClassName = 'RestServiceClient';
-  const fetcherName = 'createIsomorphicFetcher';
+  const fetcherName = 'createIsomorphicNativeFetcher';
   const configType = 'RestServiceClientConfig';
 
   clientFile.addImportDeclarations([
