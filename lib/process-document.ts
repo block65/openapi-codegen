@@ -19,12 +19,7 @@ import {
   Node,
 } from 'ts-morph';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
-import {
-  getDependents,
-  maybeJsDocDescription,
-  pascalCase,
-  wordWrap,
-} from './utils.js';
+import { getDependents, pascalCase, wordWrap } from './utils.js';
 
 // the union/intersect helpers keep typescript happy due to ts-morph typings
 function createIntersection(...types: (string | undefined)[]) {
@@ -97,15 +92,6 @@ export async function processOpenApiDocument(
       'Command',
     ],
     moduleSpecifier: '@block65/rest-client',
-  });
-
-  commandsFile.addImportDeclaration({
-    namedImports: [
-      // legacy request method functions
-      'RequestMethodCaller',
-    ],
-    moduleSpecifier: '@block65/rest-client',
-    isTypeOnly: true,
   });
 
   commandsFile.addImportDeclaration({
@@ -209,21 +195,14 @@ export async function processOpenApiDocument(
           typeof operationObject === 'object' &&
           'operationId' in operationObject
         ) {
-          /** @deprecated */
-          const func = commandsFile.addFunction({
-            name: camelcase(
-              `${operationObject.operationId.replace(/command$/i, '')} Command`,
-            ),
-            isExported: true,
-            isAsync: false,
-          });
-
           const pathParameterNames: string[] = [];
 
+          const operationId = pascalCase(
+            `${operationObject.operationId.replace(/command$/i, '')} Command`,
+          );
+
           const classDeclaration = commandsFile.addClass({
-            name: pascalCase(
-              `${operationObject.operationId.replace(/command$/i, '')} Command`,
-            ),
+            name: operationId,
             isExported: true,
             extends: 'Command',
             properties: [
@@ -241,8 +220,8 @@ export async function processOpenApiDocument(
 
           const jsDocStructure = {
             description: `\n${wordWrap(
-              operationObject.description || operationObject.operationId,
-            )}\n\n`,
+              operationObject.description || operationId,
+            )}\n`,
 
             tags: [
               ...(operationObject.summary
@@ -253,18 +232,10 @@ export async function processOpenApiDocument(
                     },
                   ]
                 : []),
-              ...(operationObject.deprecated
-                ? [
-                    {
-                      tagName: 'deprecated',
-                    },
-                  ]
-                : []),
             ],
           };
 
-          const jsdoc = func.addJsDoc(jsDocStructure);
-          classDeclaration.addJsDoc(jsDocStructure);
+          const jsdoc = classDeclaration.addJsDoc(jsDocStructure);
 
           if (operationObject.deprecated) {
             jsdoc.addTag({
@@ -294,21 +265,16 @@ export async function processOpenApiDocument(
             const parameterName = camelcase(resolvedParameter.name);
 
             if (resolvedParameter.in === 'path') {
-              func.addParameter({
-                name: parameterName,
-                type: 'string',
-              });
-
               pathParameterNames.push(parameterName);
 
-              jsdoc.addTag({
-                tagName: 'param',
-                text: wordWrap(
-                  `${parameterName} {String} ${
-                    resolvedParameter.description || ''
-                  }`,
-                ).trim(),
-              });
+              // jsdoc.addTag({
+              //   tagName: 'param',
+              //   text: wordWrap(
+              //     `${parameterName} {String} ${
+              //       resolvedParameter.description || ''
+              //     }`,
+              //   ).trim(),
+              // });
             }
 
             if (resolvedParameter.in === 'query') {
@@ -350,8 +316,6 @@ export async function processOpenApiDocument(
                 })
               : undefined;
 
-          const hasRequiredQueryParam = queryParameters.some((p) => p.required);
-
           ensureImport(queryType);
 
           const requestBodyObjectJson =
@@ -379,53 +343,15 @@ export async function processOpenApiDocument(
 
           ensureImport(bodyType);
 
-          const paramsParamName = 'parameters';
-
-          if (bodyType || queryType) {
-            const paramsHasQuestionToken = !bodyType && !hasRequiredQueryParam;
-
-            const pathParamsProperties = [
-              ...(bodyType
-                ? [
-                    {
-                      name: 'body',
-                      type: `${bodyType.getName()}${
-                        requestBodyIsArray ? '[]' : ''
-                      }`,
-                      hasQuestionToken: false,
-                    },
-                  ]
-                : []),
-              ...(queryType
-                ? [
-                    {
-                      name: 'query',
-                      type: queryType.getName(),
-                      hasQuestionToken: !hasRequiredQueryParam,
-                    },
-                  ]
-                : []),
-            ];
-
-            if (pathParamsProperties.length > 0) {
-              func.addParameter({
-                name: paramsParamName,
-                hasQuestionToken: paramsHasQuestionToken,
-                type: Writers.objectType({
-                  properties: pathParamsProperties,
-                }),
-              });
-            }
-          }
-
-          if (bodyType) {
-            jsdoc.addTag({
-              tagName: 'param',
-              text: wordWrap(
-                `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`,
-              ).trim(),
-            });
-          }
+          // const paramsParamName = 'parameters';
+          // if (bodyType) {
+          //   jsdoc.addTag({
+          //     tagName: 'param',
+          //     text: wordWrap(
+          //       `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`,
+          //     ).trim(),
+          //   });
+          // }
 
           const paramsType =
             pathParameterNames.length > 0
@@ -483,29 +409,28 @@ export async function processOpenApiDocument(
           //   });
           // }
 
-          for (const queryParam of queryParameters) {
-            const queryParameterName = camelcase(queryParam.name);
+          // for (const queryParam of queryParameters) {
+          //   const queryParameterName = camelcase(queryParam.name);
 
-            jsdoc.addTag({
-              tagName: 'param',
-              text: wordWrap(
-                `${paramsParamName}.query.${queryParameterName}${
-                  queryParam.required ? '' : '?'
-                } {String} ${maybeJsDocDescription(
-                  queryParam.deprecated && 'DEPRECATED',
-                  queryParam.description,
-                  String(queryParam.example || ''),
-                )}`,
-              ).trim(),
-            });
-          }
+          //   jsdoc.addTag({
+          //     tagName: 'param',
+          //     text: wordWrap(
+          //       `${paramsParamName}.query.${queryParameterName}${
+          //         queryParam.required ? '' : '?'
+          //       } {String} ${maybeJsDocDescription(
+          //         queryParam.deprecated && 'DEPRECATED',
+          //         queryParam.description,
+          //         String(queryParam.example || ''),
+          //       )}`,
+          //     ).trim(),
+          //   });
+          // }
 
           // this is just like a 204 response.
           if (
             !operationObject.responses ||
             Object.keys(operationObject.responses).length === 0
           ) {
-            func.setReturnType('RequestMethodCaller<void>');
             classDeclaration.getExtends()?.addTypeArgument('void');
           }
 
@@ -514,7 +439,6 @@ export async function processOpenApiDocument(
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             if (statusCode === '204') {
-              func.setReturnType('RequestMethodCaller<void>');
               classDeclaration.getExtends()?.addTypeArgument('void');
               break;
             }
@@ -556,27 +480,24 @@ export async function processOpenApiDocument(
                 arrayRef ? '[]' : ''
               }`;
 
-              const retVal = `RequestMethodCaller<${outputTypeName}>`;
+              const retVal = `${outputTypeName}`;
+              classDeclaration.getExtends()?.addTypeArgument(retVal);
 
-              func.setReturnType(retVal);
-              classDeclaration.getExtends()?.addTypeArgument(outputTypeName);
-
-              jsdoc.addTag({
-                tagName: 'returns',
-                text: `{${retVal}} HTTP ${statusCode}`,
-              });
+              // jsdoc.addTag({
+              //   tagName: 'returns',
+              //   text: `{${retVal}} HTTP ${statusCode}`,
+              // });
             } else {
-              const retVal = 'RequestMethodCaller<void>';
+              const retVal = 'void';
 
-              func.setReturnType(retVal);
-              classDeclaration.getExtends()?.addTypeArgument('void');
+              classDeclaration.getExtends()?.addTypeArgument(retVal);
 
-              outputTypes.push('void');
+              outputTypes.push(retVal);
 
-              jsdoc.addTag({
-                tagName: 'returns',
-                text: `{${retVal}} HTTP ${statusCode}`,
-              });
+              // jsdoc.addTag({
+              //   tagName: 'returns',
+              //   text: `{${retVal}} HTTP ${statusCode}`,
+              // });
             }
           }
 
@@ -593,29 +514,6 @@ export async function processOpenApiDocument(
           const pathname = `\`${path
             .replaceAll(/\{(\w+)\}/g, camelcase)
             .replaceAll(/{/g, '${')}\``;
-
-          func.addVariableStatement({
-            declarationKind: VariableDeclarationKind.Const,
-            declarations: [
-              {
-                name: 'req',
-                initializer: Writers.object({
-                  method: Writers.assertion((w) => w.quote(method), 'const'),
-                  pathname,
-                  ...(queryType && {
-                    query: `${paramsParamName}?.query`,
-                  }),
-                  ...(bodyType && { body: `${paramsParamName}.body` }),
-                }),
-              },
-            ],
-          });
-
-          func.addStatements((writer) => {
-            writer.writeLine(
-              'return (requestMethod, options) => requestMethod(req, options);',
-            );
-          });
 
           const bodyName = 'body';
           const ctorArgName = ctor.getParameters()[0]?.getName() || 'never';
