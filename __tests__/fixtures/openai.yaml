@@ -142,45 +142,73 @@ paths:
                   -H "Content-Type: application/json" \
                   -H "Authorization: Bearer $OPENAI_API_KEY" \
                   -d '{
-                    "model": "VAR_model_id",
+                    "model": "gpt-4-vision-preview",
                     "messages": [
                       {
-                        "role": "system",
-                        "content": "You are a helpful assistant."
-                      },
-                      {
                         "role": "user",
-                        "content": "Hello!"
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "What’s in this image?"
+                          },
+                          {
+                            "type": "image_url",
+                            "image_url": {
+                              "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg"
+                            }
+                          }
+                        ]
                       }
-                    ]
+                    ],
+                    "max_tokens": 300
                   }'
               python: |
                 from openai import OpenAI
+
                 client = OpenAI()
 
-                completion = client.chat.completions.create(
-                  model="VAR_model_id",
-                  messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": "Hello!"}
-                  ]
+                response = client.chat.completions.create(
+                    model="gpt-4-vision-preview",
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": "What’s in this image?"},
+                                {
+                                    "type": "image_url",
+                                    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                                },
+                            ],
+                        }
+                    ],
+                    max_tokens=300,
                 )
 
-                print(completion.choices[0].message)
+                print(response.choices[0])
               node.js: |-
                 import OpenAI from "openai";
 
                 const openai = new OpenAI();
 
                 async function main() {
-                  const completion = await openai.chat.completions.create({
-                    messages: [{ role: "system", content: "You are a helpful assistant." }],
-                    model: "VAR_model_id",
+                  const response = await openai.chat.completions.create({
+                    model: "gpt-4-vision-preview",
+                    messages: [
+                      {
+                        role: "user",
+                        content: [
+                          { type: "text", text: "What’s in this image?" },
+                          {
+                            type: "image_url",
+                            image_url:
+                              "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg/2560px-Gfp-wisconsin-madison-the-nature-boardwalk.jpg",
+                          },
+                        ],
+                      },
+                    ],
                   });
-
-                  console.log(completion.choices[0]);
+                  console.log(response.choices[0]);
                 }
-
                 main();
             response: &chat_completion_image_example |
               {
@@ -274,7 +302,7 @@ paths:
               {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{"content":"?"},"finish_reason":null}]}
 
               {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
-          - title: Function calling
+          - title: Functions
             request:
               curl: |
                 curl https://api.openai.com/v1/chat/completions \
@@ -288,8 +316,39 @@ paths:
                       "content": "What is the weather like in Boston?"
                     }
                   ],
-                  "functions": [
+                  "tools": [
                     {
+                      "type": "function",
+                      "function": {
+                        "name": "get_current_weather",
+                        "description": "Get the current weather in a given location",
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "location": {
+                              "type": "string",
+                              "description": "The city and state, e.g. San Francisco, CA"
+                            },
+                            "unit": {
+                              "type": "string",
+                              "enum": ["celsius", "fahrenheit"]
+                            }
+                          },
+                          "required": ["location"]
+                        }
+                      }
+                    }
+                  ],
+                  "tool_choice": "auto"
+                }'
+              python: |
+                from openai import OpenAI
+                client = OpenAI()
+
+                tools = [
+                  {
+                    "type": "function",
+                    "function": {
                       "name": "get_current_weather",
                       "description": "Get the current weather in a given location",
                       "parameters": {
@@ -297,46 +356,21 @@ paths:
                         "properties": {
                           "location": {
                             "type": "string",
-                            "description": "The city and state, e.g. San Francisco, CA"
+                            "description": "The city and state, e.g. San Francisco, CA",
                           },
-                          "unit": {
-                            "type": "string",
-                            "enum": ["celsius", "fahrenheit"]
-                          }
-                        },
-                        "required": ["location"]
-                      }
-                    }
-                  ],
-                  "function_call": "auto"
-                }'
-              python: |
-                from openai import OpenAI
-                client = OpenAI()
-
-                functions = [
-                  {
-                    "name": "get_current_weather",
-                    "description": "Get the current weather in a given location",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "location": {
-                                "type": "string",
-                                "description": "The city and state, e.g. San Francisco, CA",
-                            },
-                            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                          "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
                         },
                         "required": ["location"],
-                    },
+                      },
+                    }
                   }
                 ]
                 messages = [{"role": "user", "content": "What's the weather like in Boston today?"}]
                 completion = client.chat.completions.create(
                   model="VAR_model_id",
                   messages=messages,
-                  functions=functions,
-                  function_call="auto"
+                  tools=tools,
+                  tool_choice="auto"
                 )
 
                 print(completion)
@@ -347,29 +381,32 @@ paths:
 
                 async function main() {
                   const messages = [{"role": "user", "content": "What's the weather like in Boston today?"}];
-                  const functions = [
+                  const tools = [
                       {
+                        "type": "function",
+                        "function": {
                           "name": "get_current_weather",
                           "description": "Get the current weather in a given location",
                           "parameters": {
-                              "type": "object",
-                              "properties": {
-                                  "location": {
-                                      "type": "string",
-                                      "description": "The city and state, e.g. San Francisco, CA",
-                                  },
-                                  "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                            "type": "object",
+                            "properties": {
+                              "location": {
+                                "type": "string",
+                                "description": "The city and state, e.g. San Francisco, CA",
                               },
-                              "required": ["location"],
+                              "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                            },
+                            "required": ["location"],
                           },
+                        }
                       }
                   ];
 
                   const response = await openai.chat.completions.create({
-                      model: "gpt-3.5-turbo",
-                      messages: messages,
-                      functions: functions,
-                      function_call: "auto",  // auto is default, but we'll be explicit
+                    model: "gpt-3.5-turbo",
+                    messages: messages,
+                    tools: tools,
+                    tool_choice: "auto",
                   });
 
                   console.log(response);
@@ -378,30 +415,37 @@ paths:
                 main();
             response: &chat_completion_function_example |
               {
+                "id": "chatcmpl-abc123",
+                "object": "chat.completion",
+                "created": 1699896916,
+                "model": "gpt-3.5-turbo-0613",
                 "choices": [
                   {
-                    "finish_reason": "function_call",
                     "index": 0,
                     "message": {
+                      "role": "assistant",
                       "content": null,
-                      "function_call": {
-                        "arguments": "{\n  \"location\": \"Boston, MA\"\n}",
-                        "name": "get_current_weather"
-                      },
-                      "role": "assistant"
-                    }
+                      "tool_calls": [
+                        {
+                          "id": "call_abc123",
+                          "type": "function",
+                          "function": {
+                            "name": "get_current_weather",
+                            "arguments": "{\n\"location\": \"Boston, MA\"\n}"
+                          }
+                        }
+                      ]
+                    },
+                    "finish_reason": "tool_calls",
                   }
                 ],
-                "created": 1694028367,
-                "model": "gpt-3.5-turbo-0613",
-                "system_fingerprint": "fp_44709d6fcb",
-                "object": "chat.completion",
                 "usage": {
-                  "completion_tokens": 18,
                   "prompt_tokens": 82,
-                  "total_tokens": 100
+                  "completion_tokens": 17,
+                  "total_tokens": 99
                 }
               }
+
   /completions:
     post:
       operationId: createCompletion
@@ -423,6 +467,7 @@ paths:
                 $ref: '#/components/schemas/CreateCompletionResponse'
       x-oaiMeta:
         name: Create completion
+        group: completions
         returns: |
           Returns a [completion](/docs/api-reference/completions/object) object, or a sequence of completion objects if the request is streamed.
         legacy: true
@@ -643,6 +688,7 @@ paths:
                 $ref: '#/components/schemas/ImagesResponse'
       x-oaiMeta:
         name: Create image
+        group: images
         returns: Returns a list of [image](/docs/api-reference/images/object) objects.
         examples:
           request:
@@ -710,6 +756,7 @@ paths:
                 $ref: '#/components/schemas/ImagesResponse'
       x-oaiMeta:
         name: Create image edit
+        group: images
         returns: Returns a list of [image](/docs/api-reference/images/object) objects.
         examples:
           request:
@@ -781,6 +828,7 @@ paths:
                 $ref: '#/components/schemas/ImagesResponse'
       x-oaiMeta:
         name: Create image variation
+        group: images
         returns: Returns a list of [image](/docs/api-reference/images/object) objects.
         examples:
           request:
@@ -847,6 +895,7 @@ paths:
                 $ref: '#/components/schemas/CreateEmbeddingResponse'
       x-oaiMeta:
         name: Create embeddings
+        group: embeddings
         returns: A list of [embedding](/docs/api-reference/embeddings/object) objects.
         examples:
           request:
@@ -933,6 +982,7 @@ paths:
                 format: binary
       x-oaiMeta:
         name: Create speech
+        group: audio
         returns: The audio file content.
         examples:
           request:
@@ -998,6 +1048,7 @@ paths:
                 $ref: '#/components/schemas/CreateTranscriptionResponse'
       x-oaiMeta:
         name: Create transcription
+        group: audio
         returns: The transcribed text.
         examples:
           request:
@@ -1056,6 +1107,7 @@ paths:
                 $ref: '#/components/schemas/CreateTranslationResponse'
       x-oaiMeta:
         name: Create translation
+        group: audio
         returns: The translated text.
         examples:
           request:
@@ -1075,15 +1127,20 @@ paths:
                 file=audio_file
               )
             node: |
-              const { Configuration, OpenAIApi } = require("openai");
-              const configuration = new Configuration({
-                apiKey: process.env.OPENAI_API_KEY,
-              });
-              const openai = new OpenAIApi(configuration);
-              const resp = await openai.createTranslation(
-                fs.createReadStream("audio.mp3"),
-                "whisper-1"
-              );
+              import fs from "fs";
+              import OpenAI from "openai";
+
+              const openai = new OpenAI();
+
+              async function main() {
+                  const translation = await openai.audio.translations.create({
+                      file: fs.createReadStream("speech.mp3"),
+                      model: "whisper-1",
+                  });
+
+                  console.log(translation.text);
+              }
+              main();
           response: |
             {
               "text": "Hello, my name is Wolfgang and I come from Germany. Where are you heading today?"
@@ -1111,6 +1168,7 @@ paths:
                 $ref: '#/components/schemas/ListFilesResponse'
       x-oaiMeta:
         name: List files
+        group: files
         returns: A list of [File](/docs/api-reference/files/object) objects.
         examples:
           request:
@@ -1163,9 +1221,9 @@ paths:
       tags:
         - Files
       summary: |
-        Upload a file that can be used across various endpoints/features. The size of all the files uploaded by one organization can be up to 100 GB.
+        Upload a file that can be used across various endpoints. The size of all the files uploaded by one organization can be up to 100 GB.
 
-        The size of individual files for can be a maximum of 512MB. See the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
+        The size of individual files can be a maximum of 512 MB. See the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.
 
         Please [contact us](https://help.openai.com/) if you need to increase these storage limits.
       requestBody:
@@ -1183,6 +1241,7 @@ paths:
                 $ref: '#/components/schemas/OpenAIFile'
       x-oaiMeta:
         name: Upload file
+        group: files
         returns: The uploaded [File](/docs/api-reference/files/object) object.
         examples:
           request:
@@ -1217,7 +1276,7 @@ paths:
               main();
           response: |
             {
-              "id": "file-BK7bzQj3FfZFXr7DbL6xJwfo",
+              "id": "file-abc123",
               "object": "file",
               "bytes": 120000,
               "created_at": 1677610602,
@@ -1246,6 +1305,7 @@ paths:
                 $ref: '#/components/schemas/DeleteFileResponse'
       x-oaiMeta:
         name: Delete file
+        group: files
         returns: Deletion status.
         examples:
           request:
@@ -1257,7 +1317,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              client.files.delete("file-oaG6vwLtV3v3mWpvxexWDKxq")
+              client.files.delete("file-abc123")
             node.js: |-
               import OpenAI from "openai";
 
@@ -1297,24 +1357,25 @@ paths:
                 $ref: '#/components/schemas/OpenAIFile'
       x-oaiMeta:
         name: Retrieve file
+        group: files
         returns: The [File](/docs/api-reference/files/object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/files/file-BK7bzQj3FfZFXr7DbL6xJwfo \
+              curl https://api.openai.com/v1/files/file-abc123 \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
-              client.files.retrieve("file-BK7bzQj3FfZFXr7DbL6xJwfo")
+              client.files.retrieve("file-abc123")
             node.js: |-
               import OpenAI from "openai";
 
               const openai = new OpenAI();
 
               async function main() {
-                const file = await openai.files.retrieve("file-BK7bzQj3FfZFXr7DbL6xJwfo");
+                const file = await openai.files.retrieve("file-abc123");
 
                 console.log(file);
               }
@@ -1322,7 +1383,7 @@ paths:
               main();
           response: |
             {
-              "id": "file-BK7bzQj3FfZFXr7DbL6xJwfo",
+              "id": "file-abc123",
               "object": "file",
               "bytes": 120000,
               "created_at": 1677610602,
@@ -1351,24 +1412,25 @@ paths:
                 type: string
       x-oaiMeta:
         name: Retrieve file content
+        group: files
         returns: The file content.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/files/file-BK7bzQj3FfZFXr7DbL6xJwfo/content \
+              curl https://api.openai.com/v1/files/file-abc123/content \
                 -H "Authorization: Bearer $OPENAI_API_KEY" > file.jsonl
             python: |
               from openai import OpenAI
               client = OpenAI()
 
-              content = client.files.retrieve_content("file-BK7bzQj3FfZFXr7DbL6xJwfo")
+              content = client.files.retrieve_content("file-abc123")
             node.js: |
               import OpenAI from "openai";
 
               const openai = new OpenAI();
 
               async function main() {
-                const file = await openai.files.retrieveContent("file-BK7bzQj3FfZFXr7DbL6xJwfo");
+                const file = await openai.files.retrieveContent("file-abc123");
 
                 console.log(file);
               }
@@ -1401,9 +1463,10 @@ paths:
                 $ref: '#/components/schemas/FineTuningJob'
       x-oaiMeta:
         name: Create fine-tuning job
+        group: fine-tuning
         returns: A [fine-tuning.job](/docs/api-reference/fine-tuning/object) object.
         examples:
-          - title: No hyperparameters
+          - title: Default
             request:
               curl: |
                 curl https://api.openai.com/v1/fine_tuning/jobs \
@@ -1448,7 +1511,7 @@ paths:
                 "validation_file": null,
                 "training_file": "file-abc123",
               }
-          - title: Hyperparameters
+          - title: Epochs
             request:
               curl: |
                 curl https://api.openai.com/v1/fine_tuning/jobs \
@@ -1579,6 +1642,7 @@ paths:
                 $ref: '#/components/schemas/ListPaginatedFineTuningJobsResponse'
       x-oaiMeta:
         name: List fine-tuning jobs
+        group: fine-tuning
         returns: A list of paginated [fine-tuning job](/docs/api-reference/fine-tuning/object) objects.
         examples:
           request:
@@ -1648,6 +1712,7 @@ paths:
                 $ref: '#/components/schemas/FineTuningJob'
       x-oaiMeta:
         name: Retrieve fine-tuning job
+        group: fine-tuning
         returns: The [fine-tuning](/docs/api-reference/fine-tunes/object) object with the given ID.
         examples:
           request:
@@ -1729,6 +1794,7 @@ paths:
                 $ref: '#/components/schemas/ListFineTuningJobEventsResponse'
       x-oaiMeta:
         name: List fine-tuning events
+        group: fine-tuning
         returns: A list of fine-tuning event objects.
         examples:
           request:
@@ -1807,6 +1873,7 @@ paths:
                 $ref: '#/components/schemas/FineTuningJob'
       x-oaiMeta:
         name: Cancel fine-tuning
+        group: fine-tuning
         returns: The cancelled [fine-tuning](/docs/api-reference/fine-tuning/object) object.
         examples:
           request:
@@ -1873,6 +1940,7 @@ paths:
                 $ref: '#/components/schemas/FineTune'
       x-oaiMeta:
         name: Create fine-tune
+        group: fine-tunes
         returns: A [fine-tune](/docs/api-reference/fine-tunes/object) object.
         examples:
           request:
@@ -1884,7 +1952,14 @@ paths:
                   "training_file": "file-abc123"
                 }'
             python: |
-              # deprecated
+              from openai import OpenAI
+              client = OpenAI()
+
+              fine_tune = client.fine_tunes.create(
+                training_file="file-abc123",
+                model="davinci"
+              }
+              print(fine_tune)
             node.js: |
               import OpenAI from "openai";
 
@@ -1952,6 +2027,7 @@ paths:
                 $ref: '#/components/schemas/ListFineTunesResponse'
       x-oaiMeta:
         name: List fine-tunes
+        group: fine-tunes
         returns: A list of [fine-tune](/docs/api-reference/fine-tunes/object) objects.
         examples:
           request:
@@ -1959,7 +2035,11 @@ paths:
               curl https://api.openai.com/v1/fine-tunes \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             python: |
-              # deprecated
+              from openai import OpenAI
+              client = OpenAI()
+
+              models = client.fine_tunes.list()
+              print(models)
             node.js: |-
               import OpenAI from "openai";
 
@@ -2024,21 +2104,26 @@ paths:
                 $ref: '#/components/schemas/FineTune'
       x-oaiMeta:
         name: Retrieve fine-tune
+        group: fine-tunes
         returns: The [fine-tune](/docs/api-reference/fine-tunes/object) object with the given ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/fine-tunes/ft-AF1WoRqd3aJAHsqc9NY7iL8F \
+              curl https://api.openai.com/v1/fine-tunes/ft-abc123 \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             python: |
-              # deprecated
+              from openai import OpenAI
+              client = OpenAI()
+
+              fine_tune = client.fine_tunes.retrieve("ft-abc123")
+              print(fine_tune)
             node.js: |-
               import OpenAI from "openai";
 
               const openai = new OpenAI();
 
               async function main() {
-                const fineTune = await openai.fineTunes.retrieve("ft-AF1WoRqd3aJAHsqc9NY7iL8F");
+                const fineTune = await openai.fineTunes.retrieve("ft-abc123");
 
                 console.log(fineTune);
               }
@@ -2046,7 +2131,7 @@ paths:
               main();
           response: &fine_tune_example |
             {
-              "id": "ft-AF1WoRqd3aJAHsqc9NY7iL8F",
+              "id": "ft-abc123",
               "object": "fine-tune",
               "model": "curie",
               "created_at": 1614807352,
@@ -2140,6 +2225,7 @@ paths:
                 $ref: '#/components/schemas/FineTune'
       x-oaiMeta:
         name: Cancel fine-tune
+        group: fine-tunes
         returns: The cancelled [fine-tune](/docs/api-reference/fine-tunes/object) object.
         examples:
           request:
@@ -2147,7 +2233,11 @@ paths:
               curl https://api.openai.com/v1/fine-tunes/ft-AF1WoRqd3aJAHsqc9NY7iL8F/cancel \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             python: |
-              # deprecated
+              from openai import OpenAI
+              client = OpenAI()
+
+              fine_tune = client.fine_tunes.cancel("ft-abc123")
+              print(fine_tune)
             node.js: |-
               import OpenAI from "openai";
 
@@ -2225,6 +2315,7 @@ paths:
                 $ref: '#/components/schemas/ListFineTuneEventsResponse'
       x-oaiMeta:
         name: List fine-tune events
+        group: fine-tunes
         returns: A list of fine-tune event objects.
         examples:
           request:
@@ -2232,7 +2323,11 @@ paths:
               curl https://api.openai.com/v1/fine-tunes/ft-AF1WoRqd3aJAHsqc9NY7iL8F/events \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             python: |
-              # deprecated
+              from openai import OpenAI
+              client = OpenAI()
+
+              fine_tune = client.fine_tunes.list_events("ft-abc123")
+              print(fine_tune)
             node.js: |-
               import OpenAI from "openai";
 
@@ -2296,6 +2391,7 @@ paths:
                 $ref: '#/components/schemas/ListModelsResponse'
       x-oaiMeta:
         name: List models
+        group: models
         returns: A list of [model](/docs/api-reference/models/object) objects.
         examples:
           request:
@@ -2369,6 +2465,7 @@ paths:
                 $ref: '#/components/schemas/Model'
       x-oaiMeta:
         name: Retrieve model
+        group: models
         returns: The [model](/docs/api-reference/models/object) object matching the specified ID.
         examples:
           request:
@@ -2420,7 +2517,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/DeleteModelResponse'
       x-oaiMeta:
-        name: Delete fine-tune model
+        name: Delete a fine-tuned model
+        group: models
         returns: Deletion status.
         examples:
           request:
@@ -2472,6 +2570,7 @@ paths:
                 $ref: '#/components/schemas/CreateModerationResponse'
       x-oaiMeta:
         name: Create moderation
+        group: moderations
         returns: A [moderation](/docs/api-reference/moderations/object) object.
         examples:
           request:
@@ -2535,7 +2634,6 @@ paths:
               ]
             }
 
-  # Assistants
   /assistants:
     get:
       operationId: listAssistants
@@ -2580,6 +2678,7 @@ paths:
                 $ref: '#/components/schemas/ListAssistantsResponse'
       x-oaiMeta:
         name: List assistants
+        group: assistants
         beta: true
         returns: A list of [assistant](/docs/api-reference/assistants/object) objects.
         examples:
@@ -2593,7 +2692,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              my_assistants = openai.beta.assistants.list(
+              my_assistants = client.beta.assistants.list(
                   order="desc",
                   limit="20",
               )
@@ -2678,6 +2777,7 @@ paths:
                 $ref: '#/components/schemas/AssistantObject'
       x-oaiMeta:
         name: Create assistant
+        group: assistants
         beta: true
         returns: An [assistant](/docs/api-reference/assistants/object) object.
         examples:
@@ -2690,7 +2790,7 @@ paths:
                   -H "OpenAI-Beta: assistants=v1" \
                   -d '{
                     "instructions": "You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
-                    "name": "Math Tutor"
+                    "name": "Math Tutor",
                     "tools": [{"type": "code_interpreter"}],
                     "model": "gpt-4"
                   }'
@@ -2699,7 +2799,7 @@ paths:
                 from openai import OpenAI
                 client = OpenAI()
 
-                my_assistant = openai.beta.assistants.create(
+                my_assistant = client.beta.assistants.create(
                     instructions="You are a personal math tutor. When asked a question, write and run Python code to answer the question.",
                     name="Math Tutor",
                     tools=[{"type": "code_interpreter"}],
@@ -2758,7 +2858,7 @@ paths:
                 from openai import OpenAI
                 client = OpenAI()
 
-                my_assistant = openai.beta.assistants.create(
+                my_assistant = client.beta.assistants.create(
                     instructions="You are an HR bot, and you have access to files to answer employee questions about company policies.",
                     name="HR Helper",
                     tools=[{"type": "retrieval"}],
@@ -2827,6 +2927,7 @@ paths:
                 $ref: '#/components/schemas/AssistantObject'
       x-oaiMeta:
         name: Retrieve assistant
+        group: assistants
         beta: true
         returns: The [assistant](/docs/api-reference/assistants/object) object matching the specified ID.
         examples:
@@ -2840,7 +2941,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              my_assistant = openai.beta.assistants.retrieve("asst_abc123")
+              my_assistant = client.beta.assistants.retrieve("asst_abc123")
               print(my_assistant)
             node.js: |-
               import OpenAI from "openai";
@@ -2878,7 +2979,7 @@ paths:
     post:
       operationId: modifyAssistant
       tags:
-        - Assistant
+        - Assistants
       summary: Modifies an assistant.
       parameters:
         - in: path
@@ -2902,6 +3003,7 @@ paths:
                 $ref: '#/components/schemas/AssistantObject'
       x-oaiMeta:
         name: Modify assistant
+        group: assistants
         beta: true
         returns: The modified [assistant](/docs/api-reference/assistants/object) object.
         examples:
@@ -2920,7 +3022,8 @@ paths:
             python: |
               from openai import OpenAI
               client = OpenAI()
-              my_updated_assistant = openai.beta.assistants.update(
+
+              my_updated_assistant = client.beta.assistants.update(
                 "asst_abc123",
                 instructions="You are an HR bot, and you have access to files to answer employee questions about company policies. Always response with info from either of the files.",
                 name="HR Helper",
@@ -2996,6 +3099,7 @@ paths:
                 $ref: '#/components/schemas/DeleteAssistantResponse'
       x-oaiMeta:
         name: Delete assistant
+        group: assistants
         beta: true
         returns: Deletion status
         examples:
@@ -3009,7 +3113,8 @@ paths:
             python: |
               from openai import OpenAI
               client = OpenAI()
-              response = openai.beta.assistants.delete("asst_QLoItBbqwyAJEzlTy4y9kOMM")
+
+              response = client.beta.assistants.delete("asst_abc123")
               print(response)
             node.js: |-
               import OpenAI from "openai";
@@ -3017,7 +3122,7 @@ paths:
               const openai = new OpenAI();
 
               async function main() {
-                const response = await openai.beta.assistants.del("asst_QLoItBbqwyAJEzlTy4y9kOMM");
+                const response = await openai.beta.assistants.del("asst_abc123");
 
                 console.log(response);
               }
@@ -3036,7 +3141,6 @@ paths:
         - Assistants
       summary: Create a thread.
       requestBody:
-        required: true
         content:
           application/json:
             schema:
@@ -3050,6 +3154,7 @@ paths:
                 $ref: '#/components/schemas/ThreadObject'
       x-oaiMeta:
         name: Create thread
+        group: threads
         beta: true
         returns: A [thread](/docs/api-reference/threads) object.
         examples:
@@ -3065,7 +3170,7 @@ paths:
                 from openai import OpenAI
                 client = OpenAI()
 
-                empty_thread = openai.beta.threads.create()
+                empty_thread = client.beta.threads.create()
                 print(empty_thread)
               node.js: |-
                 import OpenAI from "openai";
@@ -3107,7 +3212,7 @@ paths:
                 from openai import OpenAI
                 client = OpenAI()
 
-                message_thread = openai.beta.threads.create(
+                message_thread = client.beta.threads.create(
                   messages=[
                     {
                       "role": "user",
@@ -3176,6 +3281,7 @@ paths:
                 $ref: '#/components/schemas/ThreadObject'
       x-oaiMeta:
         name: Retrieve thread
+        group: threads
         beta: true
         returns: The [thread](/docs/api-reference/threads/object) object matching the specified ID.
         examples:
@@ -3189,7 +3295,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              my_thread = openai.beta.threads.retrieve("thread_abc123")
+              my_thread = client.beta.threads.retrieve("thread_abc123")
               print(my_thread)
             node.js: |-
               import OpenAI from "openai";
@@ -3239,6 +3345,7 @@ paths:
                 $ref: '#/components/schemas/ThreadObject'
       x-oaiMeta:
         name: Modify thread
+        group: threads
         beta: true
         returns: The modified [thread](/docs/api-reference/threads/object) object matching the specified ID.
         examples:
@@ -3258,7 +3365,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              my_updated_thread = openai.beta.threads.update(
+              my_updated_thread = client.beta.threads.update(
                 "thread_abc123",
                 metadata={
                   "modified": "true",
@@ -3314,6 +3421,7 @@ paths:
                 $ref: '#/components/schemas/DeleteThreadResponse'
       x-oaiMeta:
         name: Delete thread
+        group: threads
         beta: true
         returns: Deletion status
         examples:
@@ -3328,7 +3436,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              response = openai.beta.threads.delete("thread_abc123")
+              response = client.beta.threads.delete("thread_abc123")
               print(response)
             node.js: |-
               import OpenAI from "openai";
@@ -3394,6 +3502,7 @@ paths:
                 $ref: '#/components/schemas/ListMessagesResponse'
       x-oaiMeta:
         name: List messages
+        group: threads
         beta: true
         returns: A list of [message](/docs/api-reference/messages) objects.
         examples:
@@ -3407,7 +3516,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              thread_messages = openai.beta.threads.messages.list("thread_1OWaSqVIxJdy3KYnJLbXEWhy")
+              thread_messages = client.beta.threads.messages.list("thread_abc123")
               print(thread_messages.data)
             node.js: |-
               import OpenAI from "openai";
@@ -3416,7 +3525,7 @@ paths:
 
               async function main() {
                 const threadMessages = await openai.beta.threads.messages.list(
-                  "thread_1OWaSqVIxJdy3KYnJLbXEWhy"
+                  "thread_abc123"
                 );
 
                 console.log(threadMessages.data);
@@ -3501,6 +3610,7 @@ paths:
                 $ref: '#/components/schemas/MessageObject'
       x-oaiMeta:
         name: Create message
+        group: threads
         beta: true
         returns: A [message](/docs/api-reference/messages/object) object.
         examples:
@@ -3518,7 +3628,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              thread_message = openai.beta.threads.messages.create(
+              thread_message = client.beta.threads.messages.create(
                 "thread_abc123",
                 role="user",
                 content="How does AI work? Explain it in simple terms.",
@@ -3589,6 +3699,7 @@ paths:
                 $ref: '#/components/schemas/MessageObject'
       x-oaiMeta:
         name: Retrieve message
+        group: threads
         beta: true
         returns: The [message](/docs/api-reference/threads/messages/object) object matching the specified ID.
         examples:
@@ -3602,7 +3713,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              message = openai.beta.threads.messages.retrieve(
+              message = client.beta.threads.messages.retrieve(
                 message_id="msg_abc123",
                 thread_id="thread_abc123",
               )
@@ -3676,6 +3787,7 @@ paths:
                 $ref: '#/components/schemas/MessageObject'
       x-oaiMeta:
         name: Modify message
+        group: threads
         beta: true
         returns: The modified [message](/docs/api-reference/threads/messages/object) object.
         examples:
@@ -3695,7 +3807,7 @@ paths:
               from openai import OpenAI
               client = OpenAI()
 
-              message = openai.beta.threads.messages.update(
+              message = client.beta.threads.messages.update(
                 message_id="msg_abc12",
                 thread_id="thread_abc123",
                 metadata={
@@ -3766,17 +3878,18 @@ paths:
                 $ref: '#/components/schemas/RunObject'
       x-oaiMeta:
         name: Create thread and run
+        group: threads
         beta: true
         returns: A [run](/docs/api-reference/runs/object) object.
         examples:
           request:
             curl: |
               curl https://api.openai.com/v1/threads/runs \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1' \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1" \
                 -d '{
-                    "assistant_id": "asst_IgmpQTah3ZfPHCVZjTqAY8Kv",
+                    "assistant_id": "asst_abc123",
                     "thread": {
                       "messages": [
                         {"role": "user", "content": "Explain deep learning to a 5 year old."}
@@ -3788,7 +3901,7 @@ paths:
               client = OpenAI()
 
               run = client.beta.threads.create_and_run(
-                assistant_id="asst_IgmpQTah3ZfPHCVZjTqAY8Kv",
+                assistant_id="asst_abc123",
                 thread={
                   "messages": [
                     {"role": "user", "content": "Explain deep learning to a 5 year old."}
@@ -3802,7 +3915,7 @@ paths:
 
               async function main() {
                 const run = await openai.beta.threads.createAndRun({
-                  assistant_id: "asst_IgmpQTah3ZfPHCVZjTqAY8Kv",
+                  assistant_id: "asst_abc123",
                   thread: {
                     messages: [
                       { role: "user", content: "Explain deep learning to a 5 year old." },
@@ -3816,11 +3929,11 @@ paths:
               main();
           response: |
             {
-              "id": "run_3Qudf05GGhCleEg9ggwfJQih",
+              "id": "run_abc123",
               "object": "thread.run",
               "created_at": 1699076792,
-              "assistant_id": "asst_IgmpQTah3ZfPHCVZjTqAY8Kv",
-              "thread_id": "thread_Ec3eKZcWI00WDZRC7FZci8hP",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "status": "queued",
               "started_at": null,
               "expires_at": 1699077392,
@@ -3881,21 +3994,22 @@ paths:
                 $ref: '#/components/schemas/ListRunsResponse'
       x-oaiMeta:
         name: List runs
+        group: threads
         beta: true
         returns: A list of [run](/docs/api-reference/runs/object) objects.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_BDDwIqM4KgHibXX3mqmN3Lgs/runs \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/threads/thread_abc123/runs \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               runs = client.beta.threads.runs.list(
-                "thread_BDDwIqM4KgHibXX3mqmN3Lgs"
+                "thread_abc123"
               )
               print(runs)
             node.js: |
@@ -3905,7 +4019,7 @@ paths:
 
               async function main() {
                 const runs = await openai.beta.threads.runs.list(
-                  "thread_BDDwIqM4KgHibXX3mqmN3Lgs"
+                  "thread_abc123"
                 );
 
                 console.log(runs);
@@ -3917,11 +4031,11 @@ paths:
               "object": "list",
               "data": [
                 {
-                  "id": "run_5pyUEwhaPk11vCKiDneUWXXY",
+                  "id": "run_abc123",
                   "object": "thread.run",
                   "created_at": 1699075072,
-                  "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-                  "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+                  "assistant_id": "asst_abc123",
+                  "thread_id": "thread_abc123",
                   "status": "completed",
                   "started_at": 1699075072,
                   "expires_at": null,
@@ -3937,17 +4051,17 @@ paths:
                     }
                   ],
                   "file_ids": [
-                    "file-9F1ex49ipEnKzyLUNnCA0Yzx",
-                    "file-dEWwUbt2UGHp3v0e0DpCzemP"
+                    "file-abc123",
+                    "file-abc456"
                   ],
                   "metadata": {}
                 },
                 {
-                  "id": "run_UWvV94U0FQYiT2rlbBrdEVmC",
+                  "id": "run_abc456",
                   "object": "thread.run",
                   "created_at": 1699063290,
-                  "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-                  "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+                  "assistant_id": "asst_abc123",
+                  "thread_id": "thread_abc123",
                   "status": "completed",
                   "started_at": 1699063290,
                   "expires_at": null,
@@ -3963,14 +4077,14 @@ paths:
                     }
                   ],
                   "file_ids": [
-                    "file-9F1ex49ipEnKzyLUNnCA0Yzx",
-                    "file-dEWwUbt2UGHp3v0e0DpCzemP"
+                    "file-abc123",
+                    "file-abc456"
                   ],
                   "metadata": {}
                 }
               ],
-              "first_id": "run_5pyUEwhaPk11vCKiDneUWXXY",
-              "last_id": "run_UWvV94U0FQYiT2rlbBrdEVmC",
+              "first_id": "run_abc123",
+              "last_id": "run_abc456",
               "has_more": false
             }
     post:
@@ -4000,25 +4114,26 @@ paths:
                 $ref: '#/components/schemas/RunObject'
       x-oaiMeta:
         name: Create run
+        group: threads
         beta: true
         returns: A [run](/docs/api-reference/runs/object) object.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_BDDwIqM4KgHibXX3mqmN3Lgs/runs \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1' \
+              curl https://api.openai.com/v1/threads/thread_abc123/runs \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1" \
                 -d '{
-                  "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ"
+                  "assistant_id": "asst_abc123"
                 }'
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               run = client.beta.threads.runs.create(
-                thread_id="thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                assistant_id="asst_nGl00s4xa9zmVY6Fvuvz9wwQ"
+                thread_id="thread_abc123",
+                assistant_id="asst_abc123"
               )
               print(run)
             node.js: |
@@ -4028,8 +4143,8 @@ paths:
 
               async function main() {
                 const run = await openai.beta.threads.runs.create(
-                  "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  { assistant_id: "asst_nGl00s4xa9zmVY6Fvuvz9wwQ" }
+                  "thread_abc123",
+                  { assistant_id: "asst_abc123" }
                 );
 
                 console.log(run);
@@ -4038,11 +4153,11 @@ paths:
               main();
           response: &run_object_example |
             {
-              "id": "run_UWvV94U0FQYiT2rlbBrdEVmC",
+              "id": "run_abc123",
               "object": "thread.run",
               "created_at": 1699063290,
-              "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-              "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "status": "queued",
               "started_at": 1699063290,
               "expires_at": null,
@@ -4058,8 +4173,8 @@ paths:
                 }
               ],
               "file_ids": [
-                "file-9F1ex49ipEnKzyLUNnCA0Yzx",
-                "file-dEWwUbt2UGHp3v0e0DpCzemP"
+                "file-abc123",
+                "file-abc456"
               ],
               "metadata": {}
             }
@@ -4092,21 +4207,22 @@ paths:
                 $ref: '#/components/schemas/RunObject'
       x-oaiMeta:
         name: Retrieve run
+        group: threads
         beta: true
         returns: The [run](/docs/api-reference/runs/object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_BDDwIqM4KgHibXX3mqmN3Lgs/runs/run_5pyUEwhaPk11vCKiDneUWXXY \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               run = client.beta.threads.runs.retrieve(
-                thread_id="thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                run_id="run_5pyUEwhaPk11vCKiDneUWXXY"
+                thread_id="thread_abc123",
+                run_id="run_abc123"
               )
               print(run)
             node.js: |
@@ -4116,8 +4232,8 @@ paths:
 
               async function main() {
                 const run = await openai.beta.threads.runs.retrieve(
-                  "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  "run_5pyUEwhaPk11vCKiDneUWXXY"
+                  "thread_abc123",
+                  "run_abc123"
                 );
 
                 console.log(run);
@@ -4126,11 +4242,11 @@ paths:
               main();
           response: |
             {
-              "id": "run_5pyUEwhaPk11vCKiDneUWXXY",
+              "id": "run_abc123",
               "object": "thread.run",
               "created_at": 1699075072,
-              "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-              "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "status": "completed",
               "started_at": 1699075072,
               "expires_at": null,
@@ -4146,8 +4262,8 @@ paths:
                 }
               ],
               "file_ids": [
-                "file-9F1ex49ipEnKzyLUNnCA0Yzx",
-                "file-dEWwUbt2UGHp3v0e0DpCzemP"
+                "file-abc123",
+                "file-abc456"
               ],
               "metadata": {}
             }
@@ -4184,18 +4300,19 @@ paths:
                 $ref: '#/components/schemas/RunObject'
       x-oaiMeta:
         name: Modify run
+        group: threads
         beta: true
         returns: The modified [run](/docs/api-reference/runs/object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_BDDwIqM4KgHibXX3mqmN3Lgs/runs/run_5pyUEwhaPk11vCKiDneUWXXY \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1' \
+              curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123 \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1" \
                 -d '{
                   "metadata": {
-                    "user_id": "user_zmVY6FvuBDDwIqM4KgH"
+                    "user_id": "user_abc123"
                   }
                 }'
             python: |
@@ -4203,9 +4320,9 @@ paths:
               client = OpenAI()
 
               run = client.beta.threads.runs.update(
-                thread_id="thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                run_id="run_5pyUEwhaPk11vCKiDneUWXXY",
-                metadata={"user_id": "user_zmVY6FvuBDDwIqM4KgH"},
+                thread_id="thread_abc123",
+                run_id="run_abc123",
+                metadata={"user_id": "user_abc123"},
               )
               print(run)
             node.js: |
@@ -4215,11 +4332,11 @@ paths:
 
               async function main() {
                 const run = await openai.beta.threads.runs.update(
-                  "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  "run_5pyUEwhaPk11vCKiDneUWXXY",
+                  "thread_abc123",
+                  "run_abc123",
                   {
                     metadata: {
-                      user_id: "user_zmVY6FvuBDDwIqM4KgH",
+                      user_id: "user_abc123",
                     },
                   }
                 );
@@ -4230,11 +4347,11 @@ paths:
               main();
           response: |
             {
-              "id": "run_5pyUEwhaPk11vCKiDneUWXXY",
+              "id": "run_abc123",
               "object": "thread.run",
               "created_at": 1699075072,
-              "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-              "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "status": "completed",
               "started_at": 1699075072,
               "expires_at": null,
@@ -4250,11 +4367,11 @@ paths:
                 }
               ],
               "file_ids": [
-                "file-9F1ex49ipEnKzyLUNnCA0Yzx",
-                "file-dEWwUbt2UGHp3v0e0DpCzemP"
+                "file-abc123",
+                "file-abc456"
               ],
               "metadata": {
-                "user_id": "user_zmVY6FvuBDDwIqM4KgH"
+                "user_id": "user_abc123"
               }
             }
 
@@ -4293,19 +4410,20 @@ paths:
                 $ref: '#/components/schemas/RunObject'
       x-oaiMeta:
         name: Submit tool outputs to run
+        group: threads
         beta: true
         returns: The modified [run](/docs/api-reference/runs/object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_EdR8UvCDJ035LFEJZMt3AxCd/runs/run_PHLyHQYIQn4F7JrSXslEYWwh/submit_tool_outputs \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1' \
+              curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/submit_tool_outputs \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1" \
                 -d '{
                   "tool_outputs": [
                     {
-                      "tool_call_id": "call_MbELIQcB72cq35Yzo2MRw5qs",
+                      "tool_call_id": "call_abc123",
                       "output": "28C"
                     }
                   ]
@@ -4315,11 +4433,11 @@ paths:
               client = OpenAI()
 
               run = client.beta.threads.runs.submit_tool_outputs(
-                thread_id="thread_EdR8UvCDJ035LFEJZMt3AxCd",
-                run_id="run_PHLyHQYIQn4F7JrSXslEYWwh",
+                thread_id="thread_abc123",
+                run_id="run_abc123",
                 tool_outputs=[
                   {
-                    "tool_call_id": "call_MbELIQcB72cq35Yzo2MRw5qs",
+                    "tool_call_id": "call_abc123",
                     "output": "28C"
                   }
                 ]
@@ -4332,12 +4450,12 @@ paths:
 
               async function main() {
                 const run = await openai.beta.threads.runs.submitToolOutputs(
-                  "thread_EdR8UvCDJ035LFEJZMt3AxCd",
-                  "run_PHLyHQYIQn4F7JrSXslEYWwh",
+                  "thread_abc123",
+                  "run_abc123",
                   {
                     tool_outputs: [
                       {
-                        tool_call_id: "call_MbELIQcB72cq35Yzo2MRw5qs",
+                        tool_call_id: "call_abc123",
                         output: "28C",
                       },
                     ],
@@ -4350,11 +4468,11 @@ paths:
               main();
           response: |
             {
-              "id": "run_PHLyHQYIQn4F7JrSXslEYWwh",
+              "id": "run_abc123",
               "object": "thread.run",
               "created_at": 1699075592,
-              "assistant_id": "asst_IgmpQTah3ZfPHCVZjTqAY8Kv",
-              "thread_id": "thread_EdR8UvCDJ035LFEJZMt3AxCd",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "status": "queued",
               "started_at": 1699075592,
               "expires_at": 1699076192,
@@ -4424,22 +4542,23 @@ paths:
                 $ref: '#/components/schemas/RunObject'
       x-oaiMeta:
         name: Cancel a run
+        group: threads
         beta: true
         returns: The modified [run](/docs/api-reference/runs/object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_1cjnJPXj8MFiqTx58jU9TivC/runs/run_BeRGmpGt2wb1VI22ZRniOkrR/cancel \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'OpenAI-Beta: assistants=v1' \
+              curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/cancel \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "OpenAI-Beta: assistants=v1" \
                 -X POST
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               run = client.beta.threads.runs.cancel(
-                thread_id="thread_1cjnJPXj8MFiqTx58jU9TivC",
-                run_id="run_BeRGmpGt2wb1VI22ZRniOkrR"
+                thread_id="thread_abc123",
+                run_id="run_abc123"
               )
               print(run)
             node.js: |
@@ -4449,8 +4568,8 @@ paths:
 
               async function main() {
                 const run = await openai.beta.threads.runs.cancel(
-                  "thread_1cjnJPXj8MFiqTx58jU9TivC",
-                  "run_BeRGmpGt2wb1VI22ZRniOkrR"
+                  "thread_abc123",
+                  "run_abc123"
                 );
 
                 console.log(run);
@@ -4459,11 +4578,11 @@ paths:
               main();
           response: |
             {
-              "id": "run_BeRGmpGt2wb1VI22ZRniOkrR",
+              "id": "run_abc123",
               "object": "thread.run",
               "created_at": 1699076126,
-              "assistant_id": "asst_IgmpQTah3ZfPHCVZjTqAY8Kv",
-              "thread_id": "thread_1cjnJPXj8MFiqTx58jU9TivC",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "status": "cancelling",
               "started_at": 1699076126,
               "expires_at": 1699076726,
@@ -4534,22 +4653,23 @@ paths:
                 $ref: '#/components/schemas/ListRunStepsResponse'
       x-oaiMeta:
         name: List run steps
+        group: threads
         beta: true
         returns: A list of [run step](/docs/api-reference/runs/step-object) objects.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_BDDwIqM4KgHibXX3mqmN3Lgs/runs/run_UWvV94U0FQYiT2rlbBrdEVmC/steps \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               run_steps = client.beta.threads.runs.steps.list(
-                  thread_id="thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  run_id="run_UWvV94U0FQYiT2rlbBrdEVmC"
+                  thread_id="thread_abc123",
+                  run_id="run_abc123"
               )
               print(run_steps)
             node.js: |
@@ -4558,8 +4678,8 @@ paths:
 
               async function main() {
                 const runStep = await openai.beta.threads.runs.steps.list(
-                  "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  "run_UWvV94U0FQYiT2rlbBrdEVmC"
+                  "thread_abc123",
+                  "run_abc123"
                 );
                 console.log(runStep);
               }
@@ -4570,12 +4690,12 @@ paths:
               "object": "list",
               "data": [
                 {
-                  "id": "step_QyjyrsVsysd7F4K894BZHG97",
+                  "id": "step_abc123",
                   "object": "thread.run.step",
                   "created_at": 1699063291,
-                  "run_id": "run_UWvV94U0FQYiT2rlbBrdEVmC",
-                  "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-                  "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+                  "run_id": "run_abc123",
+                  "assistant_id": "asst_abc123",
+                  "thread_id": "thread_abc123",
                   "type": "message_creation",
                   "status": "completed",
                   "cancelled_at": null,
@@ -4586,13 +4706,13 @@ paths:
                   "step_details": {
                     "type": "message_creation",
                     "message_creation": {
-                      "message_id": "msg_6YmiCRmMbbE6FALYNePPHqwm"
+                      "message_id": "msg_abc123"
                     }
                   }
                 }
               ],
-              "first_id": "step_QyjyrsVsysd7F4K894BZHG97",
-              "last_id": "step_QyjyrsVsysd7F4K894BZHG97",
+              "first_id": "step_abc123",
+              "last_id": "step_abc456",
               "has_more": false
             }
 
@@ -4630,23 +4750,24 @@ paths:
                 $ref: '#/components/schemas/RunStepObject'
       x-oaiMeta:
         name: Retrieve run step
+        group: threads
         beta: true
         returns: The [run step](/docs/api-reference/runs/step-object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_BDDwIqM4KgHibXX3mqmN3Lgs/runs/run_UWvV94U0FQYiT2rlbBrdEVmC/steps/step_QyjyrsVsysd7F4K894BZHG97 \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/threads/thread_abc123/runs/run_abc123/steps/step_abc123 \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               run_step = client.beta.threads.runs.steps.retrieve(
-                  thread_id="thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  run_id="run_UWvV94U0FQYiT2rlbBrdEVmC",
-                  step_id="step_QyjyrsVsysd7F4K894BZHG97"
+                  thread_id="thread_abc123",
+                  run_id="run_abc123",
+                  step_id="step_abc123"
               )
               print(run_step)
             node.js: |
@@ -4655,9 +4776,9 @@ paths:
 
               async function main() {
                 const runStep = await openai.beta.threads.runs.steps.retrieve(
-                  "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
-                  "run_UWvV94U0FQYiT2rlbBrdEVmC",
-                  "step_QyjyrsVsysd7F4K894BZHG97"
+                  "thread_abc123",
+                  "run_abc123",
+                  "step_abc123"
                 );
                 console.log(runStep);
               }
@@ -4665,12 +4786,12 @@ paths:
               main();
           response: &run_step_object_example |
             {
-              "id": "step_QyjyrsVsysd7F4K894BZHG97",
+              "id": "step_abc123",
               "object": "thread.run.step",
               "created_at": 1699063291,
-              "run_id": "run_UWvV94U0FQYiT2rlbBrdEVmC",
-              "assistant_id": "asst_nGl00s4xa9zmVY6Fvuvz9wwQ",
-              "thread_id": "thread_BDDwIqM4KgHibXX3mqmN3Lgs",
+              "run_id": "run_abc123",
+              "assistant_id": "asst_abc123",
+              "thread_id": "thread_abc123",
               "type": "message_creation",
               "status": "completed",
               "cancelled_at": null,
@@ -4681,7 +4802,7 @@ paths:
               "step_details": {
                 "type": "message_creation",
                 "message_creation": {
-                  "message_id": "msg_6YmiCRmMbbE6FALYNePPHqwm"
+                  "message_id": "msg_abc123"
                 }
               }
             }
@@ -4732,21 +4853,22 @@ paths:
                 $ref: '#/components/schemas/ListAssistantFilesResponse'
       x-oaiMeta:
         name: List assistant files
+        group: assistants
         beta: true
         returns: A list of [assistant file](/docs/api-reference/assistants/file-object) objects.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/assistants/asst_DUGk5I7sK0FpKeijvrO30z9J/files \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/assistants/asst_abc123/files \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               assistant_files = client.beta.assistants.files.list(
-                assistant_id="asst_DUGk5I7sK0FpKeijvrO30z9J"
+                assistant_id="asst_abc123"
               )
               print(assistant_files)
             node.js: |
@@ -4755,7 +4877,7 @@ paths:
 
               async function main() {
                 const assistantFiles = await openai.beta.assistants.files.list(
-                  "asst_FBOFvAOHhwEWMghbMGseaPGQ"
+                  "asst_abc123"
                 );
                 console.log(assistantFiles);
               }
@@ -4766,20 +4888,20 @@ paths:
               "object": "list",
               "data": [
                 {
-                  "id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
+                  "id": "file-abc123",
                   "object": "assistant.file",
                   "created_at": 1699060412,
-                  "assistant_id": "asst_DUGk5I7sK0FpKeijvrO30z9J"
+                  "assistant_id": "asst_abc123"
                 },
                 {
-                  "id": "file-9F1ex49ipEnKzyLUNnCA0Yzx",
+                  "id": "file-abc456",
                   "object": "assistant.file",
                   "created_at": 1699060412,
-                  "assistant_id": "asst_DUGk5I7sK0FpKeijvrO30z9J"
+                  "assistant_id": "asst_abc123"
                 }
               ],
-              "first_id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
-              "last_id": "file-9F1ex49ipEnKzyLUNnCA0Yzx",
+              "first_id": "file-abc123",
+              "last_id": "file-abc456",
               "has_more": false
             }
     post:
@@ -4793,7 +4915,7 @@ paths:
           required: true
           schema:
             type: string
-            example: file-AF1WoRqd3aJAHsqc9NY7iL8F
+            example: file-abc123
           description: |
             The ID of the assistant for which to create a File.
       requestBody:
@@ -4811,25 +4933,26 @@ paths:
                 $ref: '#/components/schemas/AssistantFileObject'
       x-oaiMeta:
         name: Create assistant file
+        group: assistants
         beta: true
         returns: An [assistant file](/docs/api-reference/assistants/file-object) object.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/assistants/asst_FBOFvAOHhwEWMghbMGseaPGQ/files \
+              curl https://api.openai.com/v1/assistants/asst_abc123/files \
                   -H 'Authorization: Bearer $OPENAI_API_KEY"' \
                   -H 'Content-Type: application/json' \
                   -H 'OpenAI-Beta: assistants=v1' \
                   -d '{
-                    "file_id": "file-wB6RM6wHdA49HfS2DJ9fEyrH"
+                    "file_id": "file-abc123"
                   }'
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               assistant_file = client.beta.assistants.files.create(
-                assistant_id="asst_FBOFvAOHhwEWMghbMGseaPGQ",
-                file_id="file-wB6RM6wHdA49HfS2DJ9fEyrH"
+                assistant_id="asst_abc123",
+                file_id="file-abc123"
               )
               print(assistant_file)
             node.js: |
@@ -4838,9 +4961,9 @@ paths:
 
               async function main() {
                 const myAssistantFile = await openai.beta.assistants.files.create(
-                  "asst_FBOFvAOHhwEWMghbMGseaPGQ",
+                  "asst_abc123",
                   {
-                    file_id: "file-wB6RM6wHdA49HfS2DJ9fEyrH"
+                    file_id: "file-abc123"
                   }
                 );
                 console.log(myAssistantFile);
@@ -4849,10 +4972,10 @@ paths:
               main();
           response: &assistant_file_object |
             {
-              "id": "file-wB6RM6wHdA49HfS2DJ9fEyrH",
+              "id": "file-abc123",
               "object": "assistant.file",
               "created_at": 1699055364,
-              "assistant_id": "asst_FBOFvAOHhwEWMghbMGseaPGQ"
+              "assistant_id": "asst_abc123"
             }
 
   /assistants/{assistant_id}/files/{file_id}:
@@ -4883,12 +5006,13 @@ paths:
                 $ref: '#/components/schemas/AssistantFileObject'
       x-oaiMeta:
         name: Retrieve assistant file
+        group: assistants
         beta: true
         returns: The [assistant file](/docs/api-reference/assistants/file-object) object matching the specified ID.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/assistants/asst_FBOFvAOHhwEWMghbMGseaPGQ/files/file-wB6RM6wHdA49HfS2DJ9fEyrH \
+              curl https://api.openai.com/v1/assistants/asst_abc123/files/file-abc123 \
                 -H 'Authorization: Bearer $OPENAI_API_KEY"' \
                 -H 'Content-Type: application/json' \
                 -H 'OpenAI-Beta: assistants=v1'
@@ -4897,8 +5021,8 @@ paths:
               client = OpenAI()
 
               assistant_file = client.beta.assistants.files.retrieve(
-                assistant_id="asst_FBOFvAOHhwEWMghbMGseaPGQ",
-                file_id="file-wB6RM6wHdA49HfS2DJ9fEyrH"
+                assistant_id="asst_abc123",
+                file_id="file-abc123"
               )
               print(assistant_file)
             node.js: |
@@ -4907,8 +5031,8 @@ paths:
 
               async function main() {
                 const myAssistantFile = await openai.beta.assistants.files.retrieve(
-                  "asst_FBOFvAOHhwEWMghbMGseaPGQ",
-                  "file-wB6RM6wHdA49HfS2DJ9fEyrH"
+                  "asst_abc123",
+                  "file-abc123"
                 );
                 console.log(myAssistantFile);
               }
@@ -4942,23 +5066,24 @@ paths:
                 $ref: '#/components/schemas/DeleteAssistantFileResponse'
       x-oaiMeta:
         name: Delete assistant file
+        group: assistants
         beta: true
         returns: Deletion status
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/assistants/asst_DUGk5I7sK0FpKeijvrO30z9J/files/file-9F1ex49ipEnKzyLUNnCA0Yzx \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1' \
+              curl https://api.openai.com/v1/assistants/asst_abc123/files/file-abc123 \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1" \
                 -X DELETE
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               deleted_assistant_file = client.beta.assistants.files.delete(
-                  assistant_id="asst_DUGk5I7sK0FpKeijvrO30z9J",
-                  file_id="file-dEWwUbt2UGHp3v0e0DpCzemP"
+                  assistant_id="asst_abc123",
+                  file_id="file-abc123"
               )
               print(deleted_assistant_file)
             node.js: |
@@ -4967,8 +5092,8 @@ paths:
 
               async function main() {
                 const deletedAssistantFile = await openai.beta.assistants.files.del(
-                  "asst_FBOFvAOHhwEWMghbMGseaPGQ",
-                  "file-wB6RM6wHdA49HfS2DJ9fEyrH"
+                  "asst_abc123",
+                  "file-abc123"
                 );
                 console.log(deletedAssistantFile);
               }
@@ -4976,7 +5101,7 @@ paths:
               main();
           response: |
             {
-              id: "file-BK7bzQj3FfZFXr7DbL6xJwfo",
+              id: "file-abc123",
               object: "assistant.file.deleted",
               deleted: true
             }
@@ -5033,22 +5158,23 @@ paths:
                 $ref: '#/components/schemas/ListMessageFilesResponse'
       x-oaiMeta:
         name: List message files
+        group: threads
         beta: true
         returns: A list of [message file](/docs/api-reference/messages/file-object) objects.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_RGUhOuO9b2nrktrmsQ2uSR6I/messages/msg_q3XhbGmMzsqEFa81gMLBDAVU/files \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123/files \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               message_files = client.beta.threads.messages.files.list(
-                thread_id="thread_RGUhOuO9b2nrktrmsQ2uSR6I",
-                message_id="msg_q3XhbGmMzsqEFa81gMLBDAVU"
+                thread_id="thread_abc123",
+                message_id="msg_abc123"
               )
               print(message_files)
             node.js: |
@@ -5057,8 +5183,8 @@ paths:
 
               async function main() {
                 const messageFiles = await openai.beta.threads.messages.files.list(
-                  "thread_RGUhOuO9b2nrktrmsQ2uSR6I",
-                  "msg_q3XhbGmMzsqEFa81gMLBDAVU"
+                  "thread_abc123",
+                  "msg_abc123"
                 );
                 console.log(messageFiles);
               }
@@ -5069,20 +5195,20 @@ paths:
               "object": "list",
               "data": [
                 {
-                  "id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
+                  "id": "file-abc123",
                   "object": "thread.message.file",
                   "created_at": 1699061776,
-                  "message_id": "msg_q3XhbGmMzsqEFa81gMLBDAVU"
+                  "message_id": "msg_abc123"
                 },
                 {
-                  "id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
+                  "id": "file-abc123",
                   "object": "thread.message.file",
                   "created_at": 1699061776,
-                  "message_id": "msg_q3XhbGmMzsqEFa81gMLBDAVU"
+                  "message_id": "msg_abc123"
                 }
               ],
-              "first_id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
-              "last_id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
+              "first_id": "file-abc123",
+              "last_id": "file-abc123",
               "has_more": false
             }
 
@@ -5098,21 +5224,21 @@ paths:
           required: true
           schema:
             type: string
-            example: thread_AF1WoRqd3aJAHsqc9NY7iL8F
+            example: thread_abc123
           description: The ID of the thread to which the message and File belong.
         - in: path
           name: message_id
           required: true
           schema:
             type: string
-            example: msg_AF1WoRqd3aJAHsqc9NY7iL8F
+            example: msg_abc123
           description: The ID of the message the file belongs to.
         - in: path
           name: file_id
           required: true
           schema:
             type: string
-            example: file-AF1WoRqd3aJAHsqc9NY7iL8F
+            example: file-abc123
           description: The ID of the file being retrieved.
       responses:
         '200':
@@ -5123,23 +5249,24 @@ paths:
                 $ref: '#/components/schemas/MessageFileObject'
       x-oaiMeta:
         name: Retrieve message file
+        group: threads
         beta: true
         returns: The [message file](/docs/api-reference/messages/file-object) object.
         examples:
           request:
             curl: |
-              curl https://api.openai.com/v1/threads/thread_RGUhOuO9b2nrktrmsQ2uSR6I/messages/msg_q3XhbGmMzsqEFa81gMLBDAVU/files/file-dEWwUbt2UGHp3v0e0DpCzemP \
-                -H 'Authorization: Bearer $OPENAI_API_KEY' \
-                -H 'Content-Type: application/json' \
-                -H 'OpenAI-Beta: assistants=v1'
+              curl https://api.openai.com/v1/threads/thread_abc123/messages/msg_abc123/files/file-abc123 \
+                -H "Authorization: Bearer $OPENAI_API_KEY" \
+                -H "Content-Type: application/json" \
+                -H "OpenAI-Beta: assistants=v1"
             python: |
               from openai import OpenAI
               client = OpenAI()
 
               message_files = client.beta.threads.messages.files.retrieve(
-                  thread_id="thread_RGUhOuO9b2nrktrmsQ2uSR6I",
-                  message_id="msg_q3XhbGmMzsqEFa81gMLBDAVU",
-                  file_id="file-dEWwUbt2UGHp3v0e0DpCzemP"
+                  thread_id="thread_abc123",
+                  message_id="msg_abc123",
+                  file_id="file-abc123"
               )
               print(message_files)
             node.js: |
@@ -5148,9 +5275,9 @@ paths:
 
               async function main() {
                 const messageFile = await openai.beta.threads.messages.files.retrieve(
-                  "thread_RGUhOuO9b2nrktrmsQ2uSR6I",
-                  "msg_q3XhbGmMzsqEFa81gMLBDAVU",
-                  "file-dEWwUbt2UGHp3v0e0DpCzemP"
+                  "thread_abc123",
+                  "msg_abc123",
+                  "file-abc123"
                 );
                 console.log(messageFile);
               }
@@ -5158,10 +5285,10 @@ paths:
               main();
           response: |
             {
-              "id": "file-dEWwUbt2UGHp3v0e0DpCzemP",
+              "id": "file-abc123",
               "object": "thread.message.file",
               "created_at": 1699061776,
-              "message_id": "msg_q3XhbGmMzsqEFa81gMLBDAVU"
+              "message_id": "msg_abc123"
             }
 
 components:
@@ -5305,7 +5432,7 @@ components:
           description: &completions_frequency_penalty_description |
             Number between -2.0 and 2.0. Positive values penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim.
 
-            [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         logit_bias: &completions_logit_bias
           type: object
           x-oaiTypeLabel: map
@@ -5359,7 +5486,7 @@ components:
           description: &completions_presence_penalty_description |
             Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics.
 
-            [See more information about frequency and presence penalties.](/docs/guides/gpt/parameter-details)
+            [See more information about frequency and presence penalties.](/docs/guides/text-generation/parameter-details)
         seed: &completions_seed_param
           type: integer
           minimum: -9223372036854775808
@@ -5478,7 +5605,7 @@ components:
                     items:
                       type: object
                       additionalProperties:
-                        type: integer
+                        type: number
               text:
                 type: string
         created:
@@ -5552,11 +5679,11 @@ components:
               format: uri
             detail:
               type: string
-              description: Specifies the detail level of the image.
+              description: Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
               enum: ['auto', 'low', 'high']
               default: 'auto'
           required:
-            - data
+            - url
       required:
         - type
         - image_url
@@ -5590,13 +5717,15 @@ components:
       title: System message
       properties:
         content:
-          nullable: true
           description: The contents of the system message.
           type: string
         role:
           type: string
           enum: ['system']
           description: The role of the messages author, in this case `system`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       required:
         - content
         - role
@@ -5606,7 +5735,6 @@ components:
       title: User message
       properties:
         content:
-          nullable: true
           description: |
             The contents of the user message.
           oneOf:
@@ -5619,10 +5747,14 @@ components:
               items:
                 $ref: '#/components/schemas/ChatCompletionRequestMessageContentPart'
               minItems: 1
+          x-oaiExpandable: true
         role:
           type: string
           enum: ['user']
           description: The role of the messages author, in this case `user`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
       required:
         - content
         - role
@@ -5635,11 +5767,14 @@ components:
           nullable: true
           type: string
           description: |
-            The contents of the assistant message.
+            The contents of the assistant message. Required unless `tool_calls` or `function_call` is specified.
         role:
           type: string
           enum: ['assistant']
           description: The role of the messages author, in this case `assistant`.
+        name:
+          type: string
+          description: An optional name for the participant. Provides the model information to differentiate between participants of the same role.
         tool_calls:
           $ref: '#/components/schemas/ChatCompletionMessageToolCalls'
         function_call:
@@ -5657,7 +5792,6 @@ components:
             - arguments
             - name
       required:
-        - content
         - role
 
     ChatCompletionRequestToolMessage:
@@ -5669,7 +5803,6 @@ components:
           enum: ['tool']
           description: The role of the messages author, in this case `tool`.
         content:
-          nullable: true
           type: string
           description: The contents of the tool message.
         tool_call_id:
@@ -5691,19 +5824,18 @@ components:
           description: The role of the messages author, in this case `function`.
         content:
           type: string
-          nullable: true
-          description: The return value from the function call, to return to the model.
+          description: The contents of the function message.
         name:
           type: string
           description: The name of the function to call.
       required:
         - role
-        - name
         - content
+        - name
 
-    ChatCompletionFunctionParameters:
+    FunctionParameters:
       type: object
-      description: "The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/gpt/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.\n\nTo describe a function that accepts no parameters, provide the value `{\"type\": \"object\", \"properties\": {}}`."
+      description: "The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/text-generation/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format.\n\nTo describe a function that accepts no parameters, provide the value `{\"type\": \"object\", \"properties\": {}}`."
       additionalProperties: true
 
     ChatCompletionFunctions:
@@ -5717,7 +5849,7 @@ components:
           type: string
           description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
         parameters:
-          $ref: '#/components/schemas/ChatCompletionFunctionParameters'
+          $ref: '#/components/schemas/FunctionParameters'
       required:
         - name
         - parameters
@@ -5741,22 +5873,25 @@ components:
           enum: ['function']
           description: The type of the tool. Currently, only `function` is supported.
         function:
-          type: object
-          properties:
-            description:
-              type: string
-              description: A description of what the function does, used by the model to choose when and how to call the function.
-            name:
-              type: string
-              description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-            parameters:
-              $ref: '#/components/schemas/ChatCompletionFunctionParameters'
-          required:
-            - name
-            - parameters
+          $ref: '#/components/schemas/FunctionObject'
       required:
         - type
         - function
+
+    FunctionObject:
+      type: object
+      properties:
+        description:
+          type: string
+          description: A description of what the function does, used by the model to choose when and how to call the function.
+        name:
+          type: string
+          description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
+        parameters:
+          $ref: '#/components/schemas/FunctionParameters'
+      required:
+        - name
+        - parameters
 
     ChatCompletionToolChoiceOption:
       description: |
@@ -5791,6 +5926,9 @@ components:
               description: The name of the function to call.
           required:
             - name
+      required:
+        - type
+        - function
 
     ChatCompletionMessageToolCalls:
       type: array
@@ -5939,6 +6077,8 @@ components:
             - type: string
               enum:
                 [
+                  'gpt-4-1106-preview',
+                  'gpt-4-vision-preview',
                   'gpt-4',
                   'gpt-4-0314',
                   'gpt-4-0613',
@@ -5949,6 +6089,7 @@ components:
                   'gpt-3.5-turbo-16k',
                   'gpt-3.5-turbo-0301',
                   'gpt-3.5-turbo-0613',
+                  'gpt-3.5-turbo-1106',
                   'gpt-3.5-turbo-16k-0613',
                 ]
           x-oaiTypeLabel: string
@@ -5975,7 +6116,6 @@ components:
             The maximum number of [tokens](/tokenizer) to generate in the chat completion.
 
             The total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
-          default: inf
           type: integer
           nullable: true
         n:
@@ -5985,7 +6125,7 @@ components:
           default: 1
           example: 1
           nullable: true
-          description: How many chat completion choices to generate for each input message.
+          description: How many chat completion choices to generate for each input message. Note that you will be charged based on the number of generated tokens across all of the choices. Keep `n` as `1` to minimize costs.
         presence_penalty:
           type: number
           default: 0
@@ -5995,19 +6135,19 @@ components:
           description: *completions_presence_penalty_description
         response_format:
           type: object
-          description: An object specifying the format that the model must output. Used to enable JSON mode.
+          description: |
+            An object specifying the format that the model must output.
+
+            Setting to `{ "type": "json_object" }` enables JSON mode, which guarantees the message the model generates is valid JSON.
+
+            **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
           properties:
             type:
               type: string
               enum: ['text', 'json_object']
               example: 'json_object'
               default: 'text'
-              description: |
-                Setting to `json_object` enables JSON mode. This guarantees that the message the model generates is valid JSON.
-
-                Note that your system prompt must still instruct the model to produce JSON, and to help ensure you don't forget, the API will throw an error if the string `JSON` does not appear in your system message. Also note that the message content may be partial (i.e. cut off) if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.
-
-                Must be one of `text` or `json_object`.
+              description: Must be one of `text` or `json_object`.
         seed:
           type: integer
           minimum: -9223372036854775808
@@ -6279,6 +6419,11 @@ components:
         model:
           type: string
           description: The model to generate the completion.
+        system_fingerprint:
+          type: string
+          description: |
+            This fingerprint represents the backend configuration that the model runs with.
+            Can be used in conjunction with the `seed` request parameter to understand when backend changes have been made that might impact determinism.
         object:
           type: string
           description: The object type, which is always `chat.completion.chunk`.
@@ -6353,8 +6498,8 @@ components:
 
     CreateEditResponse:
       type: object
-      title: Edit
       deprecated: true
+      title: Edit
       properties:
         choices:
           type: array
@@ -7059,31 +7204,43 @@ components:
       properties:
         input:
           description: |
-            Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`) and cannot be an empty string. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
+            Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens.
           example: 'The quick brown fox jumped over the lazy dog'
           oneOf:
             - type: string
+              title: string
+              description: The string that will be turned into an embedding.
               default: ''
               example: 'This is a test.'
             - type: array
+              title: array
+              description: The array of strings that will be turned into an embedding.
               minItems: 1
+              maxItems: 2048
               items:
                 type: string
                 default: ''
-                example: 'This is a test.'
+                example: "['This is a test.']"
             - type: array
+              title: array
+              description: The array of integers that will be turned into an embedding.
               minItems: 1
+              maxItems: 2048
               items:
                 type: integer
               example: '[1212, 318, 257, 1332, 13]'
             - type: array
+              title: array
+              description: The array of arrays containing integers that will be turned into an embedding.
               minItems: 1
+              maxItems: 2048
               items:
                 type: array
                 minItems: 1
                 items:
                   type: integer
               example: '[[1212, 318, 257, 1332, 13]]'
+          x-oaiExpandable: true
         model:
           description: *model_description
           example: 'text-embedding-ada-002'
@@ -7116,8 +7273,8 @@ components:
           description: The name of the model used to generate the embedding.
         object:
           type: string
-          description: The object type, which is always "embedding".
-          enum: [embedding]
+          description: The object type, which is always "list".
+          enum: [list]
         usage:
           type: object
           description: The usage information for the request.
@@ -7256,7 +7413,7 @@ components:
           description: The text to generate audio for. The maximum length is 4096 characters.
           maxLength: 4096
         voice:
-          description: The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`.
+          description: The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech/voice-options).
           type: string
           enum: ['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']
         response_format:
@@ -7352,7 +7509,7 @@ components:
         name: The File object
         example: |
           {
-            "id": "file-BK7bzQj3FfZFXr7DbL6xJwfo",
+            "id": "file-abc123",
             "object": "file",
             "bytes": 120000,
             "created_at": 1677610602,
@@ -7900,10 +8057,10 @@ components:
             $ref: '#/components/schemas/AssistantObject'
         first_id:
           type: string
-          example: 'asst_hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'asst_abc123'
         last_id:
           type: string
-          example: 'asst_QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'asst_abc456'
         has_more:
           type: boolean
           example: false
@@ -7949,21 +8106,7 @@ components:
           description: 'The type of tool being defined: `function`'
           enum: ['function']
         function:
-          type: object
-          description: The function definition.
-          properties:
-            description:
-              type: string
-              description: A description of what the function does, used by the model to choose when and how to call the function.
-            name:
-              type: string
-              description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
-            parameters:
-              $ref: '#/components/schemas/ChatCompletionFunctionParameters'
-          required:
-            - name
-            - parameters
-            - description
+          $ref: '#/components/schemas/FunctionObject'
       required:
         - type
         - function
@@ -7977,9 +8120,9 @@ components:
           description: The identifier, which can be referenced in API endpoints.
           type: string
         object:
-          description: The object type, which is always `assistant.run`.
+          description: The object type, which is always `thread.run`.
           type: string
-          enum: ['assistant.run']
+          enum: ['thread.run']
         created_at:
           description: The Unix timestamp (in seconds) for when the run was created.
           type: integer
@@ -8112,11 +8255,11 @@ components:
         beta: true
         example: |
           {
-            "id": "run_example123",
+            "id": "run_abc123",
             "object": "thread.run",
             "created_at": 1698107661,
-            "assistant_id": "asst_gZ1aOomboBuYWPcXJx4vAYB0",
-            "thread_id": "thread_adOpf7Jbb5Abymz0QbwxAh3c",
+            "assistant_id": "asst_abc123",
+            "thread_id": "thread_abc123",
             "status": "completed",
             "started_at": 1699073476,
             "expires_at": null,
@@ -8176,10 +8319,10 @@ components:
             $ref: '#/components/schemas/RunObject'
         first_id:
           type: string
-          example: 'run_hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'run_abc123'
         last_id:
           type: string
-          example: 'run_QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'run_abc456'
         has_more:
           type: boolean
           example: false
@@ -8216,6 +8359,7 @@ components:
                 description: The output of the tool call to be submitted to continue the run.
       required:
         - tool_outputs
+
     RunToolCallObject:
       type: object
       description: Tool call objects
@@ -8244,6 +8388,7 @@ components:
         - id
         - type
         - function
+
     CreateThreadAndRunRequest:
       type: object
       additionalProperties: false
@@ -8368,10 +8513,10 @@ components:
             $ref: '#/components/schemas/ThreadObject'
         first_id:
           type: string
-          example: 'asst_hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'asst_abc123'
         last_id:
           type: string
-          example: 'asst_QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'asst_abc456'
         has_more:
           type: boolean
           example: false
@@ -8448,10 +8593,10 @@ components:
         beta: true
         example: |
           {
-            "id": "msg_dKYDWyQvtjDBi3tudL1yWKDa",
+            "id": "msg_abc123",
             "object": "thread.message",
             "created_at": 1698983503,
-            "thread_id": "thread_RGUhOuO9b2nrktrmsQ2uSR6I",
+            "thread_id": "thread_abc123",
             "role": "assistant",
             "content": [
               {
@@ -8463,8 +8608,8 @@ components:
               }
             ],
             "file_ids": [],
-            "assistant_id": "asst_ToSF7Gb04YMj8AMMm50ZLLtY",
-            "run_id": "run_BjylUJgDqYK9bOhy4yjAiMrn",
+            "assistant_id": "asst_abc123",
+            "run_id": "run_abc123",
             "metadata": {}
           }
 
@@ -8534,10 +8679,10 @@ components:
             $ref: '#/components/schemas/MessageObject'
         first_id:
           type: string
-          example: 'msg_hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'msg_abc123'
         last_id:
           type: string
-          example: 'msg_QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'msg_abc123'
         has_more:
           type: boolean
           example: false
@@ -8678,9 +8823,9 @@ components:
           description: The identifier of the run step, which can be referenced in API endpoints.
           type: string
         object:
-          description: The object type, which is always `assistant.run.step``.
+          description: The object type, which is always `thread.run.step``.
           type: string
-          enum: ['assistant.run.step']
+          enum: ['thread.run.step']
         created_at:
           description: The Unix timestamp (in seconds) for when the run step was created.
           type: integer
@@ -8698,7 +8843,7 @@ components:
           type: string
           enum: ['message_creation', 'tool_calls']
         status:
-          description: The status of the run, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
+          description: The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.
           type: string
           enum: ['in_progress', 'cancelled', 'failed', 'completed', 'expired']
         step_details:
@@ -8776,10 +8921,10 @@ components:
             $ref: '#/components/schemas/RunStepObject'
         first_id:
           type: string
-          example: 'step_hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'step_abc123'
         last_id:
           type: string
-          example: 'step_QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'step_abc456'
         has_more:
           type: boolean
           example: false
@@ -8989,10 +9134,10 @@ components:
         beta: true
         example: |
           {
-            "id": "file-wB6RM6wHdA49HfS2DJ9fEyrH",
+            "id": "file-abc123",
             "object": "assistant.file",
             "created_at": 1699055364,
-            "assistant_id": "asst_FBOFvAOHhwEWMghbMGseaPGQ"
+            "assistant_id": "asst_abc123"
           }
 
     CreateAssistantFileRequest:
@@ -9031,10 +9176,10 @@ components:
             $ref: '#/components/schemas/AssistantFileObject'
         first_id:
           type: string
-          example: 'file-hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'file-abc123'
         last_id:
           type: string
-          example: 'file-QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'file-abc456'
         has_more:
           type: boolean
           example: false
@@ -9074,11 +9219,11 @@ components:
         beta: true
         example: |
           {
-            "id": "file-BK7bzQj3FfZFXr7DbL6xJwfo",
+            "id": "file-abc123",
             "object": "thread.message.file",
             "created_at": 1698107661,
             "message_id": "message_QLoItBbqwyAJEzlTy4y9kOMM",
-            "file_id": "file-BK7bzQj3FfZFXr7DbL6xJwfo"
+            "file_id": "file-abc123"
           }
 
     ListMessageFilesResponse:
@@ -9092,10 +9237,10 @@ components:
             $ref: '#/components/schemas/MessageFileObject'
         first_id:
           type: string
-          example: 'file-hLBK7PXBv5Lr2NQT7KLY0ag1'
+          example: 'file-abc123'
         last_id:
           type: string
-          example: 'file-QLoItBbqwyAJEzlTy4y9kOMM'
+          example: 'file-abc456'
         has_more:
           type: boolean
           example: false
@@ -9153,7 +9298,7 @@ x-oaiMeta:
       description: |
         Given a list of messages comprising a conversation, the model will return a response.
 
-        Related guide: [Chat Completions](/docs/guides/gpt)
+        Related guide: [Chat Completions](/docs/guides/text-generation)
       sections:
         - type: object
           key: CreateChatCompletionResponse
@@ -9163,20 +9308,6 @@ x-oaiMeta:
           path: streaming
         - type: endpoint
           key: createChatCompletion
-          path: create
-    - id: completions
-      title: Completions
-      legacy: true
-      description: |
-        Given a prompt, the model will return one or more predicted completions, and can also return the probabilities of alternative tokens at each position. We recommend most users use our Chat Completions API. [Learn more](/docs/deprecations/2023-07-06-gpt-and-embeddings)
-
-        Related guide: [Legacy Completions](/docs/guides/gpt/completions-api)
-      sections:
-        - type: object
-          key: CreateCompletionResponse
-          path: object
-        - type: endpoint
-          key: createCompletion
           path: create
     - id: embeddings
       title: Embeddings
@@ -9428,13 +9559,37 @@ x-oaiMeta:
         - type: endpoint
           key: listRunSteps
           path: listRunSteps
+    - id: completions
+      title: Completions
+      legacy: true
+      description: |
+        Given a prompt, the model will return one or more predicted completions along with the probabilities of alternative tokens at each position. Most developer should use our [Chat Completions API](/docs/guides/text-generation/text-generation-models) to leverage our best and newest models. Most models that support the legacy Completions endpoint [will be shut off on January 4th, 2024](/docs/deprecations/2023-07-06-gpt-and-embeddings).
+      sections:
+        - type: object
+          key: CreateCompletionResponse
+          path: object
+        - type: endpoint
+          key: createCompletion
+          path: create
+    - id: edits
+      title: Edits
+      deprecated: true
+      description: |
+        Given a prompt and an instruction, the model will return an edited version of the prompt. The Edits endpoint is deprecated will be [shut off on January 4th, 2024](/docs/deprecations/edit-models-endpoint).
+      sections:
+        - type: object
+          key: CreateEditResponse
+          path: object
+        - type: endpoint
+          key: createEdit
+          path: create
     - id: fine-tunes
       title: Fine-tunes
       deprecated: true
       description: |
-        Manage legacy fine-tuning jobs to tailor a model to your specific training data.
+        Manage fine-tuning jobs to tailor a model to your specific training data. The [updated Fine-tuning endpoint](/docs/guides/fine-tuning) offers more capabilites and newer models.
 
-        We recommend transitioning to the updating [fine-tuning API](/docs/guides/fine-tuning)
+        The Fine-tunes endpoint will be [shut off on January 4th, 2024](/docs/deprecations/2023-08-22-fine-tunes-endpoint).
       sections:
         - type: object
           key: FineTune
@@ -9457,15 +9612,3 @@ x-oaiMeta:
         - type: endpoint
           key: listFineTuneEvents
           path: list-events
-    - id: edits
-      title: Edits
-      deprecated: true
-      description: |
-        Given a prompt and an instruction, the model will return an edited version of the prompt.
-      sections:
-        - type: object
-          key: CreateEditResponse
-          path: object
-        - type: endpoint
-          key: createEdit
-          path: create

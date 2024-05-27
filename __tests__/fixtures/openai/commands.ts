@@ -595,10 +595,10 @@ export class ListFilesCommand extends Command<
  * createFile
  *
  *
- * @summary Upload a file that can be used across various endpoints/features. The size
- * of all the files uploaded by one organization can be up to 100 GB.
+ * @summary Upload a file that can be used across various endpoints. The size of all
+ * the files uploaded by one organization can be up to 100 GB.
  *
- * The size of individual files for can be a maximum of 512MB. See the
+ * The size of individual files can be a maximum of 512 MB. See the
  * [Assistants Tools guide](/docs/assistants/tools) to learn more about the
  * types of files supported. The Fine-tuning API only supports `.jsonl` files.
  *
@@ -618,10 +618,10 @@ export function createFileCommand(): RequestMethodCaller<OpenAiFile> {
  * createFile
  *
  *
- * @summary Upload a file that can be used across various endpoints/features. The size
- * of all the files uploaded by one organization can be up to 100 GB.
+ * @summary Upload a file that can be used across various endpoints. The size of all
+ * the files uploaded by one organization can be up to 100 GB.
  *
- * The size of individual files for can be a maximum of 512MB. See the
+ * The size of individual files can be a maximum of 512 MB. See the
  * [Assistants Tools guide](/docs/assistants/tools) to learn more about the
  * types of files supported. The Fine-tuning API only supports `.jsonl` files.
  *

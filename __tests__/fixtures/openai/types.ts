@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-11-08T05:04:09.190Z
+ * Generated on 2023-12-14T06:34:27.220Z
  *
  */
 import type { Jsonifiable } from 'type-fest';
@@ -154,6 +154,7 @@ export type CreateChatCompletionStreamResponse = {
   }>;
   created: number;
   model: string;
+  system_fingerprint?: string | undefined;
   /**
    * The object type, which is always `chat.completion.chunk`.
    * @enum chat.completion.chunk
@@ -596,8 +597,8 @@ export type CreateEmbeddingRequest = {
    * Input text to embed, encoded as a string or array of tokens. To embed
    * multiple inputs in a single request, pass an array of strings or array of
    * token arrays. The input must not exceed the max input tokens for the model
-   * (8192 tokens for `text-embedding-ada-002`) and cannot be an empty string.
-   * [Example Python
+   * (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and
+   * any array must be 2048 dimensions or less. [Example Python
    * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
    * for counting tokens.
    * @example The quick brown fox jumped over the lazy dog
@@ -678,7 +679,9 @@ export type CreateSpeechRequest = {
   input: string;
   /**
    * The voice to use when generating the audio. Supported voices are `alloy`,
-   * `echo`, `fable`, `onyx`, `nova`, and `shimmer`.
+   * `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are
+   * available in the [Text to speech
+   * guide](/docs/guides/text-to-speech/voice-options).
    * @enum alloy,echo,fable,onyx,nova,shimmer
    */
   voice: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
@@ -987,10 +990,10 @@ export type RunStepDetailsMessageCreationObject = {
 export type RunStepObject = {
   id: string;
   /**
-   * The object type, which is always `assistant.run.step``.
-   * @enum assistant.run.step
+   * The object type, which is always `thread.run.step``.
+   * @enum thread.run.step
    */
-  object: 'assistant.run.step';
+  object: 'thread.run.step';
   created_at: number;
   assistant_id: string;
   thread_id: string;
@@ -1002,7 +1005,7 @@ export type RunStepObject = {
    */
   type: 'message_creation' | 'tool_calls';
   /**
-   * The status of the run, which can be either `in_progress`, `cancelled`,
+   * The status of the run step, which can be either `in_progress`, `cancelled`,
    * `failed`, `completed`, or `expired`.
    * @enum in_progress,cancelled,failed,completed,expired
    */
@@ -1134,10 +1137,10 @@ export type RunToolCallObject = {
 export type RunObject = {
   id: string;
   /**
-   * The object type, which is always `assistant.run`.
-   * @enum assistant.run
+   * The object type, which is always `thread.run`.
+   * @enum thread.run
    */
-  object: 'assistant.run';
+  object: 'thread.run';
   created_at: number;
   thread_id: string;
   assistant_id: string;
@@ -1204,25 +1207,27 @@ export type ListRunsResponse = {
 };
 /**
  * The parameters the functions accepts, described as a JSON Schema object.
- * See the [guide](/docs/guides/gpt/function-calling) for examples, and the
- * [JSON Schema reference](https://json-schema.org/understanding-json-schema/)
- * for documentation about the format.
+ * See the [guide](/docs/guides/text-generation/function-calling) for
+ * examples, and the [JSON Schema
+ * reference](https://json-schema.org/understanding-json-schema/) for
+ * documentation about the format.
  *
  * To describe a function that accepts no parameters, provide the value
  * `{"type": "object", "properties": {}}`.
  */
-export type ChatCompletionFunctionParameters = {};
+export type FunctionParameters = {};
+export type FunctionObject = {
+  description?: string | undefined;
+  name: string;
+  parameters: FunctionParameters;
+};
 export type AssistantToolsFunction = {
   /**
    * The type of tool being defined: `function`
    * @enum function
    */
   type: 'function';
-  function: {
-    description: string;
-    name: string;
-    parameters: ChatCompletionFunctionParameters;
-  };
+  function: FunctionObject;
 };
 /** Represents an `assistant` that can call the model and use tools. */
 export type AssistantObject = {
@@ -1276,10 +1281,10 @@ export type CreateEmbeddingResponse = {
   data: Embedding[];
   model: string;
   /**
-   * The object type, which is always "embedding".
-   * @enum embedding
+   * The object type, which is always "list".
+   * @enum list
    */
-  object: 'embedding';
+  object: 'list';
   usage: {
     prompt_tokens: number;
     total_tokens: number;
@@ -1554,7 +1559,7 @@ export type ChatCompletionFunctionCallOption = {
 export type ChatCompletionFunctions = {
   description?: string | undefined;
   name: string;
-  parameters: ChatCompletionFunctionParameters;
+  parameters: FunctionParameters;
 };
 /**
  * Specifies a tool the model should use. Use to force the model to call a
@@ -1565,12 +1570,10 @@ export type ChatCompletionNamedToolChoice = {
    * The type of the tool. Currently, only `function` is supported.
    * @enum function
    */
-  type?: 'function' | undefined;
-  function?:
-    | {
-        name: string;
-      }
-    | undefined;
+  type: 'function';
+  function: {
+    name: string;
+  };
 };
 /**
  * Controls which (if any) function is called by the model.
@@ -1594,11 +1597,7 @@ export type ChatCompletionTool = {
    * @enum function
    */
   type: 'function';
-  function: {
-    description?: string | undefined;
-    name: string;
-    parameters: ChatCompletionFunctionParameters;
-  };
+  function: FunctionObject;
 };
 export type ChatCompletionRequestFunctionMessage = {
   /**
@@ -1606,7 +1605,7 @@ export type ChatCompletionRequestFunctionMessage = {
    * @enum function
    */
   role: 'function';
-  content: string | null;
+  content: string;
   name: string;
 };
 export type ChatCompletionRequestToolMessage = {
@@ -1615,7 +1614,7 @@ export type ChatCompletionRequestToolMessage = {
    * @enum tool
    */
   role: 'tool';
-  content: string | null;
+  content: string;
   tool_call_id: string;
 };
 export type ChatCompletionMessageToolCall = {
@@ -1633,12 +1632,13 @@ export type ChatCompletionMessageToolCall = {
 /** The tool calls generated by the model, such as function calls. */
 export type ChatCompletionMessageToolCalls = ChatCompletionMessageToolCall[];
 export type ChatCompletionRequestAssistantMessage = {
-  content: string | null;
+  content?: string | null | undefined;
   /**
    * The role of the messages author, in this case `assistant`.
    * @enum assistant
    */
   role: 'assistant';
+  name?: string | undefined;
   tool_calls?: ChatCompletionMessageToolCalls | undefined;
   /**
    * Deprecated and replaced by `tool_calls`. The name and arguments of a
@@ -1659,9 +1659,10 @@ export type ChatCompletionRequestMessageContentPartImage = {
    */
   type: 'image_url';
   image_url: {
-    url?: string | undefined;
+    url: string;
     /**
-     * Specifies the detail level of the image.
+     * Specifies the detail level of the image. Learn more in the [Vision
+     * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
      * @default auto
      * @enum auto,low,high
      */
@@ -1686,14 +1687,16 @@ export type ChatCompletionRequestUserMessage = {
    * @enum user
    */
   role: 'user';
+  name?: string | undefined;
 };
 export type ChatCompletionRequestSystemMessage = {
-  content: string | null;
+  content: string;
   /**
    * The role of the messages author, in this case `system`.
    * @enum system
    */
   role: 'system';
+  name?: string | undefined;
 };
 export type ChatCompletionRequestMessage =
   | ChatCompletionRequestSystemMessage
@@ -1711,6 +1714,8 @@ export type CreateChatCompletionRequest = {
    */
   model:
     | string
+    | 'gpt-4-1106-preview'
+    | 'gpt-4-vision-preview'
     | 'gpt-4'
     | 'gpt-4-0314'
     | 'gpt-4-0613'
@@ -1721,23 +1726,16 @@ export type CreateChatCompletionRequest = {
     | 'gpt-3.5-turbo-16k'
     | 'gpt-3.5-turbo-0301'
     | 'gpt-3.5-turbo-0613'
+    | 'gpt-3.5-turbo-1106'
     | 'gpt-3.5-turbo-16k-0613'
     | null;
   frequency_penalty?: number | null;
   logit_bias?: JsonifiableObject | null;
-  /**
-   * The maximum number of [tokens](/tokenizer) to generate in the chat
-   * completion.
-   *
-   * The total length of input tokens and generated tokens is limited by the
-   * model's context length. [Example Python
-   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-   * for counting tokens.
-   * @default inf
-   */
   max_tokens?: number | null;
   /**
-   * How many chat completion choices to generate for each input message.
+   * How many chat completion choices to generate for each input message. Note
+   * that you will be charged based on the number of generated tokens across all
+   * of the choices. Keep `n` as `1` to minimize costs.
    * @default 1
    * @example 1
    */
@@ -1746,16 +1744,6 @@ export type CreateChatCompletionRequest = {
   response_format?:
     | {
         /**
-         * Setting to `json_object` enables JSON mode. This guarantees that the
-         * message the model generates is valid JSON.
-         *
-         * Note that your system prompt must still instruct the model to produce JSON,
-         * and to help ensure you don't forget, the API will throw an error if the
-         * string `JSON` does not appear in your system message. Also note that the
-         * message content may be partial (i.e. cut off) if `finish_reason="length"`,
-         * which indicates the generation exceeded `max_tokens` or the conversation
-         * exceeded the max context length.
-         *
          * Must be one of `text` or `json_object`.
          * @default text
          * @enum text,json_object

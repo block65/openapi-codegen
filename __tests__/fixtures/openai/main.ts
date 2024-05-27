@@ -3,12 +3,12 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2023-11-08T05:04:09.190Z
+ * Generated on 2023-12-14T06:34:27.220Z
  *
  */
 import {
   RestServiceClient,
-  createIsomorphicFetcher,
+  createIsomorphicNativeFetcher,
   type RestServiceClientConfig,
 } from '@block65/rest-client';
 import {
@@ -210,7 +210,7 @@ export class OpenAiApiRestClient extends RestServiceClient<
 > {
   constructor(
     baseUrl = new URL('https://api.openai.com/v1/'),
-    fetcher = createIsomorphicFetcher(),
+    fetcher = createIsomorphicNativeFetcher(),
     config?: RestServiceClientConfig,
   ) {
     super(baseUrl, fetcher, config);
