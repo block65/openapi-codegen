@@ -1,6 +1,7 @@
 import { writeFile } from 'node:fs/promises';
+import prettierConfig from '@block65/eslint-config/prettier';
 import type { OpenAPIV3 } from 'openapi-types';
-import { format } from 'prettier';
+import { format as prettier } from 'prettier';
 import { processOpenApiDocument } from './process-document.js';
 
 export async function build(
@@ -48,4 +49,8 @@ export async function build(
       ),
     ),
   );
+    const data = await prettier(file.getFullText(), {
+      parser: 'typescript',
+      ...prettierConfig,
+    });
 }
