@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-05-27T10:54:46.817Z
+ * Generated on 2024-07-20T03:14:00.890Z
  *
  */
 import {
@@ -11,198 +11,198 @@ import {
   createIsomorphicNativeFetcher,
   type RestServiceClientConfig,
 } from '@block65/rest-client';
-import {
-  type CreateChatCompletionCommandInput,
-  type CreateCompletionCommandInput,
-  type CreateEditCommandInput,
-  type CreateImageCommandInput,
-  type CreateImageEditCommandInput,
-  type CreateImageVariationCommandInput,
-  type CreateEmbeddingCommandInput,
-  type CreateSpeechCommandInput,
-  type CreateTranscriptionCommandInput,
-  type CreateTranslationCommandInput,
-  type ListFilesCommandInput,
-  type CreateFileCommandInput,
-  type DeleteFileCommandInput,
-  type RetrieveFileCommandInput,
-  type DownloadFileCommandInput,
-  type CreateFineTuningJobCommandInput,
-  type ListPaginatedFineTuningJobsCommandInput,
-  type RetrieveFineTuningJobCommandInput,
-  type ListFineTuningEventsCommandInput,
-  type CancelFineTuningJobCommandInput,
-  type CreateFineTuneCommandInput,
-  type ListFineTunesCommandInput,
-  type RetrieveFineTuneCommandInput,
-  type CancelFineTuneCommandInput,
-  type ListFineTuneEventsCommandInput,
-  type ListModelsCommandInput,
-  type RetrieveModelCommandInput,
-  type DeleteModelCommandInput,
-  type CreateModerationCommandInput,
-  type ListAssistantsCommandInput,
-  type CreateAssistantCommandInput,
-  type GetAssistantCommandInput,
-  type ModifyAssistantCommandInput,
-  type DeleteAssistantCommandInput,
-  type CreateThreadCommandInput,
-  type GetThreadCommandInput,
-  type ModifyThreadCommandInput,
-  type DeleteThreadCommandInput,
-  type ListMessagesCommandInput,
-  type CreateMessageCommandInput,
-  type GetMessageCommandInput,
-  type ModifyMessageCommandInput,
-  type CreateThreadAndRunCommandInput,
-  type ListRunsCommandInput,
-  type CreateRunCommandInput,
-  type GetRunCommandInput,
-  type ModifyRunCommandInput,
-  type SubmitToolOuputsToRunCommandInput,
-  type CancelRunCommandInput,
-  type ListRunStepsCommandInput,
-  type GetRunStepCommandInput,
-  type ListAssistantFilesCommandInput,
-  type CreateAssistantFileCommandInput,
-  type GetAssistantFileCommandInput,
-  type DeleteAssistantFileCommandInput,
-  type ListMessageFilesCommandInput,
-  type GetMessageFileCommandInput,
-  type CreateChatCompletionResponse,
-  type CreateCompletionResponse,
-  type CreateEditResponse,
-  type ImagesResponse,
-  type CreateEmbeddingResponse,
-  type CreateTranscriptionResponse,
-  type CreateTranslationResponse,
-  type ListFilesResponse,
-  type OpenAiFile,
-  type DeleteFileResponse,
-  type FineTuningJob,
-  type ListPaginatedFineTuningJobsResponse,
-  type ListFineTuningJobEventsResponse,
-  type FineTune,
-  type ListFineTunesResponse,
-  type ListFineTuneEventsResponse,
-  type ListModelsResponse,
-  type Model,
-  type DeleteModelResponse,
-  type CreateModerationResponse,
-  type ListAssistantsResponse,
-  type AssistantObject,
-  type DeleteAssistantResponse,
-  type ThreadObject,
-  type DeleteThreadResponse,
-  type ListMessagesResponse,
-  type MessageObject,
-  type RunObject,
-  type ListRunsResponse,
-  type ListRunStepsResponse,
-  type RunStepObject,
-  type ListAssistantFilesResponse,
-  type AssistantFileObject,
-  type DeleteAssistantFileResponse,
-  type ListMessageFilesResponse,
-  type MessageFileObject,
+import type {
+  AssistantFileObject,
+  AssistantObject,
+  CancelFineTuneCommandInput,
+  CancelFineTuningJobCommandInput,
+  CancelRunCommandInput,
+  CreateAssistantCommandInput,
+  CreateAssistantFileCommandInput,
+  CreateChatCompletionCommandInput,
+  CreateChatCompletionResponse,
+  CreateCompletionCommandInput,
+  CreateCompletionResponse,
+  CreateEditCommandInput,
+  CreateEditResponse,
+  CreateEmbeddingCommandInput,
+  CreateEmbeddingResponse,
+  CreateFileCommandInput,
+  CreateFineTuneCommandInput,
+  CreateFineTuningJobCommandInput,
+  CreateImageCommandInput,
+  CreateImageEditCommandInput,
+  CreateImageVariationCommandInput,
+  CreateMessageCommandInput,
+  CreateModerationCommandInput,
+  CreateModerationResponse,
+  CreateRunCommandInput,
+  CreateSpeechCommandInput,
+  CreateThreadAndRunCommandInput,
+  CreateThreadCommandInput,
+  CreateTranscriptionCommandInput,
+  CreateTranscriptionResponse,
+  CreateTranslationCommandInput,
+  CreateTranslationResponse,
+  DeleteAssistantCommandInput,
+  DeleteAssistantFileCommandInput,
+  DeleteAssistantFileResponse,
+  DeleteAssistantResponse,
+  DeleteFileCommandInput,
+  DeleteFileResponse,
+  DeleteModelCommandInput,
+  DeleteModelResponse,
+  DeleteThreadCommandInput,
+  DeleteThreadResponse,
+  DownloadFileCommandInput,
+  FineTune,
+  FineTuningJob,
+  GetAssistantCommandInput,
+  GetAssistantFileCommandInput,
+  GetMessageCommandInput,
+  GetMessageFileCommandInput,
+  GetRunCommandInput,
+  GetRunStepCommandInput,
+  GetThreadCommandInput,
+  ImagesResponse,
+  ListAssistantFilesCommandInput,
+  ListAssistantFilesResponse,
+  ListAssistantsCommandInput,
+  ListAssistantsResponse,
+  ListFilesCommandInput,
+  ListFilesResponse,
+  ListFineTuneEventsCommandInput,
+  ListFineTuneEventsResponse,
+  ListFineTunesCommandInput,
+  ListFineTunesResponse,
+  ListFineTuningEventsCommandInput,
+  ListFineTuningJobEventsResponse,
+  ListMessageFilesCommandInput,
+  ListMessageFilesResponse,
+  ListMessagesCommandInput,
+  ListMessagesResponse,
+  ListModelsCommandInput,
+  ListModelsResponse,
+  ListPaginatedFineTuningJobsCommandInput,
+  ListPaginatedFineTuningJobsResponse,
+  ListRunsCommandInput,
+  ListRunsResponse,
+  ListRunStepsCommandInput,
+  ListRunStepsResponse,
+  MessageFileObject,
+  MessageObject,
+  Model,
+  ModifyAssistantCommandInput,
+  ModifyMessageCommandInput,
+  ModifyRunCommandInput,
+  ModifyThreadCommandInput,
+  OpenAiFile,
+  RetrieveFileCommandInput,
+  RetrieveFineTuneCommandInput,
+  RetrieveFineTuningJobCommandInput,
+  RetrieveModelCommandInput,
+  RunObject,
+  RunStepObject,
+  SubmitToolOuputsToRunCommandInput,
+  ThreadObject,
 } from './types.js';
 
 type AllInputs =
+  | CancelFineTuneCommandInput
+  | CancelFineTuningJobCommandInput
+  | CancelRunCommandInput
+  | CreateAssistantCommandInput
+  | CreateAssistantFileCommandInput
   | CreateChatCompletionCommandInput
   | CreateCompletionCommandInput
   | CreateEditCommandInput
+  | CreateEmbeddingCommandInput
+  | CreateFileCommandInput
+  | CreateFineTuneCommandInput
+  | CreateFineTuningJobCommandInput
   | CreateImageCommandInput
   | CreateImageEditCommandInput
   | CreateImageVariationCommandInput
-  | CreateEmbeddingCommandInput
+  | CreateMessageCommandInput
+  | CreateModerationCommandInput
+  | CreateRunCommandInput
   | CreateSpeechCommandInput
+  | CreateThreadAndRunCommandInput
+  | CreateThreadCommandInput
   | CreateTranscriptionCommandInput
   | CreateTranslationCommandInput
-  | ListFilesCommandInput
-  | CreateFileCommandInput
-  | DeleteFileCommandInput
-  | RetrieveFileCommandInput
-  | DownloadFileCommandInput
-  | CreateFineTuningJobCommandInput
-  | ListPaginatedFineTuningJobsCommandInput
-  | RetrieveFineTuningJobCommandInput
-  | ListFineTuningEventsCommandInput
-  | CancelFineTuningJobCommandInput
-  | CreateFineTuneCommandInput
-  | ListFineTunesCommandInput
-  | RetrieveFineTuneCommandInput
-  | CancelFineTuneCommandInput
-  | ListFineTuneEventsCommandInput
-  | ListModelsCommandInput
-  | RetrieveModelCommandInput
-  | DeleteModelCommandInput
-  | CreateModerationCommandInput
-  | ListAssistantsCommandInput
-  | CreateAssistantCommandInput
-  | GetAssistantCommandInput
-  | ModifyAssistantCommandInput
   | DeleteAssistantCommandInput
-  | CreateThreadCommandInput
-  | GetThreadCommandInput
-  | ModifyThreadCommandInput
-  | DeleteThreadCommandInput
-  | ListMessagesCommandInput
-  | CreateMessageCommandInput
-  | GetMessageCommandInput
-  | ModifyMessageCommandInput
-  | CreateThreadAndRunCommandInput
-  | ListRunsCommandInput
-  | CreateRunCommandInput
-  | GetRunCommandInput
-  | ModifyRunCommandInput
-  | SubmitToolOuputsToRunCommandInput
-  | CancelRunCommandInput
-  | ListRunStepsCommandInput
-  | GetRunStepCommandInput
-  | ListAssistantFilesCommandInput
-  | CreateAssistantFileCommandInput
-  | GetAssistantFileCommandInput
   | DeleteAssistantFileCommandInput
+  | DeleteFileCommandInput
+  | DeleteModelCommandInput
+  | DeleteThreadCommandInput
+  | DownloadFileCommandInput
+  | GetAssistantCommandInput
+  | GetAssistantFileCommandInput
+  | GetMessageCommandInput
+  | GetMessageFileCommandInput
+  | GetRunCommandInput
+  | GetRunStepCommandInput
+  | GetThreadCommandInput
+  | ListAssistantFilesCommandInput
+  | ListAssistantsCommandInput
+  | ListFilesCommandInput
+  | ListFineTuneEventsCommandInput
+  | ListFineTunesCommandInput
+  | ListFineTuningEventsCommandInput
   | ListMessageFilesCommandInput
-  | GetMessageFileCommandInput;
+  | ListMessagesCommandInput
+  | ListModelsCommandInput
+  | ListPaginatedFineTuningJobsCommandInput
+  | ListRunsCommandInput
+  | ListRunStepsCommandInput
+  | ModifyAssistantCommandInput
+  | ModifyMessageCommandInput
+  | ModifyRunCommandInput
+  | ModifyThreadCommandInput
+  | RetrieveFileCommandInput
+  | RetrieveFineTuneCommandInput
+  | RetrieveFineTuningJobCommandInput
+  | RetrieveModelCommandInput
+  | SubmitToolOuputsToRunCommandInput;
 type AllOutputs =
+  | AssistantFileObject
+  | AssistantObject
   | CreateChatCompletionResponse
   | CreateCompletionResponse
   | CreateEditResponse
-  | ImagesResponse
   | CreateEmbeddingResponse
-  | void
+  | CreateModerationResponse
   | CreateTranscriptionResponse
   | CreateTranslationResponse
-  | ListFilesResponse
-  | OpenAiFile
-  | DeleteFileResponse
-  | FineTuningJob
-  | ListPaginatedFineTuningJobsResponse
-  | ListFineTuningJobEventsResponse
-  | FineTune
-  | ListFineTunesResponse
-  | ListFineTuneEventsResponse
-  | ListModelsResponse
-  | Model
-  | DeleteModelResponse
-  | CreateModerationResponse
-  | ListAssistantsResponse
-  | AssistantObject
+  | DeleteAssistantFileResponse
   | DeleteAssistantResponse
-  | ThreadObject
+  | DeleteFileResponse
+  | DeleteModelResponse
   | DeleteThreadResponse
+  | FineTune
+  | FineTuningJob
+  | ImagesResponse
+  | ListAssistantFilesResponse
+  | ListAssistantsResponse
+  | ListFilesResponse
+  | ListFineTuneEventsResponse
+  | ListFineTunesResponse
+  | ListFineTuningJobEventsResponse
+  | ListMessageFilesResponse
   | ListMessagesResponse
-  | MessageObject
-  | RunObject
+  | ListModelsResponse
+  | ListPaginatedFineTuningJobsResponse
   | ListRunsResponse
   | ListRunStepsResponse
+  | MessageFileObject
+  | MessageObject
+  | Model
+  | OpenAiFile
+  | RunObject
   | RunStepObject
-  | ListAssistantFilesResponse
-  | AssistantFileObject
-  | DeleteAssistantFileResponse
-  | ListMessageFilesResponse
-  | MessageFileObject;
+  | ThreadObject
+  | void;
 
 export class OpenAiApiRestClient extends RestServiceClient<
   AllInputs,

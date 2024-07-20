@@ -3,15 +3,15 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-05-27T10:54:44.720Z
+ * Generated on 2024-07-20T03:13:59.069Z
  *
  */
-import type { Jsonifiable } from 'type-fest';
+import type { Jsonifiable, Jsonify } from 'type-fest';
 import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type PromoCode = string;
 export type StripeId = string;
-export type DateTime = Date;
+export type DateTime = Jsonify<Date>;
 
 export enum BillingSubscriptionStatus {
   Active = 'active',

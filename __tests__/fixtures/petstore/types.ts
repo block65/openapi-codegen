@@ -3,10 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-05-27T10:54:43.557Z
+ * Generated on 2024-07-20T03:13:58.086Z
  *
  */
-import type { Jsonifiable } from 'type-fest';
+import type { Jsonifiable, Jsonify } from 'type-fest';
 import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type Error = {
