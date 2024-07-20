@@ -614,19 +614,17 @@ export async function processOpenApiDocument(
   const fetcherName = 'createIsomorphicNativeFetcher';
   const configType = 'RestServiceClientConfig';
 
-  mainFile.addImportDeclarations([
-    {
-      moduleSpecifier: '@block65/rest-client',
-      namedImports: [
-        serviceClientClassName,
-        fetcherName,
-        {
-          name: configType,
-          isTypeOnly: true,
-        },
-      ],
-    },
-  ]);
+  mainFile.addImportDeclaration({
+    moduleSpecifier: '@block65/rest-client',
+    namedImports: [
+      serviceClientClassName,
+      fetcherName,
+      {
+        name: configType,
+        isTypeOnly: true,
+      },
+    ],
+  });
 
   mainFile.addImportDeclaration({
     moduleSpecifier: typesModuleSpecifier,
