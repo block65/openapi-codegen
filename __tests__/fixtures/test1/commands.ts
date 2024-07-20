@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T04:09:17.174Z
+ * Generated on 2024-07-20T05:47:35.352Z
  *
  */
 /** eslint-disable max-classes */
@@ -88,7 +88,7 @@ export class GetOperationCommand extends Command<
  *
  */
 export class ListBillingAccountsCommand extends Command<
-  void,
+  never,
   BillingAccountList,
   ListBillingAccountsCommandBody
 > {
@@ -174,7 +174,7 @@ export class GetBillingAccountPortalCommand extends Command<
  */
 export class LinkBillingAccountCommand extends Command<
   LinkBillingAccountCommandInput,
-  undefined,
+  never,
   LinkBillingAccountCommandBody
 > {
   public override method = 'post' as const;
@@ -263,7 +263,7 @@ export class GetPaymentMethodCommand extends Command<
  */
 export class UpdatePaymentMethodCommand extends Command<
   UpdatePaymentMethodCommandInput,
-  undefined,
+  never,
   UpdatePaymentMethodCommandBody
 > {
   public override method = 'put' as const;
@@ -336,7 +336,7 @@ export class CreateBillingSubscriptionCommand extends Command<
  */
 export class UpdateBillingSubscriptionCommand extends Command<
   UpdateBillingSubscriptionCommandInput,
-  undefined,
+  never,
   UpdateBillingSubscriptionCommandBody
 > {
   public override method = 'put' as const;
@@ -356,7 +356,7 @@ export class UpdateBillingSubscriptionCommand extends Command<
  */
 export class CancelSubscriptionCommand extends Command<
   CancelSubscriptionCommandInput,
-  undefined,
+  never,
   CancelSubscriptionCommandBody
 > {
   public override method = 'delete' as const;

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T04:09:17.174Z
+ * Generated on 2024-07-20T05:47:35.352Z
  *
  */
 import type { Jsonifiable, Jsonify } from 'type-fest';
@@ -242,16 +242,16 @@ export type GetOperationCommandParams = {
   operationId: string;
 };
 export type GetOperationCommandInput = GetOperationCommandParams;
-export type GetOperationCommandBody = void;
-export type ListBillingAccountsCommandInput = void;
-export type ListBillingAccountsCommandBody = void;
+export type GetOperationCommandBody = never;
+export type ListBillingAccountsCommandInput = never;
+export type ListBillingAccountsCommandBody = never;
 export type CreateBillingAccountCommandInput = BillingAccountCreateRequest;
 export type CreateBillingAccountCommandBody = BillingAccountCreateRequest;
 export type GetBillingAccountCommandParams = {
   billingAccountId: string;
 };
 export type GetBillingAccountCommandInput = GetBillingAccountCommandParams;
-export type GetBillingAccountCommandBody = void;
+export type GetBillingAccountCommandBody = never;
 export type UpdateBillingAccountCommandParams = {
   billingAccountId: string;
 };
@@ -274,25 +274,25 @@ export type ListPaymentMethodsCommandParams = {
   billingAccountId: string;
 };
 export type ListPaymentMethodsCommandInput = ListPaymentMethodsCommandParams;
-export type ListPaymentMethodsCommandBody = void;
+export type ListPaymentMethodsCommandBody = never;
 export type CreatePaymentMethodCommandParams = {
   billingAccountId: string;
 };
 export type CreatePaymentMethodCommandInput = CreatePaymentMethodCommandParams;
-export type CreatePaymentMethodCommandBody = void;
+export type CreatePaymentMethodCommandBody = never;
 export type GetPaymentMethodFromStripeCommandParams = {
   billingAccountId: string;
   stripePaymentMethodId: string;
 };
 export type GetPaymentMethodFromStripeCommandInput =
   GetPaymentMethodFromStripeCommandParams;
-export type GetPaymentMethodFromStripeCommandBody = void;
+export type GetPaymentMethodFromStripeCommandBody = never;
 export type GetPaymentMethodCommandParams = {
   billingAccountId: string;
   paymentMethodId: string;
 };
 export type GetPaymentMethodCommandInput = GetPaymentMethodCommandParams;
-export type GetPaymentMethodCommandBody = void;
+export type GetPaymentMethodCommandBody = never;
 export type UpdatePaymentMethodCommandParams = {
   billingAccountId: string;
   paymentMethodId: string;
@@ -305,13 +305,13 @@ export type DeletePaymentMethodCommandParams = {
   paymentMethodId: string;
 };
 export type DeletePaymentMethodCommandInput = DeletePaymentMethodCommandParams;
-export type DeletePaymentMethodCommandBody = void;
+export type DeletePaymentMethodCommandBody = never;
 export type ListBillingSubscriptionsCommandParams = {
   billingAccountId: string;
 };
 export type ListBillingSubscriptionsCommandInput =
   ListBillingSubscriptionsCommandParams;
-export type ListBillingSubscriptionsCommandBody = void;
+export type ListBillingSubscriptionsCommandBody = never;
 export type CreateBillingSubscriptionCommandParams = {
   billingAccountId: string;
 };
@@ -332,7 +332,7 @@ export type CancelSubscriptionCommandParams = {
   subscriptionId: string;
 };
 export type CancelSubscriptionCommandInput = CancelSubscriptionCommandParams;
-export type CancelSubscriptionCommandBody = void;
+export type CancelSubscriptionCommandBody = never;
 export type UpdateBillingSubscriptionPromoCodeCommandParams = {
   billingAccountId: string;
   subscriptionId: string;

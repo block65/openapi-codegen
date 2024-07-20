@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T04:09:19.082Z
+ * Generated on 2024-07-20T05:47:37.293Z
  *
  */
 import {
@@ -198,11 +198,11 @@ type AllOutputs =
   | MessageFileObject
   | MessageObject
   | Model
+  | never
   | OpenAiFile
   | RunObject
   | RunStepObject
-  | ThreadObject
-  | void;
+  | ThreadObject;
 
 export class OpenAiApiRestClient extends RestServiceClient<
   AllInputs,
