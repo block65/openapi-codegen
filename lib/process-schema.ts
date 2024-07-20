@@ -24,13 +24,13 @@ function withNullUnion(type: string | WriterFunction, nullable = false) {
   return nullable && type !== 'null' ? Writers.unionType(type, 'null') : type;
 }
 
+/** @deprecated */
 function maybeWithUndefined(
   type: string | WriterFunction,
-  withUndefined: boolean,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _hasQuestionMark: boolean,
 ) {
-  return withUndefined && type !== 'undefined'
-    ? Writers.unionType(type, 'undefined')
-    : type;
+  return type;
 }
 
 export function schemaToType(
@@ -42,7 +42,7 @@ export function schemaToType(
   propertyName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
   options: {
-    disallowUndefined?: boolean;
+    exactOptionalPropertyTypes?: boolean;
     booleanAsStringish?: boolean;
     integerAsStringish?: boolean;
   } = {},
@@ -73,10 +73,7 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: maybeWithUndefined(
-        existingSchema.getName(),
-        !options.disallowUndefined && hasQuestionToken,
-      ),
+      type: maybeWithUndefined(existingSchema.getName(), hasQuestionToken),
     };
   }
 
@@ -190,7 +187,7 @@ export function schemaToType(
       .map((schema) =>
         schemaToType(typesAndInterfaces, parentSchema, propertyName, schema, {
           // forcibly disallow undefined, we will handle it later
-          disallowUndefined: true,
+          exactOptionalPropertyTypes: true,
         }),
       )
       .map((t) => t.type);
@@ -202,10 +199,7 @@ export function schemaToType(
       return {
         name,
         hasQuestionToken,
-        type: maybeWithUndefined(
-          types[0],
-          !options.disallowUndefined && hasQuestionToken,
-        ),
+        type: maybeWithUndefined(types[0], hasQuestionToken),
         docs,
       };
     }
@@ -221,7 +215,7 @@ export function schemaToType(
               Writers.intersectionType(...types)
             : // @ts-expect-error -> bad type in ts-morph (arguably)
               Writers.unionType(...types),
-          !options.disallowUndefined && hasQuestionToken,
+          hasQuestionToken,
         ),
         docs,
       };
@@ -237,7 +231,7 @@ export function schemaToType(
             Writers.intersectionType(...types, 'null')
           : // @ts-expect-error -> bad type in ts-morph (arguably)
             Writers.unionType(...types, 'null'),
-        !options.disallowUndefined && hasQuestionToken,
+        hasQuestionToken,
       ),
       docs,
     };
@@ -282,7 +276,7 @@ export function schemaToType(
             },
           ),
         }),
-        !options.disallowUndefined && hasQuestionToken,
+        hasQuestionToken,
       ),
       docs,
     };
@@ -323,13 +317,13 @@ export function schemaToType(
       name,
       hasQuestionToken,
       type: maybeWithUndefined(
-        schemaObject.enum.length === 1
+        schemaObject.enum?.length === 1
           ? JSON.stringify(schemaObject.enum[0])
           : Writers.unionType(
               // @ts-expect-error
               ...schemaObject.enum.map((e) => JSON.stringify(e)),
             ),
-        !options.disallowUndefined && hasQuestionToken,
+        hasQuestionToken,
       ),
       docs,
     };
@@ -345,7 +339,7 @@ export function schemaToType(
           'Jsonifiable',
           'nullable' in schemaObject && schemaObject.nullable,
         ),
-        !options.disallowUndefined && hasQuestionToken,
+        hasQuestionToken,
       ),
       docs,
     };
@@ -369,7 +363,7 @@ export function schemaToType(
     hasQuestionToken,
     type: maybeWithUndefined(
       withNullUnion(type, 'nullable' in schemaObject && schemaObject.nullable),
-      !options.disallowUndefined && hasQuestionToken,
+      hasQuestionToken,
     ),
     docs,
   };
@@ -383,11 +377,6 @@ export function registerTypesFromSchema(
   typesFile: SourceFile,
   schemaName: string,
   schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
-  options: {
-    disallowUndefined?: boolean;
-    booleanAsStringish?: boolean;
-    integerAsStringish?: boolean;
-  } = {},
 ) {
   // deal with refs
   if ('$ref' in schemaObject) {
@@ -567,11 +556,7 @@ export function registerTypesFromSchema(
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion(
-        // eslint-disable-next-line no-template-curly-in-string
-        options?.integerAsStringish ? '`${number}`' : schemaObject.type,
-        schemaObject.nullable,
-      ),
+      type: withNullUnion(schemaObject.type, schemaObject.nullable),
     });
 
     if (schemaObject.description) {
@@ -588,12 +573,7 @@ export function registerTypesFromSchema(
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion(
-        options?.booleanAsStringish
-          ? Writers.unionType('"true"', '"false"')
-          : schemaObject.type,
-        schemaObject.nullable,
-      ),
+      type: withNullUnion(schemaObject.type, schemaObject.nullable),
     });
 
     if (schemaObject.description) {
