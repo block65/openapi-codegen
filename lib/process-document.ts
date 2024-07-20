@@ -5,18 +5,15 @@ import camelcase from 'camelcase';
 import type { OpenAPIV3 } from 'openapi-types';
 import toposort from 'toposort';
 import {
-  IndentationText,
   InterfaceDeclaration,
+  Node,
   Project,
-  QuoteKind,
-  ScriptTarget,
+  Scope,
   StructureKind,
   SyntaxKind,
   TypeAliasDeclaration,
   VariableDeclarationKind,
   Writers,
-  Scope,
-  Node,
 } from 'ts-morph';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import { getDependents, pascalCase, wordWrap } from './utils.js';
@@ -50,17 +47,7 @@ export async function processOpenApiDocument(
   schema: OpenAPIV3.Document,
   tags?: string[] | undefined,
 ) {
-  const project = new Project({
-    compilerOptions: {
-      target: ScriptTarget.ES2022,
-      declaration: true,
-    },
-    manipulationSettings: {
-      quoteKind: QuoteKind.Single,
-      indentationText: IndentationText.TwoSpaces,
-      useTrailingCommas: true,
-    },
-  });
+  const project = new Project();
 
   const commandsFile = project.createSourceFile(
     join(outputDir, 'commands.ts'),
