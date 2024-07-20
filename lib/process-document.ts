@@ -25,7 +25,7 @@ function createIntersection(...types: (string | undefined)[]) {
   return (
     (type1 && type2
       ? Writers.intersectionType(type1, type2, ...typeX)
-      : type1) || 'void'
+      : type1) || 'never'
   );
 }
 
@@ -38,9 +38,12 @@ function createUnion(...types: (string | undefined)[]) {
   return type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1;
 }
 
-function isVoidKeyword(type: TypeAliasDeclaration) {
-  return type?.getTypeNode()?.getKindName() === 'VoidKeyword';
+
+function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
+  return type?.getTypeNode()?.getKind() === SyntaxKind.NeverKeyword;
 }
+
+const unspecifiedKeyword = 'never' as const;
 
 export async function processOpenApiDocument(
   outputDir: string,
@@ -71,7 +74,7 @@ export async function processOpenApiDocument(
   });
 
   const outputTypes = new Set<
-    InterfaceDeclaration | TypeAliasDeclaration | 'void'
+    InterfaceDeclaration | TypeAliasDeclaration | typeof unspecifiedKeyword
   >();
 
   const refs = await $RefParser.default.resolve(schema);
@@ -373,7 +376,7 @@ export async function processOpenApiDocument(
 
           const inputBodyType = typesFile.addTypeAlias({
             name: pascalCase(`${classDeclaration.getName() || 'INVALID'}Body`),
-            type: bodyType?.getName() || 'void', // createIntersection(bodyType?.getName(), queryType?.getName()),
+            type: bodyType?.getName() || unspecifiedKeyword, // createIntersection(bodyType?.getName(), queryType?.getName()),
             isExported: true,
           });
 
@@ -384,10 +387,10 @@ export async function processOpenApiDocument(
           classDeclaration
             .getExtends()
             ?.addTypeArgument(
-              isVoidKeyword(inputType) ? 'void' : inputType.getName(),
+              isUnspecifiedKeyword(inputType) ? unspecifiedKeyword : inputType.getName(),
             );
 
-          if (!isVoidKeyword(inputType)) {
+          if (!isUnspecifiedKeyword(inputType)) {
             ctor.addParameter({
               name: 'input',
               type: inputType.getName(),
@@ -423,8 +426,7 @@ export async function processOpenApiDocument(
             !operationObject.responses ||
             Object.keys(operationObject.responses).length === 0
           ) {
-            classDeclaration.getExtends()?.addTypeArgument('undefined');
-            // outputTypes.add('void');
+            classDeclaration.getExtends()?.addTypeArgument(unspecifiedKeyword);
           }
 
           for (const [statusCode, response] of Object.entries(
@@ -432,7 +434,7 @@ export async function processOpenApiDocument(
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             if (statusCode === '204') {
-              classDeclaration.getExtends()?.addTypeArgument('undefined');
+              classDeclaration.getExtends()?.addTypeArgument(unspecifiedKeyword);
               break;
             }
 
@@ -459,11 +461,6 @@ export async function processOpenApiDocument(
             if (outputRef) {
               const outputType = typesAndInterfaces.get(outputRef);
 
-              // const outputTypeAlias = `${
-              //   outputType?.getName() || 'void'
-              // }Output`;
-              // ensureImport(outputType, outputTypeAlias);
-
               if (outputType) {
                 outputTypes.add(outputType);
                 ensureImport(outputType);
@@ -481,10 +478,8 @@ export async function processOpenApiDocument(
               //   text: `{${retVal}} HTTP ${statusCode}`,
               // });
             } else {
-              const retVal = 'void';
-
+              const retVal = unspecifiedKeyword;
               classDeclaration.getExtends()?.addTypeArgument(retVal);
-
               outputTypes.add(retVal);
 
               // jsdoc.addTag({
@@ -509,10 +504,10 @@ export async function processOpenApiDocument(
             .replaceAll(/{/g, '${')}\``;
 
           const bodyName = 'body';
-          const ctorArgName = ctor.getParameters()[0]?.getName() || 'never';
+          const ctorArgName = ctor.getParameters()[0]?.getName() || unspecifiedKeyword;
           // const hasParams = paramsType && !isVoidKeyword(paramsType);
-          const hasBody = !isVoidKeyword(inputBodyType);
-          const hasQuery = queryType && !isVoidKeyword(queryType);
+          const hasBody = !isUnspecifiedKeyword(inputBodyType);
+          const hasQuery = queryType && !isUnspecifiedKeyword(queryType) && queryParameters.length > 0;
 
           const queryParameterNames = queryParameters.map((q) => q.name);
 
@@ -522,7 +517,7 @@ export async function processOpenApiDocument(
           ];
 
           ctor.addStatements([
-            !isVoidKeyword(inputType)
+            !isUnspecifiedKeyword(inputType)
               ? {
                   kind: StructureKind.VariableStatement,
                   declarationKind: VariableDeclarationKind.Const,
@@ -619,7 +614,7 @@ export async function processOpenApiDocument(
     mainFile.addImportDeclaration({
       moduleSpecifier: typesModuleSpecifier,
       namedImports: namedImports
-        .filter(<T>(t: T | 'void'): t is T => t !== 'void')
+        .filter(<T>(t: T | 'never'): t is T => t !== 'never')
         .map((t) => ({
           name: t.getName(),
         }))
@@ -631,8 +626,8 @@ export async function processOpenApiDocument(
   const clientClassDeclaration = mainFile.addClass({
     name: pascalCase(schema.info.title, 'RestClient'),
     isExported: true,
-    extends: `${serviceClientClassName}<${allInputs?.getName() || 'void'}, ${
-      allOutputs?.getName() || 'void'
+    extends: `${serviceClientClassName}<${allInputs?.getName() || 'never'}, ${
+      allOutputs?.getName() || 'never'
     }>`,
   });
 

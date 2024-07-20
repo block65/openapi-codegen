@@ -46,8 +46,8 @@ importers:
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.24.9)
       '@block65/rest-client':
-        specifier: ^9.2.0
-        version: 9.2.0
+        specifier: ^10.0.0
+        version: 10.0.0
       '@hapi/bourne':
         specifier: ^3.0.0
         version: 3.0.0
@@ -761,9 +761,9 @@ packages:
       eslint-plugin-unicorn:
         optional: true
 
-  '@block65/rest-client@9.2.0':
-    resolution: {integrity: sha512-ydqsg1g1uJofeYp53JNZK7Z4J2iE0rirWBNX5ZEE3LM3DD1UIP/aZi2n/8IgAmlUfbZB1SNHN/6RHU6nGRH6Bg==}
-    engines: {node: '>=18.0.0'}
+  '@block65/rest-client@10.0.0':
+    resolution: {integrity: sha512-BGZe+e3an6Fatds4txaneJdSPCTe9HJJdnCpLb8Js7CAwlchNReGJ49w/IgQgOl2oUtn+E6LEl9UWX2yTuXB2w==}
+    engines: {node: '>=22.0.0'}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -3683,7 +3683,7 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  '@block65/rest-client@9.2.0':
+  '@block65/rest-client@10.0.0':
     dependencies:
       '@block65/custom-error': 12.2.0
       '@hapi/bourne': 3.0.0

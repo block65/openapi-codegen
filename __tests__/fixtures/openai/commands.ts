@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T04:09:19.082Z
+ * Generated on 2024-07-20T05:47:37.293Z
  *
  */
 /** eslint-disable max-classes */
@@ -271,7 +271,7 @@ export class CreateImageCommand extends Command<
  * @summary Creates an edited or extended image given an original image and a prompt.
  */
 export class CreateImageEditCommand extends Command<
-  void,
+  never,
   ImagesResponse,
   CreateImageEditCommandBody
 > {
@@ -289,7 +289,7 @@ export class CreateImageEditCommand extends Command<
  * @summary Creates a variation of a given image.
  */
 export class CreateImageVariationCommand extends Command<
-  void,
+  never,
   ImagesResponse,
   CreateImageVariationCommandBody
 > {
@@ -326,7 +326,7 @@ export class CreateEmbeddingCommand extends Command<
  */
 export class CreateSpeechCommand extends Command<
   CreateSpeechCommandInput,
-  void,
+  never,
   CreateSpeechCommandBody
 > {
   public override method = 'post' as const;
@@ -343,7 +343,7 @@ export class CreateSpeechCommand extends Command<
  * @summary Transcribes audio into the input language.
  */
 export class CreateTranscriptionCommand extends Command<
-  void,
+  never,
   CreateTranscriptionResponse,
   CreateTranscriptionCommandBody
 > {
@@ -361,7 +361,7 @@ export class CreateTranscriptionCommand extends Command<
  * @summary Translates audio into English.
  */
 export class CreateTranslationCommand extends Command<
-  void,
+  never,
   CreateTranslationResponse,
   CreateTranslationCommandBody
 > {
@@ -406,7 +406,7 @@ export class ListFilesCommand extends Command<
  * storage limits.
  */
 export class CreateFileCommand extends Command<
-  void,
+  never,
   OpenAiFile,
   CreateFileCommandBody
 > {
@@ -461,7 +461,7 @@ export class RetrieveFileCommand extends Command<
  */
 export class DownloadFileCommand extends Command<
   DownloadFileCommandInput,
-  void,
+  never,
   DownloadFileCommandBody
 > {
   public override method = 'get' as const;
@@ -605,7 +605,7 @@ export class CreateFineTuneCommand extends Command<
  * @deprecated
  */
 export class ListFineTunesCommand extends Command<
-  void,
+  never,
   ListFineTunesResponse,
   ListFineTunesCommandBody
 > {
@@ -684,7 +684,7 @@ export class ListFineTuneEventsCommand extends Command<
  * each one such as the owner and availability.
  */
 export class ListModelsCommand extends Command<
-  void,
+  never,
   ListModelsResponse,
   ListModelsCommandBody
 > {

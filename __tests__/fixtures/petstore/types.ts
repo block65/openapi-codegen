@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T04:09:16.205Z
+ * Generated on 2024-07-20T05:47:34.360Z
  *
  */
 import type { Jsonifiable, Jsonify } from 'type-fest';
@@ -25,16 +25,16 @@ export type FindPetsCommandQuery = {
   limit: `${number}`;
 };
 export type FindPetsCommandInput = FindPetsCommandQuery;
-export type FindPetsCommandBody = void;
+export type FindPetsCommandBody = never;
 export type AddPetCommandInput = NewPet;
 export type AddPetCommandBody = NewPet;
 export type FindPetByIdCommandParams = {
   id: string;
 };
 export type FindPetByIdCommandInput = FindPetByIdCommandParams;
-export type FindPetByIdCommandBody = void;
+export type FindPetByIdCommandBody = never;
 export type DeletePetCommandParams = {
   id: string;
 };
 export type DeletePetCommandInput = DeletePetCommandParams;
-export type DeletePetCommandBody = void;
+export type DeletePetCommandBody = never;

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T04:09:19.082Z
+ * Generated on 2024-07-20T05:47:37.293Z
  *
  */
 import type { Jsonifiable, Jsonify } from 'type-fest';
@@ -1904,40 +1904,40 @@ export type CreateEditCommandInput = CreateEditRequest;
 export type CreateEditCommandBody = CreateEditRequest;
 export type CreateImageCommandInput = CreateImageRequest;
 export type CreateImageCommandBody = CreateImageRequest;
-export type CreateImageEditCommandInput = void;
-export type CreateImageEditCommandBody = void;
-export type CreateImageVariationCommandInput = void;
-export type CreateImageVariationCommandBody = void;
+export type CreateImageEditCommandInput = never;
+export type CreateImageEditCommandBody = never;
+export type CreateImageVariationCommandInput = never;
+export type CreateImageVariationCommandBody = never;
 export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
 export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
 export type CreateSpeechCommandInput = CreateSpeechRequest;
 export type CreateSpeechCommandBody = CreateSpeechRequest;
-export type CreateTranscriptionCommandInput = void;
-export type CreateTranscriptionCommandBody = void;
-export type CreateTranslationCommandInput = void;
-export type CreateTranslationCommandBody = void;
+export type CreateTranscriptionCommandInput = never;
+export type CreateTranscriptionCommandBody = never;
+export type CreateTranslationCommandInput = never;
+export type CreateTranslationCommandBody = never;
 export type ListFilesCommandQuery = {
   purpose: string;
 };
 export type ListFilesCommandInput = ListFilesCommandQuery;
-export type ListFilesCommandBody = void;
-export type CreateFileCommandInput = void;
-export type CreateFileCommandBody = void;
+export type ListFilesCommandBody = never;
+export type CreateFileCommandInput = never;
+export type CreateFileCommandBody = never;
 export type DeleteFileCommandParams = {
   fileId: string;
 };
 export type DeleteFileCommandInput = DeleteFileCommandParams;
-export type DeleteFileCommandBody = void;
+export type DeleteFileCommandBody = never;
 export type RetrieveFileCommandParams = {
   fileId: string;
 };
 export type RetrieveFileCommandInput = RetrieveFileCommandParams;
-export type RetrieveFileCommandBody = void;
+export type RetrieveFileCommandBody = never;
 export type DownloadFileCommandParams = {
   fileId: string;
 };
 export type DownloadFileCommandInput = DownloadFileCommandParams;
-export type DownloadFileCommandBody = void;
+export type DownloadFileCommandBody = never;
 export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
 export type CreateFineTuningJobCommandBody = CreateFineTuningJobRequest;
 export type ListPaginatedFineTuningJobsCommandQuery = {
@@ -1946,13 +1946,13 @@ export type ListPaginatedFineTuningJobsCommandQuery = {
 };
 export type ListPaginatedFineTuningJobsCommandInput =
   ListPaginatedFineTuningJobsCommandQuery;
-export type ListPaginatedFineTuningJobsCommandBody = void;
+export type ListPaginatedFineTuningJobsCommandBody = never;
 export type RetrieveFineTuningJobCommandParams = {
   fineTuningJobId: string;
 };
 export type RetrieveFineTuningJobCommandInput =
   RetrieveFineTuningJobCommandParams;
-export type RetrieveFineTuningJobCommandBody = void;
+export type RetrieveFineTuningJobCommandBody = never;
 export type ListFineTuningEventsCommandQuery = {
   after: string;
   limit: `${number}`;
@@ -1962,26 +1962,26 @@ export type ListFineTuningEventsCommandParams = {
 };
 export type ListFineTuningEventsCommandInput =
   ListFineTuningEventsCommandQuery & ListFineTuningEventsCommandParams;
-export type ListFineTuningEventsCommandBody = void;
+export type ListFineTuningEventsCommandBody = never;
 export type CancelFineTuningJobCommandParams = {
   fineTuningJobId: string;
 };
 export type CancelFineTuningJobCommandInput = CancelFineTuningJobCommandParams;
-export type CancelFineTuningJobCommandBody = void;
+export type CancelFineTuningJobCommandBody = never;
 export type CreateFineTuneCommandInput = CreateFineTuneRequest;
 export type CreateFineTuneCommandBody = CreateFineTuneRequest;
-export type ListFineTunesCommandInput = void;
-export type ListFineTunesCommandBody = void;
+export type ListFineTunesCommandInput = never;
+export type ListFineTunesCommandBody = never;
 export type RetrieveFineTuneCommandParams = {
   fineTuneId: string;
 };
 export type RetrieveFineTuneCommandInput = RetrieveFineTuneCommandParams;
-export type RetrieveFineTuneCommandBody = void;
+export type RetrieveFineTuneCommandBody = never;
 export type CancelFineTuneCommandParams = {
   fineTuneId: string;
 };
 export type CancelFineTuneCommandInput = CancelFineTuneCommandParams;
-export type CancelFineTuneCommandBody = void;
+export type CancelFineTuneCommandBody = never;
 export type ListFineTuneEventsCommandQuery = {
   stream: 'true' | 'false';
 };
@@ -1990,19 +1990,19 @@ export type ListFineTuneEventsCommandParams = {
 };
 export type ListFineTuneEventsCommandInput = ListFineTuneEventsCommandQuery &
   ListFineTuneEventsCommandParams;
-export type ListFineTuneEventsCommandBody = void;
-export type ListModelsCommandInput = void;
-export type ListModelsCommandBody = void;
+export type ListFineTuneEventsCommandBody = never;
+export type ListModelsCommandInput = never;
+export type ListModelsCommandBody = never;
 export type RetrieveModelCommandParams = {
   model: string;
 };
 export type RetrieveModelCommandInput = RetrieveModelCommandParams;
-export type RetrieveModelCommandBody = void;
+export type RetrieveModelCommandBody = never;
 export type DeleteModelCommandParams = {
   model: string;
 };
 export type DeleteModelCommandInput = DeleteModelCommandParams;
-export type DeleteModelCommandBody = void;
+export type DeleteModelCommandBody = never;
 export type CreateModerationCommandInput = CreateModerationRequest;
 export type CreateModerationCommandBody = CreateModerationRequest;
 export type ListAssistantsCommandQuery = {
@@ -2012,14 +2012,14 @@ export type ListAssistantsCommandQuery = {
   before: string;
 };
 export type ListAssistantsCommandInput = ListAssistantsCommandQuery;
-export type ListAssistantsCommandBody = void;
+export type ListAssistantsCommandBody = never;
 export type CreateAssistantCommandInput = CreateAssistantRequest;
 export type CreateAssistantCommandBody = CreateAssistantRequest;
 export type GetAssistantCommandParams = {
   assistantId: string;
 };
 export type GetAssistantCommandInput = GetAssistantCommandParams;
-export type GetAssistantCommandBody = void;
+export type GetAssistantCommandBody = never;
 export type ModifyAssistantCommandParams = {
   assistantId: string;
 };
@@ -2030,14 +2030,14 @@ export type DeleteAssistantCommandParams = {
   assistantId: string;
 };
 export type DeleteAssistantCommandInput = DeleteAssistantCommandParams;
-export type DeleteAssistantCommandBody = void;
+export type DeleteAssistantCommandBody = never;
 export type CreateThreadCommandInput = CreateThreadRequest;
 export type CreateThreadCommandBody = CreateThreadRequest;
 export type GetThreadCommandParams = {
   threadId: string;
 };
 export type GetThreadCommandInput = GetThreadCommandParams;
-export type GetThreadCommandBody = void;
+export type GetThreadCommandBody = never;
 export type ModifyThreadCommandParams = {
   threadId: string;
 };
@@ -2048,7 +2048,7 @@ export type DeleteThreadCommandParams = {
   threadId: string;
 };
 export type DeleteThreadCommandInput = DeleteThreadCommandParams;
-export type DeleteThreadCommandBody = void;
+export type DeleteThreadCommandBody = never;
 export type ListMessagesCommandQuery = {
   limit: `${number}`;
   order: 'asc' | 'desc';
@@ -2060,7 +2060,7 @@ export type ListMessagesCommandParams = {
 };
 export type ListMessagesCommandInput = ListMessagesCommandQuery &
   ListMessagesCommandParams;
-export type ListMessagesCommandBody = void;
+export type ListMessagesCommandBody = never;
 export type CreateMessageCommandParams = {
   threadId: string;
 };
@@ -2072,7 +2072,7 @@ export type GetMessageCommandParams = {
   messageId: string;
 };
 export type GetMessageCommandInput = GetMessageCommandParams;
-export type GetMessageCommandBody = void;
+export type GetMessageCommandBody = never;
 export type ModifyMessageCommandParams = {
   threadId: string;
   messageId: string;
@@ -2092,7 +2092,7 @@ export type ListRunsCommandParams = {
   threadId: string;
 };
 export type ListRunsCommandInput = ListRunsCommandQuery & ListRunsCommandParams;
-export type ListRunsCommandBody = void;
+export type ListRunsCommandBody = never;
 export type CreateRunCommandParams = {
   threadId: string;
 };
@@ -2103,7 +2103,7 @@ export type GetRunCommandParams = {
   runId: string;
 };
 export type GetRunCommandInput = GetRunCommandParams;
-export type GetRunCommandBody = void;
+export type GetRunCommandBody = never;
 export type ModifyRunCommandParams = {
   threadId: string;
   runId: string;
@@ -2122,7 +2122,7 @@ export type CancelRunCommandParams = {
   runId: string;
 };
 export type CancelRunCommandInput = CancelRunCommandParams;
-export type CancelRunCommandBody = void;
+export type CancelRunCommandBody = never;
 export type ListRunStepsCommandQuery = {
   limit: `${number}`;
   order: 'asc' | 'desc';
@@ -2135,14 +2135,14 @@ export type ListRunStepsCommandParams = {
 };
 export type ListRunStepsCommandInput = ListRunStepsCommandQuery &
   ListRunStepsCommandParams;
-export type ListRunStepsCommandBody = void;
+export type ListRunStepsCommandBody = never;
 export type GetRunStepCommandParams = {
   threadId: string;
   runId: string;
   stepId: string;
 };
 export type GetRunStepCommandInput = GetRunStepCommandParams;
-export type GetRunStepCommandBody = void;
+export type GetRunStepCommandBody = never;
 export type ListAssistantFilesCommandQuery = {
   limit: `${number}`;
   order: 'asc' | 'desc';
@@ -2154,7 +2154,7 @@ export type ListAssistantFilesCommandParams = {
 };
 export type ListAssistantFilesCommandInput = ListAssistantFilesCommandQuery &
   ListAssistantFilesCommandParams;
-export type ListAssistantFilesCommandBody = void;
+export type ListAssistantFilesCommandBody = never;
 export type CreateAssistantFileCommandParams = {
   assistantId: string;
 };
@@ -2166,13 +2166,13 @@ export type GetAssistantFileCommandParams = {
   fileId: string;
 };
 export type GetAssistantFileCommandInput = GetAssistantFileCommandParams;
-export type GetAssistantFileCommandBody = void;
+export type GetAssistantFileCommandBody = never;
 export type DeleteAssistantFileCommandParams = {
   assistantId: string;
   fileId: string;
 };
 export type DeleteAssistantFileCommandInput = DeleteAssistantFileCommandParams;
-export type DeleteAssistantFileCommandBody = void;
+export type DeleteAssistantFileCommandBody = never;
 export type ListMessageFilesCommandQuery = {
   limit: `${number}`;
   order: 'asc' | 'desc';
@@ -2185,11 +2185,11 @@ export type ListMessageFilesCommandParams = {
 };
 export type ListMessageFilesCommandInput = ListMessageFilesCommandQuery &
   ListMessageFilesCommandParams;
-export type ListMessageFilesCommandBody = void;
+export type ListMessageFilesCommandBody = never;
 export type GetMessageFileCommandParams = {
   threadId: string;
   messageId: string;
   fileId: string;
 };
 export type GetMessageFileCommandInput = GetMessageFileCommandParams;
-export type GetMessageFileCommandBody = void;
+export type GetMessageFileCommandBody = never;
