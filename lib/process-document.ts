@@ -629,16 +629,16 @@ export async function processOpenApiDocument(
   const namedImports = [...new Set([...inputTypes, ...outputTypes])];
 
   if (namedImports.length > 0) {
-  mainFile.addImportDeclaration({
-    moduleSpecifier: typesModuleSpecifier,
-    namedImports: namedImports
-      .filter(<T>(t: T | 'void'): t is T => t !== 'void')
-      .map((t) => ({
-        name: t.getName(),
-      }))
-      .sort((a, b) => a.name.localeCompare(b.name)),
-    isTypeOnly: true,
-  });
+    mainFile.addImportDeclaration({
+      moduleSpecifier: typesModuleSpecifier,
+      namedImports: namedImports
+        .filter(<T>(t: T | 'void'): t is T => t !== 'void')
+        .map((t) => ({
+          name: t.getName(),
+        }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      isTypeOnly: true,
+    });
   }
 
   const clientClassDeclaration = mainFile.addClass({
