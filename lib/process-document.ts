@@ -119,10 +119,12 @@ export async function processOpenApiDocument(
     relative(commandsFile.getDirectoryPath(), typesFile.getFilePath());
 
   const typesImportDecl =
-    commandsFile.getImportDeclaration(
-      (decl) =>
-        decl.getModuleSpecifier().getLiteralValue() === typesModuleSpecifier,
-    ) ||
+    commandsFile
+      .getImportDeclaration(
+        (decl) =>
+          decl.getModuleSpecifier().getLiteralValue() === typesModuleSpecifier,
+      )
+      ?.setIsTypeOnly(true) ||
     commandsFile.addImportDeclaration({
       moduleSpecifier: typesModuleSpecifier,
       namedImports: [],
@@ -633,9 +635,9 @@ export async function processOpenApiDocument(
       .filter(<T>(t: T | 'void'): t is T => t !== 'void')
       .map((t) => ({
         name: t.getName(),
-        isTypeOnly: true,
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
+    isTypeOnly: true,
   });
 
   const clientClassDeclaration = mainFile.addClass({
