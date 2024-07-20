@@ -23,13 +23,13 @@ export async function build(
    *
   */`.trim();
 
-  const { commandsFile, typesFile, clientFile } = await processOpenApiDocument(
+  const { commandsFile, typesFile, mainFile } = await processOpenApiDocument(
     outputDir,
     apischema.default,
     tags,
   );
 
-  const files = [commandsFile, typesFile, clientFile];
+  const files = [commandsFile, typesFile, mainFile];
 
   commandsFile.insertStatements(0, '/** eslint-disable max-classes */');
 

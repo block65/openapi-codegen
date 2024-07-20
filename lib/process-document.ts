@@ -79,7 +79,7 @@ export async function processOpenApiDocument(
     },
   );
 
-  const clientFile = project.createSourceFile(join(outputDir, 'main.ts'), '', {
+  const mainFile = project.createSourceFile(join(outputDir, 'main.ts'), '', {
     overwrite: true,
   });
 
@@ -596,14 +596,14 @@ export async function processOpenApiDocument(
   );
 
   const allInputs = inputUnion
-    ? clientFile.addTypeAlias({
+    ? mainFile.addTypeAlias({
         name: 'AllInputs',
         type: inputUnion,
       })
     : undefined;
 
   const allOutputs = outputUnion
-    ? clientFile.addTypeAlias({
+    ? mainFile.addTypeAlias({
         name: 'AllOutputs',
         type: outputUnion,
       })
@@ -613,7 +613,7 @@ export async function processOpenApiDocument(
   const fetcherName = 'createIsomorphicNativeFetcher';
   const configType = 'RestServiceClientConfig';
 
-  clientFile.addImportDeclarations([
+  mainFile.addImportDeclarations([
     {
       moduleSpecifier: '@block65/rest-client',
       namedImports: [
@@ -627,7 +627,7 @@ export async function processOpenApiDocument(
     },
   ]);
 
-  clientFile.addImportDeclaration({
+  mainFile.addImportDeclaration({
     moduleSpecifier: typesModuleSpecifier,
     namedImports: [...new Set([...inputTypes, ...outputTypes])]
       .filter(<T>(t: T | 'void'): t is T => t !== 'void')
@@ -638,7 +638,7 @@ export async function processOpenApiDocument(
       .sort((a, b) => a.name.localeCompare(b.name)),
   });
 
-  const clientClassDeclaration = clientFile.addClass({
+  const clientClassDeclaration = mainFile.addClass({
     name: pascalCase(schema.info.title, 'RestClient'),
     isExported: true,
     extends: `${serviceClientClassName}<${allInputs?.getName() || 'void'}, ${
@@ -683,5 +683,5 @@ export async function processOpenApiDocument(
     ]);
   }
 
-  return { commandsFile, typesFile, clientFile };
+  return { commandsFile, typesFile, mainFile };
 }
