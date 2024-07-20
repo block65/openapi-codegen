@@ -626,9 +626,12 @@ export async function processOpenApiDocument(
     ],
   });
 
+  const namedImports = [...new Set([...inputTypes, ...outputTypes])];
+
+  if (namedImports.length > 0) {
   mainFile.addImportDeclaration({
     moduleSpecifier: typesModuleSpecifier,
-    namedImports: [...new Set([...inputTypes, ...outputTypes])]
+    namedImports: namedImports
       .filter(<T>(t: T | 'void'): t is T => t !== 'void')
       .map((t) => ({
         name: t.getName(),
@@ -636,6 +639,7 @@ export async function processOpenApiDocument(
       .sort((a, b) => a.name.localeCompare(b.name)),
     isTypeOnly: true,
   });
+  }
 
   const clientClassDeclaration = mainFile.addClass({
     name: pascalCase(schema.info.title, 'RestClient'),
