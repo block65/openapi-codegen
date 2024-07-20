@@ -83,8 +83,9 @@ export async function processOpenApiDocument(
     overwrite: true,
   });
 
-  const outputTypes: (InterfaceDeclaration | TypeAliasDeclaration | 'void')[] =
-    [];
+  const outputTypes = new Set<
+    InterfaceDeclaration | TypeAliasDeclaration | 'void'
+  >();
 
   const refs = await $RefParser.default.resolve(schema);
 
@@ -477,7 +478,7 @@ export async function processOpenApiDocument(
               // ensureImport(outputType, outputTypeAlias);
 
               if (outputType) {
-                outputTypes.push(outputType);
+                outputTypes.add(outputType);
                 ensureImport(outputType);
               }
 
@@ -497,7 +498,7 @@ export async function processOpenApiDocument(
 
               classDeclaration.getExtends()?.addTypeArgument(retVal);
 
-              outputTypes.push(retVal);
+              outputTypes.add(retVal);
 
               // jsdoc.addTag({
               //   tagName: 'returns',
@@ -592,9 +593,7 @@ export async function processOpenApiDocument(
     ...new Set(inputTypes.sort().map((t) => t.getName())),
   );
   const outputUnion = createUnion(
-    ...new Set(
-      outputTypes.map((t) => (typeof t === 'string' ? t : t.getName())),
-    ),
+    ...[...outputTypes].map((t) => (typeof t === 'string' ? t : t.getName())),
   );
 
   const allInputs = inputUnion
