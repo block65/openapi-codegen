@@ -73,7 +73,9 @@
     "/chat/completions": {
       "post": {
         "operationId": "createChatCompletion",
-        "tags": ["Chat"],
+        "tags": [
+          "Chat"
+        ],
         "summary": "Creates a model response for the given chat conversation.",
         "requestBody": {
           "required": true,
@@ -146,7 +148,9 @@
     "/completions": {
       "post": {
         "operationId": "createCompletion",
-        "tags": ["Completions"],
+        "tags": [
+          "Completions"
+        ],
         "summary": "Creates a completion for the provided prompt and parameters.",
         "requestBody": {
           "required": true,
@@ -202,7 +206,9 @@
       "post": {
         "operationId": "createEdit",
         "deprecated": true,
-        "tags": ["Edits"],
+        "tags": [
+          "Edits"
+        ],
         "summary": "Creates a new edit for the provided input, instruction, and parameters.",
         "requestBody": {
           "required": true,
@@ -244,7 +250,9 @@
     "/images/generations": {
       "post": {
         "operationId": "createImage",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "summary": "Creates an image given a prompt.",
         "requestBody": {
           "required": true,
@@ -286,7 +294,9 @@
     "/images/edits": {
       "post": {
         "operationId": "createImageEdit",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "summary": "Creates an edited or extended image given an original image and a prompt.",
         "requestBody": {
           "required": true,
@@ -328,7 +338,9 @@
     "/images/variations": {
       "post": {
         "operationId": "createImageVariation",
-        "tags": ["Images"],
+        "tags": [
+          "Images"
+        ],
         "summary": "Creates a variation of a given image.",
         "requestBody": {
           "required": true,
@@ -370,7 +382,9 @@
     "/embeddings": {
       "post": {
         "operationId": "createEmbedding",
-        "tags": ["Embeddings"],
+        "tags": [
+          "Embeddings"
+        ],
         "summary": "Creates an embedding vector representing the input text.",
         "requestBody": {
           "required": true,
@@ -412,7 +426,9 @@
     "/audio/speech": {
       "post": {
         "operationId": "createSpeech",
-        "tags": ["Audio"],
+        "tags": [
+          "Audio"
+        ],
         "summary": "Generates audio from the input text.",
         "requestBody": {
           "required": true,
@@ -462,7 +478,9 @@
     "/audio/transcriptions": {
       "post": {
         "operationId": "createTranscription",
-        "tags": ["Audio"],
+        "tags": [
+          "Audio"
+        ],
         "summary": "Transcribes audio into the input language.",
         "requestBody": {
           "required": true,
@@ -504,7 +522,9 @@
     "/audio/translations": {
       "post": {
         "operationId": "createTranslation",
-        "tags": ["Audio"],
+        "tags": [
+          "Audio"
+        ],
         "summary": "Translates audio into English.",
         "requestBody": {
           "required": true,
@@ -546,7 +566,9 @@
     "/files": {
       "get": {
         "operationId": "listFiles",
-        "tags": ["Files"],
+        "tags": [
+          "Files"
+        ],
         "summary": "Returns a list of files that belong to the user's organization.",
         "parameters": [
           {
@@ -587,7 +609,9 @@
       },
       "post": {
         "operationId": "createFile",
-        "tags": ["Files"],
+        "tags": [
+          "Files"
+        ],
         "summary": "Upload a file that can be used across various endpoints. The size of all the files uploaded by one organization can be up to 100 GB.\n\nThe size of individual files can be a maximum of 512 MB. See the [Assistants Tools guide](/docs/assistants/tools) to learn more about the types of files supported. The Fine-tuning API only supports `.jsonl` files.\n\nPlease [contact us](https://help.openai.com/) if you need to increase these storage limits.\n",
         "requestBody": {
           "required": true,
@@ -629,7 +653,9 @@
     "/files/{file_id}": {
       "delete": {
         "operationId": "deleteFile",
-        "tags": ["Files"],
+        "tags": [
+          "Files"
+        ],
         "summary": "Delete a file.",
         "parameters": [
           {
@@ -670,7 +696,9 @@
       },
       "get": {
         "operationId": "retrieveFile",
-        "tags": ["Files"],
+        "tags": [
+          "Files"
+        ],
         "summary": "Returns information about a specific file.",
         "parameters": [
           {
@@ -713,7 +741,9 @@
     "/files/{file_id}/content": {
       "get": {
         "operationId": "downloadFile",
-        "tags": ["Files"],
+        "tags": [
+          "Files"
+        ],
         "summary": "Returns the contents of the specified file.",
         "parameters": [
           {
@@ -755,7 +785,9 @@
     "/fine_tuning/jobs": {
       "post": {
         "operationId": "createFineTuningJob",
-        "tags": ["Fine-tuning"],
+        "tags": [
+          "Fine-tuning"
+        ],
         "summary": "Creates a job that fine-tunes a specified model from a given dataset.\n\nResponse includes details of the enqueued job including job status and the name of the fine-tuned models once complete.\n\n[Learn more about fine-tuning](/docs/guides/fine-tuning)\n",
         "requestBody": {
           "required": true,
@@ -816,7 +848,9 @@
       },
       "get": {
         "operationId": "listPaginatedFineTuningJobs",
-        "tags": ["Fine-tuning"],
+        "tags": [
+          "Fine-tuning"
+        ],
         "summary": "List your organization's fine-tuning jobs\n",
         "parameters": [
           {
@@ -869,7 +903,9 @@
     "/fine_tuning/jobs/{fine_tuning_job_id}": {
       "get": {
         "operationId": "retrieveFineTuningJob",
-        "tags": ["Fine-tuning"],
+        "tags": [
+          "Fine-tuning"
+        ],
         "summary": "Get info about a fine-tuning job.\n\n[Learn more about fine-tuning](/docs/guides/fine-tuning)\n",
         "parameters": [
           {
@@ -913,7 +949,9 @@
     "/fine_tuning/jobs/{fine_tuning_job_id}/events": {
       "get": {
         "operationId": "listFineTuningEvents",
-        "tags": ["Fine-tuning"],
+        "tags": [
+          "Fine-tuning"
+        ],
         "summary": "Get status updates for a fine-tuning job.\n",
         "parameters": [
           {
@@ -976,7 +1014,9 @@
     "/fine_tuning/jobs/{fine_tuning_job_id}/cancel": {
       "post": {
         "operationId": "cancelFineTuningJob",
-        "tags": ["Fine-tuning"],
+        "tags": [
+          "Fine-tuning"
+        ],
         "summary": "Immediately cancel a fine-tune job.\n",
         "parameters": [
           {
@@ -1021,7 +1061,9 @@
       "post": {
         "operationId": "createFineTune",
         "deprecated": true,
-        "tags": ["Fine-tunes"],
+        "tags": [
+          "Fine-tunes"
+        ],
         "summary": "Creates a job that fine-tunes a specified model from a given dataset.\n\nResponse includes details of the enqueued job including job status and the name of the fine-tuned models once complete.\n\n[Learn more about fine-tuning](/docs/guides/legacy-fine-tuning)\n",
         "requestBody": {
           "required": true,
@@ -1062,7 +1104,9 @@
       "get": {
         "operationId": "listFineTunes",
         "deprecated": true,
-        "tags": ["Fine-tunes"],
+        "tags": [
+          "Fine-tunes"
+        ],
         "summary": "List your organization's fine-tuning jobs\n",
         "responses": {
           "200": {
@@ -1095,7 +1139,9 @@
       "get": {
         "operationId": "retrieveFineTune",
         "deprecated": true,
-        "tags": ["Fine-tunes"],
+        "tags": [
+          "Fine-tunes"
+        ],
         "summary": "Gets info about the fine-tune job.\n\n[Learn more about fine-tuning](/docs/guides/legacy-fine-tuning)\n",
         "parameters": [
           {
@@ -1140,7 +1186,9 @@
       "post": {
         "operationId": "cancelFineTune",
         "deprecated": true,
-        "tags": ["Fine-tunes"],
+        "tags": [
+          "Fine-tunes"
+        ],
         "summary": "Immediately cancel a fine-tune job.\n",
         "parameters": [
           {
@@ -1185,7 +1233,9 @@
       "get": {
         "operationId": "listFineTuneEvents",
         "deprecated": true,
-        "tags": ["Fine-tunes"],
+        "tags": [
+          "Fine-tunes"
+        ],
         "summary": "Get fine-grained status updates for a fine-tune job.\n",
         "parameters": [
           {
@@ -1239,7 +1289,9 @@
     "/models": {
       "get": {
         "operationId": "listModels",
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "summary": "Lists the currently available models, and provides basic information about each one such as the owner and availability.",
         "responses": {
           "200": {
@@ -1271,7 +1323,9 @@
     "/models/{model}": {
       "get": {
         "operationId": "retrieveModel",
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "summary": "Retrieves a model instance, providing basic information about the model such as the owner and permissioning.",
         "parameters": [
           {
@@ -1313,7 +1367,9 @@
       },
       "delete": {
         "operationId": "deleteModel",
-        "tags": ["Models"],
+        "tags": [
+          "Models"
+        ],
         "summary": "Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.",
         "parameters": [
           {
@@ -1357,7 +1413,9 @@
     "/moderations": {
       "post": {
         "operationId": "createModeration",
-        "tags": ["Moderations"],
+        "tags": [
+          "Moderations"
+        ],
         "summary": "Classifies if text violates OpenAI's Content Policy",
         "requestBody": {
           "required": true,
@@ -1399,7 +1457,9 @@
     "/assistants": {
       "get": {
         "operationId": "listAssistants",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Returns a list of assistants.",
         "parameters": [
           {
@@ -1419,7 +1479,10 @@
             "schema": {
               "type": "string",
               "default": "desc",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -1468,7 +1531,9 @@
       },
       "post": {
         "operationId": "createAssistant",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Create an assistant with a model and instructions.",
         "requestBody": {
           "required": true,
@@ -1523,7 +1588,9 @@
     "/assistants/{assistant_id}": {
       "get": {
         "operationId": "getAssistant",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieves an assistant.",
         "parameters": [
           {
@@ -1565,7 +1632,9 @@
       },
       "post": {
         "operationId": "modifyAssistant",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Modifies an assistant.",
         "parameters": [
           {
@@ -1617,7 +1686,9 @@
       },
       "delete": {
         "operationId": "deleteAssistant",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Delete an assistant.",
         "parameters": [
           {
@@ -1661,7 +1732,9 @@
     "/threads": {
       "post": {
         "operationId": "createThread",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Create a thread.",
         "requestBody": {
           "content": {
@@ -1715,7 +1788,9 @@
     "/threads/{thread_id}": {
       "get": {
         "operationId": "getThread",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieves a thread.",
         "parameters": [
           {
@@ -1757,7 +1832,9 @@
       },
       "post": {
         "operationId": "modifyThread",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Modifies a thread.",
         "parameters": [
           {
@@ -1809,7 +1886,9 @@
       },
       "delete": {
         "operationId": "deleteThread",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Delete a thread.",
         "parameters": [
           {
@@ -1853,7 +1932,9 @@
     "/threads/{thread_id}/messages": {
       "get": {
         "operationId": "listMessages",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Returns a list of messages for a given thread.",
         "parameters": [
           {
@@ -1882,7 +1963,10 @@
             "schema": {
               "type": "string",
               "default": "desc",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -1931,7 +2015,9 @@
       },
       "post": {
         "operationId": "createMessage",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Create a message.",
         "parameters": [
           {
@@ -1985,7 +2071,9 @@
     "/threads/{thread_id}/messages/{message_id}": {
       "get": {
         "operationId": "getMessage",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieve a message.",
         "parameters": [
           {
@@ -2036,7 +2124,9 @@
       },
       "post": {
         "operationId": "modifyMessage",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Modifies a message.",
         "parameters": [
           {
@@ -2099,7 +2189,9 @@
     "/threads/runs": {
       "post": {
         "operationId": "createThreadAndRun",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Create a thread and run it in one request.",
         "requestBody": {
           "required": true,
@@ -2142,7 +2234,9 @@
     "/threads/{thread_id}/runs": {
       "get": {
         "operationId": "listRuns",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Returns a list of runs belonging to a thread.",
         "parameters": [
           {
@@ -2171,7 +2265,10 @@
             "schema": {
               "type": "string",
               "default": "desc",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -2220,7 +2317,9 @@
       },
       "post": {
         "operationId": "createRun",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Create a run.",
         "parameters": [
           {
@@ -2274,7 +2373,9 @@
     "/threads/{thread_id}/runs/{run_id}": {
       "get": {
         "operationId": "getRun",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieves a run.",
         "parameters": [
           {
@@ -2325,7 +2426,9 @@
       },
       "post": {
         "operationId": "modifyRun",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Modifies a run.",
         "parameters": [
           {
@@ -2388,7 +2491,9 @@
     "/threads/{thread_id}/runs/{run_id}/submit_tool_outputs": {
       "post": {
         "operationId": "submitToolOuputsToRun",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "When a run has the `status: \"requires_action\"` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.\n",
         "parameters": [
           {
@@ -2451,7 +2556,9 @@
     "/threads/{thread_id}/runs/{run_id}/cancel": {
       "post": {
         "operationId": "cancelRun",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Cancels a run that is `in_progress`.",
         "parameters": [
           {
@@ -2504,7 +2611,9 @@
     "/threads/{thread_id}/runs/{run_id}/steps": {
       "get": {
         "operationId": "listRunSteps",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Returns a list of run steps belonging to a run.",
         "parameters": [
           {
@@ -2542,7 +2651,10 @@
             "schema": {
               "type": "string",
               "default": "desc",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -2593,7 +2705,9 @@
     "/threads/{thread_id}/runs/{run_id}/steps/{step_id}": {
       "get": {
         "operationId": "getRunStep",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieves a run step.",
         "parameters": [
           {
@@ -2655,7 +2769,9 @@
     "/assistants/{assistant_id}/files": {
       "get": {
         "operationId": "listAssistantFiles",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Returns a list of assistant files.",
         "parameters": [
           {
@@ -2684,7 +2800,10 @@
             "schema": {
               "type": "string",
               "default": "desc",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -2733,7 +2852,9 @@
       },
       "post": {
         "operationId": "createAssistantFile",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Create an assistant file by attaching a [File](/docs/api-reference/files) to an [assistant](/docs/api-reference/assistants).",
         "parameters": [
           {
@@ -2788,7 +2909,9 @@
     "/assistants/{assistant_id}/files/{file_id}": {
       "get": {
         "operationId": "getAssistantFile",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieves an AssistantFile.",
         "parameters": [
           {
@@ -2839,7 +2962,9 @@
       },
       "delete": {
         "operationId": "deleteAssistantFile",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Delete an assistant file.",
         "parameters": [
           {
@@ -2892,7 +3017,9 @@
     "/threads/{thread_id}/messages/{message_id}/files": {
       "get": {
         "operationId": "listMessageFiles",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Returns a list of message files.",
         "parameters": [
           {
@@ -2930,7 +3057,10 @@
             "schema": {
               "type": "string",
               "default": "desc",
-              "enum": ["asc", "desc"]
+              "enum": [
+                "asc",
+                "desc"
+              ]
             }
           },
           {
@@ -2981,7 +3111,9 @@
     "/threads/{thread_id}/messages/{message_id}/files/{file_id}": {
       "get": {
         "operationId": "getMessageFile",
-        "tags": ["Assistants"],
+        "tags": [
+          "Assistants"
+        ],
         "summary": "Retrieves a message file.",
         "parameters": [
           {
@@ -3072,7 +3204,12 @@
             "nullable": false
           }
         },
-        "required": ["type", "message", "param", "code"]
+        "required": [
+          "type",
+          "message",
+          "param",
+          "code"
+        ]
       },
       "ErrorResponse": {
         "type": "object",
@@ -3081,14 +3218,18 @@
             "$ref": "#/components/schemas/Error"
           }
         },
-        "required": ["error"]
+        "required": [
+          "error"
+        ]
       },
       "ListModelsResponse": {
         "type": "object",
         "properties": {
           "object": {
             "type": "string",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           },
           "data": {
             "type": "array",
@@ -3097,7 +3238,10 @@
             }
           }
         },
-        "required": ["object", "data"]
+        "required": [
+          "object",
+          "data"
+        ]
       },
       "DeleteModelResponse": {
         "type": "object",
@@ -3112,7 +3256,11 @@
             "type": "string"
           }
         },
-        "required": ["id", "object", "deleted"]
+        "required": [
+          "id",
+          "object",
+          "deleted"
+        ]
       },
       "CreateCompletionRequest": {
         "type": "object",
@@ -3312,7 +3460,10 @@
             "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).\n"
           }
         },
-        "required": ["model", "prompt"]
+        "required": [
+          "model",
+          "prompt"
+        ]
       },
       "CreateCompletionResponse": {
         "type": "object",
@@ -3327,12 +3478,21 @@
             "description": "The list of completion choices the model generated for the input prompt.",
             "items": {
               "type": "object",
-              "required": ["finish_reason", "index", "logprobs", "text"],
+              "required": [
+                "finish_reason",
+                "index",
+                "logprobs",
+                "text"
+              ],
               "properties": {
                 "finish_reason": {
                   "type": "string",
                   "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\nor `content_filter` if content was omitted due to a flag from our content filters.\n",
-                  "enum": ["stop", "length", "content_filter"]
+                  "enum": [
+                    "stop",
+                    "length",
+                    "content_filter"
+                  ]
                 },
                 "index": {
                   "type": "integer"
@@ -3391,13 +3551,21 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always \"text_completion\"",
-            "enum": ["text_completion"]
+            "enum": [
+              "text_completion"
+            ]
           },
           "usage": {
             "$ref": "#/components/schemas/CompletionUsage"
           }
         },
-        "required": ["id", "object", "created", "model", "choices"],
+        "required": [
+          "id",
+          "object",
+          "created",
+          "model",
+          "choices"
+        ],
         "x-oaiMeta": {
           "name": "The completion object",
           "legacy": true,
@@ -3421,7 +3589,9 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["image_url"],
+            "enum": [
+              "image_url"
+            ],
             "description": "The type of the content part."
           },
           "image_url": {
@@ -3435,14 +3605,23 @@
               "detail": {
                 "type": "string",
                 "description": "Specifies the detail level of the image. Learn more in the [Vision guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).",
-                "enum": ["auto", "low", "high"],
+                "enum": [
+                  "auto",
+                  "low",
+                  "high"
+                ],
                 "default": "auto"
               }
             },
-            "required": ["url"]
+            "required": [
+              "url"
+            ]
           }
         },
-        "required": ["type", "image_url"]
+        "required": [
+          "type",
+          "image_url"
+        ]
       },
       "ChatCompletionRequestMessageContentPartText": {
         "type": "object",
@@ -3450,7 +3629,9 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["text"],
+            "enum": [
+              "text"
+            ],
             "description": "The type of the content part."
           },
           "text": {
@@ -3458,7 +3639,10 @@
             "description": "The text content."
           }
         },
-        "required": ["type", "text"]
+        "required": [
+          "type",
+          "text"
+        ]
       },
       "ChatCompletionRequestMessage": {
         "oneOf": [
@@ -3490,7 +3674,9 @@
           },
           "role": {
             "type": "string",
-            "enum": ["system"],
+            "enum": [
+              "system"
+            ],
             "description": "The role of the messages author, in this case `system`."
           },
           "name": {
@@ -3498,7 +3684,10 @@
             "description": "An optional name for the participant. Provides the model information to differentiate between participants of the same role."
           }
         },
-        "required": ["content", "role"]
+        "required": [
+          "content",
+          "role"
+        ]
       },
       "ChatCompletionRequestUserMessage": {
         "type": "object",
@@ -3526,7 +3715,9 @@
           },
           "role": {
             "type": "string",
-            "enum": ["user"],
+            "enum": [
+              "user"
+            ],
             "description": "The role of the messages author, in this case `user`."
           },
           "name": {
@@ -3534,7 +3725,10 @@
             "description": "An optional name for the participant. Provides the model information to differentiate between participants of the same role."
           }
         },
-        "required": ["content", "role"]
+        "required": [
+          "content",
+          "role"
+        ]
       },
       "ChatCompletionRequestAssistantMessage": {
         "type": "object",
@@ -3547,7 +3741,9 @@
           },
           "role": {
             "type": "string",
-            "enum": ["assistant"],
+            "enum": [
+              "assistant"
+            ],
             "description": "The role of the messages author, in this case `assistant`."
           },
           "name": {
@@ -3571,10 +3767,15 @@
                 "description": "The name of the function to call."
               }
             },
-            "required": ["arguments", "name"]
+            "required": [
+              "arguments",
+              "name"
+            ]
           }
         },
-        "required": ["role"]
+        "required": [
+          "role"
+        ]
       },
       "ChatCompletionRequestToolMessage": {
         "type": "object",
@@ -3582,7 +3783,9 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["tool"],
+            "enum": [
+              "tool"
+            ],
             "description": "The role of the messages author, in this case `tool`."
           },
           "content": {
@@ -3594,7 +3797,11 @@
             "description": "Tool call that this message is responding to."
           }
         },
-        "required": ["role", "content", "tool_call_id"]
+        "required": [
+          "role",
+          "content",
+          "tool_call_id"
+        ]
       },
       "ChatCompletionRequestFunctionMessage": {
         "type": "object",
@@ -3603,7 +3810,9 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The role of the messages author, in this case `function`."
           },
           "content": {
@@ -3615,7 +3824,11 @@
             "description": "The name of the function to call."
           }
         },
-        "required": ["role", "content", "name"]
+        "required": [
+          "role",
+          "content",
+          "name"
+        ]
       },
       "FunctionParameters": {
         "type": "object",
@@ -3638,7 +3851,10 @@
             "$ref": "#/components/schemas/FunctionParameters"
           }
         },
-        "required": ["name", "parameters"]
+        "required": [
+          "name",
+          "parameters"
+        ]
       },
       "ChatCompletionFunctionCallOption": {
         "type": "object",
@@ -3649,21 +3865,28 @@
             "description": "The name of the function to call."
           }
         },
-        "required": ["name"]
+        "required": [
+          "name"
+        ]
       },
       "ChatCompletionTool": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool. Currently, only `function` is supported."
           },
           "function": {
             "$ref": "#/components/schemas/FunctionObject"
           }
         },
-        "required": ["type", "function"]
+        "required": [
+          "type",
+          "function"
+        ]
       },
       "FunctionObject": {
         "type": "object",
@@ -3680,7 +3903,10 @@
             "$ref": "#/components/schemas/FunctionParameters"
           }
         },
-        "required": ["name", "parameters"]
+        "required": [
+          "name",
+          "parameters"
+        ]
       },
       "ChatCompletionToolChoiceOption": {
         "description": "Controls which (if any) function is called by the model.\n`none` means the model will not call a function and instead generates a message.\n`auto` means the model can pick between generating a message or calling a function.\nSpecifying a particular function via `{\"type: \"function\", \"function\": {\"name\": \"my_function\"}}` forces the model to call that function.\n\n`none` is the default when no functions are present. `auto` is the default if functions are present.\n",
@@ -3688,7 +3914,10 @@
           {
             "type": "string",
             "description": "`none` means the model will not call a function and instead generates a message. `auto` means the model can pick between generating a message or calling a function.\n",
-            "enum": ["none", "auto"]
+            "enum": [
+              "none",
+              "auto"
+            ]
           },
           {
             "$ref": "#/components/schemas/ChatCompletionNamedToolChoice"
@@ -3702,7 +3931,9 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool. Currently, only `function` is supported."
           },
           "function": {
@@ -3713,10 +3944,15 @@
                 "description": "The name of the function to call."
               }
             },
-            "required": ["name"]
+            "required": [
+              "name"
+            ]
           }
         },
-        "required": ["type", "function"]
+        "required": [
+          "type",
+          "function"
+        ]
       },
       "ChatCompletionMessageToolCalls": {
         "type": "array",
@@ -3734,7 +3970,9 @@
           },
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool. Currently, only `function` is supported."
           },
           "function": {
@@ -3750,10 +3988,17 @@
                 "description": "The arguments to call the function with, as generated by the model in JSON format. Note that the model does not always generate valid JSON, and may hallucinate parameters not defined by your function schema. Validate the arguments in your code before calling your function."
               }
             },
-            "required": ["name", "arguments"]
+            "required": [
+              "name",
+              "arguments"
+            ]
           }
         },
-        "required": ["id", "type", "function"]
+        "required": [
+          "id",
+          "type",
+          "function"
+        ]
       },
       "ChatCompletionMessageToolCallChunk": {
         "type": "object",
@@ -3767,7 +4012,9 @@
           },
           "type": {
             "type": "string",
-            "enum": ["function"],
+            "enum": [
+              "function"
+            ],
             "description": "The type of the tool. Currently, only `function` is supported."
           },
           "function": {
@@ -3784,12 +4031,20 @@
             }
           }
         },
-        "required": ["index"]
+        "required": [
+          "index"
+        ]
       },
       "ChatCompletionRole": {
         "type": "string",
         "description": "The role of the author of a message",
-        "enum": ["system", "user", "assistant", "tool", "function"]
+        "enum": [
+          "system",
+          "user",
+          "assistant",
+          "tool",
+          "function"
+        ]
       },
       "ChatCompletionResponseMessage": {
         "type": "object",
@@ -3805,7 +4060,9 @@
           },
           "role": {
             "type": "string",
-            "enum": ["assistant"],
+            "enum": [
+              "assistant"
+            ],
             "description": "The role of the author of this message."
           },
           "function_call": {
@@ -3822,10 +4079,16 @@
                 "description": "The name of the function to call."
               }
             },
-            "required": ["name", "arguments"]
+            "required": [
+              "name",
+              "arguments"
+            ]
           }
         },
-        "required": ["role", "content"]
+        "required": [
+          "role",
+          "content"
+        ]
       },
       "ChatCompletionStreamResponseDelta": {
         "type": "object",
@@ -3859,7 +4122,12 @@
           },
           "role": {
             "type": "string",
-            "enum": ["system", "user", "assistant", "tool"],
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "tool"
+            ],
             "description": "The role of the author of this message."
           }
         }
@@ -3950,7 +4218,10 @@
             "properties": {
               "type": {
                 "type": "string",
-                "enum": ["text", "json_object"],
+                "enum": [
+                  "text",
+                  "json_object"
+                ],
                 "example": "json_object",
                 "default": "text",
                 "description": "Must be one of `text` or `json_object`."
@@ -4031,7 +4302,10 @@
               {
                 "type": "string",
                 "description": "`none` means the model will not call a function and instead generates a message. `auto` means the model can pick between generating a message or calling a function.\n",
-                "enum": ["none", "auto"]
+                "enum": [
+                  "none",
+                  "auto"
+                ]
               },
               {
                 "$ref": "#/components/schemas/ChatCompletionFunctionCallOption"
@@ -4050,7 +4324,10 @@
             }
           }
         },
-        "required": ["model", "messages"]
+        "required": [
+          "model",
+          "messages"
+        ]
       },
       "CreateChatCompletionResponse": {
         "type": "object",
@@ -4065,7 +4342,11 @@
             "description": "A list of chat completion choices. Can be more than one if `n` is greater than 1.",
             "items": {
               "type": "object",
-              "required": ["finish_reason", "index", "message"],
+              "required": [
+                "finish_reason",
+                "index",
+                "message"
+              ],
               "properties": {
                 "finish_reason": {
                   "type": "string",
@@ -4103,13 +4384,21 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always `chat.completion`.",
-            "enum": ["chat.completion"]
+            "enum": [
+              "chat.completion"
+            ]
           },
           "usage": {
             "$ref": "#/components/schemas/CompletionUsage"
           }
         },
-        "required": ["choices", "created", "id", "model", "object"],
+        "required": [
+          "choices",
+          "created",
+          "id",
+          "model",
+          "object"
+        ],
         "x-oaiMeta": {
           "name": "The chat completion object",
           "group": "chat",
@@ -4129,12 +4418,21 @@
             "description": "A list of chat completion choices. Can be more than one if `n` is greater than 1.",
             "items": {
               "type": "object",
-              "required": ["finish_reason", "index", "message"],
+              "required": [
+                "finish_reason",
+                "index",
+                "message"
+              ],
               "properties": {
                 "finish_reason": {
                   "type": "string",
                   "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence, `length` if the maximum number of tokens specified in the request was reached, `content_filter` if content was omitted due to a flag from our content filters, or `function_call` if the model called a function.\n",
-                  "enum": ["stop", "length", "function_call", "content_filter"]
+                  "enum": [
+                    "stop",
+                    "length",
+                    "function_call",
+                    "content_filter"
+                  ]
                 },
                 "index": {
                   "type": "integer",
@@ -4161,13 +4459,21 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always `chat.completion`.",
-            "enum": ["chat.completion"]
+            "enum": [
+              "chat.completion"
+            ]
           },
           "usage": {
             "$ref": "#/components/schemas/CompletionUsage"
           }
         },
-        "required": ["choices", "created", "id", "model", "object"],
+        "required": [
+          "choices",
+          "created",
+          "id",
+          "model",
+          "object"
+        ],
         "x-oaiMeta": {
           "name": "The chat completion object",
           "group": "chat",
@@ -4188,10 +4494,16 @@
           },
           "object": {
             "type": "string",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           }
         },
-        "required": ["object", "data", "has_more"]
+        "required": [
+          "object",
+          "data",
+          "has_more"
+        ]
       },
       "CreateChatCompletionStreamResponse": {
         "type": "object",
@@ -4206,7 +4518,11 @@
             "description": "A list of chat completion choices. Can be more than one if `n` is greater than 1.",
             "items": {
               "type": "object",
-              "required": ["delta", "finish_reason", "index"],
+              "required": [
+                "delta",
+                "finish_reason",
+                "index"
+              ],
               "properties": {
                 "delta": {
                   "$ref": "#/components/schemas/ChatCompletionStreamResponseDelta"
@@ -4245,10 +4561,18 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always `chat.completion.chunk`.",
-            "enum": ["chat.completion.chunk"]
+            "enum": [
+              "chat.completion.chunk"
+            ]
           }
         },
-        "required": ["choices", "created", "id", "model", "object"],
+        "required": [
+          "choices",
+          "created",
+          "id",
+          "model",
+          "object"
+        ],
         "x-oaiMeta": {
           "name": "The chat completion chunk object",
           "group": "chat",
@@ -4281,7 +4605,10 @@
               },
               {
                 "type": "string",
-                "enum": ["text-davinci-edit-001", "code-davinci-edit-001"]
+                "enum": [
+                  "text-davinci-edit-001",
+                  "code-davinci-edit-001"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -4321,7 +4648,10 @@
             "description": "An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.\n\nWe generally recommend altering this or `temperature` but not both.\n"
           }
         },
-        "required": ["model", "instruction"]
+        "required": [
+          "model",
+          "instruction"
+        ]
       },
       "CreateEditResponse": {
         "type": "object",
@@ -4333,12 +4663,19 @@
             "description": "A list of edit choices. Can be more than one if `n` is greater than 1.",
             "items": {
               "type": "object",
-              "required": ["text", "index", "finish_reason"],
+              "required": [
+                "text",
+                "index",
+                "finish_reason"
+              ],
               "properties": {
                 "finish_reason": {
                   "type": "string",
                   "description": "The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,\n`length` if the maximum number of tokens specified in the request was reached,\nor `content_filter` if content was omitted due to a flag from our content filters.\n",
-                  "enum": ["stop", "length"]
+                  "enum": [
+                    "stop",
+                    "length"
+                  ]
                 },
                 "index": {
                   "type": "integer",
@@ -4354,7 +4691,9 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always `edit`.",
-            "enum": ["edit"]
+            "enum": [
+              "edit"
+            ]
           },
           "created": {
             "type": "integer",
@@ -4364,7 +4703,12 @@
             "$ref": "#/components/schemas/CompletionUsage"
           }
         },
-        "required": ["object", "created", "choices", "usage"],
+        "required": [
+          "object",
+          "created",
+          "choices",
+          "usage"
+        ],
         "x-oaiMeta": {
           "name": "The edit object",
           "example": "{\n  \"object\": \"edit\",\n  \"created\": 1589478378,\n  \"choices\": [\n    {\n      \"text\": \"What day of the week is it?\",\n      \"index\": 0,\n    }\n  ],\n  \"usage\": {\n    \"prompt_tokens\": 25,\n    \"completion_tokens\": 32,\n    \"total_tokens\": 57\n  }\n}\n"
@@ -4385,7 +4729,10 @@
               },
               {
                 "type": "string",
-                "enum": ["dall-e-2", "dall-e-3"]
+                "enum": [
+                  "dall-e-2",
+                  "dall-e-3"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string",
@@ -4405,14 +4752,20 @@
           },
           "quality": {
             "type": "string",
-            "enum": ["standard", "hd"],
+            "enum": [
+              "standard",
+              "hd"
+            ],
             "default": "standard",
             "example": "standard",
             "description": "The quality of the image that will be generated. `hd` creates images with finer details and greater consistency across the image. This param is only supported for `dall-e-3`."
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
+            "enum": [
+              "url",
+              "b64_json"
+            ],
             "default": "url",
             "example": "url",
             "nullable": true,
@@ -4434,7 +4787,10 @@
           },
           "style": {
             "type": "string",
-            "enum": ["vivid", "natural"],
+            "enum": [
+              "vivid",
+              "natural"
+            ],
             "default": "vivid",
             "example": "vivid",
             "nullable": true,
@@ -4446,7 +4802,9 @@
             "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).\n"
           }
         },
-        "required": ["prompt"]
+        "required": [
+          "prompt"
+        ]
       },
       "ImagesResponse": {
         "properties": {
@@ -4460,7 +4818,10 @@
             }
           }
         },
-        "required": ["created", "data"]
+        "required": [
+          "created",
+          "data"
+        ]
       },
       "Image": {
         "type": "object",
@@ -4509,7 +4870,9 @@
               },
               {
                 "type": "string",
-                "enum": ["dall-e-2"]
+                "enum": [
+                  "dall-e-2"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string",
@@ -4529,7 +4892,11 @@
           },
           "size": {
             "type": "string",
-            "enum": ["256x256", "512x512", "1024x1024"],
+            "enum": [
+              "256x256",
+              "512x512",
+              "1024x1024"
+            ],
             "default": "1024x1024",
             "example": "1024x1024",
             "nullable": true,
@@ -4537,7 +4904,10 @@
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
+            "enum": [
+              "url",
+              "b64_json"
+            ],
             "default": "url",
             "example": "url",
             "nullable": true,
@@ -4549,7 +4919,10 @@
             "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).\n"
           }
         },
-        "required": ["prompt", "image"]
+        "required": [
+          "prompt",
+          "image"
+        ]
       },
       "CreateImageVariationRequest": {
         "type": "object",
@@ -4566,7 +4939,9 @@
               },
               {
                 "type": "string",
-                "enum": ["dall-e-2"]
+                "enum": [
+                  "dall-e-2"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string",
@@ -4586,7 +4961,10 @@
           },
           "response_format": {
             "type": "string",
-            "enum": ["url", "b64_json"],
+            "enum": [
+              "url",
+              "b64_json"
+            ],
             "default": "url",
             "example": "url",
             "nullable": true,
@@ -4594,7 +4972,11 @@
           },
           "size": {
             "type": "string",
-            "enum": ["256x256", "512x512", "1024x1024"],
+            "enum": [
+              "256x256",
+              "512x512",
+              "1024x1024"
+            ],
             "default": "1024x1024",
             "example": "1024x1024",
             "nullable": true,
@@ -4606,7 +4988,9 @@
             "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).\n"
           }
         },
-        "required": ["image"]
+        "required": [
+          "image"
+        ]
       },
       "CreateModerationRequest": {
         "type": "object",
@@ -4640,13 +5024,18 @@
               },
               {
                 "type": "string",
-                "enum": ["text-moderation-latest", "text-moderation-stable"]
+                "enum": [
+                  "text-moderation-latest",
+                  "text-moderation-stable"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
           }
         },
-        "required": ["input"]
+        "required": [
+          "input"
+        ]
       },
       "CreateModerationResponse": {
         "type": "object",
@@ -4797,11 +5186,19 @@
                   ]
                 }
               },
-              "required": ["flagged", "categories", "category_scores"]
+              "required": [
+                "flagged",
+                "categories",
+                "category_scores"
+              ]
             }
           }
         },
-        "required": ["id", "model", "results"],
+        "required": [
+          "id",
+          "model",
+          "results"
+        ],
         "x-oaiMeta": {
           "name": "The moderation object",
           "example": "{\n  \"id\": \"modr-XXXXX\",\n  \"model\": \"text-moderation-005\",\n  \"results\": [\n    {\n      \"flagged\": true,\n      \"categories\": {\n        \"sexual\": false,\n        \"hate\": false,\n        \"harassment\": false,\n        \"self-harm\": false,\n        \"sexual/minors\": false,\n        \"hate/threatening\": false,\n        \"violence/graphic\": false,\n        \"self-harm/intent\": false,\n        \"self-harm/instructions\": false,\n        \"harassment/threatening\": true,\n        \"violence\": true,\n      },\n      \"category_scores\": {\n        \"sexual\": 1.2282071e-06,\n        \"hate\": 0.010696256,\n        \"harassment\": 0.29842457,\n        \"self-harm\": 1.5236925e-08,\n        \"sexual/minors\": 5.7246268e-08,\n        \"hate/threatening\": 0.0060676364,\n        \"violence/graphic\": 4.435014e-06,\n        \"self-harm/intent\": 8.098441e-10,\n        \"self-harm/instructions\": 2.8498655e-11,\n        \"harassment/threatening\": 0.63055265,\n        \"violence\": 0.99011886,\n      }\n    }\n  ]\n}\n"
@@ -4818,10 +5215,15 @@
           },
           "object": {
             "type": "string",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           }
         },
-        "required": ["object", "data"]
+        "required": [
+          "object",
+          "data"
+        ]
       },
       "CreateFileRequest": {
         "type": "object",
@@ -4835,10 +5237,16 @@
           "purpose": {
             "description": "The intended purpose of the uploaded file.\n\nUse \"fine-tune\" for [Fine-tuning](/docs/api-reference/fine-tuning) and \"assistants\" for [Assistants](/docs/api-reference/assistants) and [Messages](/docs/api-reference/messages). This allows us to validate the format of the uploaded file is correct for fine-tuning.\n",
             "type": "string",
-            "enum": ["fine-tune", "assistants"]
+            "enum": [
+              "fine-tune",
+              "assistants"
+            ]
           }
         },
-        "required": ["file", "purpose"]
+        "required": [
+          "file",
+          "purpose"
+        ]
       },
       "DeleteFileResponse": {
         "type": "object",
@@ -4848,13 +5256,19 @@
           },
           "object": {
             "type": "string",
-            "enum": ["file"]
+            "enum": [
+              "file"
+            ]
           },
           "deleted": {
             "type": "boolean"
           }
         },
-        "required": ["id", "object", "deleted"]
+        "required": [
+          "id",
+          "object",
+          "deleted"
+        ]
       },
       "CreateFineTuningJobRequest": {
         "type": "object",
@@ -4868,7 +5282,11 @@
               },
               {
                 "type": "string",
-                "enum": ["babbage-002", "davinci-002", "gpt-3.5-turbo"]
+                "enum": [
+                  "babbage-002",
+                  "davinci-002",
+                  "gpt-3.5-turbo"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -4887,7 +5305,9 @@
                 "oneOf": [
                   {
                     "type": "string",
-                    "enum": ["auto"]
+                    "enum": [
+                      "auto"
+                    ]
                   },
                   {
                     "type": "integer",
@@ -4902,7 +5322,9 @@
                 "oneOf": [
                   {
                     "type": "string",
-                    "enum": ["auto"]
+                    "enum": [
+                      "auto"
+                    ]
                   },
                   {
                     "type": "number",
@@ -4917,7 +5339,9 @@
                 "oneOf": [
                   {
                     "type": "string",
-                    "enum": ["auto"]
+                    "enum": [
+                      "auto"
+                    ]
                   },
                   {
                     "type": "integer",
@@ -4944,7 +5368,10 @@
             "example": "file-abc123"
           }
         },
-        "required": ["model", "training_file"]
+        "required": [
+          "model",
+          "training_file"
+        ]
       },
       "ListFineTuningJobEventsResponse": {
         "type": "object",
@@ -4957,10 +5384,15 @@
           },
           "object": {
             "type": "string",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           }
         },
-        "required": ["object", "data"]
+        "required": [
+          "object",
+          "data"
+        ]
       },
       "CreateFineTuneRequest": {
         "type": "object",
@@ -4982,7 +5414,12 @@
             "items": {
               "type": "number"
             },
-            "example": [0.6, 1, 1.5, 2],
+            "example": [
+              0.6,
+              1,
+              1.5,
+              2
+            ],
             "default": null,
             "nullable": true
           },
@@ -5013,7 +5450,9 @@
                 "oneOf": [
                   {
                     "type": "string",
-                    "enum": ["auto"]
+                    "enum": [
+                      "auto"
+                    ]
                   },
                   {
                     "type": "integer",
@@ -5042,7 +5481,12 @@
               },
               {
                 "type": "string",
-                "enum": ["ada", "babbage", "curie", "davinci"]
+                "enum": [
+                  "ada",
+                  "babbage",
+                  "curie",
+                  "davinci"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -5068,7 +5512,9 @@
             "example": "file-abc123"
           }
         },
-        "required": ["training_file"]
+        "required": [
+          "training_file"
+        ]
       },
       "ListFineTunesResponse": {
         "type": "object",
@@ -5081,10 +5527,15 @@
           },
           "object": {
             "type": "string",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           }
         },
-        "required": ["object", "data"]
+        "required": [
+          "object",
+          "data"
+        ]
       },
       "ListFineTuneEventsResponse": {
         "type": "object",
@@ -5097,10 +5548,15 @@
           },
           "object": {
             "type": "string",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           }
         },
-        "required": ["object", "data"]
+        "required": [
+          "object",
+          "data"
+        ]
       },
       "CreateEmbeddingRequest": {
         "type": "object",
@@ -5167,7 +5623,9 @@
               },
               {
                 "type": "string",
-                "enum": ["text-embedding-ada-002"]
+                "enum": [
+                  "text-embedding-ada-002"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -5177,7 +5635,10 @@
             "example": "float",
             "default": "float",
             "type": "string",
-            "enum": ["float", "base64"]
+            "enum": [
+              "float",
+              "base64"
+            ]
           },
           "user": {
             "type": "string",
@@ -5185,7 +5646,10 @@
             "description": "A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse. [Learn more](/docs/guides/safety-best-practices/end-user-ids).\n"
           }
         },
-        "required": ["model", "input"]
+        "required": [
+          "model",
+          "input"
+        ]
       },
       "CreateEmbeddingResponse": {
         "type": "object",
@@ -5204,7 +5668,9 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always \"list\".",
-            "enum": ["list"]
+            "enum": [
+              "list"
+            ]
           },
           "usage": {
             "type": "object",
@@ -5219,10 +5685,18 @@
                 "description": "The total number of tokens used by the request."
               }
             },
-            "required": ["prompt_tokens", "total_tokens"]
+            "required": [
+              "prompt_tokens",
+              "total_tokens"
+            ]
           }
         },
-        "required": ["object", "model", "data", "usage"]
+        "required": [
+          "object",
+          "model",
+          "data",
+          "usage"
+        ]
       },
       "CreateTranscriptionRequest": {
         "type": "object",
@@ -5243,7 +5717,9 @@
               },
               {
                 "type": "string",
-                "enum": ["whisper-1"]
+                "enum": [
+                  "whisper-1"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -5259,7 +5735,13 @@
           "response_format": {
             "description": "The format of the transcript output, in one of these options: `json`, `text`, `srt`, `verbose_json`, or `vtt`.\n",
             "type": "string",
-            "enum": ["json", "text", "srt", "verbose_json", "vtt"],
+            "enum": [
+              "json",
+              "text",
+              "srt",
+              "verbose_json",
+              "vtt"
+            ],
             "default": "json"
           },
           "temperature": {
@@ -5268,7 +5750,10 @@
             "default": 0
           }
         },
-        "required": ["file", "model"]
+        "required": [
+          "file",
+          "model"
+        ]
       },
       "CreateTranscriptionResponse": {
         "type": "object",
@@ -5277,7 +5762,9 @@
             "type": "string"
           }
         },
-        "required": ["text"]
+        "required": [
+          "text"
+        ]
       },
       "CreateTranslationRequest": {
         "type": "object",
@@ -5298,7 +5785,9 @@
               },
               {
                 "type": "string",
-                "enum": ["whisper-1"]
+                "enum": [
+                  "whisper-1"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -5318,7 +5807,10 @@
             "default": 0
           }
         },
-        "required": ["file", "model"]
+        "required": [
+          "file",
+          "model"
+        ]
       },
       "CreateTranslationResponse": {
         "type": "object",
@@ -5327,7 +5819,9 @@
             "type": "string"
           }
         },
-        "required": ["text"]
+        "required": [
+          "text"
+        ]
       },
       "CreateSpeechRequest": {
         "type": "object",
@@ -5341,7 +5835,10 @@
               },
               {
                 "type": "string",
-                "enum": ["tts-1", "tts-1-hd"]
+                "enum": [
+                  "tts-1",
+                  "tts-1-hd"
+                ]
               }
             ],
             "x-oaiTypeLabel": "string"
@@ -5354,13 +5851,25 @@
           "voice": {
             "description": "The voice to use when generating the audio. Supported voices are `alloy`, `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are available in the [Text to speech guide](/docs/guides/text-to-speech/voice-options).",
             "type": "string",
-            "enum": ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
+            "enum": [
+              "alloy",
+              "echo",
+              "fable",
+              "onyx",
+              "nova",
+              "shimmer"
+            ]
           },
           "response_format": {
             "description": "The format to audio in. Supported formats are `mp3`, `opus`, `aac`, and `flac`.",
             "default": "mp3",
             "type": "string",
-            "enum": ["mp3", "opus", "aac", "flac"]
+            "enum": [
+              "mp3",
+              "opus",
+              "aac",
+              "flac"
+            ]
           },
           "speed": {
             "description": "The speed of the generated audio. Select a value from `0.25` to `4.0`. `1.0` is the default.",
@@ -5370,7 +5879,11 @@
             "maximum": 4
           }
         },
-        "required": ["model", "input", "voice"]
+        "required": [
+          "model",
+          "input",
+          "voice"
+        ]
       },
       "Model": {
         "title": "Model",
@@ -5387,14 +5900,21 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always \"model\".",
-            "enum": ["model"]
+            "enum": [
+              "model"
+            ]
           },
           "owned_by": {
             "type": "string",
             "description": "The organization that owns the model."
           }
         },
-        "required": ["id", "object", "created", "owned_by"],
+        "required": [
+          "id",
+          "object",
+          "created",
+          "owned_by"
+        ],
         "x-oaiMeta": {
           "name": "The model object",
           "example": "{\n  \"id\": \"VAR_model_id\",\n  \"object\": \"model\",\n  \"created\": 1686935002,\n  \"owned_by\": \"openai\"\n}\n"
@@ -5423,7 +5943,9 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always `file`.",
-            "enum": ["file"]
+            "enum": [
+              "file"
+            ]
           },
           "purpose": {
             "type": "string",
@@ -5439,7 +5961,11 @@
             "type": "string",
             "deprecated": true,
             "description": "Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.",
-            "enum": ["uploaded", "processed", "error"]
+            "enum": [
+              "uploaded",
+              "processed",
+              "error"
+            ]
           },
           "status_details": {
             "type": "string",
@@ -5479,10 +6005,16 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always \"embedding\".",
-            "enum": ["embedding"]
+            "enum": [
+              "embedding"
+            ]
           }
         },
-        "required": ["index", "object", "embedding"],
+        "required": [
+          "index",
+          "object",
+          "embedding"
+        ],
         "x-oaiMeta": {
           "name": "The embedding object",
           "example": "{\n  \"object\": \"embedding\",\n  \"embedding\": [\n    0.0023064255,\n    -0.009327292,\n    .... (1536 floats total for ada-002)\n    -0.0028842222,\n  ],\n  \"index\": 0\n}\n"
@@ -5520,7 +6052,11 @@
                 "nullable": true
               }
             },
-            "required": ["code", "message", "param"]
+            "required": [
+              "code",
+              "message",
+              "param"
+            ]
           },
           "fine_tuned_model": {
             "type": "string",
@@ -5540,7 +6076,9 @@
                 "oneOf": [
                   {
                     "type": "string",
-                    "enum": ["auto"]
+                    "enum": [
+                      "auto"
+                    ]
                   },
                   {
                     "type": "integer",
@@ -5552,7 +6090,9 @@
                 "description": "The number of epochs to train the model for. An epoch refers to one full cycle through the training dataset.\n\"auto\" decides the optimal number of epochs based on the size of the dataset. If setting the number manually, we support any number between 1 and 50 epochs."
               }
             },
-            "required": ["n_epochs"]
+            "required": [
+              "n_epochs"
+            ]
           },
           "model": {
             "type": "string",
@@ -5561,7 +6101,9 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always \"fine_tuning.job\".",
-            "enum": ["fine_tuning.job"]
+            "enum": [
+              "fine_tuning.job"
+            ]
           },
           "organization_id": {
             "type": "string",
@@ -5635,17 +6177,29 @@
           },
           "level": {
             "type": "string",
-            "enum": ["info", "warn", "error"]
+            "enum": [
+              "info",
+              "warn",
+              "error"
+            ]
           },
           "message": {
             "type": "string"
           },
           "object": {
             "type": "string",
-            "enum": ["fine_tuning.job.event"]
+            "enum": [
+              "fine_tuning.job.event"
+            ]
           }
         },
-        "required": ["id", "object", "created_at", "level", "message"],
+        "required": [
+          "id",
+          "object",
+          "created_at",
+          "level",
+          "message"
+        ],
         "x-oaiMeta": {
           "name": "The fine-tuning job event object",
           "example": "{\n  \"object\": \"fine_tuning.job.event\",\n  \"id\": \"ftevent-abc123\"\n  \"created_at\": 1677610602,\n  \"level\": \"info\",\n  \"message\": \"Created fine-tuning job\"\n}\n"
@@ -5723,7 +6277,9 @@
           "object": {
             "type": "string",
             "description": "The object type, which is always \"fine-tune\".",
-            "enum": ["fine-tune"]
+            "enum": [
+              "fine-tune"
+            ]
           },
           "organization_id": {
             "type": "string",
@@ -5794,10 +6350,17 @@
           },
           "object": {
             "type": "string",
-            "enum": ["fine-tune-event"]
+            "enum": [
+              "fine-tune-event"
+            ]
           }
         },
-        "required": ["object", "created_at", "level", "message"],
+        "required": [
+          "object",
+          "created_at",
+          "level",
+          "message"
+        ],
         "x-oaiMeta": {
           "name": "The fine-tune event object",
           "example": "{\n  \"object\": \"fine-tune-event\",\n  \"created_at\": 1677610602,\n  \"level\": \"info\",\n  \"message\": \"Created fine-tune job\"\n}\n"
@@ -5820,7 +6383,11 @@
             "description": "Total number of tokens used in the request (prompt + completion)."
           }
         },
-        "required": ["prompt_tokens", "completion_tokens", "total_tokens"]
+        "required": [
+          "prompt_tokens",
+          "completion_tokens",
+          "total_tokens"
+        ]
       },
       "AssistantObject": {
         "type": "object",
@@ -5834,7 +6401,9 @@
           "object": {
             "description": "The object type, which is always `assistant`.",
             "type": "string",
-            "enum": ["assistant"]
+            "enum": [
+              "assistant"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the assistant was created.",
@@ -5982,7 +6551,9 @@
             "nullable": true
           }
         },
-        "required": ["model"]
+        "required": [
+          "model"
+        ]
       },
       "ModifyAssistantRequest": {
         "type": "object",
@@ -6062,10 +6633,16 @@
           },
           "object": {
             "type": "string",
-            "enum": ["assistant.deleted"]
+            "enum": [
+              "assistant.deleted"
+            ]
           }
         },
-        "required": ["id", "object", "deleted"]
+        "required": [
+          "id",
+          "object",
+          "deleted"
+        ]
       },
       "ListAssistantsResponse": {
         "type": "object",
@@ -6093,7 +6670,13 @@
             "example": false
           }
         },
-        "required": ["object", "data", "first_id", "last_id", "has_more"],
+        "required": [
+          "object",
+          "data",
+          "first_id",
+          "last_id",
+          "has_more"
+        ],
         "x-oaiMeta": {
           "name": "List assistants response object",
           "group": "chat",
@@ -6107,10 +6690,14 @@
           "type": {
             "type": "string",
             "description": "The type of tool being defined: `code_interpreter`",
-            "enum": ["code_interpreter"]
+            "enum": [
+              "code_interpreter"
+            ]
           }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       },
       "AssistantToolsRetrieval": {
         "type": "object",
@@ -6119,10 +6706,14 @@
           "type": {
             "type": "string",
             "description": "The type of tool being defined: `retrieval`",
-            "enum": ["retrieval"]
+            "enum": [
+              "retrieval"
+            ]
           }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       },
       "AssistantToolsFunction": {
         "type": "object",
@@ -6131,13 +6722,18 @@
           "type": {
             "type": "string",
             "description": "The type of tool being defined: `function`",
-            "enum": ["function"]
+            "enum": [
+              "function"
+            ]
           },
           "function": {
             "$ref": "#/components/schemas/FunctionObject"
           }
         },
-        "required": ["type", "function"]
+        "required": [
+          "type",
+          "function"
+        ]
       },
       "RunObject": {
         "type": "object",
@@ -6151,7 +6747,9 @@
           "object": {
             "description": "The object type, which is always `thread.run`.",
             "type": "string",
-            "enum": ["thread.run"]
+            "enum": [
+              "thread.run"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the run was created.",
@@ -6187,7 +6785,9 @@
               "type": {
                 "description": "For now, this is always `submit_tool_outputs`.",
                 "type": "string",
-                "enum": ["submit_tool_outputs"]
+                "enum": [
+                  "submit_tool_outputs"
+                ]
               },
               "submit_tool_outputs": {
                 "type": "object",
@@ -6201,10 +6801,15 @@
                     }
                   }
                 },
-                "required": ["tool_calls"]
+                "required": [
+                  "tool_calls"
+                ]
               }
             },
-            "required": ["type", "submit_tool_outputs"]
+            "required": [
+              "type",
+              "submit_tool_outputs"
+            ]
           },
           "last_error": {
             "type": "object",
@@ -6214,14 +6819,20 @@
               "code": {
                 "type": "string",
                 "description": "One of `server_error` or `rate_limit_exceeded`.",
-                "enum": ["server_error", "rate_limit_exceeded"]
+                "enum": [
+                  "server_error",
+                  "rate_limit_exceeded"
+                ]
               },
               "message": {
                 "type": "string",
                 "description": "A human-readable description of the error."
               }
             },
-            "required": ["code", "message"]
+            "required": [
+              "code",
+              "message"
+            ]
           },
           "expires_at": {
             "description": "The Unix timestamp (in seconds) for when the run will expire.",
@@ -6361,7 +6972,10 @@
             "nullable": true
           }
         },
-        "required": ["thread_id", "assistant_id"]
+        "required": [
+          "thread_id",
+          "assistant_id"
+        ]
       },
       "ListRunsResponse": {
         "type": "object",
@@ -6389,7 +7003,13 @@
             "example": false
           }
         },
-        "required": ["object", "data", "first_id", "last_id", "has_more"]
+        "required": [
+          "object",
+          "data",
+          "first_id",
+          "last_id",
+          "has_more"
+        ]
       },
       "ModifyRunRequest": {
         "type": "object",
@@ -6425,7 +7045,9 @@
             }
           }
         },
-        "required": ["tool_outputs"]
+        "required": [
+          "tool_outputs"
+        ]
       },
       "RunToolCallObject": {
         "type": "object",
@@ -6438,7 +7060,9 @@
           "type": {
             "type": "string",
             "description": "The type of tool call the output is required for. For now, this is always `function`.",
-            "enum": ["function"]
+            "enum": [
+              "function"
+            ]
           },
           "function": {
             "type": "object",
@@ -6453,10 +7077,17 @@
                 "description": "The arguments that the model expects you to pass to the function."
               }
             },
-            "required": ["name", "arguments"]
+            "required": [
+              "name",
+              "arguments"
+            ]
           }
         },
-        "required": ["id", "type", "function"]
+        "required": [
+          "id",
+          "type",
+          "function"
+        ]
       },
       "CreateThreadAndRunRequest": {
         "type": "object",
@@ -6506,7 +7137,10 @@
             "nullable": true
           }
         },
-        "required": ["thread_id", "assistant_id"]
+        "required": [
+          "thread_id",
+          "assistant_id"
+        ]
       },
       "ThreadObject": {
         "type": "object",
@@ -6520,7 +7154,9 @@
           "object": {
             "description": "The object type, which is always `thread`.",
             "type": "string",
-            "enum": ["thread"]
+            "enum": [
+              "thread"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the thread was created.",
@@ -6533,7 +7169,12 @@
             "nullable": true
           }
         },
-        "required": ["id", "object", "created_at", "metadata"],
+        "required": [
+          "id",
+          "object",
+          "created_at",
+          "metadata"
+        ],
         "x-oaiMeta": {
           "name": "The thread object",
           "beta": true,
@@ -6582,10 +7223,16 @@
           },
           "object": {
             "type": "string",
-            "enum": ["thread.deleted"]
+            "enum": [
+              "thread.deleted"
+            ]
           }
         },
-        "required": ["id", "object", "deleted"]
+        "required": [
+          "id",
+          "object",
+          "deleted"
+        ]
       },
       "ListThreadsResponse": {
         "properties": {
@@ -6612,7 +7259,13 @@
             "example": false
           }
         },
-        "required": ["object", "data", "first_id", "last_id", "has_more"]
+        "required": [
+          "object",
+          "data",
+          "first_id",
+          "last_id",
+          "has_more"
+        ]
       },
       "MessageObject": {
         "type": "object",
@@ -6626,7 +7279,9 @@
           "object": {
             "description": "The object type, which is always `thread.message`.",
             "type": "string",
-            "enum": ["thread.message"]
+            "enum": [
+              "thread.message"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the message was created.",
@@ -6639,7 +7294,10 @@
           "role": {
             "description": "The entity that produced the message. One of `user` or `assistant`.",
             "type": "string",
-            "enum": ["user", "assistant"]
+            "enum": [
+              "user",
+              "assistant"
+            ]
           },
           "content": {
             "description": "The content of the message in array of text and/or images.",
@@ -6703,11 +7361,16 @@
       "CreateMessageRequest": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["role", "content"],
+        "required": [
+          "role",
+          "content"
+        ],
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["user"],
+            "enum": [
+              "user"
+            ],
             "description": "The role of the entity that is creating the message. Currently only `user` is supported."
           },
           "content": {
@@ -6757,10 +7420,16 @@
           },
           "object": {
             "type": "string",
-            "enum": ["thread.message.deleted"]
+            "enum": [
+              "thread.message.deleted"
+            ]
           }
         },
-        "required": ["id", "object", "deleted"]
+        "required": [
+          "id",
+          "object",
+          "deleted"
+        ]
       },
       "ListMessagesResponse": {
         "properties": {
@@ -6787,7 +7456,13 @@
             "example": false
           }
         },
-        "required": ["object", "data", "first_id", "last_id", "has_more"]
+        "required": [
+          "object",
+          "data",
+          "first_id",
+          "last_id",
+          "has_more"
+        ]
       },
       "MessageContentImageFileObject": {
         "title": "Image file",
@@ -6797,7 +7472,9 @@
           "type": {
             "description": "Always `image_file`.",
             "type": "string",
-            "enum": ["image_file"]
+            "enum": [
+              "image_file"
+            ]
           },
           "image_file": {
             "type": "object",
@@ -6807,10 +7484,15 @@
                 "type": "string"
               }
             },
-            "required": ["file_id"]
+            "required": [
+              "file_id"
+            ]
           }
         },
-        "required": ["type", "image_file"]
+        "required": [
+          "type",
+          "image_file"
+        ]
       },
       "MessageContentTextObject": {
         "title": "Text",
@@ -6820,7 +7502,9 @@
           "type": {
             "description": "Always `text`.",
             "type": "string",
-            "enum": ["text"]
+            "enum": [
+              "text"
+            ]
           },
           "text": {
             "type": "object",
@@ -6844,10 +7528,16 @@
                 }
               }
             },
-            "required": ["value", "annotations"]
+            "required": [
+              "value",
+              "annotations"
+            ]
           }
         },
-        "required": ["type", "text"]
+        "required": [
+          "type",
+          "text"
+        ]
       },
       "MessageContentTextAnnotationsFileCitationObject": {
         "title": "File citation",
@@ -6857,7 +7547,9 @@
           "type": {
             "description": "Always `file_citation`.",
             "type": "string",
-            "enum": ["file_citation"]
+            "enum": [
+              "file_citation"
+            ]
           },
           "text": {
             "description": "The text in the message content that needs to be replaced.",
@@ -6875,7 +7567,10 @@
                 "type": "string"
               }
             },
-            "required": ["file_id", "quote"]
+            "required": [
+              "file_id",
+              "quote"
+            ]
           },
           "start_index": {
             "type": "integer",
@@ -6902,7 +7597,9 @@
           "type": {
             "description": "Always `file_path`.",
             "type": "string",
-            "enum": ["file_path"]
+            "enum": [
+              "file_path"
+            ]
           },
           "text": {
             "description": "The text in the message content that needs to be replaced.",
@@ -6916,7 +7613,9 @@
                 "type": "string"
               }
             },
-            "required": ["file_id"]
+            "required": [
+              "file_id"
+            ]
           },
           "start_index": {
             "type": "integer",
@@ -6927,7 +7626,13 @@
             "minimum": 0
           }
         },
-        "required": ["type", "text", "file_path", "start_index", "end_index"]
+        "required": [
+          "type",
+          "text",
+          "file_path",
+          "start_index",
+          "end_index"
+        ]
       },
       "RunStepObject": {
         "type": "object",
@@ -6941,7 +7646,9 @@
           "object": {
             "description": "The object type, which is always `thread.run.step``.",
             "type": "string",
-            "enum": ["thread.run.step"]
+            "enum": [
+              "thread.run.step"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the run step was created.",
@@ -6962,7 +7669,10 @@
           "type": {
             "description": "The type of run step, which can be either `message_creation` or `tool_calls`.",
             "type": "string",
-            "enum": ["message_creation", "tool_calls"]
+            "enum": [
+              "message_creation",
+              "tool_calls"
+            ]
           },
           "status": {
             "description": "The status of the run step, which can be either `in_progress`, `cancelled`, `failed`, `completed`, or `expired`.",
@@ -6996,14 +7706,20 @@
               "code": {
                 "type": "string",
                 "description": "One of `server_error` or `rate_limit_exceeded`.",
-                "enum": ["server_error", "rate_limit_exceeded"]
+                "enum": [
+                  "server_error",
+                  "rate_limit_exceeded"
+                ]
               },
               "message": {
                 "type": "string",
                 "description": "A human-readable description of the error."
               }
             },
-            "required": ["code", "message"]
+            "required": [
+              "code",
+              "message"
+            ]
           },
           "expired_at": {
             "description": "The Unix timestamp (in seconds) for when the run step expired. A step is considered expired if the parent run is expired.",
@@ -7080,7 +7796,13 @@
             "example": false
           }
         },
-        "required": ["object", "data", "first_id", "last_id", "has_more"]
+        "required": [
+          "object",
+          "data",
+          "first_id",
+          "last_id",
+          "has_more"
+        ]
       },
       "RunStepDetailsMessageCreationObject": {
         "title": "Message creation",
@@ -7090,7 +7812,9 @@
           "type": {
             "description": "Always `message_creation``.",
             "type": "string",
-            "enum": ["message_creation"]
+            "enum": [
+              "message_creation"
+            ]
           },
           "message_creation": {
             "type": "object",
@@ -7100,10 +7824,15 @@
                 "description": "The ID of the message that was created by this run step."
               }
             },
-            "required": ["message_id"]
+            "required": [
+              "message_id"
+            ]
           }
         },
-        "required": ["type", "message_creation"]
+        "required": [
+          "type",
+          "message_creation"
+        ]
       },
       "RunStepDetailsToolCallsObject": {
         "title": "Tool calls",
@@ -7113,7 +7842,9 @@
           "type": {
             "description": "Always `tool_calls`.",
             "type": "string",
-            "enum": ["tool_calls"]
+            "enum": [
+              "tool_calls"
+            ]
           },
           "tool_calls": {
             "type": "array",
@@ -7135,7 +7866,10 @@
             }
           }
         },
-        "required": ["type", "tool_calls"]
+        "required": [
+          "type",
+          "tool_calls"
+        ]
       },
       "RunStepDetailsToolCallsCodeObject": {
         "title": "Code interpreter tool call",
@@ -7149,12 +7883,17 @@
           "type": {
             "type": "string",
             "description": "The type of tool call. This is always going to be `code_interpreter` for this type of tool call.",
-            "enum": ["code_interpreter"]
+            "enum": [
+              "code_interpreter"
+            ]
           },
           "code_interpreter": {
             "type": "object",
             "description": "The Code Interpreter tool call definition.",
-            "required": ["input", "outputs"],
+            "required": [
+              "input",
+              "outputs"
+            ],
             "properties": {
               "input": {
                 "type": "string",
@@ -7179,7 +7918,11 @@
             }
           }
         },
-        "required": ["id", "type", "code_interpreter"]
+        "required": [
+          "id",
+          "type",
+          "code_interpreter"
+        ]
       },
       "RunStepDetailsToolCallsCodeOutputLogsObject": {
         "title": "Code interpreter log output",
@@ -7189,14 +7932,19 @@
           "type": {
             "description": "Always `logs`.",
             "type": "string",
-            "enum": ["logs"]
+            "enum": [
+              "logs"
+            ]
           },
           "logs": {
             "type": "string",
             "description": "The text output from the Code Interpreter tool call."
           }
         },
-        "required": ["type", "logs"]
+        "required": [
+          "type",
+          "logs"
+        ]
       },
       "RunStepDetailsToolCallsCodeOutputImageObject": {
         "title": "Code interpreter image output",
@@ -7205,7 +7953,9 @@
           "type": {
             "description": "Always `image`.",
             "type": "string",
-            "enum": ["image"]
+            "enum": [
+              "image"
+            ]
           },
           "image": {
             "type": "object",
@@ -7215,10 +7965,15 @@
                 "type": "string"
               }
             },
-            "required": ["file_id"]
+            "required": [
+              "file_id"
+            ]
           }
         },
-        "required": ["type", "image"]
+        "required": [
+          "type",
+          "image"
+        ]
       },
       "RunStepDetailsToolCallsRetrievalObject": {
         "title": "Retrieval tool call",
@@ -7231,7 +7986,9 @@
           "type": {
             "type": "string",
             "description": "The type of tool call. This is always going to be `retrieval` for this type of tool call.",
-            "enum": ["retrieval"]
+            "enum": [
+              "retrieval"
+            ]
           },
           "retrieval": {
             "type": "object",
@@ -7239,7 +7996,11 @@
             "x-oaiTypeLabel": "map"
           }
         },
-        "required": ["id", "type", "retrieval"]
+        "required": [
+          "id",
+          "type",
+          "retrieval"
+        ]
       },
       "RunStepDetailsToolCallsFunctionObject": {
         "type": "object",
@@ -7252,7 +8013,9 @@
           "type": {
             "type": "string",
             "description": "The type of tool call. This is always going to be `function` for this type of tool call.",
-            "enum": ["function"]
+            "enum": [
+              "function"
+            ]
           },
           "function": {
             "type": "object",
@@ -7272,10 +8035,18 @@
                 "nullable": true
               }
             },
-            "required": ["name", "arguments", "output"]
+            "required": [
+              "name",
+              "arguments",
+              "output"
+            ]
           }
         },
-        "required": ["id", "type", "function"]
+        "required": [
+          "id",
+          "type",
+          "function"
+        ]
       },
       "AssistantFileObject": {
         "type": "object",
@@ -7289,7 +8060,9 @@
           "object": {
             "description": "The object type, which is always `assistant.file`.",
             "type": "string",
-            "enum": ["assistant.file"]
+            "enum": [
+              "assistant.file"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the assistant file was created.",
@@ -7300,7 +8073,12 @@
             "type": "string"
           }
         },
-        "required": ["id", "object", "created_at", "assistant_id"],
+        "required": [
+          "id",
+          "object",
+          "created_at",
+          "assistant_id"
+        ],
         "x-oaiMeta": {
           "name": "The assistant file object",
           "beta": true,
@@ -7316,7 +8094,9 @@
             "type": "string"
           }
         },
-        "required": ["file_id"]
+        "required": [
+          "file_id"
+        ]
       },
       "DeleteAssistantFileResponse": {
         "type": "object",
@@ -7330,10 +8110,16 @@
           },
           "object": {
             "type": "string",
-            "enum": ["assistant.file.deleted"]
+            "enum": [
+              "assistant.file.deleted"
+            ]
           }
         },
-        "required": ["id", "object", "deleted"]
+        "required": [
+          "id",
+          "object",
+          "deleted"
+        ]
       },
       "ListAssistantFilesResponse": {
         "properties": {
@@ -7381,7 +8167,9 @@
           "object": {
             "description": "The object type, which is always `thread.message.file`.",
             "type": "string",
-            "enum": ["thread.message.file"]
+            "enum": [
+              "thread.message.file"
+            ]
           },
           "created_at": {
             "description": "The Unix timestamp (in seconds) for when the message file was created.",
@@ -7392,7 +8180,12 @@
             "type": "string"
           }
         },
-        "required": ["id", "object", "created_at", "message_id"],
+        "required": [
+          "id",
+          "object",
+          "created_at",
+          "message_id"
+        ],
         "x-oaiMeta": {
           "name": "The message file object",
           "beta": true,
