@@ -35,7 +35,9 @@ function createIntersection(...types: (string | undefined)[]) {
 // the union/intersect helpers keep typescript happy due to ts-morph typings
 function createUnion(...types: (string | undefined)[]) {
   // create a type  of all the inputs
-  const [type1, type2, ...typeX] = types.filter((t): t is string => !!t);
+  const [type1, type2, ...typeX] = types
+    .filter((t): t is string => !!t)
+    .sort((a, b) => a.localeCompare(b));
   return type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1;
 }
 
