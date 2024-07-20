@@ -586,7 +586,7 @@ export async function processOpenApiDocument(
 
   const inputTypes = typesFile.getTypeAliases().filter((t) => isInput(t));
   const inputUnion = createUnion(
-    ...new Set(inputTypes.map((t) => t.getName())),
+    ...new Set(inputTypes.sort().map((t) => t.getName())),
   );
   const outputUnion = createUnion(
     ...new Set(
@@ -633,7 +633,8 @@ export async function processOpenApiDocument(
       .map((t) => ({
         name: t.getName(),
         isTypeOnly: true,
-      })),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name)),
   });
 
   const clientClassDeclaration = clientFile.addClass({
