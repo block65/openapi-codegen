@@ -433,7 +433,8 @@ export async function processOpenApiDocument(
             !operationObject.responses ||
             Object.keys(operationObject.responses).length === 0
           ) {
-            classDeclaration.getExtends()?.addTypeArgument('void');
+            classDeclaration.getExtends()?.addTypeArgument('undefined');
+            // outputTypes.add('void');
           }
 
           for (const [statusCode, response] of Object.entries(
@@ -441,7 +442,7 @@ export async function processOpenApiDocument(
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             if (statusCode === '204') {
-              classDeclaration.getExtends()?.addTypeArgument('void');
+              classDeclaration.getExtends()?.addTypeArgument('undefined');
               break;
             }
 
