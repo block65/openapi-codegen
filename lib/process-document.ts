@@ -101,7 +101,7 @@ export async function processOpenApiDocument(
   });
 
   typesFile.addImportDeclaration({
-    namedImports: ['Jsonifiable'],
+    namedImports: ['Jsonifiable', 'Jsonify'],
     moduleSpecifier: 'type-fest',
     isTypeOnly: true,
   });
