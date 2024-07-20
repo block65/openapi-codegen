@@ -35,7 +35,9 @@ function createIntersection(...types: (string | undefined)[]) {
 // the union/intersect helpers keep typescript happy due to ts-morph typings
 function createUnion(...types: (string | undefined)[]) {
   // create a type  of all the inputs
-  const [type1, type2, ...typeX] = types.filter((t): t is string => !!t);
+  const [type1, type2, ...typeX] = types
+    .filter((t): t is string => !!t)
+    .sort((a, b) => a.localeCompare(b));
   return type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1;
 }
 
@@ -77,12 +79,13 @@ export async function processOpenApiDocument(
     },
   );
 
-  const clientFile = project.createSourceFile(join(outputDir, 'main.ts'), '', {
+  const mainFile = project.createSourceFile(join(outputDir, 'main.ts'), '', {
     overwrite: true,
   });
 
-  const outputTypes: (InterfaceDeclaration | TypeAliasDeclaration | 'void')[] =
-    [];
+  const outputTypes = new Set<
+    InterfaceDeclaration | TypeAliasDeclaration | 'void'
+  >();
 
   const refs = await $RefParser.default.resolve(schema);
 
@@ -101,7 +104,7 @@ export async function processOpenApiDocument(
   });
 
   typesFile.addImportDeclaration({
-    namedImports: ['Jsonifiable'],
+    namedImports: ['Jsonifiable', 'Jsonify'],
     moduleSpecifier: 'type-fest',
     isTypeOnly: true,
   });
@@ -117,10 +120,12 @@ export async function processOpenApiDocument(
     relative(commandsFile.getDirectoryPath(), typesFile.getFilePath());
 
   const typesImportDecl =
-    commandsFile.getImportDeclaration(
-      (decl) =>
-        decl.getModuleSpecifier().getLiteralValue() === typesModuleSpecifier,
-    ) ||
+    commandsFile
+      .getImportDeclaration(
+        (decl) =>
+          decl.getModuleSpecifier().getLiteralValue() === typesModuleSpecifier,
+      )
+      ?.setIsTypeOnly(true) ||
     commandsFile.addImportDeclaration({
       moduleSpecifier: typesModuleSpecifier,
       namedImports: [],
@@ -431,7 +436,8 @@ export async function processOpenApiDocument(
             !operationObject.responses ||
             Object.keys(operationObject.responses).length === 0
           ) {
-            classDeclaration.getExtends()?.addTypeArgument('void');
+            classDeclaration.getExtends()?.addTypeArgument('undefined');
+            // outputTypes.add('void');
           }
 
           for (const [statusCode, response] of Object.entries(
@@ -439,7 +445,7 @@ export async function processOpenApiDocument(
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             if (statusCode === '204') {
-              classDeclaration.getExtends()?.addTypeArgument('void');
+              classDeclaration.getExtends()?.addTypeArgument('undefined');
               break;
             }
 
@@ -472,7 +478,7 @@ export async function processOpenApiDocument(
               // ensureImport(outputType, outputTypeAlias);
 
               if (outputType) {
-                outputTypes.push(outputType);
+                outputTypes.add(outputType);
                 ensureImport(outputType);
               }
 
@@ -492,7 +498,7 @@ export async function processOpenApiDocument(
 
               classDeclaration.getExtends()?.addTypeArgument(retVal);
 
-              outputTypes.push(retVal);
+              outputTypes.add(retVal);
 
               // jsdoc.addTag({
               //   tagName: 'returns',
@@ -584,23 +590,21 @@ export async function processOpenApiDocument(
 
   const inputTypes = typesFile.getTypeAliases().filter((t) => isInput(t));
   const inputUnion = createUnion(
-    ...new Set(inputTypes.map((t) => t.getName())),
+    ...new Set(inputTypes.sort().map((t) => t.getName())),
   );
   const outputUnion = createUnion(
-    ...new Set(
-      outputTypes.map((t) => (typeof t === 'string' ? t : t.getName())),
-    ),
+    ...[...outputTypes].map((t) => (typeof t === 'string' ? t : t.getName())),
   );
 
   const allInputs = inputUnion
-    ? clientFile.addTypeAlias({
+    ? mainFile.addTypeAlias({
         name: 'AllInputs',
         type: inputUnion,
       })
     : undefined;
 
   const allOutputs = outputUnion
-    ? clientFile.addTypeAlias({
+    ? mainFile.addTypeAlias({
         name: 'AllOutputs',
         type: outputUnion,
       })
@@ -610,31 +614,34 @@ export async function processOpenApiDocument(
   const fetcherName = 'createIsomorphicNativeFetcher';
   const configType = 'RestServiceClientConfig';
 
-  clientFile.addImportDeclarations([
-    {
-      moduleSpecifier: '@block65/rest-client',
-      namedImports: [
-        serviceClientClassName,
-        fetcherName,
-        {
-          name: configType,
-          isTypeOnly: true,
-        },
-      ],
-    },
-  ]);
+  mainFile.addImportDeclaration({
+    moduleSpecifier: '@block65/rest-client',
+    namedImports: [
+      serviceClientClassName,
+      fetcherName,
+      {
+        name: configType,
+        isTypeOnly: true,
+      },
+    ],
+  });
 
-  clientFile.addImportDeclaration({
+  const namedImports = [...new Set([...inputTypes, ...outputTypes])];
+
+  if (namedImports.length > 0) {
+  mainFile.addImportDeclaration({
     moduleSpecifier: typesModuleSpecifier,
-    namedImports: [...new Set([...inputTypes, ...outputTypes])]
+    namedImports: namedImports
       .filter(<T>(t: T | 'void'): t is T => t !== 'void')
       .map((t) => ({
         name: t.getName(),
-        isTypeOnly: true,
-      })),
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name)),
+    isTypeOnly: true,
   });
+  }
 
-  const clientClassDeclaration = clientFile.addClass({
+  const clientClassDeclaration = mainFile.addClass({
     name: pascalCase(schema.info.title, 'RestClient'),
     isExported: true,
     extends: `${serviceClientClassName}<${allInputs?.getName() || 'void'}, ${
@@ -679,5 +686,5 @@ export async function processOpenApiDocument(
     ]);
   }
 
-  return { commandsFile, typesFile, clientFile };
+  return { commandsFile, typesFile, mainFile };
 }

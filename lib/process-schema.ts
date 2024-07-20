@@ -525,7 +525,7 @@ export function registerTypesFromSchema(
       name: pascalCase(schemaName),
       isExported: true,
       type: withNullUnion(
-        schemaObject.format?.includes('date') ? 'Date' : 'string',
+        schemaObject.format === 'date-time' ? 'Jsonify<Date>' : 'string',
         schemaObject.nullable,
       ),
     });

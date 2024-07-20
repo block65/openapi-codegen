@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-05-27T10:54:43.557Z
+ * Generated on 2024-07-20T03:13:58.086Z
  *
  */
 /** eslint-disable max-classes */
@@ -104,7 +104,7 @@ export class FindPetByIdCommand extends Command<
  */
 export class DeletePetCommand extends Command<
   DeletePetCommandInput,
-  void,
+  undefined,
   DeletePetCommandBody
 > {
   public override method = 'delete' as const;

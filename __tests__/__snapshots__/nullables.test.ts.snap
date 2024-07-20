@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`nullables 1`] = `
-"import type { Jsonifiable } from 'type-fest';
+"import type { Jsonifiable, Jsonify } from 'type-fest';
 import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type MySchemaLolOrNullable = "lol" | "kek" | null;

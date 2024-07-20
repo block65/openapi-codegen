@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-05-27T10:54:44.720Z
+ * Generated on 2024-07-20T03:13:59.069Z
  *
  */
 import {
@@ -11,67 +11,67 @@ import {
   createIsomorphicNativeFetcher,
   type RestServiceClientConfig,
 } from '@block65/rest-client';
-import {
-  type GetOperationCommandInput,
-  type ListBillingAccountsCommandInput,
-  type CreateBillingAccountCommandInput,
-  type GetBillingAccountCommandInput,
-  type UpdateBillingAccountCommandInput,
-  type GetBillingAccountPortalCommandInput,
-  type LinkBillingAccountCommandInput,
-  type ListPaymentMethodsCommandInput,
-  type CreatePaymentMethodCommandInput,
-  type GetPaymentMethodFromStripeCommandInput,
-  type GetPaymentMethodCommandInput,
-  type UpdatePaymentMethodCommandInput,
-  type DeletePaymentMethodCommandInput,
-  type ListBillingSubscriptionsCommandInput,
-  type CreateBillingSubscriptionCommandInput,
-  type UpdateBillingSubscriptionCommandInput,
-  type CancelSubscriptionCommandInput,
-  type UpdateBillingSubscriptionPromoCodeCommandInput,
-  type LongRunningOperation,
-  type BillingAccountList,
-  type BillingAccount,
-  type BillingAccountPortal,
-  type PaymentMethods,
-  type PaymentMethodIntendedLro,
-  type PaymentMethod,
-  type PaymentMethodDeletedLro,
-  type BillingSubscriptions,
-  type BillingSubscriptionLro,
+import type {
+  BillingAccount,
+  BillingAccountList,
+  BillingAccountPortal,
+  BillingSubscriptionLro,
+  BillingSubscriptions,
+  CancelSubscriptionCommandInput,
+  CreateBillingAccountCommandInput,
+  CreateBillingSubscriptionCommandInput,
+  CreatePaymentMethodCommandInput,
+  DeletePaymentMethodCommandInput,
+  GetBillingAccountCommandInput,
+  GetBillingAccountPortalCommandInput,
+  GetOperationCommandInput,
+  GetPaymentMethodCommandInput,
+  GetPaymentMethodFromStripeCommandInput,
+  LinkBillingAccountCommandInput,
+  ListBillingAccountsCommandInput,
+  ListBillingSubscriptionsCommandInput,
+  ListPaymentMethodsCommandInput,
+  LongRunningOperation,
+  PaymentMethod,
+  PaymentMethodDeletedLro,
+  PaymentMethodIntendedLro,
+  PaymentMethods,
+  UpdateBillingAccountCommandInput,
+  UpdateBillingSubscriptionCommandInput,
+  UpdateBillingSubscriptionPromoCodeCommandInput,
+  UpdatePaymentMethodCommandInput,
 } from './types.js';
 
 type AllInputs =
-  | GetOperationCommandInput
-  | ListBillingAccountsCommandInput
-  | CreateBillingAccountCommandInput
-  | GetBillingAccountCommandInput
-  | UpdateBillingAccountCommandInput
-  | GetBillingAccountPortalCommandInput
-  | LinkBillingAccountCommandInput
-  | ListPaymentMethodsCommandInput
-  | CreatePaymentMethodCommandInput
-  | GetPaymentMethodFromStripeCommandInput
-  | GetPaymentMethodCommandInput
-  | UpdatePaymentMethodCommandInput
-  | DeletePaymentMethodCommandInput
-  | ListBillingSubscriptionsCommandInput
-  | CreateBillingSubscriptionCommandInput
-  | UpdateBillingSubscriptionCommandInput
   | CancelSubscriptionCommandInput
-  | UpdateBillingSubscriptionPromoCodeCommandInput;
+  | CreateBillingAccountCommandInput
+  | CreateBillingSubscriptionCommandInput
+  | CreatePaymentMethodCommandInput
+  | DeletePaymentMethodCommandInput
+  | GetBillingAccountCommandInput
+  | GetBillingAccountPortalCommandInput
+  | GetOperationCommandInput
+  | GetPaymentMethodCommandInput
+  | GetPaymentMethodFromStripeCommandInput
+  | LinkBillingAccountCommandInput
+  | ListBillingAccountsCommandInput
+  | ListBillingSubscriptionsCommandInput
+  | ListPaymentMethodsCommandInput
+  | UpdateBillingAccountCommandInput
+  | UpdateBillingSubscriptionCommandInput
+  | UpdateBillingSubscriptionPromoCodeCommandInput
+  | UpdatePaymentMethodCommandInput;
 type AllOutputs =
-  | LongRunningOperation
-  | BillingAccountList
   | BillingAccount
+  | BillingAccountList
   | BillingAccountPortal
-  | PaymentMethods
-  | PaymentMethodIntendedLro
+  | BillingSubscriptionLro
+  | BillingSubscriptions
+  | LongRunningOperation
   | PaymentMethod
   | PaymentMethodDeletedLro
-  | BillingSubscriptions
-  | BillingSubscriptionLro;
+  | PaymentMethodIntendedLro
+  | PaymentMethods;
 
 export class BillingServiceRestApiRestClient extends RestServiceClient<
   AllInputs,
