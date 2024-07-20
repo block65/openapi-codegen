@@ -41,6 +41,7 @@
     "@block65/rest-client": "^9.2.0",
     "@hapi/bourne": "^3.0.0",
     "@jest/globals": "^29.7.0",
+    "@ts-morph/common": "^0.24.0",
     "@types/eslint": "^8.56.10",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.11",
