@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T03:14:00.890Z
+ * Generated on 2024-07-20T04:09:19.082Z
  *
  */
 import type { Jsonifiable, Jsonify } from 'type-fest';
@@ -51,7 +51,7 @@ export type CreateCompletionRequest = {
    * @default 1
    */
   best_of?: number | null;
-  echo?: boolean | null | undefined;
+  echo?: boolean | null;
   frequency_penalty?: number | null;
   logit_bias?: JsonifiableObject | null;
   logprobs?: number | null;
@@ -78,13 +78,13 @@ export type CreateCompletionRequest = {
   n?: number | null;
   presence_penalty?: number | null;
   seed?: number | null;
-  stop?: string | null | string[] | null | undefined;
-  stream?: boolean | null | undefined;
+  stop?: string | null | string[] | null;
+  stream?: boolean | null;
   /**
    * The suffix that comes after a completion of inserted text.
    * @example test.
    */
-  suffix?: string | null | undefined;
+  suffix?: string | null;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -112,7 +112,7 @@ export type CreateCompletionRequest = {
    * more](/docs/guides/safety-best-practices/end-user-ids).
    * @example user-1234
    */
-  user?: string | undefined;
+  user?: string;
 };
 
 /** The role of the author of a message */
@@ -154,7 +154,7 @@ export type CreateChatCompletionStreamResponse = {
   }>;
   created: number;
   model: string;
-  system_fingerprint?: string | undefined;
+  system_fingerprint?: string;
   /**
    * The object type, which is always `chat.completion.chunk`.
    * @enum chat.completion.chunk
@@ -182,7 +182,7 @@ export type CreateEditRequest = {
    * The input text to use as a starting point for the edit.
    * @example What day of the wek is it?
    */
-  input?: string | null | undefined;
+  input?: string | null;
   /**
    * How many edits to generate for the input and instruction.
    * @default 1
@@ -223,7 +223,7 @@ export type CreateImageRequest = {
    * @default dall-e-2
    * @example dall-e-3
    */
-  model?: string | 'dall-e-2' | 'dall-e-3' | null | undefined;
+  model?: string | 'dall-e-2' | 'dall-e-3' | null;
   /**
    * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
    * only `n=1` is supported.
@@ -239,7 +239,7 @@ export type CreateImageRequest = {
    * @enum standard,hd
    * @example standard
    */
-  quality?: 'standard' | 'hd' | undefined;
+  quality?: 'standard' | 'hd';
   /**
    * The format in which the generated images are returned. Must be one of `url`
    * or `b64_json`.
@@ -247,7 +247,7 @@ export type CreateImageRequest = {
    * @enum url,b64_json
    * @example url
    */
-  response_format?: 'url' | 'b64_json' | undefined;
+  response_format?: 'url' | 'b64_json';
   /**
    * The size of the generated images. Must be one of `256x256`, `512x512`, or
    * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
@@ -256,13 +256,7 @@ export type CreateImageRequest = {
    * @enum 256x256,512x512,1024x1024,1792x1024,1024x1792
    * @example 1024x1024
    */
-  size?:
-    | '256x256'
-    | '512x512'
-    | '1024x1024'
-    | '1792x1024'
-    | '1024x1792'
-    | undefined;
+  size?: '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
   /**
    * The style of the generated images. Must be one of `vivid` or `natural`.
    * Vivid causes the model to lean towards generating hyper-real and dramatic
@@ -272,14 +266,14 @@ export type CreateImageRequest = {
    * @enum vivid,natural
    * @example vivid
    */
-  style?: 'vivid' | 'natural' | undefined;
+  style?: 'vivid' | 'natural';
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
    * @example user-1234
    */
-  user?: string | undefined;
+  user?: string;
 };
 export type CreateImageEditRequest = {
   image: string;
@@ -289,14 +283,14 @@ export type CreateImageEditRequest = {
    * @example A cute baby sea otter wearing a beret
    */
   prompt: string;
-  mask?: string | undefined;
+  mask?: string;
   /**
    * The model to use for image generation. Only `dall-e-2` is supported at this
    * time.
    * @default dall-e-2
    * @example dall-e-2
    */
-  model?: string | 'dall-e-2' | null | undefined;
+  model?: string | 'dall-e-2' | null;
   /**
    * The number of images to generate. Must be between 1 and 10.
    * @default 1
@@ -310,7 +304,7 @@ export type CreateImageEditRequest = {
    * @enum 256x256,512x512,1024x1024
    * @example 1024x1024
    */
-  size?: '256x256' | '512x512' | '1024x1024' | undefined;
+  size?: '256x256' | '512x512' | '1024x1024';
   /**
    * The format in which the generated images are returned. Must be one of `url`
    * or `b64_json`.
@@ -318,14 +312,14 @@ export type CreateImageEditRequest = {
    * @enum url,b64_json
    * @example url
    */
-  response_format?: 'url' | 'b64_json' | undefined;
+  response_format?: 'url' | 'b64_json';
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
    * @example user-1234
    */
-  user?: string | undefined;
+  user?: string;
 };
 export type CreateImageVariationRequest = {
   image: string;
@@ -335,7 +329,7 @@ export type CreateImageVariationRequest = {
    * @default dall-e-2
    * @example dall-e-2
    */
-  model?: string | 'dall-e-2' | null | undefined;
+  model?: string | 'dall-e-2' | null;
   /**
    * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
    * only `n=1` is supported.
@@ -350,7 +344,7 @@ export type CreateImageVariationRequest = {
    * @enum url,b64_json
    * @example url
    */
-  response_format?: 'url' | 'b64_json' | undefined;
+  response_format?: 'url' | 'b64_json';
   /**
    * The size of the generated images. Must be one of `256x256`, `512x512`, or
    * `1024x1024`.
@@ -358,14 +352,14 @@ export type CreateImageVariationRequest = {
    * @enum 256x256,512x512,1024x1024
    * @example 1024x1024
    */
-  size?: '256x256' | '512x512' | '1024x1024' | undefined;
+  size?: '256x256' | '512x512' | '1024x1024';
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
    * @example user-1234
    */
-  user?: string | undefined;
+  user?: string;
 };
 export type CreateModerationRequest = {
   input: string | string[] | null;
@@ -381,12 +375,7 @@ export type CreateModerationRequest = {
    * @default text-moderation-latest
    * @example text-moderation-stable
    */
-  model?:
-    | string
-    | 'text-moderation-latest'
-    | 'text-moderation-stable'
-    | null
-    | undefined;
+  model?: string | 'text-moderation-latest' | 'text-moderation-stable' | null;
 };
 /**
  * Represents policy compliance report by OpenAI's content moderation model
@@ -463,32 +452,30 @@ export type CreateFineTuningJobRequest = {
    * @example file-abc123
    */
   training_file: string;
-  hyperparameters?:
-    | {
-        /**
-         * Number of examples in each batch. A larger batch size means that model
-         * parameters
-         * are updated less frequently, but with lower variance.
-         * @default auto
-         */
-        batch_size?: 'auto' | number | null | undefined;
-        /**
-         * Scaling factor for the learning rate. A smaller learning rate may be useful
-         * to avoid
-         * overfitting.
-         * @default auto
-         */
-        learning_rate_multiplier?: 'auto' | number | null | undefined;
-        /**
-         * The number of epochs to train the model for. An epoch refers to one full
-         * cycle
-         * through the training dataset.
-         * @default auto
-         */
-        n_epochs?: 'auto' | number | null | undefined;
-      }
-    | undefined;
-  suffix?: string | null | undefined;
+  hyperparameters?: {
+    /**
+     * Number of examples in each batch. A larger batch size means that model
+     * parameters
+     * are updated less frequently, but with lower variance.
+     * @default auto
+     */
+    batch_size?: 'auto' | number | null;
+    /**
+     * Scaling factor for the learning rate. A smaller learning rate may be useful
+     * to avoid
+     * overfitting.
+     * @default auto
+     */
+    learning_rate_multiplier?: 'auto' | number | null;
+    /**
+     * The number of epochs to train the model for. An epoch refers to one full
+     * cycle
+     * through the training dataset.
+     * @default auto
+     */
+    n_epochs?: 'auto' | number | null;
+  };
+  suffix?: string | null;
   /**
    * The ID of an uploaded file that contains validation data.
    *
@@ -503,7 +490,7 @@ export type CreateFineTuningJobRequest = {
    * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
    * @example file-abc123
    */
-  validation_file?: string | null | undefined;
+  validation_file?: string | null;
 };
 export type CreateFineTuneRequest = {
   /**
@@ -536,18 +523,16 @@ export type CreateFineTuneRequest = {
    */
   classification_betas?: number[];
   classification_n_classes?: number | null;
-  classification_positive_class?: string | null | undefined;
-  compute_classification_metrics?: boolean | null | undefined;
-  hyperparameters?:
-    | {
-        /**
-         * The number of epochs to train the model for. An epoch refers to one
-         * full cycle through the training dataset.
-         * @default auto
-         */
-        n_epochs?: 'auto' | number | null | undefined;
-      }
-    | undefined;
+  classification_positive_class?: string | null;
+  compute_classification_metrics?: boolean | null;
+  hyperparameters?: {
+    /**
+     * The number of epochs to train the model for. An epoch refers to one
+     * full cycle through the training dataset.
+     * @default auto
+     */
+    n_epochs?: 'auto' | number | null;
+  };
   learning_rate_multiplier?: number | null;
   /**
    * The name of the base model to fine-tune. You can select one of "ada",
@@ -558,7 +543,7 @@ export type CreateFineTuneRequest = {
    * @default curie
    * @example curie
    */
-  model?: string | 'ada' | 'babbage' | 'curie' | 'davinci' | null | undefined;
+  model?: string | 'ada' | 'babbage' | 'curie' | 'davinci' | null;
   /**
    * The weight to use for loss on the prompt tokens. This controls how
    * much the model tries to learn to generate the prompt (as compared
@@ -571,7 +556,7 @@ export type CreateFineTuneRequest = {
    * @default 0.01
    */
   prompt_loss_weight?: number | null;
-  suffix?: string | null | undefined;
+  suffix?: string | null;
   /**
    * The ID of an uploaded file that contains validation data.
    *
@@ -590,7 +575,7 @@ export type CreateFineTuneRequest = {
    * details.
    * @example file-abc123
    */
-  validation_file?: string | null | undefined;
+  validation_file?: string | null;
 };
 export type CreateEmbeddingRequest = {
   /**
@@ -619,14 +604,14 @@ export type CreateEmbeddingRequest = {
    * @enum float,base64
    * @example float
    */
-  encoding_format?: 'float' | 'base64' | undefined;
+  encoding_format?: 'float' | 'base64';
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
    * @example user-1234
    */
-  user?: string | undefined;
+  user?: string;
 };
 export type CreateTranscriptionRequest = {
   file: string;
@@ -635,21 +620,15 @@ export type CreateTranscriptionRequest = {
    * @example whisper-1
    */
   model: string | 'whisper-1' | null;
-  language?: string | undefined;
-  prompt?: string | undefined;
+  language?: string;
+  prompt?: string;
   /**
    * The format of the transcript output, in one of these options: `json`,
    * `text`, `srt`, `verbose_json`, or `vtt`.
    * @default json
    * @enum json,text,srt,verbose_json,vtt
    */
-  response_format?:
-    | 'json'
-    | 'text'
-    | 'srt'
-    | 'verbose_json'
-    | 'vtt'
-    | undefined;
+  response_format?: 'json' | 'text' | 'srt' | 'verbose_json' | 'vtt';
   temperature?: number;
 };
 export type CreateTranscriptionResponse = {
@@ -662,13 +641,13 @@ export type CreateTranslationRequest = {
    * @example whisper-1
    */
   model: string | 'whisper-1' | null;
-  prompt?: string | undefined;
+  prompt?: string;
   /**
    * The format of the transcript output, in one of these options: `json`,
    * `text`, `srt`, `verbose_json`, or `vtt`.
    * @default json
    */
-  response_format?: string | undefined;
+  response_format?: string;
   temperature?: number;
 };
 export type CreateTranslationResponse = {
@@ -691,7 +670,7 @@ export type CreateSpeechRequest = {
    * @default mp3
    * @enum mp3,opus,aac,flac
    */
-  response_format?: 'mp3' | 'opus' | 'aac' | 'flac' | undefined;
+  response_format?: 'mp3' | 'opus' | 'aac' | 'flac';
   /**
    * The speed of the generated audio. Select a value from `0.25` to `4.0`.
    * `1.0` is the default.
@@ -701,9 +680,9 @@ export type CreateSpeechRequest = {
 };
 export type CreateAssistantRequest = {
   model: string;
-  name?: string | null | undefined;
-  description?: string | null | undefined;
-  instructions?: string | null | undefined;
+  name?: string | null;
+  description?: string | null;
+  instructions?: string | null;
   /**
    * A list of tool enabled on the assistant. There can be a maximum of 128
    * tools per assistant. Tools can be of types `code_interpreter`, `retrieval`,
@@ -721,10 +700,10 @@ export type CreateAssistantRequest = {
   metadata?: JsonifiableObject | null;
 };
 export type ModifyAssistantRequest = {
-  model?: string | undefined;
-  name?: string | null | undefined;
-  description?: string | null | undefined;
-  instructions?: string | null | undefined;
+  model?: string;
+  name?: string | null;
+  description?: string | null;
+  instructions?: string | null;
   /**
    * A list of tool enabled on the assistant. There can be a maximum of 128
    * tools per assistant. Tools can be of types `code_interpreter`, `retrieval`,
@@ -764,8 +743,8 @@ export type AssistantToolsRetrieval = {
 };
 export type CreateRunRequest = {
   assistant_id: string;
-  model?: string | null | undefined;
-  instructions?: string | null | undefined;
+  model?: string | null;
+  instructions?: string | null;
   tools?: Array<AssistantToolsCode | AssistantToolsRetrieval | never | null>;
   metadata?: JsonifiableObject | null;
 };
@@ -774,8 +753,8 @@ export type ModifyRunRequest = {
 };
 export type SubmitToolOutputsRunRequest = {
   tool_outputs: Array<{
-    tool_call_id?: string | undefined;
-    output?: string | undefined;
+    tool_call_id?: string;
+    output?: string;
   }>;
 };
 export type ModifyThreadRequest = {
@@ -1113,9 +1092,9 @@ export type CreateThreadRequest = {
 };
 export type CreateThreadAndRunRequest = {
   assistant_id: string;
-  thread?: CreateThreadRequest | undefined;
-  model?: string | null | undefined;
-  instructions?: string | null | undefined;
+  thread?: CreateThreadRequest;
+  model?: string | null;
+  instructions?: string | null;
   tools?: Array<AssistantToolsCode | AssistantToolsRetrieval | never | null>;
   metadata?: JsonifiableObject | null;
 };
@@ -1217,7 +1196,7 @@ export type ListRunsResponse = {
  */
 export type FunctionParameters = {};
 export type FunctionObject = {
-  description?: string | undefined;
+  description?: string;
   name: string;
   parameters: FunctionParameters;
 };
@@ -1348,8 +1327,8 @@ export type FineTune = {
   hyperparams: {
     batch_size: number;
     classification_n_classes?: number;
-    classification_positive_class?: string | undefined;
-    compute_classification_metrics?: boolean | undefined;
+    classification_positive_class?: string;
+    compute_classification_metrics?: boolean;
     learning_rate_multiplier: number;
     n_epochs: number;
     prompt_loss_weight: number;
@@ -1389,9 +1368,9 @@ export type ListFilesResponse = {
 };
 /** Represents the url or the content of an image generated by the OpenAI API. */
 export type Image = {
-  b64_json?: string | undefined;
-  url?: string | undefined;
-  revised_prompt?: string | undefined;
+  b64_json?: string;
+  url?: string;
+  revised_prompt?: string;
 };
 export type ImagesResponse = {
   created: number;
@@ -1503,13 +1482,13 @@ export type CreateChatCompletionFunctionResponse = {
   }>;
   created: number;
   model: string;
-  system_fingerprint?: string | undefined;
+  system_fingerprint?: string;
   /**
    * The object type, which is always `chat.completion`.
    * @enum chat.completion
    */
   object: 'chat.completion';
-  usage?: CompletionUsage | undefined;
+  usage?: CompletionUsage;
 };
 /**
  * Represents a chat completion response returned by model, based on the
@@ -1541,13 +1520,13 @@ export type CreateChatCompletionResponse = {
   }>;
   created: number;
   model: string;
-  system_fingerprint?: string | undefined;
+  system_fingerprint?: string;
   /**
    * The object type, which is always `chat.completion`.
    * @enum chat.completion
    */
   object: 'chat.completion';
-  usage?: CompletionUsage | undefined;
+  usage?: CompletionUsage;
 };
 /**
  * Specifying a particular function via `{"name": "my_function"}` forces the
@@ -1557,7 +1536,7 @@ export type ChatCompletionFunctionCallOption = {
   name: string;
 };
 export type ChatCompletionFunctions = {
-  description?: string | undefined;
+  description?: string;
   name: string;
   parameters: FunctionParameters;
 };
@@ -1632,25 +1611,23 @@ export type ChatCompletionMessageToolCall = {
 /** The tool calls generated by the model, such as function calls. */
 export type ChatCompletionMessageToolCalls = ChatCompletionMessageToolCall[];
 export type ChatCompletionRequestAssistantMessage = {
-  content?: string | null | undefined;
+  content?: string | null;
   /**
    * The role of the messages author, in this case `assistant`.
    * @enum assistant
    */
   role: 'assistant';
-  name?: string | undefined;
-  tool_calls?: ChatCompletionMessageToolCalls | undefined;
+  name?: string;
+  tool_calls?: ChatCompletionMessageToolCalls;
   /**
    * Deprecated and replaced by `tool_calls`. The name and arguments of a
    * function that should be called, as generated by the model.
    * @deprecated
    */
-  function_call?:
-    | {
-        arguments: string;
-        name: string;
-      }
-    | undefined;
+  function_call?: {
+    arguments: string;
+    name: string;
+  };
 };
 export type ChatCompletionRequestMessageContentPartImage = {
   /**
@@ -1666,7 +1643,7 @@ export type ChatCompletionRequestMessageContentPartImage = {
      * @default auto
      * @enum auto,low,high
      */
-    detail?: 'auto' | 'low' | 'high' | undefined;
+    detail?: 'auto' | 'low' | 'high';
   };
 };
 export type ChatCompletionRequestMessageContentPartText = {
@@ -1687,7 +1664,7 @@ export type ChatCompletionRequestUserMessage = {
    * @enum user
    */
   role: 'user';
-  name?: string | undefined;
+  name?: string;
 };
 export type ChatCompletionRequestSystemMessage = {
   content: string;
@@ -1696,7 +1673,7 @@ export type ChatCompletionRequestSystemMessage = {
    * @enum system
    */
   role: 'system';
-  name?: string | undefined;
+  name?: string;
 };
 export type ChatCompletionRequestMessage =
   | ChatCompletionRequestSystemMessage
@@ -1741,20 +1718,18 @@ export type CreateChatCompletionRequest = {
    */
   n?: number | null;
   presence_penalty?: number | null;
-  response_format?:
-    | {
-        /**
-         * Must be one of `text` or `json_object`.
-         * @default text
-         * @enum text,json_object
-         * @example json_object
-         */
-        type?: 'text' | 'json_object' | undefined;
-      }
-    | undefined;
+  response_format?: {
+    /**
+     * Must be one of `text` or `json_object`.
+     * @default text
+     * @enum text,json_object
+     * @example json_object
+     */
+    type?: 'text' | 'json_object';
+  };
   seed?: number | null;
-  stop?: string | null | string[] | null | undefined;
-  stream?: boolean | null | undefined;
+  stop?: string | null | string[] | null;
+  stream?: boolean | null;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -1777,14 +1752,14 @@ export type CreateChatCompletionRequest = {
    */
   top_p?: number | null;
   tools?: ChatCompletionTool[];
-  tool_choice?: ChatCompletionToolChoiceOption | undefined;
+  tool_choice?: ChatCompletionToolChoiceOption;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
    * more](/docs/guides/safety-best-practices/end-user-ids).
    * @example user-1234
    */
-  user?: string | undefined;
+  user?: string;
   /**
    * Deprecated in favor of `tool_choice`.
    *
@@ -1800,12 +1775,7 @@ export type CreateChatCompletionRequest = {
    * if functions are present.
    * @deprecated
    */
-  function_call?:
-    | 'none'
-    | 'auto'
-    | ChatCompletionFunctionCallOption
-    | null
-    | undefined;
+  function_call?: 'none' | 'auto' | ChatCompletionFunctionCallOption | null;
   /**
    * Deprecated in favor of `tools`.
    *
@@ -1816,44 +1786,40 @@ export type CreateChatCompletionRequest = {
 };
 export type ChatCompletionMessageToolCallChunk = {
   index: number;
-  id?: string | undefined;
+  id?: string;
   /**
    * The type of the tool. Currently, only `function` is supported.
    * @enum function
    */
-  type?: 'function' | undefined;
-  function?:
-    | {
-        name?: string | undefined;
-        arguments?: string | undefined;
-      }
-    | undefined;
+  type?: 'function';
+  function?: {
+    name?: string;
+    arguments?: string;
+  };
 };
 /** A chat completion delta generated by streamed model responses. */
 export type ChatCompletionStreamResponseDelta = {
-  content?: string | null | undefined;
+  content?: string | null;
   /**
    * Deprecated and replaced by `tool_calls`. The name and arguments of a
    * function that should be called, as generated by the model.
    * @deprecated
    */
-  function_call?:
-    | {
-        arguments?: string | undefined;
-        name?: string | undefined;
-      }
-    | undefined;
+  function_call?: {
+    arguments?: string;
+    name?: string;
+  };
   tool_calls?: ChatCompletionMessageToolCallChunk[];
   /**
    * The role of the author of this message.
    * @enum system,user,assistant,tool
    */
-  role?: 'system' | 'user' | 'assistant' | 'tool' | undefined;
+  role?: 'system' | 'user' | 'assistant' | 'tool';
 };
 /** A chat completion message generated by the model. */
 export type ChatCompletionResponseMessage = {
   content: string | null;
-  tool_calls?: ChatCompletionMessageToolCalls | undefined;
+  tool_calls?: ChatCompletionMessageToolCalls;
   /**
    * The role of the author of this message.
    * @enum assistant
@@ -1864,12 +1830,10 @@ export type ChatCompletionResponseMessage = {
    * function that should be called, as generated by the model.
    * @deprecated
    */
-  function_call?:
-    | {
-        arguments: string;
-        name: string;
-      }
-    | undefined;
+  function_call?: {
+    arguments: string;
+    name: string;
+  };
 };
 /**
  * Represents a completion response from the API. Note: both the streamed and
@@ -1900,13 +1864,13 @@ export type CreateCompletionResponse = {
   }>;
   created: number;
   model: string;
-  system_fingerprint?: string | undefined;
+  system_fingerprint?: string;
   /**
    * The object type, which is always "text_completion"
    * @enum text_completion
    */
   object: 'text_completion';
-  usage?: CompletionUsage | undefined;
+  usage?: CompletionUsage;
 };
 /** Describes an OpenAI model offering that can be used with the API. */
 export type Model = {

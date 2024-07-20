@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T03:13:58.086Z
+ * Generated on 2024-07-20T04:09:16.205Z
  *
  */
 import type { Jsonifiable, Jsonify } from 'type-fest';
@@ -15,7 +15,7 @@ export type Error = {
 };
 export type NewPet = {
   name: string;
-  tag?: string | undefined;
+  tag?: string;
 };
 export type Pet = NewPet & {
   id: number;

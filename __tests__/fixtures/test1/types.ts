@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T03:13:59.069Z
+ * Generated on 2024-07-20T04:09:17.174Z
  *
  */
 import type { Jsonifiable, Jsonify } from 'type-fest';
@@ -37,14 +37,14 @@ export type BillingSubscriptionIdentifiers = {
   subscriptionId: Id;
 };
 export type BillingSubscription = BillingSubscriptionIdentifiers & {
-  accountId?: Id | undefined;
+  accountId?: Id;
   planSku: PlanSku;
   interval: BillingSubscriptionInterval;
   status: BillingSubscriptionStatus;
   cycleTime: DateTime;
-  trialEndTime?: DateTime | undefined;
+  trialEndTime?: DateTime;
   createdTime: DateTime;
-  updatedTime?: DateTime | undefined;
+  updatedTime?: DateTime;
 };
 export type BillingSubscriptions = BillingSubscription[];
 export type Uuid = string;
@@ -79,14 +79,14 @@ export type UpdateBillingSubscriptionPromoCodeRequest = {
 /** Reasonable string to be used as a name of a person, or an object */
 export type Name = string;
 export type UpdateBillingSubscriptionRequest = {
-  label?: Name | undefined;
-  trialEndTime?: DateTime | undefined;
+  label?: Name;
+  trialEndTime?: DateTime;
 };
 export type CreateBillingSubscriptionRequest = {
   accountId: Id;
   planSku: PlanSku;
   interval: BillingSubscriptionInterval;
-  promoCode?: StringU8 | undefined;
+  promoCode?: StringU8;
 };
 
 export enum PaymentMethodBrand {
@@ -108,7 +108,7 @@ export type PaymentMethod = PaymentMethodIdentifiers & {
   label: Name;
   expireTime: DateTime;
   humanId: StringU8;
-  brand?: PaymentMethodBrand | undefined;
+  brand?: PaymentMethodBrand;
 };
 export type PaymentMethods = PaymentMethod[];
 export type PaymentMethodDeletedLongRunningOperationSuccess = {
@@ -138,8 +138,8 @@ export type PaymentMethodIntendedLro =
   | PaymentMethodLongRunningOperationSuccess
   | LongRunningOperationFail;
 export type UpdatePaymentMethodRequest = {
-  label?: Name | undefined;
-  isDefault?: boolean | undefined;
+  label?: Name;
+  isDefault?: boolean;
 };
 export type LinkBillingAccountRequest = {
   accountId: Id;
@@ -199,23 +199,23 @@ export type BillingAccount = BillingAccountIdentifiers & {
   currency: Currency;
   type: BillingAccountType;
   createdTime: DateTime;
-  updatedTime?: DateTime | undefined;
-  locale?: BillingLocale | undefined;
-  purchaseOrder?: StringU8 | undefined;
-  taxId?: StringU8 | undefined;
-  timeZone?: TimeZone | undefined;
-  defaultPaymentMethodId?: Id | undefined;
+  updatedTime?: DateTime;
+  locale?: BillingLocale;
+  purchaseOrder?: StringU8;
+  taxId?: StringU8;
+  timeZone?: TimeZone;
+  defaultPaymentMethodId?: Id;
 };
 export type BillingAccountList = BillingAccount[];
 export type BillingAccountUpdateRequest = {
-  name?: Name | undefined;
-  email?: Email | undefined;
-  country?: BillingCountry | undefined;
-  timeZone?: TimeZone | undefined;
-  currency?: Currency | undefined;
-  locale?: BillingLocale | null | undefined;
-  purchaseOrder?: StringU8 | null | undefined;
-  taxId?: StringU8 | null | undefined;
+  name?: Name;
+  email?: Email;
+  country?: BillingCountry;
+  timeZone?: TimeZone;
+  currency?: Currency;
+  locale?: BillingLocale | null;
+  purchaseOrder?: StringU8 | null;
+  taxId?: StringU8 | null;
 };
 export type BillingAccountCreateRequest = {
   name: Name;
@@ -223,9 +223,9 @@ export type BillingAccountCreateRequest = {
   country: BillingCountry;
   timeZone: TimeZone;
   currency: Currency;
-  locale?: BillingLocale | null | undefined;
-  purchaseOrder?: StringU8 | null | undefined;
-  taxId?: StringU8 | null | undefined;
+  locale?: BillingLocale | null;
+  purchaseOrder?: StringU8 | null;
+  taxId?: StringU8 | null;
 };
 export type LongRunningOperationSuccess = {
   operationId: Uuid;
