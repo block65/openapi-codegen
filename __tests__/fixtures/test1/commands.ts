@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T05:47:35.352Z
+ * Generated on 2024-10-02T11:43:02.777Z
  *
  */
 /** eslint-disable max-classes */
@@ -88,14 +88,14 @@ export class GetOperationCommand extends Command<
  *
  */
 export class ListBillingAccountsCommand extends Command<
-  never,
+  ListBillingAccountsCommandInput,
   BillingAccountList,
   ListBillingAccountsCommandBody
 > {
   public override method = 'get' as const;
 
-  constructor() {
-    // no input parameters
+  constructor(input: ListBillingAccountsCommandInput) {
+    const body = input;
     super(`/billing-accounts`);
   }
 }
@@ -174,7 +174,7 @@ export class GetBillingAccountPortalCommand extends Command<
  */
 export class LinkBillingAccountCommand extends Command<
   LinkBillingAccountCommandInput,
-  never,
+  unknown,
   LinkBillingAccountCommandBody
 > {
   public override method = 'post' as const;
@@ -263,7 +263,7 @@ export class GetPaymentMethodCommand extends Command<
  */
 export class UpdatePaymentMethodCommand extends Command<
   UpdatePaymentMethodCommandInput,
-  never,
+  unknown,
   UpdatePaymentMethodCommandBody
 > {
   public override method = 'put' as const;
@@ -336,7 +336,7 @@ export class CreateBillingSubscriptionCommand extends Command<
  */
 export class UpdateBillingSubscriptionCommand extends Command<
   UpdateBillingSubscriptionCommandInput,
-  never,
+  unknown,
   UpdateBillingSubscriptionCommandBody
 > {
   public override method = 'put' as const;
@@ -356,7 +356,7 @@ export class UpdateBillingSubscriptionCommand extends Command<
  */
 export class CancelSubscriptionCommand extends Command<
   CancelSubscriptionCommandInput,
-  never,
+  unknown,
   CancelSubscriptionCommandBody
 > {
   public override method = 'delete' as const;

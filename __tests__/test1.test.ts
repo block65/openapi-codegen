@@ -1,4 +1,4 @@
-import { test } from '@jest/globals';
+import { test, expect } from 'vitest';
 import { GetBillingAccountCommand } from './fixtures/test1/commands.js';
 import { BillingServiceRestApiRestClient } from './fixtures/test1/main.js';
 

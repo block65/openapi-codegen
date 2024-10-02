@@ -1,4 +1,4 @@
-import { test } from '@jest/globals';
+import { test, expect } from 'vitest';
 import { CreateModerationCommand } from './fixtures/openai/commands.js';
 import { OpenAiApiRestClient } from './fixtures/openai/main.js';
 

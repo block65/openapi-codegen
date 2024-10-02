@@ -16,7 +16,7 @@ clean:
 .PHONY: test
 test: node_modules
 	pnpm tsc -b
-	NODE_OPTIONS=--experimental-vm-modules pnpm jest
+	pnpm exec vitest
 
 node_modules: package.json
 	pnpm install
@@ -45,15 +45,20 @@ test1:  __tests__/fixtures/test1.json dist
 		-o __tests__/fixtures/test1
 	pnpm prettier --write __tests__/fixtures/test1
 
-.PHONY: openai
-openai: __tests__/fixtures/openai.yaml dist
+
+__tests__/fixtures/openai.json: __tests__/fixtures/openai.yaml
 	mkdir -p $(@D)
-	pnpm js-yaml $< > $(@D)/openai.json
+	pnpm js-yaml $< > $@
+
+__tests__/fixtures/openai.yaml: __tests__/fixtures/openai.yaml
+	curl https://raw.githubusercontent.com/openai/openai-openapi/refs/heads/master/openapi.yaml --output $@
+
+.PHONY: openai
+openai: __tests__/fixtures/openai.json dist
 	node --enable-source-maps dist/bin/index.js \
-		-i $(@D)/openai.json \
+		-i $< \
 		-o __tests__/fixtures/openai
 	pnpm prettier --write __tests__/fixtures/openai
-
 
 # .PHONY: cloudflare
 # cloudflare: __tests__/fixtures/cloudflare/openapi.json dist

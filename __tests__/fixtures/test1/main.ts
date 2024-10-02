@@ -3,12 +3,11 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T05:47:35.352Z
+ * Generated on 2024-10-02T11:43:02.777Z
  *
  */
 import {
   RestServiceClient,
-  createIsomorphicNativeFetcher,
   type RestServiceClientConfig,
 } from '@block65/rest-client';
 import type {
@@ -78,10 +77,9 @@ export class BillingServiceRestApiRestClient extends RestServiceClient<
   AllOutputs
 > {
   constructor(
-    baseUrl = new URL('https://api.example.com/'),
-    fetcher = createIsomorphicNativeFetcher(),
+    baseUrl: string | URL = new URL('https://api.example.com/'),
     config?: RestServiceClientConfig,
   ) {
-    super(baseUrl, fetcher, config);
+    super(baseUrl, config);
   }
 }

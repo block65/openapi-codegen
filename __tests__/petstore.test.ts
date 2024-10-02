@@ -1,4 +1,4 @@
-import { test } from '@jest/globals';
+import { test, expect } from 'vitest';
 import { FindPetsCommand } from './fixtures/petstore/commands.js';
 import { SwaggerPetstoreRestClient } from './fixtures/petstore/main.js';
 

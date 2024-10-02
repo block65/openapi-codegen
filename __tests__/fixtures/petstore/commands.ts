@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T05:47:34.360Z
+ * Generated on 2024-10-02T11:43:01.299Z
  *
  */
 /** eslint-disable max-classes */
@@ -58,7 +58,7 @@ export class FindPetsCommand extends Command<
   public override method = 'get' as const;
 
   constructor(input: FindPetsCommandInput) {
-    const { tags, limit, ...body } = input;
+    const { tags, limit } = input;
     super(`/pets`, undefined, { tags, limit });
   }
 }
@@ -104,7 +104,7 @@ export class FindPetByIdCommand extends Command<
  */
 export class DeletePetCommand extends Command<
   DeletePetCommandInput,
-  never,
+  unknown,
   DeletePetCommandBody
 > {
   public override method = 'delete' as const;

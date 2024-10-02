@@ -1,4 +1,4 @@
-import { test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { processOpenApiDocument } from '../lib/process-document.js';
 
 test('nullables', async () => {
@@ -16,11 +16,8 @@ test('nullables', async () => {
           MySchemaLolOrNullable: {
             oneOf: [
               {
-                type: 'string',
+                type: ['string', 'null'],
                 enum: ['lol', 'kek'],
-              },
-              {
-                nullable: true,
               },
             ],
           },

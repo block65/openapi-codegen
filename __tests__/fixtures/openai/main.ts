@@ -3,32 +3,34 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T05:47:37.293Z
+ * Generated on 2024-10-02T11:43:05.462Z
  *
  */
 import {
   RestServiceClient,
-  createIsomorphicNativeFetcher,
   type RestServiceClientConfig,
 } from '@block65/rest-client';
 import type {
-  AssistantFileObject,
+  AddUploadPartCommandInput,
+  ArchiveProjectCommandInput,
   AssistantObject,
-  CancelFineTuneCommandInput,
+  Batch,
+  BatchRequestInput,
+  CancelBatchCommandInput,
   CancelFineTuningJobCommandInput,
   CancelRunCommandInput,
+  CancelUploadCommandInput,
+  CancelVectorStoreFileBatchCommandInput,
+  CompleteUploadCommandInput,
   CreateAssistantCommandInput,
-  CreateAssistantFileCommandInput,
+  CreateBatchCommandInput,
   CreateChatCompletionCommandInput,
   CreateChatCompletionResponse,
   CreateCompletionCommandInput,
   CreateCompletionResponse,
-  CreateEditCommandInput,
-  CreateEditResponse,
   CreateEmbeddingCommandInput,
   CreateEmbeddingResponse,
   CreateFileCommandInput,
-  CreateFineTuneCommandInput,
   CreateFineTuningJobCommandInput,
   CreateImageCommandInput,
   CreateImageEditCommandInput,
@@ -36,183 +38,301 @@ import type {
   CreateMessageCommandInput,
   CreateModerationCommandInput,
   CreateModerationResponse,
+  CreateProjectCommandInput,
+  CreateProjectServiceAccountCommandInput,
+  CreateProjectUserCommandInput,
   CreateRunCommandInput,
   CreateSpeechCommandInput,
   CreateThreadAndRunCommandInput,
   CreateThreadCommandInput,
   CreateTranscriptionCommandInput,
-  CreateTranscriptionResponse,
   CreateTranslationCommandInput,
-  CreateTranslationResponse,
+  CreateUploadCommandInput,
+  CreateVectorStoreCommandInput,
+  CreateVectorStoreFileBatchCommandInput,
+  CreateVectorStoreFileCommandInput,
   DeleteAssistantCommandInput,
-  DeleteAssistantFileCommandInput,
-  DeleteAssistantFileResponse,
   DeleteAssistantResponse,
   DeleteFileCommandInput,
   DeleteFileResponse,
+  DeleteInviteCommandInput,
+  DeleteMessageCommandInput,
+  DeleteMessageResponse,
   DeleteModelCommandInput,
   DeleteModelResponse,
+  DeleteProjectApiKeyCommandInput,
+  DeleteProjectServiceAccountCommandInput,
+  DeleteProjectUserCommandInput,
   DeleteThreadCommandInput,
   DeleteThreadResponse,
+  DeleteUserCommandInput,
+  DeleteVectorStoreCommandInput,
+  DeleteVectorStoreFileCommandInput,
+  DeleteVectorStoreFileResponse,
+  DeleteVectorStoreResponse,
   DownloadFileCommandInput,
-  FineTune,
+  FinetuneChatRequestInput,
+  FinetuneCompletionRequestInput,
   FineTuningJob,
   GetAssistantCommandInput,
-  GetAssistantFileCommandInput,
   GetMessageCommandInput,
-  GetMessageFileCommandInput,
   GetRunCommandInput,
   GetRunStepCommandInput,
   GetThreadCommandInput,
+  GetVectorStoreCommandInput,
+  GetVectorStoreFileBatchCommandInput,
+  GetVectorStoreFileCommandInput,
   ImagesResponse,
-  ListAssistantFilesCommandInput,
-  ListAssistantFilesResponse,
+  Invite,
+  InviteDeleteResponse,
+  InviteListResponse,
+  InviteUserCommandInput,
   ListAssistantsCommandInput,
   ListAssistantsResponse,
+  ListAuditLogsCommandInput,
+  ListAuditLogsResponse,
+  ListBatchesCommandInput,
+  ListBatchesResponse,
   ListFilesCommandInput,
+  ListFilesInVectorStoreBatchCommandInput,
   ListFilesResponse,
-  ListFineTuneEventsCommandInput,
-  ListFineTuneEventsResponse,
-  ListFineTunesCommandInput,
-  ListFineTunesResponse,
   ListFineTuningEventsCommandInput,
+  ListFineTuningJobCheckpointsCommandInput,
+  ListFineTuningJobCheckpointsResponse,
   ListFineTuningJobEventsResponse,
-  ListMessageFilesCommandInput,
-  ListMessageFilesResponse,
+  ListInvitesCommandInput,
   ListMessagesCommandInput,
   ListMessagesResponse,
   ListModelsCommandInput,
   ListModelsResponse,
   ListPaginatedFineTuningJobsCommandInput,
   ListPaginatedFineTuningJobsResponse,
+  ListProjectApiKeysCommandInput,
+  ListProjectsCommandInput,
+  ListProjectServiceAccountsCommandInput,
+  ListProjectUsersCommandInput,
   ListRunsCommandInput,
   ListRunsResponse,
   ListRunStepsCommandInput,
   ListRunStepsResponse,
-  MessageFileObject,
+  ListUsersCommandInput,
+  ListVectorStoreFilesCommandInput,
+  ListVectorStoreFilesResponse,
+  ListVectorStoresCommandInput,
+  ListVectorStoresResponse,
   MessageObject,
   Model,
   ModifyAssistantCommandInput,
   ModifyMessageCommandInput,
+  ModifyProjectCommandInput,
+  ModifyProjectUserCommandInput,
   ModifyRunCommandInput,
   ModifyThreadCommandInput,
+  ModifyUserCommandInput,
+  ModifyVectorStoreCommandInput,
   OpenAiFile,
+  Project,
+  ProjectApiKey,
+  ProjectApiKeyDeleteResponse,
+  ProjectApiKeyListResponse,
+  ProjectListResponse,
+  ProjectServiceAccount,
+  ProjectServiceAccountCreateResponse,
+  ProjectServiceAccountDeleteResponse,
+  ProjectServiceAccountListResponse,
+  ProjectUser,
+  ProjectUserDeleteResponse,
+  ProjectUserListResponse,
+  RetrieveBatchCommandInput,
   RetrieveFileCommandInput,
-  RetrieveFineTuneCommandInput,
   RetrieveFineTuningJobCommandInput,
+  RetrieveInviteCommandInput,
   RetrieveModelCommandInput,
+  RetrieveProjectApiKeyCommandInput,
+  RetrieveProjectCommandInput,
+  RetrieveProjectServiceAccountCommandInput,
+  RetrieveProjectUserCommandInput,
+  RetrieveUserCommandInput,
   RunObject,
   RunStepObject,
   SubmitToolOuputsToRunCommandInput,
   ThreadObject,
+  Upload,
+  UploadPart,
+  User,
+  UserDeleteResponse,
+  UserListResponse,
+  VectorStoreFileBatchObject,
+  VectorStoreFileObject,
+  VectorStoreObject,
 } from './types.js';
 
 type AllInputs =
-  | CancelFineTuneCommandInput
+  | AddUploadPartCommandInput
+  | ArchiveProjectCommandInput
+  | BatchRequestInput
+  | CancelBatchCommandInput
   | CancelFineTuningJobCommandInput
   | CancelRunCommandInput
+  | CancelUploadCommandInput
+  | CancelVectorStoreFileBatchCommandInput
+  | CompleteUploadCommandInput
   | CreateAssistantCommandInput
-  | CreateAssistantFileCommandInput
+  | CreateBatchCommandInput
   | CreateChatCompletionCommandInput
   | CreateCompletionCommandInput
-  | CreateEditCommandInput
   | CreateEmbeddingCommandInput
   | CreateFileCommandInput
-  | CreateFineTuneCommandInput
   | CreateFineTuningJobCommandInput
   | CreateImageCommandInput
   | CreateImageEditCommandInput
   | CreateImageVariationCommandInput
   | CreateMessageCommandInput
   | CreateModerationCommandInput
+  | CreateProjectCommandInput
+  | CreateProjectServiceAccountCommandInput
+  | CreateProjectUserCommandInput
   | CreateRunCommandInput
   | CreateSpeechCommandInput
   | CreateThreadAndRunCommandInput
   | CreateThreadCommandInput
   | CreateTranscriptionCommandInput
   | CreateTranslationCommandInput
+  | CreateUploadCommandInput
+  | CreateVectorStoreCommandInput
+  | CreateVectorStoreFileBatchCommandInput
+  | CreateVectorStoreFileCommandInput
   | DeleteAssistantCommandInput
-  | DeleteAssistantFileCommandInput
   | DeleteFileCommandInput
+  | DeleteInviteCommandInput
+  | DeleteMessageCommandInput
   | DeleteModelCommandInput
+  | DeleteProjectApiKeyCommandInput
+  | DeleteProjectServiceAccountCommandInput
+  | DeleteProjectUserCommandInput
   | DeleteThreadCommandInput
+  | DeleteUserCommandInput
+  | DeleteVectorStoreCommandInput
+  | DeleteVectorStoreFileCommandInput
   | DownloadFileCommandInput
+  | FinetuneChatRequestInput
+  | FinetuneCompletionRequestInput
   | GetAssistantCommandInput
-  | GetAssistantFileCommandInput
   | GetMessageCommandInput
-  | GetMessageFileCommandInput
   | GetRunCommandInput
   | GetRunStepCommandInput
   | GetThreadCommandInput
-  | ListAssistantFilesCommandInput
+  | GetVectorStoreCommandInput
+  | GetVectorStoreFileBatchCommandInput
+  | GetVectorStoreFileCommandInput
+  | InviteUserCommandInput
   | ListAssistantsCommandInput
+  | ListAuditLogsCommandInput
+  | ListBatchesCommandInput
   | ListFilesCommandInput
-  | ListFineTuneEventsCommandInput
-  | ListFineTunesCommandInput
+  | ListFilesInVectorStoreBatchCommandInput
   | ListFineTuningEventsCommandInput
-  | ListMessageFilesCommandInput
+  | ListFineTuningJobCheckpointsCommandInput
+  | ListInvitesCommandInput
   | ListMessagesCommandInput
   | ListModelsCommandInput
   | ListPaginatedFineTuningJobsCommandInput
+  | ListProjectApiKeysCommandInput
+  | ListProjectsCommandInput
+  | ListProjectServiceAccountsCommandInput
+  | ListProjectUsersCommandInput
   | ListRunsCommandInput
   | ListRunStepsCommandInput
+  | ListUsersCommandInput
+  | ListVectorStoreFilesCommandInput
+  | ListVectorStoresCommandInput
   | ModifyAssistantCommandInput
   | ModifyMessageCommandInput
+  | ModifyProjectCommandInput
+  | ModifyProjectUserCommandInput
   | ModifyRunCommandInput
   | ModifyThreadCommandInput
+  | ModifyUserCommandInput
+  | ModifyVectorStoreCommandInput
+  | RetrieveBatchCommandInput
   | RetrieveFileCommandInput
-  | RetrieveFineTuneCommandInput
   | RetrieveFineTuningJobCommandInput
+  | RetrieveInviteCommandInput
   | RetrieveModelCommandInput
+  | RetrieveProjectApiKeyCommandInput
+  | RetrieveProjectCommandInput
+  | RetrieveProjectServiceAccountCommandInput
+  | RetrieveProjectUserCommandInput
+  | RetrieveUserCommandInput
   | SubmitToolOuputsToRunCommandInput;
 type AllOutputs =
-  | AssistantFileObject
   | AssistantObject
+  | Batch
   | CreateChatCompletionResponse
   | CreateCompletionResponse
-  | CreateEditResponse
   | CreateEmbeddingResponse
   | CreateModerationResponse
-  | CreateTranscriptionResponse
-  | CreateTranslationResponse
-  | DeleteAssistantFileResponse
   | DeleteAssistantResponse
   | DeleteFileResponse
+  | DeleteMessageResponse
   | DeleteModelResponse
   | DeleteThreadResponse
-  | FineTune
+  | DeleteVectorStoreFileResponse
+  | DeleteVectorStoreResponse
   | FineTuningJob
   | ImagesResponse
-  | ListAssistantFilesResponse
+  | Invite
+  | InviteDeleteResponse
+  | InviteListResponse
   | ListAssistantsResponse
+  | ListAuditLogsResponse
+  | ListBatchesResponse
   | ListFilesResponse
-  | ListFineTuneEventsResponse
-  | ListFineTunesResponse
+  | ListFineTuningJobCheckpointsResponse
   | ListFineTuningJobEventsResponse
-  | ListMessageFilesResponse
   | ListMessagesResponse
   | ListModelsResponse
   | ListPaginatedFineTuningJobsResponse
   | ListRunsResponse
   | ListRunStepsResponse
-  | MessageFileObject
+  | ListVectorStoreFilesResponse
+  | ListVectorStoresResponse
   | MessageObject
   | Model
-  | never
   | OpenAiFile
+  | Project
+  | ProjectApiKey
+  | ProjectApiKeyDeleteResponse
+  | ProjectApiKeyListResponse
+  | ProjectListResponse
+  | ProjectServiceAccount
+  | ProjectServiceAccountCreateResponse
+  | ProjectServiceAccountDeleteResponse
+  | ProjectServiceAccountListResponse
+  | ProjectUser
+  | ProjectUserDeleteResponse
+  | ProjectUserListResponse
   | RunObject
   | RunStepObject
-  | ThreadObject;
+  | ThreadObject
+  | unknown
+  | Upload
+  | UploadPart
+  | User
+  | UserDeleteResponse
+  | UserListResponse
+  | VectorStoreFileBatchObject
+  | VectorStoreFileObject
+  | VectorStoreObject;
 
 export class OpenAiApiRestClient extends RestServiceClient<
   AllInputs,
   AllOutputs
 > {
   constructor(
-    baseUrl = new URL('https://api.openai.com/v1/'),
-    fetcher = createIsomorphicNativeFetcher(),
+    baseUrl: string | URL = new URL('https://api.openai.com/v1/'),
     config?: RestServiceClientConfig,
   ) {
-    super(baseUrl, fetcher, config);
+    super(baseUrl, config);
   }
 }

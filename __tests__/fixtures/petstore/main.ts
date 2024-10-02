@@ -3,12 +3,11 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T05:47:34.360Z
+ * Generated on 2024-10-02T11:43:01.299Z
  *
  */
 import {
   RestServiceClient,
-  createIsomorphicNativeFetcher,
   type RestServiceClientConfig,
 } from '@block65/rest-client';
 import type {
@@ -31,10 +30,9 @@ export class SwaggerPetstoreRestClient extends RestServiceClient<
   AllOutputs
 > {
   constructor(
-    baseUrl = new URL('http://petstore.swagger.io/api/'),
-    fetcher = createIsomorphicNativeFetcher(),
+    baseUrl: string | URL = new URL('http://petstore.swagger.io/api/'),
     config?: RestServiceClientConfig,
   ) {
-    super(baseUrl, fetcher, config);
+    super(baseUrl, config);
   }
 }
