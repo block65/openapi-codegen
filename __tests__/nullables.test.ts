@@ -5,7 +5,7 @@ test('nullables', async () => {
   const result = await processOpenApiDocument(
     '/tmp/like-you-know-whatever', // if we dont call .save() it doesnt matter what this path is
     {
-      openapi: '3.0.0',
+      openapi: '3.1.0',
       info: {
         title: 'Test',
         version: '1.0.0',

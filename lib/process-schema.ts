@@ -35,7 +35,11 @@ function schemaTypeIsNull(
 }
 
 function maybeUnion(...types: (string | WriterFunction)[]) {
-  const [first = 'unknown', second, ...rest] = types;
+  const [first, second, ...rest] = types;
+
+  if (typeof first === 'undefined') {
+    return 'unknown';
+  }
 
   return typeof second === 'undefined'
     ? first
@@ -43,7 +47,11 @@ function maybeUnion(...types: (string | WriterFunction)[]) {
 }
 
 function maybeIntersection(...types: (string | WriterFunction)[]) {
-  const [first = 'unknown', second, ...rest] = types;
+  const [first, second, ...rest] = types;
+
+  if (typeof first === 'undefined') {
+    return 'unknown';
+  }
 
   return typeof second === 'undefined'
     ? first
@@ -55,9 +63,12 @@ export function schemaToType(
     string,
     InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration
   >,
-  parentSchema: OpenAPIV3_1.SchemaObject,
+  parentSchema: OpenAPIV3_1.SchemaObject | OpenAPIV3.SchemaObject,
   propertyName: string,
-  schemaObject: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject,
+  schemaObject:
+    | OpenAPIV3_1.SchemaObject
+    | OpenAPIV3.SchemaObject
+    | OpenAPIV3_1.ReferenceObject,
   options: {
     exactOptionalPropertyTypes?: boolean;
     booleanAsStringish?: boolean;
@@ -139,7 +150,7 @@ export function schemaToType(
         name,
         hasQuestionToken,
         type: maybeWithNullUnion(
-          schemaObject.type[0] || 'never',
+          schemaObject.type[0] || 'unknown', // weird edge case
           schemaTypeIsNull(schemaObject),
         ),
         docs,
@@ -150,19 +161,20 @@ export function schemaToType(
       name,
       hasQuestionToken,
       type: maybeUnion(
-        ...schemaObject.type.map((schemaStr) => {
+        ...schemaObject.type.map((type) => {
           const schema =
-            schemaStr === 'array'
+            type === 'array'
               ? ({
+                  items: {},
+                  ...schemaObject,
                   type: 'array',
-                  items: {
-                    type: 'object',
-                    properties: {},
-                  },
-                } satisfies OpenAPIV3_1.ArraySchemaObject)
-              : ({
-                  type: schemaStr,
-                } satisfies OpenAPIV3_1.NonArraySchemaObject);
+                } satisfies
+                  | OpenAPIV3.ArraySchemaObject
+                  | OpenAPIV3_1.ArraySchemaObject)
+              : {
+                  ...schemaObject,
+                  type,
+                };
 
           return (
             schemaToType(typesAndInterfaces, schemaObject, name, schema).type ||
