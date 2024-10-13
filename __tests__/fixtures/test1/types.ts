@@ -3,10 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:02.777Z
+ * Generated on 2024-10-13T01:58:17.798Z
  *
  */
-import type { Jsonifiable, Jsonify } from 'type-fest';
+import type { Jsonify } from 'type-fest';
 import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type PromoCode = string;
@@ -18,14 +18,20 @@ export enum BillingSubscriptionStatusEnum {
   Inactive = 'inactive',
 }
 
-export type BillingSubscriptionStatusString = 'active' | 'inactive';
+export type BillingSubscriptionStatus =
+  | BillingSubscriptionStatusEnum
+  | 'active'
+  | 'inactive';
 
 export enum BillingSubscriptionIntervalEnum {
   Monthly = 'monthly',
   Yearly = 'yearly',
 }
 
-export type BillingSubscriptionIntervalString = 'monthly' | 'yearly';
+export type BillingSubscriptionInterval =
+  | BillingSubscriptionIntervalEnum
+  | 'monthly'
+  | 'yearly';
 
 export enum PlanSkuEnum {
   Donotuse = 'donotuse',
@@ -35,7 +41,8 @@ export enum PlanSkuEnum {
   Plasku4 = 'plasku4',
 }
 
-export type PlanSkuString =
+export type PlanSku =
+  | PlanSkuEnum
   | 'donotuse'
   | 'plasku1'
   | 'plasku2'
@@ -48,9 +55,9 @@ export type BillingSubscriptionIdentifiers = {
 };
 export type BillingSubscription = BillingSubscriptionIdentifiers & {
   accountId?: Id;
-  planSku: PlanSkuEnum;
-  interval: BillingSubscriptionIntervalEnum;
-  status: BillingSubscriptionStatusEnum;
+  planSku: PlanSku;
+  interval: BillingSubscriptionInterval;
+  status: BillingSubscriptionStatus;
   cycleTime: DateTime;
   trialEndTime?: DateTime;
   createdTime: DateTime;
@@ -94,8 +101,8 @@ export type UpdateBillingSubscriptionRequest = {
 };
 export type CreateBillingSubscriptionRequest = {
   accountId: Id;
-  planSku: PlanSkuEnum;
-  interval: BillingSubscriptionIntervalEnum;
+  planSku: PlanSku;
+  interval: BillingSubscriptionInterval;
   promoCode?: StringU8;
 };
 
@@ -110,7 +117,8 @@ export enum PaymentMethodBrandEnum {
   Unknown = 'unknown',
 }
 
-export type PaymentMethodBrandString =
+export type PaymentMethodBrand =
+  | PaymentMethodBrandEnum
   | 'amex'
   | 'diners'
   | 'discover'
@@ -127,7 +135,7 @@ export type PaymentMethod = PaymentMethodIdentifiers & {
   label: Name;
   expireTime: DateTime;
   humanId: StringU8;
-  brand?: PaymentMethodBrandEnum;
+  brand?: PaymentMethodBrand;
 };
 export type PaymentMethods = PaymentMethod[];
 export type PaymentMethodDeletedLongRunningOperationSuccess = {
@@ -178,7 +186,7 @@ export enum BillingLocaleEnum {
   En = 'en',
 }
 
-export type BillingLocaleString = 'en';
+export type BillingLocale = BillingLocaleEnum | 'en';
 
 export enum BillingAccountTypeEnum {
   Standard = 'standard',
@@ -186,7 +194,11 @@ export enum BillingAccountTypeEnum {
   Reseller = 'reseller',
 }
 
-export type BillingAccountTypeString = 'standard' | 'agency' | 'reseller';
+export type BillingAccountType =
+  | BillingAccountTypeEnum
+  | 'standard'
+  | 'agency'
+  | 'reseller';
 
 export enum CurrencyEnum {
   Usd = 'usd',
@@ -196,14 +208,17 @@ export enum CurrencyEnum {
   Gbp = 'gbp',
 }
 
-export type CurrencyString = 'usd' | 'aud' | 'sgd' | 'myr' | 'gbp';
+export type Currency = CurrencyEnum | 'usd' | 'aud' | 'sgd' | 'myr' | 'gbp';
 
 export enum BillingAccountStatusEnum {
   Nominal = 'nominal',
   Delinquent = 'delinquent',
 }
 
-export type BillingAccountStatusString = 'nominal' | 'delinquent';
+export type BillingAccountStatus =
+  | BillingAccountStatusEnum
+  | 'nominal'
+  | 'delinquent';
 
 export enum BillingCountryEnum {
   Us = 'us',
@@ -213,7 +228,13 @@ export enum BillingCountryEnum {
   Gb = 'gb',
 }
 
-export type BillingCountryString = 'us' | 'au' | 'sg' | 'my' | 'gb';
+export type BillingCountry =
+  | BillingCountryEnum
+  | 'us'
+  | 'au'
+  | 'sg'
+  | 'my'
+  | 'gb';
 /** Valid email address with fully qualified public top-level domain */
 export type Email = string;
 export type BillingAccountIdentifiers = {
@@ -222,13 +243,13 @@ export type BillingAccountIdentifiers = {
 export type BillingAccount = BillingAccountIdentifiers & {
   name: Name;
   email: Email;
-  country: BillingCountryEnum;
-  status: BillingAccountStatusEnum;
-  currency: CurrencyEnum;
-  type: BillingAccountTypeEnum;
+  country: BillingCountry;
+  status: BillingAccountStatus;
+  currency: Currency;
+  type: BillingAccountType;
   createdTime: DateTime;
   updatedTime?: DateTime;
-  locale?: BillingLocaleEnum;
+  locale?: BillingLocale;
   purchaseOrder?: StringU8;
   taxId?: StringU8;
   timeZone?: TimeZone;
@@ -238,20 +259,20 @@ export type BillingAccountList = BillingAccount[];
 export type BillingAccountUpdateRequest = {
   name?: Name;
   email?: Email;
-  country?: BillingCountryEnum;
+  country?: BillingCountry;
   timeZone?: TimeZone;
-  currency?: CurrencyEnum;
-  locale?: BillingLocaleEnum | null;
+  currency?: Currency;
+  locale?: BillingLocale | null;
   purchaseOrder?: StringU8 | null;
   taxId?: StringU8 | null;
 };
 export type BillingAccountCreateRequest = {
   name: Name;
   email: Email;
-  country: BillingCountryEnum;
+  country: BillingCountry;
   timeZone: TimeZone;
-  currency: CurrencyEnum;
-  locale?: BillingLocaleEnum | null;
+  currency: Currency;
+  locale?: BillingLocale | null;
   purchaseOrder?: StringU8 | null;
   taxId?: StringU8 | null;
 };
@@ -270,16 +291,13 @@ export type GetOperationCommandParams = {
   operationId: Uuid;
 };
 export type GetOperationCommandInput = GetOperationCommandParams;
-export type GetOperationCommandBody = unknown;
 export type ListBillingAccountsCommandInput = never;
-export type ListBillingAccountsCommandBody = unknown;
 export type CreateBillingAccountCommandInput = BillingAccountCreateRequest;
 export type CreateBillingAccountCommandBody = BillingAccountCreateRequest;
 export type GetBillingAccountCommandParams = {
   billingAccountId: Id;
 };
 export type GetBillingAccountCommandInput = GetBillingAccountCommandParams;
-export type GetBillingAccountCommandBody = unknown;
 export type UpdateBillingAccountCommandParams = {
   billingAccountId: Id;
 };
@@ -302,25 +320,21 @@ export type ListPaymentMethodsCommandParams = {
   billingAccountId: Id;
 };
 export type ListPaymentMethodsCommandInput = ListPaymentMethodsCommandParams;
-export type ListPaymentMethodsCommandBody = unknown;
 export type CreatePaymentMethodCommandParams = {
   billingAccountId: Id;
 };
 export type CreatePaymentMethodCommandInput = CreatePaymentMethodCommandParams;
-export type CreatePaymentMethodCommandBody = unknown;
 export type GetPaymentMethodFromStripeCommandParams = {
   billingAccountId: Id;
   stripePaymentMethodId: StripeId;
 };
 export type GetPaymentMethodFromStripeCommandInput =
   GetPaymentMethodFromStripeCommandParams;
-export type GetPaymentMethodFromStripeCommandBody = unknown;
 export type GetPaymentMethodCommandParams = {
   billingAccountId: Id;
   paymentMethodId: Id;
 };
 export type GetPaymentMethodCommandInput = GetPaymentMethodCommandParams;
-export type GetPaymentMethodCommandBody = unknown;
 export type UpdatePaymentMethodCommandParams = {
   billingAccountId: Id;
   paymentMethodId: Id;
@@ -333,13 +347,11 @@ export type DeletePaymentMethodCommandParams = {
   paymentMethodId: Id;
 };
 export type DeletePaymentMethodCommandInput = DeletePaymentMethodCommandParams;
-export type DeletePaymentMethodCommandBody = unknown;
 export type ListBillingSubscriptionsCommandParams = {
   billingAccountId: Id;
 };
 export type ListBillingSubscriptionsCommandInput =
   ListBillingSubscriptionsCommandParams;
-export type ListBillingSubscriptionsCommandBody = unknown;
 export type CreateBillingSubscriptionCommandParams = {
   billingAccountId: Id;
 };
@@ -360,7 +372,6 @@ export type CancelSubscriptionCommandParams = {
   subscriptionId: Id;
 };
 export type CancelSubscriptionCommandInput = CancelSubscriptionCommandParams;
-export type CancelSubscriptionCommandBody = unknown;
 export type UpdateBillingSubscriptionPromoCodeCommandParams = {
   billingAccountId: Id;
   subscriptionId: Id;

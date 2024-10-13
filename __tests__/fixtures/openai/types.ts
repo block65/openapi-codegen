@@ -3,10 +3,9 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:05.462Z
+ * Generated on 2024-10-13T01:58:20.017Z
  *
  */
-import type { Jsonifiable, Jsonify } from 'type-fest';
 import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type DeleteModelResponse = {
@@ -24,7 +23,8 @@ export enum ChatCompletionRoleEnum {
 }
 
 /** The role of the author of a message */
-export type ChatCompletionRoleString =
+export type ChatCompletionRole =
+  | ChatCompletionRoleEnum
   | 'system'
   | 'user'
   | 'assistant'
@@ -34,11 +34,11 @@ export type ChatCompletionTokenLogprob = {
   token: string;
   logprob: number;
   readonly bytes: number[];
-  top_logprobs: Array<{
+  readonly top_logprobs: {
     token: string;
     logprob: number;
     readonly bytes: number[];
-  }>;
+  }[];
 };
 /**
  * Represents a streamed chunk of a chat completion response returned by
@@ -46,7 +46,7 @@ export type ChatCompletionTokenLogprob = {
  */
 export type CreateChatCompletionStreamResponse = {
   id: string;
-  choices: Array<{
+  readonly choices: {
     /** WARN: $ref used before available - #/components/schemas/ChatCompletionStreamResponseDelta */
     delta: never;
     logprobs?: {
@@ -71,7 +71,7 @@ export type CreateChatCompletionStreamResponse = {
       | 'content_filter'
       | 'function_call';
     index: number;
-  }>;
+  }[];
   created: number;
   model: string;
   /**
@@ -97,7 +97,7 @@ export type CreateChatCompletionStreamResponse = {
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export type CreateChatCompletionImageResponse = {};
+export type CreateChatCompletionImageResponse = JsonifiableObject;
 export type CreateImageRequest = {
   /**
    * A text description of the desired image(s). The maximum length is 1000
@@ -117,7 +117,7 @@ export type CreateImageRequest = {
    * @default 1
    * @example 1
    */
-  n?: number;
+  n?: number | null;
   /**
    * The quality of the image that will be generated. `hd` creates images with
    * finer details and greater consistency across the image. This param is only
@@ -184,7 +184,7 @@ export type CreateImageEditRequest = {
    * @default 1
    * @example 1
    */
-  n?: number;
+  n?: number | null;
   /**
    * The size of the generated images. Must be one of `256x256`, `512x512`, or
    * `1024x1024`.
@@ -225,7 +225,7 @@ export type CreateImageVariationRequest = {
    * @default 1
    * @example 1
    */
-  n?: number;
+  n?: number | null;
   /**
    * The format in which the generated images are returned. Must be one of `url`
    * or `b64_json`. URLs are only valid for 60 minutes after the image has been
@@ -255,7 +255,7 @@ export type CreateModerationRequest = {
   input:
     | string
     | string[]
-    | Array<
+    | (
         | {
             /**
              * Always `image_url`.
@@ -283,7 +283,7 @@ export type CreateModerationRequest = {
             text: string;
           }
         | null
-      >
+      )[]
     | null;
   /**
    * The content moderation model you would like to use. Learn more in
@@ -304,7 +304,7 @@ export type CreateModerationRequest = {
 export type CreateModerationResponse = {
   id: string;
   model: string;
-  results: Array<{
+  readonly results: {
     flagged: boolean;
     categories: {
       hate: boolean;
@@ -343,15 +343,15 @@ export type CreateModerationResponse = {
       readonly 'harassment/threatening': 'text'[];
       readonly illicit: 'text'[];
       readonly 'illicit/violent': 'text'[];
-      'self-harm': Array<'text' | 'image'>;
-      'self-harm/intent': Array<'text' | 'image'>;
-      'self-harm/instructions': Array<'text' | 'image'>;
-      sexual: Array<'text' | 'image'>;
+      readonly 'self-harm': ('text' | 'image')[];
+      readonly 'self-harm/intent': ('text' | 'image')[];
+      readonly 'self-harm/instructions': ('text' | 'image')[];
+      readonly sexual: ('text' | 'image')[];
       readonly 'sexual/minors': 'text'[];
-      violence: Array<'text' | 'image'>;
-      'violence/graphic': Array<'text' | 'image'>;
+      readonly violence: ('text' | 'image')[];
+      readonly 'violence/graphic': ('text' | 'image')[];
     };
-  }>;
+  }[];
 };
 export type CreateFileRequest = {
   file: string;
@@ -391,7 +391,7 @@ export type CompleteUploadRequest = {
   readonly part_ids: string[];
   md5?: string;
 };
-export type CancelUploadRequest = {};
+export type CancelUploadRequest = JsonifiableObject;
 export type CreateFineTuningJobRequest = {
   /**
    * The name of the model to fine-tune. You can select one of the
@@ -462,7 +462,7 @@ export type CreateFineTuningJobRequest = {
    * @example file-abc123
    */
   validation_file?: string;
-  integrations?: Array<{
+  readonly integrations?: {
     type: 'wandb';
     wandb: {
       /**
@@ -474,7 +474,7 @@ export type CreateFineTuningJobRequest = {
       entity?: string;
       readonly tags?: string[];
     };
-  }>;
+  }[];
   /**
    * The seed controls the reproducibility of the job. Passing in the same seed
    * and job parameters should produce the same results, but may differ in rare
@@ -482,7 +482,7 @@ export type CreateFineTuningJobRequest = {
    * If a seed is not specified, one will be generated for you.
    * @example 42
    */
-  seed?: number;
+  seed?: number | null;
 };
 export type CreateEmbeddingRequest = {
   /**
@@ -620,11 +620,11 @@ export type ModifyRunRequest = {
   metadata?: JsonifiableObject;
 };
 export type SubmitToolOutputsRunRequest = {
-  tool_outputs: Array<{
+  readonly tool_outputs: {
     tool_call_id?: string;
     output?: string;
-  }>;
-  stream?: boolean;
+  }[];
+  stream?: boolean | null;
 };
 export type ModifyThreadRequest = {
   tool_resources?: {
@@ -745,7 +745,7 @@ export type MessageContentTextObject = {
   type: 'text';
   text: {
     value: string;
-    annotations: Array<never | never | null>;
+    readonly annotations: (never | never | null)[];
   };
 };
 /** The refusal content generated by the assistant. */
@@ -811,7 +811,7 @@ export type MessageDeltaContentTextObject = {
   type: 'text';
   text?: {
     value?: string;
-    annotations?: Array<never | never | null>;
+    readonly annotations?: (never | never | null)[];
   };
 };
 /** The refusal content that is part of a message. */
@@ -873,7 +873,7 @@ export type RunStepDetailsToolCallsCodeObject = {
   type: 'code_interpreter';
   code_interpreter: {
     input: string;
-    outputs: Array<never | never | null>;
+    readonly outputs: (never | never | null)[];
   };
 };
 /** Details of the Code Interpreter tool call the run step was involved in. */
@@ -888,7 +888,7 @@ export type RunStepDeltaStepDetailsToolCallsCodeObject = {
   type: 'code_interpreter';
   code_interpreter?: {
     input?: string;
-    outputs?: Array<never | never | null>;
+    readonly outputs?: (never | never | null)[];
   };
 };
 /** Text output from the Code Interpreter tool call as part of a run step. */
@@ -1215,7 +1215,7 @@ export type Project = {
   object: 'organization.project';
   name: string;
   created_at: number;
-  archived_at?: number;
+  archived_at?: number | null;
   /**
    * `active` or `archived`
    * @enum active,archived
@@ -1349,7 +1349,8 @@ export enum AuditLogEventTypeEnum {
 }
 
 /** The event type. */
-export type AuditLogEventTypeString =
+export type AuditLogEventType =
+  | AuditLogEventTypeEnum
   | 'api_key.created'
   | 'api_key.updated'
   | 'api_key.deleted'
@@ -1373,7 +1374,7 @@ export type AuditLogEventTypeString =
 /** A log of a user action or configuration change within this organization. */
 export type AuditLog = {
   id: string;
-  type: AuditLogEventTypeEnum;
+  type: AuditLogEventType;
   effective_at: number;
   project?: {
     id?: string;
@@ -1492,12 +1493,12 @@ export type Batch = {
   endpoint: string;
   errors?: {
     object?: string;
-    data?: Array<{
+    readonly data?: {
       code?: string;
       message?: string;
       param?: string;
-      line?: number;
-    }>;
+      line?: number | null;
+    }[];
   };
   input_file_id: string;
   completion_window: string;
@@ -1556,13 +1557,13 @@ export type MessageDeltaObject = {
      * @enum user,assistant
      */
     role?: 'user' | 'assistant';
-    content?: Array<
+    readonly content?: (
       | MessageDeltaContentImageFileObject
       | MessageDeltaContentTextObject
       | MessageDeltaContentRefusalObject
       | MessageDeltaContentImageUrlObject
       | null
-    >;
+    )[];
   };
 };
 /** Occurs when a stream ends. */
@@ -1612,26 +1613,30 @@ export type MessageObject = {
       | 'run_expired'
       | 'run_failed';
   };
-  completed_at: number;
-  incomplete_at: number;
+  completed_at: number | null;
+  incomplete_at: number | null;
   /**
    * The entity that produced the message. One of `user` or `assistant`.
    * @enum user,assistant
    */
   role: 'user' | 'assistant';
-  content: Array<
+  readonly content: (
     | MessageContentImageFileObject
     | MessageContentImageUrlObject
     | MessageContentTextObject
     | MessageContentRefusalObject
     | null
-  >;
+  )[];
   assistant_id: string;
   run_id: string;
-  attachments: Array<{
+  readonly attachments: {
     file_id?: string;
-    tools?: Array<AssistantToolsCode | AssistantToolsFileSearchTypeOnly | null>;
-  }>;
+    readonly tools?: (
+      | AssistantToolsCode
+      | AssistantToolsFileSearchTypeOnly
+      | null
+    )[];
+  }[];
   metadata: JsonifiableObject;
 };
 export type MessageStreamEvent =
@@ -1662,12 +1667,12 @@ export type RunStepDeltaStepDetailsToolCallsObject = {
    * @enum tool_calls
    */
   type: 'tool_calls';
-  tool_calls?: Array<
+  readonly tool_calls?: (
     | RunStepDeltaStepDetailsToolCallsCodeObject
     | RunStepDeltaStepDetailsToolCallsFileSearchObject
     | RunStepDeltaStepDetailsToolCallsFunctionObject
     | null
-  >;
+  )[];
 };
 /** Details of the message creation by the run step. */
 export type RunStepDeltaStepDetailsMessageCreationObject = {
@@ -1714,12 +1719,12 @@ export type RunStepDetailsToolCallsObject = {
    * @enum tool_calls
    */
   type: 'tool_calls';
-  tool_calls: Array<
+  readonly tool_calls: (
     | RunStepDetailsToolCallsCodeObject
     | never
     | RunStepDetailsToolCallsFunctionObject
     | null
-  >;
+  )[];
 };
 /** Details of the message creation by the run step. */
 export type RunStepDetailsMessageCreationObject = {
@@ -1768,10 +1773,10 @@ export type RunStepObject = {
     code: 'server_error' | 'rate_limit_exceeded';
     message: string;
   };
-  expired_at: number;
-  cancelled_at: number;
-  failed_at: number;
-  completed_at: number;
+  expired_at: number | null;
+  cancelled_at: number | null;
+  failed_at: number | null;
+  completed_at: number | null;
   metadata: JsonifiableObject;
   usage: RunStepCompletionUsage;
 };
@@ -1805,7 +1810,7 @@ export type RunStepStreamEvent =
       data: RunStepObject;
     };
 /** The schema for the response format, described as a JSON Schema object. */
-export type ResponseFormatJsonSchemaSchema = {};
+export type ResponseFormatJsonSchemaSchema = JsonifiableObject;
 export type ResponseFormatJsonSchema = {
   /**
    * The type of response format being defined: `json_schema`
@@ -1816,7 +1821,7 @@ export type ResponseFormatJsonSchema = {
     description?: string;
     name: string;
     schema?: ResponseFormatJsonSchemaSchema;
-    strict?: boolean;
+    strict?: boolean | null;
   };
 };
 export type ResponseFormatJsonObject = {
@@ -1911,7 +1916,7 @@ export type TruncationObject = {
    * @enum auto,last_messages
    */
   type: 'auto' | 'last_messages';
-  last_messages?: number;
+  last_messages?: number | null;
 };
 /**
  * Usage statistics related to the run. This value will be `null` if the run
@@ -1981,11 +1986,11 @@ export type RunObject = {
     code: 'server_error' | 'rate_limit_exceeded' | 'invalid_prompt';
     message: string;
   };
-  expires_at: number;
-  started_at: number;
-  cancelled_at: number;
-  failed_at: number;
-  completed_at: number;
+  expires_at: number | null;
+  started_at: number | null;
+  cancelled_at: number | null;
+  failed_at: number | null;
+  completed_at: number | null;
   incomplete_details: {
     /**
      * The reason why the run is incomplete. This will point to which specific
@@ -2001,13 +2006,13 @@ export type RunObject = {
    * for this run.
    * @default
    */
-  tools: Array<AssistantToolsCode | never | never | null>;
+  readonly tools: (AssistantToolsCode | never | never | null)[];
   metadata: JsonifiableObject;
   usage: RunCompletionUsage;
-  temperature?: number;
-  top_p?: number;
-  max_prompt_tokens: number;
-  max_completion_tokens: number;
+  temperature?: number | null;
+  top_p?: number | null;
+  max_prompt_tokens: number | null;
+  max_completion_tokens: number | null;
   truncation_strategy: TruncationObject;
   tool_choice: AssistantsApiToolChoiceOption;
   parallel_tool_calls: ParallelToolCalls;
@@ -2254,8 +2259,8 @@ export type VectorStoreObject = {
    */
   status: 'expired' | 'in_progress' | 'completed';
   expires_after?: VectorStoreExpirationAfter;
-  expires_at?: number;
-  last_active_at: number;
+  expires_at?: number | null;
+  last_active_at: number | null;
   metadata: JsonifiableObject;
 };
 export type ListVectorStoresResponse = {
@@ -2285,14 +2290,14 @@ export type RunStepDetailsToolCallsFileSearchResultObject = {
   file_id: string;
   file_name: string;
   score: number;
-  content?: Array<{
+  readonly content?: {
     /**
      * The type of the content.
      * @enum text
      */
     type?: 'text';
     text?: string;
-  }>;
+  }[];
 };
 /** The ranking options for the file search. */
 export type RunStepDetailsToolCallsFileSearchRankingOptionsObject = {
@@ -2350,17 +2355,21 @@ export type CreateMessageRequest = {
   role: 'user' | 'assistant';
   content:
     | string
-    | Array<
+    | (
         | MessageContentImageFileObject
         | MessageContentImageUrlObject
         | MessageRequestContentTextObject
         | null
-      >
+      )[]
     | null;
-  attachments?: Array<{
+  readonly attachments?: {
     file_id?: string;
-    tools?: Array<AssistantToolsCode | AssistantToolsFileSearchTypeOnly | null>;
-  }>;
+    readonly tools?: (
+      | AssistantToolsCode
+      | AssistantToolsFileSearchTypeOnly
+      | null
+    )[];
+  }[];
   metadata?: JsonifiableObject;
 };
 export type CreateThreadRequest = {
@@ -2417,7 +2426,7 @@ export type CreateThreadAndRunRequest = {
     | 'gpt-3.5-turbo-16k-0613'
     | null;
   instructions?: string;
-  tools?: Array<AssistantToolsCode | never | never | null>;
+  readonly tools?: (AssistantToolsCode | never | never | null)[];
   tool_resources?: {
     code_interpreter?: {
       /**
@@ -2440,7 +2449,7 @@ export type CreateThreadAndRunRequest = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -2451,10 +2460,10 @@ export type CreateThreadAndRunRequest = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
-  stream?: boolean;
-  max_prompt_tokens?: number;
-  max_completion_tokens?: number;
+  top_p?: number | null;
+  stream?: boolean | null;
+  max_prompt_tokens?: number | null;
+  max_completion_tokens?: number | null;
   truncation_strategy?: TruncationObject;
   tool_choice?: AssistantsApiToolChoiceOption;
   parallel_tool_calls?: ParallelToolCalls;
@@ -2506,7 +2515,7 @@ export type CreateRunRequest = {
   instructions?: string;
   additional_instructions?: string;
   readonly additional_messages?: CreateMessageRequest[];
-  tools?: Array<AssistantToolsCode | never | never | null>;
+  readonly tools?: (AssistantToolsCode | never | never | null)[];
   metadata?: JsonifiableObject;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
@@ -2515,7 +2524,7 @@ export type CreateRunRequest = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -2526,10 +2535,10 @@ export type CreateRunRequest = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
-  stream?: boolean;
-  max_prompt_tokens?: number;
-  max_completion_tokens?: number;
+  top_p?: number | null;
+  stream?: boolean | null;
+  max_prompt_tokens?: number | null;
+  max_completion_tokens?: number | null;
   truncation_strategy?: TruncationObject;
   tool_choice?: AssistantsApiToolChoiceOption;
   parallel_tool_calls?: ParallelToolCalls;
@@ -2543,12 +2552,12 @@ export type CreateRunRequest = {
  *
  * Omitting `parameters` defines a function with an empty parameter list.
  */
-export type FunctionParameters = {};
+export type FunctionParameters = JsonifiableObject;
 export type FunctionObject = {
   description?: string;
   name: string;
   parameters?: FunctionParameters;
-  strict?: boolean;
+  strict?: boolean | null;
 };
 export type AssistantToolsFunction = {
   /**
@@ -2605,12 +2614,12 @@ export type AssistantObject = {
    * `file_search`, or `function`.
    * @default
    */
-  tools: Array<
+  readonly tools: (
     | AssistantToolsCode
     | AssistantToolsFileSearch
     | AssistantToolsFunction
     | null
-  >;
+  )[];
   tool_resources?: {
     code_interpreter?: {
       /**
@@ -2633,7 +2642,7 @@ export type AssistantObject = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -2644,7 +2653,7 @@ export type AssistantObject = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
+  top_p?: number | null;
   response_format?: AssistantsApiResponseFormatOption;
 };
 export type ListAssistantsResponse = {
@@ -2665,12 +2674,12 @@ export type ModifyAssistantRequest = {
    * `file_search`, or `function`.
    * @default
    */
-  tools?: Array<
+  readonly tools?: (
     | AssistantToolsCode
     | AssistantToolsFileSearch
     | AssistantToolsFunction
     | null
-  >;
+  )[];
   tool_resources?: {
     code_interpreter?: {
       /**
@@ -2693,7 +2702,7 @@ export type ModifyAssistantRequest = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -2704,7 +2713,7 @@ export type ModifyAssistantRequest = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
+  top_p?: number | null;
   response_format?: AssistantsApiResponseFormatOption;
 };
 export type CreateAssistantRequest = {
@@ -2751,12 +2760,12 @@ export type CreateAssistantRequest = {
    * `file_search`, or `function`.
    * @default
    */
-  tools?: Array<
+  readonly tools?: (
     | AssistantToolsCode
     | AssistantToolsFileSearch
     | AssistantToolsFunction
     | null
-  >;
+  )[];
   tool_resources?: {
     code_interpreter?: {
       /**
@@ -2777,7 +2786,7 @@ export type CreateAssistantRequest = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -2788,7 +2797,7 @@ export type CreateAssistantRequest = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
+  top_p?: number | null;
   response_format?: AssistantsApiResponseFormatOption;
 };
 export type ChatCompletionFunctions = {
@@ -2806,7 +2815,7 @@ export type ChatCompletionTool = {
 };
 /** The per-line training example of a fine-tuning input file for chat models */
 export type FinetuneChatRequestInput = {
-  messages?: Array<never | never | never | never | never | null>;
+  readonly messages?: (never | never | never | never | never | null)[];
   readonly tools?: ChatCompletionTool[];
   parallel_tool_calls?: ParallelToolCalls;
   /**
@@ -2905,7 +2914,8 @@ export enum AudioResponseFormatEnum {
  * The format of the output, in one of these options: `json`, `text`, `srt`,
  * `verbose_json`, or `vtt`.
  */
-export type AudioResponseFormatString =
+export type AudioResponseFormat =
+  | AudioResponseFormatEnum
   | 'json'
   | 'text'
   | 'srt'
@@ -2920,7 +2930,7 @@ export type CreateTranslationRequest = {
    */
   model: string | 'whisper-1' | null;
   prompt?: string;
-  response_format?: AudioResponseFormatEnum;
+  response_format?: AudioResponseFormat;
   temperature?: number;
 };
 export type TranscriptionWord = {
@@ -2949,7 +2959,7 @@ export type CreateTranscriptionRequest = {
   model: string | 'whisper-1' | null;
   language?: string;
   prompt?: string;
-  response_format?: AudioResponseFormatEnum;
+  response_format?: AudioResponseFormat;
   temperature?: number;
   /**
    * The timestamp granularities to populate for this transcription.
@@ -2959,7 +2969,7 @@ export type CreateTranscriptionRequest = {
    * generating word timestamps incurs additional latency.
    * @default segment
    */
-  'timestamp_granularities[]'?: Array<'word' | 'segment'>;
+  readonly 'timestamp_granularities[]'?: ('word' | 'segment')[];
 };
 /** Represents an embedding vector returned by embedding endpoint. */
 export type Embedding = {
@@ -3055,7 +3065,7 @@ export type FineTuningJob = {
     param: string;
   };
   fine_tuned_model: string;
-  finished_at: number;
+  finished_at: number | null;
   hyperparameters: {
     /**
      * The number of epochs to train the model for. An epoch refers to one full
@@ -3088,12 +3098,12 @@ export type FineTuningJob = {
     | 'succeeded'
     | 'failed'
     | 'cancelled';
-  trained_tokens: number;
+  trained_tokens: number | null;
   training_file: string;
   validation_file: string;
   readonly integrations?: FineTuningIntegration[];
   seed: number;
-  estimated_finish?: number;
+  estimated_finish?: number | null;
 };
 export type ListPaginatedFineTuningJobsResponse = {
   readonly data: FineTuningJob[];
@@ -3115,7 +3125,7 @@ export type CompletionUsage = {
  */
 export type CreateChatCompletionFunctionResponse = {
   id: string;
-  choices: Array<{
+  readonly choices: {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
      * model hit a natural stop point or a provided stop sequence, `length` if the
@@ -3128,7 +3138,7 @@ export type CreateChatCompletionFunctionResponse = {
     index: number;
     /** WARN: $ref used before available - #/components/schemas/ChatCompletionResponseMessage */
     message: never;
-  }>;
+  }[];
   created: number;
   model: string;
   system_fingerprint?: string;
@@ -3145,7 +3155,7 @@ export type CreateChatCompletionFunctionResponse = {
  */
 export type CreateChatCompletionResponse = {
   id: string;
-  choices: Array<{
+  readonly choices: {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
      * model hit a natural stop point or a provided stop sequence,
@@ -3170,7 +3180,7 @@ export type CreateChatCompletionResponse = {
       readonly content: ChatCompletionTokenLogprob[];
       readonly refusal: ChatCompletionTokenLogprob[];
     };
-  }>;
+  }[];
   created: number;
   model: string;
   /**
@@ -3391,10 +3401,10 @@ export type CreateChatCompletionRequest = {
     | 'gpt-3.5-turbo-0125'
     | 'gpt-3.5-turbo-16k-0613'
     | null;
-  frequency_penalty?: number;
+  frequency_penalty?: number | null;
   logit_bias?: JsonifiableObject;
-  logprobs?: boolean;
-  top_logprobs?: number;
+  logprobs?: boolean | null;
+  top_logprobs?: number | null;
   /**
    * The maximum number of [tokens](/tokenizer) that can be generated in the
    * chat completion. This value can be used to control
@@ -3404,8 +3414,8 @@ export type CreateChatCompletionRequest = {
    * not compatible with [o1 series models](/docs/guides/reasoning).
    * @deprecated
    */
-  max_tokens?: number;
-  max_completion_tokens?: number;
+  max_tokens?: number | null;
+  max_completion_tokens?: number | null;
   /**
    * How many chat completion choices to generate for each input message. Note
    * that you will be charged based on the number of generated tokens across all
@@ -3413,14 +3423,14 @@ export type CreateChatCompletionRequest = {
    * @default 1
    * @example 1
    */
-  n?: number;
-  presence_penalty?: number;
+  n?: number | null;
+  presence_penalty?: number | null;
   response_format?:
     | ResponseFormatText
     | ResponseFormatJsonObject
     | ResponseFormatJsonSchema
     | null;
-  seed?: number;
+  seed?: number | null;
   /**
    * Specifies the latency tier to use for processing the request. This
    * parameter is relevant for customers subscribed to the scale tier service:
@@ -3444,7 +3454,7 @@ export type CreateChatCompletionRequest = {
    */
   service_tier?: 'auto' | 'default';
   stop?: string | string[] | null;
-  stream?: boolean;
+  stream?: boolean | null;
   stream_options?: ChatCompletionStreamOptions;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
@@ -3455,7 +3465,7 @@ export type CreateChatCompletionRequest = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -3466,7 +3476,7 @@ export type CreateChatCompletionRequest = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
+  top_p?: number | null;
   readonly tools?: ChatCompletionTool[];
   tool_choice?: ChatCompletionToolChoiceOption;
   parallel_tool_calls?: ParallelToolCalls;
@@ -3569,7 +3579,7 @@ export type FineTuneChatCompletionRequestAssistantMessage =
  */
 export type CreateCompletionResponse = {
   id: string;
-  choices: Array<{
+  readonly choices: {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
      * model hit a natural stop point or a provided stop sequence,
@@ -3588,7 +3598,7 @@ export type CreateCompletionResponse = {
       readonly top_logprobs?: JsonifiableObject[];
     };
     text: string;
-  }>;
+  }[];
   created: number;
   model: string;
   system_fingerprint?: string;
@@ -3628,11 +3638,11 @@ export type CreateCompletionRequest = {
    * settings for `max_tokens` and `stop`.
    * @default 1
    */
-  best_of?: number;
-  echo?: boolean;
-  frequency_penalty?: number;
+  best_of?: number | null;
+  echo?: boolean | null;
+  frequency_penalty?: number | null;
   logit_bias?: JsonifiableObject;
-  logprobs?: number;
+  logprobs?: number | null;
   /**
    * The maximum number of [tokens](/tokenizer) that can be generated in the
    * completion.
@@ -3644,7 +3654,7 @@ export type CreateCompletionRequest = {
    * @default 16
    * @example 16
    */
-  max_tokens?: number;
+  max_tokens?: number | null;
   /**
    * How many completions to generate for each prompt.
    *
@@ -3654,11 +3664,11 @@ export type CreateCompletionRequest = {
    * @default 1
    * @example 1
    */
-  n?: number;
-  presence_penalty?: number;
-  seed?: number;
+  n?: number | null;
+  presence_penalty?: number | null;
+  seed?: number | null;
   stop?: string | string[] | null;
-  stream?: boolean;
+  stream?: boolean | null;
   stream_options?: ChatCompletionStreamOptions;
   /**
    * The suffix that comes after a completion of inserted text.
@@ -3676,7 +3686,7 @@ export type CreateCompletionRequest = {
    * @default 1
    * @example 1
    */
-  temperature?: number;
+  temperature?: number | null;
   /**
    * An alternative to sampling with temperature, called nucleus sampling, where
    * the model considers the results of the tokens with top_p probability mass.
@@ -3687,7 +3697,7 @@ export type CreateCompletionRequest = {
    * @default 1
    * @example 1
    */
-  top_p?: number;
+  top_p?: number | null;
   /**
    * A unique identifier representing your end-user, which can help OpenAI to
    * monitor and detect abuse. [Learn
@@ -3721,46 +3731,36 @@ export type CreateCompletionCommandBody = CreateCompletionRequest;
 export type CreateImageCommandInput = CreateImageRequest;
 export type CreateImageCommandBody = CreateImageRequest;
 export type CreateImageEditCommandInput = never;
-export type CreateImageEditCommandBody = unknown;
 export type CreateImageVariationCommandInput = never;
-export type CreateImageVariationCommandBody = unknown;
 export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
 export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
 export type CreateSpeechCommandInput = CreateSpeechRequest;
 export type CreateSpeechCommandBody = CreateSpeechRequest;
 export type CreateTranscriptionCommandInput = never;
-export type CreateTranscriptionCommandBody = unknown;
 export type CreateTranslationCommandInput = never;
-export type CreateTranslationCommandBody = unknown;
 export type ListFilesCommandQuery = {
   purpose?: string | undefined;
 };
 export type ListFilesCommandInput = ListFilesCommandQuery;
-export type ListFilesCommandBody = unknown;
 export type CreateFileCommandInput = never;
-export type CreateFileCommandBody = unknown;
 export type DeleteFileCommandParams = {
   file_id: string;
 };
 export type DeleteFileCommandInput = DeleteFileCommandParams;
-export type DeleteFileCommandBody = unknown;
 export type RetrieveFileCommandParams = {
   file_id: string;
 };
 export type RetrieveFileCommandInput = RetrieveFileCommandParams;
-export type RetrieveFileCommandBody = unknown;
 export type DownloadFileCommandParams = {
   file_id: string;
 };
 export type DownloadFileCommandInput = DownloadFileCommandParams;
-export type DownloadFileCommandBody = unknown;
 export type CreateUploadCommandInput = CreateUploadRequest;
 export type CreateUploadCommandBody = CreateUploadRequest;
 export type AddUploadPartCommandParams = {
   upload_id: string;
 };
 export type AddUploadPartCommandInput = AddUploadPartCommandParams;
-export type AddUploadPartCommandBody = unknown;
 export type CompleteUploadCommandParams = {
   upload_id: string;
 };
@@ -3771,7 +3771,6 @@ export type CancelUploadCommandParams = {
   upload_id: string;
 };
 export type CancelUploadCommandInput = CancelUploadCommandParams;
-export type CancelUploadCommandBody = unknown;
 export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
 export type CreateFineTuningJobCommandBody = CreateFineTuningJobRequest;
 export type ListPaginatedFineTuningJobsCommandQuery = {
@@ -3780,13 +3779,11 @@ export type ListPaginatedFineTuningJobsCommandQuery = {
 };
 export type ListPaginatedFineTuningJobsCommandInput =
   ListPaginatedFineTuningJobsCommandQuery;
-export type ListPaginatedFineTuningJobsCommandBody = unknown;
 export type RetrieveFineTuningJobCommandParams = {
   fine_tuning_job_id: string;
 };
 export type RetrieveFineTuningJobCommandInput =
   RetrieveFineTuningJobCommandParams;
-export type RetrieveFineTuningJobCommandBody = unknown;
 export type ListFineTuningEventsCommandQuery = {
   after?: string | undefined;
   limit?: `${number}` | undefined;
@@ -3796,12 +3793,10 @@ export type ListFineTuningEventsCommandParams = {
 };
 export type ListFineTuningEventsCommandInput =
   ListFineTuningEventsCommandParams & ListFineTuningEventsCommandQuery;
-export type ListFineTuningEventsCommandBody = unknown;
 export type CancelFineTuningJobCommandParams = {
   fine_tuning_job_id: string;
 };
 export type CancelFineTuningJobCommandInput = CancelFineTuningJobCommandParams;
-export type CancelFineTuningJobCommandBody = unknown;
 export type ListFineTuningJobCheckpointsCommandQuery = {
   after?: string | undefined;
   limit?: `${number}` | undefined;
@@ -3812,19 +3807,15 @@ export type ListFineTuningJobCheckpointsCommandParams = {
 export type ListFineTuningJobCheckpointsCommandInput =
   ListFineTuningJobCheckpointsCommandParams &
     ListFineTuningJobCheckpointsCommandQuery;
-export type ListFineTuningJobCheckpointsCommandBody = unknown;
 export type ListModelsCommandInput = never;
-export type ListModelsCommandBody = unknown;
 export type RetrieveModelCommandParams = {
   model: string;
 };
 export type RetrieveModelCommandInput = RetrieveModelCommandParams;
-export type RetrieveModelCommandBody = unknown;
 export type DeleteModelCommandParams = {
   model: string;
 };
 export type DeleteModelCommandInput = DeleteModelCommandParams;
-export type DeleteModelCommandBody = unknown;
 export type CreateModerationCommandInput = CreateModerationRequest;
 export type CreateModerationCommandBody = CreateModerationRequest;
 export type ListAssistantsCommandQuery = {
@@ -3834,14 +3825,12 @@ export type ListAssistantsCommandQuery = {
   before?: string | undefined;
 };
 export type ListAssistantsCommandInput = ListAssistantsCommandQuery;
-export type ListAssistantsCommandBody = unknown;
 export type CreateAssistantCommandInput = CreateAssistantRequest;
 export type CreateAssistantCommandBody = CreateAssistantRequest;
 export type GetAssistantCommandParams = {
   assistant_id: string;
 };
 export type GetAssistantCommandInput = GetAssistantCommandParams;
-export type GetAssistantCommandBody = unknown;
 export type ModifyAssistantCommandParams = {
   assistant_id: string;
 };
@@ -3852,14 +3841,12 @@ export type DeleteAssistantCommandParams = {
   assistant_id: string;
 };
 export type DeleteAssistantCommandInput = DeleteAssistantCommandParams;
-export type DeleteAssistantCommandBody = unknown;
 export type CreateThreadCommandInput = CreateThreadRequest;
 export type CreateThreadCommandBody = CreateThreadRequest;
 export type GetThreadCommandParams = {
   thread_id: string;
 };
 export type GetThreadCommandInput = GetThreadCommandParams;
-export type GetThreadCommandBody = unknown;
 export type ModifyThreadCommandParams = {
   thread_id: string;
 };
@@ -3870,7 +3857,6 @@ export type DeleteThreadCommandParams = {
   thread_id: string;
 };
 export type DeleteThreadCommandInput = DeleteThreadCommandParams;
-export type DeleteThreadCommandBody = unknown;
 export type ListMessagesCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -3883,7 +3869,6 @@ export type ListMessagesCommandParams = {
 };
 export type ListMessagesCommandInput = ListMessagesCommandParams &
   ListMessagesCommandQuery;
-export type ListMessagesCommandBody = unknown;
 export type CreateMessageCommandParams = {
   thread_id: string;
 };
@@ -3895,7 +3880,6 @@ export type GetMessageCommandParams = {
   message_id: string;
 };
 export type GetMessageCommandInput = GetMessageCommandParams;
-export type GetMessageCommandBody = unknown;
 export type ModifyMessageCommandParams = {
   thread_id: string;
   message_id: string;
@@ -3908,7 +3892,6 @@ export type DeleteMessageCommandParams = {
   message_id: string;
 };
 export type DeleteMessageCommandInput = DeleteMessageCommandParams;
-export type DeleteMessageCommandBody = unknown;
 export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
 export type CreateThreadAndRunCommandBody = CreateThreadAndRunRequest;
 export type ListRunsCommandQuery = {
@@ -3921,7 +3904,6 @@ export type ListRunsCommandParams = {
   thread_id: string;
 };
 export type ListRunsCommandInput = ListRunsCommandParams & ListRunsCommandQuery;
-export type ListRunsCommandBody = unknown;
 export type CreateRunCommandQuery = {
   include?:
     | 'step_details.tool_calls[*].file_search.results[*].content'[]
@@ -3939,7 +3921,6 @@ export type GetRunCommandParams = {
   run_id: string;
 };
 export type GetRunCommandInput = GetRunCommandParams;
-export type GetRunCommandBody = unknown;
 export type ModifyRunCommandParams = {
   thread_id: string;
   run_id: string;
@@ -3958,7 +3939,6 @@ export type CancelRunCommandParams = {
   run_id: string;
 };
 export type CancelRunCommandInput = CancelRunCommandParams;
-export type CancelRunCommandBody = unknown;
 export type ListRunStepsCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -3974,7 +3954,6 @@ export type ListRunStepsCommandParams = {
 };
 export type ListRunStepsCommandInput = ListRunStepsCommandParams &
   ListRunStepsCommandQuery;
-export type ListRunStepsCommandBody = unknown;
 export type GetRunStepCommandQuery = {
   include?:
     | 'step_details.tool_calls[*].file_search.results[*].content'[]
@@ -3987,7 +3966,6 @@ export type GetRunStepCommandParams = {
 };
 export type GetRunStepCommandInput = GetRunStepCommandParams &
   GetRunStepCommandQuery;
-export type GetRunStepCommandBody = unknown;
 export type ListVectorStoresCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -3995,14 +3973,12 @@ export type ListVectorStoresCommandQuery = {
   before?: string | undefined;
 };
 export type ListVectorStoresCommandInput = ListVectorStoresCommandQuery;
-export type ListVectorStoresCommandBody = unknown;
 export type CreateVectorStoreCommandInput = CreateVectorStoreRequest;
 export type CreateVectorStoreCommandBody = CreateVectorStoreRequest;
 export type GetVectorStoreCommandParams = {
   vector_store_id: string;
 };
 export type GetVectorStoreCommandInput = GetVectorStoreCommandParams;
-export type GetVectorStoreCommandBody = unknown;
 export type ModifyVectorStoreCommandParams = {
   vector_store_id: string;
 };
@@ -4013,7 +3989,6 @@ export type DeleteVectorStoreCommandParams = {
   vector_store_id: string;
 };
 export type DeleteVectorStoreCommandInput = DeleteVectorStoreCommandParams;
-export type DeleteVectorStoreCommandBody = unknown;
 export type ListVectorStoreFilesCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -4026,7 +4001,6 @@ export type ListVectorStoreFilesCommandParams = {
 };
 export type ListVectorStoreFilesCommandInput =
   ListVectorStoreFilesCommandParams & ListVectorStoreFilesCommandQuery;
-export type ListVectorStoreFilesCommandBody = unknown;
 export type CreateVectorStoreFileCommandParams = {
   vector_store_id: string;
 };
@@ -4038,14 +4012,12 @@ export type GetVectorStoreFileCommandParams = {
   file_id: string;
 };
 export type GetVectorStoreFileCommandInput = GetVectorStoreFileCommandParams;
-export type GetVectorStoreFileCommandBody = unknown;
 export type DeleteVectorStoreFileCommandParams = {
   vector_store_id: string;
   file_id: string;
 };
 export type DeleteVectorStoreFileCommandInput =
   DeleteVectorStoreFileCommandParams;
-export type DeleteVectorStoreFileCommandBody = unknown;
 export type CreateVectorStoreFileBatchCommandParams = {
   vector_store_id: string;
 };
@@ -4059,14 +4031,12 @@ export type GetVectorStoreFileBatchCommandParams = {
 };
 export type GetVectorStoreFileBatchCommandInput =
   GetVectorStoreFileBatchCommandParams;
-export type GetVectorStoreFileBatchCommandBody = unknown;
 export type CancelVectorStoreFileBatchCommandParams = {
   vector_store_id: string;
   batch_id: string;
 };
 export type CancelVectorStoreFileBatchCommandInput =
   CancelVectorStoreFileBatchCommandParams;
-export type CancelVectorStoreFileBatchCommandBody = unknown;
 export type ListFilesInVectorStoreBatchCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -4081,25 +4051,20 @@ export type ListFilesInVectorStoreBatchCommandParams = {
 export type ListFilesInVectorStoreBatchCommandInput =
   ListFilesInVectorStoreBatchCommandParams &
     ListFilesInVectorStoreBatchCommandQuery;
-export type ListFilesInVectorStoreBatchCommandBody = unknown;
 export type CreateBatchCommandInput = never;
-export type CreateBatchCommandBody = unknown;
 export type ListBatchesCommandQuery = {
   after?: string | undefined;
   limit?: `${number}` | undefined;
 };
 export type ListBatchesCommandInput = ListBatchesCommandQuery;
-export type ListBatchesCommandBody = unknown;
 export type RetrieveBatchCommandParams = {
   batch_id: string;
 };
 export type RetrieveBatchCommandInput = RetrieveBatchCommandParams;
-export type RetrieveBatchCommandBody = unknown;
 export type CancelBatchCommandParams = {
   batch_id: string;
 };
 export type CancelBatchCommandInput = CancelBatchCommandParams;
-export type CancelBatchCommandBody = unknown;
 export type ListAuditLogsCommandQuery = {
   effective_at?: {
     gt?: number;
@@ -4108,7 +4073,7 @@ export type ListAuditLogsCommandQuery = {
     lte?: number;
   };
   project_ids?: string[] | undefined;
-  event_types?: AuditLogEventTypeEnum[] | undefined;
+  event_types?: AuditLogEventType[] | undefined;
   actor_ids?: string[] | undefined;
   actor_emails?: string[] | undefined;
   resource_ids?: string[] | undefined;
@@ -4117,64 +4082,54 @@ export type ListAuditLogsCommandQuery = {
   before?: string | undefined;
 };
 export type ListAuditLogsCommandInput = ListAuditLogsCommandQuery;
-export type ListAuditLogsCommandBody = unknown;
 export type ListInvitesCommandQuery = {
   limit?: `${number}` | undefined;
   after?: string | undefined;
 };
 export type ListInvitesCommandInput = ListInvitesCommandQuery;
-export type ListInvitesCommandBody = unknown;
 export type InviteUserCommandInput = InviteRequest;
 export type InviteUserCommandBody = InviteRequest;
 export type RetrieveInviteCommandParams = {
   invite_id: string;
 };
 export type RetrieveInviteCommandInput = RetrieveInviteCommandParams;
-export type RetrieveInviteCommandBody = unknown;
 export type DeleteInviteCommandParams = {
   invite_id: string;
 };
 export type DeleteInviteCommandInput = DeleteInviteCommandParams;
-export type DeleteInviteCommandBody = unknown;
 export type ListUsersCommandQuery = {
   limit?: `${number}` | undefined;
   after?: string | undefined;
 };
 export type ListUsersCommandInput = ListUsersCommandQuery;
-export type ListUsersCommandBody = unknown;
 export type RetrieveUserCommandParams = {
   user_id: string;
 };
 export type RetrieveUserCommandInput = RetrieveUserCommandParams;
-export type RetrieveUserCommandBody = unknown;
 export type ModifyUserCommandInput = UserRoleUpdateRequest;
 export type ModifyUserCommandBody = UserRoleUpdateRequest;
 export type DeleteUserCommandParams = {
   user_id: string;
 };
 export type DeleteUserCommandInput = DeleteUserCommandParams;
-export type DeleteUserCommandBody = unknown;
 export type ListProjectsCommandQuery = {
   limit?: `${number}` | undefined;
   after?: string | undefined;
   include_archived?: 'true' | 'false';
 };
 export type ListProjectsCommandInput = ListProjectsCommandQuery;
-export type ListProjectsCommandBody = unknown;
 export type CreateProjectCommandInput = ProjectCreateRequest;
 export type CreateProjectCommandBody = ProjectCreateRequest;
 export type RetrieveProjectCommandParams = {
   project_id: string;
 };
 export type RetrieveProjectCommandInput = RetrieveProjectCommandParams;
-export type RetrieveProjectCommandBody = unknown;
 export type ModifyProjectCommandInput = ProjectUpdateRequest;
 export type ModifyProjectCommandBody = ProjectUpdateRequest;
 export type ArchiveProjectCommandParams = {
   project_id: string;
 };
 export type ArchiveProjectCommandInput = ArchiveProjectCommandParams;
-export type ArchiveProjectCommandBody = unknown;
 export type ListProjectUsersCommandQuery = {
   limit?: `${number}` | undefined;
   after?: string | undefined;
@@ -4184,7 +4139,6 @@ export type ListProjectUsersCommandParams = {
 };
 export type ListProjectUsersCommandInput = ListProjectUsersCommandParams &
   ListProjectUsersCommandQuery;
-export type ListProjectUsersCommandBody = unknown;
 export type CreateProjectUserCommandParams = {
   project_id: string;
 };
@@ -4196,7 +4150,6 @@ export type RetrieveProjectUserCommandParams = {
   user_id: string;
 };
 export type RetrieveProjectUserCommandInput = RetrieveProjectUserCommandParams;
-export type RetrieveProjectUserCommandBody = unknown;
 export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest;
 export type ModifyProjectUserCommandBody = ProjectUserUpdateRequest;
 export type DeleteProjectUserCommandParams = {
@@ -4204,7 +4157,6 @@ export type DeleteProjectUserCommandParams = {
   user_id: string;
 };
 export type DeleteProjectUserCommandInput = DeleteProjectUserCommandParams;
-export type DeleteProjectUserCommandBody = unknown;
 export type ListProjectServiceAccountsCommandQuery = {
   limit?: `${number}` | undefined;
   after?: string | undefined;
@@ -4215,7 +4167,6 @@ export type ListProjectServiceAccountsCommandParams = {
 export type ListProjectServiceAccountsCommandInput =
   ListProjectServiceAccountsCommandParams &
     ListProjectServiceAccountsCommandQuery;
-export type ListProjectServiceAccountsCommandBody = unknown;
 export type CreateProjectServiceAccountCommandParams = {
   project_id: string;
 };
@@ -4229,14 +4180,12 @@ export type RetrieveProjectServiceAccountCommandParams = {
 };
 export type RetrieveProjectServiceAccountCommandInput =
   RetrieveProjectServiceAccountCommandParams;
-export type RetrieveProjectServiceAccountCommandBody = unknown;
 export type DeleteProjectServiceAccountCommandParams = {
   project_id: string;
   service_account_id: string;
 };
 export type DeleteProjectServiceAccountCommandInput =
   DeleteProjectServiceAccountCommandParams;
-export type DeleteProjectServiceAccountCommandBody = unknown;
 export type ListProjectApiKeysCommandQuery = {
   limit?: `${number}` | undefined;
   after?: string | undefined;
@@ -4246,17 +4195,14 @@ export type ListProjectApiKeysCommandParams = {
 };
 export type ListProjectApiKeysCommandInput = ListProjectApiKeysCommandParams &
   ListProjectApiKeysCommandQuery;
-export type ListProjectApiKeysCommandBody = unknown;
 export type RetrieveProjectApiKeyCommandParams = {
   project_id: string;
   key_id: string;
 };
 export type RetrieveProjectApiKeyCommandInput =
   RetrieveProjectApiKeyCommandParams;
-export type RetrieveProjectApiKeyCommandBody = unknown;
 export type DeleteProjectApiKeyCommandParams = {
   project_id: string;
   key_id: string;
 };
 export type DeleteProjectApiKeyCommandInput = DeleteProjectApiKeyCommandParams;
-export type DeleteProjectApiKeyCommandBody = unknown;

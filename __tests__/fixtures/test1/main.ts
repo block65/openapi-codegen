@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:02.777Z
+ * Generated on 2024-10-13T01:58:17.798Z
  *
  */
 import {
@@ -70,7 +70,8 @@ type AllOutputs =
   | PaymentMethod
   | PaymentMethodDeletedLro
   | PaymentMethodIntendedLro
-  | PaymentMethods;
+  | PaymentMethods
+  | undefined;
 
 export class BillingServiceRestApiRestClient extends RestServiceClient<
   AllInputs,

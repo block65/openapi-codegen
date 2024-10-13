@@ -3,11 +3,9 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:01.299Z
+ * Generated on 2024-10-13T01:58:16.299Z
  *
  */
-import type { Jsonifiable, Jsonify } from 'type-fest';
-import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
 
 export type Error = {
   code: number;
@@ -25,16 +23,13 @@ export type FindPetsCommandQuery = {
   limit?: `${number}` | undefined;
 };
 export type FindPetsCommandInput = FindPetsCommandQuery;
-export type FindPetsCommandBody = unknown;
 export type AddPetCommandInput = NewPet;
 export type AddPetCommandBody = NewPet;
 export type FindPetByIdCommandParams = {
   id: `${number}`;
 };
 export type FindPetByIdCommandInput = FindPetByIdCommandParams;
-export type FindPetByIdCommandBody = unknown;
 export type DeletePetCommandParams = {
   id: `${number}`;
 };
 export type DeletePetCommandInput = DeletePetCommandParams;
-export type DeletePetCommandBody = unknown;

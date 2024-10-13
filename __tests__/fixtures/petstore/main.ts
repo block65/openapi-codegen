@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:01.299Z
+ * Generated on 2024-10-13T01:58:16.299Z
  *
  */
 import {
@@ -23,7 +23,7 @@ type AllInputs =
   | DeletePetCommandInput
   | FindPetByIdCommandInput
   | FindPetsCommandInput;
-type AllOutputs = Pet;
+type AllOutputs = Pet | Pet[] | undefined;
 
 export class SwaggerPetstoreRestClient extends RestServiceClient<
   AllInputs,

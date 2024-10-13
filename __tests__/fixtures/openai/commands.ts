@@ -3,308 +3,213 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:05.462Z
+ * Generated on 2024-10-13T01:58:20.017Z
  *
  */
 /** eslint-disable max-classes */
 import { Command } from '@block65/rest-client';
-import type { Jsonifiable } from 'type-fest';
 import type {
-  CreateChatCompletionRequest,
   CreateChatCompletionCommandInput,
   CreateChatCompletionCommandBody,
   CreateChatCompletionResponse,
-  CreateCompletionRequest,
   CreateCompletionCommandInput,
   CreateCompletionCommandBody,
   CreateCompletionResponse,
-  CreateImageRequest,
   CreateImageCommandInput,
   CreateImageCommandBody,
   ImagesResponse,
   CreateImageEditCommandInput,
-  CreateImageEditCommandBody,
   CreateImageVariationCommandInput,
-  CreateImageVariationCommandBody,
-  CreateEmbeddingRequest,
   CreateEmbeddingCommandInput,
   CreateEmbeddingCommandBody,
   CreateEmbeddingResponse,
-  CreateSpeechRequest,
   CreateSpeechCommandInput,
   CreateSpeechCommandBody,
   CreateTranscriptionCommandInput,
-  CreateTranscriptionCommandBody,
   CreateTranslationCommandInput,
-  CreateTranslationCommandBody,
   ListFilesCommandQuery,
   ListFilesCommandInput,
-  ListFilesCommandBody,
   ListFilesResponse,
   CreateFileCommandInput,
-  CreateFileCommandBody,
   OpenAiFile,
   DeleteFileCommandInput,
-  DeleteFileCommandBody,
   DeleteFileResponse,
   RetrieveFileCommandInput,
-  RetrieveFileCommandBody,
   DownloadFileCommandInput,
-  DownloadFileCommandBody,
-  CreateUploadRequest,
   CreateUploadCommandInput,
   CreateUploadCommandBody,
   Upload,
   AddUploadPartCommandInput,
-  AddUploadPartCommandBody,
   UploadPart,
-  CompleteUploadRequest,
   CompleteUploadCommandInput,
   CompleteUploadCommandBody,
   CancelUploadCommandInput,
-  CancelUploadCommandBody,
-  CreateFineTuningJobRequest,
   CreateFineTuningJobCommandInput,
   CreateFineTuningJobCommandBody,
   FineTuningJob,
   ListPaginatedFineTuningJobsCommandQuery,
   ListPaginatedFineTuningJobsCommandInput,
-  ListPaginatedFineTuningJobsCommandBody,
   ListPaginatedFineTuningJobsResponse,
   RetrieveFineTuningJobCommandInput,
-  RetrieveFineTuningJobCommandBody,
   ListFineTuningEventsCommandQuery,
   ListFineTuningEventsCommandInput,
-  ListFineTuningEventsCommandBody,
   ListFineTuningJobEventsResponse,
   CancelFineTuningJobCommandInput,
-  CancelFineTuningJobCommandBody,
   ListFineTuningJobCheckpointsCommandQuery,
   ListFineTuningJobCheckpointsCommandInput,
-  ListFineTuningJobCheckpointsCommandBody,
   ListFineTuningJobCheckpointsResponse,
   ListModelsCommandInput,
-  ListModelsCommandBody,
   ListModelsResponse,
   RetrieveModelCommandInput,
-  RetrieveModelCommandBody,
   Model,
   DeleteModelCommandInput,
-  DeleteModelCommandBody,
   DeleteModelResponse,
-  CreateModerationRequest,
   CreateModerationCommandInput,
   CreateModerationCommandBody,
   CreateModerationResponse,
   ListAssistantsCommandQuery,
   ListAssistantsCommandInput,
-  ListAssistantsCommandBody,
   ListAssistantsResponse,
-  CreateAssistantRequest,
   CreateAssistantCommandInput,
   CreateAssistantCommandBody,
   AssistantObject,
   GetAssistantCommandInput,
-  GetAssistantCommandBody,
-  ModifyAssistantRequest,
   ModifyAssistantCommandInput,
   ModifyAssistantCommandBody,
   DeleteAssistantCommandInput,
-  DeleteAssistantCommandBody,
   DeleteAssistantResponse,
-  CreateThreadRequest,
   CreateThreadCommandInput,
   CreateThreadCommandBody,
   ThreadObject,
   GetThreadCommandInput,
-  GetThreadCommandBody,
-  ModifyThreadRequest,
   ModifyThreadCommandInput,
   ModifyThreadCommandBody,
   DeleteThreadCommandInput,
-  DeleteThreadCommandBody,
   DeleteThreadResponse,
   ListMessagesCommandQuery,
   ListMessagesCommandInput,
-  ListMessagesCommandBody,
   ListMessagesResponse,
-  CreateMessageRequest,
   CreateMessageCommandInput,
   CreateMessageCommandBody,
   MessageObject,
   GetMessageCommandInput,
-  GetMessageCommandBody,
-  ModifyMessageRequest,
   ModifyMessageCommandInput,
   ModifyMessageCommandBody,
   DeleteMessageCommandInput,
-  DeleteMessageCommandBody,
   DeleteMessageResponse,
-  CreateThreadAndRunRequest,
   CreateThreadAndRunCommandInput,
   CreateThreadAndRunCommandBody,
   RunObject,
   ListRunsCommandQuery,
   ListRunsCommandInput,
-  ListRunsCommandBody,
   ListRunsResponse,
   CreateRunCommandQuery,
-  CreateRunRequest,
   CreateRunCommandInput,
   CreateRunCommandBody,
   GetRunCommandInput,
-  GetRunCommandBody,
-  ModifyRunRequest,
   ModifyRunCommandInput,
   ModifyRunCommandBody,
-  SubmitToolOutputsRunRequest,
   SubmitToolOuputsToRunCommandInput,
   SubmitToolOuputsToRunCommandBody,
   CancelRunCommandInput,
-  CancelRunCommandBody,
   ListRunStepsCommandQuery,
   ListRunStepsCommandInput,
-  ListRunStepsCommandBody,
   ListRunStepsResponse,
   GetRunStepCommandQuery,
   GetRunStepCommandInput,
-  GetRunStepCommandBody,
   RunStepObject,
   ListVectorStoresCommandQuery,
   ListVectorStoresCommandInput,
-  ListVectorStoresCommandBody,
   ListVectorStoresResponse,
-  CreateVectorStoreRequest,
   CreateVectorStoreCommandInput,
   CreateVectorStoreCommandBody,
   VectorStoreObject,
   GetVectorStoreCommandInput,
-  GetVectorStoreCommandBody,
-  UpdateVectorStoreRequest,
   ModifyVectorStoreCommandInput,
   ModifyVectorStoreCommandBody,
   DeleteVectorStoreCommandInput,
-  DeleteVectorStoreCommandBody,
   DeleteVectorStoreResponse,
   ListVectorStoreFilesCommandQuery,
   ListVectorStoreFilesCommandInput,
-  ListVectorStoreFilesCommandBody,
   ListVectorStoreFilesResponse,
-  CreateVectorStoreFileRequest,
   CreateVectorStoreFileCommandInput,
   CreateVectorStoreFileCommandBody,
   VectorStoreFileObject,
   GetVectorStoreFileCommandInput,
-  GetVectorStoreFileCommandBody,
   DeleteVectorStoreFileCommandInput,
-  DeleteVectorStoreFileCommandBody,
   DeleteVectorStoreFileResponse,
-  CreateVectorStoreFileBatchRequest,
   CreateVectorStoreFileBatchCommandInput,
   CreateVectorStoreFileBatchCommandBody,
   VectorStoreFileBatchObject,
   GetVectorStoreFileBatchCommandInput,
-  GetVectorStoreFileBatchCommandBody,
   CancelVectorStoreFileBatchCommandInput,
-  CancelVectorStoreFileBatchCommandBody,
   ListFilesInVectorStoreBatchCommandQuery,
   ListFilesInVectorStoreBatchCommandInput,
-  ListFilesInVectorStoreBatchCommandBody,
   CreateBatchCommandInput,
-  CreateBatchCommandBody,
   Batch,
   ListBatchesCommandQuery,
   ListBatchesCommandInput,
-  ListBatchesCommandBody,
   ListBatchesResponse,
   RetrieveBatchCommandInput,
-  RetrieveBatchCommandBody,
   CancelBatchCommandInput,
-  CancelBatchCommandBody,
   ListAuditLogsCommandQuery,
   ListAuditLogsCommandInput,
-  ListAuditLogsCommandBody,
   ListAuditLogsResponse,
   ListInvitesCommandQuery,
   ListInvitesCommandInput,
-  ListInvitesCommandBody,
   InviteListResponse,
-  InviteRequest,
   InviteUserCommandInput,
   InviteUserCommandBody,
   Invite,
   RetrieveInviteCommandInput,
-  RetrieveInviteCommandBody,
   DeleteInviteCommandInput,
-  DeleteInviteCommandBody,
   InviteDeleteResponse,
   ListUsersCommandQuery,
   ListUsersCommandInput,
-  ListUsersCommandBody,
   UserListResponse,
   RetrieveUserCommandInput,
-  RetrieveUserCommandBody,
   User,
-  UserRoleUpdateRequest,
   ModifyUserCommandInput,
   ModifyUserCommandBody,
   DeleteUserCommandInput,
-  DeleteUserCommandBody,
   UserDeleteResponse,
   ListProjectsCommandQuery,
   ListProjectsCommandInput,
-  ListProjectsCommandBody,
   ProjectListResponse,
-  ProjectCreateRequest,
   CreateProjectCommandInput,
   CreateProjectCommandBody,
   Project,
   RetrieveProjectCommandInput,
-  RetrieveProjectCommandBody,
-  ProjectUpdateRequest,
   ModifyProjectCommandInput,
   ModifyProjectCommandBody,
   ArchiveProjectCommandInput,
-  ArchiveProjectCommandBody,
   ListProjectUsersCommandQuery,
   ListProjectUsersCommandInput,
-  ListProjectUsersCommandBody,
   ProjectUserListResponse,
-  ProjectUserCreateRequest,
   CreateProjectUserCommandInput,
   CreateProjectUserCommandBody,
   ProjectUser,
   RetrieveProjectUserCommandInput,
-  RetrieveProjectUserCommandBody,
-  ProjectUserUpdateRequest,
   ModifyProjectUserCommandInput,
   ModifyProjectUserCommandBody,
   DeleteProjectUserCommandInput,
-  DeleteProjectUserCommandBody,
   ProjectUserDeleteResponse,
   ListProjectServiceAccountsCommandQuery,
   ListProjectServiceAccountsCommandInput,
-  ListProjectServiceAccountsCommandBody,
   ProjectServiceAccountListResponse,
-  ProjectServiceAccountCreateRequest,
   CreateProjectServiceAccountCommandInput,
   CreateProjectServiceAccountCommandBody,
   ProjectServiceAccountCreateResponse,
   RetrieveProjectServiceAccountCommandInput,
-  RetrieveProjectServiceAccountCommandBody,
   ProjectServiceAccount,
   DeleteProjectServiceAccountCommandInput,
-  DeleteProjectServiceAccountCommandBody,
   ProjectServiceAccountDeleteResponse,
   ListProjectApiKeysCommandQuery,
   ListProjectApiKeysCommandInput,
-  ListProjectApiKeysCommandBody,
   ProjectApiKeyListResponse,
   RetrieveProjectApiKeyCommandInput,
-  RetrieveProjectApiKeyCommandBody,
   ProjectApiKey,
   DeleteProjectApiKeyCommandInput,
-  DeleteProjectApiKeyCommandBody,
   ProjectApiKeyDeleteResponse,
 } from './types.js';
 
@@ -370,14 +275,9 @@ export class CreateImageCommand extends Command<
 export class CreateImageEditCommand extends Command<
   CreateImageEditCommandInput,
   ImagesResponse,
-  CreateImageEditCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor(input: CreateImageEditCommandInput) {
-    const body = input;
-    super(`/images/edits`);
-  }
 }
 
 /**
@@ -388,14 +288,9 @@ export class CreateImageEditCommand extends Command<
 export class CreateImageVariationCommand extends Command<
   CreateImageVariationCommandInput,
   ImagesResponse,
-  CreateImageVariationCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor(input: CreateImageVariationCommandInput) {
-    const body = input;
-    super(`/images/variations`);
-  }
 }
 
 /**
@@ -442,14 +337,9 @@ export class CreateSpeechCommand extends Command<
 export class CreateTranscriptionCommand extends Command<
   CreateTranscriptionCommandInput,
   unknown,
-  CreateTranscriptionCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor(input: CreateTranscriptionCommandInput) {
-    const body = input;
-    super(`/audio/transcriptions`);
-  }
 }
 
 /**
@@ -460,14 +350,9 @@ export class CreateTranscriptionCommand extends Command<
 export class CreateTranslationCommand extends Command<
   CreateTranslationCommandInput,
   unknown,
-  CreateTranslationCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor(input: CreateTranslationCommandInput) {
-    const body = input;
-    super(`/audio/translations`);
-  }
 }
 
 /**
@@ -478,7 +363,7 @@ export class CreateTranslationCommand extends Command<
 export class ListFilesCommand extends Command<
   ListFilesCommandInput,
   ListFilesResponse,
-  ListFilesCommandBody,
+  never,
   ListFilesCommandQuery
 > {
   public override method = 'get' as const;
@@ -515,14 +400,9 @@ export class ListFilesCommand extends Command<
 export class CreateFileCommand extends Command<
   CreateFileCommandInput,
   OpenAiFile,
-  CreateFileCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor(input: CreateFileCommandInput) {
-    const body = input;
-    super(`/files`);
-  }
 }
 
 /**
@@ -533,7 +413,7 @@ export class CreateFileCommand extends Command<
 export class DeleteFileCommand extends Command<
   DeleteFileCommandInput,
   DeleteFileResponse,
-  DeleteFileCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -551,7 +431,7 @@ export class DeleteFileCommand extends Command<
 export class RetrieveFileCommand extends Command<
   RetrieveFileCommandInput,
   OpenAiFile,
-  RetrieveFileCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -569,7 +449,7 @@ export class RetrieveFileCommand extends Command<
 export class DownloadFileCommand extends Command<
   DownloadFileCommandInput,
   unknown,
-  DownloadFileCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -630,7 +510,7 @@ export class CreateUploadCommand extends Command<
 export class AddUploadPartCommand extends Command<
   AddUploadPartCommandInput,
   UploadPart,
-  AddUploadPartCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -677,7 +557,7 @@ export class CompleteUploadCommand extends Command<
 export class CancelUploadCommand extends Command<
   CancelUploadCommandInput,
   Upload,
-  CancelUploadCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -719,7 +599,7 @@ export class CreateFineTuningJobCommand extends Command<
 export class ListPaginatedFineTuningJobsCommand extends Command<
   ListPaginatedFineTuningJobsCommandInput,
   ListPaginatedFineTuningJobsResponse,
-  ListPaginatedFineTuningJobsCommandBody,
+  never,
   ListPaginatedFineTuningJobsCommandQuery
 > {
   public override method = 'get' as const;
@@ -740,7 +620,7 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
 export class RetrieveFineTuningJobCommand extends Command<
   RetrieveFineTuningJobCommandInput,
   FineTuningJob,
-  RetrieveFineTuningJobCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -758,7 +638,7 @@ export class RetrieveFineTuningJobCommand extends Command<
 export class ListFineTuningEventsCommand extends Command<
   ListFineTuningEventsCommandInput,
   ListFineTuningJobEventsResponse,
-  ListFineTuningEventsCommandBody,
+  never,
   ListFineTuningEventsCommandQuery
 > {
   public override method = 'get' as const;
@@ -780,7 +660,7 @@ export class ListFineTuningEventsCommand extends Command<
 export class CancelFineTuningJobCommand extends Command<
   CancelFineTuningJobCommandInput,
   FineTuningJob,
-  CancelFineTuningJobCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -798,7 +678,7 @@ export class CancelFineTuningJobCommand extends Command<
 export class ListFineTuningJobCheckpointsCommand extends Command<
   ListFineTuningJobCheckpointsCommandInput,
   ListFineTuningJobCheckpointsResponse,
-  ListFineTuningJobCheckpointsCommandBody,
+  never,
   ListFineTuningJobCheckpointsCommandQuery
 > {
   public override method = 'get' as const;
@@ -821,14 +701,9 @@ export class ListFineTuningJobCheckpointsCommand extends Command<
 export class ListModelsCommand extends Command<
   ListModelsCommandInput,
   ListModelsResponse,
-  ListModelsCommandBody
+  never
 > {
   public override method = 'get' as const;
-
-  constructor(input: ListModelsCommandInput) {
-    const body = input;
-    super(`/models`);
-  }
 }
 
 /**
@@ -840,7 +715,7 @@ export class ListModelsCommand extends Command<
 export class RetrieveModelCommand extends Command<
   RetrieveModelCommandInput,
   Model,
-  RetrieveModelCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -859,7 +734,7 @@ export class RetrieveModelCommand extends Command<
 export class DeleteModelCommand extends Command<
   DeleteModelCommandInput,
   DeleteModelResponse,
-  DeleteModelCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -896,7 +771,7 @@ export class CreateModerationCommand extends Command<
 export class ListAssistantsCommand extends Command<
   ListAssistantsCommandInput,
   ListAssistantsResponse,
-  ListAssistantsCommandBody,
+  never,
   ListAssistantsCommandQuery
 > {
   public override method = 'get' as const;
@@ -933,7 +808,7 @@ export class CreateAssistantCommand extends Command<
 export class GetAssistantCommand extends Command<
   GetAssistantCommandInput,
   AssistantObject,
-  GetAssistantCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -969,7 +844,7 @@ export class ModifyAssistantCommand extends Command<
 export class DeleteAssistantCommand extends Command<
   DeleteAssistantCommandInput,
   DeleteAssistantResponse,
-  DeleteAssistantCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1005,7 +880,7 @@ export class CreateThreadCommand extends Command<
 export class GetThreadCommand extends Command<
   GetThreadCommandInput,
   ThreadObject,
-  GetThreadCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1041,7 +916,7 @@ export class ModifyThreadCommand extends Command<
 export class DeleteThreadCommand extends Command<
   DeleteThreadCommandInput,
   DeleteThreadResponse,
-  DeleteThreadCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1059,7 +934,7 @@ export class DeleteThreadCommand extends Command<
 export class ListMessagesCommand extends Command<
   ListMessagesCommandInput,
   ListMessagesResponse,
-  ListMessagesCommandBody,
+  never,
   ListMessagesCommandQuery
 > {
   public override method = 'get' as const;
@@ -1102,7 +977,7 @@ export class CreateMessageCommand extends Command<
 export class GetMessageCommand extends Command<
   GetMessageCommandInput,
   MessageObject,
-  GetMessageCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1138,7 +1013,7 @@ export class ModifyMessageCommand extends Command<
 export class DeleteMessageCommand extends Command<
   DeleteMessageCommandInput,
   DeleteMessageResponse,
-  DeleteMessageCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1174,7 +1049,7 @@ export class CreateThreadAndRunCommand extends Command<
 export class ListRunsCommand extends Command<
   ListRunsCommandInput,
   ListRunsResponse,
-  ListRunsCommandBody,
+  never,
   ListRunsCommandQuery
 > {
   public override method = 'get' as const;
@@ -1217,7 +1092,7 @@ export class CreateRunCommand extends Command<
 export class GetRunCommand extends Command<
   GetRunCommandInput,
   RunObject,
-  GetRunCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1274,7 +1149,7 @@ export class SubmitToolOuputsToRunCommand extends Command<
 export class CancelRunCommand extends Command<
   CancelRunCommandInput,
   RunObject,
-  CancelRunCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -1292,7 +1167,7 @@ export class CancelRunCommand extends Command<
 export class ListRunStepsCommand extends Command<
   ListRunStepsCommandInput,
   ListRunStepsResponse,
-  ListRunStepsCommandBody,
+  never,
   ListRunStepsCommandQuery
 > {
   public override method = 'get' as const;
@@ -1317,7 +1192,7 @@ export class ListRunStepsCommand extends Command<
 export class GetRunStepCommand extends Command<
   GetRunStepCommandInput,
   RunStepObject,
-  GetRunStepCommandBody,
+  never,
   GetRunStepCommandQuery
 > {
   public override method = 'get' as const;
@@ -1338,7 +1213,7 @@ export class GetRunStepCommand extends Command<
 export class ListVectorStoresCommand extends Command<
   ListVectorStoresCommandInput,
   ListVectorStoresResponse,
-  ListVectorStoresCommandBody,
+  never,
   ListVectorStoresCommandQuery
 > {
   public override method = 'get' as const;
@@ -1375,7 +1250,7 @@ export class CreateVectorStoreCommand extends Command<
 export class GetVectorStoreCommand extends Command<
   GetVectorStoreCommandInput,
   VectorStoreObject,
-  GetVectorStoreCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1411,7 +1286,7 @@ export class ModifyVectorStoreCommand extends Command<
 export class DeleteVectorStoreCommand extends Command<
   DeleteVectorStoreCommandInput,
   DeleteVectorStoreResponse,
-  DeleteVectorStoreCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1429,7 +1304,7 @@ export class DeleteVectorStoreCommand extends Command<
 export class ListVectorStoreFilesCommand extends Command<
   ListVectorStoreFilesCommandInput,
   ListVectorStoreFilesResponse,
-  ListVectorStoreFilesCommandBody,
+  never,
   ListVectorStoreFilesCommandQuery
 > {
   public override method = 'get' as const;
@@ -1473,7 +1348,7 @@ export class CreateVectorStoreFileCommand extends Command<
 export class GetVectorStoreFileCommand extends Command<
   GetVectorStoreFileCommandInput,
   VectorStoreFileObject,
-  GetVectorStoreFileCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1493,7 +1368,7 @@ export class GetVectorStoreFileCommand extends Command<
 export class DeleteVectorStoreFileCommand extends Command<
   DeleteVectorStoreFileCommandInput,
   DeleteVectorStoreFileResponse,
-  DeleteVectorStoreFileCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1529,7 +1404,7 @@ export class CreateVectorStoreFileBatchCommand extends Command<
 export class GetVectorStoreFileBatchCommand extends Command<
   GetVectorStoreFileBatchCommandInput,
   VectorStoreFileBatchObject,
-  GetVectorStoreFileBatchCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1548,7 +1423,7 @@ export class GetVectorStoreFileBatchCommand extends Command<
 export class CancelVectorStoreFileBatchCommand extends Command<
   CancelVectorStoreFileBatchCommandInput,
   VectorStoreFileBatchObject,
-  CancelVectorStoreFileBatchCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -1566,7 +1441,7 @@ export class CancelVectorStoreFileBatchCommand extends Command<
 export class ListFilesInVectorStoreBatchCommand extends Command<
   ListFilesInVectorStoreBatchCommandInput,
   ListVectorStoreFilesResponse,
-  ListFilesInVectorStoreBatchCommandBody,
+  never,
   ListFilesInVectorStoreBatchCommandQuery
 > {
   public override method = 'get' as const;
@@ -1590,14 +1465,9 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
 export class CreateBatchCommand extends Command<
   CreateBatchCommandInput,
   Batch,
-  CreateBatchCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor(input: CreateBatchCommandInput) {
-    const body = input;
-    super(`/batches`);
-  }
 }
 
 /**
@@ -1608,7 +1478,7 @@ export class CreateBatchCommand extends Command<
 export class ListBatchesCommand extends Command<
   ListBatchesCommandInput,
   ListBatchesResponse,
-  ListBatchesCommandBody,
+  never,
   ListBatchesCommandQuery
 > {
   public override method = 'get' as const;
@@ -1627,7 +1497,7 @@ export class ListBatchesCommand extends Command<
 export class RetrieveBatchCommand extends Command<
   RetrieveBatchCommandInput,
   Batch,
-  RetrieveBatchCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1647,7 +1517,7 @@ export class RetrieveBatchCommand extends Command<
 export class CancelBatchCommand extends Command<
   CancelBatchCommandInput,
   Batch,
-  CancelBatchCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -1665,7 +1535,7 @@ export class CancelBatchCommand extends Command<
 export class ListAuditLogsCommand extends Command<
   ListAuditLogsCommandInput,
   ListAuditLogsResponse,
-  ListAuditLogsCommandBody,
+  never,
   ListAuditLogsCommandQuery
 > {
   public override method = 'get' as const;
@@ -1704,7 +1574,7 @@ export class ListAuditLogsCommand extends Command<
 export class ListInvitesCommand extends Command<
   ListInvitesCommandInput,
   InviteListResponse,
-  ListInvitesCommandBody,
+  never,
   ListInvitesCommandQuery
 > {
   public override method = 'get' as const;
@@ -1742,7 +1612,7 @@ export class InviteUserCommand extends Command<
 export class RetrieveInviteCommand extends Command<
   RetrieveInviteCommandInput,
   Invite,
-  RetrieveInviteCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1761,7 +1631,7 @@ export class RetrieveInviteCommand extends Command<
 export class DeleteInviteCommand extends Command<
   DeleteInviteCommandInput,
   InviteDeleteResponse,
-  DeleteInviteCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1779,7 +1649,7 @@ export class DeleteInviteCommand extends Command<
 export class ListUsersCommand extends Command<
   ListUsersCommandInput,
   UserListResponse,
-  ListUsersCommandBody,
+  never,
   ListUsersCommandQuery
 > {
   public override method = 'get' as const;
@@ -1798,7 +1668,7 @@ export class ListUsersCommand extends Command<
 export class RetrieveUserCommand extends Command<
   RetrieveUserCommandInput,
   User,
-  RetrieveUserCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1834,7 +1704,7 @@ export class ModifyUserCommand extends Command<
 export class DeleteUserCommand extends Command<
   DeleteUserCommandInput,
   UserDeleteResponse,
-  DeleteUserCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -1852,7 +1722,7 @@ export class DeleteUserCommand extends Command<
 export class ListProjectsCommand extends Command<
   ListProjectsCommandInput,
   ProjectListResponse,
-  ListProjectsCommandBody,
+  never,
   ListProjectsCommandQuery
 > {
   public override method = 'get' as const;
@@ -1894,7 +1764,7 @@ export class CreateProjectCommand extends Command<
 export class RetrieveProjectCommand extends Command<
   RetrieveProjectCommandInput,
   Project,
-  RetrieveProjectCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -1931,7 +1801,7 @@ export class ModifyProjectCommand extends Command<
 export class ArchiveProjectCommand extends Command<
   ArchiveProjectCommandInput,
   Project,
-  ArchiveProjectCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -1949,7 +1819,7 @@ export class ArchiveProjectCommand extends Command<
 export class ListProjectUsersCommand extends Command<
   ListProjectUsersCommandInput,
   ProjectUserListResponse,
-  ListProjectUsersCommandBody,
+  never,
   ListProjectUsersCommandQuery
 > {
   public override method = 'get' as const;
@@ -1990,7 +1860,7 @@ export class CreateProjectUserCommand extends Command<
 export class RetrieveProjectUserCommand extends Command<
   RetrieveProjectUserCommandInput,
   ProjectUser,
-  RetrieveProjectUserCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -2026,7 +1896,7 @@ export class ModifyProjectUserCommand extends Command<
 export class DeleteProjectUserCommand extends Command<
   DeleteProjectUserCommandInput,
   ProjectUserDeleteResponse,
-  DeleteProjectUserCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -2044,7 +1914,7 @@ export class DeleteProjectUserCommand extends Command<
 export class ListProjectServiceAccountsCommand extends Command<
   ListProjectServiceAccountsCommandInput,
   ProjectServiceAccountListResponse,
-  ListProjectServiceAccountsCommandBody,
+  never,
   ListProjectServiceAccountsCommandQuery
 > {
   public override method = 'get' as const;
@@ -2085,7 +1955,7 @@ export class CreateProjectServiceAccountCommand extends Command<
 export class RetrieveProjectServiceAccountCommand extends Command<
   RetrieveProjectServiceAccountCommandInput,
   ProjectServiceAccount,
-  RetrieveProjectServiceAccountCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -2105,7 +1975,7 @@ export class RetrieveProjectServiceAccountCommand extends Command<
 export class DeleteProjectServiceAccountCommand extends Command<
   DeleteProjectServiceAccountCommandInput,
   ProjectServiceAccountDeleteResponse,
-  DeleteProjectServiceAccountCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -2125,7 +1995,7 @@ export class DeleteProjectServiceAccountCommand extends Command<
 export class ListProjectApiKeysCommand extends Command<
   ListProjectApiKeysCommandInput,
   ProjectApiKeyListResponse,
-  ListProjectApiKeysCommandBody,
+  never,
   ListProjectApiKeysCommandQuery
 > {
   public override method = 'get' as const;
@@ -2147,7 +2017,7 @@ export class ListProjectApiKeysCommand extends Command<
 export class RetrieveProjectApiKeyCommand extends Command<
   RetrieveProjectApiKeyCommandInput,
   ProjectApiKey,
-  RetrieveProjectApiKeyCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -2165,7 +2035,7 @@ export class RetrieveProjectApiKeyCommand extends Command<
 export class DeleteProjectApiKeyCommand extends Command<
   DeleteProjectApiKeyCommandInput,
   ProjectApiKeyDeleteResponse,
-  DeleteProjectApiKeyCommandBody
+  never
 > {
   public override method = 'delete' as const;
 

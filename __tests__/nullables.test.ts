@@ -3,7 +3,7 @@ import { processOpenApiDocument } from '../lib/process-document.js';
 
 test('nullables', async () => {
   const result = await processOpenApiDocument(
-    '/tmp', // if we dont call .save() it doesnt matter
+    '/tmp/like-you-know-whatever', // if we dont call .save() it doesnt matter what this path is
     {
       openapi: '3.0.0',
       info: {

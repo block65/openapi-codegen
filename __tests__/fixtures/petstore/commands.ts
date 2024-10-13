@@ -3,24 +3,19 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:01.299Z
+ * Generated on 2024-10-13T01:58:16.299Z
  *
  */
 /** eslint-disable max-classes */
 import { Command } from '@block65/rest-client';
-import type { Jsonifiable } from 'type-fest';
 import type {
   FindPetsCommandQuery,
   FindPetsCommandInput,
-  FindPetsCommandBody,
   Pet,
-  NewPet,
   AddPetCommandInput,
   AddPetCommandBody,
   FindPetByIdCommandInput,
-  FindPetByIdCommandBody,
   DeletePetCommandInput,
-  DeletePetCommandBody,
 } from './types.js';
 
 /**
@@ -52,7 +47,7 @@ import type {
 export class FindPetsCommand extends Command<
   FindPetsCommandInput,
   Pet[],
-  FindPetsCommandBody,
+  never,
   FindPetsCommandQuery
 > {
   public override method = 'get' as const;
@@ -88,7 +83,7 @@ export class AddPetCommand extends Command<
 export class FindPetByIdCommand extends Command<
   FindPetByIdCommandInput,
   Pet,
-  FindPetByIdCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -104,8 +99,8 @@ export class FindPetByIdCommand extends Command<
  */
 export class DeletePetCommand extends Command<
   DeletePetCommandInput,
-  unknown,
-  DeletePetCommandBody
+  undefined,
+  never
 > {
   public override method = 'delete' as const;
 

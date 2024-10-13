@@ -18,9 +18,25 @@ import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
   castToValidJsIdentifier,
   getDependents,
+  iife,
   pascalCase,
   wordWrap,
 } from './utils.js';
+
+const neverKeyword = 'never' as const;
+// function isNeverKeyword(type: TypeAliasDeclaration) {
+//   return type?.getTypeNode()?.getKindName() === neverKeyword;
+// }
+
+const unspecifiedKeyword = 'unknown' as const;
+function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
+  return type?.getTypeNode()?.getKindName() === unspecifiedKeyword;
+}
+
+const emptyKeyword = 'undefined' as const;
+// function isEmptyKeyword(type: TypeAliasDeclaration) {
+//   return type?.getTypeNode()?.getKindName() === emptyKeyword;
+// }
 
 // the union/intersect helpers keep typescript happy due to ts-morph typings
 function createIntersection(...types: (string | undefined)[]) {
@@ -29,7 +45,7 @@ function createIntersection(...types: (string | undefined)[]) {
   return (
     (type1 && type2
       ? Writers.intersectionType(type1, type2, ...typeX)
-      : type1) || 'never'
+      : type1) || neverKeyword
   );
 }
 
@@ -41,12 +57,6 @@ function createUnion(...types: (string | undefined)[]) {
     .sort((a, b) => a.localeCompare(b));
   return type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1;
 }
-
-function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
-  return type?.getTypeNode()?.getKind() === SyntaxKind.UnknownKeyword;
-}
-
-const unspecifiedKeyword = 'unknown' as const;
 
 export async function processOpenApiDocument(
   outputDir: string,
@@ -77,7 +87,10 @@ export async function processOpenApiDocument(
   });
 
   const outputTypes = new Set<
-    InterfaceDeclaration | TypeAliasDeclaration | typeof unspecifiedKeyword
+    | InterfaceDeclaration
+    | TypeAliasDeclaration
+    | typeof unspecifiedKeyword
+    | string
   >();
 
   const refs = await $RefParser.resolve(schema);
@@ -195,12 +208,13 @@ export async function processOpenApiDocument(
         ) {
           const pathParameters: OpenAPIV3.ParameterObject[] = [];
 
-          const operationId = pascalCase(
-            `${operationObject.operationId.replace(/command$/i, '')} Command`,
+          const commandName = pascalCase(
+            operationObject.operationId.replace(/command$/i, ''),
+            'Command',
           );
 
           const commandClassDeclaration = commandsFile.addClass({
-            name: operationId,
+            name: commandName,
             isExported: true,
             extends: 'Command',
             properties: [
@@ -212,13 +226,10 @@ export async function processOpenApiDocument(
               },
             ],
           });
-          const ctor = commandClassDeclaration.addConstructor();
-
-          // classs.getExtends()?.addTypeArguments(['never', 'never']);
 
           const jsDocStructure = {
             description: `\n${wordWrap(
-              operationObject.description || operationId,
+              operationObject.description || commandName,
             )}\n`,
 
             tags: [
@@ -278,7 +289,8 @@ export async function processOpenApiDocument(
             queryParameters.length > 0
               ? typesFile.addTypeAlias({
                   name: pascalCase(
-                    `${commandClassDeclaration.getName() || 'INVALID'}Query`,
+                    commandClassDeclaration.getName() || 'INVALID',
+                    'Query',
                   ),
                   isExported: true,
                   type: Writers.objectType({
@@ -312,10 +324,23 @@ export async function processOpenApiDocument(
                         return type;
                       }
 
+                      return {
+                        // ...type,
+                        name,
+                        // query parameters need to allow undefined due to the
+                        // rest client spreading all of the parameters
+                        hasQuestionToken: true,
+                        type:
+                          // I dont know how to do nested writer functions
+                          typeof type.type === 'function'
+                            ? type.type
+                            : Writers.unionType(`${type.type}`, 'undefined'),
+                      };
                     }),
                   }),
                 })
               : undefined;
+
           ensureImport(queryType);
 
           const requestBodyObjectJson =
@@ -341,7 +366,7 @@ export async function processOpenApiDocument(
             requestBodyObjectJsonSchema &&
             typesAndInterfaces.get(requestBodyObjectJsonSchema.$ref);
 
-          ensureImport(bodyType);
+          // ensureImport(bodyType);
 
           // const paramsParamName = 'parameters';
           // if (bodyType) {
@@ -394,10 +419,7 @@ export async function processOpenApiDocument(
               : null;
 
           const inputType = typesFile.addTypeAlias({
-            name: pascalCase(
-              commandClassDeclaration.getName() || 'Invalid',
-              'Input',
-            ),
+            name: pascalCase(commandClassDeclaration.getName() || '', 'Input'),
             type: createIntersection(
               bodyType?.getName(),
               paramsType?.getName(),
@@ -407,31 +429,22 @@ export async function processOpenApiDocument(
           });
           ensureImport(inputType);
 
-          const inputBodyType = typesFile.addTypeAlias({
-            name: pascalCase(
-              `${commandClassDeclaration.getName() || 'INVALID'}Body`,
-            ),
-            type: bodyType?.getName() || unspecifiedKeyword, // createIntersection(bodyType?.getName(), queryType?.getName()),
-            isExported: true,
-          });
+          const inputBodyType =
+            bodyType &&
+            typesFile.addTypeAlias({
+              name: pascalCase(commandClassDeclaration.getName() || '', 'Body'),
+              type: bodyType.getName() || unspecifiedKeyword,
+              isExported: true,
+            });
 
-          ensureImport(inputBodyType);
+          if (inputBodyType) {
+            ensureImport(inputBodyType);
+          }
 
           // CommandInput
           commandClassDeclaration
             .getExtends()
-            ?.addTypeArgument(
-              isUnspecifiedKeyword(inputType)
-                ? unspecifiedKeyword
-                : inputType.getName(),
-            );
-
-          if (!isUnspecifiedKeyword(inputType)) {
-            ctor.addParameter({
-              name: 'input',
-              type: inputType.getName(),
-            });
-          }
+            ?.addTypeArgument(inputType?.getName() || unspecifiedKeyword);
 
           // if (queryType && !isVoidKeyword(queryType)) {
           //   ctor.addParameter({
@@ -474,7 +487,9 @@ export async function processOpenApiDocument(
             if (statusCode === '204') {
               commandClassDeclaration
                 .getExtends()
-                ?.addTypeArgument(unspecifiedKeyword);
+                ?.addTypeArgument(emptyKeyword);
+
+              outputTypes.add(emptyKeyword);
               break;
             }
 
@@ -510,8 +525,13 @@ export async function processOpenApiDocument(
                 arrayRef ? '[]' : ''
               }`;
 
-              const retVal = `${outputTypeName}`;
-              commandClassDeclaration.getExtends()?.addTypeArgument(retVal);
+              if (arrayRef) {
+                outputTypes.add(outputTypeName);
+              }
+
+              commandClassDeclaration
+                .getExtends()
+                ?.addTypeArgument(`${outputTypeName}`);
 
               // jsdoc.addTag({
               //   tagName: 'returns',
@@ -532,7 +552,9 @@ export async function processOpenApiDocument(
           // body
           commandClassDeclaration
             .getExtends()
-            ?.addTypeArgument(inputBodyType.getName());
+            ?.addTypeArgument(
+              inputBodyType ? inputBodyType.getName() : neverKeyword,
+            );
 
           // query
           if (queryType) {
@@ -546,70 +568,92 @@ export async function processOpenApiDocument(
             .replaceAll(/{/g, '${')}\``;
 
           const bodyName = 'body';
-          const ctorArgName =
-            ctor.getParameters()[0]?.getName() || unspecifiedKeyword;
-          const hasBody = !isUnspecifiedKeyword(inputBodyType);
+
+          const hasBody = !!inputBodyType;
           const hasQuery =
             queryType &&
             !isUnspecifiedKeyword(queryType) &&
             queryParameters.length > 0;
 
-          const queryParameterNames = queryParameters
-            .map((q) => q.name)
-            .map(castToValidJsIdentifier);
-          const pathParameterNames = pathParameters
-            .map((q) => q.name)
-            .map(castToValidJsIdentifier);
+          const hasParams =
+            paramsType &&
+            !isUnspecifiedKeyword(paramsType) &&
+            pathParameters.length > 0;
 
-          const paramsToDestructure = [
-            ...pathParameterNames,
-            ...queryParameterNames,
-          ];
+          if (hasBody || hasQuery || hasParams) {
+            const ctor = commandClassDeclaration.addConstructor();
 
-          ctor.addStatements([
-            !isUnspecifiedKeyword(inputType)
-              ? {
+            const queryParameterNames = queryParameters
+              .map((q) => q.name)
+              .map(castToValidJsIdentifier);
+
+            const pathParameterNames = pathParameters
+              .map((q) => q.name)
+              .map(castToValidJsIdentifier);
+
+            const paramsToDestructure = [
+              ...pathParameterNames,
+              ...queryParameterNames,
+            ];
+
+            if (!isUnspecifiedKeyword(inputType)) {
+              const cctorParam = ctor.addParameter({
+                name: 'input',
+                type: inputType.getName(),
+              });
+
+              ctor.addStatements([
+                {
                   kind: StructureKind.VariableStatement,
                   declarationKind: VariableDeclarationKind.Const,
                   declarations: [
                     {
                       kind: StructureKind.VariableDeclaration,
-                      initializer: ctorArgName,
-                      name:
-                        paramsToDestructure.length > 0
-                          ? `{${[
+                      initializer: cctorParam.getName(),
+                      name: iife(() => {
+                        switch (true) {
+                          case paramsToDestructure.length > 0 && hasBody:
+                            return `{${[
                               ...paramsToDestructure,
-                              hasBody ? `...${bodyName}` : '',
-                            ].join(',')} }`
-                          : bodyName,
+                              `...${bodyName}`,
+                            ].join(', ')} }`;
+                          case paramsToDestructure.length > 0 && !hasBody:
+                            return `{${paramsToDestructure.join(', ')} }`;
+                          case hasBody:
+                            return bodyName;
+                          default:
+                            return '_';
+                        }
+                      }),
                     },
                   ],
-                }
-              : '// no input parameters',
-            'super();',
-          ]);
+                },
+                'super();',
+              ]);
+            }
 
-          const superKeyword = ctor.getFirstDescendantByKind(
-            SyntaxKind.SuperKeyword,
-          );
-
-          const callExpr = superKeyword?.getParentIfKindOrThrow(
-            SyntaxKind.CallExpression,
-          );
-
-          // type narrowing
-          if (Node.isCallExpression(callExpr)) {
-            callExpr.addArguments(
-              hasBody || hasQuery
-                ? [
-                    pathname,
-                    hasBody ? bodyName : 'undefined',
-                    ...(hasQuery
-                      ? [`{${queryParameterNames.join(', ')}}`]
-                      : []),
-                  ]
-                : [pathname],
+            const superKeyword = ctor.getFirstDescendantByKind(
+              SyntaxKind.SuperKeyword,
             );
+
+            const callExpr = superKeyword?.getParentIfKindOrThrow(
+              SyntaxKind.CallExpression,
+            );
+
+            // type narrowing
+            if (Node.isCallExpression(callExpr)) {
+              callExpr.addArguments(
+                hasBody || hasQuery
+                  ? [
+                      pathname,
+                      hasBody ? bodyName : emptyKeyword,
+                      ...(hasQuery
+                        ? [`{${queryParameterNames.join(', ')}}`]
+                        : []),
+                    ]
+                  : [pathname],
+              );
+            }
           }
         }
       }
@@ -658,20 +702,19 @@ export async function processOpenApiDocument(
     ],
   });
 
-  const namedImports = [...new Set([...inputTypes, ...outputTypes])];
+  const namedImports = [...new Set([...inputTypes, ...outputTypes])].filter(
+    <T>(t: T | string | typeof unspecifiedKeyword): t is T =>
+      typeof t !== 'string',
+  );
 
   if (namedImports.length > 0) {
     mainFile.addImportDeclaration({
       moduleSpecifier: typesModuleSpecifier,
       namedImports: namedImports
-        .filter(
-          <T>(t: T | typeof unspecifiedKeyword): t is T =>
-            t !== unspecifiedKeyword,
-        )
+        .sort((a, b) => a.getName().localeCompare(b.getName()))
         .map((t) => ({
           name: t.getName(),
-        }))
-        .sort((a, b) => a.name.localeCompare(b.name)),
+        })),
       isTypeOnly: true,
     });
   }
@@ -723,6 +766,10 @@ export async function processOpenApiDocument(
   }
 
   mainFile.organizeImports();
+
+  // tidies up any unused type-fest imports
+  typesFile.fixUnusedIdentifiers();
+  commandsFile.fixUnusedIdentifiers();
 
   return { commandsFile, typesFile, mainFile };
 }

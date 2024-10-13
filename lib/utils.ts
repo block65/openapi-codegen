@@ -83,3 +83,7 @@ export function wordWrap(text: string) {
 export function castToValidJsIdentifier(name: string) {
   return name.replace(/^(\d+)/, '_$1').replaceAll(/[^a-zA-Z0-9_]/g, '');
 }
+
+export function iife<T>(fn: () => T): T {
+  return fn();
+}

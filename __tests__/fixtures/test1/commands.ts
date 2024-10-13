@@ -3,65 +3,46 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-02T11:43:02.777Z
+ * Generated on 2024-10-13T01:58:17.798Z
  *
  */
 /** eslint-disable max-classes */
 import { Command } from '@block65/rest-client';
-import type { Jsonifiable } from 'type-fest';
 import type {
   GetOperationCommandInput,
-  GetOperationCommandBody,
   LongRunningOperation,
   ListBillingAccountsCommandInput,
-  ListBillingAccountsCommandBody,
   BillingAccountList,
-  BillingAccountCreateRequest,
   CreateBillingAccountCommandInput,
   CreateBillingAccountCommandBody,
   BillingAccount,
   GetBillingAccountCommandInput,
-  GetBillingAccountCommandBody,
-  BillingAccountUpdateRequest,
   UpdateBillingAccountCommandInput,
   UpdateBillingAccountCommandBody,
-  BillingAccountPortalRequest,
   GetBillingAccountPortalCommandInput,
   GetBillingAccountPortalCommandBody,
   BillingAccountPortal,
-  LinkBillingAccountRequest,
   LinkBillingAccountCommandInput,
   LinkBillingAccountCommandBody,
   ListPaymentMethodsCommandInput,
-  ListPaymentMethodsCommandBody,
   PaymentMethods,
   CreatePaymentMethodCommandInput,
-  CreatePaymentMethodCommandBody,
   PaymentMethodIntendedLro,
   GetPaymentMethodFromStripeCommandInput,
-  GetPaymentMethodFromStripeCommandBody,
   PaymentMethod,
   GetPaymentMethodCommandInput,
-  GetPaymentMethodCommandBody,
-  UpdatePaymentMethodRequest,
   UpdatePaymentMethodCommandInput,
   UpdatePaymentMethodCommandBody,
   DeletePaymentMethodCommandInput,
-  DeletePaymentMethodCommandBody,
   PaymentMethodDeletedLro,
   ListBillingSubscriptionsCommandInput,
-  ListBillingSubscriptionsCommandBody,
   BillingSubscriptions,
-  CreateBillingSubscriptionRequest,
   CreateBillingSubscriptionCommandInput,
   CreateBillingSubscriptionCommandBody,
   BillingSubscriptionLro,
-  UpdateBillingSubscriptionRequest,
   UpdateBillingSubscriptionCommandInput,
   UpdateBillingSubscriptionCommandBody,
   CancelSubscriptionCommandInput,
-  CancelSubscriptionCommandBody,
-  UpdateBillingSubscriptionPromoCodeRequest,
   UpdateBillingSubscriptionPromoCodeCommandInput,
   UpdateBillingSubscriptionPromoCodeCommandBody,
 } from './types.js';
@@ -73,7 +54,7 @@ import type {
 export class GetOperationCommand extends Command<
   GetOperationCommandInput,
   LongRunningOperation,
-  GetOperationCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -90,14 +71,9 @@ export class GetOperationCommand extends Command<
 export class ListBillingAccountsCommand extends Command<
   ListBillingAccountsCommandInput,
   BillingAccountList,
-  ListBillingAccountsCommandBody
+  never
 > {
   public override method = 'get' as const;
-
-  constructor(input: ListBillingAccountsCommandInput) {
-    const body = input;
-    super(`/billing-accounts`);
-  }
 }
 
 /**
@@ -124,7 +100,7 @@ export class CreateBillingAccountCommand extends Command<
 export class GetBillingAccountCommand extends Command<
   GetBillingAccountCommandInput,
   BillingAccount,
-  GetBillingAccountCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -192,7 +168,7 @@ export class LinkBillingAccountCommand extends Command<
 export class ListPaymentMethodsCommand extends Command<
   ListPaymentMethodsCommandInput,
   PaymentMethods,
-  ListPaymentMethodsCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -209,7 +185,7 @@ export class ListPaymentMethodsCommand extends Command<
 export class CreatePaymentMethodCommand extends Command<
   CreatePaymentMethodCommandInput,
   PaymentMethodIntendedLro,
-  CreatePaymentMethodCommandBody
+  never
 > {
   public override method = 'post' as const;
 
@@ -226,7 +202,7 @@ export class CreatePaymentMethodCommand extends Command<
 export class GetPaymentMethodFromStripeCommand extends Command<
   GetPaymentMethodFromStripeCommandInput,
   PaymentMethod,
-  GetPaymentMethodFromStripeCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -245,7 +221,7 @@ export class GetPaymentMethodFromStripeCommand extends Command<
 export class GetPaymentMethodCommand extends Command<
   GetPaymentMethodCommandInput,
   PaymentMethod,
-  GetPaymentMethodCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -263,7 +239,7 @@ export class GetPaymentMethodCommand extends Command<
  */
 export class UpdatePaymentMethodCommand extends Command<
   UpdatePaymentMethodCommandInput,
-  unknown,
+  undefined,
   UpdatePaymentMethodCommandBody
 > {
   public override method = 'put' as const;
@@ -284,7 +260,7 @@ export class UpdatePaymentMethodCommand extends Command<
 export class DeletePaymentMethodCommand extends Command<
   DeletePaymentMethodCommandInput,
   PaymentMethodDeletedLro,
-  DeletePaymentMethodCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -303,7 +279,7 @@ export class DeletePaymentMethodCommand extends Command<
 export class ListBillingSubscriptionsCommand extends Command<
   ListBillingSubscriptionsCommandInput,
   BillingSubscriptions,
-  ListBillingSubscriptionsCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -336,7 +312,7 @@ export class CreateBillingSubscriptionCommand extends Command<
  */
 export class UpdateBillingSubscriptionCommand extends Command<
   UpdateBillingSubscriptionCommandInput,
-  unknown,
+  undefined,
   UpdateBillingSubscriptionCommandBody
 > {
   public override method = 'put' as const;
@@ -356,8 +332,8 @@ export class UpdateBillingSubscriptionCommand extends Command<
  */
 export class CancelSubscriptionCommand extends Command<
   CancelSubscriptionCommandInput,
-  unknown,
-  CancelSubscriptionCommandBody
+  undefined,
+  never
 > {
   public override method = 'delete' as const;
 
