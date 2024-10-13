@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { join, relative } from 'node:path';
 import { $RefParser } from '@apidevtools/json-schema-ref-parser';
-import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
+import type { oas30, oas31 } from 'openapi3-ts';
 import toposort from 'toposort';
 import {
   InterfaceDeclaration,
@@ -14,6 +14,7 @@ import {
   VariableDeclarationKind,
   Writers,
 } from 'ts-morph';
+import type { Simplify } from 'type-fest';
 import { registerTypesFromSchema, schemaToType } from './process-schema.js';
 import {
   castToValidJsIdentifier,
@@ -60,7 +61,7 @@ function createUnion(...types: (string | undefined)[]) {
 
 export async function processOpenApiDocument(
   outputDir: string,
-  schema: OpenAPIV3_1.Document,
+  schema: Simplify<oas31.OpenAPIObject>,
   tags?: string[] | undefined,
 ) {
   const project = new Project();
@@ -191,22 +192,22 @@ export async function processOpenApiDocument(
     );
   }
 
-  for (const [path, pathItemObject] of Object.entries(schema.paths || {})) {
+  for (const [path, pathItemObject] of Object.entries<oas31.PathItemObject>(
+    schema.paths || {},
+  )) {
     if (pathItemObject) {
-      for (const [method, operationObject] of Object.entries(
-        pathItemObject,
-      ).filter(
-        ([, o]) =>
-          !tags ||
-          (typeof o === 'object' && 'tags' in o
-            ? o.tags.some((t) => tags.includes(t))
-            : false),
-      )) {
+      for (const [method, operationObject] of Object.entries(pathItemObject)
+        // ensure op is an object
+        .filter(
+          (e): e is [string, oas31.OperationObject] => typeof e[1] === 'object',
+        )
+        // tags
+        .filter(([, o]) => !tags || o.tags?.some((t) => tags?.includes(t)))) {
         if (
           typeof operationObject === 'object' &&
           'operationId' in operationObject
         ) {
-          const pathParameters: OpenAPIV3.ParameterObject[] = [];
+          const pathParameters: oas30.ParameterObject[] = [];
 
           const commandName = pascalCase(
             operationObject.operationId.replace(/command$/i, ''),
@@ -258,13 +259,13 @@ export async function processOpenApiDocument(
               ? operationObject.requestBody
               : undefined;
 
-          const queryParameters: OpenAPIV3.ParameterObject[] = [];
+          const queryParameters: oas30.ParameterObject[] = [];
 
           for (const parameter of [
             ...(operationObject.parameters || []),
             ...(pathItemObject.parameters || []),
           ]) {
-            const resolvedParameter: OpenAPIV3.ParameterObject =
+            const resolvedParameter: oas30.ParameterObject =
               '$ref' in parameter ? refs.get(parameter.$ref) : parameter;
 
             if (resolvedParameter.in === 'path') {
@@ -481,7 +482,7 @@ export async function processOpenApiDocument(
           }
 
           for (const [statusCode, response] of Object.entries(
-            operationObject.responses,
+            operationObject.responses || {},
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             if (statusCode === '204') {
