@@ -1,6 +1,6 @@
 import { writeFile } from 'node:fs/promises';
 import prettierConfig from '@block65/eslint-config/prettier';
-import type { OpenAPIV3_1 } from 'openapi-types';
+import type { oas31 } from 'openapi3-ts';
 import { format as prettier } from 'prettier';
 import { processOpenApiDocument } from './process-document.js';
 
@@ -11,7 +11,7 @@ export async function build(
 ) {
   const apischema = (await import(inputFile, {
     with: { type: 'json' },
-  })) as { default: OpenAPIV3_1.Document };
+  })) as { default: oas31.OpenAPIObject };
 
   const banner = `
   /**

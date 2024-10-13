@@ -1,5 +1,5 @@
 import camelcase from 'camelcase';
-import type { OpenAPIV3_1 } from 'openapi-types';
+import type { oas31 } from 'openapi3-ts';
 import wrap from 'word-wrap';
 
 export function maybeJsDocDescription(
@@ -8,9 +8,7 @@ export function maybeJsDocDescription(
   return str.length > 0 ? ['', ...str].filter(Boolean).join(' - ').trim() : '';
 }
 
-export function isReferenceObject(
-  obj: unknown,
-): obj is OpenAPIV3_1.ReferenceObject {
+export function isReferenceObject(obj: unknown): obj is oas31.ReferenceObject {
   return typeof obj === 'object' && obj !== null && '$ref' in obj;
 }
 
@@ -18,9 +16,9 @@ export function getDependency(obj: unknown): string | undefined {
   return isReferenceObject(obj) ? obj.$ref : undefined;
 }
 
-export function isNotReferenceObject<
-  T extends OpenAPIV3_1.ReferenceObject | unknown,
->(obj: T): obj is Exclude<T, OpenAPIV3_1.ReferenceObject> {
+export function isNotReferenceObject<T extends oas31.ReferenceObject | unknown>(
+  obj: T,
+): obj is Exclude<T, oas31.ReferenceObject> {
   return !isReferenceObject(obj);
 }
 
@@ -29,7 +27,7 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 }
 
 export function getDependents(
-  obj: OpenAPIV3_1.ReferenceObject | OpenAPIV3_1.SchemaObject,
+  obj: oas31.ReferenceObject | oas31.SchemaObject,
 ): string[] {
   const strOnly = (x: string | undefined): x is string => typeof x === 'string';
 

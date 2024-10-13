@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
+import type { oas31, oas30 } from 'openapi3-ts';
 import {
   Writers,
   type CodeBlockWriter,
@@ -24,9 +24,7 @@ function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
   return withNull && type !== 'null' ? Writers.unionType(type, 'null') : type;
 }
 
-function schemaTypeIsNull(
-  schema: OpenAPIV3.SchemaObject | OpenAPIV3_1.SchemaObject,
-) {
+function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
   return (
     schema.type === 'null' ||
     ('nullable' in schema && schema.nullable) ||
@@ -63,12 +61,9 @@ export function schemaToType(
     string,
     InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration
   >,
-  parentSchema: OpenAPIV3_1.SchemaObject | OpenAPIV3.SchemaObject,
+  parentSchema: oas31.SchemaObject | oas30.SchemaObject,
   propertyName: string,
-  schemaObject:
-    | OpenAPIV3_1.SchemaObject
-    | OpenAPIV3.SchemaObject
-    | OpenAPIV3_1.ReferenceObject,
+  schemaObject: oas31.SchemaObject | oas30.SchemaObject | oas31.ReferenceObject,
   options: {
     exactOptionalPropertyTypes?: boolean;
     booleanAsStringish?: boolean;
@@ -127,8 +122,18 @@ export function schemaToType(
           },
         ]
       : []),
-    ...(schemaObject.example
+
+    // 3
+    ...('example' in schemaObject
       ? [{ tagName: 'example', text: String(schemaObject.example) }]
+      : []),
+
+    // 3.1
+    ...('examples' in schemaObject
+      ? schemaObject.examples.map((example) => ({
+          tagName: 'example',
+          text: JSON.stringify(example),
+        }))
       : []),
     ...(schemaObject.deprecated ? [{ tagName: 'deprecated' }] : []),
   ];
@@ -168,13 +173,11 @@ export function schemaToType(
                   items: {},
                   ...schemaObject,
                   type: 'array',
-                } satisfies
-                  | OpenAPIV3.ArraySchemaObject
-                  | OpenAPIV3_1.ArraySchemaObject)
-              : {
+                } satisfies typeof schemaObject)
+              : ({
                   ...schemaObject,
                   type,
-                };
+                } satisfies typeof schemaObject);
 
           return (
             schemaToType(typesAndInterfaces, schemaObject, name, schema).type ||
@@ -420,10 +423,10 @@ export function registerTypesFromSchema(
   typesFile: SourceFile,
   schemaName: string,
   schemaObject:
-    | OpenAPIV3.SchemaObject
-    | OpenAPIV3.ReferenceObject
-    | OpenAPIV3_1.SchemaObject
-    | OpenAPIV3_1.ReferenceObject,
+    | oas30.SchemaObject
+    | oas30.ReferenceObject
+    | oas31.SchemaObject
+    | oas31.ReferenceObject,
 ) {
   // deal with refs
   if ('$ref' in schemaObject) {
