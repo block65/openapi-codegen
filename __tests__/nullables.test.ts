@@ -1,11 +1,11 @@
-import { test } from '@jest/globals';
+import { expect, test } from 'vitest';
 import { processOpenApiDocument } from '../lib/process-document.js';
 
 test('nullables', async () => {
   const result = await processOpenApiDocument(
-    '/tmp', // if we dont call .save() it doesnt matter
+    '/tmp/like-you-know-whatever', // if we dont call .save() it doesnt matter what this path is
     {
-      openapi: '3.0.0',
+      openapi: '3.1.0',
       info: {
         title: 'Test',
         version: '1.0.0',
@@ -16,11 +16,8 @@ test('nullables', async () => {
           MySchemaLolOrNullable: {
             oneOf: [
               {
-                type: 'string',
+                type: ['string', 'null'],
                 enum: ['lol', 'kek'],
-              },
-              {
-                nullable: true,
               },
             ],
           },

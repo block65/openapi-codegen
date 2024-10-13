@@ -3,193 +3,214 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-07-20T05:47:37.293Z
+ * Generated on 2024-10-13T02:06:31.654Z
  *
  */
 /** eslint-disable max-classes */
 import { Command } from '@block65/rest-client';
-import type { Jsonifiable } from 'type-fest';
 import type {
-  CreateChatCompletionRequest,
   CreateChatCompletionCommandInput,
   CreateChatCompletionCommandBody,
   CreateChatCompletionResponse,
-  CreateCompletionRequest,
   CreateCompletionCommandInput,
   CreateCompletionCommandBody,
   CreateCompletionResponse,
-  CreateEditRequest,
-  CreateEditCommandInput,
-  CreateEditCommandBody,
-  CreateEditResponse,
-  CreateImageRequest,
   CreateImageCommandInput,
   CreateImageCommandBody,
   ImagesResponse,
   CreateImageEditCommandInput,
-  CreateImageEditCommandBody,
   CreateImageVariationCommandInput,
-  CreateImageVariationCommandBody,
-  CreateEmbeddingRequest,
   CreateEmbeddingCommandInput,
   CreateEmbeddingCommandBody,
   CreateEmbeddingResponse,
-  CreateSpeechRequest,
   CreateSpeechCommandInput,
   CreateSpeechCommandBody,
   CreateTranscriptionCommandInput,
-  CreateTranscriptionCommandBody,
-  CreateTranscriptionResponse,
   CreateTranslationCommandInput,
-  CreateTranslationCommandBody,
-  CreateTranslationResponse,
   ListFilesCommandQuery,
   ListFilesCommandInput,
-  ListFilesCommandBody,
   ListFilesResponse,
   CreateFileCommandInput,
-  CreateFileCommandBody,
   OpenAiFile,
   DeleteFileCommandInput,
-  DeleteFileCommandBody,
   DeleteFileResponse,
   RetrieveFileCommandInput,
-  RetrieveFileCommandBody,
   DownloadFileCommandInput,
-  DownloadFileCommandBody,
-  CreateFineTuningJobRequest,
+  CreateUploadCommandInput,
+  CreateUploadCommandBody,
+  Upload,
+  AddUploadPartCommandInput,
+  UploadPart,
+  CompleteUploadCommandInput,
+  CompleteUploadCommandBody,
+  CancelUploadCommandInput,
   CreateFineTuningJobCommandInput,
   CreateFineTuningJobCommandBody,
   FineTuningJob,
   ListPaginatedFineTuningJobsCommandQuery,
   ListPaginatedFineTuningJobsCommandInput,
-  ListPaginatedFineTuningJobsCommandBody,
   ListPaginatedFineTuningJobsResponse,
   RetrieveFineTuningJobCommandInput,
-  RetrieveFineTuningJobCommandBody,
   ListFineTuningEventsCommandQuery,
   ListFineTuningEventsCommandInput,
-  ListFineTuningEventsCommandBody,
   ListFineTuningJobEventsResponse,
   CancelFineTuningJobCommandInput,
-  CancelFineTuningJobCommandBody,
-  CreateFineTuneRequest,
-  CreateFineTuneCommandInput,
-  CreateFineTuneCommandBody,
-  FineTune,
-  ListFineTunesCommandInput,
-  ListFineTunesCommandBody,
-  ListFineTunesResponse,
-  RetrieveFineTuneCommandInput,
-  RetrieveFineTuneCommandBody,
-  CancelFineTuneCommandInput,
-  CancelFineTuneCommandBody,
-  ListFineTuneEventsCommandQuery,
-  ListFineTuneEventsCommandInput,
-  ListFineTuneEventsCommandBody,
-  ListFineTuneEventsResponse,
+  ListFineTuningJobCheckpointsCommandQuery,
+  ListFineTuningJobCheckpointsCommandInput,
+  ListFineTuningJobCheckpointsResponse,
   ListModelsCommandInput,
-  ListModelsCommandBody,
   ListModelsResponse,
   RetrieveModelCommandInput,
-  RetrieveModelCommandBody,
   Model,
   DeleteModelCommandInput,
-  DeleteModelCommandBody,
   DeleteModelResponse,
-  CreateModerationRequest,
   CreateModerationCommandInput,
   CreateModerationCommandBody,
   CreateModerationResponse,
   ListAssistantsCommandQuery,
   ListAssistantsCommandInput,
-  ListAssistantsCommandBody,
   ListAssistantsResponse,
-  CreateAssistantRequest,
   CreateAssistantCommandInput,
   CreateAssistantCommandBody,
   AssistantObject,
   GetAssistantCommandInput,
-  GetAssistantCommandBody,
-  ModifyAssistantRequest,
   ModifyAssistantCommandInput,
   ModifyAssistantCommandBody,
   DeleteAssistantCommandInput,
-  DeleteAssistantCommandBody,
   DeleteAssistantResponse,
-  CreateThreadRequest,
   CreateThreadCommandInput,
   CreateThreadCommandBody,
   ThreadObject,
   GetThreadCommandInput,
-  GetThreadCommandBody,
-  ModifyThreadRequest,
   ModifyThreadCommandInput,
   ModifyThreadCommandBody,
   DeleteThreadCommandInput,
-  DeleteThreadCommandBody,
   DeleteThreadResponse,
   ListMessagesCommandQuery,
   ListMessagesCommandInput,
-  ListMessagesCommandBody,
   ListMessagesResponse,
-  CreateMessageRequest,
   CreateMessageCommandInput,
   CreateMessageCommandBody,
   MessageObject,
   GetMessageCommandInput,
-  GetMessageCommandBody,
-  ModifyMessageRequest,
   ModifyMessageCommandInput,
   ModifyMessageCommandBody,
-  CreateThreadAndRunRequest,
+  DeleteMessageCommandInput,
+  DeleteMessageResponse,
   CreateThreadAndRunCommandInput,
   CreateThreadAndRunCommandBody,
   RunObject,
   ListRunsCommandQuery,
   ListRunsCommandInput,
-  ListRunsCommandBody,
   ListRunsResponse,
-  CreateRunRequest,
+  CreateRunCommandQuery,
   CreateRunCommandInput,
   CreateRunCommandBody,
   GetRunCommandInput,
-  GetRunCommandBody,
-  ModifyRunRequest,
   ModifyRunCommandInput,
   ModifyRunCommandBody,
-  SubmitToolOutputsRunRequest,
   SubmitToolOuputsToRunCommandInput,
   SubmitToolOuputsToRunCommandBody,
   CancelRunCommandInput,
-  CancelRunCommandBody,
   ListRunStepsCommandQuery,
   ListRunStepsCommandInput,
-  ListRunStepsCommandBody,
   ListRunStepsResponse,
+  GetRunStepCommandQuery,
   GetRunStepCommandInput,
-  GetRunStepCommandBody,
   RunStepObject,
-  ListAssistantFilesCommandQuery,
-  ListAssistantFilesCommandInput,
-  ListAssistantFilesCommandBody,
-  ListAssistantFilesResponse,
-  CreateAssistantFileRequest,
-  CreateAssistantFileCommandInput,
-  CreateAssistantFileCommandBody,
-  AssistantFileObject,
-  GetAssistantFileCommandInput,
-  GetAssistantFileCommandBody,
-  DeleteAssistantFileCommandInput,
-  DeleteAssistantFileCommandBody,
-  DeleteAssistantFileResponse,
-  ListMessageFilesCommandQuery,
-  ListMessageFilesCommandInput,
-  ListMessageFilesCommandBody,
-  ListMessageFilesResponse,
-  GetMessageFileCommandInput,
-  GetMessageFileCommandBody,
-  MessageFileObject,
+  ListVectorStoresCommandQuery,
+  ListVectorStoresCommandInput,
+  ListVectorStoresResponse,
+  CreateVectorStoreCommandInput,
+  CreateVectorStoreCommandBody,
+  VectorStoreObject,
+  GetVectorStoreCommandInput,
+  ModifyVectorStoreCommandInput,
+  ModifyVectorStoreCommandBody,
+  DeleteVectorStoreCommandInput,
+  DeleteVectorStoreResponse,
+  ListVectorStoreFilesCommandQuery,
+  ListVectorStoreFilesCommandInput,
+  ListVectorStoreFilesResponse,
+  CreateVectorStoreFileCommandInput,
+  CreateVectorStoreFileCommandBody,
+  VectorStoreFileObject,
+  GetVectorStoreFileCommandInput,
+  DeleteVectorStoreFileCommandInput,
+  DeleteVectorStoreFileResponse,
+  CreateVectorStoreFileBatchCommandInput,
+  CreateVectorStoreFileBatchCommandBody,
+  VectorStoreFileBatchObject,
+  GetVectorStoreFileBatchCommandInput,
+  CancelVectorStoreFileBatchCommandInput,
+  ListFilesInVectorStoreBatchCommandQuery,
+  ListFilesInVectorStoreBatchCommandInput,
+  CreateBatchCommandInput,
+  Batch,
+  ListBatchesCommandQuery,
+  ListBatchesCommandInput,
+  ListBatchesResponse,
+  RetrieveBatchCommandInput,
+  CancelBatchCommandInput,
+  ListAuditLogsCommandQuery,
+  ListAuditLogsCommandInput,
+  ListAuditLogsResponse,
+  ListInvitesCommandQuery,
+  ListInvitesCommandInput,
+  InviteListResponse,
+  InviteUserCommandInput,
+  InviteUserCommandBody,
+  Invite,
+  RetrieveInviteCommandInput,
+  DeleteInviteCommandInput,
+  InviteDeleteResponse,
+  ListUsersCommandQuery,
+  ListUsersCommandInput,
+  UserListResponse,
+  RetrieveUserCommandInput,
+  User,
+  ModifyUserCommandInput,
+  ModifyUserCommandBody,
+  DeleteUserCommandInput,
+  UserDeleteResponse,
+  ListProjectsCommandQuery,
+  ListProjectsCommandInput,
+  ProjectListResponse,
+  CreateProjectCommandInput,
+  CreateProjectCommandBody,
+  Project,
+  RetrieveProjectCommandInput,
+  ModifyProjectCommandInput,
+  ModifyProjectCommandBody,
+  ArchiveProjectCommandInput,
+  ListProjectUsersCommandQuery,
+  ListProjectUsersCommandInput,
+  ProjectUserListResponse,
+  CreateProjectUserCommandInput,
+  CreateProjectUserCommandBody,
+  ProjectUser,
+  RetrieveProjectUserCommandInput,
+  ModifyProjectUserCommandInput,
+  ModifyProjectUserCommandBody,
+  DeleteProjectUserCommandInput,
+  ProjectUserDeleteResponse,
+  ListProjectServiceAccountsCommandQuery,
+  ListProjectServiceAccountsCommandInput,
+  ProjectServiceAccountListResponse,
+  CreateProjectServiceAccountCommandInput,
+  CreateProjectServiceAccountCommandBody,
+  ProjectServiceAccountCreateResponse,
+  RetrieveProjectServiceAccountCommandInput,
+  ProjectServiceAccount,
+  DeleteProjectServiceAccountCommandInput,
+  ProjectServiceAccountDeleteResponse,
+  ListProjectApiKeysCommandQuery,
+  ListProjectApiKeysCommandInput,
+  ProjectApiKeyListResponse,
+  RetrieveProjectApiKeyCommandInput,
+  ProjectApiKey,
+  DeleteProjectApiKeyCommandInput,
+  ProjectApiKeyDeleteResponse,
 } from './types.js';
 
 /**
@@ -229,25 +250,6 @@ export class CreateCompletionCommand extends Command<
 }
 
 /**
- * CreateEditCommand
- *
- * @summary Creates a new edit for the provided input, instruction, and parameters.
- * @deprecated
- */
-export class CreateEditCommand extends Command<
-  CreateEditCommandInput,
-  CreateEditResponse,
-  CreateEditCommandBody
-> {
-  public override method = 'post' as const;
-
-  constructor(input: CreateEditCommandInput) {
-    const body = input;
-    super(`/edits`, body);
-  }
-}
-
-/**
  * CreateImageCommand
  *
  * @summary Creates an image given a prompt.
@@ -271,16 +273,11 @@ export class CreateImageCommand extends Command<
  * @summary Creates an edited or extended image given an original image and a prompt.
  */
 export class CreateImageEditCommand extends Command<
-  never,
+  CreateImageEditCommandInput,
   ImagesResponse,
-  CreateImageEditCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor() {
-    // no input parameters
-    super(`/images/edits`);
-  }
 }
 
 /**
@@ -289,16 +286,11 @@ export class CreateImageEditCommand extends Command<
  * @summary Creates a variation of a given image.
  */
 export class CreateImageVariationCommand extends Command<
-  never,
+  CreateImageVariationCommandInput,
   ImagesResponse,
-  CreateImageVariationCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor() {
-    // no input parameters
-    super(`/images/variations`);
-  }
 }
 
 /**
@@ -326,7 +318,7 @@ export class CreateEmbeddingCommand extends Command<
  */
 export class CreateSpeechCommand extends Command<
   CreateSpeechCommandInput,
-  never,
+  unknown,
   CreateSpeechCommandBody
 > {
   public override method = 'post' as const;
@@ -343,16 +335,11 @@ export class CreateSpeechCommand extends Command<
  * @summary Transcribes audio into the input language.
  */
 export class CreateTranscriptionCommand extends Command<
-  never,
-  CreateTranscriptionResponse,
-  CreateTranscriptionCommandBody
+  CreateTranscriptionCommandInput,
+  unknown,
+  never
 > {
   public override method = 'post' as const;
-
-  constructor() {
-    // no input parameters
-    super(`/audio/transcriptions`);
-  }
 }
 
 /**
@@ -361,16 +348,11 @@ export class CreateTranscriptionCommand extends Command<
  * @summary Translates audio into English.
  */
 export class CreateTranslationCommand extends Command<
-  never,
-  CreateTranslationResponse,
-  CreateTranslationCommandBody
+  CreateTranslationCommandInput,
+  unknown,
+  never
 > {
   public override method = 'post' as const;
-
-  constructor() {
-    // no input parameters
-    super(`/audio/translations`);
-  }
 }
 
 /**
@@ -381,13 +363,13 @@ export class CreateTranslationCommand extends Command<
 export class ListFilesCommand extends Command<
   ListFilesCommandInput,
   ListFilesResponse,
-  ListFilesCommandBody,
+  never,
   ListFilesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListFilesCommandInput) {
-    const { purpose, ...body } = input;
+    const { purpose } = input;
     super(`/files`, undefined, { purpose });
   }
 }
@@ -395,27 +377,32 @@ export class ListFilesCommand extends Command<
 /**
  * CreateFileCommand
  *
- * @summary Upload a file that can be used across various endpoints. The size of all
- * the files uploaded by one organization can be up to 100 GB.
+ * @summary Upload a file that can be used across various endpoints. Individual files
+ * can be up to 512 MB, and the size of all files uploaded by one organization
+ * can be up to 100 GB.
  *
- * The size of individual files can be a maximum of 512 MB. See the
- * [Assistants Tools guide](/docs/assistants/tools) to learn more about the
- * types of files supported. The Fine-tuning API only supports `.jsonl` files.
+ * The Assistants API supports files up to 2 million tokens and of specific
+ * file types. See the [Assistants Tools guide](/docs/assistants/tools) for
+ * details.
+ *
+ * The Fine-tuning API only supports `.jsonl` files. The input also has
+ * certain required formats for fine-tuning
+ * [chat](/docs/api-reference/fine-tuning/chat-input) or
+ * [completions](/docs/api-reference/fine-tuning/completions-input) models.
+ *
+ * The Batch API only supports `.jsonl` files up to 100 MB in size. The input
+ * also has a specific required
+ * [format](/docs/api-reference/batch/request-input).
  *
  * Please [contact us](https://help.openai.com/) if you need to increase these
  * storage limits.
  */
 export class CreateFileCommand extends Command<
-  never,
+  CreateFileCommandInput,
   OpenAiFile,
-  CreateFileCommandBody
+  never
 > {
   public override method = 'post' as const;
-
-  constructor() {
-    // no input parameters
-    super(`/files`);
-  }
 }
 
 /**
@@ -426,13 +413,13 @@ export class CreateFileCommand extends Command<
 export class DeleteFileCommand extends Command<
   DeleteFileCommandInput,
   DeleteFileResponse,
-  DeleteFileCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
   constructor(input: DeleteFileCommandInput) {
-    const { fileId } = input;
-    super(`/files/${fileId}`);
+    const { file_id } = input;
+    super(`/files/${file_id}`);
   }
 }
 
@@ -444,13 +431,13 @@ export class DeleteFileCommand extends Command<
 export class RetrieveFileCommand extends Command<
   RetrieveFileCommandInput,
   OpenAiFile,
-  RetrieveFileCommandBody
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: RetrieveFileCommandInput) {
-    const { fileId } = input;
-    super(`/files/${fileId}`);
+    const { file_id } = input;
+    super(`/files/${file_id}`);
   }
 }
 
@@ -461,21 +448,130 @@ export class RetrieveFileCommand extends Command<
  */
 export class DownloadFileCommand extends Command<
   DownloadFileCommandInput,
-  never,
-  DownloadFileCommandBody
+  unknown,
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: DownloadFileCommandInput) {
-    const { fileId } = input;
-    super(`/files/${fileId}/content`);
+    const { file_id } = input;
+    super(`/files/${file_id}/content`);
+  }
+}
+
+/**
+ * CreateUploadCommand
+ *
+ * @summary Creates an intermediate [Upload](/docs/api-reference/uploads/object) object
+ * that you can add [Parts](/docs/api-reference/uploads/part-object) to.
+ * Currently, an Upload can accept at most 8 GB in total and expires after an
+ * hour after you create it.
+ *
+ * Once you complete the Upload, we will create a
+ * [File](/docs/api-reference/files/object) object that contains all the parts
+ * you uploaded. This File is usable in the rest of our platform as a regular
+ * File object.
+ *
+ * For certain `purpose`s, the correct `mime_type` must be specified. Please
+ * refer to documentation for the supported MIME types for your use case:
+ * - [Assistants](/docs/assistants/tools/file-search/supported-files)
+ *
+ * For guidance on the proper filename extensions for each purpose, please
+ * follow the documentation on [creating a
+ * File](/docs/api-reference/files/create).
+ */
+export class CreateUploadCommand extends Command<
+  CreateUploadCommandInput,
+  Upload,
+  CreateUploadCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CreateUploadCommandInput) {
+    const body = input;
+    super(`/uploads`, body);
+  }
+}
+
+/**
+ * AddUploadPartCommand
+ *
+ * @summary Adds a [Part](/docs/api-reference/uploads/part-object) to an
+ * [Upload](/docs/api-reference/uploads/object) object. A Part represents a
+ * chunk of bytes from the file you are trying to upload.
+ *
+ * Each Part can be at most 64 MB, and you can add Parts until you hit the
+ * Upload maximum of 8 GB.
+ *
+ * It is possible to add multiple Parts in parallel. You can decide the
+ * intended order of the Parts when you [complete the
+ * Upload](/docs/api-reference/uploads/complete).
+ */
+export class AddUploadPartCommand extends Command<
+  AddUploadPartCommandInput,
+  UploadPart,
+  never
+> {
+  public override method = 'post' as const;
+
+  constructor(input: AddUploadPartCommandInput) {
+    const { upload_id } = input;
+    super(`/uploads/${upload_id}/parts`);
+  }
+}
+
+/**
+ * CompleteUploadCommand
+ *
+ * @summary Completes the [Upload](/docs/api-reference/uploads/object).
+ *
+ * Within the returned Upload object, there is a nested
+ * [File](/docs/api-reference/files/object) object that is ready to use in the
+ * rest of the platform.
+ *
+ * You can specify the order of the Parts by passing in an ordered list of the
+ * Part IDs.
+ *
+ * The number of bytes uploaded upon completion must match the number of bytes
+ * initially specified when creating the Upload object. No Parts may be added
+ * after an Upload is completed.
+ */
+export class CompleteUploadCommand extends Command<
+  CompleteUploadCommandInput,
+  Upload,
+  CompleteUploadCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CompleteUploadCommandInput) {
+    const { upload_id, ...body } = input;
+    super(`/uploads/${upload_id}/complete`, body);
+  }
+}
+
+/**
+ * CancelUploadCommand
+ *
+ * @summary Cancels the Upload. No Parts may be added after an Upload is cancelled.
+ */
+export class CancelUploadCommand extends Command<
+  CancelUploadCommandInput,
+  Upload,
+  never
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CancelUploadCommandInput) {
+    const { upload_id } = input;
+    super(`/uploads/${upload_id}/cancel`);
   }
 }
 
 /**
  * CreateFineTuningJobCommand
  *
- * @summary Creates a job that fine-tunes a specified model from a given dataset.
+ * @summary Creates a fine-tuning job which begins the process of creating a new model
+ * from a given dataset.
  *
  * Response includes details of the enqueued job including job status and the
  * name of the fine-tuned models once complete.
@@ -503,13 +599,13 @@ export class CreateFineTuningJobCommand extends Command<
 export class ListPaginatedFineTuningJobsCommand extends Command<
   ListPaginatedFineTuningJobsCommandInput,
   ListPaginatedFineTuningJobsResponse,
-  ListPaginatedFineTuningJobsCommandBody,
+  never,
   ListPaginatedFineTuningJobsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListPaginatedFineTuningJobsCommandInput) {
-    const { after, limit, ...body } = input;
+    const { after, limit } = input;
     super(`/fine_tuning/jobs`, undefined, { after, limit });
   }
 }
@@ -524,13 +620,13 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
 export class RetrieveFineTuningJobCommand extends Command<
   RetrieveFineTuningJobCommandInput,
   FineTuningJob,
-  RetrieveFineTuningJobCommandBody
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: RetrieveFineTuningJobCommandInput) {
-    const { fineTuningJobId } = input;
-    super(`/fine_tuning/jobs/${fineTuningJobId}`);
+    const { fine_tuning_job_id } = input;
+    super(`/fine_tuning/jobs/${fine_tuning_job_id}`);
   }
 }
 
@@ -542,14 +638,14 @@ export class RetrieveFineTuningJobCommand extends Command<
 export class ListFineTuningEventsCommand extends Command<
   ListFineTuningEventsCommandInput,
   ListFineTuningJobEventsResponse,
-  ListFineTuningEventsCommandBody,
+  never,
   ListFineTuningEventsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListFineTuningEventsCommandInput) {
-    const { fineTuningJobId, after, limit, ...body } = input;
-    super(`/fine_tuning/jobs/${fineTuningJobId}/events`, undefined, {
+    const { fine_tuning_job_id, after, limit } = input;
+    super(`/fine_tuning/jobs/${fine_tuning_job_id}/events`, undefined, {
       after,
       limit,
     });
@@ -564,116 +660,35 @@ export class ListFineTuningEventsCommand extends Command<
 export class CancelFineTuningJobCommand extends Command<
   CancelFineTuningJobCommandInput,
   FineTuningJob,
-  CancelFineTuningJobCommandBody
+  never
 > {
   public override method = 'post' as const;
 
   constructor(input: CancelFineTuningJobCommandInput) {
-    const { fineTuningJobId } = input;
-    super(`/fine_tuning/jobs/${fineTuningJobId}/cancel`);
+    const { fine_tuning_job_id } = input;
+    super(`/fine_tuning/jobs/${fine_tuning_job_id}/cancel`);
   }
 }
 
 /**
- * CreateFineTuneCommand
+ * ListFineTuningJobCheckpointsCommand
  *
- * @summary Creates a job that fine-tunes a specified model from a given dataset.
- *
- * Response includes details of the enqueued job including job status and the
- * name of the fine-tuned models once complete.
- *
- * [Learn more about fine-tuning](/docs/guides/legacy-fine-tuning)
- * @deprecated
+ * @summary List checkpoints for a fine-tuning job.
  */
-export class CreateFineTuneCommand extends Command<
-  CreateFineTuneCommandInput,
-  FineTune,
-  CreateFineTuneCommandBody
-> {
-  public override method = 'post' as const;
-
-  constructor(input: CreateFineTuneCommandInput) {
-    const body = input;
-    super(`/fine-tunes`, body);
-  }
-}
-
-/**
- * ListFineTunesCommand
- *
- * @summary List your organization's fine-tuning jobs
- * @deprecated
- */
-export class ListFineTunesCommand extends Command<
+export class ListFineTuningJobCheckpointsCommand extends Command<
+  ListFineTuningJobCheckpointsCommandInput,
+  ListFineTuningJobCheckpointsResponse,
   never,
-  ListFineTunesResponse,
-  ListFineTunesCommandBody
+  ListFineTuningJobCheckpointsCommandQuery
 > {
   public override method = 'get' as const;
 
-  constructor() {
-    // no input parameters
-    super(`/fine-tunes`);
-  }
-}
-
-/**
- * RetrieveFineTuneCommand
- *
- * @summary Gets info about the fine-tune job.
- *
- * [Learn more about fine-tuning](/docs/guides/legacy-fine-tuning)
- * @deprecated
- */
-export class RetrieveFineTuneCommand extends Command<
-  RetrieveFineTuneCommandInput,
-  FineTune,
-  RetrieveFineTuneCommandBody
-> {
-  public override method = 'get' as const;
-
-  constructor(input: RetrieveFineTuneCommandInput) {
-    const { fineTuneId } = input;
-    super(`/fine-tunes/${fineTuneId}`);
-  }
-}
-
-/**
- * CancelFineTuneCommand
- *
- * @summary Immediately cancel a fine-tune job.
- * @deprecated
- */
-export class CancelFineTuneCommand extends Command<
-  CancelFineTuneCommandInput,
-  FineTune,
-  CancelFineTuneCommandBody
-> {
-  public override method = 'post' as const;
-
-  constructor(input: CancelFineTuneCommandInput) {
-    const { fineTuneId } = input;
-    super(`/fine-tunes/${fineTuneId}/cancel`);
-  }
-}
-
-/**
- * ListFineTuneEventsCommand
- *
- * @summary Get fine-grained status updates for a fine-tune job.
- * @deprecated
- */
-export class ListFineTuneEventsCommand extends Command<
-  ListFineTuneEventsCommandInput,
-  ListFineTuneEventsResponse,
-  ListFineTuneEventsCommandBody,
-  ListFineTuneEventsCommandQuery
-> {
-  public override method = 'get' as const;
-
-  constructor(input: ListFineTuneEventsCommandInput) {
-    const { fineTuneId, stream, ...body } = input;
-    super(`/fine-tunes/${fineTuneId}/events`, undefined, { stream });
+  constructor(input: ListFineTuningJobCheckpointsCommandInput) {
+    const { fine_tuning_job_id, after, limit } = input;
+    super(`/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`, undefined, {
+      after,
+      limit,
+    });
   }
 }
 
@@ -684,16 +699,11 @@ export class ListFineTuneEventsCommand extends Command<
  * each one such as the owner and availability.
  */
 export class ListModelsCommand extends Command<
-  never,
+  ListModelsCommandInput,
   ListModelsResponse,
-  ListModelsCommandBody
+  never
 > {
   public override method = 'get' as const;
-
-  constructor() {
-    // no input parameters
-    super(`/models`);
-  }
 }
 
 /**
@@ -705,7 +715,7 @@ export class ListModelsCommand extends Command<
 export class RetrieveModelCommand extends Command<
   RetrieveModelCommandInput,
   Model,
-  RetrieveModelCommandBody
+  never
 > {
   public override method = 'get' as const;
 
@@ -724,7 +734,7 @@ export class RetrieveModelCommand extends Command<
 export class DeleteModelCommand extends Command<
   DeleteModelCommandInput,
   DeleteModelResponse,
-  DeleteModelCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
@@ -737,7 +747,8 @@ export class DeleteModelCommand extends Command<
 /**
  * CreateModerationCommand
  *
- * @summary Classifies if text violates OpenAI's Content Policy
+ * @summary Classifies if text and/or image inputs are potentially harmful. Learn
+ * more in the [moderation guide](/docs/guides/moderation).
  */
 export class CreateModerationCommand extends Command<
   CreateModerationCommandInput,
@@ -760,13 +771,13 @@ export class CreateModerationCommand extends Command<
 export class ListAssistantsCommand extends Command<
   ListAssistantsCommandInput,
   ListAssistantsResponse,
-  ListAssistantsCommandBody,
+  never,
   ListAssistantsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListAssistantsCommandInput) {
-    const { limit, order, after, before, ...body } = input;
+    const { limit, order, after, before } = input;
     super(`/assistants`, undefined, { limit, order, after, before });
   }
 }
@@ -797,13 +808,13 @@ export class CreateAssistantCommand extends Command<
 export class GetAssistantCommand extends Command<
   GetAssistantCommandInput,
   AssistantObject,
-  GetAssistantCommandBody
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: GetAssistantCommandInput) {
-    const { assistantId } = input;
-    super(`/assistants/${assistantId}`);
+    const { assistant_id } = input;
+    super(`/assistants/${assistant_id}`);
   }
 }
 
@@ -820,8 +831,8 @@ export class ModifyAssistantCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: ModifyAssistantCommandInput) {
-    const { assistantId, ...body } = input;
-    super(`/assistants/${assistantId}`, body);
+    const { assistant_id, ...body } = input;
+    super(`/assistants/${assistant_id}`, body);
   }
 }
 
@@ -833,13 +844,13 @@ export class ModifyAssistantCommand extends Command<
 export class DeleteAssistantCommand extends Command<
   DeleteAssistantCommandInput,
   DeleteAssistantResponse,
-  DeleteAssistantCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
   constructor(input: DeleteAssistantCommandInput) {
-    const { assistantId } = input;
-    super(`/assistants/${assistantId}`);
+    const { assistant_id } = input;
+    super(`/assistants/${assistant_id}`);
   }
 }
 
@@ -869,13 +880,13 @@ export class CreateThreadCommand extends Command<
 export class GetThreadCommand extends Command<
   GetThreadCommandInput,
   ThreadObject,
-  GetThreadCommandBody
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: GetThreadCommandInput) {
-    const { threadId } = input;
-    super(`/threads/${threadId}`);
+    const { thread_id } = input;
+    super(`/threads/${thread_id}`);
   }
 }
 
@@ -892,8 +903,8 @@ export class ModifyThreadCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: ModifyThreadCommandInput) {
-    const { threadId, ...body } = input;
-    super(`/threads/${threadId}`, body);
+    const { thread_id, ...body } = input;
+    super(`/threads/${thread_id}`, body);
   }
 }
 
@@ -905,13 +916,13 @@ export class ModifyThreadCommand extends Command<
 export class DeleteThreadCommand extends Command<
   DeleteThreadCommandInput,
   DeleteThreadResponse,
-  DeleteThreadCommandBody
+  never
 > {
   public override method = 'delete' as const;
 
   constructor(input: DeleteThreadCommandInput) {
-    const { threadId } = input;
-    super(`/threads/${threadId}`);
+    const { thread_id } = input;
+    super(`/threads/${thread_id}`);
   }
 }
 
@@ -923,18 +934,19 @@ export class DeleteThreadCommand extends Command<
 export class ListMessagesCommand extends Command<
   ListMessagesCommandInput,
   ListMessagesResponse,
-  ListMessagesCommandBody,
+  never,
   ListMessagesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListMessagesCommandInput) {
-    const { threadId, limit, order, after, before, ...body } = input;
-    super(`/threads/${threadId}/messages`, undefined, {
+    const { thread_id, limit, order, after, before, run_id } = input;
+    super(`/threads/${thread_id}/messages`, undefined, {
       limit,
       order,
       after,
       before,
+      run_id,
     });
   }
 }
@@ -952,8 +964,8 @@ export class CreateMessageCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: CreateMessageCommandInput) {
-    const { threadId, ...body } = input;
-    super(`/threads/${threadId}/messages`, body);
+    const { thread_id, ...body } = input;
+    super(`/threads/${thread_id}/messages`, body);
   }
 }
 
@@ -965,13 +977,13 @@ export class CreateMessageCommand extends Command<
 export class GetMessageCommand extends Command<
   GetMessageCommandInput,
   MessageObject,
-  GetMessageCommandBody
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: GetMessageCommandInput) {
-    const { threadId, messageId } = input;
-    super(`/threads/${threadId}/messages/${messageId}`);
+    const { thread_id, message_id } = input;
+    super(`/threads/${thread_id}/messages/${message_id}`);
   }
 }
 
@@ -988,8 +1000,26 @@ export class ModifyMessageCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: ModifyMessageCommandInput) {
-    const { threadId, messageId, ...body } = input;
-    super(`/threads/${threadId}/messages/${messageId}`, body);
+    const { thread_id, message_id, ...body } = input;
+    super(`/threads/${thread_id}/messages/${message_id}`, body);
+  }
+}
+
+/**
+ * DeleteMessageCommand
+ *
+ * @summary Deletes a message.
+ */
+export class DeleteMessageCommand extends Command<
+  DeleteMessageCommandInput,
+  DeleteMessageResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteMessageCommandInput) {
+    const { thread_id, message_id } = input;
+    super(`/threads/${thread_id}/messages/${message_id}`);
   }
 }
 
@@ -1019,14 +1049,14 @@ export class CreateThreadAndRunCommand extends Command<
 export class ListRunsCommand extends Command<
   ListRunsCommandInput,
   ListRunsResponse,
-  ListRunsCommandBody,
+  never,
   ListRunsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListRunsCommandInput) {
-    const { threadId, limit, order, after, before, ...body } = input;
-    super(`/threads/${threadId}/runs`, undefined, {
+    const { thread_id, limit, order, after, before } = input;
+    super(`/threads/${thread_id}/runs`, undefined, {
       limit,
       order,
       after,
@@ -1043,13 +1073,14 @@ export class ListRunsCommand extends Command<
 export class CreateRunCommand extends Command<
   CreateRunCommandInput,
   RunObject,
-  CreateRunCommandBody
+  CreateRunCommandBody,
+  CreateRunCommandQuery
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateRunCommandInput) {
-    const { threadId, ...body } = input;
-    super(`/threads/${threadId}/runs`, body);
+    const { thread_id, include, ...body } = input;
+    super(`/threads/${thread_id}/runs`, body, { include });
   }
 }
 
@@ -1061,13 +1092,13 @@ export class CreateRunCommand extends Command<
 export class GetRunCommand extends Command<
   GetRunCommandInput,
   RunObject,
-  GetRunCommandBody
+  never
 > {
   public override method = 'get' as const;
 
   constructor(input: GetRunCommandInput) {
-    const { threadId, runId } = input;
-    super(`/threads/${threadId}/runs/${runId}`);
+    const { thread_id, run_id } = input;
+    super(`/threads/${thread_id}/runs/${run_id}`);
   }
 }
 
@@ -1084,8 +1115,8 @@ export class ModifyRunCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: ModifyRunCommandInput) {
-    const { threadId, runId, ...body } = input;
-    super(`/threads/${threadId}/runs/${runId}`, body);
+    const { thread_id, run_id, ...body } = input;
+    super(`/threads/${thread_id}/runs/${run_id}`, body);
   }
 }
 
@@ -1105,8 +1136,8 @@ export class SubmitToolOuputsToRunCommand extends Command<
   public override method = 'post' as const;
 
   constructor(input: SubmitToolOuputsToRunCommandInput) {
-    const { threadId, runId, ...body } = input;
-    super(`/threads/${threadId}/runs/${runId}/submit_tool_outputs`, body);
+    const { thread_id, run_id, ...body } = input;
+    super(`/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`, body);
   }
 }
 
@@ -1118,13 +1149,13 @@ export class SubmitToolOuputsToRunCommand extends Command<
 export class CancelRunCommand extends Command<
   CancelRunCommandInput,
   RunObject,
-  CancelRunCommandBody
+  never
 > {
   public override method = 'post' as const;
 
   constructor(input: CancelRunCommandInput) {
-    const { threadId, runId } = input;
-    super(`/threads/${threadId}/runs/${runId}/cancel`);
+    const { thread_id, run_id } = input;
+    super(`/threads/${thread_id}/runs/${run_id}/cancel`);
   }
 }
 
@@ -1136,18 +1167,19 @@ export class CancelRunCommand extends Command<
 export class ListRunStepsCommand extends Command<
   ListRunStepsCommandInput,
   ListRunStepsResponse,
-  ListRunStepsCommandBody,
+  never,
   ListRunStepsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListRunStepsCommandInput) {
-    const { threadId, runId, limit, order, after, before, ...body } = input;
-    super(`/threads/${threadId}/runs/${runId}/steps`, undefined, {
+    const { thread_id, run_id, limit, order, after, before, include } = input;
+    super(`/threads/${thread_id}/runs/${run_id}/steps`, undefined, {
       limit,
       order,
       after,
       before,
+      include,
     });
   }
 }
@@ -1160,113 +1192,374 @@ export class ListRunStepsCommand extends Command<
 export class GetRunStepCommand extends Command<
   GetRunStepCommandInput,
   RunStepObject,
-  GetRunStepCommandBody
+  never,
+  GetRunStepCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: GetRunStepCommandInput) {
-    const { threadId, runId, stepId } = input;
-    super(`/threads/${threadId}/runs/${runId}/steps/${stepId}`);
-  }
-}
-
-/**
- * ListAssistantFilesCommand
- *
- * @summary Returns a list of assistant files.
- */
-export class ListAssistantFilesCommand extends Command<
-  ListAssistantFilesCommandInput,
-  ListAssistantFilesResponse,
-  ListAssistantFilesCommandBody,
-  ListAssistantFilesCommandQuery
-> {
-  public override method = 'get' as const;
-
-  constructor(input: ListAssistantFilesCommandInput) {
-    const { assistantId, limit, order, after, before, ...body } = input;
-    super(`/assistants/${assistantId}/files`, undefined, {
-      limit,
-      order,
-      after,
-      before,
+    const { thread_id, run_id, step_id, include } = input;
+    super(`/threads/${thread_id}/runs/${run_id}/steps/${step_id}`, undefined, {
+      include,
     });
   }
 }
 
 /**
- * CreateAssistantFileCommand
+ * ListVectorStoresCommand
  *
- * @summary Create an assistant file by attaching a [File](/docs/api-reference/files)
- * to an [assistant](/docs/api-reference/assistants).
+ * @summary Returns a list of vector stores.
  */
-export class CreateAssistantFileCommand extends Command<
-  CreateAssistantFileCommandInput,
-  AssistantFileObject,
-  CreateAssistantFileCommandBody
+export class ListVectorStoresCommand extends Command<
+  ListVectorStoresCommandInput,
+  ListVectorStoresResponse,
+  never,
+  ListVectorStoresCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListVectorStoresCommandInput) {
+    const { limit, order, after, before } = input;
+    super(`/vector_stores`, undefined, { limit, order, after, before });
+  }
+}
+
+/**
+ * CreateVectorStoreCommand
+ *
+ * @summary Create a vector store.
+ */
+export class CreateVectorStoreCommand extends Command<
+  CreateVectorStoreCommandInput,
+  VectorStoreObject,
+  CreateVectorStoreCommandBody
 > {
   public override method = 'post' as const;
 
-  constructor(input: CreateAssistantFileCommandInput) {
-    const { assistantId, ...body } = input;
-    super(`/assistants/${assistantId}/files`, body);
+  constructor(input: CreateVectorStoreCommandInput) {
+    const body = input;
+    super(`/vector_stores`, body);
   }
 }
 
 /**
- * GetAssistantFileCommand
+ * GetVectorStoreCommand
  *
- * @summary Retrieves an AssistantFile.
+ * @summary Retrieves a vector store.
  */
-export class GetAssistantFileCommand extends Command<
-  GetAssistantFileCommandInput,
-  AssistantFileObject,
-  GetAssistantFileCommandBody
+export class GetVectorStoreCommand extends Command<
+  GetVectorStoreCommandInput,
+  VectorStoreObject,
+  never
 > {
   public override method = 'get' as const;
 
-  constructor(input: GetAssistantFileCommandInput) {
-    const { assistantId, fileId } = input;
-    super(`/assistants/${assistantId}/files/${fileId}`);
+  constructor(input: GetVectorStoreCommandInput) {
+    const { vector_store_id } = input;
+    super(`/vector_stores/${vector_store_id}`);
   }
 }
 
 /**
- * DeleteAssistantFileCommand
+ * ModifyVectorStoreCommand
  *
- * @summary Delete an assistant file.
+ * @summary Modifies a vector store.
  */
-export class DeleteAssistantFileCommand extends Command<
-  DeleteAssistantFileCommandInput,
-  DeleteAssistantFileResponse,
-  DeleteAssistantFileCommandBody
+export class ModifyVectorStoreCommand extends Command<
+  ModifyVectorStoreCommandInput,
+  VectorStoreObject,
+  ModifyVectorStoreCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: ModifyVectorStoreCommandInput) {
+    const { vector_store_id, ...body } = input;
+    super(`/vector_stores/${vector_store_id}`, body);
+  }
+}
+
+/**
+ * DeleteVectorStoreCommand
+ *
+ * @summary Delete a vector store.
+ */
+export class DeleteVectorStoreCommand extends Command<
+  DeleteVectorStoreCommandInput,
+  DeleteVectorStoreResponse,
+  never
 > {
   public override method = 'delete' as const;
 
-  constructor(input: DeleteAssistantFileCommandInput) {
-    const { assistantId, fileId } = input;
-    super(`/assistants/${assistantId}/files/${fileId}`);
+  constructor(input: DeleteVectorStoreCommandInput) {
+    const { vector_store_id } = input;
+    super(`/vector_stores/${vector_store_id}`);
   }
 }
 
 /**
- * ListMessageFilesCommand
+ * ListVectorStoreFilesCommand
  *
- * @summary Returns a list of message files.
+ * @summary Returns a list of vector store files.
  */
-export class ListMessageFilesCommand extends Command<
-  ListMessageFilesCommandInput,
-  ListMessageFilesResponse,
-  ListMessageFilesCommandBody,
-  ListMessageFilesCommandQuery
+export class ListVectorStoreFilesCommand extends Command<
+  ListVectorStoreFilesCommandInput,
+  ListVectorStoreFilesResponse,
+  never,
+  ListVectorStoreFilesCommandQuery
 > {
   public override method = 'get' as const;
 
-  constructor(input: ListMessageFilesCommandInput) {
-    const { threadId, messageId, limit, order, after, before, ...body } = input;
-    super(`/threads/${threadId}/messages/${messageId}/files`, undefined, {
+  constructor(input: ListVectorStoreFilesCommandInput) {
+    const { vector_store_id, limit, order, after, before, filter } = input;
+    super(`/vector_stores/${vector_store_id}/files`, undefined, {
       limit,
       order,
+      after,
+      before,
+      filter,
+    });
+  }
+}
+
+/**
+ * CreateVectorStoreFileCommand
+ *
+ * @summary Create a vector store file by attaching a [File](/docs/api-reference/files)
+ * to a [vector store](/docs/api-reference/vector-stores/object).
+ */
+export class CreateVectorStoreFileCommand extends Command<
+  CreateVectorStoreFileCommandInput,
+  VectorStoreFileObject,
+  CreateVectorStoreFileCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CreateVectorStoreFileCommandInput) {
+    const { vector_store_id, ...body } = input;
+    super(`/vector_stores/${vector_store_id}/files`, body);
+  }
+}
+
+/**
+ * GetVectorStoreFileCommand
+ *
+ * @summary Retrieves a vector store file.
+ */
+export class GetVectorStoreFileCommand extends Command<
+  GetVectorStoreFileCommandInput,
+  VectorStoreFileObject,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: GetVectorStoreFileCommandInput) {
+    const { vector_store_id, file_id } = input;
+    super(`/vector_stores/${vector_store_id}/files/${file_id}`);
+  }
+}
+
+/**
+ * DeleteVectorStoreFileCommand
+ *
+ * @summary Delete a vector store file. This will remove the file from the vector store
+ * but the file itself will not be deleted. To delete the file, use the
+ * [delete file](/docs/api-reference/files/delete) endpoint.
+ */
+export class DeleteVectorStoreFileCommand extends Command<
+  DeleteVectorStoreFileCommandInput,
+  DeleteVectorStoreFileResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteVectorStoreFileCommandInput) {
+    const { vector_store_id, file_id } = input;
+    super(`/vector_stores/${vector_store_id}/files/${file_id}`);
+  }
+}
+
+/**
+ * CreateVectorStoreFileBatchCommand
+ *
+ * @summary Create a vector store file batch.
+ */
+export class CreateVectorStoreFileBatchCommand extends Command<
+  CreateVectorStoreFileBatchCommandInput,
+  VectorStoreFileBatchObject,
+  CreateVectorStoreFileBatchCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CreateVectorStoreFileBatchCommandInput) {
+    const { vector_store_id, ...body } = input;
+    super(`/vector_stores/${vector_store_id}/file_batches`, body);
+  }
+}
+
+/**
+ * GetVectorStoreFileBatchCommand
+ *
+ * @summary Retrieves a vector store file batch.
+ */
+export class GetVectorStoreFileBatchCommand extends Command<
+  GetVectorStoreFileBatchCommandInput,
+  VectorStoreFileBatchObject,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: GetVectorStoreFileBatchCommandInput) {
+    const { vector_store_id, batch_id } = input;
+    super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}`);
+  }
+}
+
+/**
+ * CancelVectorStoreFileBatchCommand
+ *
+ * @summary Cancel a vector store file batch. This attempts to cancel the processing of
+ * files in this batch as soon as possible.
+ */
+export class CancelVectorStoreFileBatchCommand extends Command<
+  CancelVectorStoreFileBatchCommandInput,
+  VectorStoreFileBatchObject,
+  never
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CancelVectorStoreFileBatchCommandInput) {
+    const { vector_store_id, batch_id } = input;
+    super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}/cancel`);
+  }
+}
+
+/**
+ * ListFilesInVectorStoreBatchCommand
+ *
+ * @summary Returns a list of vector store files in a batch.
+ */
+export class ListFilesInVectorStoreBatchCommand extends Command<
+  ListFilesInVectorStoreBatchCommandInput,
+  ListVectorStoreFilesResponse,
+  never,
+  ListFilesInVectorStoreBatchCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListFilesInVectorStoreBatchCommandInput) {
+    const { vector_store_id, batch_id, limit, order, after, before, filter } =
+      input;
+    super(
+      `/vector_stores/${vector_store_id}/file_batches/${batch_id}/files`,
+      undefined,
+      { limit, order, after, before, filter },
+    );
+  }
+}
+
+/**
+ * CreateBatchCommand
+ *
+ * @summary Creates and executes a batch from an uploaded file of requests
+ */
+export class CreateBatchCommand extends Command<
+  CreateBatchCommandInput,
+  Batch,
+  never
+> {
+  public override method = 'post' as const;
+}
+
+/**
+ * ListBatchesCommand
+ *
+ * @summary List your organization's batches.
+ */
+export class ListBatchesCommand extends Command<
+  ListBatchesCommandInput,
+  ListBatchesResponse,
+  never,
+  ListBatchesCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListBatchesCommandInput) {
+    const { after, limit } = input;
+    super(`/batches`, undefined, { after, limit });
+  }
+}
+
+/**
+ * RetrieveBatchCommand
+ *
+ * @summary Retrieves a batch.
+ */
+export class RetrieveBatchCommand extends Command<
+  RetrieveBatchCommandInput,
+  Batch,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveBatchCommandInput) {
+    const { batch_id } = input;
+    super(`/batches/${batch_id}`);
+  }
+}
+
+/**
+ * CancelBatchCommand
+ *
+ * @summary Cancels an in-progress batch. The batch will be in status `cancelling` for
+ * up to 10 minutes, before changing to `cancelled`, where it will have
+ * partial results (if any) available in the output file.
+ */
+export class CancelBatchCommand extends Command<
+  CancelBatchCommandInput,
+  Batch,
+  never
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CancelBatchCommandInput) {
+    const { batch_id } = input;
+    super(`/batches/${batch_id}/cancel`);
+  }
+}
+
+/**
+ * ListAuditLogsCommand
+ *
+ * @summary List user actions and configuration changes within this organization.
+ */
+export class ListAuditLogsCommand extends Command<
+  ListAuditLogsCommandInput,
+  ListAuditLogsResponse,
+  never,
+  ListAuditLogsCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListAuditLogsCommandInput) {
+    const {
+      effective_at,
+      project_ids,
+      event_types,
+      actor_ids,
+      actor_emails,
+      resource_ids,
+      limit,
+      after,
+      before,
+    } = input;
+    super(`/organization/audit_logs`, undefined, {
+      effective_at,
+      project_ids,
+      event_types,
+      actor_ids,
+      actor_emails,
+      resource_ids,
+      limit,
       after,
       before,
     });
@@ -1274,19 +1567,480 @@ export class ListMessageFilesCommand extends Command<
 }
 
 /**
- * GetMessageFileCommand
+ * ListInvitesCommand
  *
- * @summary Retrieves a message file.
+ * @summary Returns a list of invites in the organization.
  */
-export class GetMessageFileCommand extends Command<
-  GetMessageFileCommandInput,
-  MessageFileObject,
-  GetMessageFileCommandBody
+export class ListInvitesCommand extends Command<
+  ListInvitesCommandInput,
+  InviteListResponse,
+  never,
+  ListInvitesCommandQuery
 > {
   public override method = 'get' as const;
 
-  constructor(input: GetMessageFileCommandInput) {
-    const { threadId, messageId, fileId } = input;
-    super(`/threads/${threadId}/messages/${messageId}/files/${fileId}`);
+  constructor(input: ListInvitesCommandInput) {
+    const { limit, after } = input;
+    super(`/organization/invites`, undefined, { limit, after });
+  }
+}
+
+/**
+ * InviteUserCommand
+ *
+ * @summary Create an invite for a user to the organization. The invite must be
+ * accepted by the user before they have access to the organization.
+ */
+export class InviteUserCommand extends Command<
+  InviteUserCommandInput,
+  Invite,
+  InviteUserCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: InviteUserCommandInput) {
+    const body = input;
+    super(`/organization/invites`, body);
+  }
+}
+
+/**
+ * RetrieveInviteCommand
+ *
+ * @summary Retrieves an invite.
+ */
+export class RetrieveInviteCommand extends Command<
+  RetrieveInviteCommandInput,
+  Invite,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveInviteCommandInput) {
+    const { invite_id } = input;
+    super(`/organization/invites/${invite_id}`);
+  }
+}
+
+/**
+ * DeleteInviteCommand
+ *
+ * @summary Delete an invite. If the invite has already been accepted, it cannot be
+ * deleted.
+ */
+export class DeleteInviteCommand extends Command<
+  DeleteInviteCommandInput,
+  InviteDeleteResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteInviteCommandInput) {
+    const { invite_id } = input;
+    super(`/organization/invites/${invite_id}`);
+  }
+}
+
+/**
+ * ListUsersCommand
+ *
+ * @summary Lists all of the users in the organization.
+ */
+export class ListUsersCommand extends Command<
+  ListUsersCommandInput,
+  UserListResponse,
+  never,
+  ListUsersCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListUsersCommandInput) {
+    const { limit, after } = input;
+    super(`/organization/users`, undefined, { limit, after });
+  }
+}
+
+/**
+ * RetrieveUserCommand
+ *
+ * @summary Retrieves a user by their identifier.
+ */
+export class RetrieveUserCommand extends Command<
+  RetrieveUserCommandInput,
+  User,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveUserCommandInput) {
+    const { user_id } = input;
+    super(`/organization/users/${user_id}`);
+  }
+}
+
+/**
+ * ModifyUserCommand
+ *
+ * @summary Modifies a user's role in the organization.
+ */
+export class ModifyUserCommand extends Command<
+  ModifyUserCommandInput,
+  User,
+  ModifyUserCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: ModifyUserCommandInput) {
+    const body = input;
+    super(`/organization/users/${user_id}`, body);
+  }
+}
+
+/**
+ * DeleteUserCommand
+ *
+ * @summary Deletes a user from the organization.
+ */
+export class DeleteUserCommand extends Command<
+  DeleteUserCommandInput,
+  UserDeleteResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteUserCommandInput) {
+    const { user_id } = input;
+    super(`/organization/users/${user_id}`);
+  }
+}
+
+/**
+ * ListProjectsCommand
+ *
+ * @summary Returns a list of projects.
+ */
+export class ListProjectsCommand extends Command<
+  ListProjectsCommandInput,
+  ProjectListResponse,
+  never,
+  ListProjectsCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListProjectsCommandInput) {
+    const { limit, after, include_archived } = input;
+    super(`/organization/projects`, undefined, {
+      limit,
+      after,
+      include_archived,
+    });
+  }
+}
+
+/**
+ * CreateProjectCommand
+ *
+ * @summary Create a new project in the organization. Projects can be created and
+ * archived, but cannot be deleted.
+ */
+export class CreateProjectCommand extends Command<
+  CreateProjectCommandInput,
+  Project,
+  CreateProjectCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CreateProjectCommandInput) {
+    const body = input;
+    super(`/organization/projects`, body);
+  }
+}
+
+/**
+ * RetrieveProjectCommand
+ *
+ * @summary Retrieves a project.
+ */
+export class RetrieveProjectCommand extends Command<
+  RetrieveProjectCommandInput,
+  Project,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveProjectCommandInput) {
+    const { project_id } = input;
+    super(`/organization/projects/${project_id}`);
+  }
+}
+
+/**
+ * ModifyProjectCommand
+ *
+ * @summary Modifies a project in the organization.
+ */
+export class ModifyProjectCommand extends Command<
+  ModifyProjectCommandInput,
+  Project,
+  ModifyProjectCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: ModifyProjectCommandInput) {
+    const body = input;
+    super(`/organization/projects/${project_id}`, body);
+  }
+}
+
+/**
+ * ArchiveProjectCommand
+ *
+ * @summary Archives a project in the organization. Archived projects cannot be used or
+ * updated.
+ */
+export class ArchiveProjectCommand extends Command<
+  ArchiveProjectCommandInput,
+  Project,
+  never
+> {
+  public override method = 'post' as const;
+
+  constructor(input: ArchiveProjectCommandInput) {
+    const { project_id } = input;
+    super(`/organization/projects/${project_id}/archive`);
+  }
+}
+
+/**
+ * ListProjectUsersCommand
+ *
+ * @summary Returns a list of users in the project.
+ */
+export class ListProjectUsersCommand extends Command<
+  ListProjectUsersCommandInput,
+  ProjectUserListResponse,
+  never,
+  ListProjectUsersCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListProjectUsersCommandInput) {
+    const { project_id, limit, after } = input;
+    super(`/organization/projects/${project_id}/users`, undefined, {
+      limit,
+      after,
+    });
+  }
+}
+
+/**
+ * CreateProjectUserCommand
+ *
+ * @summary Adds a user to the project. Users must already be members of the
+ * organization to be added to a project.
+ */
+export class CreateProjectUserCommand extends Command<
+  CreateProjectUserCommandInput,
+  ProjectUser,
+  CreateProjectUserCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CreateProjectUserCommandInput) {
+    const { project_id, ...body } = input;
+    super(`/organization/projects/${project_id}/users`, body);
+  }
+}
+
+/**
+ * RetrieveProjectUserCommand
+ *
+ * @summary Retrieves a user in the project.
+ */
+export class RetrieveProjectUserCommand extends Command<
+  RetrieveProjectUserCommandInput,
+  ProjectUser,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveProjectUserCommandInput) {
+    const { project_id, user_id } = input;
+    super(`/organization/projects/${project_id}/users/${user_id}`);
+  }
+}
+
+/**
+ * ModifyProjectUserCommand
+ *
+ * @summary Modifies a user's role in the project.
+ */
+export class ModifyProjectUserCommand extends Command<
+  ModifyProjectUserCommandInput,
+  ProjectUser,
+  ModifyProjectUserCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: ModifyProjectUserCommandInput) {
+    const body = input;
+    super(`/organization/projects/${project_id}/users/${user_id}`, body);
+  }
+}
+
+/**
+ * DeleteProjectUserCommand
+ *
+ * @summary Deletes a user from the project.
+ */
+export class DeleteProjectUserCommand extends Command<
+  DeleteProjectUserCommandInput,
+  ProjectUserDeleteResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteProjectUserCommandInput) {
+    const { project_id, user_id } = input;
+    super(`/organization/projects/${project_id}/users/${user_id}`);
+  }
+}
+
+/**
+ * ListProjectServiceAccountsCommand
+ *
+ * @summary Returns a list of service accounts in the project.
+ */
+export class ListProjectServiceAccountsCommand extends Command<
+  ListProjectServiceAccountsCommandInput,
+  ProjectServiceAccountListResponse,
+  never,
+  ListProjectServiceAccountsCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListProjectServiceAccountsCommandInput) {
+    const { project_id, limit, after } = input;
+    super(`/organization/projects/${project_id}/service_accounts`, undefined, {
+      limit,
+      after,
+    });
+  }
+}
+
+/**
+ * CreateProjectServiceAccountCommand
+ *
+ * @summary Creates a new service account in the project. This also returns an
+ * unredacted API key for the service account.
+ */
+export class CreateProjectServiceAccountCommand extends Command<
+  CreateProjectServiceAccountCommandInput,
+  ProjectServiceAccountCreateResponse,
+  CreateProjectServiceAccountCommandBody
+> {
+  public override method = 'post' as const;
+
+  constructor(input: CreateProjectServiceAccountCommandInput) {
+    const { project_id, ...body } = input;
+    super(`/organization/projects/${project_id}/service_accounts`, body);
+  }
+}
+
+/**
+ * RetrieveProjectServiceAccountCommand
+ *
+ * @summary Retrieves a service account in the project.
+ */
+export class RetrieveProjectServiceAccountCommand extends Command<
+  RetrieveProjectServiceAccountCommandInput,
+  ProjectServiceAccount,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveProjectServiceAccountCommandInput) {
+    const { project_id, service_account_id } = input;
+    super(
+      `/organization/projects/${project_id}/service_accounts/${service_account_id}`,
+    );
+  }
+}
+
+/**
+ * DeleteProjectServiceAccountCommand
+ *
+ * @summary Deletes a service account from the project.
+ */
+export class DeleteProjectServiceAccountCommand extends Command<
+  DeleteProjectServiceAccountCommandInput,
+  ProjectServiceAccountDeleteResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteProjectServiceAccountCommandInput) {
+    const { project_id, service_account_id } = input;
+    super(
+      `/organization/projects/${project_id}/service_accounts/${service_account_id}`,
+    );
+  }
+}
+
+/**
+ * ListProjectApiKeysCommand
+ *
+ * @summary Returns a list of API keys in the project.
+ */
+export class ListProjectApiKeysCommand extends Command<
+  ListProjectApiKeysCommandInput,
+  ProjectApiKeyListResponse,
+  never,
+  ListProjectApiKeysCommandQuery
+> {
+  public override method = 'get' as const;
+
+  constructor(input: ListProjectApiKeysCommandInput) {
+    const { project_id, limit, after } = input;
+    super(`/organization/projects/${project_id}/api_keys`, undefined, {
+      limit,
+      after,
+    });
+  }
+}
+
+/**
+ * RetrieveProjectApiKeyCommand
+ *
+ * @summary Retrieves an API key in the project.
+ */
+export class RetrieveProjectApiKeyCommand extends Command<
+  RetrieveProjectApiKeyCommandInput,
+  ProjectApiKey,
+  never
+> {
+  public override method = 'get' as const;
+
+  constructor(input: RetrieveProjectApiKeyCommandInput) {
+    const { project_id, key_id } = input;
+    super(`/organization/projects/${project_id}/api_keys/${key_id}`);
+  }
+}
+
+/**
+ * DeleteProjectApiKeyCommand
+ *
+ * @summary Deletes an API key from the project.
+ */
+export class DeleteProjectApiKeyCommand extends Command<
+  DeleteProjectApiKeyCommandInput,
+  ProjectApiKeyDeleteResponse,
+  never
+> {
+  public override method = 'delete' as const;
+
+  constructor(input: DeleteProjectApiKeyCommandInput) {
+    const { project_id, key_id } = input;
+    super(`/organization/projects/${project_id}/api_keys/${key_id}`);
   }
 }

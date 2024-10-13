@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import type { OpenAPIV3 } from 'openapi-types';
+import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
 import {
   Writers,
   type CodeBlockWriter,
@@ -20,17 +20,42 @@ import {
   wordWrap,
 } from './utils.js';
 
-function withNullUnion(type: string | WriterFunction, nullable = false) {
-  return nullable && type !== 'null' ? Writers.unionType(type, 'null') : type;
+function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
+  return withNull && type !== 'null' ? Writers.unionType(type, 'null') : type;
 }
 
-/** @deprecated */
-function maybeWithUndefined(
-  type: string | WriterFunction,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _hasQuestionMark: boolean,
+function schemaTypeIsNull(
+  schema: OpenAPIV3.SchemaObject | OpenAPIV3_1.SchemaObject,
 ) {
-  return type;
+  return (
+    schema.type === 'null' ||
+    ('nullable' in schema && schema.nullable) ||
+    schema.enum?.every((e) => e === 'null')
+  );
+}
+
+function maybeUnion(...types: (string | WriterFunction)[]) {
+  const [first, second, ...rest] = types;
+
+  if (typeof first === 'undefined') {
+    return 'unknown';
+  }
+
+  return typeof second === 'undefined'
+    ? first
+    : Writers.unionType(first, second, ...rest);
+}
+
+function maybeIntersection(...types: (string | WriterFunction)[]) {
+  const [first, second, ...rest] = types;
+
+  if (typeof first === 'undefined') {
+    return 'unknown';
+  }
+
+  return typeof second === 'undefined'
+    ? first
+    : Writers.intersectionType(first, second, ...rest);
 }
 
 export function schemaToType(
@@ -38,9 +63,12 @@ export function schemaToType(
     string,
     InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration
   >,
-  parentSchema: OpenAPIV3.SchemaObject,
+  parentSchema: OpenAPIV3_1.SchemaObject | OpenAPIV3.SchemaObject,
   propertyName: string,
-  schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+  schemaObject:
+    | OpenAPIV3_1.SchemaObject
+    | OpenAPIV3.SchemaObject
+    | OpenAPIV3_1.ReferenceObject,
   options: {
     exactOptionalPropertyTypes?: boolean;
     booleanAsStringish?: boolean;
@@ -73,7 +101,7 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: maybeWithUndefined(existingSchema.getName(), hasQuestionToken),
+      type: existingSchema.getName(),
     };
   }
 
@@ -115,6 +143,61 @@ export function schemaToType(
   const docs: (OptionalKind<JSDocStructure> | string)[] =
     Object.keys(maybeJsDoc).length > 1 ? [maybeJsDoc] : [];
 
+  if (Array.isArray(schemaObject.type)) {
+    //
+    if (schemaObject.type.length === 1) {
+      return {
+        name,
+        hasQuestionToken,
+        type: maybeWithNullUnion(
+          schemaObject.type[0] || 'unknown', // weird edge case
+          schemaTypeIsNull(schemaObject),
+        ),
+        docs,
+      };
+    }
+
+    return {
+      name,
+      hasQuestionToken,
+      type: maybeUnion(
+        ...schemaObject.type.map((type) => {
+          const schema =
+            type === 'array'
+              ? ({
+                  items: {},
+                  ...schemaObject,
+                  type: 'array',
+                } satisfies
+                  | OpenAPIV3.ArraySchemaObject
+                  | OpenAPIV3_1.ArraySchemaObject)
+              : {
+                  ...schemaObject,
+                  type,
+                };
+
+          return (
+            schemaToType(typesAndInterfaces, schemaObject, name, schema).type ||
+            'never'
+          );
+        }),
+      ),
+      docs,
+    };
+  }
+
+  if ('const' in schemaObject) {
+    return {
+      name,
+      hasQuestionToken,
+      type: Array.isArray(schemaObject.const)
+        ? maybeUnion(...schemaObject.const)
+        : JSON.stringify(schemaObject.const),
+
+      docs,
+    };
+  }
+
   if (schemaObject.type === 'array') {
     const type = schemaToType(
       typesAndInterfaces,
@@ -129,10 +212,11 @@ export function schemaToType(
         name,
         hasQuestionToken,
         type: (writer: CodeBlockWriter) => {
-          writer.write('Array<');
+          writer.write('(');
           typeWriter(writer);
-          writer.write('>');
+          writer.write(')[]');
         },
+        isReadonly: true,
         docs,
       };
     }
@@ -140,37 +224,10 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: `${type.type}[]`,
+      type: `(${type.type})[]`,
+      isReadonly: true,
       docs,
     };
-
-    // if ('$ref' in propertySchema.items) {
-    //   const existingSchema = typesAndInterfaces.get(propertySchema.items.$ref);
-
-    //   if (!existingSchema) {
-    //     throw new Error(
-    //       `ref used before available: ${propertySchema.items.$ref}`,
-    //     );
-    //   }
-
-    //   return {
-    //     name,
-    //     hasQuestionToken,
-    //     type: `${withNullUnion(
-    //       existingSchema.getName(),
-    //       'nullable' in propertySchema && propertySchema.nullable,
-    //     )}[]`,
-    //   };
-    // }
-
-    // return {
-    //   name,
-    //   hasQuestionToken,
-    //   type: withNullUnion(
-    //     'never',
-    //     'nullable' in propertySchema && propertySchema.nullable,
-    //   ),
-    // };
   }
 
   if (
@@ -181,8 +238,6 @@ export function schemaToType(
     const schemaItems =
       schemaObject.allOf || schemaObject.oneOf || schemaObject.anyOf || [];
 
-    const intersect = 'allOf' in schemaObject;
-
     const types = schemaItems
       .map((schema) =>
         schemaToType(typesAndInterfaces, parentSchema, propertyName, schema, {
@@ -192,31 +247,26 @@ export function schemaToType(
       )
       .map((t) => t.type);
 
-    const nullable = 'nullable' in schemaObject && schemaObject.nullable;
-
-    // not nullable, and only one type, so just return that type
-    if (!nullable && types.length === 1 && types[0]) {
+    // only one type, so just return that type
+    if (types.length === 1) {
       return {
         name,
         hasQuestionToken,
-        type: maybeWithUndefined(types[0], hasQuestionToken),
+        type: `${types[0]}`,
         docs,
       };
     }
 
-    // already got a nullable type, no need to add another null
+    const intersect = 'allOf' in schemaObject;
+
+    // already got a null type, no need to add another null
     if (types.some((t) => t === 'null')) {
       return {
         name,
         hasQuestionToken,
-        type: maybeWithUndefined(
-          intersect
-            ? // @ts-expect-error -> bad type in ts-morph (arguably)
-              Writers.intersectionType(...types)
-            : // @ts-expect-error -> bad type in ts-morph (arguably)
-              Writers.unionType(...types),
-          hasQuestionToken,
-        ),
+        type: intersect
+          ? maybeIntersection(...types.filter(isNotNullOrUndefined))
+          : maybeUnion(...types.filter(isNotNullOrUndefined)),
         docs,
       };
     }
@@ -225,20 +275,16 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: maybeWithUndefined(
-        intersect
-          ? // @ts-expect-error -> bad type in ts-morph (arguably)
-            Writers.intersectionType(...types, 'null')
-          : // @ts-expect-error -> bad type in ts-morph (arguably)
-            Writers.unionType(...types, 'null'),
-        hasQuestionToken,
-      ),
+      type: intersect
+        ? maybeIntersection(...types.filter(isNotNullOrUndefined), 'null')
+        : maybeUnion(...types.filter(isNotNullOrUndefined), 'null'),
       docs,
     };
   }
 
   if (schemaObject.type === 'object') {
-    // type=object and enum null is common openapi nullable workaround
+    // type=object and enum null is common openapi workaround
+    // we convert it to null type
     if (schemaObject.enum?.every((e) => e === null)) {
       return {
         name,
@@ -248,36 +294,35 @@ export function schemaToType(
       };
     }
 
-    if (!schemaObject.properties) {
-      return {
-        name,
-        hasQuestionToken,
-        type: withNullUnion('JsonifiableObject', schemaObject.nullable),
-        docs,
-      };
-    }
+    // if (!schemaObject.properties) {
+    //   return {
+    //     name,
+    //     hasQuestionToken,
+    //     type: 'Jsonifiable',
+    //     docs,
+    //   };
+    // }
 
     return {
       name,
       hasQuestionToken,
-      // WARN: Duplicated code - recursion beat me
-      type: maybeWithUndefined(
-        Writers.objectType({
-          properties: Object.entries(schemaObject.properties || {}).map(
-            ([schemaPropertyName, schemaPropertySchema]) => {
-              const type = schemaToType(
-                typesAndInterfaces,
-                schemaObject,
-                schemaPropertyName,
-                schemaPropertySchema,
-              );
+      // WARN: Duplicated code - the recursion beat me
+      type: schemaObject.properties
+        ? Writers.objectType({
+            properties: Object.entries(schemaObject.properties).map(
+              ([key, schema]) => {
+                const type = schemaToType(
+                  typesAndInterfaces,
+                  schemaObject,
+                  key,
+                  schema,
+                );
 
-              return type;
-            },
-          ),
-        }),
-        hasQuestionToken,
-      ),
+                return type;
+              },
+            ),
+          })
+        : 'JsonifiableObject',
       docs,
     };
   }
@@ -286,10 +331,10 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: withNullUnion(
+      type: maybeWithNullUnion(
         // eslint-disable-next-line no-template-curly-in-string
         options.integerAsStringish ? '`${number}`' : 'number',
-        schemaObject.nullable,
+        schemaTypeIsNull(schemaObject),
       ),
       docs,
     };
@@ -299,32 +344,30 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: maybeWithUndefined(
-        withNullUnion(
-          options.booleanAsStringish
-            ? Writers.unionType('"true"', '"false"')
-            : 'boolean',
-          schemaObject.nullable,
-        ),
-        hasQuestionToken,
+      type: maybeWithNullUnion(
+        options.booleanAsStringish
+          ? Writers.unionType('"true"', '"false"')
+          : 'boolean',
+        schemaTypeIsNull(schemaObject),
       ),
       docs,
     };
   }
 
-  if (schemaObject.type === 'string' && 'enum' in schemaObject) {
+  if (schemaObject.type === 'string') {
+    if ('enum' in schemaObject) {
+      return {
+        name,
+        hasQuestionToken,
+        type: maybeUnion(...schemaObject.enum.map((e) => JSON.stringify(e))),
+        docs,
+      };
+    }
+
     return {
       name,
       hasQuestionToken,
-      type: maybeWithUndefined(
-        schemaObject.enum?.length === 1
-          ? JSON.stringify(schemaObject.enum[0])
-          : Writers.unionType(
-              // @ts-expect-error
-              ...schemaObject.enum.map((e) => JSON.stringify(e)),
-            ),
-        hasQuestionToken,
-      ),
+      type: 'string',
       docs,
     };
   }
@@ -334,37 +377,37 @@ export function schemaToType(
     return {
       name,
       hasQuestionToken,
-      type: maybeWithUndefined(
-        withNullUnion(
-          'Jsonifiable',
-          'nullable' in schemaObject && schemaObject.nullable,
-        ),
-        hasQuestionToken,
-      ),
+      type: maybeWithNullUnion('Jsonifiable', schemaTypeIsNull(schemaObject)),
+      docs,
+      isReadonly: !!schemaObject.readOnly,
+    };
+  }
+
+  if (
+    schemaObject.type === 'null' ||
+    // legacy nullables
+    ('nullable' in schemaObject && schemaObject.nullable) ||
+    ('enum' in schemaObject && schemaObject.enum?.every((e) => e === 'null'))
+  ) {
+    return {
+      name,
+      hasQuestionToken,
+      type: 'null',
       docs,
     };
   }
 
-  const type =
-    schemaObject.type?.toString() ||
-    ('nullable' in schemaObject && 'null') ||
-    'never';
-
-  if (type === 'never') {
-    console.warn(
-      'WARN: unsupported type in %j with parent %j',
-      schemaObject,
-      parentSchema,
-    );
-  }
+  console.warn(
+    'WARN: unhandled type %s in %j', // with parent %j',
+    schemaObject.type,
+    schemaObject,
+    // parentSchema,
+  );
 
   return {
     name,
     hasQuestionToken,
-    type: maybeWithUndefined(
-      withNullUnion(type, 'nullable' in schemaObject && schemaObject.nullable),
-      hasQuestionToken,
-    ),
+    type: 'unknown',
     docs,
   };
 }
@@ -376,7 +419,11 @@ export function registerTypesFromSchema(
   >,
   typesFile: SourceFile,
   schemaName: string,
-  schemaObject: OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject,
+  schemaObject:
+    | OpenAPIV3.SchemaObject
+    | OpenAPIV3.ReferenceObject
+    | OpenAPIV3_1.SchemaObject
+    | OpenAPIV3_1.ReferenceObject,
 ) {
   // deal with refs
   if ('$ref' in schemaObject) {
@@ -455,17 +502,12 @@ export function registerTypesFromSchema(
       ]),
     ];
 
-    const writerType = intersect ? Writers.intersectionType : Writers.unionType;
-
-    // gets around picky types for writerType
-    const [firstType = 'never', secondType, ...restTypes] = typeArgs;
-
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: secondType
-        ? writerType.call(Writers, firstType, secondType, ...restTypes)
-        : firstType,
+      type: intersect
+        ? maybeIntersection(...typeArgs)
+        : maybeUnion(...typeArgs),
     });
 
     if (schemaObject.description) {
@@ -483,20 +525,22 @@ export function registerTypesFromSchema(
       name: pascalCase(schemaName),
       isExported: true,
       // WARN: Duplicated code - the recursion beat me
-      type: Writers.objectType({
-        properties: Object.entries(schemaObject.properties || {}).map(
-          ([propertyName, propertySchema]) => {
-            const type = schemaToType(
-              typesAndInterfaces,
-              schemaObject,
-              propertyName,
-              propertySchema,
-            );
+      type: schemaObject.properties
+        ? Writers.objectType({
+            properties: Object.entries(schemaObject.properties).map(
+              ([key, schema]) => {
+                const type = schemaToType(
+                  typesAndInterfaces,
+                  schemaObject,
+                  key,
+                  schema,
+                );
 
-            return type;
-          },
-        ),
-      }),
+                return type;
+              },
+            ),
+          })
+        : 'JsonifiableObject',
     });
 
     if (schemaObject.description) {
@@ -508,15 +552,86 @@ export function registerTypesFromSchema(
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, newIf);
   }
 
+  // deal with enums
+  else if (schemaObject.type === 'string' && schemaObject.enum) {
+    const docs = schemaObject.description
+      ? [
+          {
+            description: wordWrap(schemaObject.description),
+          },
+        ]
+      : [];
+
+    // bonus enum interface for the same set of strings
+    // handy for looping over the enum values
+    const enumDeclaration = typesFile.addEnum({
+      name: pascalCase(schemaName, 'Enum'),
+      isExported: true,
+      members: schemaObject.enum.map((e: unknown) => ({
+        name: typeof e === 'string' ? pascalCase(e) : String(e),
+        value: String(e),
+      })),
+    });
+
+    const stringUnion = typesFile.addTypeAlias({
+      name: pascalCase(schemaName /* , schemaObject.type */),
+      isExported: true,
+      type: maybeUnion(
+        enumDeclaration.getName(),
+        ...schemaObject.enum.map((e) => JSON.stringify(e)),
+      ),
+      docs,
+    });
+
+    typesAndInterfaces.set(`#/components/schemas/${schemaName}`, stringUnion);
+
+    typesAndInterfaces.set(
+      `#/components/schemas/${enumDeclaration.getName()}`,
+      enumDeclaration,
+    );
+  }
+
+  // deal with string consts
+  else if (schemaObject.type === 'string' && 'const' in schemaObject) {
+    const constDeclaration = typesFile.addTypeAlias({
+      isExported: true,
+      name: pascalCase(schemaName),
+      type: JSON.stringify(schemaObject.const),
+    });
+
+    if (schemaObject.description) {
+      constDeclaration.addJsDoc({
+        description: wordWrap(schemaObject.description),
+      });
+    }
+
+    typesAndInterfaces.set(
+      `#/components/schemas/${schemaName}`,
+      constDeclaration,
+    );
+  }
+
   // deal with non-enum strings
   else if (schemaObject.type === 'string' && !schemaObject.enum) {
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion(
-        schemaObject.format === 'date-time' ? 'Jsonify<Date>' : 'string',
-        schemaObject.nullable,
-      ),
+      // default
+      type: maybeWithNullUnion('string', schemaTypeIsNull(schemaObject)),
+
+      // date format
+      ...(schemaObject.format === 'date-time' && {
+        type: 'Jsonify<Date>',
+      }),
+
+      // custom extension
+      ...('typescriptHint' in schemaObject &&
+        typeof schemaObject.typescriptHint === 'string' && {
+          type: maybeWithNullUnion(
+            schemaObject.typescriptHint,
+            schemaTypeIsNull(schemaObject),
+          ),
+        }),
     });
 
     if (schemaObject.description) {
@@ -528,35 +643,15 @@ export function registerTypesFromSchema(
     typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
   }
 
-  // deal with enums strings
-  else if (schemaObject.type === 'string' && schemaObject.enum) {
-    const enumDeclaration = typesFile.addEnum({
-      name: pascalCase(schemaName),
-      isExported: true,
-      members: schemaObject.enum.map((e: unknown) => ({
-        name: typeof e === 'string' ? pascalCase(e) : String(e),
-        value: String(e),
-      })),
-    });
-
-    if (schemaObject.description) {
-      enumDeclaration.addJsDoc({
-        description: wordWrap(schemaObject.description),
-      });
-    }
-
-    typesAndInterfaces.set(
-      `#/components/schemas/${schemaName}`,
-      enumDeclaration,
-    );
-  }
-
   // deal with numberish things
   else if (schemaObject.type === 'number' || schemaObject.type === 'integer') {
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion(schemaObject.type, schemaObject.nullable),
+      type: maybeWithNullUnion(
+        schemaObject.type,
+        schemaTypeIsNull(schemaObject),
+      ),
     });
 
     if (schemaObject.description) {
@@ -573,7 +668,10 @@ export function registerTypesFromSchema(
     const typeAlias = typesFile.addTypeAlias({
       name: pascalCase(schemaName),
       isExported: true,
-      type: withNullUnion(schemaObject.type, schemaObject.nullable),
+      type: maybeWithNullUnion(
+        schemaObject.type,
+        schemaTypeIsNull(schemaObject),
+      ),
     });
 
     if (schemaObject.description) {

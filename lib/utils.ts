@@ -79,3 +79,11 @@ export function wordWrap(text: string) {
   // max width is 75 as it will be indented already inside a multi-line comment
   return wrap(text, { width: 75, indent: '' });
 }
+
+export function castToValidJsIdentifier(name: string) {
+  return name.replace(/^(\d+)/, '_$1').replaceAll(/[^a-zA-Z0-9_]/g, '');
+}
+
+export function iife<T>(fn: () => T): T {
+  return fn();
+}
