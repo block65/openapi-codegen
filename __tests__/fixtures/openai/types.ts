@@ -3,28 +3,18 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:31.654Z
+ * Generated on 2025-02-02T10:02:00.661Z
  *
  */
-import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
+import type { JsonifiableObject } from 'type-fest/source/jsonifiable.ts';
 
 export type DeleteModelResponse = {
   id: string;
   deleted: boolean;
   object: string;
 };
-
-export enum ChatCompletionRoleEnum {
-  System = 'system',
-  User = 'user',
-  Assistant = 'assistant',
-  Tool = 'tool',
-  Function = 'function',
-}
-
 /** The role of the author of a message */
 export type ChatCompletionRole =
-  | ChatCompletionRoleEnum
   | 'system'
   | 'user'
   | 'assistant'
@@ -33,11 +23,11 @@ export type ChatCompletionRole =
 export type ChatCompletionTokenLogprob = {
   token: string;
   logprob: number;
-  readonly bytes: number[];
-  readonly top_logprobs: {
+  bytes: readonly number[];
+  top_logprobs: readonly {
     token: string;
     logprob: number;
-    readonly bytes: number[];
+    bytes: readonly number[];
   }[];
 };
 /**
@@ -46,12 +36,12 @@ export type ChatCompletionTokenLogprob = {
  */
 export type CreateChatCompletionStreamResponse = {
   id: string;
-  readonly choices: {
+  choices: readonly {
     /** WARN: $ref used before available - #/components/schemas/ChatCompletionStreamResponseDelta */
     delta: never;
     logprobs?: {
-      readonly content: ChatCompletionTokenLogprob[];
-      readonly refusal: ChatCompletionTokenLogprob[];
+      content: readonly ChatCompletionTokenLogprob[];
+      refusal: readonly ChatCompletionTokenLogprob[];
     };
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
@@ -254,8 +244,8 @@ export type CreateImageVariationRequest = {
 export type CreateModerationRequest = {
   input:
     | string
-    | string[]
-    | (
+    | readonly string[]
+    | readonly (
         | {
             /**
              * Always `image_url`.
@@ -304,7 +294,7 @@ export type CreateModerationRequest = {
 export type CreateModerationResponse = {
   id: string;
   model: string;
-  readonly results: {
+  results: readonly {
     flagged: boolean;
     categories: {
       hate: boolean;
@@ -337,19 +327,19 @@ export type CreateModerationResponse = {
       'violence/graphic': number;
     };
     category_applied_input_types: {
-      readonly hate: 'text'[];
-      readonly 'hate/threatening': 'text'[];
-      readonly harassment: 'text'[];
-      readonly 'harassment/threatening': 'text'[];
-      readonly illicit: 'text'[];
-      readonly 'illicit/violent': 'text'[];
-      readonly 'self-harm': ('text' | 'image')[];
-      readonly 'self-harm/intent': ('text' | 'image')[];
-      readonly 'self-harm/instructions': ('text' | 'image')[];
-      readonly sexual: ('text' | 'image')[];
-      readonly 'sexual/minors': 'text'[];
-      readonly violence: ('text' | 'image')[];
-      readonly 'violence/graphic': ('text' | 'image')[];
+      hate: readonly 'text'[];
+      'hate/threatening': readonly 'text'[];
+      harassment: readonly 'text'[];
+      'harassment/threatening': readonly 'text'[];
+      illicit: readonly 'text'[];
+      'illicit/violent': readonly 'text'[];
+      'self-harm': readonly ('text' | 'image')[];
+      'self-harm/intent': readonly ('text' | 'image')[];
+      'self-harm/instructions': readonly ('text' | 'image')[];
+      sexual: readonly ('text' | 'image')[];
+      'sexual/minors': readonly 'text'[];
+      violence: readonly ('text' | 'image')[];
+      'violence/graphic': readonly ('text' | 'image')[];
     };
   }[];
 };
@@ -388,7 +378,7 @@ export type AddUploadPartRequest = {
   data: string;
 };
 export type CompleteUploadRequest = {
-  readonly part_ids: string[];
+  part_ids: readonly string[];
   md5?: string;
 };
 export type CancelUploadRequest = JsonifiableObject;
@@ -462,7 +452,7 @@ export type CreateFineTuningJobRequest = {
    * @example file-abc123
    */
   validation_file?: string;
-  readonly integrations?: {
+  integrations?: readonly {
     type: 'wandb';
     wandb: {
       /**
@@ -472,7 +462,7 @@ export type CreateFineTuningJobRequest = {
       project: string;
       name?: string;
       entity?: string;
-      readonly tags?: string[];
+      tags?: readonly string[];
     };
   }[];
   /**
@@ -495,7 +485,12 @@ export type CreateEmbeddingRequest = {
    * for counting tokens.
    * @example The quick brown fox jumped over the lazy dog
    */
-  input: string | string[] | number[] | number[][] | null;
+  input:
+    | string
+    | readonly string[]
+    | readonly number[]
+    | readonly (readonly number[])[]
+    | null;
   /**
    * ID of the model to use. You can use the [List
    * models](/docs/api-reference/models/list) API to see all of your available
@@ -586,7 +581,7 @@ export type FineTuningIntegration = {
     project: string;
     name?: string;
     entity?: string;
-    readonly tags?: string[];
+    tags?: readonly string[];
   };
 };
 /**
@@ -617,10 +612,10 @@ export type AssistantToolsFileSearchTypeOnly = {
   type: 'file_search';
 };
 export type ModifyRunRequest = {
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type SubmitToolOutputsRunRequest = {
-  readonly tool_outputs: {
+  tool_outputs: readonly {
     tool_call_id?: string;
     output?: string;
   }[];
@@ -635,13 +630,13 @@ export type ModifyThreadRequest = {
        * the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: {
-      readonly vector_store_ids?: string[];
+      vector_store_ids?: readonly string[];
     };
   };
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type DeleteThreadResponse = {
   id: string;
@@ -649,7 +644,7 @@ export type DeleteThreadResponse = {
   object: 'thread.deleted';
 };
 export type ModifyMessageRequest = {
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type DeleteMessageResponse = {
   id: string;
@@ -745,7 +740,7 @@ export type MessageContentTextObject = {
   type: 'text';
   text: {
     value: string;
-    readonly annotations: (never | never | null)[];
+    annotations: readonly (never | never | null)[];
   };
 };
 /** The refusal content generated by the assistant. */
@@ -811,7 +806,7 @@ export type MessageDeltaContentTextObject = {
   type: 'text';
   text?: {
     value?: string;
-    readonly annotations?: (never | never | null)[];
+    annotations?: readonly (never | never | null)[];
   };
 };
 /** The refusal content that is part of a message. */
@@ -873,7 +868,7 @@ export type RunStepDetailsToolCallsCodeObject = {
   type: 'code_interpreter';
   code_interpreter: {
     input: string;
-    readonly outputs: (never | never | null)[];
+    outputs: readonly (never | never | null)[];
   };
 };
 /** Details of the Code Interpreter tool call the run step was involved in. */
@@ -888,7 +883,7 @@ export type RunStepDeltaStepDetailsToolCallsCodeObject = {
   type: 'code_interpreter';
   code_interpreter?: {
     input?: string;
-    readonly outputs?: (never | never | null)[];
+    outputs?: readonly (never | never | null)[];
   };
 };
 /** Text output from the Code Interpreter tool call as part of a run step. */
@@ -940,7 +935,7 @@ export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
    * @enum file_search
    */
   type: 'file_search';
-  file_search: JsonifiableObject;
+  file_search: JsonifiableObject /* fallthrough */;
 };
 export type RunStepDetailsToolCallsFunctionObject = {
   id: string;
@@ -1023,7 +1018,7 @@ export type BatchRequestOutput = {
   response?: {
     status_code?: number;
     request_id?: string;
-    body?: JsonifiableObject;
+    body?: JsonifiableObject /* fallthrough */;
   };
   error?: {
     code?: string;
@@ -1162,7 +1157,7 @@ export type ProjectApiKey = {
 };
 export type ProjectApiKeyListResponse = {
   object: 'list';
-  readonly data: ProjectApiKey[];
+  data: readonly ProjectApiKey[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -1193,14 +1188,14 @@ export type ProjectServiceAccountCreateResponse = {
 };
 export type ProjectServiceAccountListResponse = {
   object: 'list';
-  readonly data: ProjectServiceAccount[];
+  data: readonly ProjectServiceAccount[];
   first_id: string;
   last_id: string;
   has_more: boolean;
 };
 export type ProjectUserListResponse = {
   object: string;
-  readonly data: ProjectUser[];
+  data: readonly ProjectUser[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -1226,7 +1221,7 @@ export type Project = {
 };
 export type ProjectListResponse = {
   object: 'list';
-  readonly data: Project[];
+  data: readonly Project[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -1250,7 +1245,7 @@ export type User = {
 };
 export type UserListResponse = {
   object: 'list';
-  readonly data: User[];
+  data: readonly User[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -1284,7 +1279,7 @@ export type InviteListResponse = {
    * @enum list
    */
   object: 'list';
-  readonly data: Invite[];
+  data: readonly Invite[];
   first_id?: string;
   last_id?: string;
   has_more?: boolean;
@@ -1324,33 +1319,8 @@ export type AuditLogActor = {
   session?: AuditLogActorSession;
   api_key?: AuditLogActorApiKey;
 };
-
-export enum AuditLogEventTypeEnum {
-  ApiKeyCreated = 'api_key.created',
-  ApiKeyUpdated = 'api_key.updated',
-  ApiKeyDeleted = 'api_key.deleted',
-  InviteSent = 'invite.sent',
-  InviteAccepted = 'invite.accepted',
-  InviteDeleted = 'invite.deleted',
-  LoginSucceeded = 'login.succeeded',
-  LoginFailed = 'login.failed',
-  LogoutSucceeded = 'logout.succeeded',
-  LogoutFailed = 'logout.failed',
-  OrganizationUpdated = 'organization.updated',
-  ProjectCreated = 'project.created',
-  ProjectUpdated = 'project.updated',
-  ProjectArchived = 'project.archived',
-  ServiceAccountCreated = 'service_account.created',
-  ServiceAccountUpdated = 'service_account.updated',
-  ServiceAccountDeleted = 'service_account.deleted',
-  UserAdded = 'user.added',
-  UserUpdated = 'user.updated',
-  UserDeleted = 'user.deleted',
-}
-
 /** The event type. */
 export type AuditLogEventType =
-  | AuditLogEventTypeEnum
   | 'api_key.created'
   | 'api_key.updated'
   | 'api_key.deleted'
@@ -1384,13 +1354,13 @@ export type AuditLog = {
   'api_key.created'?: {
     id?: string;
     data?: {
-      readonly scopes?: string[];
+      scopes?: readonly string[];
     };
   };
   'api_key.updated'?: {
     id?: string;
     changes_requested?: {
-      readonly scopes?: string[];
+      scopes?: readonly string[];
     };
   };
   'api_key.deleted'?: {
@@ -1478,7 +1448,7 @@ export type AuditLog = {
 };
 export type ListAuditLogsResponse = {
   object: 'list';
-  readonly data: AuditLog[];
+  data: readonly AuditLog[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -1493,7 +1463,7 @@ export type Batch = {
   endpoint: string;
   errors?: {
     object?: string;
-    readonly data?: {
+    data?: readonly {
       code?: string;
       message?: string;
       param?: string;
@@ -1531,10 +1501,10 @@ export type Batch = {
     completed: number;
     failed: number;
   };
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type ListBatchesResponse = {
-  readonly data: Batch[];
+  data: readonly Batch[];
   first_id?: string;
   last_id?: string;
   has_more: boolean;
@@ -1557,7 +1527,7 @@ export type MessageDeltaObject = {
      * @enum user,assistant
      */
     role?: 'user' | 'assistant';
-    readonly content?: (
+    content?: readonly (
       | MessageDeltaContentImageFileObject
       | MessageDeltaContentTextObject
       | MessageDeltaContentRefusalObject
@@ -1620,7 +1590,7 @@ export type MessageObject = {
    * @enum user,assistant
    */
   role: 'user' | 'assistant';
-  readonly content: (
+  content: readonly (
     | MessageContentImageFileObject
     | MessageContentImageUrlObject
     | MessageContentTextObject
@@ -1629,15 +1599,15 @@ export type MessageObject = {
   )[];
   assistant_id: string;
   run_id: string;
-  readonly attachments: {
+  attachments: readonly {
     file_id?: string;
-    readonly tools?: (
+    tools?: readonly (
       | AssistantToolsCode
       | AssistantToolsFileSearchTypeOnly
       | null
     )[];
   }[];
-  metadata: JsonifiableObject;
+  metadata: JsonifiableObject /* fallthrough */;
 };
 export type MessageStreamEvent =
   | {
@@ -1667,7 +1637,7 @@ export type RunStepDeltaStepDetailsToolCallsObject = {
    * @enum tool_calls
    */
   type: 'tool_calls';
-  readonly tool_calls?: (
+  tool_calls?: readonly (
     | RunStepDeltaStepDetailsToolCallsCodeObject
     | RunStepDeltaStepDetailsToolCallsFileSearchObject
     | RunStepDeltaStepDetailsToolCallsFunctionObject
@@ -1719,7 +1689,7 @@ export type RunStepDetailsToolCallsObject = {
    * @enum tool_calls
    */
   type: 'tool_calls';
-  readonly tool_calls: (
+  tool_calls: readonly (
     | RunStepDetailsToolCallsCodeObject
     | never
     | RunStepDetailsToolCallsFunctionObject
@@ -1777,7 +1747,7 @@ export type RunStepObject = {
   cancelled_at: number | null;
   failed_at: number | null;
   completed_at: number | null;
-  metadata: JsonifiableObject;
+  metadata: JsonifiableObject /* fallthrough */;
   usage: RunStepCompletionUsage;
 };
 export type RunStepStreamEvent =
@@ -1975,7 +1945,7 @@ export type RunObject = {
      */
     type: 'submit_tool_outputs';
     submit_tool_outputs: {
-      readonly tool_calls: RunToolCallObject[];
+      tool_calls: readonly RunToolCallObject[];
     };
   };
   last_error: {
@@ -2006,8 +1976,8 @@ export type RunObject = {
    * for this run.
    * @default
    */
-  readonly tools: (AssistantToolsCode | never | never | null)[];
-  metadata: JsonifiableObject;
+  tools: readonly (AssistantToolsCode | never | never | null)[];
+  metadata: JsonifiableObject /* fallthrough */;
   usage: RunCompletionUsage;
   temperature?: number | null;
   top_p?: number | null;
@@ -2076,13 +2046,13 @@ export type ThreadObject = {
        * the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: {
-      readonly vector_store_ids?: string[];
+      vector_store_ids?: readonly string[];
     };
   };
-  metadata: JsonifiableObject;
+  metadata: JsonifiableObject /* fallthrough */;
 };
 export type ThreadStreamEvent = {
   event: 'thread.created';
@@ -2155,7 +2125,7 @@ export type ChunkingStrategyRequestParam =
   | AutoChunkingStrategyRequestParam
   | StaticChunkingStrategyRequestParam;
 export type CreateVectorStoreFileBatchRequest = {
-  readonly file_ids: string[];
+  file_ids: readonly string[];
   chunking_strategy?: ChunkingStrategyRequestParam;
 };
 /**
@@ -2211,7 +2181,7 @@ export type VectorStoreFileObject = {
 };
 export type ListVectorStoreFilesResponse = {
   object: string;
-  readonly data: VectorStoreFileObject[];
+  data: readonly VectorStoreFileObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -2261,11 +2231,11 @@ export type VectorStoreObject = {
   expires_after?: VectorStoreExpirationAfter;
   expires_at?: number | null;
   last_active_at: number | null;
-  metadata: JsonifiableObject;
+  metadata: JsonifiableObject /* fallthrough */;
 };
 export type ListVectorStoresResponse = {
   object: string;
-  readonly data: VectorStoreObject[];
+  data: readonly VectorStoreObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -2273,24 +2243,24 @@ export type ListVectorStoresResponse = {
 export type UpdateVectorStoreRequest = {
   name?: string;
   expires_after?: VectorStoreExpirationAfter;
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type CreateVectorStoreRequest = {
-  readonly file_ids?: string[];
+  file_ids?: readonly string[];
   name?: string;
   expires_after?: VectorStoreExpirationAfter;
   chunking_strategy?:
     | AutoChunkingStrategyRequestParam
     | StaticChunkingStrategyRequestParam
     | null;
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 /** A result instance of the file search. */
 export type RunStepDetailsToolCallsFileSearchResultObject = {
   file_id: string;
   file_name: string;
   score: number;
-  readonly content?: {
+  content?: readonly {
     /**
      * The type of the content.
      * @enum text
@@ -2318,26 +2288,26 @@ export type RunStepDetailsToolCallsFileSearchObject = {
   type: 'file_search';
   file_search: {
     ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
-    readonly results?: RunStepDetailsToolCallsFileSearchResultObject[];
+    results?: readonly RunStepDetailsToolCallsFileSearchResultObject[];
   };
 };
 export type ListRunStepsResponse = {
   object: string;
-  readonly data: RunStepObject[];
+  data: readonly RunStepObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
 };
 export type ListMessagesResponse = {
   object: string;
-  readonly data: MessageObject[];
+  data: readonly MessageObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
 };
 export type ListThreadsResponse = {
   object: string;
-  readonly data: ThreadObject[];
+  data: readonly ThreadObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -2355,25 +2325,25 @@ export type CreateMessageRequest = {
   role: 'user' | 'assistant';
   content:
     | string
-    | (
+    | readonly (
         | MessageContentImageFileObject
         | MessageContentImageUrlObject
         | MessageRequestContentTextObject
         | null
       )[]
     | null;
-  readonly attachments?: {
+  attachments?: readonly {
     file_id?: string;
-    readonly tools?: (
+    tools?: readonly (
       | AssistantToolsCode
       | AssistantToolsFileSearchTypeOnly
       | null
     )[];
   }[];
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type CreateThreadRequest = {
-  readonly messages?: CreateMessageRequest[];
+  messages?: readonly CreateMessageRequest[];
   tool_resources?: {
     code_interpreter?: {
       /**
@@ -2382,11 +2352,11 @@ export type CreateThreadRequest = {
        * the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: unknown | unknown | null;
   };
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
 };
 export type CreateThreadAndRunRequest = {
   assistant_id: string;
@@ -2426,7 +2396,7 @@ export type CreateThreadAndRunRequest = {
     | 'gpt-3.5-turbo-16k-0613'
     | null;
   instructions?: string;
-  readonly tools?: (AssistantToolsCode | never | never | null)[];
+  tools?: readonly (AssistantToolsCode | never | never | null)[];
   tool_resources?: {
     code_interpreter?: {
       /**
@@ -2435,13 +2405,13 @@ export type CreateThreadAndRunRequest = {
        * the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: {
-      readonly vector_store_ids?: string[];
+      vector_store_ids?: readonly string[];
     };
   };
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -2471,7 +2441,7 @@ export type CreateThreadAndRunRequest = {
 };
 export type ListRunsResponse = {
   object: string;
-  readonly data: RunObject[];
+  data: readonly RunObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -2514,9 +2484,9 @@ export type CreateRunRequest = {
     | null;
   instructions?: string;
   additional_instructions?: string;
-  readonly additional_messages?: CreateMessageRequest[];
-  readonly tools?: (AssistantToolsCode | never | never | null)[];
-  metadata?: JsonifiableObject;
+  additional_messages?: readonly CreateMessageRequest[];
+  tools?: readonly (AssistantToolsCode | never | never | null)[];
+  metadata?: JsonifiableObject /* fallthrough */;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -2614,7 +2584,7 @@ export type AssistantObject = {
    * `file_search`, or `function`.
    * @default
    */
-  readonly tools: (
+  tools: readonly (
     | AssistantToolsCode
     | AssistantToolsFileSearch
     | AssistantToolsFunction
@@ -2628,13 +2598,13 @@ export type AssistantObject = {
        * with the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: {
-      readonly vector_store_ids?: string[];
+      vector_store_ids?: readonly string[];
     };
   };
-  metadata: JsonifiableObject;
+  metadata: JsonifiableObject /* fallthrough */;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -2658,7 +2628,7 @@ export type AssistantObject = {
 };
 export type ListAssistantsResponse = {
   object: string;
-  readonly data: AssistantObject[];
+  data: readonly AssistantObject[];
   first_id: string;
   last_id: string;
   has_more: boolean;
@@ -2674,7 +2644,7 @@ export type ModifyAssistantRequest = {
    * `file_search`, or `function`.
    * @default
    */
-  readonly tools?: (
+  tools?: readonly (
     | AssistantToolsCode
     | AssistantToolsFileSearch
     | AssistantToolsFunction
@@ -2688,13 +2658,13 @@ export type ModifyAssistantRequest = {
        * associated with the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: {
-      readonly vector_store_ids?: string[];
+      vector_store_ids?: readonly string[];
     };
   };
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -2760,7 +2730,7 @@ export type CreateAssistantRequest = {
    * `file_search`, or `function`.
    * @default
    */
-  readonly tools?: (
+  tools?: readonly (
     | AssistantToolsCode
     | AssistantToolsFileSearch
     | AssistantToolsFunction
@@ -2774,11 +2744,11 @@ export type CreateAssistantRequest = {
        * the tool.
        * @default
        */
-      readonly file_ids?: string[];
+      file_ids?: readonly string[];
     };
     file_search?: unknown | unknown | null;
   };
-  metadata?: JsonifiableObject;
+  metadata?: JsonifiableObject /* fallthrough */;
   /**
    * What sampling temperature to use, between 0 and 2. Higher values like 0.8
    * will make the output more random, while lower values like 0.2 will make it
@@ -2815,14 +2785,14 @@ export type ChatCompletionTool = {
 };
 /** The per-line training example of a fine-tuning input file for chat models */
 export type FinetuneChatRequestInput = {
-  readonly messages?: (never | never | never | never | never | null)[];
-  readonly tools?: ChatCompletionTool[];
+  messages?: readonly (never | never | never | never | never | null)[];
+  tools?: readonly ChatCompletionTool[];
   parallel_tool_calls?: ParallelToolCalls;
   /**
    * A list of functions the model may generate JSON inputs for.
    * @deprecated
    */
-  readonly functions?: ChatCompletionFunctions[];
+  functions?: readonly ChatCompletionFunctions[];
 };
 /** The `File` object represents a document that has been uploaded to OpenAI. */
 export type OpenAiFile = {
@@ -2889,7 +2859,7 @@ export type TranscriptionSegment = {
   start: number;
   end: number;
   text: string;
-  readonly tokens: number[];
+  tokens: readonly number[];
   temperature: number;
   avg_logprob: number;
   compression_ratio: number;
@@ -2899,23 +2869,13 @@ export type CreateTranslationResponseVerboseJson = {
   language: string;
   duration: string;
   text: string;
-  readonly segments?: TranscriptionSegment[];
+  segments?: readonly TranscriptionSegment[];
 };
-
-export enum AudioResponseFormatEnum {
-  Json = 'json',
-  Text = 'text',
-  Srt = 'srt',
-  VerboseJson = 'verbose_json',
-  Vtt = 'vtt',
-}
-
 /**
  * The format of the output, in one of these options: `json`, `text`, `srt`,
  * `verbose_json`, or `vtt`.
  */
 export type AudioResponseFormat =
-  | AudioResponseFormatEnum
   | 'json'
   | 'text'
   | 'srt'
@@ -2946,8 +2906,8 @@ export type CreateTranscriptionResponseVerboseJson = {
   language: string;
   duration: string;
   text: string;
-  readonly words?: TranscriptionWord[];
-  readonly segments?: TranscriptionSegment[];
+  words?: readonly TranscriptionWord[];
+  segments?: readonly TranscriptionSegment[];
 };
 export type CreateTranscriptionRequest = {
   file: string;
@@ -2969,12 +2929,12 @@ export type CreateTranscriptionRequest = {
    * generating word timestamps incurs additional latency.
    * @default segment
    */
-  readonly 'timestamp_granularities[]'?: ('word' | 'segment')[];
+  'timestamp_granularities[]'?: readonly ('word' | 'segment')[];
 };
 /** Represents an embedding vector returned by embedding endpoint. */
 export type Embedding = {
   index: number;
-  readonly embedding: number[];
+  embedding: readonly number[];
   /**
    * The object type, which is always "embedding".
    * @enum embedding
@@ -2982,7 +2942,7 @@ export type Embedding = {
   object: 'embedding';
 };
 export type CreateEmbeddingResponse = {
-  readonly data: Embedding[];
+  data: readonly Embedding[];
   model: string;
   /**
    * The object type, which is always "list".
@@ -3020,7 +2980,7 @@ export type FineTuningJobCheckpoint = {
   object: 'fine_tuning.job.checkpoint';
 };
 export type ListFineTuningJobCheckpointsResponse = {
-  readonly data: FineTuningJobCheckpoint[];
+  data: readonly FineTuningJobCheckpoint[];
   object: 'list';
   first_id?: string;
   last_id?: string;
@@ -3035,11 +2995,11 @@ export type FineTuningJobEvent = {
   object: 'fine_tuning.job.event';
 };
 export type ListFineTuningJobEventsResponse = {
-  readonly data: FineTuningJobEvent[];
+  data: readonly FineTuningJobEvent[];
   object: 'list';
 };
 export type ListFilesResponse = {
-  readonly data: OpenAiFile[];
+  data: readonly OpenAiFile[];
   object: 'list';
 };
 /** Represents the url or the content of an image generated by the OpenAI API. */
@@ -3050,7 +3010,7 @@ export type Image = {
 };
 export type ImagesResponse = {
   created: number;
-  readonly data: Image[];
+  data: readonly Image[];
 };
 /**
  * The `fine_tuning.job` object represents a fine-tuning job that has been
@@ -3084,7 +3044,7 @@ export type FineTuningJob = {
    */
   object: 'fine_tuning.job';
   organization_id: string;
-  readonly result_files: string[];
+  result_files: readonly string[];
   /**
    * The current status of the fine-tuning job, which can be either
    * `validating_files`, `queued`, `running`, `succeeded`, `failed`, or
@@ -3101,12 +3061,12 @@ export type FineTuningJob = {
   trained_tokens: number | null;
   training_file: string;
   validation_file: string;
-  readonly integrations?: FineTuningIntegration[];
+  integrations?: readonly FineTuningIntegration[];
   seed: number;
   estimated_finish?: number | null;
 };
 export type ListPaginatedFineTuningJobsResponse = {
-  readonly data: FineTuningJob[];
+  data: readonly FineTuningJob[];
   has_more: boolean;
   object: 'list';
 };
@@ -3125,7 +3085,7 @@ export type CompletionUsage = {
  */
 export type CreateChatCompletionFunctionResponse = {
   id: string;
-  readonly choices: {
+  choices: readonly {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
      * model hit a natural stop point or a provided stop sequence, `length` if the
@@ -3155,7 +3115,7 @@ export type CreateChatCompletionFunctionResponse = {
  */
 export type CreateChatCompletionResponse = {
   id: string;
-  readonly choices: {
+  choices: readonly {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
      * model hit a natural stop point or a provided stop sequence,
@@ -3177,8 +3137,8 @@ export type CreateChatCompletionResponse = {
     /** WARN: $ref used before available - #/components/schemas/ChatCompletionResponseMessage */
     message: never;
     logprobs: {
-      readonly content: ChatCompletionTokenLogprob[];
-      readonly refusal: ChatCompletionTokenLogprob[];
+      content: readonly ChatCompletionTokenLogprob[];
+      refusal: readonly ChatCompletionTokenLogprob[];
     };
   }[];
   created: number;
@@ -3266,7 +3226,10 @@ export type ChatCompletionRequestToolMessage = {
    * @enum tool
    */
   role: 'tool';
-  content: string | ChatCompletionRequestToolMessageContentPart[] | null;
+  content:
+    | string
+    | readonly ChatCompletionRequestToolMessageContentPart[]
+    | null;
   tool_call_id: string;
 };
 export type ChatCompletionMessageToolCall = {
@@ -3295,7 +3258,10 @@ export type ChatCompletionRequestAssistantMessageContentPart =
   | ChatCompletionRequestMessageContentPartText
   | ChatCompletionRequestMessageContentPartRefusal;
 export type ChatCompletionRequestAssistantMessage = {
-  content?: string | ChatCompletionRequestAssistantMessageContentPart[] | null;
+  content?:
+    | string
+    | readonly ChatCompletionRequestAssistantMessageContentPart[]
+    | null;
   refusal?: string;
   /**
    * The role of the messages author, in this case `assistant`.
@@ -3335,7 +3301,10 @@ export type ChatCompletionRequestUserMessageContentPart =
   | ChatCompletionRequestMessageContentPartText
   | ChatCompletionRequestMessageContentPartImage;
 export type ChatCompletionRequestUserMessage = {
-  content: string | ChatCompletionRequestUserMessageContentPart[] | null;
+  content:
+    | string
+    | readonly ChatCompletionRequestUserMessageContentPart[]
+    | null;
   /**
    * The role of the messages author, in this case `user`.
    * @enum user
@@ -3346,7 +3315,10 @@ export type ChatCompletionRequestUserMessage = {
 export type ChatCompletionRequestSystemMessageContentPart =
   ChatCompletionRequestMessageContentPartText;
 export type ChatCompletionRequestSystemMessage = {
-  content: string | ChatCompletionRequestSystemMessageContentPart[] | null;
+  content:
+    | string
+    | readonly ChatCompletionRequestSystemMessageContentPart[]
+    | null;
   /**
    * The role of the messages author, in this case `system`.
    * @enum system
@@ -3361,7 +3333,7 @@ export type ChatCompletionRequestMessage =
   | ChatCompletionRequestToolMessage
   | ChatCompletionRequestFunctionMessage;
 export type CreateChatCompletionRequest = {
-  readonly messages: ChatCompletionRequestMessage[];
+  messages: readonly ChatCompletionRequestMessage[];
   /**
    * ID of the model to use. See the [model endpoint
    * compatibility](/docs/models/model-endpoint-compatibility) table for details
@@ -3402,7 +3374,10 @@ export type CreateChatCompletionRequest = {
     | 'gpt-3.5-turbo-16k-0613'
     | null;
   frequency_penalty?: number | null;
-  logit_bias?: JsonifiableObject;
+  logit_bias?: Record<
+    string | number,
+    /* additionalProperties is not handled yet */ unknown
+  >;
   logprobs?: boolean | null;
   top_logprobs?: number | null;
   /**
@@ -3453,7 +3428,7 @@ export type CreateChatCompletionRequest = {
    * @enum auto,default
    */
   service_tier?: 'auto' | 'default';
-  stop?: string | string[] | null;
+  stop?: string | readonly string[] | null;
   stream?: boolean | null;
   stream_options?: ChatCompletionStreamOptions;
   /**
@@ -3477,7 +3452,7 @@ export type CreateChatCompletionRequest = {
    * @example 1
    */
   top_p?: number | null;
-  readonly tools?: ChatCompletionTool[];
+  tools?: readonly ChatCompletionTool[];
   tool_choice?: ChatCompletionToolChoiceOption;
   parallel_tool_calls?: ParallelToolCalls;
   /**
@@ -3509,7 +3484,7 @@ export type CreateChatCompletionRequest = {
    * A list of functions the model may generate JSON inputs for.
    * @deprecated
    */
-  readonly functions?: ChatCompletionFunctions[];
+  functions?: readonly ChatCompletionFunctions[];
 };
 export type ChatCompletionMessageToolCallChunk = {
   index: number;
@@ -3536,7 +3511,7 @@ export type ChatCompletionStreamResponseDelta = {
     arguments?: string;
     name?: string;
   };
-  readonly tool_calls?: ChatCompletionMessageToolCallChunk[];
+  tool_calls?: readonly ChatCompletionMessageToolCallChunk[];
   /**
    * The role of the author of this message.
    * @enum system,user,assistant,tool
@@ -3579,7 +3554,7 @@ export type FineTuneChatCompletionRequestAssistantMessage =
  */
 export type CreateCompletionResponse = {
   id: string;
-  readonly choices: {
+  choices: readonly {
     /**
      * The reason the model stopped generating tokens. This will be `stop` if the
      * model hit a natural stop point or a provided stop sequence,
@@ -3592,10 +3567,13 @@ export type CreateCompletionResponse = {
     finish_reason: 'stop' | 'length' | 'content_filter';
     index: number;
     logprobs: {
-      readonly text_offset?: number[];
-      readonly token_logprobs?: number[];
-      readonly tokens?: string[];
-      readonly top_logprobs?: JsonifiableObject[];
+      text_offset?: readonly number[];
+      token_logprobs?: readonly number[];
+      tokens?: readonly string[];
+      top_logprobs?: readonly Record<
+        string | number,
+        /* additionalProperties is not handled yet */ unknown
+      >[];
     };
     text: string;
   }[];
@@ -3625,7 +3603,12 @@ export type CreateCompletionRequest = {
    * if from the beginning of a new document.
    * @default <|endoftext|>
    */
-  prompt: string | string[] | number[] | number[][] | null;
+  prompt:
+    | string
+    | readonly string[]
+    | readonly number[]
+    | readonly (readonly number[])[]
+    | null;
   /**
    * Generates `best_of` completions server-side and returns the "best" (the one
    * with the highest log probability per token). Results cannot be streamed.
@@ -3641,7 +3624,10 @@ export type CreateCompletionRequest = {
   best_of?: number | null;
   echo?: boolean | null;
   frequency_penalty?: number | null;
-  logit_bias?: JsonifiableObject;
+  logit_bias?: Record<
+    string | number,
+    /* additionalProperties is not handled yet */ unknown
+  >;
   logprobs?: number | null;
   /**
    * The maximum number of [tokens](/tokenizer) that can be generated in the
@@ -3667,7 +3653,7 @@ export type CreateCompletionRequest = {
   n?: number | null;
   presence_penalty?: number | null;
   seed?: number | null;
-  stop?: string | string[] | null;
+  stop?: string | readonly string[] | null;
   stream?: boolean | null;
   stream_options?: ChatCompletionStreamOptions;
   /**
@@ -3719,30 +3705,95 @@ export type Model = {
 };
 export type ListModelsResponse = {
   object: 'list';
-  readonly data: Model[];
+  data: readonly Model[];
 };
 export type ErrorResponse = {
   error: Error;
 };
-export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
 export type CreateChatCompletionCommandBody = CreateChatCompletionRequest;
-export type CreateCompletionCommandInput = CreateCompletionRequest;
+export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
 export type CreateCompletionCommandBody = CreateCompletionRequest;
-export type CreateImageCommandInput = CreateImageRequest;
+export type CreateCompletionCommandInput = CreateCompletionRequest;
 export type CreateImageCommandBody = CreateImageRequest;
-export type CreateImageEditCommandInput = never;
-export type CreateImageVariationCommandInput = never;
-export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
+export type CreateImageCommandInput = CreateImageRequest;
+type CreateImageEditCommandBodyMultipartFormData =
+  | ArrayBuffer
+  | ArrayBufferView
+  | Blob
+  | FormData
+  | ReadableStream<Uint8Array>
+  | string
+  | URLSearchParams;
+export type CreateImageEditCommandBodyNonJson = {
+  body: CreateImageEditCommandBodyMultipartFormData;
+};
+export type CreateImageEditCommandInput = CreateImageEditCommandBodyNonJson;
+type CreateImageVariationCommandBodyMultipartFormData =
+  | ArrayBuffer
+  | ArrayBufferView
+  | Blob
+  | FormData
+  | ReadableStream<Uint8Array>
+  | string
+  | URLSearchParams;
+export type CreateImageVariationCommandBodyNonJson = {
+  body: CreateImageVariationCommandBodyMultipartFormData;
+};
+export type CreateImageVariationCommandInput =
+  CreateImageVariationCommandBodyNonJson;
 export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
-export type CreateSpeechCommandInput = CreateSpeechRequest;
+export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
 export type CreateSpeechCommandBody = CreateSpeechRequest;
-export type CreateTranscriptionCommandInput = never;
-export type CreateTranslationCommandInput = never;
+export type CreateSpeechCommandInput = CreateSpeechRequest;
+type CreateTranscriptionCommandBodyMultipartFormData =
+  | ArrayBuffer
+  | ArrayBufferView
+  | Blob
+  | FormData
+  | ReadableStream<Uint8Array>
+  | string
+  | URLSearchParams;
+export type CreateTranscriptionCommandBodyNonJson = {
+  body: CreateTranscriptionCommandBodyMultipartFormData;
+};
+export type CreateTranscriptionCommandInput =
+  CreateTranscriptionCommandBodyNonJson;
+export type CreateTranscriptionCommandOutput =
+  | CreateTranscriptionResponseJson
+  | CreateTranscriptionResponseVerboseJson
+  | null;
+type CreateTranslationCommandBodyMultipartFormData =
+  | ArrayBuffer
+  | ArrayBufferView
+  | Blob
+  | FormData
+  | ReadableStream<Uint8Array>
+  | string
+  | URLSearchParams;
+export type CreateTranslationCommandBodyNonJson = {
+  body: CreateTranslationCommandBodyMultipartFormData;
+};
+export type CreateTranslationCommandInput = CreateTranslationCommandBodyNonJson;
+export type CreateTranslationCommandOutput =
+  | CreateTranslationResponseJson
+  | CreateTranslationResponseVerboseJson
+  | null;
 export type ListFilesCommandQuery = {
   purpose?: string | undefined;
 };
 export type ListFilesCommandInput = ListFilesCommandQuery;
-export type CreateFileCommandInput = never;
+type CreateFileCommandBodyMultipartFormData =
+  | ArrayBuffer
+  | ArrayBufferView
+  | Blob
+  | FormData
+  | ReadableStream<Uint8Array>
+  | string
+  | URLSearchParams;
+export type CreateFileCommandBodyNonJson = {
+  body: CreateFileCommandBodyMultipartFormData;
+};
+export type CreateFileCommandInput = CreateFileCommandBodyNonJson;
 export type DeleteFileCommandParams = {
   file_id: string;
 };
@@ -3755,24 +3806,37 @@ export type DownloadFileCommandParams = {
   file_id: string;
 };
 export type DownloadFileCommandInput = DownloadFileCommandParams;
-export type CreateUploadCommandInput = CreateUploadRequest;
+export type DownloadFileCommandOutput = string | undefined;
 export type CreateUploadCommandBody = CreateUploadRequest;
+export type CreateUploadCommandInput = CreateUploadRequest;
+type AddUploadPartCommandBodyMultipartFormData =
+  | ArrayBuffer
+  | ArrayBufferView
+  | Blob
+  | FormData
+  | ReadableStream<Uint8Array>
+  | string
+  | URLSearchParams;
+export type AddUploadPartCommandBodyNonJson = {
+  body: AddUploadPartCommandBodyMultipartFormData;
+};
 export type AddUploadPartCommandParams = {
   upload_id: string;
 };
-export type AddUploadPartCommandInput = AddUploadPartCommandParams;
+export type AddUploadPartCommandInput = AddUploadPartCommandBodyNonJson &
+  AddUploadPartCommandParams;
 export type CompleteUploadCommandParams = {
   upload_id: string;
 };
+export type CompleteUploadCommandBody = CompleteUploadRequest;
 export type CompleteUploadCommandInput = CompleteUploadRequest &
   CompleteUploadCommandParams;
-export type CompleteUploadCommandBody = CompleteUploadRequest;
 export type CancelUploadCommandParams = {
   upload_id: string;
 };
 export type CancelUploadCommandInput = CancelUploadCommandParams;
-export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
 export type CreateFineTuningJobCommandBody = CreateFineTuningJobRequest;
+export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
 export type ListPaginatedFineTuningJobsCommandQuery = {
   after?: string | undefined;
   limit?: `${number}` | undefined;
@@ -3816,8 +3880,8 @@ export type DeleteModelCommandParams = {
   model: string;
 };
 export type DeleteModelCommandInput = DeleteModelCommandParams;
-export type CreateModerationCommandInput = CreateModerationRequest;
 export type CreateModerationCommandBody = CreateModerationRequest;
+export type CreateModerationCommandInput = CreateModerationRequest;
 export type ListAssistantsCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -3825,8 +3889,8 @@ export type ListAssistantsCommandQuery = {
   before?: string | undefined;
 };
 export type ListAssistantsCommandInput = ListAssistantsCommandQuery;
-export type CreateAssistantCommandInput = CreateAssistantRequest;
 export type CreateAssistantCommandBody = CreateAssistantRequest;
+export type CreateAssistantCommandInput = CreateAssistantRequest;
 export type GetAssistantCommandParams = {
   assistant_id: string;
 };
@@ -3834,15 +3898,15 @@ export type GetAssistantCommandInput = GetAssistantCommandParams;
 export type ModifyAssistantCommandParams = {
   assistant_id: string;
 };
+export type ModifyAssistantCommandBody = ModifyAssistantRequest;
 export type ModifyAssistantCommandInput = ModifyAssistantRequest &
   ModifyAssistantCommandParams;
-export type ModifyAssistantCommandBody = ModifyAssistantRequest;
 export type DeleteAssistantCommandParams = {
   assistant_id: string;
 };
 export type DeleteAssistantCommandInput = DeleteAssistantCommandParams;
-export type CreateThreadCommandInput = CreateThreadRequest;
 export type CreateThreadCommandBody = CreateThreadRequest;
+export type CreateThreadCommandInput = CreateThreadRequest;
 export type GetThreadCommandParams = {
   thread_id: string;
 };
@@ -3850,9 +3914,9 @@ export type GetThreadCommandInput = GetThreadCommandParams;
 export type ModifyThreadCommandParams = {
   thread_id: string;
 };
+export type ModifyThreadCommandBody = ModifyThreadRequest;
 export type ModifyThreadCommandInput = ModifyThreadRequest &
   ModifyThreadCommandParams;
-export type ModifyThreadCommandBody = ModifyThreadRequest;
 export type DeleteThreadCommandParams = {
   thread_id: string;
 };
@@ -3872,9 +3936,9 @@ export type ListMessagesCommandInput = ListMessagesCommandParams &
 export type CreateMessageCommandParams = {
   thread_id: string;
 };
+export type CreateMessageCommandBody = CreateMessageRequest;
 export type CreateMessageCommandInput = CreateMessageRequest &
   CreateMessageCommandParams;
-export type CreateMessageCommandBody = CreateMessageRequest;
 export type GetMessageCommandParams = {
   thread_id: string;
   message_id: string;
@@ -3884,16 +3948,16 @@ export type ModifyMessageCommandParams = {
   thread_id: string;
   message_id: string;
 };
+export type ModifyMessageCommandBody = ModifyMessageRequest;
 export type ModifyMessageCommandInput = ModifyMessageRequest &
   ModifyMessageCommandParams;
-export type ModifyMessageCommandBody = ModifyMessageRequest;
 export type DeleteMessageCommandParams = {
   thread_id: string;
   message_id: string;
 };
 export type DeleteMessageCommandInput = DeleteMessageCommandParams;
-export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
 export type CreateThreadAndRunCommandBody = CreateThreadAndRunRequest;
+export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
 export type ListRunsCommandQuery = {
   limit?: `${number}` | undefined;
   order?: 'asc' | 'desc';
@@ -3906,16 +3970,16 @@ export type ListRunsCommandParams = {
 export type ListRunsCommandInput = ListRunsCommandParams & ListRunsCommandQuery;
 export type CreateRunCommandQuery = {
   include?:
-    | 'step_details.tool_calls[*].file_search.results[*].content'[]
+    | readonly 'step_details.tool_calls[*].file_search.results[*].content'[]
     | undefined;
 };
 export type CreateRunCommandParams = {
   thread_id: string;
 };
+export type CreateRunCommandBody = CreateRunRequest;
 export type CreateRunCommandInput = CreateRunRequest &
   CreateRunCommandParams &
   CreateRunCommandQuery;
-export type CreateRunCommandBody = CreateRunRequest;
 export type GetRunCommandParams = {
   thread_id: string;
   run_id: string;
@@ -3925,15 +3989,15 @@ export type ModifyRunCommandParams = {
   thread_id: string;
   run_id: string;
 };
-export type ModifyRunCommandInput = ModifyRunRequest & ModifyRunCommandParams;
 export type ModifyRunCommandBody = ModifyRunRequest;
+export type ModifyRunCommandInput = ModifyRunRequest & ModifyRunCommandParams;
 export type SubmitToolOuputsToRunCommandParams = {
   thread_id: string;
   run_id: string;
 };
+export type SubmitToolOuputsToRunCommandBody = SubmitToolOutputsRunRequest;
 export type SubmitToolOuputsToRunCommandInput = SubmitToolOutputsRunRequest &
   SubmitToolOuputsToRunCommandParams;
-export type SubmitToolOuputsToRunCommandBody = SubmitToolOutputsRunRequest;
 export type CancelRunCommandParams = {
   thread_id: string;
   run_id: string;
@@ -3945,7 +4009,7 @@ export type ListRunStepsCommandQuery = {
   after?: string | undefined;
   before?: string | undefined;
   include?:
-    | 'step_details.tool_calls[*].file_search.results[*].content'[]
+    | readonly 'step_details.tool_calls[*].file_search.results[*].content'[]
     | undefined;
 };
 export type ListRunStepsCommandParams = {
@@ -3956,7 +4020,7 @@ export type ListRunStepsCommandInput = ListRunStepsCommandParams &
   ListRunStepsCommandQuery;
 export type GetRunStepCommandQuery = {
   include?:
-    | 'step_details.tool_calls[*].file_search.results[*].content'[]
+    | readonly 'step_details.tool_calls[*].file_search.results[*].content'[]
     | undefined;
 };
 export type GetRunStepCommandParams = {
@@ -3973,8 +4037,8 @@ export type ListVectorStoresCommandQuery = {
   before?: string | undefined;
 };
 export type ListVectorStoresCommandInput = ListVectorStoresCommandQuery;
-export type CreateVectorStoreCommandInput = CreateVectorStoreRequest;
 export type CreateVectorStoreCommandBody = CreateVectorStoreRequest;
+export type CreateVectorStoreCommandInput = CreateVectorStoreRequest;
 export type GetVectorStoreCommandParams = {
   vector_store_id: string;
 };
@@ -3982,9 +4046,9 @@ export type GetVectorStoreCommandInput = GetVectorStoreCommandParams;
 export type ModifyVectorStoreCommandParams = {
   vector_store_id: string;
 };
+export type ModifyVectorStoreCommandBody = UpdateVectorStoreRequest;
 export type ModifyVectorStoreCommandInput = UpdateVectorStoreRequest &
   ModifyVectorStoreCommandParams;
-export type ModifyVectorStoreCommandBody = UpdateVectorStoreRequest;
 export type DeleteVectorStoreCommandParams = {
   vector_store_id: string;
 };
@@ -4004,9 +4068,9 @@ export type ListVectorStoreFilesCommandInput =
 export type CreateVectorStoreFileCommandParams = {
   vector_store_id: string;
 };
+export type CreateVectorStoreFileCommandBody = CreateVectorStoreFileRequest;
 export type CreateVectorStoreFileCommandInput = CreateVectorStoreFileRequest &
   CreateVectorStoreFileCommandParams;
-export type CreateVectorStoreFileCommandBody = CreateVectorStoreFileRequest;
 export type GetVectorStoreFileCommandParams = {
   vector_store_id: string;
   file_id: string;
@@ -4021,10 +4085,10 @@ export type DeleteVectorStoreFileCommandInput =
 export type CreateVectorStoreFileBatchCommandParams = {
   vector_store_id: string;
 };
-export type CreateVectorStoreFileBatchCommandInput =
-  CreateVectorStoreFileBatchRequest & CreateVectorStoreFileBatchCommandParams;
 export type CreateVectorStoreFileBatchCommandBody =
   CreateVectorStoreFileBatchRequest;
+export type CreateVectorStoreFileBatchCommandInput =
+  CreateVectorStoreFileBatchRequest & CreateVectorStoreFileBatchCommandParams;
 export type GetVectorStoreFileBatchCommandParams = {
   vector_store_id: string;
   batch_id: string;
@@ -4051,7 +4115,29 @@ export type ListFilesInVectorStoreBatchCommandParams = {
 export type ListFilesInVectorStoreBatchCommandInput =
   ListFilesInVectorStoreBatchCommandParams &
     ListFilesInVectorStoreBatchCommandQuery;
-export type CreateBatchCommandInput = never;
+type createBatchJsonBody = {
+  input_file_id: string;
+  /**
+   * The endpoint to be used for all requests in the batch. Currently
+   * `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are
+   * supported. Note that `/v1/embeddings` batches are also restricted to a
+   * maximum of 50,000 embedding inputs across all requests in the batch.
+   * @enum /v1/chat/completions,/v1/embeddings,/v1/completions
+   */
+  endpoint: '/v1/chat/completions' | '/v1/embeddings' | '/v1/completions';
+  /**
+   * The time frame within which the batch should be processed. Currently only
+   * `24h` is supported.
+   * @enum 24h
+   */
+  completion_window: '24h';
+  metadata?: Record<
+    string | number,
+    /* additionalProperties is not handled yet */ unknown
+  >;
+};
+export type CreateBatchCommandBody = createBatchJsonBody;
+export type CreateBatchCommandInput = createBatchJsonBody;
 export type ListBatchesCommandQuery = {
   after?: string | undefined;
   limit?: `${number}` | undefined;
@@ -4072,11 +4158,11 @@ export type ListAuditLogsCommandQuery = {
     lt?: number;
     lte?: number;
   };
-  project_ids?: string[] | undefined;
-  event_types?: AuditLogEventType[] | undefined;
-  actor_ids?: string[] | undefined;
-  actor_emails?: string[] | undefined;
-  resource_ids?: string[] | undefined;
+  project_ids?: readonly string[] | undefined;
+  event_types?: readonly AuditLogEventType[] | undefined;
+  actor_ids?: readonly string[] | undefined;
+  actor_emails?: readonly string[] | undefined;
+  resource_ids?: readonly string[] | undefined;
   limit?: `${number}` | undefined;
   after?: string | undefined;
   before?: string | undefined;
@@ -4087,8 +4173,8 @@ export type ListInvitesCommandQuery = {
   after?: string | undefined;
 };
 export type ListInvitesCommandInput = ListInvitesCommandQuery;
-export type InviteUserCommandInput = InviteRequest;
 export type InviteUserCommandBody = InviteRequest;
+export type InviteUserCommandInput = InviteRequest;
 export type RetrieveInviteCommandParams = {
   invite_id: string;
 };
@@ -4106,8 +4192,8 @@ export type RetrieveUserCommandParams = {
   user_id: string;
 };
 export type RetrieveUserCommandInput = RetrieveUserCommandParams;
-export type ModifyUserCommandInput = UserRoleUpdateRequest;
 export type ModifyUserCommandBody = UserRoleUpdateRequest;
+export type ModifyUserCommandInput = UserRoleUpdateRequest;
 export type DeleteUserCommandParams = {
   user_id: string;
 };
@@ -4118,14 +4204,14 @@ export type ListProjectsCommandQuery = {
   include_archived?: 'true' | 'false';
 };
 export type ListProjectsCommandInput = ListProjectsCommandQuery;
-export type CreateProjectCommandInput = ProjectCreateRequest;
 export type CreateProjectCommandBody = ProjectCreateRequest;
+export type CreateProjectCommandInput = ProjectCreateRequest;
 export type RetrieveProjectCommandParams = {
   project_id: string;
 };
 export type RetrieveProjectCommandInput = RetrieveProjectCommandParams;
-export type ModifyProjectCommandInput = ProjectUpdateRequest;
 export type ModifyProjectCommandBody = ProjectUpdateRequest;
+export type ModifyProjectCommandInput = ProjectUpdateRequest;
 export type ArchiveProjectCommandParams = {
   project_id: string;
 };
@@ -4142,16 +4228,16 @@ export type ListProjectUsersCommandInput = ListProjectUsersCommandParams &
 export type CreateProjectUserCommandParams = {
   project_id: string;
 };
+export type CreateProjectUserCommandBody = ProjectUserCreateRequest;
 export type CreateProjectUserCommandInput = ProjectUserCreateRequest &
   CreateProjectUserCommandParams;
-export type CreateProjectUserCommandBody = ProjectUserCreateRequest;
 export type RetrieveProjectUserCommandParams = {
   project_id: string;
   user_id: string;
 };
 export type RetrieveProjectUserCommandInput = RetrieveProjectUserCommandParams;
-export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest;
 export type ModifyProjectUserCommandBody = ProjectUserUpdateRequest;
+export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest;
 export type DeleteProjectUserCommandParams = {
   project_id: string;
   user_id: string;
@@ -4170,10 +4256,10 @@ export type ListProjectServiceAccountsCommandInput =
 export type CreateProjectServiceAccountCommandParams = {
   project_id: string;
 };
-export type CreateProjectServiceAccountCommandInput =
-  ProjectServiceAccountCreateRequest & CreateProjectServiceAccountCommandParams;
 export type CreateProjectServiceAccountCommandBody =
   ProjectServiceAccountCreateRequest;
+export type CreateProjectServiceAccountCommandInput =
+  ProjectServiceAccountCreateRequest & CreateProjectServiceAccountCommandParams;
 export type RetrieveProjectServiceAccountCommandParams = {
   project_id: string;
   service_account_id: string;

@@ -3,30 +3,27 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:31.654Z
+ * Generated on 2025-02-02T10:02:00.661Z
  *
  */
 /** eslint-disable max-classes */
-import { Command } from '@block65/rest-client';
+import { Command, stripUndefined, jsonStringify } from '@block65/rest-client';
 import type {
   CreateChatCompletionCommandInput,
-  CreateChatCompletionCommandBody,
   CreateChatCompletionResponse,
   CreateCompletionCommandInput,
-  CreateCompletionCommandBody,
   CreateCompletionResponse,
   CreateImageCommandInput,
-  CreateImageCommandBody,
   ImagesResponse,
   CreateImageEditCommandInput,
   CreateImageVariationCommandInput,
   CreateEmbeddingCommandInput,
-  CreateEmbeddingCommandBody,
   CreateEmbeddingResponse,
   CreateSpeechCommandInput,
-  CreateSpeechCommandBody,
   CreateTranscriptionCommandInput,
+  CreateTranscriptionCommandOutput,
   CreateTranslationCommandInput,
+  CreateTranslationCommandOutput,
   ListFilesCommandQuery,
   ListFilesCommandInput,
   ListFilesResponse,
@@ -36,16 +33,14 @@ import type {
   DeleteFileResponse,
   RetrieveFileCommandInput,
   DownloadFileCommandInput,
+  DownloadFileCommandOutput,
   CreateUploadCommandInput,
-  CreateUploadCommandBody,
   Upload,
   AddUploadPartCommandInput,
   UploadPart,
   CompleteUploadCommandInput,
-  CompleteUploadCommandBody,
   CancelUploadCommandInput,
   CreateFineTuningJobCommandInput,
-  CreateFineTuningJobCommandBody,
   FineTuningJob,
   ListPaginatedFineTuningJobsCommandQuery,
   ListPaginatedFineTuningJobsCommandInput,
@@ -65,52 +60,41 @@ import type {
   DeleteModelCommandInput,
   DeleteModelResponse,
   CreateModerationCommandInput,
-  CreateModerationCommandBody,
   CreateModerationResponse,
   ListAssistantsCommandQuery,
   ListAssistantsCommandInput,
   ListAssistantsResponse,
   CreateAssistantCommandInput,
-  CreateAssistantCommandBody,
   AssistantObject,
   GetAssistantCommandInput,
   ModifyAssistantCommandInput,
-  ModifyAssistantCommandBody,
   DeleteAssistantCommandInput,
   DeleteAssistantResponse,
   CreateThreadCommandInput,
-  CreateThreadCommandBody,
   ThreadObject,
   GetThreadCommandInput,
   ModifyThreadCommandInput,
-  ModifyThreadCommandBody,
   DeleteThreadCommandInput,
   DeleteThreadResponse,
   ListMessagesCommandQuery,
   ListMessagesCommandInput,
   ListMessagesResponse,
   CreateMessageCommandInput,
-  CreateMessageCommandBody,
   MessageObject,
   GetMessageCommandInput,
   ModifyMessageCommandInput,
-  ModifyMessageCommandBody,
   DeleteMessageCommandInput,
   DeleteMessageResponse,
   CreateThreadAndRunCommandInput,
-  CreateThreadAndRunCommandBody,
   RunObject,
   ListRunsCommandQuery,
   ListRunsCommandInput,
   ListRunsResponse,
   CreateRunCommandQuery,
   CreateRunCommandInput,
-  CreateRunCommandBody,
   GetRunCommandInput,
   ModifyRunCommandInput,
-  ModifyRunCommandBody,
   SubmitToolOuputsToRunCommandInput,
-  SubmitToolOuputsToRunCommandBody,
   CancelRunCommandInput,
   ListRunStepsCommandQuery,
   ListRunStepsCommandInput,
@@ -122,24 +106,20 @@ import type {
   ListVectorStoresCommandInput,
   ListVectorStoresResponse,
   CreateVectorStoreCommandInput,
-  CreateVectorStoreCommandBody,
   VectorStoreObject,
   GetVectorStoreCommandInput,
   ModifyVectorStoreCommandInput,
-  ModifyVectorStoreCommandBody,
   DeleteVectorStoreCommandInput,
   DeleteVectorStoreResponse,
   ListVectorStoreFilesCommandQuery,
   ListVectorStoreFilesCommandInput,
   ListVectorStoreFilesResponse,
   CreateVectorStoreFileCommandInput,
-  CreateVectorStoreFileCommandBody,
   VectorStoreFileObject,
   GetVectorStoreFileCommandInput,
   DeleteVectorStoreFileCommandInput,
   DeleteVectorStoreFileResponse,
   CreateVectorStoreFileBatchCommandInput,
-  CreateVectorStoreFileBatchCommandBody,
   VectorStoreFileBatchObject,
   GetVectorStoreFileBatchCommandInput,
   CancelVectorStoreFileBatchCommandInput,
@@ -159,7 +139,6 @@ import type {
   ListInvitesCommandInput,
   InviteListResponse,
   InviteUserCommandInput,
-  InviteUserCommandBody,
   Invite,
   RetrieveInviteCommandInput,
   DeleteInviteCommandInput,
@@ -170,35 +149,29 @@ import type {
   RetrieveUserCommandInput,
   User,
   ModifyUserCommandInput,
-  ModifyUserCommandBody,
   DeleteUserCommandInput,
   UserDeleteResponse,
   ListProjectsCommandQuery,
   ListProjectsCommandInput,
   ProjectListResponse,
   CreateProjectCommandInput,
-  CreateProjectCommandBody,
   Project,
   RetrieveProjectCommandInput,
   ModifyProjectCommandInput,
-  ModifyProjectCommandBody,
   ArchiveProjectCommandInput,
   ListProjectUsersCommandQuery,
   ListProjectUsersCommandInput,
   ProjectUserListResponse,
   CreateProjectUserCommandInput,
-  CreateProjectUserCommandBody,
   ProjectUser,
   RetrieveProjectUserCommandInput,
   ModifyProjectUserCommandInput,
-  ModifyProjectUserCommandBody,
   DeleteProjectUserCommandInput,
   ProjectUserDeleteResponse,
   ListProjectServiceAccountsCommandQuery,
   ListProjectServiceAccountsCommandInput,
   ProjectServiceAccountListResponse,
   CreateProjectServiceAccountCommandInput,
-  CreateProjectServiceAccountCommandBody,
   ProjectServiceAccountCreateResponse,
   RetrieveProjectServiceAccountCommandInput,
   ProjectServiceAccount,
@@ -211,7 +184,7 @@ import type {
   ProjectApiKey,
   DeleteProjectApiKeyCommandInput,
   ProjectApiKeyDeleteResponse,
-} from './types.js';
+} from './types.ts';
 
 /**
  * CreateChatCompletionCommand
@@ -220,14 +193,13 @@ import type {
  */
 export class CreateChatCompletionCommand extends Command<
   CreateChatCompletionCommandInput,
-  CreateChatCompletionResponse,
-  CreateChatCompletionCommandBody
+  CreateChatCompletionResponse
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateChatCompletionCommandInput) {
     const body = input;
-    super(`/chat/completions`, body);
+    super(`/chat/completions`, jsonStringify(body));
   }
 }
 
@@ -238,14 +210,13 @@ export class CreateChatCompletionCommand extends Command<
  */
 export class CreateCompletionCommand extends Command<
   CreateCompletionCommandInput,
-  CreateCompletionResponse,
-  CreateCompletionCommandBody
+  CreateCompletionResponse
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateCompletionCommandInput) {
     const body = input;
-    super(`/completions`, body);
+    super(`/completions`, jsonStringify(body));
   }
 }
 
@@ -256,14 +227,13 @@ export class CreateCompletionCommand extends Command<
  */
 export class CreateImageCommand extends Command<
   CreateImageCommandInput,
-  ImagesResponse,
-  CreateImageCommandBody
+  ImagesResponse
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateImageCommandInput) {
     const body = input;
-    super(`/images/generations`, body);
+    super(`/images/generations`, jsonStringify(body));
   }
 }
 
@@ -274,10 +244,14 @@ export class CreateImageCommand extends Command<
  */
 export class CreateImageEditCommand extends Command<
   CreateImageEditCommandInput,
-  ImagesResponse,
-  never
+  ImagesResponse
 > {
   public override method = 'post' as const;
+
+  constructor(input: CreateImageEditCommandInput) {
+    const { body } = input;
+    super(`/images/edits`, body);
+  }
 }
 
 /**
@@ -287,10 +261,14 @@ export class CreateImageEditCommand extends Command<
  */
 export class CreateImageVariationCommand extends Command<
   CreateImageVariationCommandInput,
-  ImagesResponse,
-  never
+  ImagesResponse
 > {
   public override method = 'post' as const;
+
+  constructor(input: CreateImageVariationCommandInput) {
+    const { body } = input;
+    super(`/images/variations`, body);
+  }
 }
 
 /**
@@ -300,14 +278,13 @@ export class CreateImageVariationCommand extends Command<
  */
 export class CreateEmbeddingCommand extends Command<
   CreateEmbeddingCommandInput,
-  CreateEmbeddingResponse,
-  CreateEmbeddingCommandBody
+  CreateEmbeddingResponse
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateEmbeddingCommandInput) {
     const body = input;
-    super(`/embeddings`, body);
+    super(`/embeddings`, jsonStringify(body));
   }
 }
 
@@ -318,14 +295,13 @@ export class CreateEmbeddingCommand extends Command<
  */
 export class CreateSpeechCommand extends Command<
   CreateSpeechCommandInput,
-  unknown,
-  CreateSpeechCommandBody
+  unknown
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateSpeechCommandInput) {
     const body = input;
-    super(`/audio/speech`, body);
+    super(`/audio/speech`, jsonStringify(body));
   }
 }
 
@@ -336,10 +312,14 @@ export class CreateSpeechCommand extends Command<
  */
 export class CreateTranscriptionCommand extends Command<
   CreateTranscriptionCommandInput,
-  unknown,
-  never
+  CreateTranscriptionCommandOutput
 > {
   public override method = 'post' as const;
+
+  constructor(input: CreateTranscriptionCommandInput) {
+    const { body } = input;
+    super(`/audio/transcriptions`, body);
+  }
 }
 
 /**
@@ -349,10 +329,14 @@ export class CreateTranscriptionCommand extends Command<
  */
 export class CreateTranslationCommand extends Command<
   CreateTranslationCommandInput,
-  unknown,
-  never
+  CreateTranslationCommandOutput
 > {
   public override method = 'post' as const;
+
+  constructor(input: CreateTranslationCommandInput) {
+    const { body } = input;
+    super(`/audio/translations`, body);
+  }
 }
 
 /**
@@ -363,14 +347,13 @@ export class CreateTranslationCommand extends Command<
 export class ListFilesCommand extends Command<
   ListFilesCommandInput,
   ListFilesResponse,
-  never,
   ListFilesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListFilesCommandInput) {
     const { purpose } = input;
-    super(`/files`, undefined, { purpose });
+    super(`/files`, undefined, stripUndefined({ purpose }));
   }
 }
 
@@ -399,10 +382,14 @@ export class ListFilesCommand extends Command<
  */
 export class CreateFileCommand extends Command<
   CreateFileCommandInput,
-  OpenAiFile,
-  never
+  OpenAiFile
 > {
   public override method = 'post' as const;
+
+  constructor(input: CreateFileCommandInput) {
+    const { body } = input;
+    super(`/files`, body);
+  }
 }
 
 /**
@@ -412,8 +399,7 @@ export class CreateFileCommand extends Command<
  */
 export class DeleteFileCommand extends Command<
   DeleteFileCommandInput,
-  DeleteFileResponse,
-  never
+  DeleteFileResponse
 > {
   public override method = 'delete' as const;
 
@@ -430,8 +416,7 @@ export class DeleteFileCommand extends Command<
  */
 export class RetrieveFileCommand extends Command<
   RetrieveFileCommandInput,
-  OpenAiFile,
-  never
+  OpenAiFile
 > {
   public override method = 'get' as const;
 
@@ -448,8 +433,7 @@ export class RetrieveFileCommand extends Command<
  */
 export class DownloadFileCommand extends Command<
   DownloadFileCommandInput,
-  unknown,
-  never
+  DownloadFileCommandOutput
 > {
   public override method = 'get' as const;
 
@@ -482,14 +466,13 @@ export class DownloadFileCommand extends Command<
  */
 export class CreateUploadCommand extends Command<
   CreateUploadCommandInput,
-  Upload,
-  CreateUploadCommandBody
+  Upload
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateUploadCommandInput) {
     const body = input;
-    super(`/uploads`, body);
+    super(`/uploads`, jsonStringify(body));
   }
 }
 
@@ -509,14 +492,13 @@ export class CreateUploadCommand extends Command<
  */
 export class AddUploadPartCommand extends Command<
   AddUploadPartCommandInput,
-  UploadPart,
-  never
+  UploadPart
 > {
   public override method = 'post' as const;
 
   constructor(input: AddUploadPartCommandInput) {
-    const { upload_id } = input;
-    super(`/uploads/${upload_id}/parts`);
+    const { upload_id, body } = input;
+    super(`/uploads/${upload_id}/parts`, body);
   }
 }
 
@@ -538,14 +520,13 @@ export class AddUploadPartCommand extends Command<
  */
 export class CompleteUploadCommand extends Command<
   CompleteUploadCommandInput,
-  Upload,
-  CompleteUploadCommandBody
+  Upload
 > {
   public override method = 'post' as const;
 
   constructor(input: CompleteUploadCommandInput) {
     const { upload_id, ...body } = input;
-    super(`/uploads/${upload_id}/complete`, body);
+    super(`/uploads/${upload_id}/complete`, jsonStringify(body));
   }
 }
 
@@ -556,8 +537,7 @@ export class CompleteUploadCommand extends Command<
  */
 export class CancelUploadCommand extends Command<
   CancelUploadCommandInput,
-  Upload,
-  never
+  Upload
 > {
   public override method = 'post' as const;
 
@@ -580,14 +560,13 @@ export class CancelUploadCommand extends Command<
  */
 export class CreateFineTuningJobCommand extends Command<
   CreateFineTuningJobCommandInput,
-  FineTuningJob,
-  CreateFineTuningJobCommandBody
+  FineTuningJob
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateFineTuningJobCommandInput) {
     const body = input;
-    super(`/fine_tuning/jobs`, body);
+    super(`/fine_tuning/jobs`, jsonStringify(body));
   }
 }
 
@@ -599,14 +578,13 @@ export class CreateFineTuningJobCommand extends Command<
 export class ListPaginatedFineTuningJobsCommand extends Command<
   ListPaginatedFineTuningJobsCommandInput,
   ListPaginatedFineTuningJobsResponse,
-  never,
   ListPaginatedFineTuningJobsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListPaginatedFineTuningJobsCommandInput) {
     const { after, limit } = input;
-    super(`/fine_tuning/jobs`, undefined, { after, limit });
+    super(`/fine_tuning/jobs`, undefined, stripUndefined({ after, limit }));
   }
 }
 
@@ -619,8 +597,7 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
  */
 export class RetrieveFineTuningJobCommand extends Command<
   RetrieveFineTuningJobCommandInput,
-  FineTuningJob,
-  never
+  FineTuningJob
 > {
   public override method = 'get' as const;
 
@@ -638,17 +615,17 @@ export class RetrieveFineTuningJobCommand extends Command<
 export class ListFineTuningEventsCommand extends Command<
   ListFineTuningEventsCommandInput,
   ListFineTuningJobEventsResponse,
-  never,
   ListFineTuningEventsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListFineTuningEventsCommandInput) {
     const { fine_tuning_job_id, after, limit } = input;
-    super(`/fine_tuning/jobs/${fine_tuning_job_id}/events`, undefined, {
-      after,
-      limit,
-    });
+    super(
+      `/fine_tuning/jobs/${fine_tuning_job_id}/events`,
+      undefined,
+      stripUndefined({ after, limit }),
+    );
   }
 }
 
@@ -659,8 +636,7 @@ export class ListFineTuningEventsCommand extends Command<
  */
 export class CancelFineTuningJobCommand extends Command<
   CancelFineTuningJobCommandInput,
-  FineTuningJob,
-  never
+  FineTuningJob
 > {
   public override method = 'post' as const;
 
@@ -678,17 +654,17 @@ export class CancelFineTuningJobCommand extends Command<
 export class ListFineTuningJobCheckpointsCommand extends Command<
   ListFineTuningJobCheckpointsCommandInput,
   ListFineTuningJobCheckpointsResponse,
-  never,
   ListFineTuningJobCheckpointsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListFineTuningJobCheckpointsCommandInput) {
     const { fine_tuning_job_id, after, limit } = input;
-    super(`/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`, undefined, {
-      after,
-      limit,
-    });
+    super(
+      `/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`,
+      undefined,
+      stripUndefined({ after, limit }),
+    );
   }
 }
 
@@ -700,8 +676,7 @@ export class ListFineTuningJobCheckpointsCommand extends Command<
  */
 export class ListModelsCommand extends Command<
   ListModelsCommandInput,
-  ListModelsResponse,
-  never
+  ListModelsResponse
 > {
   public override method = 'get' as const;
 }
@@ -714,8 +689,7 @@ export class ListModelsCommand extends Command<
  */
 export class RetrieveModelCommand extends Command<
   RetrieveModelCommandInput,
-  Model,
-  never
+  Model
 > {
   public override method = 'get' as const;
 
@@ -733,8 +707,7 @@ export class RetrieveModelCommand extends Command<
  */
 export class DeleteModelCommand extends Command<
   DeleteModelCommandInput,
-  DeleteModelResponse,
-  never
+  DeleteModelResponse
 > {
   public override method = 'delete' as const;
 
@@ -752,14 +725,13 @@ export class DeleteModelCommand extends Command<
  */
 export class CreateModerationCommand extends Command<
   CreateModerationCommandInput,
-  CreateModerationResponse,
-  CreateModerationCommandBody
+  CreateModerationResponse
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateModerationCommandInput) {
     const body = input;
-    super(`/moderations`, body);
+    super(`/moderations`, jsonStringify(body));
   }
 }
 
@@ -771,14 +743,17 @@ export class CreateModerationCommand extends Command<
 export class ListAssistantsCommand extends Command<
   ListAssistantsCommandInput,
   ListAssistantsResponse,
-  never,
   ListAssistantsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListAssistantsCommandInput) {
     const { limit, order, after, before } = input;
-    super(`/assistants`, undefined, { limit, order, after, before });
+    super(
+      `/assistants`,
+      undefined,
+      stripUndefined({ limit, order, after, before }),
+    );
   }
 }
 
@@ -789,14 +764,13 @@ export class ListAssistantsCommand extends Command<
  */
 export class CreateAssistantCommand extends Command<
   CreateAssistantCommandInput,
-  AssistantObject,
-  CreateAssistantCommandBody
+  AssistantObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateAssistantCommandInput) {
     const body = input;
-    super(`/assistants`, body);
+    super(`/assistants`, jsonStringify(body));
   }
 }
 
@@ -807,8 +781,7 @@ export class CreateAssistantCommand extends Command<
  */
 export class GetAssistantCommand extends Command<
   GetAssistantCommandInput,
-  AssistantObject,
-  never
+  AssistantObject
 > {
   public override method = 'get' as const;
 
@@ -825,14 +798,13 @@ export class GetAssistantCommand extends Command<
  */
 export class ModifyAssistantCommand extends Command<
   ModifyAssistantCommandInput,
-  AssistantObject,
-  ModifyAssistantCommandBody
+  AssistantObject
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyAssistantCommandInput) {
     const { assistant_id, ...body } = input;
-    super(`/assistants/${assistant_id}`, body);
+    super(`/assistants/${assistant_id}`, jsonStringify(body));
   }
 }
 
@@ -843,8 +815,7 @@ export class ModifyAssistantCommand extends Command<
  */
 export class DeleteAssistantCommand extends Command<
   DeleteAssistantCommandInput,
-  DeleteAssistantResponse,
-  never
+  DeleteAssistantResponse
 > {
   public override method = 'delete' as const;
 
@@ -861,14 +832,13 @@ export class DeleteAssistantCommand extends Command<
  */
 export class CreateThreadCommand extends Command<
   CreateThreadCommandInput,
-  ThreadObject,
-  CreateThreadCommandBody
+  ThreadObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateThreadCommandInput) {
     const body = input;
-    super(`/threads`, body);
+    super(`/threads`, jsonStringify(body));
   }
 }
 
@@ -879,8 +849,7 @@ export class CreateThreadCommand extends Command<
  */
 export class GetThreadCommand extends Command<
   GetThreadCommandInput,
-  ThreadObject,
-  never
+  ThreadObject
 > {
   public override method = 'get' as const;
 
@@ -897,14 +866,13 @@ export class GetThreadCommand extends Command<
  */
 export class ModifyThreadCommand extends Command<
   ModifyThreadCommandInput,
-  ThreadObject,
-  ModifyThreadCommandBody
+  ThreadObject
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyThreadCommandInput) {
     const { thread_id, ...body } = input;
-    super(`/threads/${thread_id}`, body);
+    super(`/threads/${thread_id}`, jsonStringify(body));
   }
 }
 
@@ -915,8 +883,7 @@ export class ModifyThreadCommand extends Command<
  */
 export class DeleteThreadCommand extends Command<
   DeleteThreadCommandInput,
-  DeleteThreadResponse,
-  never
+  DeleteThreadResponse
 > {
   public override method = 'delete' as const;
 
@@ -934,20 +901,17 @@ export class DeleteThreadCommand extends Command<
 export class ListMessagesCommand extends Command<
   ListMessagesCommandInput,
   ListMessagesResponse,
-  never,
   ListMessagesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListMessagesCommandInput) {
     const { thread_id, limit, order, after, before, run_id } = input;
-    super(`/threads/${thread_id}/messages`, undefined, {
-      limit,
-      order,
-      after,
-      before,
-      run_id,
-    });
+    super(
+      `/threads/${thread_id}/messages`,
+      undefined,
+      stripUndefined({ limit, order, after, before, run_id }),
+    );
   }
 }
 
@@ -958,14 +922,13 @@ export class ListMessagesCommand extends Command<
  */
 export class CreateMessageCommand extends Command<
   CreateMessageCommandInput,
-  MessageObject,
-  CreateMessageCommandBody
+  MessageObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateMessageCommandInput) {
     const { thread_id, ...body } = input;
-    super(`/threads/${thread_id}/messages`, body);
+    super(`/threads/${thread_id}/messages`, jsonStringify(body));
   }
 }
 
@@ -976,8 +939,7 @@ export class CreateMessageCommand extends Command<
  */
 export class GetMessageCommand extends Command<
   GetMessageCommandInput,
-  MessageObject,
-  never
+  MessageObject
 > {
   public override method = 'get' as const;
 
@@ -994,14 +956,13 @@ export class GetMessageCommand extends Command<
  */
 export class ModifyMessageCommand extends Command<
   ModifyMessageCommandInput,
-  MessageObject,
-  ModifyMessageCommandBody
+  MessageObject
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyMessageCommandInput) {
     const { thread_id, message_id, ...body } = input;
-    super(`/threads/${thread_id}/messages/${message_id}`, body);
+    super(`/threads/${thread_id}/messages/${message_id}`, jsonStringify(body));
   }
 }
 
@@ -1012,8 +973,7 @@ export class ModifyMessageCommand extends Command<
  */
 export class DeleteMessageCommand extends Command<
   DeleteMessageCommandInput,
-  DeleteMessageResponse,
-  never
+  DeleteMessageResponse
 > {
   public override method = 'delete' as const;
 
@@ -1030,14 +990,13 @@ export class DeleteMessageCommand extends Command<
  */
 export class CreateThreadAndRunCommand extends Command<
   CreateThreadAndRunCommandInput,
-  RunObject,
-  CreateThreadAndRunCommandBody
+  RunObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateThreadAndRunCommandInput) {
     const body = input;
-    super(`/threads/runs`, body);
+    super(`/threads/runs`, jsonStringify(body));
   }
 }
 
@@ -1049,19 +1008,17 @@ export class CreateThreadAndRunCommand extends Command<
 export class ListRunsCommand extends Command<
   ListRunsCommandInput,
   ListRunsResponse,
-  never,
   ListRunsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListRunsCommandInput) {
     const { thread_id, limit, order, after, before } = input;
-    super(`/threads/${thread_id}/runs`, undefined, {
-      limit,
-      order,
-      after,
-      before,
-    });
+    super(
+      `/threads/${thread_id}/runs`,
+      undefined,
+      stripUndefined({ limit, order, after, before }),
+    );
   }
 }
 
@@ -1073,14 +1030,17 @@ export class ListRunsCommand extends Command<
 export class CreateRunCommand extends Command<
   CreateRunCommandInput,
   RunObject,
-  CreateRunCommandBody,
   CreateRunCommandQuery
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateRunCommandInput) {
     const { thread_id, include, ...body } = input;
-    super(`/threads/${thread_id}/runs`, body, { include });
+    super(
+      `/threads/${thread_id}/runs`,
+      jsonStringify(body),
+      stripUndefined({ include }),
+    );
   }
 }
 
@@ -1089,11 +1049,7 @@ export class CreateRunCommand extends Command<
  *
  * @summary Retrieves a run.
  */
-export class GetRunCommand extends Command<
-  GetRunCommandInput,
-  RunObject,
-  never
-> {
+export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
   public override method = 'get' as const;
 
   constructor(input: GetRunCommandInput) {
@@ -1109,14 +1065,13 @@ export class GetRunCommand extends Command<
  */
 export class ModifyRunCommand extends Command<
   ModifyRunCommandInput,
-  RunObject,
-  ModifyRunCommandBody
+  RunObject
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyRunCommandInput) {
     const { thread_id, run_id, ...body } = input;
-    super(`/threads/${thread_id}/runs/${run_id}`, body);
+    super(`/threads/${thread_id}/runs/${run_id}`, jsonStringify(body));
   }
 }
 
@@ -1130,14 +1085,16 @@ export class ModifyRunCommand extends Command<
  */
 export class SubmitToolOuputsToRunCommand extends Command<
   SubmitToolOuputsToRunCommandInput,
-  RunObject,
-  SubmitToolOuputsToRunCommandBody
+  RunObject
 > {
   public override method = 'post' as const;
 
   constructor(input: SubmitToolOuputsToRunCommandInput) {
     const { thread_id, run_id, ...body } = input;
-    super(`/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`, body);
+    super(
+      `/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`,
+      jsonStringify(body),
+    );
   }
 }
 
@@ -1148,8 +1105,7 @@ export class SubmitToolOuputsToRunCommand extends Command<
  */
 export class CancelRunCommand extends Command<
   CancelRunCommandInput,
-  RunObject,
-  never
+  RunObject
 > {
   public override method = 'post' as const;
 
@@ -1167,20 +1123,17 @@ export class CancelRunCommand extends Command<
 export class ListRunStepsCommand extends Command<
   ListRunStepsCommandInput,
   ListRunStepsResponse,
-  never,
   ListRunStepsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListRunStepsCommandInput) {
     const { thread_id, run_id, limit, order, after, before, include } = input;
-    super(`/threads/${thread_id}/runs/${run_id}/steps`, undefined, {
-      limit,
-      order,
-      after,
-      before,
-      include,
-    });
+    super(
+      `/threads/${thread_id}/runs/${run_id}/steps`,
+      undefined,
+      stripUndefined({ limit, order, after, before, include }),
+    );
   }
 }
 
@@ -1192,16 +1145,17 @@ export class ListRunStepsCommand extends Command<
 export class GetRunStepCommand extends Command<
   GetRunStepCommandInput,
   RunStepObject,
-  never,
   GetRunStepCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: GetRunStepCommandInput) {
     const { thread_id, run_id, step_id, include } = input;
-    super(`/threads/${thread_id}/runs/${run_id}/steps/${step_id}`, undefined, {
-      include,
-    });
+    super(
+      `/threads/${thread_id}/runs/${run_id}/steps/${step_id}`,
+      undefined,
+      stripUndefined({ include }),
+    );
   }
 }
 
@@ -1213,14 +1167,17 @@ export class GetRunStepCommand extends Command<
 export class ListVectorStoresCommand extends Command<
   ListVectorStoresCommandInput,
   ListVectorStoresResponse,
-  never,
   ListVectorStoresCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListVectorStoresCommandInput) {
     const { limit, order, after, before } = input;
-    super(`/vector_stores`, undefined, { limit, order, after, before });
+    super(
+      `/vector_stores`,
+      undefined,
+      stripUndefined({ limit, order, after, before }),
+    );
   }
 }
 
@@ -1231,14 +1188,13 @@ export class ListVectorStoresCommand extends Command<
  */
 export class CreateVectorStoreCommand extends Command<
   CreateVectorStoreCommandInput,
-  VectorStoreObject,
-  CreateVectorStoreCommandBody
+  VectorStoreObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateVectorStoreCommandInput) {
     const body = input;
-    super(`/vector_stores`, body);
+    super(`/vector_stores`, jsonStringify(body));
   }
 }
 
@@ -1249,8 +1205,7 @@ export class CreateVectorStoreCommand extends Command<
  */
 export class GetVectorStoreCommand extends Command<
   GetVectorStoreCommandInput,
-  VectorStoreObject,
-  never
+  VectorStoreObject
 > {
   public override method = 'get' as const;
 
@@ -1267,14 +1222,13 @@ export class GetVectorStoreCommand extends Command<
  */
 export class ModifyVectorStoreCommand extends Command<
   ModifyVectorStoreCommandInput,
-  VectorStoreObject,
-  ModifyVectorStoreCommandBody
+  VectorStoreObject
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyVectorStoreCommandInput) {
     const { vector_store_id, ...body } = input;
-    super(`/vector_stores/${vector_store_id}`, body);
+    super(`/vector_stores/${vector_store_id}`, jsonStringify(body));
   }
 }
 
@@ -1285,8 +1239,7 @@ export class ModifyVectorStoreCommand extends Command<
  */
 export class DeleteVectorStoreCommand extends Command<
   DeleteVectorStoreCommandInput,
-  DeleteVectorStoreResponse,
-  never
+  DeleteVectorStoreResponse
 > {
   public override method = 'delete' as const;
 
@@ -1304,20 +1257,17 @@ export class DeleteVectorStoreCommand extends Command<
 export class ListVectorStoreFilesCommand extends Command<
   ListVectorStoreFilesCommandInput,
   ListVectorStoreFilesResponse,
-  never,
   ListVectorStoreFilesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListVectorStoreFilesCommandInput) {
     const { vector_store_id, limit, order, after, before, filter } = input;
-    super(`/vector_stores/${vector_store_id}/files`, undefined, {
-      limit,
-      order,
-      after,
-      before,
-      filter,
-    });
+    super(
+      `/vector_stores/${vector_store_id}/files`,
+      undefined,
+      stripUndefined({ limit, order, after, before, filter }),
+    );
   }
 }
 
@@ -1329,14 +1279,13 @@ export class ListVectorStoreFilesCommand extends Command<
  */
 export class CreateVectorStoreFileCommand extends Command<
   CreateVectorStoreFileCommandInput,
-  VectorStoreFileObject,
-  CreateVectorStoreFileCommandBody
+  VectorStoreFileObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateVectorStoreFileCommandInput) {
     const { vector_store_id, ...body } = input;
-    super(`/vector_stores/${vector_store_id}/files`, body);
+    super(`/vector_stores/${vector_store_id}/files`, jsonStringify(body));
   }
 }
 
@@ -1347,8 +1296,7 @@ export class CreateVectorStoreFileCommand extends Command<
  */
 export class GetVectorStoreFileCommand extends Command<
   GetVectorStoreFileCommandInput,
-  VectorStoreFileObject,
-  never
+  VectorStoreFileObject
 > {
   public override method = 'get' as const;
 
@@ -1367,8 +1315,7 @@ export class GetVectorStoreFileCommand extends Command<
  */
 export class DeleteVectorStoreFileCommand extends Command<
   DeleteVectorStoreFileCommandInput,
-  DeleteVectorStoreFileResponse,
-  never
+  DeleteVectorStoreFileResponse
 > {
   public override method = 'delete' as const;
 
@@ -1385,14 +1332,16 @@ export class DeleteVectorStoreFileCommand extends Command<
  */
 export class CreateVectorStoreFileBatchCommand extends Command<
   CreateVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject,
-  CreateVectorStoreFileBatchCommandBody
+  VectorStoreFileBatchObject
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateVectorStoreFileBatchCommandInput) {
     const { vector_store_id, ...body } = input;
-    super(`/vector_stores/${vector_store_id}/file_batches`, body);
+    super(
+      `/vector_stores/${vector_store_id}/file_batches`,
+      jsonStringify(body),
+    );
   }
 }
 
@@ -1403,8 +1352,7 @@ export class CreateVectorStoreFileBatchCommand extends Command<
  */
 export class GetVectorStoreFileBatchCommand extends Command<
   GetVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject,
-  never
+  VectorStoreFileBatchObject
 > {
   public override method = 'get' as const;
 
@@ -1422,8 +1370,7 @@ export class GetVectorStoreFileBatchCommand extends Command<
  */
 export class CancelVectorStoreFileBatchCommand extends Command<
   CancelVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject,
-  never
+  VectorStoreFileBatchObject
 > {
   public override method = 'post' as const;
 
@@ -1441,7 +1388,6 @@ export class CancelVectorStoreFileBatchCommand extends Command<
 export class ListFilesInVectorStoreBatchCommand extends Command<
   ListFilesInVectorStoreBatchCommandInput,
   ListVectorStoreFilesResponse,
-  never,
   ListFilesInVectorStoreBatchCommandQuery
 > {
   public override method = 'get' as const;
@@ -1452,7 +1398,7 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
     super(
       `/vector_stores/${vector_store_id}/file_batches/${batch_id}/files`,
       undefined,
-      { limit, order, after, before, filter },
+      stripUndefined({ limit, order, after, before, filter }),
     );
   }
 }
@@ -1464,10 +1410,14 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
  */
 export class CreateBatchCommand extends Command<
   CreateBatchCommandInput,
-  Batch,
-  never
+  Batch
 > {
   public override method = 'post' as const;
+
+  constructor(input: CreateBatchCommandInput) {
+    const body = input;
+    super(`/batches`, jsonStringify(body));
+  }
 }
 
 /**
@@ -1478,14 +1428,13 @@ export class CreateBatchCommand extends Command<
 export class ListBatchesCommand extends Command<
   ListBatchesCommandInput,
   ListBatchesResponse,
-  never,
   ListBatchesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListBatchesCommandInput) {
     const { after, limit } = input;
-    super(`/batches`, undefined, { after, limit });
+    super(`/batches`, undefined, stripUndefined({ after, limit }));
   }
 }
 
@@ -1496,8 +1445,7 @@ export class ListBatchesCommand extends Command<
  */
 export class RetrieveBatchCommand extends Command<
   RetrieveBatchCommandInput,
-  Batch,
-  never
+  Batch
 > {
   public override method = 'get' as const;
 
@@ -1516,8 +1464,7 @@ export class RetrieveBatchCommand extends Command<
  */
 export class CancelBatchCommand extends Command<
   CancelBatchCommandInput,
-  Batch,
-  never
+  Batch
 > {
   public override method = 'post' as const;
 
@@ -1535,7 +1482,6 @@ export class CancelBatchCommand extends Command<
 export class ListAuditLogsCommand extends Command<
   ListAuditLogsCommandInput,
   ListAuditLogsResponse,
-  never,
   ListAuditLogsCommandQuery
 > {
   public override method = 'get' as const;
@@ -1552,17 +1498,21 @@ export class ListAuditLogsCommand extends Command<
       after,
       before,
     } = input;
-    super(`/organization/audit_logs`, undefined, {
-      effective_at,
-      project_ids,
-      event_types,
-      actor_ids,
-      actor_emails,
-      resource_ids,
-      limit,
-      after,
-      before,
-    });
+    super(
+      `/organization/audit_logs`,
+      undefined,
+      stripUndefined({
+        effective_at,
+        project_ids,
+        event_types,
+        actor_ids,
+        actor_emails,
+        resource_ids,
+        limit,
+        after,
+        before,
+      }),
+    );
   }
 }
 
@@ -1574,14 +1524,13 @@ export class ListAuditLogsCommand extends Command<
 export class ListInvitesCommand extends Command<
   ListInvitesCommandInput,
   InviteListResponse,
-  never,
   ListInvitesCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListInvitesCommandInput) {
     const { limit, after } = input;
-    super(`/organization/invites`, undefined, { limit, after });
+    super(`/organization/invites`, undefined, stripUndefined({ limit, after }));
   }
 }
 
@@ -1591,16 +1540,12 @@ export class ListInvitesCommand extends Command<
  * @summary Create an invite for a user to the organization. The invite must be
  * accepted by the user before they have access to the organization.
  */
-export class InviteUserCommand extends Command<
-  InviteUserCommandInput,
-  Invite,
-  InviteUserCommandBody
-> {
+export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
   public override method = 'post' as const;
 
   constructor(input: InviteUserCommandInput) {
     const body = input;
-    super(`/organization/invites`, body);
+    super(`/organization/invites`, jsonStringify(body));
   }
 }
 
@@ -1611,8 +1556,7 @@ export class InviteUserCommand extends Command<
  */
 export class RetrieveInviteCommand extends Command<
   RetrieveInviteCommandInput,
-  Invite,
-  never
+  Invite
 > {
   public override method = 'get' as const;
 
@@ -1630,8 +1574,7 @@ export class RetrieveInviteCommand extends Command<
  */
 export class DeleteInviteCommand extends Command<
   DeleteInviteCommandInput,
-  InviteDeleteResponse,
-  never
+  InviteDeleteResponse
 > {
   public override method = 'delete' as const;
 
@@ -1649,14 +1592,13 @@ export class DeleteInviteCommand extends Command<
 export class ListUsersCommand extends Command<
   ListUsersCommandInput,
   UserListResponse,
-  never,
   ListUsersCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListUsersCommandInput) {
     const { limit, after } = input;
-    super(`/organization/users`, undefined, { limit, after });
+    super(`/organization/users`, undefined, stripUndefined({ limit, after }));
   }
 }
 
@@ -1667,8 +1609,7 @@ export class ListUsersCommand extends Command<
  */
 export class RetrieveUserCommand extends Command<
   RetrieveUserCommandInput,
-  User,
-  never
+  User
 > {
   public override method = 'get' as const;
 
@@ -1683,16 +1624,12 @@ export class RetrieveUserCommand extends Command<
  *
  * @summary Modifies a user's role in the organization.
  */
-export class ModifyUserCommand extends Command<
-  ModifyUserCommandInput,
-  User,
-  ModifyUserCommandBody
-> {
+export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
   public override method = 'post' as const;
 
   constructor(input: ModifyUserCommandInput) {
     const body = input;
-    super(`/organization/users/${user_id}`, body);
+    super(`/organization/users/${user_id}`, jsonStringify(body));
   }
 }
 
@@ -1703,8 +1640,7 @@ export class ModifyUserCommand extends Command<
  */
 export class DeleteUserCommand extends Command<
   DeleteUserCommandInput,
-  UserDeleteResponse,
-  never
+  UserDeleteResponse
 > {
   public override method = 'delete' as const;
 
@@ -1722,18 +1658,17 @@ export class DeleteUserCommand extends Command<
 export class ListProjectsCommand extends Command<
   ListProjectsCommandInput,
   ProjectListResponse,
-  never,
   ListProjectsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListProjectsCommandInput) {
     const { limit, after, include_archived } = input;
-    super(`/organization/projects`, undefined, {
-      limit,
-      after,
-      include_archived,
-    });
+    super(
+      `/organization/projects`,
+      undefined,
+      stripUndefined({ limit, after, include_archived }),
+    );
   }
 }
 
@@ -1745,14 +1680,13 @@ export class ListProjectsCommand extends Command<
  */
 export class CreateProjectCommand extends Command<
   CreateProjectCommandInput,
-  Project,
-  CreateProjectCommandBody
+  Project
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateProjectCommandInput) {
     const body = input;
-    super(`/organization/projects`, body);
+    super(`/organization/projects`, jsonStringify(body));
   }
 }
 
@@ -1763,8 +1697,7 @@ export class CreateProjectCommand extends Command<
  */
 export class RetrieveProjectCommand extends Command<
   RetrieveProjectCommandInput,
-  Project,
-  never
+  Project
 > {
   public override method = 'get' as const;
 
@@ -1781,14 +1714,13 @@ export class RetrieveProjectCommand extends Command<
  */
 export class ModifyProjectCommand extends Command<
   ModifyProjectCommandInput,
-  Project,
-  ModifyProjectCommandBody
+  Project
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyProjectCommandInput) {
     const body = input;
-    super(`/organization/projects/${project_id}`, body);
+    super(`/organization/projects/${project_id}`, jsonStringify(body));
   }
 }
 
@@ -1800,8 +1732,7 @@ export class ModifyProjectCommand extends Command<
  */
 export class ArchiveProjectCommand extends Command<
   ArchiveProjectCommandInput,
-  Project,
-  never
+  Project
 > {
   public override method = 'post' as const;
 
@@ -1819,17 +1750,17 @@ export class ArchiveProjectCommand extends Command<
 export class ListProjectUsersCommand extends Command<
   ListProjectUsersCommandInput,
   ProjectUserListResponse,
-  never,
   ListProjectUsersCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListProjectUsersCommandInput) {
     const { project_id, limit, after } = input;
-    super(`/organization/projects/${project_id}/users`, undefined, {
-      limit,
-      after,
-    });
+    super(
+      `/organization/projects/${project_id}/users`,
+      undefined,
+      stripUndefined({ limit, after }),
+    );
   }
 }
 
@@ -1841,14 +1772,13 @@ export class ListProjectUsersCommand extends Command<
  */
 export class CreateProjectUserCommand extends Command<
   CreateProjectUserCommandInput,
-  ProjectUser,
-  CreateProjectUserCommandBody
+  ProjectUser
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateProjectUserCommandInput) {
     const { project_id, ...body } = input;
-    super(`/organization/projects/${project_id}/users`, body);
+    super(`/organization/projects/${project_id}/users`, jsonStringify(body));
   }
 }
 
@@ -1859,8 +1789,7 @@ export class CreateProjectUserCommand extends Command<
  */
 export class RetrieveProjectUserCommand extends Command<
   RetrieveProjectUserCommandInput,
-  ProjectUser,
-  never
+  ProjectUser
 > {
   public override method = 'get' as const;
 
@@ -1877,14 +1806,16 @@ export class RetrieveProjectUserCommand extends Command<
  */
 export class ModifyProjectUserCommand extends Command<
   ModifyProjectUserCommandInput,
-  ProjectUser,
-  ModifyProjectUserCommandBody
+  ProjectUser
 > {
   public override method = 'post' as const;
 
   constructor(input: ModifyProjectUserCommandInput) {
     const body = input;
-    super(`/organization/projects/${project_id}/users/${user_id}`, body);
+    super(
+      `/organization/projects/${project_id}/users/${user_id}`,
+      jsonStringify(body),
+    );
   }
 }
 
@@ -1895,8 +1826,7 @@ export class ModifyProjectUserCommand extends Command<
  */
 export class DeleteProjectUserCommand extends Command<
   DeleteProjectUserCommandInput,
-  ProjectUserDeleteResponse,
-  never
+  ProjectUserDeleteResponse
 > {
   public override method = 'delete' as const;
 
@@ -1914,17 +1844,17 @@ export class DeleteProjectUserCommand extends Command<
 export class ListProjectServiceAccountsCommand extends Command<
   ListProjectServiceAccountsCommandInput,
   ProjectServiceAccountListResponse,
-  never,
   ListProjectServiceAccountsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListProjectServiceAccountsCommandInput) {
     const { project_id, limit, after } = input;
-    super(`/organization/projects/${project_id}/service_accounts`, undefined, {
-      limit,
-      after,
-    });
+    super(
+      `/organization/projects/${project_id}/service_accounts`,
+      undefined,
+      stripUndefined({ limit, after }),
+    );
   }
 }
 
@@ -1936,14 +1866,16 @@ export class ListProjectServiceAccountsCommand extends Command<
  */
 export class CreateProjectServiceAccountCommand extends Command<
   CreateProjectServiceAccountCommandInput,
-  ProjectServiceAccountCreateResponse,
-  CreateProjectServiceAccountCommandBody
+  ProjectServiceAccountCreateResponse
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateProjectServiceAccountCommandInput) {
     const { project_id, ...body } = input;
-    super(`/organization/projects/${project_id}/service_accounts`, body);
+    super(
+      `/organization/projects/${project_id}/service_accounts`,
+      jsonStringify(body),
+    );
   }
 }
 
@@ -1954,8 +1886,7 @@ export class CreateProjectServiceAccountCommand extends Command<
  */
 export class RetrieveProjectServiceAccountCommand extends Command<
   RetrieveProjectServiceAccountCommandInput,
-  ProjectServiceAccount,
-  never
+  ProjectServiceAccount
 > {
   public override method = 'get' as const;
 
@@ -1974,8 +1905,7 @@ export class RetrieveProjectServiceAccountCommand extends Command<
  */
 export class DeleteProjectServiceAccountCommand extends Command<
   DeleteProjectServiceAccountCommandInput,
-  ProjectServiceAccountDeleteResponse,
-  never
+  ProjectServiceAccountDeleteResponse
 > {
   public override method = 'delete' as const;
 
@@ -1995,17 +1925,17 @@ export class DeleteProjectServiceAccountCommand extends Command<
 export class ListProjectApiKeysCommand extends Command<
   ListProjectApiKeysCommandInput,
   ProjectApiKeyListResponse,
-  never,
   ListProjectApiKeysCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: ListProjectApiKeysCommandInput) {
     const { project_id, limit, after } = input;
-    super(`/organization/projects/${project_id}/api_keys`, undefined, {
-      limit,
-      after,
-    });
+    super(
+      `/organization/projects/${project_id}/api_keys`,
+      undefined,
+      stripUndefined({ limit, after }),
+    );
   }
 }
 
@@ -2016,8 +1946,7 @@ export class ListProjectApiKeysCommand extends Command<
  */
 export class RetrieveProjectApiKeyCommand extends Command<
   RetrieveProjectApiKeyCommandInput,
-  ProjectApiKey,
-  never
+  ProjectApiKey
 > {
   public override method = 'get' as const;
 
@@ -2034,8 +1963,7 @@ export class RetrieveProjectApiKeyCommand extends Command<
  */
 export class DeleteProjectApiKeyCommand extends Command<
   DeleteProjectApiKeyCommandInput,
-  ProjectApiKeyDeleteResponse,
-  never
+  ProjectApiKeyDeleteResponse
 > {
   public override method = 'delete' as const;
 

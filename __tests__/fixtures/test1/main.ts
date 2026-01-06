@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:29.480Z
+ * Generated on 2025-02-02T09:59:28.164Z
  *
  */
 import {
@@ -39,7 +39,7 @@ import type {
   UpdateBillingSubscriptionCommandInput,
   UpdateBillingSubscriptionPromoCodeCommandInput,
   UpdatePaymentMethodCommandInput,
-} from './types.js';
+} from './types.ts';
 
 type AllInputs =
   | CancelSubscriptionCommandInput

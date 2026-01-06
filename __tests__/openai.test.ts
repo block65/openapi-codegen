@@ -1,6 +1,6 @@
 import { test, expect } from 'vitest';
-import { CreateModerationCommand } from './fixtures/openai/commands.js';
-import { OpenAiApiRestClient } from './fixtures/openai/main.js';
+import { CreateModerationCommand } from './fixtures/openai/commands.ts';
+import { OpenAiApiRestClient } from './fixtures/openai/main.ts';
 
 test('OpenAI CreateModeration', async () => {
   const openAiClient = new OpenAiApiRestClient(new URL('http://invalid'));

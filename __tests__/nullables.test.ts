@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { processOpenApiDocument } from '../lib/process-document.js';
+import { processOpenApiDocument } from '../lib/process-document.ts';
 
 test('nullables', async () => {
   const result = await processOpenApiDocument(

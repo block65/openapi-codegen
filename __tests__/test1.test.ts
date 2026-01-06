@@ -1,7 +1,7 @@
 import { MockAgent, setGlobalDispatcher } from 'undici';
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
-import { GetBillingAccountCommand } from './fixtures/test1/commands.js';
-import { BillingServiceRestApiRestClient } from './fixtures/test1/main.js';
+import { GetBillingAccountCommand } from './fixtures/test1/commands.ts';
+import { BillingServiceRestApiRestClient } from './fixtures/test1/main.ts';
 
 const mockAgent = new MockAgent();
 

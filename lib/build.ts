@@ -1,8 +1,6 @@
 import { writeFile } from 'node:fs/promises';
-import prettierConfig from '@block65/eslint-config/prettier';
 import type { oas31 } from 'openapi3-ts';
-import { format as prettier } from 'prettier';
-import { processOpenApiDocument } from './process-document.js';
+import { processOpenApiDocument } from './process-document.ts';
 
 export async function build(
   inputFile: string,
@@ -35,15 +33,17 @@ export async function build(
 
   // eslint-disable-next-line no-restricted-syntax
   for await (const file of files) {
-    file.insertStatements(0, banner);
-    file.formatText();
+    try {
+      file.insertStatements(0, banner);
+      file.formatText();
 
-    await file.save();
+      await file.save();
 
-    const data = await prettier(file.getFullText(), {
-      parser: 'typescript',
-      ...prettierConfig,
-    });
-    await writeFile(file.getFilePath(), data);
+      await writeFile(file.getFilePath(), file.getFullText());
+    } catch (err) {
+      console.warn(err);
+      await writeFile(file.getFilePath(), file.getFullText());
+
+    }
   }
 }

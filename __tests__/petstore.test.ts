@@ -1,7 +1,7 @@
 import { MockAgent, setGlobalDispatcher } from 'undici';
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
-import { FindPetsCommand } from './fixtures/petstore/commands.js';
-import { SwaggerPetstoreRestClient } from './fixtures/petstore/main.js';
+import { FindPetsCommand } from './fixtures/petstore/commands.ts';
+import { SwaggerPetstoreRestClient } from './fixtures/petstore/main.ts';
 
 const mockAgent = new MockAgent();
 setGlobalDispatcher(mockAgent);

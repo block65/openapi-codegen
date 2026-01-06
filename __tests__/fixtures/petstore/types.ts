@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:27.975Z
+ * Generated on 2025-02-02T09:59:14.778Z
  *
  */
 
@@ -19,12 +19,12 @@ export type Pet = NewPet & {
   id: number;
 };
 export type FindPetsCommandQuery = {
-  tags?: string[] | undefined;
+  tags?: readonly string[] | undefined;
   limit?: `${number}` | undefined;
 };
 export type FindPetsCommandInput = FindPetsCommandQuery;
-export type AddPetCommandInput = NewPet;
 export type AddPetCommandBody = NewPet;
+export type AddPetCommandInput = NewPet;
 export type FindPetByIdCommandParams = {
   id: `${number}`;
 };

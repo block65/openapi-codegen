@@ -61,6 +61,14 @@ openai: __tests__/fixtures/openai.json dist
 		-o __tests__/fixtures/openai
 	pnpm exec prettier --write __tests__/fixtures/openai
 
+.PHONY: docker
+docker: __tests__/fixtures/docker.json dist
+	node --enable-source-maps dist/bin/index.js \
+		-i $< \
+		-o __tests__/fixtures/docker
+	pnpm exec prettier --write __tests__/fixtures/docker
+	
+
 # .PHONY: cloudflare
 # cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
 # 	node --enable-source-maps dist/bin/index.js \

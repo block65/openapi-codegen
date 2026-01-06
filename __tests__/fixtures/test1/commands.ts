@@ -3,27 +3,23 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:29.480Z
+ * Generated on 2025-02-02T09:59:28.164Z
  *
  */
 /** eslint-disable max-classes */
-import { Command } from '@block65/rest-client';
+import { Command, jsonStringify } from '@block65/rest-client';
 import type {
   GetOperationCommandInput,
   LongRunningOperation,
   ListBillingAccountsCommandInput,
   BillingAccountList,
   CreateBillingAccountCommandInput,
-  CreateBillingAccountCommandBody,
   BillingAccount,
   GetBillingAccountCommandInput,
   UpdateBillingAccountCommandInput,
-  UpdateBillingAccountCommandBody,
   GetBillingAccountPortalCommandInput,
-  GetBillingAccountPortalCommandBody,
   BillingAccountPortal,
   LinkBillingAccountCommandInput,
-  LinkBillingAccountCommandBody,
   ListPaymentMethodsCommandInput,
   PaymentMethods,
   CreatePaymentMethodCommandInput,
@@ -32,20 +28,16 @@ import type {
   PaymentMethod,
   GetPaymentMethodCommandInput,
   UpdatePaymentMethodCommandInput,
-  UpdatePaymentMethodCommandBody,
   DeletePaymentMethodCommandInput,
   PaymentMethodDeletedLro,
   ListBillingSubscriptionsCommandInput,
   BillingSubscriptions,
   CreateBillingSubscriptionCommandInput,
-  CreateBillingSubscriptionCommandBody,
   BillingSubscriptionLro,
   UpdateBillingSubscriptionCommandInput,
-  UpdateBillingSubscriptionCommandBody,
   CancelSubscriptionCommandInput,
   UpdateBillingSubscriptionPromoCodeCommandInput,
-  UpdateBillingSubscriptionPromoCodeCommandBody,
-} from './types.js';
+} from './types.ts';
 
 /**
  * GetOperationCommand
@@ -53,8 +45,7 @@ import type {
  */
 export class GetOperationCommand extends Command<
   GetOperationCommandInput,
-  LongRunningOperation,
-  never
+  LongRunningOperation
 > {
   public override method = 'get' as const;
 
@@ -70,8 +61,7 @@ export class GetOperationCommand extends Command<
  */
 export class ListBillingAccountsCommand extends Command<
   ListBillingAccountsCommandInput,
-  BillingAccountList,
-  never
+  BillingAccountList
 > {
   public override method = 'get' as const;
 }
@@ -82,14 +72,13 @@ export class ListBillingAccountsCommand extends Command<
  */
 export class CreateBillingAccountCommand extends Command<
   CreateBillingAccountCommandInput,
-  BillingAccount,
-  CreateBillingAccountCommandBody
+  BillingAccount
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateBillingAccountCommandInput) {
     const body = input;
-    super(`/billing-accounts`, body);
+    super(`/billing-accounts`, jsonStringify(body));
   }
 }
 
@@ -99,8 +88,7 @@ export class CreateBillingAccountCommand extends Command<
  */
 export class GetBillingAccountCommand extends Command<
   GetBillingAccountCommandInput,
-  BillingAccount,
-  never
+  BillingAccount
 > {
   public override method = 'get' as const;
 
@@ -116,14 +104,13 @@ export class GetBillingAccountCommand extends Command<
  */
 export class UpdateBillingAccountCommand extends Command<
   UpdateBillingAccountCommandInput,
-  BillingAccount,
-  UpdateBillingAccountCommandBody
+  BillingAccount
 > {
   public override method = 'put' as const;
 
   constructor(input: UpdateBillingAccountCommandInput) {
     const { billingAccountId, ...body } = input;
-    super(`/billing-accounts/${billingAccountId}`, body);
+    super(`/billing-accounts/${billingAccountId}`, jsonStringify(body));
   }
 }
 
@@ -133,14 +120,13 @@ export class UpdateBillingAccountCommand extends Command<
  */
 export class GetBillingAccountPortalCommand extends Command<
   GetBillingAccountPortalCommandInput,
-  BillingAccountPortal,
-  GetBillingAccountPortalCommandBody
+  BillingAccountPortal
 > {
   public override method = 'post' as const;
 
   constructor(input: GetBillingAccountPortalCommandInput) {
     const { billingAccountId, ...body } = input;
-    super(`/billing-accounts/${billingAccountId}/portal`, body);
+    super(`/billing-accounts/${billingAccountId}/portal`, jsonStringify(body));
   }
 }
 
@@ -150,14 +136,13 @@ export class GetBillingAccountPortalCommand extends Command<
  */
 export class LinkBillingAccountCommand extends Command<
   LinkBillingAccountCommandInput,
-  unknown,
-  LinkBillingAccountCommandBody
+  unknown
 > {
   public override method = 'post' as const;
 
   constructor(input: LinkBillingAccountCommandInput) {
     const { billingAccountId, ...body } = input;
-    super(`/billing-accounts/${billingAccountId}/link`, body);
+    super(`/billing-accounts/${billingAccountId}/link`, jsonStringify(body));
   }
 }
 
@@ -167,8 +152,7 @@ export class LinkBillingAccountCommand extends Command<
  */
 export class ListPaymentMethodsCommand extends Command<
   ListPaymentMethodsCommandInput,
-  PaymentMethods,
-  never
+  PaymentMethods
 > {
   public override method = 'get' as const;
 
@@ -184,8 +168,7 @@ export class ListPaymentMethodsCommand extends Command<
  */
 export class CreatePaymentMethodCommand extends Command<
   CreatePaymentMethodCommandInput,
-  PaymentMethodIntendedLro,
-  never
+  PaymentMethodIntendedLro
 > {
   public override method = 'post' as const;
 
@@ -201,8 +184,7 @@ export class CreatePaymentMethodCommand extends Command<
  */
 export class GetPaymentMethodFromStripeCommand extends Command<
   GetPaymentMethodFromStripeCommandInput,
-  PaymentMethod,
-  never
+  PaymentMethod
 > {
   public override method = 'get' as const;
 
@@ -220,8 +202,7 @@ export class GetPaymentMethodFromStripeCommand extends Command<
  */
 export class GetPaymentMethodCommand extends Command<
   GetPaymentMethodCommandInput,
-  PaymentMethod,
-  never
+  PaymentMethod
 > {
   public override method = 'get' as const;
 
@@ -239,8 +220,7 @@ export class GetPaymentMethodCommand extends Command<
  */
 export class UpdatePaymentMethodCommand extends Command<
   UpdatePaymentMethodCommandInput,
-  undefined,
-  UpdatePaymentMethodCommandBody
+  undefined
 > {
   public override method = 'put' as const;
 
@@ -248,7 +228,7 @@ export class UpdatePaymentMethodCommand extends Command<
     const { billingAccountId, paymentMethodId, ...body } = input;
     super(
       `/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
-      body,
+      jsonStringify(body),
     );
   }
 }
@@ -259,8 +239,7 @@ export class UpdatePaymentMethodCommand extends Command<
  */
 export class DeletePaymentMethodCommand extends Command<
   DeletePaymentMethodCommandInput,
-  PaymentMethodDeletedLro,
-  never
+  PaymentMethodDeletedLro
 > {
   public override method = 'delete' as const;
 
@@ -278,8 +257,7 @@ export class DeletePaymentMethodCommand extends Command<
  */
 export class ListBillingSubscriptionsCommand extends Command<
   ListBillingSubscriptionsCommandInput,
-  BillingSubscriptions,
-  never
+  BillingSubscriptions
 > {
   public override method = 'get' as const;
 
@@ -295,14 +273,16 @@ export class ListBillingSubscriptionsCommand extends Command<
  */
 export class CreateBillingSubscriptionCommand extends Command<
   CreateBillingSubscriptionCommandInput,
-  BillingSubscriptionLro,
-  CreateBillingSubscriptionCommandBody
+  BillingSubscriptionLro
 > {
   public override method = 'post' as const;
 
   constructor(input: CreateBillingSubscriptionCommandInput) {
     const { billingAccountId, ...body } = input;
-    super(`/billing-accounts/${billingAccountId}/subscriptions`, body);
+    super(
+      `/billing-accounts/${billingAccountId}/subscriptions`,
+      jsonStringify(body),
+    );
   }
 }
 
@@ -312,8 +292,7 @@ export class CreateBillingSubscriptionCommand extends Command<
  */
 export class UpdateBillingSubscriptionCommand extends Command<
   UpdateBillingSubscriptionCommandInput,
-  undefined,
-  UpdateBillingSubscriptionCommandBody
+  undefined
 > {
   public override method = 'put' as const;
 
@@ -321,7 +300,7 @@ export class UpdateBillingSubscriptionCommand extends Command<
     const { billingAccountId, subscriptionId, ...body } = input;
     super(
       `/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
-      body,
+      jsonStringify(body),
     );
   }
 }
@@ -332,8 +311,7 @@ export class UpdateBillingSubscriptionCommand extends Command<
  */
 export class CancelSubscriptionCommand extends Command<
   CancelSubscriptionCommandInput,
-  undefined,
-  never
+  undefined
 > {
   public override method = 'delete' as const;
 
@@ -351,8 +329,7 @@ export class CancelSubscriptionCommand extends Command<
  */
 export class UpdateBillingSubscriptionPromoCodeCommand extends Command<
   UpdateBillingSubscriptionPromoCodeCommandInput,
-  BillingSubscriptionLro,
-  UpdateBillingSubscriptionPromoCodeCommandBody
+  BillingSubscriptionLro
 > {
   public override method = 'put' as const;
 
@@ -360,7 +337,7 @@ export class UpdateBillingSubscriptionPromoCodeCommand extends Command<
     const { billingAccountId, subscriptionId, ...body } = input;
     super(
       `/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}/promo-code`,
-      body,
+      jsonStringify(body),
     );
   }
 }

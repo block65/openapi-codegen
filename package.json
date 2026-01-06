@@ -1,70 +1,57 @@
 {
-  "name": "@block65/openapi-codegen",
-  "version": "6.0.3",
-  "private": false,
-  "license": "UNLICENSED",
-  "sideEffects": false,
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/lib/index.d.ts",
-      "default": "./dist/lib/index.js"
-    }
-  },
-  "bin": {
-    "openapi-codegen": "./dist/bin/index.js"
-  },
-  "files": [
-    "dist/bin/*.js",
-    "dist/bin/*.d.ts",
-    "dist/lib/*.js",
-    "dist/lib/*.d.ts"
-  ],
-  "scripts": {
-    "preversion": "make test"
-  },
-  "dependencies": {
-    "@apidevtools/json-schema-ref-parser": "^11.7.0",
-    "@block65/eslint-config": "^12.0.1",
-    "camelcase": "^8.0.0",
-    "prettier": "^3.3.3",
-    "toposort": "^2.0.2",
-    "ts-morph": "^23.0.0",
-    "type-fest": "^4.26.1",
-    "word-wrap": "^1.2.5",
-    "yargs": "^17.7.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@babel/preset-env": "^7.25.4",
-    "@babel/preset-typescript": "^7.24.7",
-    "@block65/rest-client": "^11.0.3",
-    "@hapi/bourne": "^3.0.0",
-    "@ts-morph/common": "^0.24.0",
-    "@types/eslint": "^8.56.12",
-    "@types/node": "^22.7.4",
-    "@types/toposort": "^2.0.7",
-    "@types/yargs": "^17.0.33",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-jsx-a11y": "^6.10.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-react": "^7.37.1",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "js-yaml": "^4.1.0",
-    "openapi3-ts": "^4.4.0",
-    "prettier": "^2.8.8",
-    "typescript": "^5.6.2",
-    "undici": "^6.19.8",
-    "vitest": "^2.1.1"
-  },
-  "peerDependencies": {
-    "@block65/rest-client": "^11.0.3"
-  },
-  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1",
-  "engines": {
-    "node": ">=20.0.0"
-  }
+	"name": "@block65/openapi-codegen",
+	"version": "6.0.3",
+	"private": false,
+	"license": "UNLICENSED",
+	"sideEffects": false,
+	"type": "module",
+	"bin": {
+		"openapi-codegen": "./bin/index.ts"
+	},
+	"scripts": {
+		"preversion": "make test"
+	},
+	"dependencies": {
+		"@apidevtools/json-schema-ref-parser": "catalog:default",
+		"camelcase": "^9.0.0",
+		"toposort": "^2.0.2",
+		"ts-morph": "^27.0.2",
+		"type-fest": "catalog:default",
+		"word-wrap": "^1.2.5",
+		"yargs": "^18.0.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.28.5",
+		"@babel/preset-env": "^7.28.5",
+		"@babel/preset-typescript": "^7.28.5",
+		"@block65/rest-client": "workspace:^",
+		"@hapi/bourne": "^3.0.0",
+		"@ts-morph/common": "^0.28.1",
+		"@types/eslint": "^9.6.1",
+		"@types/node": "catalog:",
+		"@types/toposort": "^2.0.7",
+		"@types/yargs": "^17.0.35",
+		"@typescript-eslint/eslint-plugin": "^8.50.0",
+		"@typescript-eslint/parser": "^8.50.0",
+		"eslint": "catalog:default",
+		"eslint-plugin-import": "^2.32.0",
+		"eslint-plugin-jsx-a11y": "catalog:",
+		"eslint-plugin-prettier": "^5.5.4",
+		"eslint-plugin-react": "catalog:",
+		"eslint-plugin-react-hooks": "^7.0.1",
+		"js-yaml": "^4.1.1",
+		"openapi3-ts": "catalog:default",
+		"prettier": "^3.7.4",
+		"typescript": "catalog:default",
+		"undici": "^7.16.0",
+		"vitest": "catalog:default"
+	},
+	"peerDependencies": {
+		"@block65/eslint-config": "workspace:^",
+		"@block65/rest-client": "workspace:^",
+		"prettier": "catalog:default"
+	},
+	"engines": {
+		"node": ">=20.0.0"
+	}
 }

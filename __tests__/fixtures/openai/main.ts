@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:31.654Z
+ * Generated on 2025-02-02T10:02:00.661Z
  *
  */
 import {
@@ -46,7 +46,9 @@ import type {
   CreateThreadAndRunCommandInput,
   CreateThreadCommandInput,
   CreateTranscriptionCommandInput,
+  CreateTranscriptionCommandOutput,
   CreateTranslationCommandInput,
+  CreateTranslationCommandOutput,
   CreateUploadCommandInput,
   CreateVectorStoreCommandInput,
   CreateVectorStoreFileBatchCommandInput,
@@ -71,6 +73,7 @@ import type {
   DeleteVectorStoreFileResponse,
   DeleteVectorStoreResponse,
   DownloadFileCommandInput,
+  DownloadFileCommandOutput,
   FinetuneChatRequestInput,
   FinetuneCompletionRequestInput,
   FineTuningJob,
@@ -165,7 +168,7 @@ import type {
   VectorStoreFileBatchObject,
   VectorStoreFileObject,
   VectorStoreObject,
-} from './types.js';
+} from './types.ts';
 
 type AllInputs =
   | AddUploadPartCommandInput
@@ -272,6 +275,8 @@ type AllOutputs =
   | CreateCompletionResponse
   | CreateEmbeddingResponse
   | CreateModerationResponse
+  | CreateTranscriptionCommandOutput
+  | CreateTranslationCommandOutput
   | DeleteAssistantResponse
   | DeleteFileResponse
   | DeleteMessageResponse
@@ -279,6 +284,7 @@ type AllOutputs =
   | DeleteThreadResponse
   | DeleteVectorStoreFileResponse
   | DeleteVectorStoreResponse
+  | DownloadFileCommandOutput
   | FineTuningJob
   | ImagesResponse
   | Invite

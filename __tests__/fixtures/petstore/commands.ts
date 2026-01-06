@@ -3,20 +3,19 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:27.975Z
+ * Generated on 2025-02-02T09:59:14.778Z
  *
  */
 /** eslint-disable max-classes */
-import { Command } from '@block65/rest-client';
+import { Command, stripUndefined, jsonStringify } from '@block65/rest-client';
 import type {
   FindPetsCommandQuery,
   FindPetsCommandInput,
   Pet,
   AddPetCommandInput,
-  AddPetCommandBody,
   FindPetByIdCommandInput,
   DeletePetCommandInput,
-} from './types.js';
+} from './types.ts';
 
 /**
  * Returns all pets from the system that the user has access to
@@ -47,14 +46,13 @@ import type {
 export class FindPetsCommand extends Command<
   FindPetsCommandInput,
   Pet[],
-  never,
   FindPetsCommandQuery
 > {
   public override method = 'get' as const;
 
   constructor(input: FindPetsCommandInput) {
     const { tags, limit } = input;
-    super(`/pets`, undefined, { tags, limit });
+    super(`/pets`, undefined, stripUndefined({ tags, limit }));
   }
 }
 
@@ -62,16 +60,12 @@ export class FindPetsCommand extends Command<
  * Creates a new pet in the store. Duplicates are allowed
  *
  */
-export class AddPetCommand extends Command<
-  AddPetCommandInput,
-  Pet,
-  AddPetCommandBody
-> {
+export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
   public override method = 'post' as const;
 
   constructor(input: AddPetCommandInput) {
     const body = input;
-    super(`/pets`, body);
+    super(`/pets`, jsonStringify(body));
   }
 }
 
@@ -80,11 +74,7 @@ export class AddPetCommand extends Command<
  * the pet
  *
  */
-export class FindPetByIdCommand extends Command<
-  FindPetByIdCommandInput,
-  Pet,
-  never
-> {
+export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
   public override method = 'get' as const;
 
   constructor(input: FindPetByIdCommandInput) {
@@ -99,8 +89,7 @@ export class FindPetByIdCommand extends Command<
  */
 export class DeletePetCommand extends Command<
   DeletePetCommandInput,
-  undefined,
-  never
+  undefined
 > {
   public override method = 'delete' as const;
 

@@ -70,7 +70,7 @@ export function refToName(ref: string): string {
 }
 
 export function pascalCase(...str: string[]): string {
-  return camelcase(str, { pascalCase: true });
+  return camelcase(str.flatMap(s => s.split('/')), { pascalCase: true });
 }
 
 export function wordWrap(text: string) {

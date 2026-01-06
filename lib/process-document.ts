@@ -15,14 +15,14 @@ import {
   Writers,
 } from 'ts-morph';
 import type { Simplify } from 'type-fest';
-import { registerTypesFromSchema, schemaToType } from './process-schema.js';
+import { registerTypesFromSchema, schemaToType } from './process-schema.ts';
 import {
   castToValidJsIdentifier,
   getDependents,
   iife,
   pascalCase,
   wordWrap,
-} from './utils.js';
+} from './utils.ts';
 
 const neverKeyword = 'never' as const;
 // function isNeverKeyword(type: TypeAliasDeclaration) {
@@ -56,7 +56,11 @@ function createUnion(...types: (string | undefined)[]) {
   const [type1, type2, ...typeX] = types
     .filter((t): t is string => !!t)
     .sort((a, b) => a.localeCompare(b));
-  return type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1;
+  return (
+    (type1 && type2
+      ? Writers.unionType(type1, type2, ...typeX)
+      : type1) || neverKeyword
+  );
 }
 
 export async function processOpenApiDocument(
@@ -100,6 +104,8 @@ export async function processOpenApiDocument(
     namedImports: [
       // command classes
       'Command',
+      'stripUndefined',
+      'jsonStringify',
     ],
     moduleSpecifier: '@block65/rest-client',
   });
@@ -110,15 +116,10 @@ export async function processOpenApiDocument(
     isTypeOnly: true,
   });
 
+
   typesFile.addImportDeclaration({
     namedImports: ['Jsonifiable', 'Jsonify'],
     moduleSpecifier: 'type-fest',
-    isTypeOnly: true,
-  });
-
-  typesFile.addImportDeclaration({
-    namedImports: ['JsonifiableObject'],
-    moduleSpecifier: 'type-fest/source/jsonifiable.js',
     isTypeOnly: true,
   });
 
@@ -236,11 +237,11 @@ export async function processOpenApiDocument(
             tags: [
               ...(operationObject.summary
                 ? [
-                    {
-                      tagName: 'summary',
-                      text: wordWrap(operationObject.summary),
-                    },
-                  ]
+                  {
+                    tagName: 'summary',
+                    text: wordWrap(operationObject.summary),
+                  },
+                ]
                 : []),
             ],
           };
@@ -255,7 +256,7 @@ export async function processOpenApiDocument(
 
           const requestBodyObject =
             operationObject.requestBody &&
-            !('$ref' in operationObject.requestBody)
+              !('$ref' in operationObject.requestBody)
               ? operationObject.requestBody
               : undefined;
 
@@ -289,83 +290,169 @@ export async function processOpenApiDocument(
           const queryType =
             queryParameters.length > 0
               ? typesFile.addTypeAlias({
-                  name: pascalCase(
-                    commandClassDeclaration.getName() || 'INVALID',
-                    'Query',
-                  ),
-                  isExported: true,
-                  type: Writers.objectType({
-                    properties: queryParameters.map((qp) => {
-                      const name = castToValidJsIdentifier(qp.name);
+                name: pascalCase(
+                  commandClassDeclaration.getName() || 'INVALID',
+                  'Query',
+                ),
+                isExported: true,
+                type: Writers.objectType({
+                  properties: queryParameters.map((qp) => {
+                    const name = castToValidJsIdentifier(qp.name);
 
-                      if (!qp.schema) {
-                        return {
-                          name,
-                          hasQuestionToken: !qp.required,
-                        };
-                      }
-
-                      const type = schemaToType(
-                        typesAndInterfaces,
-                        qp.required
-                          ? {
-                              required: [name],
-                            }
-                          : {},
-                        name,
-                        qp.schema,
-                        {
-                          // query parameters can't be strictly "boolean"
-                          booleanAsStringish: true,
-                          integerAsStringish: true,
-                        },
-                      );
-
-                      if (qp.required) {
-                        return type;
-                      }
-
+                    if (!qp.schema) {
                       return {
-                        // ...type,
                         name,
-                        // query parameters need to allow undefined due to the
-                        // rest client spreading all of the parameters
-                        hasQuestionToken: true,
-                        type:
-                          // I dont know how to do nested writer functions
-                          typeof type.type === 'function'
-                            ? type.type
-                            : Writers.unionType(`${type.type}`, 'undefined'),
+                        hasQuestionToken: !qp.required,
                       };
-                    }),
+                    }
+
+                    const type = schemaToType(
+                      typesAndInterfaces,
+                      qp.required
+                        ? {
+                          required: [name],
+                        }
+                        : {},
+                      name,
+                      qp.schema,
+                      {
+                        // query parameters can't be strictly "boolean"
+                        booleanAsStringish: true,
+                        integerAsStringish: true,
+                      },
+                    );
+
+
+
+                    return {
+                      // ...type,
+                      name,
+                      // query parameters need to allow undefined due to the
+                      // rest client spreading all of the parameters
+                      hasQuestionToken: true,
+                      type:
+                        // I dont know how to do nested writer functions
+                        typeof type.type === 'function'
+                          ? type.type
+                          : Writers.unionType(`${type.type}`, 'undefined'),
+                    };
                   }),
-                })
+                }),
+              })
               : undefined;
 
           ensureImport(queryType);
 
-          const requestBodyObjectJson =
+          const jsonRequestBodyObject =
             requestBodyObject?.content['application/json'];
 
-          const requestBodyIsArray =
-            requestBodyObjectJson?.schema &&
-            'type' in requestBodyObjectJson.schema &&
-            requestBodyObjectJson.schema?.type === 'array';
+          const jsonBodyType = iife(() => {
 
-          // get the ref from the schema or the array items
-          const requestBodyObjectJsonSchema =
-            (requestBodyObjectJson?.schema &&
-              (('$ref' in requestBodyObjectJson.schema &&
-                requestBodyObjectJson?.schema) ||
-                (requestBodyIsArray &&
-                  'items' in requestBodyObjectJson.schema &&
-                  '$ref' in requestBodyObjectJson.schema.items &&
-                  requestBodyObjectJson.schema.items))) ||
-            undefined;
+            if (!jsonRequestBodyObject?.schema) {
+              return undefined;
+            }
 
-          const bodyType =
-            requestBodyObjectJsonSchema &&
-            typesAndInterfaces.get(requestBodyObjectJsonSchema.$ref);
+            if ('$ref' in jsonRequestBodyObject.schema) { return typesAndInterfaces.get(jsonRequestBodyObject.schema.$ref) };
+
+            if (jsonRequestBodyObject.schema.type === 'array' && 'items' in jsonRequestBodyObject.schema && '$ref' in jsonRequestBodyObject.schema.items) {
+              return typesAndInterfaces.get(jsonRequestBodyObject.schema.items.$ref);
+            }
+
+            // named as such because we only support the json request body atm
+            const name = castToValidJsIdentifier(`${operationObject.operationId} JsonBody`);
+
+            // if (!requestBodySchema) {
+            //   return {
+            //     name,
+            //     hasQuestionToken: !requestBodyObjectJson.schema.required,
+            //   };
+            // }
+
+            const type = schemaToType(
+              typesAndInterfaces,
+              jsonRequestBodyObject.schema.required
+                ? {
+                  required: [name],
+                }
+                : {},
+              name,
+              jsonRequestBodyObject.schema,
+              {
+                // query parameters can't be strictly "boolean"
+                booleanAsStringish: true,
+                integerAsStringish: true,
+              },
+            );
+
+            return typesFile.addTypeAlias({
+              name,
+              type:
+                // I dont know how to do nested writer functions
+                typeof type.type === 'function'
+                  ? type.type
+                  : String(type.type),
+            });
+
+
+            // console.warn("Couldn't find a body type for", requestBodyObjectJson.schema);
+
+            // return undefined;
+
+
+
+          });
+
+          const nonJsonBodyEntries = requestBodyObject?.content ? Object.entries(
+            requestBodyObject.content,
+          ).filter(([, o]) => o !== jsonRequestBodyObject) : [];
+
+          if (jsonBodyType && nonJsonBodyEntries.length > 0) {
+            console.warn(
+              commandClassDeclaration.getName(),
+              'Non-json and json body types are not supported together yet',
+            )
+          }
+
+          const nonJsonBodyPropName = 'body';
+          const inputBodyName = 'body';
+
+          const nonJsonBodyType = !jsonBodyType && nonJsonBodyEntries.length > 0 ? typesFile.addTypeAlias(
+            {
+              name: pascalCase(`${commandClassDeclaration.getName() || 'INVALID'} Body NonJson`),
+              isExported: true,
+              type: Writers.objectType({
+                properties: [{
+                  name: nonJsonBodyPropName,
+                  type: createUnion(
+                    ...nonJsonBodyEntries.map(([contentType, _mediaTypeObj]) => {
+                      const nonJsonBody = typesFile.addTypeAlias({
+                        name: pascalCase(
+                          `${commandClassDeclaration.getName() || 'INVALID'} Body ${contentType}`,
+                        ),
+                        type: createUnion(...['ReadableStream<Uint8Array>', 'string', 'ArrayBuffer', 'ArrayBufferView', 'Blob', 'URLSearchParams', 'FormData']),
+                      });
+
+                      // nonJsonBody.addJsDoc({
+                      //   description: `The body of the request, encoded as ${contentType}`,
+                      //   tags: [
+                      //     {
+                      //       tagName: 'param',
+                      //       text: wordWrap(
+                      //         `body {${nonJsonBody.getName()}} ${mediaTypeObj.schema?.description || ''
+                      //         }`,
+                      //       ).trim(),
+                      //     },
+                      //   ],
+                      // });
+
+                      return nonJsonBody.getName();
+                    })
+                  ),
+                }]
+              }),
+            }
+          ) : undefined;
+
 
           // ensureImport(bodyType);
 
@@ -382,47 +469,62 @@ export async function processOpenApiDocument(
           const paramsType =
             pathParameters.length > 0
               ? typesFile.addTypeAlias({
-                  name: pascalCase(
-                    `${commandClassDeclaration.getName() || 'INVALID'}Params`,
-                  ),
-                  type: Writers.objectType({
-                    properties: pathParameters.map((p) => {
-                      const name = castToValidJsIdentifier(p.name);
+                name: pascalCase(
+                  `${commandClassDeclaration.getName() || 'INVALID'}Params`,
+                ),
+                type: Writers.objectType({
+                  properties: pathParameters.map((p) => {
+                    const name = castToValidJsIdentifier(p.name);
 
-                      const type = schemaToType(
-                        typesAndInterfaces,
-                        p.required
-                          ? {
-                              required: [name],
-                            }
-                          : {},
-                        name,
-                        p.schema || {
-                          type: 'string',
-                          description:
-                            '// TODO: check this? no path param schema was found',
-                        },
-                        {
-                          // parameters can't be strictly "boolean"
-                          booleanAsStringish: true,
-                          integerAsStringish: true,
-                        },
-                      );
+                    const type = schemaToType(
+                      typesAndInterfaces,
+                      p.required
+                        ? {
+                          required: [name],
+                        }
+                        : {},
+                      name,
+                      p.schema || {
+                        type: 'string',
+                        description:
+                          '// TODO: check this? no path param schema was found',
+                      },
+                      {
+                        // parameters can't be strictly "boolean"
+                        booleanAsStringish: true,
+                        integerAsStringish: true,
+                      },
+                    );
 
-                      return {
-                        name,
-                        type: type.type || unspecifiedKeyword,
-                      };
-                    }),
+                    return {
+                      name,
+                      type: type.type || unspecifiedKeyword,
+                    };
                   }),
-                  isExported: true,
-                })
+                }),
+                isExported: true,
+              })
               : null;
+
+
+          const bodyType =
+            (jsonBodyType &&
+              typesFile.addTypeAlias({
+                name: pascalCase(commandClassDeclaration.getName() || '', 'Body'),
+                type: jsonBodyType.getName(),
+                isExported: true,
+              })) || (
+              nonJsonBodyType
+            )
+
+          if (bodyType) {
+            ensureImport(bodyType);
+          }
 
           const inputType = typesFile.addTypeAlias({
             name: pascalCase(commandClassDeclaration.getName() || '', 'Input'),
             type: createIntersection(
-              bodyType?.getName(),
+              jsonBodyType?.getName() || nonJsonBodyType?.getName(),
               paramsType?.getName(),
               queryType?.getName(),
             ),
@@ -430,17 +532,6 @@ export async function processOpenApiDocument(
           });
           ensureImport(inputType);
 
-          const inputBodyType =
-            bodyType &&
-            typesFile.addTypeAlias({
-              name: pascalCase(commandClassDeclaration.getName() || '', 'Body'),
-              type: bodyType.getName() || unspecifiedKeyword,
-              isExported: true,
-            });
-
-          if (inputBodyType) {
-            ensureImport(inputBodyType);
-          }
 
           // CommandInput
           commandClassDeclaration
@@ -482,7 +573,7 @@ export async function processOpenApiDocument(
           }
 
           for (const [statusCode, response] of Object.entries(
-            operationObject.responses || {},
+            { ...operationObject.responses },
           ).filter(([s]) => s.startsWith('2'))) {
             // early out if response is 204
             if (statusCode === '204') {
@@ -522,9 +613,8 @@ export async function processOpenApiDocument(
                 ensureImport(outputType);
               }
 
-              const outputTypeName = `${outputType?.getName()}${
-                arrayRef ? '[]' : ''
-              }`;
+              const outputTypeName = `${outputType?.getName()}${arrayRef ? '[]' : ''
+                }`;
 
               if (arrayRef) {
                 outputTypes.add(outputTypeName);
@@ -538,24 +628,65 @@ export async function processOpenApiDocument(
               //   tagName: 'returns',
               //   text: `{${retVal}} HTTP ${statusCode}`,
               // });
-            } else {
-              const retVal = unspecifiedKeyword;
-              commandClassDeclaration.getExtends()?.addTypeArgument(retVal);
-              outputTypes.add(retVal);
+            } else if (jsonResponse?.schema) {
+
+              const outputType = schemaToType(
+                typesAndInterfaces,
+                {},
+                '',
+                jsonResponse.schema
+              )
+
+              const responseTypeAlias = typesFile.addTypeAlias({
+                name: pascalCase(
+                  commandClassDeclaration.getName() || 'INVALID',
+                  'Output',
+                ),
+                type:
+                  // I dont know how to do nested writer functions
+                  typeof outputType.type === 'function'
+                    ? outputType.type
+                    : Writers.unionType(`${outputType.type}`, 'undefined'),
+                isExported: true,
+              });
+
+              ensureImport(responseTypeAlias);
+
+
+
+
+
+              commandClassDeclaration.getExtends()?.addTypeArgument(responseTypeAlias.getName());
+              outputTypes.add(responseTypeAlias);
+
+
+
 
               // jsdoc.addTag({
               //   tagName: 'returns',
               //   text: `{${retVal}} HTTP ${statusCode}`,
               // });
+            } else {
+              const retVal = unspecifiedKeyword
+
+
+
+
+
+              commandClassDeclaration.getExtends()?.addTypeArgument(retVal);
+              outputTypes.add(retVal);
             }
           }
 
           // body
-          commandClassDeclaration
-            .getExtends()
-            ?.addTypeArgument(
-              inputBodyType ? inputBodyType.getName() : neverKeyword,
-            );
+          // commandClassDeclaration
+          //   .getExtends()
+          //   ?.addTypeArgument(
+          //     bodyType ? bodyType.getName() :
+
+
+          //       neverKeyword,
+          //   );
 
           // query
           if (queryType) {
@@ -568,9 +699,11 @@ export async function processOpenApiDocument(
             // .replaceAll(/\{(\w+)\}/g, camelcase)
             .replaceAll(/{/g, '${')}\``;
 
-          const bodyName = 'body';
 
-          const hasBody = !!inputBodyType;
+          const hasJsonBody = !!jsonBodyType;
+
+          const hasNonJsonBody = !!nonJsonBodyType;
+
           const hasQuery =
             queryType &&
             !isUnspecifiedKeyword(queryType) &&
@@ -581,7 +714,7 @@ export async function processOpenApiDocument(
             !isUnspecifiedKeyword(paramsType) &&
             pathParameters.length > 0;
 
-          if (hasBody || hasQuery || hasParams) {
+          if (hasNonJsonBody || hasJsonBody || hasQuery || hasParams) {
             const ctor = commandClassDeclaration.addConstructor();
 
             const queryParameterNames = queryParameters
@@ -603,6 +736,7 @@ export async function processOpenApiDocument(
                 type: inputType.getName(),
               });
 
+
               ctor.addStatements([
                 {
                   kind: StructureKind.VariableStatement,
@@ -613,15 +747,22 @@ export async function processOpenApiDocument(
                       initializer: cctorParam.getName(),
                       name: iife(() => {
                         switch (true) {
-                          case paramsToDestructure.length > 0 && hasBody:
+                          case paramsToDestructure.length > 0 && hasNonJsonBody:
                             return `{${[
                               ...paramsToDestructure,
-                              `...${bodyName}`,
+                              nonJsonBodyPropName,
                             ].join(', ')} }`;
-                          case paramsToDestructure.length > 0 && !hasBody:
+                          case paramsToDestructure.length > 0 && hasJsonBody:
+                            return `{${[
+                              ...paramsToDestructure,
+                              `...${inputBodyName}`,
+                            ].join(', ')} }`;
+                          case paramsToDestructure.length > 0 && !hasJsonBody:
                             return `{${paramsToDestructure.join(', ')} }`;
-                          case hasBody:
-                            return bodyName;
+                          case hasNonJsonBody:
+                            return `{${nonJsonBodyPropName}}`;
+                          case hasJsonBody:
+                            return inputBodyName;
                           default:
                             return '_';
                         }
@@ -641,20 +782,49 @@ export async function processOpenApiDocument(
               SyntaxKind.CallExpression,
             );
 
+
             // type narrowing
             if (Node.isCallExpression(callExpr)) {
-              callExpr.addArguments(
-                hasBody || hasQuery
-                  ? [
-                      pathname,
-                      hasBody ? bodyName : emptyKeyword,
-                      ...(hasQuery
-                        ? [`{${queryParameterNames.join(', ')}}`]
-                        : []),
-                    ]
-                  : [pathname],
-              );
+              if (hasJsonBody) {
+                callExpr.addArguments(
+                  [
+                    pathname,
+                    `jsonStringify(${inputBodyName})`,
+                    ...(hasQuery
+                      ? [`stripUndefined({${queryParameterNames.join(', ')}})`]
+                      : []),
+                  ],
+                );
+              } else if (hasNonJsonBody) {
+                callExpr.addArguments(
+                  [
+                    pathname,
+                    nonJsonBodyPropName,
+                    ...(hasQuery
+                      ? [`stripUndefined({${queryParameterNames.join(', ')}})`]
+                      : []),
+                  ],
+                );
+              } else if (hasQuery) {
+                callExpr.addArguments(
+                  [
+                    pathname,
+                    emptyKeyword,
+                    ...(hasQuery
+                      ? [`stripUndefined({${queryParameterNames.join(', ')}})`]
+                      : []),
+                  ],
+                );
+              } else {
+                callExpr.addArguments(
+                  [
+                    pathname,
+
+                  ],
+                )
+              }
             }
+
           }
         }
       }
@@ -675,16 +845,16 @@ export async function processOpenApiDocument(
 
   const allInputs = inputUnion
     ? mainFile.addTypeAlias({
-        name: 'AllInputs',
-        type: inputUnion,
-      })
+      name: 'AllInputs',
+      type: inputUnion,
+    })
     : undefined;
 
   const allOutputs = outputUnion
     ? mainFile.addTypeAlias({
-        name: 'AllOutputs',
-        type: outputUnion,
-      })
+      name: 'AllOutputs',
+      type: outputUnion,
+    })
     : undefined;
 
   const serviceClientClassName = 'RestServiceClient';
@@ -723,9 +893,8 @@ export async function processOpenApiDocument(
   const clientClassDeclaration = mainFile.addClass({
     name: pascalCase(schema.info.title, 'RestClient'),
     isExported: true,
-    extends: `${serviceClientClassName}<${allInputs?.getName() || unspecifiedKeyword}, ${
-      allOutputs?.getName() || unspecifiedKeyword
-    }>`,
+    extends: `${serviceClientClassName}<${allInputs?.getName() || unspecifiedKeyword}, ${allOutputs?.getName() || unspecifiedKeyword
+      }>`,
   });
 
   const ctor = clientClassDeclaration.addConstructor();

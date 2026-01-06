@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:27.975Z
+ * Generated on 2025-02-02T09:59:14.778Z
  *
  */
 import {
@@ -16,7 +16,7 @@ import type {
   FindPetByIdCommandInput,
   FindPetsCommandInput,
   Pet,
-} from './types.js';
+} from './types.ts';
 
 type AllInputs =
   | AddPetCommandInput

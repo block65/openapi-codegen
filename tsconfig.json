@@ -25,6 +25,8 @@
     "noUnusedParameters": true,
     "verbatimModuleSyntax": true,
     "removeComments": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "resolveJsonModule": true,
     "sourceMap": true
   },
