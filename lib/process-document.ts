@@ -313,6 +313,22 @@ export async function processOpenApiDocument(
 						}
 					}
 
+					// Extract path parameters from URL pattern that weren't declared this
+					// is technically against the spec but we are the good guys
+					for (const [, paramName] of path.matchAll(/\{(\w+)\}/g)) {
+						const alreadyDeclared = pathParameters.some(
+							(p) => p.name === paramName,
+						);
+						if (!alreadyDeclared) {
+							pathParameters.push({
+								name: paramName,
+								in: "path",
+								required: true,
+								schema: { type: "string" },
+							});
+						}
+					}
+
 					const queryType =
 						queryParameters.length > 0
 							? typesFile.addTypeAlias({

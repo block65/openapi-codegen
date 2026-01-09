@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:22:09.389Z
+ * Generated on 2026-01-09T08:35:53.827Z
  *
  */
 import { validator } from "hono/validator";

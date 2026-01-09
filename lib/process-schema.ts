@@ -287,10 +287,7 @@ export function schemaToType(
 			hasQuestionToken,
 			type:
 				hasNullType || isNullable
-					? maybeUnion(
-							...filteredTypes.filter((t) => t !== "null"),
-							"null",
-						)
+					? maybeUnion(...filteredTypes.filter((t) => t !== "null"), "null")
 					: maybeUnion(...filteredTypes),
 			docs,
 		};

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:23:27.053Z
+ * Generated on 2026-01-09T08:35:34.785Z
  *
  */
 import { validator } from "hono/validator";
@@ -102,12 +102,15 @@ import {
 	modifyMessageCommandBodySchema,
 	modifyMessageCommandParamsSchema,
 	modifyProjectCommandBodySchema,
+	modifyProjectCommandParamsSchema,
 	modifyProjectUserCommandBodySchema,
+	modifyProjectUserCommandParamsSchema,
 	modifyRunCommandBodySchema,
 	modifyRunCommandParamsSchema,
 	modifyThreadCommandBodySchema,
 	modifyThreadCommandParamsSchema,
 	modifyUserCommandBodySchema,
+	modifyUserCommandParamsSchema,
 	modifyVectorStoreCommandBodySchema,
 	modifyVectorStoreCommandParamsSchema,
 	retrieveBatchCommandParamsSchema,
@@ -539,6 +542,9 @@ export const modifyuser = [
 	validator("json", (value) => {
 		return v.parse(modifyUserCommandBodySchema, value);
 	}),
+	validator("param", (value) => {
+		return v.parse(modifyUserCommandParamsSchema, value);
+	}),
 ] as const;
 export const deleteuser = [
 	validator("param", (value) => {
@@ -563,6 +569,9 @@ export const retrieveproject = [
 export const modifyproject = [
 	validator("json", (value) => {
 		return v.parse(modifyProjectCommandBodySchema, value);
+	}),
+	validator("param", (value) => {
+		return v.parse(modifyProjectCommandParamsSchema, value);
 	}),
 ] as const;
 export const archiveproject = [
@@ -594,6 +603,9 @@ export const retrieveprojectuser = [
 export const modifyprojectuser = [
 	validator("json", (value) => {
 		return v.parse(modifyProjectUserCommandBodySchema, value);
+	}),
+	validator("param", (value) => {
+		return v.parse(modifyProjectUserCommandParamsSchema, value);
 	}),
 ] as const;
 export const deleteprojectuser = [

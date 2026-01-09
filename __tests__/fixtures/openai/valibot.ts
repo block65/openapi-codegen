@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:23:27.053Z
+ * Generated on 2026-01-09T08:35:34.785Z
  *
  */
 import * as v from "valibot";
@@ -6912,6 +6912,9 @@ export const retrieveUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
 export const modifyUserCommandBodySchema = userRoleUpdateRequestSchema;
+export const modifyUserCommandParamsSchema = v.strictObject({
+	user_id: v.string(),
+});
 export const deleteUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
@@ -6925,6 +6928,9 @@ export const retrieveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const modifyProjectCommandBodySchema = projectUpdateRequestSchema;
+export const modifyProjectCommandParamsSchema = v.strictObject({
+	project_id: v.string(),
+});
 export const archiveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
@@ -6946,6 +6952,10 @@ export const retrieveProjectUserCommandParamsSchema = v.strictObject({
 });
 export const modifyProjectUserCommandBodySchema =
 	projectUserUpdateRequestSchema;
+export const modifyProjectUserCommandParamsSchema = v.strictObject({
+	project_id: v.string(),
+	user_id: v.string(),
+});
 export const deleteProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:23:27.053Z
+ * Generated on 2026-01-09T08:35:34.785Z
  *
  */
 import type { Jsonifiable } from "type-fest";
@@ -4152,8 +4152,12 @@ export type RetrieveUserCommandParams = {
 	user_id: string;
 };
 export type RetrieveUserCommandInput = RetrieveUserCommandParams;
+export type ModifyUserCommandParams = {
+	user_id: string;
+};
 export type ModifyUserCommandBody = UserRoleUpdateRequest;
-export type ModifyUserCommandInput = UserRoleUpdateRequest;
+export type ModifyUserCommandInput = UserRoleUpdateRequest &
+	ModifyUserCommandParams;
 export type DeleteUserCommandParams = {
 	user_id: string;
 };
@@ -4170,8 +4174,12 @@ export type RetrieveProjectCommandParams = {
 	project_id: string;
 };
 export type RetrieveProjectCommandInput = RetrieveProjectCommandParams;
+export type ModifyProjectCommandParams = {
+	project_id: string;
+};
 export type ModifyProjectCommandBody = ProjectUpdateRequest;
-export type ModifyProjectCommandInput = ProjectUpdateRequest;
+export type ModifyProjectCommandInput = ProjectUpdateRequest &
+	ModifyProjectCommandParams;
 export type ArchiveProjectCommandParams = {
 	project_id: string;
 };
@@ -4196,8 +4204,13 @@ export type RetrieveProjectUserCommandParams = {
 	user_id: string;
 };
 export type RetrieveProjectUserCommandInput = RetrieveProjectUserCommandParams;
+export type ModifyProjectUserCommandParams = {
+	project_id: string;
+	user_id: string;
+};
 export type ModifyProjectUserCommandBody = ProjectUserUpdateRequest;
-export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest;
+export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest &
+	ModifyProjectUserCommandParams;
 export type DeleteProjectUserCommandParams = {
 	project_id: string;
 	user_id: string;

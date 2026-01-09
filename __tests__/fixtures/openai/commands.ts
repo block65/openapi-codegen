@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:23:27.053Z
+ * Generated on 2026-01-09T08:35:34.785Z
  *
  */
 /** eslint-disable max-classes */
@@ -1628,7 +1628,7 @@ export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
 	public override method = "post" as const;
 
 	constructor(input: ModifyUserCommandInput) {
-		const body = input;
+		const { user_id, ...body } = input;
 		super(`/organization/users/${user_id}`, jsonStringify(body));
 	}
 }
@@ -1719,7 +1719,7 @@ export class ModifyProjectCommand extends Command<
 	public override method = "post" as const;
 
 	constructor(input: ModifyProjectCommandInput) {
-		const body = input;
+		const { project_id, ...body } = input;
 		super(`/organization/projects/${project_id}`, jsonStringify(body));
 	}
 }
@@ -1811,7 +1811,7 @@ export class ModifyProjectUserCommand extends Command<
 	public override method = "post" as const;
 
 	constructor(input: ModifyProjectUserCommandInput) {
-		const body = input;
+		const { project_id, user_id, ...body } = input;
 		super(
 			`/organization/projects/${project_id}/users/${user_id}`,
 			jsonStringify(body),
