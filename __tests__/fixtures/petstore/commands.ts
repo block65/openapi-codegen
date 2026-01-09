@@ -3,19 +3,19 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2025-02-02T09:59:14.778Z
+ * Generated on 2026-01-09T08:04:36.476Z
  *
  */
 /** eslint-disable max-classes */
-import { Command, stripUndefined, jsonStringify } from '@block65/rest-client';
+import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type {
-  FindPetsCommandQuery,
-  FindPetsCommandInput,
-  Pet,
-  AddPetCommandInput,
-  FindPetByIdCommandInput,
-  DeletePetCommandInput,
-} from './types.ts';
+	FindPetsCommandQuery,
+	FindPetsCommandInput,
+	Pet,
+	AddPetCommandInput,
+	FindPetByIdCommandInput,
+	DeletePetCommandInput,
+} from "./types.js";
 
 /**
  * Returns all pets from the system that the user has access to
@@ -44,16 +44,16 @@ import type {
  *
  */
 export class FindPetsCommand extends Command<
-  FindPetsCommandInput,
-  Pet[],
-  FindPetsCommandQuery
+	FindPetsCommandInput,
+	Pet[],
+	FindPetsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: FindPetsCommandInput) {
-    const { tags, limit } = input;
-    super(`/pets`, undefined, stripUndefined({ tags, limit }));
-  }
+	constructor(input: FindPetsCommandInput) {
+		const { tags, limit } = input;
+		super(`/pets`, undefined, stripUndefined({ tags, limit }));
+	}
 }
 
 /**
@@ -61,12 +61,12 @@ export class FindPetsCommand extends Command<
  *
  */
 export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: AddPetCommandInput) {
-    const body = input;
-    super(`/pets`, jsonStringify(body));
-  }
+	constructor(input: AddPetCommandInput) {
+		const body = input;
+		super(`/pets`, jsonStringify(body));
+	}
 }
 
 /**
@@ -75,12 +75,12 @@ export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
  *
  */
 export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: FindPetByIdCommandInput) {
-    const { id } = input;
-    super(`/pets/${id}`);
-  }
+	constructor(input: FindPetByIdCommandInput) {
+		const { id } = input;
+		super(`/pets/${id}`);
+	}
 }
 
 /**
@@ -88,13 +88,13 @@ export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
  *
  */
 export class DeletePetCommand extends Command<
-  DeletePetCommandInput,
-  undefined
+	DeletePetCommandInput,
+	undefined
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeletePetCommandInput) {
-    const { id } = input;
-    super(`/pets/${id}`);
-  }
+	constructor(input: DeletePetCommandInput) {
+		const { id } = input;
+		super(`/pets/${id}`);
+	}
 }

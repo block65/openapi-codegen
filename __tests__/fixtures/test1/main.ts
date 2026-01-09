@@ -3,84 +3,84 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2025-02-02T09:59:28.164Z
+ * Generated on 2026-01-09T08:04:38.060Z
  *
  */
 import {
-  RestServiceClient,
-  type RestServiceClientConfig,
-} from '@block65/rest-client';
+	RestServiceClient,
+	type RestServiceClientConfig,
+} from "@block65/rest-client";
 import type {
-  BillingAccount,
-  BillingAccountList,
-  BillingAccountPortal,
-  BillingSubscriptionLro,
-  BillingSubscriptions,
-  CancelSubscriptionCommandInput,
-  CreateBillingAccountCommandInput,
-  CreateBillingSubscriptionCommandInput,
-  CreatePaymentMethodCommandInput,
-  DeletePaymentMethodCommandInput,
-  GetBillingAccountCommandInput,
-  GetBillingAccountPortalCommandInput,
-  GetOperationCommandInput,
-  GetPaymentMethodCommandInput,
-  GetPaymentMethodFromStripeCommandInput,
-  LinkBillingAccountCommandInput,
-  ListBillingAccountsCommandInput,
-  ListBillingSubscriptionsCommandInput,
-  ListPaymentMethodsCommandInput,
-  LongRunningOperation,
-  PaymentMethod,
-  PaymentMethodDeletedLro,
-  PaymentMethodIntendedLro,
-  PaymentMethods,
-  UpdateBillingAccountCommandInput,
-  UpdateBillingSubscriptionCommandInput,
-  UpdateBillingSubscriptionPromoCodeCommandInput,
-  UpdatePaymentMethodCommandInput,
-} from './types.ts';
+	BillingAccount,
+	BillingAccountList,
+	BillingAccountPortal,
+	BillingSubscriptionLro,
+	BillingSubscriptions,
+	CancelSubscriptionCommandInput,
+	CreateBillingAccountCommandInput,
+	CreateBillingSubscriptionCommandInput,
+	CreatePaymentMethodCommandInput,
+	DeletePaymentMethodCommandInput,
+	GetBillingAccountCommandInput,
+	GetBillingAccountPortalCommandInput,
+	GetOperationCommandInput,
+	GetPaymentMethodCommandInput,
+	GetPaymentMethodFromStripeCommandInput,
+	LinkBillingAccountCommandInput,
+	ListBillingAccountsCommandInput,
+	ListBillingSubscriptionsCommandInput,
+	ListPaymentMethodsCommandInput,
+	LongRunningOperation,
+	PaymentMethod,
+	PaymentMethodDeletedLro,
+	PaymentMethodIntendedLro,
+	PaymentMethods,
+	UpdateBillingAccountCommandInput,
+	UpdateBillingSubscriptionCommandInput,
+	UpdateBillingSubscriptionPromoCodeCommandInput,
+	UpdatePaymentMethodCommandInput,
+} from "./types.js";
 
 type AllInputs =
-  | CancelSubscriptionCommandInput
-  | CreateBillingAccountCommandInput
-  | CreateBillingSubscriptionCommandInput
-  | CreatePaymentMethodCommandInput
-  | DeletePaymentMethodCommandInput
-  | GetBillingAccountCommandInput
-  | GetBillingAccountPortalCommandInput
-  | GetOperationCommandInput
-  | GetPaymentMethodCommandInput
-  | GetPaymentMethodFromStripeCommandInput
-  | LinkBillingAccountCommandInput
-  | ListBillingAccountsCommandInput
-  | ListBillingSubscriptionsCommandInput
-  | ListPaymentMethodsCommandInput
-  | UpdateBillingAccountCommandInput
-  | UpdateBillingSubscriptionCommandInput
-  | UpdateBillingSubscriptionPromoCodeCommandInput
-  | UpdatePaymentMethodCommandInput;
+	| CancelSubscriptionCommandInput
+	| CreateBillingAccountCommandInput
+	| CreateBillingSubscriptionCommandInput
+	| CreatePaymentMethodCommandInput
+	| DeletePaymentMethodCommandInput
+	| GetBillingAccountCommandInput
+	| GetBillingAccountPortalCommandInput
+	| GetOperationCommandInput
+	| GetPaymentMethodCommandInput
+	| GetPaymentMethodFromStripeCommandInput
+	| LinkBillingAccountCommandInput
+	| ListBillingAccountsCommandInput
+	| ListBillingSubscriptionsCommandInput
+	| ListPaymentMethodsCommandInput
+	| UpdateBillingAccountCommandInput
+	| UpdateBillingSubscriptionCommandInput
+	| UpdateBillingSubscriptionPromoCodeCommandInput
+	| UpdatePaymentMethodCommandInput;
 type AllOutputs =
-  | BillingAccount
-  | BillingAccountList
-  | BillingAccountPortal
-  | BillingSubscriptionLro
-  | BillingSubscriptions
-  | LongRunningOperation
-  | PaymentMethod
-  | PaymentMethodDeletedLro
-  | PaymentMethodIntendedLro
-  | PaymentMethods
-  | undefined;
+	| BillingAccount
+	| BillingAccountList
+	| BillingAccountPortal
+	| BillingSubscriptionLro
+	| BillingSubscriptions
+	| LongRunningOperation
+	| PaymentMethod
+	| PaymentMethodDeletedLro
+	| PaymentMethodIntendedLro
+	| PaymentMethods
+	| undefined;
 
 export class BillingServiceRestApiRestClient extends RestServiceClient<
-  AllInputs,
-  AllOutputs
+	AllInputs,
+	AllOutputs
 > {
-  constructor(
-    baseUrl: string | URL = new URL('https://api.example.com/'),
-    config?: RestServiceClientConfig,
-  ) {
-    super(baseUrl, config);
-  }
+	constructor(
+		baseUrl: string | URL = new URL("https://api.example.com/"),
+		config?: RestServiceClientConfig,
+	) {
+		super(baseUrl, config);
+	}
 }

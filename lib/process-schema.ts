@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import type { oas31, oas30 } from "openapi3-ts";
+import type { oas30, oas31 } from "openapi3-ts";
 import {
-	Writers,
 	type CodeBlockWriter,
 	type EnumDeclaration,
 	type InterfaceDeclaration,
@@ -11,6 +10,7 @@ import {
 	type SourceFile,
 	type TypeAliasDeclaration,
 	type WriterFunction,
+	Writers,
 } from "ts-morph";
 import {
 	isNotNullOrUndefined,
@@ -639,18 +639,16 @@ export function registerTypesFromSchema(
 			// default
 			type: maybeWithNullUnion("string", schemaTypeIsNull(schemaObject)),
 
-
-
 			// date format
 			...(schemaObject.format === "date-time" && {
 				type: "Jsonify<Date>",
 			}),
 
 			// custom extension
-			...("x-typescriptHint" in schemaObject &&
-				typeof schemaObject["x-typescriptHint"] === "string" && {
+			...("x-typescript-hint" in schemaObject &&
+				typeof schemaObject["x-typescript-hint"] === "string" && {
 					type: maybeWithNullUnion(
-						schemaObject["x-typescriptHint"],
+						schemaObject["x-typescript-hint"],
 						schemaTypeIsNull(schemaObject),
 					),
 				}),

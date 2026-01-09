@@ -1,15 +1,15 @@
-import { test, expect } from 'vitest';
-import { CreateModerationCommand } from './fixtures/openai/commands.ts';
-import { OpenAiApiRestClient } from './fixtures/openai/main.ts';
+import { test, expect } from "vitest";
+import { CreateModerationCommand } from "./fixtures/openai/commands.ts";
+import { OpenAiApiRestClient } from "./fixtures/openai/main.ts";
 
-test('OpenAI CreateModeration', async () => {
-  const openAiClient = new OpenAiApiRestClient(new URL('http://invalid'));
+test("OpenAI CreateModeration", async () => {
+	const openAiClient = new OpenAiApiRestClient(new URL("http://invalid"));
 
-  const command = new CreateModerationCommand({
-    input: 'This is a test',
-  });
+	const command = new CreateModerationCommand({
+		input: "This is a test",
+	});
 
-  const result = await openAiClient.json(command).catch((err) => err);
+	const result = await openAiClient.json(command).catch((err) => err);
 
-  expect(result).toBeTruthy();
+	expect(result).toBeTruthy();
 });

@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@apidevtools/json-schema-ref-parser": "catalog:default",
+		"@block65/toolkit": "workspace:^",
 		"camelcase": "^9.0.0",
 		"toposort": "^2.0.2",
 		"ts-morph": "^27.0.2",
@@ -21,10 +22,10 @@
 		"yargs": "^18.0.0"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.28.5",
-		"@babel/preset-env": "^7.28.5",
-		"@babel/preset-typescript": "^7.28.5",
+		"@biomejs/biome": "catalog:default",
+		"@block65/shared-config": "workspace:*",
 		"@block65/rest-client": "workspace:^",
+
 		"@hapi/bourne": "^3.0.0",
 		"@ts-morph/common": "^0.28.1",
 		"@types/eslint": "^9.6.1",
@@ -35,23 +36,23 @@
 		"@typescript-eslint/parser": "^8.50.0",
 		"eslint": "catalog:default",
 		"eslint-plugin-import": "^2.32.0",
-		"eslint-plugin-jsx-a11y": "catalog:",
-		"eslint-plugin-prettier": "^5.5.4",
-		"eslint-plugin-react": "catalog:",
-		"eslint-plugin-react-hooks": "^7.0.1",
 		"js-yaml": "^4.1.1",
 		"openapi3-ts": "catalog:default",
 		"prettier": "^3.7.4",
 		"typescript": "catalog:default",
 		"undici": "^7.16.0",
+		"hono": "catalog:default",
+		"valibot": "catalog:default",
 		"vitest": "catalog:default"
 	},
 	"peerDependencies": {
 		"@block65/eslint-config": "workspace:^",
 		"@block65/rest-client": "workspace:^",
+		"valibot": "catalog:default",
+		"hono": "catalog:default",
 		"prettier": "catalog:default"
 	},
 	"engines": {
-		"node": ">=20.0.0"
+		"node": ">=24.0.0"
 	}
 }

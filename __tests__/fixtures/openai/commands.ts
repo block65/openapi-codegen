@@ -3,188 +3,188 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2025-02-02T10:02:00.661Z
+ * Generated on 2026-01-09T08:04:40.265Z
  *
  */
 /** eslint-disable max-classes */
-import { Command, stripUndefined, jsonStringify } from '@block65/rest-client';
+import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type {
-  CreateChatCompletionCommandInput,
-  CreateChatCompletionResponse,
-  CreateCompletionCommandInput,
-  CreateCompletionResponse,
-  CreateImageCommandInput,
-  ImagesResponse,
-  CreateImageEditCommandInput,
-  CreateImageVariationCommandInput,
-  CreateEmbeddingCommandInput,
-  CreateEmbeddingResponse,
-  CreateSpeechCommandInput,
-  CreateTranscriptionCommandInput,
-  CreateTranscriptionCommandOutput,
-  CreateTranslationCommandInput,
-  CreateTranslationCommandOutput,
-  ListFilesCommandQuery,
-  ListFilesCommandInput,
-  ListFilesResponse,
-  CreateFileCommandInput,
-  OpenAiFile,
-  DeleteFileCommandInput,
-  DeleteFileResponse,
-  RetrieveFileCommandInput,
-  DownloadFileCommandInput,
-  DownloadFileCommandOutput,
-  CreateUploadCommandInput,
-  Upload,
-  AddUploadPartCommandInput,
-  UploadPart,
-  CompleteUploadCommandInput,
-  CancelUploadCommandInput,
-  CreateFineTuningJobCommandInput,
-  FineTuningJob,
-  ListPaginatedFineTuningJobsCommandQuery,
-  ListPaginatedFineTuningJobsCommandInput,
-  ListPaginatedFineTuningJobsResponse,
-  RetrieveFineTuningJobCommandInput,
-  ListFineTuningEventsCommandQuery,
-  ListFineTuningEventsCommandInput,
-  ListFineTuningJobEventsResponse,
-  CancelFineTuningJobCommandInput,
-  ListFineTuningJobCheckpointsCommandQuery,
-  ListFineTuningJobCheckpointsCommandInput,
-  ListFineTuningJobCheckpointsResponse,
-  ListModelsCommandInput,
-  ListModelsResponse,
-  RetrieveModelCommandInput,
-  Model,
-  DeleteModelCommandInput,
-  DeleteModelResponse,
-  CreateModerationCommandInput,
-  CreateModerationResponse,
-  ListAssistantsCommandQuery,
-  ListAssistantsCommandInput,
-  ListAssistantsResponse,
-  CreateAssistantCommandInput,
-  AssistantObject,
-  GetAssistantCommandInput,
-  ModifyAssistantCommandInput,
-  DeleteAssistantCommandInput,
-  DeleteAssistantResponse,
-  CreateThreadCommandInput,
-  ThreadObject,
-  GetThreadCommandInput,
-  ModifyThreadCommandInput,
-  DeleteThreadCommandInput,
-  DeleteThreadResponse,
-  ListMessagesCommandQuery,
-  ListMessagesCommandInput,
-  ListMessagesResponse,
-  CreateMessageCommandInput,
-  MessageObject,
-  GetMessageCommandInput,
-  ModifyMessageCommandInput,
-  DeleteMessageCommandInput,
-  DeleteMessageResponse,
-  CreateThreadAndRunCommandInput,
-  RunObject,
-  ListRunsCommandQuery,
-  ListRunsCommandInput,
-  ListRunsResponse,
-  CreateRunCommandQuery,
-  CreateRunCommandInput,
-  GetRunCommandInput,
-  ModifyRunCommandInput,
-  SubmitToolOuputsToRunCommandInput,
-  CancelRunCommandInput,
-  ListRunStepsCommandQuery,
-  ListRunStepsCommandInput,
-  ListRunStepsResponse,
-  GetRunStepCommandQuery,
-  GetRunStepCommandInput,
-  RunStepObject,
-  ListVectorStoresCommandQuery,
-  ListVectorStoresCommandInput,
-  ListVectorStoresResponse,
-  CreateVectorStoreCommandInput,
-  VectorStoreObject,
-  GetVectorStoreCommandInput,
-  ModifyVectorStoreCommandInput,
-  DeleteVectorStoreCommandInput,
-  DeleteVectorStoreResponse,
-  ListVectorStoreFilesCommandQuery,
-  ListVectorStoreFilesCommandInput,
-  ListVectorStoreFilesResponse,
-  CreateVectorStoreFileCommandInput,
-  VectorStoreFileObject,
-  GetVectorStoreFileCommandInput,
-  DeleteVectorStoreFileCommandInput,
-  DeleteVectorStoreFileResponse,
-  CreateVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject,
-  GetVectorStoreFileBatchCommandInput,
-  CancelVectorStoreFileBatchCommandInput,
-  ListFilesInVectorStoreBatchCommandQuery,
-  ListFilesInVectorStoreBatchCommandInput,
-  CreateBatchCommandInput,
-  Batch,
-  ListBatchesCommandQuery,
-  ListBatchesCommandInput,
-  ListBatchesResponse,
-  RetrieveBatchCommandInput,
-  CancelBatchCommandInput,
-  ListAuditLogsCommandQuery,
-  ListAuditLogsCommandInput,
-  ListAuditLogsResponse,
-  ListInvitesCommandQuery,
-  ListInvitesCommandInput,
-  InviteListResponse,
-  InviteUserCommandInput,
-  Invite,
-  RetrieveInviteCommandInput,
-  DeleteInviteCommandInput,
-  InviteDeleteResponse,
-  ListUsersCommandQuery,
-  ListUsersCommandInput,
-  UserListResponse,
-  RetrieveUserCommandInput,
-  User,
-  ModifyUserCommandInput,
-  DeleteUserCommandInput,
-  UserDeleteResponse,
-  ListProjectsCommandQuery,
-  ListProjectsCommandInput,
-  ProjectListResponse,
-  CreateProjectCommandInput,
-  Project,
-  RetrieveProjectCommandInput,
-  ModifyProjectCommandInput,
-  ArchiveProjectCommandInput,
-  ListProjectUsersCommandQuery,
-  ListProjectUsersCommandInput,
-  ProjectUserListResponse,
-  CreateProjectUserCommandInput,
-  ProjectUser,
-  RetrieveProjectUserCommandInput,
-  ModifyProjectUserCommandInput,
-  DeleteProjectUserCommandInput,
-  ProjectUserDeleteResponse,
-  ListProjectServiceAccountsCommandQuery,
-  ListProjectServiceAccountsCommandInput,
-  ProjectServiceAccountListResponse,
-  CreateProjectServiceAccountCommandInput,
-  ProjectServiceAccountCreateResponse,
-  RetrieveProjectServiceAccountCommandInput,
-  ProjectServiceAccount,
-  DeleteProjectServiceAccountCommandInput,
-  ProjectServiceAccountDeleteResponse,
-  ListProjectApiKeysCommandQuery,
-  ListProjectApiKeysCommandInput,
-  ProjectApiKeyListResponse,
-  RetrieveProjectApiKeyCommandInput,
-  ProjectApiKey,
-  DeleteProjectApiKeyCommandInput,
-  ProjectApiKeyDeleteResponse,
-} from './types.ts';
+	CreateChatCompletionCommandInput,
+	CreateChatCompletionResponse,
+	CreateCompletionCommandInput,
+	CreateCompletionResponse,
+	CreateImageCommandInput,
+	ImagesResponse,
+	CreateImageEditCommandInput,
+	CreateImageVariationCommandInput,
+	CreateEmbeddingCommandInput,
+	CreateEmbeddingResponse,
+	CreateSpeechCommandInput,
+	CreateTranscriptionCommandInput,
+	CreateTranscriptionCommandOutput,
+	CreateTranslationCommandInput,
+	CreateTranslationCommandOutput,
+	ListFilesCommandQuery,
+	ListFilesCommandInput,
+	ListFilesResponse,
+	CreateFileCommandInput,
+	OpenAiFile,
+	DeleteFileCommandInput,
+	DeleteFileResponse,
+	RetrieveFileCommandInput,
+	DownloadFileCommandInput,
+	DownloadFileCommandOutput,
+	CreateUploadCommandInput,
+	Upload,
+	AddUploadPartCommandInput,
+	UploadPart,
+	CompleteUploadCommandInput,
+	CancelUploadCommandInput,
+	CreateFineTuningJobCommandInput,
+	FineTuningJob,
+	ListPaginatedFineTuningJobsCommandQuery,
+	ListPaginatedFineTuningJobsCommandInput,
+	ListPaginatedFineTuningJobsResponse,
+	RetrieveFineTuningJobCommandInput,
+	ListFineTuningEventsCommandQuery,
+	ListFineTuningEventsCommandInput,
+	ListFineTuningJobEventsResponse,
+	CancelFineTuningJobCommandInput,
+	ListFineTuningJobCheckpointsCommandQuery,
+	ListFineTuningJobCheckpointsCommandInput,
+	ListFineTuningJobCheckpointsResponse,
+	ListModelsCommandInput,
+	ListModelsResponse,
+	RetrieveModelCommandInput,
+	Model,
+	DeleteModelCommandInput,
+	DeleteModelResponse,
+	CreateModerationCommandInput,
+	CreateModerationResponse,
+	ListAssistantsCommandQuery,
+	ListAssistantsCommandInput,
+	ListAssistantsResponse,
+	CreateAssistantCommandInput,
+	AssistantObject,
+	GetAssistantCommandInput,
+	ModifyAssistantCommandInput,
+	DeleteAssistantCommandInput,
+	DeleteAssistantResponse,
+	CreateThreadCommandInput,
+	ThreadObject,
+	GetThreadCommandInput,
+	ModifyThreadCommandInput,
+	DeleteThreadCommandInput,
+	DeleteThreadResponse,
+	ListMessagesCommandQuery,
+	ListMessagesCommandInput,
+	ListMessagesResponse,
+	CreateMessageCommandInput,
+	MessageObject,
+	GetMessageCommandInput,
+	ModifyMessageCommandInput,
+	DeleteMessageCommandInput,
+	DeleteMessageResponse,
+	CreateThreadAndRunCommandInput,
+	RunObject,
+	ListRunsCommandQuery,
+	ListRunsCommandInput,
+	ListRunsResponse,
+	CreateRunCommandQuery,
+	CreateRunCommandInput,
+	GetRunCommandInput,
+	ModifyRunCommandInput,
+	SubmitToolOuputsToRunCommandInput,
+	CancelRunCommandInput,
+	ListRunStepsCommandQuery,
+	ListRunStepsCommandInput,
+	ListRunStepsResponse,
+	GetRunStepCommandQuery,
+	GetRunStepCommandInput,
+	RunStepObject,
+	ListVectorStoresCommandQuery,
+	ListVectorStoresCommandInput,
+	ListVectorStoresResponse,
+	CreateVectorStoreCommandInput,
+	VectorStoreObject,
+	GetVectorStoreCommandInput,
+	ModifyVectorStoreCommandInput,
+	DeleteVectorStoreCommandInput,
+	DeleteVectorStoreResponse,
+	ListVectorStoreFilesCommandQuery,
+	ListVectorStoreFilesCommandInput,
+	ListVectorStoreFilesResponse,
+	CreateVectorStoreFileCommandInput,
+	VectorStoreFileObject,
+	GetVectorStoreFileCommandInput,
+	DeleteVectorStoreFileCommandInput,
+	DeleteVectorStoreFileResponse,
+	CreateVectorStoreFileBatchCommandInput,
+	VectorStoreFileBatchObject,
+	GetVectorStoreFileBatchCommandInput,
+	CancelVectorStoreFileBatchCommandInput,
+	ListFilesInVectorStoreBatchCommandQuery,
+	ListFilesInVectorStoreBatchCommandInput,
+	CreateBatchCommandInput,
+	Batch,
+	ListBatchesCommandQuery,
+	ListBatchesCommandInput,
+	ListBatchesResponse,
+	RetrieveBatchCommandInput,
+	CancelBatchCommandInput,
+	ListAuditLogsCommandQuery,
+	ListAuditLogsCommandInput,
+	ListAuditLogsResponse,
+	ListInvitesCommandQuery,
+	ListInvitesCommandInput,
+	InviteListResponse,
+	InviteUserCommandInput,
+	Invite,
+	RetrieveInviteCommandInput,
+	DeleteInviteCommandInput,
+	InviteDeleteResponse,
+	ListUsersCommandQuery,
+	ListUsersCommandInput,
+	UserListResponse,
+	RetrieveUserCommandInput,
+	User,
+	ModifyUserCommandInput,
+	DeleteUserCommandInput,
+	UserDeleteResponse,
+	ListProjectsCommandQuery,
+	ListProjectsCommandInput,
+	ProjectListResponse,
+	CreateProjectCommandInput,
+	Project,
+	RetrieveProjectCommandInput,
+	ModifyProjectCommandInput,
+	ArchiveProjectCommandInput,
+	ListProjectUsersCommandQuery,
+	ListProjectUsersCommandInput,
+	ProjectUserListResponse,
+	CreateProjectUserCommandInput,
+	ProjectUser,
+	RetrieveProjectUserCommandInput,
+	ModifyProjectUserCommandInput,
+	DeleteProjectUserCommandInput,
+	ProjectUserDeleteResponse,
+	ListProjectServiceAccountsCommandQuery,
+	ListProjectServiceAccountsCommandInput,
+	ProjectServiceAccountListResponse,
+	CreateProjectServiceAccountCommandInput,
+	ProjectServiceAccountCreateResponse,
+	RetrieveProjectServiceAccountCommandInput,
+	ProjectServiceAccount,
+	DeleteProjectServiceAccountCommandInput,
+	ProjectServiceAccountDeleteResponse,
+	ListProjectApiKeysCommandQuery,
+	ListProjectApiKeysCommandInput,
+	ProjectApiKeyListResponse,
+	RetrieveProjectApiKeyCommandInput,
+	ProjectApiKey,
+	DeleteProjectApiKeyCommandInput,
+	ProjectApiKeyDeleteResponse,
+} from "./types.js";
 
 /**
  * CreateChatCompletionCommand
@@ -192,15 +192,15 @@ import type {
  * @summary Creates a model response for the given chat conversation.
  */
 export class CreateChatCompletionCommand extends Command<
-  CreateChatCompletionCommandInput,
-  CreateChatCompletionResponse
+	CreateChatCompletionCommandInput,
+	CreateChatCompletionResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateChatCompletionCommandInput) {
-    const body = input;
-    super(`/chat/completions`, jsonStringify(body));
-  }
+	constructor(input: CreateChatCompletionCommandInput) {
+		const body = input;
+		super(`/chat/completions`, jsonStringify(body));
+	}
 }
 
 /**
@@ -209,15 +209,15 @@ export class CreateChatCompletionCommand extends Command<
  * @summary Creates a completion for the provided prompt and parameters.
  */
 export class CreateCompletionCommand extends Command<
-  CreateCompletionCommandInput,
-  CreateCompletionResponse
+	CreateCompletionCommandInput,
+	CreateCompletionResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateCompletionCommandInput) {
-    const body = input;
-    super(`/completions`, jsonStringify(body));
-  }
+	constructor(input: CreateCompletionCommandInput) {
+		const body = input;
+		super(`/completions`, jsonStringify(body));
+	}
 }
 
 /**
@@ -226,15 +226,15 @@ export class CreateCompletionCommand extends Command<
  * @summary Creates an image given a prompt.
  */
 export class CreateImageCommand extends Command<
-  CreateImageCommandInput,
-  ImagesResponse
+	CreateImageCommandInput,
+	ImagesResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateImageCommandInput) {
-    const body = input;
-    super(`/images/generations`, jsonStringify(body));
-  }
+	constructor(input: CreateImageCommandInput) {
+		const body = input;
+		super(`/images/generations`, jsonStringify(body));
+	}
 }
 
 /**
@@ -243,15 +243,15 @@ export class CreateImageCommand extends Command<
  * @summary Creates an edited or extended image given an original image and a prompt.
  */
 export class CreateImageEditCommand extends Command<
-  CreateImageEditCommandInput,
-  ImagesResponse
+	CreateImageEditCommandInput,
+	ImagesResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateImageEditCommandInput) {
-    const { body } = input;
-    super(`/images/edits`, body);
-  }
+	constructor(input: CreateImageEditCommandInput) {
+		const { body } = input;
+		super(`/images/edits`, body);
+	}
 }
 
 /**
@@ -260,15 +260,15 @@ export class CreateImageEditCommand extends Command<
  * @summary Creates a variation of a given image.
  */
 export class CreateImageVariationCommand extends Command<
-  CreateImageVariationCommandInput,
-  ImagesResponse
+	CreateImageVariationCommandInput,
+	ImagesResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateImageVariationCommandInput) {
-    const { body } = input;
-    super(`/images/variations`, body);
-  }
+	constructor(input: CreateImageVariationCommandInput) {
+		const { body } = input;
+		super(`/images/variations`, body);
+	}
 }
 
 /**
@@ -277,15 +277,15 @@ export class CreateImageVariationCommand extends Command<
  * @summary Creates an embedding vector representing the input text.
  */
 export class CreateEmbeddingCommand extends Command<
-  CreateEmbeddingCommandInput,
-  CreateEmbeddingResponse
+	CreateEmbeddingCommandInput,
+	CreateEmbeddingResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateEmbeddingCommandInput) {
-    const body = input;
-    super(`/embeddings`, jsonStringify(body));
-  }
+	constructor(input: CreateEmbeddingCommandInput) {
+		const body = input;
+		super(`/embeddings`, jsonStringify(body));
+	}
 }
 
 /**
@@ -294,15 +294,15 @@ export class CreateEmbeddingCommand extends Command<
  * @summary Generates audio from the input text.
  */
 export class CreateSpeechCommand extends Command<
-  CreateSpeechCommandInput,
-  unknown
+	CreateSpeechCommandInput,
+	unknown
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateSpeechCommandInput) {
-    const body = input;
-    super(`/audio/speech`, jsonStringify(body));
-  }
+	constructor(input: CreateSpeechCommandInput) {
+		const body = input;
+		super(`/audio/speech`, jsonStringify(body));
+	}
 }
 
 /**
@@ -311,15 +311,15 @@ export class CreateSpeechCommand extends Command<
  * @summary Transcribes audio into the input language.
  */
 export class CreateTranscriptionCommand extends Command<
-  CreateTranscriptionCommandInput,
-  CreateTranscriptionCommandOutput
+	CreateTranscriptionCommandInput,
+	CreateTranscriptionCommandOutput
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateTranscriptionCommandInput) {
-    const { body } = input;
-    super(`/audio/transcriptions`, body);
-  }
+	constructor(input: CreateTranscriptionCommandInput) {
+		const { body } = input;
+		super(`/audio/transcriptions`, body);
+	}
 }
 
 /**
@@ -328,15 +328,15 @@ export class CreateTranscriptionCommand extends Command<
  * @summary Translates audio into English.
  */
 export class CreateTranslationCommand extends Command<
-  CreateTranslationCommandInput,
-  CreateTranslationCommandOutput
+	CreateTranslationCommandInput,
+	CreateTranslationCommandOutput
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateTranslationCommandInput) {
-    const { body } = input;
-    super(`/audio/translations`, body);
-  }
+	constructor(input: CreateTranslationCommandInput) {
+		const { body } = input;
+		super(`/audio/translations`, body);
+	}
 }
 
 /**
@@ -345,16 +345,16 @@ export class CreateTranslationCommand extends Command<
  * @summary Returns a list of files that belong to the user's organization.
  */
 export class ListFilesCommand extends Command<
-  ListFilesCommandInput,
-  ListFilesResponse,
-  ListFilesCommandQuery
+	ListFilesCommandInput,
+	ListFilesResponse,
+	ListFilesCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListFilesCommandInput) {
-    const { purpose } = input;
-    super(`/files`, undefined, stripUndefined({ purpose }));
-  }
+	constructor(input: ListFilesCommandInput) {
+		const { purpose } = input;
+		super(`/files`, undefined, stripUndefined({ purpose }));
+	}
 }
 
 /**
@@ -381,15 +381,15 @@ export class ListFilesCommand extends Command<
  * storage limits.
  */
 export class CreateFileCommand extends Command<
-  CreateFileCommandInput,
-  OpenAiFile
+	CreateFileCommandInput,
+	OpenAiFile
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateFileCommandInput) {
-    const { body } = input;
-    super(`/files`, body);
-  }
+	constructor(input: CreateFileCommandInput) {
+		const { body } = input;
+		super(`/files`, body);
+	}
 }
 
 /**
@@ -398,15 +398,15 @@ export class CreateFileCommand extends Command<
  * @summary Delete a file.
  */
 export class DeleteFileCommand extends Command<
-  DeleteFileCommandInput,
-  DeleteFileResponse
+	DeleteFileCommandInput,
+	DeleteFileResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteFileCommandInput) {
-    const { file_id } = input;
-    super(`/files/${file_id}`);
-  }
+	constructor(input: DeleteFileCommandInput) {
+		const { file_id } = input;
+		super(`/files/${file_id}`);
+	}
 }
 
 /**
@@ -415,15 +415,15 @@ export class DeleteFileCommand extends Command<
  * @summary Returns information about a specific file.
  */
 export class RetrieveFileCommand extends Command<
-  RetrieveFileCommandInput,
-  OpenAiFile
+	RetrieveFileCommandInput,
+	OpenAiFile
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveFileCommandInput) {
-    const { file_id } = input;
-    super(`/files/${file_id}`);
-  }
+	constructor(input: RetrieveFileCommandInput) {
+		const { file_id } = input;
+		super(`/files/${file_id}`);
+	}
 }
 
 /**
@@ -432,15 +432,15 @@ export class RetrieveFileCommand extends Command<
  * @summary Returns the contents of the specified file.
  */
 export class DownloadFileCommand extends Command<
-  DownloadFileCommandInput,
-  DownloadFileCommandOutput
+	DownloadFileCommandInput,
+	DownloadFileCommandOutput
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: DownloadFileCommandInput) {
-    const { file_id } = input;
-    super(`/files/${file_id}/content`);
-  }
+	constructor(input: DownloadFileCommandInput) {
+		const { file_id } = input;
+		super(`/files/${file_id}/content`);
+	}
 }
 
 /**
@@ -465,15 +465,15 @@ export class DownloadFileCommand extends Command<
  * File](/docs/api-reference/files/create).
  */
 export class CreateUploadCommand extends Command<
-  CreateUploadCommandInput,
-  Upload
+	CreateUploadCommandInput,
+	Upload
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateUploadCommandInput) {
-    const body = input;
-    super(`/uploads`, jsonStringify(body));
-  }
+	constructor(input: CreateUploadCommandInput) {
+		const body = input;
+		super(`/uploads`, jsonStringify(body));
+	}
 }
 
 /**
@@ -491,15 +491,15 @@ export class CreateUploadCommand extends Command<
  * Upload](/docs/api-reference/uploads/complete).
  */
 export class AddUploadPartCommand extends Command<
-  AddUploadPartCommandInput,
-  UploadPart
+	AddUploadPartCommandInput,
+	UploadPart
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: AddUploadPartCommandInput) {
-    const { upload_id, body } = input;
-    super(`/uploads/${upload_id}/parts`, body);
-  }
+	constructor(input: AddUploadPartCommandInput) {
+		const { upload_id, body } = input;
+		super(`/uploads/${upload_id}/parts`, body);
+	}
 }
 
 /**
@@ -519,15 +519,15 @@ export class AddUploadPartCommand extends Command<
  * after an Upload is completed.
  */
 export class CompleteUploadCommand extends Command<
-  CompleteUploadCommandInput,
-  Upload
+	CompleteUploadCommandInput,
+	Upload
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CompleteUploadCommandInput) {
-    const { upload_id, ...body } = input;
-    super(`/uploads/${upload_id}/complete`, jsonStringify(body));
-  }
+	constructor(input: CompleteUploadCommandInput) {
+		const { upload_id, ...body } = input;
+		super(`/uploads/${upload_id}/complete`, jsonStringify(body));
+	}
 }
 
 /**
@@ -536,15 +536,15 @@ export class CompleteUploadCommand extends Command<
  * @summary Cancels the Upload. No Parts may be added after an Upload is cancelled.
  */
 export class CancelUploadCommand extends Command<
-  CancelUploadCommandInput,
-  Upload
+	CancelUploadCommandInput,
+	Upload
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CancelUploadCommandInput) {
-    const { upload_id } = input;
-    super(`/uploads/${upload_id}/cancel`);
-  }
+	constructor(input: CancelUploadCommandInput) {
+		const { upload_id } = input;
+		super(`/uploads/${upload_id}/cancel`);
+	}
 }
 
 /**
@@ -559,15 +559,15 @@ export class CancelUploadCommand extends Command<
  * [Learn more about fine-tuning](/docs/guides/fine-tuning)
  */
 export class CreateFineTuningJobCommand extends Command<
-  CreateFineTuningJobCommandInput,
-  FineTuningJob
+	CreateFineTuningJobCommandInput,
+	FineTuningJob
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateFineTuningJobCommandInput) {
-    const body = input;
-    super(`/fine_tuning/jobs`, jsonStringify(body));
-  }
+	constructor(input: CreateFineTuningJobCommandInput) {
+		const body = input;
+		super(`/fine_tuning/jobs`, jsonStringify(body));
+	}
 }
 
 /**
@@ -576,16 +576,16 @@ export class CreateFineTuningJobCommand extends Command<
  * @summary List your organization's fine-tuning jobs
  */
 export class ListPaginatedFineTuningJobsCommand extends Command<
-  ListPaginatedFineTuningJobsCommandInput,
-  ListPaginatedFineTuningJobsResponse,
-  ListPaginatedFineTuningJobsCommandQuery
+	ListPaginatedFineTuningJobsCommandInput,
+	ListPaginatedFineTuningJobsResponse,
+	ListPaginatedFineTuningJobsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListPaginatedFineTuningJobsCommandInput) {
-    const { after, limit } = input;
-    super(`/fine_tuning/jobs`, undefined, stripUndefined({ after, limit }));
-  }
+	constructor(input: ListPaginatedFineTuningJobsCommandInput) {
+		const { after, limit } = input;
+		super(`/fine_tuning/jobs`, undefined, stripUndefined({ after, limit }));
+	}
 }
 
 /**
@@ -596,15 +596,15 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
  * [Learn more about fine-tuning](/docs/guides/fine-tuning)
  */
 export class RetrieveFineTuningJobCommand extends Command<
-  RetrieveFineTuningJobCommandInput,
-  FineTuningJob
+	RetrieveFineTuningJobCommandInput,
+	FineTuningJob
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveFineTuningJobCommandInput) {
-    const { fine_tuning_job_id } = input;
-    super(`/fine_tuning/jobs/${fine_tuning_job_id}`);
-  }
+	constructor(input: RetrieveFineTuningJobCommandInput) {
+		const { fine_tuning_job_id } = input;
+		super(`/fine_tuning/jobs/${fine_tuning_job_id}`);
+	}
 }
 
 /**
@@ -613,20 +613,20 @@ export class RetrieveFineTuningJobCommand extends Command<
  * @summary Get status updates for a fine-tuning job.
  */
 export class ListFineTuningEventsCommand extends Command<
-  ListFineTuningEventsCommandInput,
-  ListFineTuningJobEventsResponse,
-  ListFineTuningEventsCommandQuery
+	ListFineTuningEventsCommandInput,
+	ListFineTuningJobEventsResponse,
+	ListFineTuningEventsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListFineTuningEventsCommandInput) {
-    const { fine_tuning_job_id, after, limit } = input;
-    super(
-      `/fine_tuning/jobs/${fine_tuning_job_id}/events`,
-      undefined,
-      stripUndefined({ after, limit }),
-    );
-  }
+	constructor(input: ListFineTuningEventsCommandInput) {
+		const { fine_tuning_job_id, after, limit } = input;
+		super(
+			`/fine_tuning/jobs/${fine_tuning_job_id}/events`,
+			undefined,
+			stripUndefined({ after, limit }),
+		);
+	}
 }
 
 /**
@@ -635,15 +635,15 @@ export class ListFineTuningEventsCommand extends Command<
  * @summary Immediately cancel a fine-tune job.
  */
 export class CancelFineTuningJobCommand extends Command<
-  CancelFineTuningJobCommandInput,
-  FineTuningJob
+	CancelFineTuningJobCommandInput,
+	FineTuningJob
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CancelFineTuningJobCommandInput) {
-    const { fine_tuning_job_id } = input;
-    super(`/fine_tuning/jobs/${fine_tuning_job_id}/cancel`);
-  }
+	constructor(input: CancelFineTuningJobCommandInput) {
+		const { fine_tuning_job_id } = input;
+		super(`/fine_tuning/jobs/${fine_tuning_job_id}/cancel`);
+	}
 }
 
 /**
@@ -652,20 +652,20 @@ export class CancelFineTuningJobCommand extends Command<
  * @summary List checkpoints for a fine-tuning job.
  */
 export class ListFineTuningJobCheckpointsCommand extends Command<
-  ListFineTuningJobCheckpointsCommandInput,
-  ListFineTuningJobCheckpointsResponse,
-  ListFineTuningJobCheckpointsCommandQuery
+	ListFineTuningJobCheckpointsCommandInput,
+	ListFineTuningJobCheckpointsResponse,
+	ListFineTuningJobCheckpointsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListFineTuningJobCheckpointsCommandInput) {
-    const { fine_tuning_job_id, after, limit } = input;
-    super(
-      `/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`,
-      undefined,
-      stripUndefined({ after, limit }),
-    );
-  }
+	constructor(input: ListFineTuningJobCheckpointsCommandInput) {
+		const { fine_tuning_job_id, after, limit } = input;
+		super(
+			`/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`,
+			undefined,
+			stripUndefined({ after, limit }),
+		);
+	}
 }
 
 /**
@@ -675,10 +675,10 @@ export class ListFineTuningJobCheckpointsCommand extends Command<
  * each one such as the owner and availability.
  */
 export class ListModelsCommand extends Command<
-  ListModelsCommandInput,
-  ListModelsResponse
+	ListModelsCommandInput,
+	ListModelsResponse
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 }
 
 /**
@@ -688,15 +688,15 @@ export class ListModelsCommand extends Command<
  * such as the owner and permissioning.
  */
 export class RetrieveModelCommand extends Command<
-  RetrieveModelCommandInput,
-  Model
+	RetrieveModelCommandInput,
+	Model
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveModelCommandInput) {
-    const { model } = input;
-    super(`/models/${model}`);
-  }
+	constructor(input: RetrieveModelCommandInput) {
+		const { model } = input;
+		super(`/models/${model}`);
+	}
 }
 
 /**
@@ -706,15 +706,15 @@ export class RetrieveModelCommand extends Command<
  * organization to delete a model.
  */
 export class DeleteModelCommand extends Command<
-  DeleteModelCommandInput,
-  DeleteModelResponse
+	DeleteModelCommandInput,
+	DeleteModelResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteModelCommandInput) {
-    const { model } = input;
-    super(`/models/${model}`);
-  }
+	constructor(input: DeleteModelCommandInput) {
+		const { model } = input;
+		super(`/models/${model}`);
+	}
 }
 
 /**
@@ -724,15 +724,15 @@ export class DeleteModelCommand extends Command<
  * more in the [moderation guide](/docs/guides/moderation).
  */
 export class CreateModerationCommand extends Command<
-  CreateModerationCommandInput,
-  CreateModerationResponse
+	CreateModerationCommandInput,
+	CreateModerationResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateModerationCommandInput) {
-    const body = input;
-    super(`/moderations`, jsonStringify(body));
-  }
+	constructor(input: CreateModerationCommandInput) {
+		const body = input;
+		super(`/moderations`, jsonStringify(body));
+	}
 }
 
 /**
@@ -741,20 +741,20 @@ export class CreateModerationCommand extends Command<
  * @summary Returns a list of assistants.
  */
 export class ListAssistantsCommand extends Command<
-  ListAssistantsCommandInput,
-  ListAssistantsResponse,
-  ListAssistantsCommandQuery
+	ListAssistantsCommandInput,
+	ListAssistantsResponse,
+	ListAssistantsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListAssistantsCommandInput) {
-    const { limit, order, after, before } = input;
-    super(
-      `/assistants`,
-      undefined,
-      stripUndefined({ limit, order, after, before }),
-    );
-  }
+	constructor(input: ListAssistantsCommandInput) {
+		const { limit, order, after, before } = input;
+		super(
+			`/assistants`,
+			undefined,
+			stripUndefined({ limit, order, after, before }),
+		);
+	}
 }
 
 /**
@@ -763,15 +763,15 @@ export class ListAssistantsCommand extends Command<
  * @summary Create an assistant with a model and instructions.
  */
 export class CreateAssistantCommand extends Command<
-  CreateAssistantCommandInput,
-  AssistantObject
+	CreateAssistantCommandInput,
+	AssistantObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateAssistantCommandInput) {
-    const body = input;
-    super(`/assistants`, jsonStringify(body));
-  }
+	constructor(input: CreateAssistantCommandInput) {
+		const body = input;
+		super(`/assistants`, jsonStringify(body));
+	}
 }
 
 /**
@@ -780,15 +780,15 @@ export class CreateAssistantCommand extends Command<
  * @summary Retrieves an assistant.
  */
 export class GetAssistantCommand extends Command<
-  GetAssistantCommandInput,
-  AssistantObject
+	GetAssistantCommandInput,
+	AssistantObject
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetAssistantCommandInput) {
-    const { assistant_id } = input;
-    super(`/assistants/${assistant_id}`);
-  }
+	constructor(input: GetAssistantCommandInput) {
+		const { assistant_id } = input;
+		super(`/assistants/${assistant_id}`);
+	}
 }
 
 /**
@@ -797,15 +797,15 @@ export class GetAssistantCommand extends Command<
  * @summary Modifies an assistant.
  */
 export class ModifyAssistantCommand extends Command<
-  ModifyAssistantCommandInput,
-  AssistantObject
+	ModifyAssistantCommandInput,
+	AssistantObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyAssistantCommandInput) {
-    const { assistant_id, ...body } = input;
-    super(`/assistants/${assistant_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyAssistantCommandInput) {
+		const { assistant_id, ...body } = input;
+		super(`/assistants/${assistant_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -814,15 +814,15 @@ export class ModifyAssistantCommand extends Command<
  * @summary Delete an assistant.
  */
 export class DeleteAssistantCommand extends Command<
-  DeleteAssistantCommandInput,
-  DeleteAssistantResponse
+	DeleteAssistantCommandInput,
+	DeleteAssistantResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteAssistantCommandInput) {
-    const { assistant_id } = input;
-    super(`/assistants/${assistant_id}`);
-  }
+	constructor(input: DeleteAssistantCommandInput) {
+		const { assistant_id } = input;
+		super(`/assistants/${assistant_id}`);
+	}
 }
 
 /**
@@ -831,15 +831,15 @@ export class DeleteAssistantCommand extends Command<
  * @summary Create a thread.
  */
 export class CreateThreadCommand extends Command<
-  CreateThreadCommandInput,
-  ThreadObject
+	CreateThreadCommandInput,
+	ThreadObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateThreadCommandInput) {
-    const body = input;
-    super(`/threads`, jsonStringify(body));
-  }
+	constructor(input: CreateThreadCommandInput) {
+		const body = input;
+		super(`/threads`, jsonStringify(body));
+	}
 }
 
 /**
@@ -848,15 +848,15 @@ export class CreateThreadCommand extends Command<
  * @summary Retrieves a thread.
  */
 export class GetThreadCommand extends Command<
-  GetThreadCommandInput,
-  ThreadObject
+	GetThreadCommandInput,
+	ThreadObject
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetThreadCommandInput) {
-    const { thread_id } = input;
-    super(`/threads/${thread_id}`);
-  }
+	constructor(input: GetThreadCommandInput) {
+		const { thread_id } = input;
+		super(`/threads/${thread_id}`);
+	}
 }
 
 /**
@@ -865,15 +865,15 @@ export class GetThreadCommand extends Command<
  * @summary Modifies a thread.
  */
 export class ModifyThreadCommand extends Command<
-  ModifyThreadCommandInput,
-  ThreadObject
+	ModifyThreadCommandInput,
+	ThreadObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyThreadCommandInput) {
-    const { thread_id, ...body } = input;
-    super(`/threads/${thread_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyThreadCommandInput) {
+		const { thread_id, ...body } = input;
+		super(`/threads/${thread_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -882,15 +882,15 @@ export class ModifyThreadCommand extends Command<
  * @summary Delete a thread.
  */
 export class DeleteThreadCommand extends Command<
-  DeleteThreadCommandInput,
-  DeleteThreadResponse
+	DeleteThreadCommandInput,
+	DeleteThreadResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteThreadCommandInput) {
-    const { thread_id } = input;
-    super(`/threads/${thread_id}`);
-  }
+	constructor(input: DeleteThreadCommandInput) {
+		const { thread_id } = input;
+		super(`/threads/${thread_id}`);
+	}
 }
 
 /**
@@ -899,20 +899,20 @@ export class DeleteThreadCommand extends Command<
  * @summary Returns a list of messages for a given thread.
  */
 export class ListMessagesCommand extends Command<
-  ListMessagesCommandInput,
-  ListMessagesResponse,
-  ListMessagesCommandQuery
+	ListMessagesCommandInput,
+	ListMessagesResponse,
+	ListMessagesCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListMessagesCommandInput) {
-    const { thread_id, limit, order, after, before, run_id } = input;
-    super(
-      `/threads/${thread_id}/messages`,
-      undefined,
-      stripUndefined({ limit, order, after, before, run_id }),
-    );
-  }
+	constructor(input: ListMessagesCommandInput) {
+		const { thread_id, limit, order, after, before, run_id } = input;
+		super(
+			`/threads/${thread_id}/messages`,
+			undefined,
+			stripUndefined({ limit, order, after, before, run_id }),
+		);
+	}
 }
 
 /**
@@ -921,15 +921,15 @@ export class ListMessagesCommand extends Command<
  * @summary Create a message.
  */
 export class CreateMessageCommand extends Command<
-  CreateMessageCommandInput,
-  MessageObject
+	CreateMessageCommandInput,
+	MessageObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateMessageCommandInput) {
-    const { thread_id, ...body } = input;
-    super(`/threads/${thread_id}/messages`, jsonStringify(body));
-  }
+	constructor(input: CreateMessageCommandInput) {
+		const { thread_id, ...body } = input;
+		super(`/threads/${thread_id}/messages`, jsonStringify(body));
+	}
 }
 
 /**
@@ -938,15 +938,15 @@ export class CreateMessageCommand extends Command<
  * @summary Retrieve a message.
  */
 export class GetMessageCommand extends Command<
-  GetMessageCommandInput,
-  MessageObject
+	GetMessageCommandInput,
+	MessageObject
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetMessageCommandInput) {
-    const { thread_id, message_id } = input;
-    super(`/threads/${thread_id}/messages/${message_id}`);
-  }
+	constructor(input: GetMessageCommandInput) {
+		const { thread_id, message_id } = input;
+		super(`/threads/${thread_id}/messages/${message_id}`);
+	}
 }
 
 /**
@@ -955,15 +955,15 @@ export class GetMessageCommand extends Command<
  * @summary Modifies a message.
  */
 export class ModifyMessageCommand extends Command<
-  ModifyMessageCommandInput,
-  MessageObject
+	ModifyMessageCommandInput,
+	MessageObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyMessageCommandInput) {
-    const { thread_id, message_id, ...body } = input;
-    super(`/threads/${thread_id}/messages/${message_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyMessageCommandInput) {
+		const { thread_id, message_id, ...body } = input;
+		super(`/threads/${thread_id}/messages/${message_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -972,15 +972,15 @@ export class ModifyMessageCommand extends Command<
  * @summary Deletes a message.
  */
 export class DeleteMessageCommand extends Command<
-  DeleteMessageCommandInput,
-  DeleteMessageResponse
+	DeleteMessageCommandInput,
+	DeleteMessageResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteMessageCommandInput) {
-    const { thread_id, message_id } = input;
-    super(`/threads/${thread_id}/messages/${message_id}`);
-  }
+	constructor(input: DeleteMessageCommandInput) {
+		const { thread_id, message_id } = input;
+		super(`/threads/${thread_id}/messages/${message_id}`);
+	}
 }
 
 /**
@@ -989,15 +989,15 @@ export class DeleteMessageCommand extends Command<
  * @summary Create a thread and run it in one request.
  */
 export class CreateThreadAndRunCommand extends Command<
-  CreateThreadAndRunCommandInput,
-  RunObject
+	CreateThreadAndRunCommandInput,
+	RunObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateThreadAndRunCommandInput) {
-    const body = input;
-    super(`/threads/runs`, jsonStringify(body));
-  }
+	constructor(input: CreateThreadAndRunCommandInput) {
+		const body = input;
+		super(`/threads/runs`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1006,20 +1006,20 @@ export class CreateThreadAndRunCommand extends Command<
  * @summary Returns a list of runs belonging to a thread.
  */
 export class ListRunsCommand extends Command<
-  ListRunsCommandInput,
-  ListRunsResponse,
-  ListRunsCommandQuery
+	ListRunsCommandInput,
+	ListRunsResponse,
+	ListRunsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListRunsCommandInput) {
-    const { thread_id, limit, order, after, before } = input;
-    super(
-      `/threads/${thread_id}/runs`,
-      undefined,
-      stripUndefined({ limit, order, after, before }),
-    );
-  }
+	constructor(input: ListRunsCommandInput) {
+		const { thread_id, limit, order, after, before } = input;
+		super(
+			`/threads/${thread_id}/runs`,
+			undefined,
+			stripUndefined({ limit, order, after, before }),
+		);
+	}
 }
 
 /**
@@ -1028,20 +1028,20 @@ export class ListRunsCommand extends Command<
  * @summary Create a run.
  */
 export class CreateRunCommand extends Command<
-  CreateRunCommandInput,
-  RunObject,
-  CreateRunCommandQuery
+	CreateRunCommandInput,
+	RunObject,
+	CreateRunCommandQuery
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateRunCommandInput) {
-    const { thread_id, include, ...body } = input;
-    super(
-      `/threads/${thread_id}/runs`,
-      jsonStringify(body),
-      stripUndefined({ include }),
-    );
-  }
+	constructor(input: CreateRunCommandInput) {
+		const { thread_id, include, ...body } = input;
+		super(
+			`/threads/${thread_id}/runs`,
+			jsonStringify(body),
+			stripUndefined({ include }),
+		);
+	}
 }
 
 /**
@@ -1050,12 +1050,12 @@ export class CreateRunCommand extends Command<
  * @summary Retrieves a run.
  */
 export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetRunCommandInput) {
-    const { thread_id, run_id } = input;
-    super(`/threads/${thread_id}/runs/${run_id}`);
-  }
+	constructor(input: GetRunCommandInput) {
+		const { thread_id, run_id } = input;
+		super(`/threads/${thread_id}/runs/${run_id}`);
+	}
 }
 
 /**
@@ -1064,15 +1064,15 @@ export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
  * @summary Modifies a run.
  */
 export class ModifyRunCommand extends Command<
-  ModifyRunCommandInput,
-  RunObject
+	ModifyRunCommandInput,
+	RunObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyRunCommandInput) {
-    const { thread_id, run_id, ...body } = input;
-    super(`/threads/${thread_id}/runs/${run_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyRunCommandInput) {
+		const { thread_id, run_id, ...body } = input;
+		super(`/threads/${thread_id}/runs/${run_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1084,18 +1084,18 @@ export class ModifyRunCommand extends Command<
  * submitted in a single request.
  */
 export class SubmitToolOuputsToRunCommand extends Command<
-  SubmitToolOuputsToRunCommandInput,
-  RunObject
+	SubmitToolOuputsToRunCommandInput,
+	RunObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: SubmitToolOuputsToRunCommandInput) {
-    const { thread_id, run_id, ...body } = input;
-    super(
-      `/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`,
-      jsonStringify(body),
-    );
-  }
+	constructor(input: SubmitToolOuputsToRunCommandInput) {
+		const { thread_id, run_id, ...body } = input;
+		super(
+			`/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`,
+			jsonStringify(body),
+		);
+	}
 }
 
 /**
@@ -1104,15 +1104,15 @@ export class SubmitToolOuputsToRunCommand extends Command<
  * @summary Cancels a run that is `in_progress`.
  */
 export class CancelRunCommand extends Command<
-  CancelRunCommandInput,
-  RunObject
+	CancelRunCommandInput,
+	RunObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CancelRunCommandInput) {
-    const { thread_id, run_id } = input;
-    super(`/threads/${thread_id}/runs/${run_id}/cancel`);
-  }
+	constructor(input: CancelRunCommandInput) {
+		const { thread_id, run_id } = input;
+		super(`/threads/${thread_id}/runs/${run_id}/cancel`);
+	}
 }
 
 /**
@@ -1121,20 +1121,20 @@ export class CancelRunCommand extends Command<
  * @summary Returns a list of run steps belonging to a run.
  */
 export class ListRunStepsCommand extends Command<
-  ListRunStepsCommandInput,
-  ListRunStepsResponse,
-  ListRunStepsCommandQuery
+	ListRunStepsCommandInput,
+	ListRunStepsResponse,
+	ListRunStepsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListRunStepsCommandInput) {
-    const { thread_id, run_id, limit, order, after, before, include } = input;
-    super(
-      `/threads/${thread_id}/runs/${run_id}/steps`,
-      undefined,
-      stripUndefined({ limit, order, after, before, include }),
-    );
-  }
+	constructor(input: ListRunStepsCommandInput) {
+		const { thread_id, run_id, limit, order, after, before, include } = input;
+		super(
+			`/threads/${thread_id}/runs/${run_id}/steps`,
+			undefined,
+			stripUndefined({ limit, order, after, before, include }),
+		);
+	}
 }
 
 /**
@@ -1143,20 +1143,20 @@ export class ListRunStepsCommand extends Command<
  * @summary Retrieves a run step.
  */
 export class GetRunStepCommand extends Command<
-  GetRunStepCommandInput,
-  RunStepObject,
-  GetRunStepCommandQuery
+	GetRunStepCommandInput,
+	RunStepObject,
+	GetRunStepCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetRunStepCommandInput) {
-    const { thread_id, run_id, step_id, include } = input;
-    super(
-      `/threads/${thread_id}/runs/${run_id}/steps/${step_id}`,
-      undefined,
-      stripUndefined({ include }),
-    );
-  }
+	constructor(input: GetRunStepCommandInput) {
+		const { thread_id, run_id, step_id, include } = input;
+		super(
+			`/threads/${thread_id}/runs/${run_id}/steps/${step_id}`,
+			undefined,
+			stripUndefined({ include }),
+		);
+	}
 }
 
 /**
@@ -1165,20 +1165,20 @@ export class GetRunStepCommand extends Command<
  * @summary Returns a list of vector stores.
  */
 export class ListVectorStoresCommand extends Command<
-  ListVectorStoresCommandInput,
-  ListVectorStoresResponse,
-  ListVectorStoresCommandQuery
+	ListVectorStoresCommandInput,
+	ListVectorStoresResponse,
+	ListVectorStoresCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListVectorStoresCommandInput) {
-    const { limit, order, after, before } = input;
-    super(
-      `/vector_stores`,
-      undefined,
-      stripUndefined({ limit, order, after, before }),
-    );
-  }
+	constructor(input: ListVectorStoresCommandInput) {
+		const { limit, order, after, before } = input;
+		super(
+			`/vector_stores`,
+			undefined,
+			stripUndefined({ limit, order, after, before }),
+		);
+	}
 }
 
 /**
@@ -1187,15 +1187,15 @@ export class ListVectorStoresCommand extends Command<
  * @summary Create a vector store.
  */
 export class CreateVectorStoreCommand extends Command<
-  CreateVectorStoreCommandInput,
-  VectorStoreObject
+	CreateVectorStoreCommandInput,
+	VectorStoreObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateVectorStoreCommandInput) {
-    const body = input;
-    super(`/vector_stores`, jsonStringify(body));
-  }
+	constructor(input: CreateVectorStoreCommandInput) {
+		const body = input;
+		super(`/vector_stores`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1204,15 +1204,15 @@ export class CreateVectorStoreCommand extends Command<
  * @summary Retrieves a vector store.
  */
 export class GetVectorStoreCommand extends Command<
-  GetVectorStoreCommandInput,
-  VectorStoreObject
+	GetVectorStoreCommandInput,
+	VectorStoreObject
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetVectorStoreCommandInput) {
-    const { vector_store_id } = input;
-    super(`/vector_stores/${vector_store_id}`);
-  }
+	constructor(input: GetVectorStoreCommandInput) {
+		const { vector_store_id } = input;
+		super(`/vector_stores/${vector_store_id}`);
+	}
 }
 
 /**
@@ -1221,15 +1221,15 @@ export class GetVectorStoreCommand extends Command<
  * @summary Modifies a vector store.
  */
 export class ModifyVectorStoreCommand extends Command<
-  ModifyVectorStoreCommandInput,
-  VectorStoreObject
+	ModifyVectorStoreCommandInput,
+	VectorStoreObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyVectorStoreCommandInput) {
-    const { vector_store_id, ...body } = input;
-    super(`/vector_stores/${vector_store_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyVectorStoreCommandInput) {
+		const { vector_store_id, ...body } = input;
+		super(`/vector_stores/${vector_store_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1238,15 +1238,15 @@ export class ModifyVectorStoreCommand extends Command<
  * @summary Delete a vector store.
  */
 export class DeleteVectorStoreCommand extends Command<
-  DeleteVectorStoreCommandInput,
-  DeleteVectorStoreResponse
+	DeleteVectorStoreCommandInput,
+	DeleteVectorStoreResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteVectorStoreCommandInput) {
-    const { vector_store_id } = input;
-    super(`/vector_stores/${vector_store_id}`);
-  }
+	constructor(input: DeleteVectorStoreCommandInput) {
+		const { vector_store_id } = input;
+		super(`/vector_stores/${vector_store_id}`);
+	}
 }
 
 /**
@@ -1255,20 +1255,20 @@ export class DeleteVectorStoreCommand extends Command<
  * @summary Returns a list of vector store files.
  */
 export class ListVectorStoreFilesCommand extends Command<
-  ListVectorStoreFilesCommandInput,
-  ListVectorStoreFilesResponse,
-  ListVectorStoreFilesCommandQuery
+	ListVectorStoreFilesCommandInput,
+	ListVectorStoreFilesResponse,
+	ListVectorStoreFilesCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListVectorStoreFilesCommandInput) {
-    const { vector_store_id, limit, order, after, before, filter } = input;
-    super(
-      `/vector_stores/${vector_store_id}/files`,
-      undefined,
-      stripUndefined({ limit, order, after, before, filter }),
-    );
-  }
+	constructor(input: ListVectorStoreFilesCommandInput) {
+		const { vector_store_id, limit, order, after, before, filter } = input;
+		super(
+			`/vector_stores/${vector_store_id}/files`,
+			undefined,
+			stripUndefined({ limit, order, after, before, filter }),
+		);
+	}
 }
 
 /**
@@ -1278,15 +1278,15 @@ export class ListVectorStoreFilesCommand extends Command<
  * to a [vector store](/docs/api-reference/vector-stores/object).
  */
 export class CreateVectorStoreFileCommand extends Command<
-  CreateVectorStoreFileCommandInput,
-  VectorStoreFileObject
+	CreateVectorStoreFileCommandInput,
+	VectorStoreFileObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateVectorStoreFileCommandInput) {
-    const { vector_store_id, ...body } = input;
-    super(`/vector_stores/${vector_store_id}/files`, jsonStringify(body));
-  }
+	constructor(input: CreateVectorStoreFileCommandInput) {
+		const { vector_store_id, ...body } = input;
+		super(`/vector_stores/${vector_store_id}/files`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1295,15 +1295,15 @@ export class CreateVectorStoreFileCommand extends Command<
  * @summary Retrieves a vector store file.
  */
 export class GetVectorStoreFileCommand extends Command<
-  GetVectorStoreFileCommandInput,
-  VectorStoreFileObject
+	GetVectorStoreFileCommandInput,
+	VectorStoreFileObject
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetVectorStoreFileCommandInput) {
-    const { vector_store_id, file_id } = input;
-    super(`/vector_stores/${vector_store_id}/files/${file_id}`);
-  }
+	constructor(input: GetVectorStoreFileCommandInput) {
+		const { vector_store_id, file_id } = input;
+		super(`/vector_stores/${vector_store_id}/files/${file_id}`);
+	}
 }
 
 /**
@@ -1314,15 +1314,15 @@ export class GetVectorStoreFileCommand extends Command<
  * [delete file](/docs/api-reference/files/delete) endpoint.
  */
 export class DeleteVectorStoreFileCommand extends Command<
-  DeleteVectorStoreFileCommandInput,
-  DeleteVectorStoreFileResponse
+	DeleteVectorStoreFileCommandInput,
+	DeleteVectorStoreFileResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteVectorStoreFileCommandInput) {
-    const { vector_store_id, file_id } = input;
-    super(`/vector_stores/${vector_store_id}/files/${file_id}`);
-  }
+	constructor(input: DeleteVectorStoreFileCommandInput) {
+		const { vector_store_id, file_id } = input;
+		super(`/vector_stores/${vector_store_id}/files/${file_id}`);
+	}
 }
 
 /**
@@ -1331,18 +1331,18 @@ export class DeleteVectorStoreFileCommand extends Command<
  * @summary Create a vector store file batch.
  */
 export class CreateVectorStoreFileBatchCommand extends Command<
-  CreateVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject
+	CreateVectorStoreFileBatchCommandInput,
+	VectorStoreFileBatchObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateVectorStoreFileBatchCommandInput) {
-    const { vector_store_id, ...body } = input;
-    super(
-      `/vector_stores/${vector_store_id}/file_batches`,
-      jsonStringify(body),
-    );
-  }
+	constructor(input: CreateVectorStoreFileBatchCommandInput) {
+		const { vector_store_id, ...body } = input;
+		super(
+			`/vector_stores/${vector_store_id}/file_batches`,
+			jsonStringify(body),
+		);
+	}
 }
 
 /**
@@ -1351,15 +1351,15 @@ export class CreateVectorStoreFileBatchCommand extends Command<
  * @summary Retrieves a vector store file batch.
  */
 export class GetVectorStoreFileBatchCommand extends Command<
-  GetVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject
+	GetVectorStoreFileBatchCommandInput,
+	VectorStoreFileBatchObject
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: GetVectorStoreFileBatchCommandInput) {
-    const { vector_store_id, batch_id } = input;
-    super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}`);
-  }
+	constructor(input: GetVectorStoreFileBatchCommandInput) {
+		const { vector_store_id, batch_id } = input;
+		super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}`);
+	}
 }
 
 /**
@@ -1369,15 +1369,15 @@ export class GetVectorStoreFileBatchCommand extends Command<
  * files in this batch as soon as possible.
  */
 export class CancelVectorStoreFileBatchCommand extends Command<
-  CancelVectorStoreFileBatchCommandInput,
-  VectorStoreFileBatchObject
+	CancelVectorStoreFileBatchCommandInput,
+	VectorStoreFileBatchObject
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CancelVectorStoreFileBatchCommandInput) {
-    const { vector_store_id, batch_id } = input;
-    super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}/cancel`);
-  }
+	constructor(input: CancelVectorStoreFileBatchCommandInput) {
+		const { vector_store_id, batch_id } = input;
+		super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}/cancel`);
+	}
 }
 
 /**
@@ -1386,21 +1386,21 @@ export class CancelVectorStoreFileBatchCommand extends Command<
  * @summary Returns a list of vector store files in a batch.
  */
 export class ListFilesInVectorStoreBatchCommand extends Command<
-  ListFilesInVectorStoreBatchCommandInput,
-  ListVectorStoreFilesResponse,
-  ListFilesInVectorStoreBatchCommandQuery
+	ListFilesInVectorStoreBatchCommandInput,
+	ListVectorStoreFilesResponse,
+	ListFilesInVectorStoreBatchCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListFilesInVectorStoreBatchCommandInput) {
-    const { vector_store_id, batch_id, limit, order, after, before, filter } =
-      input;
-    super(
-      `/vector_stores/${vector_store_id}/file_batches/${batch_id}/files`,
-      undefined,
-      stripUndefined({ limit, order, after, before, filter }),
-    );
-  }
+	constructor(input: ListFilesInVectorStoreBatchCommandInput) {
+		const { vector_store_id, batch_id, limit, order, after, before, filter } =
+			input;
+		super(
+			`/vector_stores/${vector_store_id}/file_batches/${batch_id}/files`,
+			undefined,
+			stripUndefined({ limit, order, after, before, filter }),
+		);
+	}
 }
 
 /**
@@ -1409,15 +1409,15 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
  * @summary Creates and executes a batch from an uploaded file of requests
  */
 export class CreateBatchCommand extends Command<
-  CreateBatchCommandInput,
-  Batch
+	CreateBatchCommandInput,
+	Batch
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateBatchCommandInput) {
-    const body = input;
-    super(`/batches`, jsonStringify(body));
-  }
+	constructor(input: CreateBatchCommandInput) {
+		const body = input;
+		super(`/batches`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1426,16 +1426,16 @@ export class CreateBatchCommand extends Command<
  * @summary List your organization's batches.
  */
 export class ListBatchesCommand extends Command<
-  ListBatchesCommandInput,
-  ListBatchesResponse,
-  ListBatchesCommandQuery
+	ListBatchesCommandInput,
+	ListBatchesResponse,
+	ListBatchesCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListBatchesCommandInput) {
-    const { after, limit } = input;
-    super(`/batches`, undefined, stripUndefined({ after, limit }));
-  }
+	constructor(input: ListBatchesCommandInput) {
+		const { after, limit } = input;
+		super(`/batches`, undefined, stripUndefined({ after, limit }));
+	}
 }
 
 /**
@@ -1444,15 +1444,15 @@ export class ListBatchesCommand extends Command<
  * @summary Retrieves a batch.
  */
 export class RetrieveBatchCommand extends Command<
-  RetrieveBatchCommandInput,
-  Batch
+	RetrieveBatchCommandInput,
+	Batch
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveBatchCommandInput) {
-    const { batch_id } = input;
-    super(`/batches/${batch_id}`);
-  }
+	constructor(input: RetrieveBatchCommandInput) {
+		const { batch_id } = input;
+		super(`/batches/${batch_id}`);
+	}
 }
 
 /**
@@ -1463,15 +1463,15 @@ export class RetrieveBatchCommand extends Command<
  * partial results (if any) available in the output file.
  */
 export class CancelBatchCommand extends Command<
-  CancelBatchCommandInput,
-  Batch
+	CancelBatchCommandInput,
+	Batch
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CancelBatchCommandInput) {
-    const { batch_id } = input;
-    super(`/batches/${batch_id}/cancel`);
-  }
+	constructor(input: CancelBatchCommandInput) {
+		const { batch_id } = input;
+		super(`/batches/${batch_id}/cancel`);
+	}
 }
 
 /**
@@ -1480,40 +1480,40 @@ export class CancelBatchCommand extends Command<
  * @summary List user actions and configuration changes within this organization.
  */
 export class ListAuditLogsCommand extends Command<
-  ListAuditLogsCommandInput,
-  ListAuditLogsResponse,
-  ListAuditLogsCommandQuery
+	ListAuditLogsCommandInput,
+	ListAuditLogsResponse,
+	ListAuditLogsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListAuditLogsCommandInput) {
-    const {
-      effective_at,
-      project_ids,
-      event_types,
-      actor_ids,
-      actor_emails,
-      resource_ids,
-      limit,
-      after,
-      before,
-    } = input;
-    super(
-      `/organization/audit_logs`,
-      undefined,
-      stripUndefined({
-        effective_at,
-        project_ids,
-        event_types,
-        actor_ids,
-        actor_emails,
-        resource_ids,
-        limit,
-        after,
-        before,
-      }),
-    );
-  }
+	constructor(input: ListAuditLogsCommandInput) {
+		const {
+			effective_at,
+			project_ids,
+			event_types,
+			actor_ids,
+			actor_emails,
+			resource_ids,
+			limit,
+			after,
+			before,
+		} = input;
+		super(
+			`/organization/audit_logs`,
+			undefined,
+			stripUndefined({
+				effective_at,
+				project_ids,
+				event_types,
+				actor_ids,
+				actor_emails,
+				resource_ids,
+				limit,
+				after,
+				before,
+			}),
+		);
+	}
 }
 
 /**
@@ -1522,16 +1522,16 @@ export class ListAuditLogsCommand extends Command<
  * @summary Returns a list of invites in the organization.
  */
 export class ListInvitesCommand extends Command<
-  ListInvitesCommandInput,
-  InviteListResponse,
-  ListInvitesCommandQuery
+	ListInvitesCommandInput,
+	InviteListResponse,
+	ListInvitesCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListInvitesCommandInput) {
-    const { limit, after } = input;
-    super(`/organization/invites`, undefined, stripUndefined({ limit, after }));
-  }
+	constructor(input: ListInvitesCommandInput) {
+		const { limit, after } = input;
+		super(`/organization/invites`, undefined, stripUndefined({ limit, after }));
+	}
 }
 
 /**
@@ -1541,12 +1541,12 @@ export class ListInvitesCommand extends Command<
  * accepted by the user before they have access to the organization.
  */
 export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: InviteUserCommandInput) {
-    const body = input;
-    super(`/organization/invites`, jsonStringify(body));
-  }
+	constructor(input: InviteUserCommandInput) {
+		const body = input;
+		super(`/organization/invites`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1555,15 +1555,15 @@ export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
  * @summary Retrieves an invite.
  */
 export class RetrieveInviteCommand extends Command<
-  RetrieveInviteCommandInput,
-  Invite
+	RetrieveInviteCommandInput,
+	Invite
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveInviteCommandInput) {
-    const { invite_id } = input;
-    super(`/organization/invites/${invite_id}`);
-  }
+	constructor(input: RetrieveInviteCommandInput) {
+		const { invite_id } = input;
+		super(`/organization/invites/${invite_id}`);
+	}
 }
 
 /**
@@ -1573,15 +1573,15 @@ export class RetrieveInviteCommand extends Command<
  * deleted.
  */
 export class DeleteInviteCommand extends Command<
-  DeleteInviteCommandInput,
-  InviteDeleteResponse
+	DeleteInviteCommandInput,
+	InviteDeleteResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteInviteCommandInput) {
-    const { invite_id } = input;
-    super(`/organization/invites/${invite_id}`);
-  }
+	constructor(input: DeleteInviteCommandInput) {
+		const { invite_id } = input;
+		super(`/organization/invites/${invite_id}`);
+	}
 }
 
 /**
@@ -1590,16 +1590,16 @@ export class DeleteInviteCommand extends Command<
  * @summary Lists all of the users in the organization.
  */
 export class ListUsersCommand extends Command<
-  ListUsersCommandInput,
-  UserListResponse,
-  ListUsersCommandQuery
+	ListUsersCommandInput,
+	UserListResponse,
+	ListUsersCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListUsersCommandInput) {
-    const { limit, after } = input;
-    super(`/organization/users`, undefined, stripUndefined({ limit, after }));
-  }
+	constructor(input: ListUsersCommandInput) {
+		const { limit, after } = input;
+		super(`/organization/users`, undefined, stripUndefined({ limit, after }));
+	}
 }
 
 /**
@@ -1608,15 +1608,15 @@ export class ListUsersCommand extends Command<
  * @summary Retrieves a user by their identifier.
  */
 export class RetrieveUserCommand extends Command<
-  RetrieveUserCommandInput,
-  User
+	RetrieveUserCommandInput,
+	User
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveUserCommandInput) {
-    const { user_id } = input;
-    super(`/organization/users/${user_id}`);
-  }
+	constructor(input: RetrieveUserCommandInput) {
+		const { user_id } = input;
+		super(`/organization/users/${user_id}`);
+	}
 }
 
 /**
@@ -1625,12 +1625,12 @@ export class RetrieveUserCommand extends Command<
  * @summary Modifies a user's role in the organization.
  */
 export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyUserCommandInput) {
-    const body = input;
-    super(`/organization/users/${user_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyUserCommandInput) {
+		const body = input;
+		super(`/organization/users/${user_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1639,15 +1639,15 @@ export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
  * @summary Deletes a user from the organization.
  */
 export class DeleteUserCommand extends Command<
-  DeleteUserCommandInput,
-  UserDeleteResponse
+	DeleteUserCommandInput,
+	UserDeleteResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteUserCommandInput) {
-    const { user_id } = input;
-    super(`/organization/users/${user_id}`);
-  }
+	constructor(input: DeleteUserCommandInput) {
+		const { user_id } = input;
+		super(`/organization/users/${user_id}`);
+	}
 }
 
 /**
@@ -1656,20 +1656,20 @@ export class DeleteUserCommand extends Command<
  * @summary Returns a list of projects.
  */
 export class ListProjectsCommand extends Command<
-  ListProjectsCommandInput,
-  ProjectListResponse,
-  ListProjectsCommandQuery
+	ListProjectsCommandInput,
+	ProjectListResponse,
+	ListProjectsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListProjectsCommandInput) {
-    const { limit, after, include_archived } = input;
-    super(
-      `/organization/projects`,
-      undefined,
-      stripUndefined({ limit, after, include_archived }),
-    );
-  }
+	constructor(input: ListProjectsCommandInput) {
+		const { limit, after, include_archived } = input;
+		super(
+			`/organization/projects`,
+			undefined,
+			stripUndefined({ limit, after, include_archived }),
+		);
+	}
 }
 
 /**
@@ -1679,15 +1679,15 @@ export class ListProjectsCommand extends Command<
  * archived, but cannot be deleted.
  */
 export class CreateProjectCommand extends Command<
-  CreateProjectCommandInput,
-  Project
+	CreateProjectCommandInput,
+	Project
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateProjectCommandInput) {
-    const body = input;
-    super(`/organization/projects`, jsonStringify(body));
-  }
+	constructor(input: CreateProjectCommandInput) {
+		const body = input;
+		super(`/organization/projects`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1696,15 +1696,15 @@ export class CreateProjectCommand extends Command<
  * @summary Retrieves a project.
  */
 export class RetrieveProjectCommand extends Command<
-  RetrieveProjectCommandInput,
-  Project
+	RetrieveProjectCommandInput,
+	Project
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveProjectCommandInput) {
-    const { project_id } = input;
-    super(`/organization/projects/${project_id}`);
-  }
+	constructor(input: RetrieveProjectCommandInput) {
+		const { project_id } = input;
+		super(`/organization/projects/${project_id}`);
+	}
 }
 
 /**
@@ -1713,15 +1713,15 @@ export class RetrieveProjectCommand extends Command<
  * @summary Modifies a project in the organization.
  */
 export class ModifyProjectCommand extends Command<
-  ModifyProjectCommandInput,
-  Project
+	ModifyProjectCommandInput,
+	Project
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyProjectCommandInput) {
-    const body = input;
-    super(`/organization/projects/${project_id}`, jsonStringify(body));
-  }
+	constructor(input: ModifyProjectCommandInput) {
+		const body = input;
+		super(`/organization/projects/${project_id}`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1731,15 +1731,15 @@ export class ModifyProjectCommand extends Command<
  * updated.
  */
 export class ArchiveProjectCommand extends Command<
-  ArchiveProjectCommandInput,
-  Project
+	ArchiveProjectCommandInput,
+	Project
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ArchiveProjectCommandInput) {
-    const { project_id } = input;
-    super(`/organization/projects/${project_id}/archive`);
-  }
+	constructor(input: ArchiveProjectCommandInput) {
+		const { project_id } = input;
+		super(`/organization/projects/${project_id}/archive`);
+	}
 }
 
 /**
@@ -1748,20 +1748,20 @@ export class ArchiveProjectCommand extends Command<
  * @summary Returns a list of users in the project.
  */
 export class ListProjectUsersCommand extends Command<
-  ListProjectUsersCommandInput,
-  ProjectUserListResponse,
-  ListProjectUsersCommandQuery
+	ListProjectUsersCommandInput,
+	ProjectUserListResponse,
+	ListProjectUsersCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListProjectUsersCommandInput) {
-    const { project_id, limit, after } = input;
-    super(
-      `/organization/projects/${project_id}/users`,
-      undefined,
-      stripUndefined({ limit, after }),
-    );
-  }
+	constructor(input: ListProjectUsersCommandInput) {
+		const { project_id, limit, after } = input;
+		super(
+			`/organization/projects/${project_id}/users`,
+			undefined,
+			stripUndefined({ limit, after }),
+		);
+	}
 }
 
 /**
@@ -1771,15 +1771,15 @@ export class ListProjectUsersCommand extends Command<
  * organization to be added to a project.
  */
 export class CreateProjectUserCommand extends Command<
-  CreateProjectUserCommandInput,
-  ProjectUser
+	CreateProjectUserCommandInput,
+	ProjectUser
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateProjectUserCommandInput) {
-    const { project_id, ...body } = input;
-    super(`/organization/projects/${project_id}/users`, jsonStringify(body));
-  }
+	constructor(input: CreateProjectUserCommandInput) {
+		const { project_id, ...body } = input;
+		super(`/organization/projects/${project_id}/users`, jsonStringify(body));
+	}
 }
 
 /**
@@ -1788,15 +1788,15 @@ export class CreateProjectUserCommand extends Command<
  * @summary Retrieves a user in the project.
  */
 export class RetrieveProjectUserCommand extends Command<
-  RetrieveProjectUserCommandInput,
-  ProjectUser
+	RetrieveProjectUserCommandInput,
+	ProjectUser
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveProjectUserCommandInput) {
-    const { project_id, user_id } = input;
-    super(`/organization/projects/${project_id}/users/${user_id}`);
-  }
+	constructor(input: RetrieveProjectUserCommandInput) {
+		const { project_id, user_id } = input;
+		super(`/organization/projects/${project_id}/users/${user_id}`);
+	}
 }
 
 /**
@@ -1805,18 +1805,18 @@ export class RetrieveProjectUserCommand extends Command<
  * @summary Modifies a user's role in the project.
  */
 export class ModifyProjectUserCommand extends Command<
-  ModifyProjectUserCommandInput,
-  ProjectUser
+	ModifyProjectUserCommandInput,
+	ProjectUser
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: ModifyProjectUserCommandInput) {
-    const body = input;
-    super(
-      `/organization/projects/${project_id}/users/${user_id}`,
-      jsonStringify(body),
-    );
-  }
+	constructor(input: ModifyProjectUserCommandInput) {
+		const body = input;
+		super(
+			`/organization/projects/${project_id}/users/${user_id}`,
+			jsonStringify(body),
+		);
+	}
 }
 
 /**
@@ -1825,15 +1825,15 @@ export class ModifyProjectUserCommand extends Command<
  * @summary Deletes a user from the project.
  */
 export class DeleteProjectUserCommand extends Command<
-  DeleteProjectUserCommandInput,
-  ProjectUserDeleteResponse
+	DeleteProjectUserCommandInput,
+	ProjectUserDeleteResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteProjectUserCommandInput) {
-    const { project_id, user_id } = input;
-    super(`/organization/projects/${project_id}/users/${user_id}`);
-  }
+	constructor(input: DeleteProjectUserCommandInput) {
+		const { project_id, user_id } = input;
+		super(`/organization/projects/${project_id}/users/${user_id}`);
+	}
 }
 
 /**
@@ -1842,20 +1842,20 @@ export class DeleteProjectUserCommand extends Command<
  * @summary Returns a list of service accounts in the project.
  */
 export class ListProjectServiceAccountsCommand extends Command<
-  ListProjectServiceAccountsCommandInput,
-  ProjectServiceAccountListResponse,
-  ListProjectServiceAccountsCommandQuery
+	ListProjectServiceAccountsCommandInput,
+	ProjectServiceAccountListResponse,
+	ListProjectServiceAccountsCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListProjectServiceAccountsCommandInput) {
-    const { project_id, limit, after } = input;
-    super(
-      `/organization/projects/${project_id}/service_accounts`,
-      undefined,
-      stripUndefined({ limit, after }),
-    );
-  }
+	constructor(input: ListProjectServiceAccountsCommandInput) {
+		const { project_id, limit, after } = input;
+		super(
+			`/organization/projects/${project_id}/service_accounts`,
+			undefined,
+			stripUndefined({ limit, after }),
+		);
+	}
 }
 
 /**
@@ -1865,18 +1865,18 @@ export class ListProjectServiceAccountsCommand extends Command<
  * unredacted API key for the service account.
  */
 export class CreateProjectServiceAccountCommand extends Command<
-  CreateProjectServiceAccountCommandInput,
-  ProjectServiceAccountCreateResponse
+	CreateProjectServiceAccountCommandInput,
+	ProjectServiceAccountCreateResponse
 > {
-  public override method = 'post' as const;
+	public override method = "post" as const;
 
-  constructor(input: CreateProjectServiceAccountCommandInput) {
-    const { project_id, ...body } = input;
-    super(
-      `/organization/projects/${project_id}/service_accounts`,
-      jsonStringify(body),
-    );
-  }
+	constructor(input: CreateProjectServiceAccountCommandInput) {
+		const { project_id, ...body } = input;
+		super(
+			`/organization/projects/${project_id}/service_accounts`,
+			jsonStringify(body),
+		);
+	}
 }
 
 /**
@@ -1885,17 +1885,17 @@ export class CreateProjectServiceAccountCommand extends Command<
  * @summary Retrieves a service account in the project.
  */
 export class RetrieveProjectServiceAccountCommand extends Command<
-  RetrieveProjectServiceAccountCommandInput,
-  ProjectServiceAccount
+	RetrieveProjectServiceAccountCommandInput,
+	ProjectServiceAccount
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveProjectServiceAccountCommandInput) {
-    const { project_id, service_account_id } = input;
-    super(
-      `/organization/projects/${project_id}/service_accounts/${service_account_id}`,
-    );
-  }
+	constructor(input: RetrieveProjectServiceAccountCommandInput) {
+		const { project_id, service_account_id } = input;
+		super(
+			`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
+		);
+	}
 }
 
 /**
@@ -1904,17 +1904,17 @@ export class RetrieveProjectServiceAccountCommand extends Command<
  * @summary Deletes a service account from the project.
  */
 export class DeleteProjectServiceAccountCommand extends Command<
-  DeleteProjectServiceAccountCommandInput,
-  ProjectServiceAccountDeleteResponse
+	DeleteProjectServiceAccountCommandInput,
+	ProjectServiceAccountDeleteResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteProjectServiceAccountCommandInput) {
-    const { project_id, service_account_id } = input;
-    super(
-      `/organization/projects/${project_id}/service_accounts/${service_account_id}`,
-    );
-  }
+	constructor(input: DeleteProjectServiceAccountCommandInput) {
+		const { project_id, service_account_id } = input;
+		super(
+			`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
+		);
+	}
 }
 
 /**
@@ -1923,20 +1923,20 @@ export class DeleteProjectServiceAccountCommand extends Command<
  * @summary Returns a list of API keys in the project.
  */
 export class ListProjectApiKeysCommand extends Command<
-  ListProjectApiKeysCommandInput,
-  ProjectApiKeyListResponse,
-  ListProjectApiKeysCommandQuery
+	ListProjectApiKeysCommandInput,
+	ProjectApiKeyListResponse,
+	ListProjectApiKeysCommandQuery
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: ListProjectApiKeysCommandInput) {
-    const { project_id, limit, after } = input;
-    super(
-      `/organization/projects/${project_id}/api_keys`,
-      undefined,
-      stripUndefined({ limit, after }),
-    );
-  }
+	constructor(input: ListProjectApiKeysCommandInput) {
+		const { project_id, limit, after } = input;
+		super(
+			`/organization/projects/${project_id}/api_keys`,
+			undefined,
+			stripUndefined({ limit, after }),
+		);
+	}
 }
 
 /**
@@ -1945,15 +1945,15 @@ export class ListProjectApiKeysCommand extends Command<
  * @summary Retrieves an API key in the project.
  */
 export class RetrieveProjectApiKeyCommand extends Command<
-  RetrieveProjectApiKeyCommandInput,
-  ProjectApiKey
+	RetrieveProjectApiKeyCommandInput,
+	ProjectApiKey
 > {
-  public override method = 'get' as const;
+	public override method = "get" as const;
 
-  constructor(input: RetrieveProjectApiKeyCommandInput) {
-    const { project_id, key_id } = input;
-    super(`/organization/projects/${project_id}/api_keys/${key_id}`);
-  }
+	constructor(input: RetrieveProjectApiKeyCommandInput) {
+		const { project_id, key_id } = input;
+		super(`/organization/projects/${project_id}/api_keys/${key_id}`);
+	}
 }
 
 /**
@@ -1962,13 +1962,13 @@ export class RetrieveProjectApiKeyCommand extends Command<
  * @summary Deletes an API key from the project.
  */
 export class DeleteProjectApiKeyCommand extends Command<
-  DeleteProjectApiKeyCommandInput,
-  ProjectApiKeyDeleteResponse
+	DeleteProjectApiKeyCommandInput,
+	ProjectApiKeyDeleteResponse
 > {
-  public override method = 'delete' as const;
+	public override method = "delete" as const;
 
-  constructor(input: DeleteProjectApiKeyCommandInput) {
-    const { project_id, key_id } = input;
-    super(`/organization/projects/${project_id}/api_keys/${key_id}`);
-  }
+	constructor(input: DeleteProjectApiKeyCommandInput) {
+		const { project_id, key_id } = input;
+		super(`/organization/projects/${project_id}/api_keys/${key_id}`);
+	}
 }

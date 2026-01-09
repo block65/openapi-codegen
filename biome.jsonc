@@ -1,0 +1,25 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+
+	"root": true,
+
+	"extends": ["./node_modules/@block65/shared-config/biome.jsonc"],
+
+	"files": {
+		"includes": [
+			"**/*",
+			"!**/*.tw.css",
+			"!**/worker-configuration.d.ts",
+			"!packages/react/.lib",
+			"!**/src-tauri/gen",
+			"!**/src-tauri/target",
+			"!**/dist",
+			"!**/build",
+			"!**/node_modules",
+			"!**/.astro",
+			"!**/.wrangler",
+			"!**/.moon/cache"
+		],
+		"ignoreUnknown": true
+	}
+}

@@ -3,36 +3,36 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2025-02-02T09:59:14.778Z
+ * Generated on 2026-01-09T08:04:36.476Z
  *
  */
 import {
-  RestServiceClient,
-  type RestServiceClientConfig,
-} from '@block65/rest-client';
+	RestServiceClient,
+	type RestServiceClientConfig,
+} from "@block65/rest-client";
 import type {
-  AddPetCommandInput,
-  DeletePetCommandInput,
-  FindPetByIdCommandInput,
-  FindPetsCommandInput,
-  Pet,
-} from './types.ts';
+	AddPetCommandInput,
+	DeletePetCommandInput,
+	FindPetByIdCommandInput,
+	FindPetsCommandInput,
+	Pet,
+} from "./types.js";
 
 type AllInputs =
-  | AddPetCommandInput
-  | DeletePetCommandInput
-  | FindPetByIdCommandInput
-  | FindPetsCommandInput;
+	| AddPetCommandInput
+	| DeletePetCommandInput
+	| FindPetByIdCommandInput
+	| FindPetsCommandInput;
 type AllOutputs = Pet | Pet[] | undefined;
 
 export class SwaggerPetstoreRestClient extends RestServiceClient<
-  AllInputs,
-  AllOutputs
+	AllInputs,
+	AllOutputs
 > {
-  constructor(
-    baseUrl: string | URL = new URL('http://petstore.swagger.io/api/'),
-    config?: RestServiceClientConfig,
-  ) {
-    super(baseUrl, config);
-  }
+	constructor(
+		baseUrl: string | URL = new URL("http://petstore.swagger.io/api/"),
+		config?: RestServiceClientConfig,
+	) {
+		super(baseUrl, config);
+	}
 }

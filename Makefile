@@ -1,7 +1,7 @@
 
 SRCS = $(wildcard lib/**)
 
-all: dist
+all: test
 
 .PHONY: deps
 deps: node_modules
@@ -21,30 +21,27 @@ test: node_modules
 node_modules: package.json
 	pnpm install
 
-dist: node_modules tsconfig.json $(SRCS)
-	pnpm exec tsc
-
 .PHONY: dev
 dev:
 	pnpm tsc -b -w
 
 .PHONY: fixtures
-fixtures: dist
-	$(MAKE) petstore test1 openai
+fixtures:
+	$(MAKE) petstore test1 openai docker
 
 .PHONY: petstore
-petstore:  __tests__/fixtures/petstore.json dist
-	node --enable-source-maps dist/bin/index.js \
+petstore:  __tests__/fixtures/petstore.json
+	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/petstore
-	pnpm exec prettier --write __tests__/fixtures/petstore
+	pnpm exec biome format --write __tests__/fixtures/petstore
 
 .PHONY: test1
-test1:  __tests__/fixtures/test1.json dist
-	node --enable-source-maps dist/bin/index.js \
+test1:  __tests__/fixtures/test1.json
+	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/test1
-	pnpm exec prettier --write __tests__/fixtures/test1
+	pnpm exec biome format --write __tests__/fixtures/test1
 
 
 __tests__/fixtures/openai.json: __tests__/fixtures/openai.yaml
@@ -55,23 +52,23 @@ __tests__/fixtures/openai.yaml: __tests__/fixtures/openai.yaml
 	curl https://raw.githubusercontent.com/openai/openai-openapi/refs/heads/master/openapi.yaml --output $@
 
 .PHONY: openai
-openai: __tests__/fixtures/openai.json dist
-	node --enable-source-maps dist/bin/index.js \
+openai: __tests__/fixtures/openai.json
+	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/openai
-	pnpm exec prettier --write __tests__/fixtures/openai
+	pnpm exec biome format --write __tests__/fixtures/openai
 
 .PHONY: docker
-docker: __tests__/fixtures/docker.json dist
-	node --enable-source-maps dist/bin/index.js \
+docker: __tests__/fixtures/docker.json
+	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/docker
-	pnpm exec prettier --write __tests__/fixtures/docker
+	pnpm exec biome format --write __tests__/fixtures/docker
 	
 
 # .PHONY: cloudflare
-# cloudflare: __tests__/fixtures/cloudflare/openapi.json dist
-# 	node --enable-source-maps dist/bin/index.js \
+# cloudflare: __tests__/fixtures/cloudflare/openapi.json
+# 	node --enable-source-maps bin/index.js \
 # 		-i __tests__/fixtures/cloudflare/openapi.json \
 # 		-o __tests__/fixtures/cloudflare
 # 	pnpm prettier --write __tests__/fixtures/cloudflare
@@ -79,4 +76,4 @@ docker: __tests__/fixtures/docker.json dist
 .PHONY: pretty
 pretty: node_modules
 	pnpm exec eslint --fix . || true
-	pnpm exec prettier --write .
+	pnpm exec biome format --write .

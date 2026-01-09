@@ -1,0 +1,373 @@
+import { join } from "node:path";
+import camelcase from "camelcase";
+import type { oas30, oas31 } from "openapi3-ts";
+import {
+	type CodeBlockWriter,
+	type Project,
+	type SourceFile,
+	VariableDeclarationKind,
+	type WriterFunction,
+	Writers,
+} from "ts-morph";
+import type { Primitive } from "type-fest";
+import type * as v from "valibot";
+import { wordWrap } from "./utils.ts";
+
+/**
+ * Helper to generate v.name(...args) using ts-morph Writers
+ */
+function vcall(
+	name: { [k in keyof typeof v]: k extends string ? k : never }[keyof typeof v],
+	...args: (
+		| string
+		| WriterFunction
+		| Primitive
+		| (string | WriterFunction | Primitive)[]
+	)[]
+): WriterFunction {
+	return (writer) => {
+		writer.write(`v.${name}(`);
+		args.forEach((arg, index) => {
+			if (typeof arg === "function") {
+				arg(writer);
+			} else if (Array.isArray(arg)) {
+				writer.write("[");
+				arg.forEach((item, itemIndex) => {
+					if (typeof item === "function") {
+						item(writer);
+					} else {
+						writer.write(String(item));
+					}
+					if (itemIndex < arg.length - 1) writer.write(", ");
+				});
+				writer.write("]");
+			} else {
+				writer.write(String(arg));
+			}
+			if (index < args.length - 1) writer.write(", ");
+		});
+		writer.write(")");
+	};
+}
+
+function schemaIsNullable(schema: oas30.SchemaObject | oas31.SchemaObject) {
+	return (
+		schema.type === "null" ||
+		("nullable" in schema && schema.nullable) ||
+		(Array.isArray(schema.type) && schema.type.includes("null"))
+	);
+}
+
+function maybeNullable(
+	validator: WriterFunction | string,
+	isNullable: boolean,
+) {
+	return isNullable ? vcall("nullable", validator) : validator;
+}
+
+function maybePipe(
+	base: WriterFunction | string,
+	...constraints: (WriterFunction | string | undefined)[]
+) {
+	const valid = constraints.filter(Boolean);
+	return valid.length > 0 ? vcall("pipe", base, ...valid) : base;
+}
+
+export function schemaToValidator(
+	validators: Map<string, string>,
+	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+): WriterFunction | string {
+	if ("$ref" in schema) {
+		return validators.get(schema.$ref) ?? vcall("unknown");
+	}
+
+	const isNullable = schemaIsNullable(schema);
+
+	const typescriptHint =
+		"x-typescript-hint" in schema &&
+		typeof schema["x-typescript-hint"] === "string"
+			? schema["x-typescript-hint"]
+			: undefined;
+
+	const typescriptHintSchema = typescriptHint
+		? `v.custom<${typescriptHint}>(() => true)`
+		: undefined;
+
+	if (schema.type === "string") {
+		if (schema.enum) {
+			return maybeNullable(
+				vcall(
+					"picklist",
+					schema.enum.map((e) => JSON.stringify(e)),
+				),
+				isNullable,
+			);
+		}
+		return maybeNullable(
+			maybePipe(
+				vcall("string"),
+				schema.minLength !== undefined
+					? vcall("minLength", schema.minLength)
+					: undefined,
+				schema.maxLength !== undefined
+					? vcall("maxLength", schema.maxLength)
+					: undefined,
+				schema.pattern
+					? vcall("regex", `/${schema.pattern.replaceAll("/", "\\/")}/`)
+					: undefined,
+				schema.format === "email" ? vcall("email") : undefined,
+				schema.format === "uuid" ? vcall("uuid") : undefined,
+				typescriptHintSchema,
+			),
+			isNullable,
+		);
+	}
+
+	if (schema.type === "number" || schema.type === "integer") {
+		return maybeNullable(
+			maybePipe(
+				vcall("number"),
+				schema.type === "integer" ? vcall("integer") : undefined,
+				schema.minimum !== undefined
+					? vcall("minValue", schema.minimum)
+					: undefined,
+				schema.maximum !== undefined
+					? vcall("maxValue", schema.maximum)
+					: undefined,
+				typescriptHintSchema,
+			),
+			isNullable,
+		);
+	}
+
+	if (schema.type === "boolean") {
+		return maybeNullable(vcall("boolean"), isNullable);
+	}
+
+	if (schema.type === "array") {
+		const items = schema.items
+			? schemaToValidator(validators, schema.items)
+			: vcall("unknown");
+
+		return maybeNullable(
+			maybePipe(
+				vcall("array", items),
+				schema.minItems !== undefined
+					? vcall("minLength", schema.minItems)
+					: undefined,
+				schema.maxItems !== undefined
+					? vcall("maxLength", schema.maxItems)
+					: undefined,
+			),
+			isNullable,
+		);
+	}
+
+	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
+	if (combinator) {
+		const variants = combinator.map((s) => schemaToValidator(validators, s));
+		const type = schema.allOf ? "intersect" : "union";
+
+		if (schema.oneOf && schema.discriminator?.propertyName) {
+			return maybeNullable(
+				vcall(
+					"variant",
+					JSON.stringify(schema.discriminator.propertyName),
+					variants,
+				),
+				isNullable,
+			);
+		}
+		return maybeNullable(vcall(type, variants), isNullable);
+	}
+
+	if (schema.type === "object" || schema.properties || !schema.type) {
+		const props = schema.properties ?? {};
+		if (Object.keys(props).length === 0) {
+			return maybeNullable(
+				vcall("record", vcall("string"), vcall("unknown")),
+				isNullable,
+			);
+		}
+
+		const requiredProps = new Set(schema.required ?? []);
+
+		const strictObjectWriter = (writer: CodeBlockWriter) => {
+			writer.writeLine("{");
+			writer.indent(() => {
+				Object.entries(props).forEach(([name, s]) => {
+					const isRequired = requiredProps.has(name);
+					const validator = schemaToValidator(validators, s);
+					const finalValidator = isRequired
+						? validator
+						: vcall("exactOptional", validator);
+
+					// write comment
+					if (!("$ref" in s) && s.description) {
+						writer.writeLine("/**");
+						writer.writeLine(
+							` * ${wordWrap(s.description).split("\n").join("\n * ")}`,
+						);
+						writer.writeLine(" */");
+					}
+
+					writer.write(`${JSON.stringify(name)}: `);
+					if (typeof finalValidator === "function") {
+						finalValidator(writer);
+					} else {
+						writer.write(finalValidator);
+					}
+					writer.writeLine(",");
+				});
+			});
+			writer.write("}");
+		};
+
+		return maybeNullable(vcall("strictObject", strictObjectWriter), isNullable);
+	}
+
+	return vcall("unknown");
+}
+
+export function createValibotFile(project: Project, outputDir: string) {
+	const file = project.createSourceFile(join(outputDir, "valibot.ts"), "", {
+		overwrite: true,
+	});
+
+	// Valibot import
+	file.addImportDeclaration({
+		moduleSpecifier: "valibot",
+		namespaceImport: "v",
+	});
+
+	return file;
+}
+
+export function registerValidatorFromSchema(
+	validators: Map<string, string>,
+	valibotFile: SourceFile,
+	schemaName: string,
+	schemaObject: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+) {
+	const validatorName = camelcase([schemaName, "schema"]);
+
+	validators.set(`#/components/schemas/${schemaName}`, validatorName);
+
+	valibotFile.addVariableStatement({
+		isExported: true,
+		declarationKind: VariableDeclarationKind.Const,
+		docs:
+			!("$ref" in schemaObject) && schemaObject.description
+				? [
+						{
+							description: wordWrap(schemaObject.description),
+							tags: [
+								...(schemaObject.deprecated
+									? [
+											{
+												tagName: "deprecated",
+											},
+										]
+									: []),
+								...(schemaObject.title
+									? [
+											{
+												tagName: "title",
+												text: schemaObject.title,
+											},
+										]
+									: []),
+								...(schemaObject.example
+									? [
+											{
+												tagName: "example",
+												text: JSON.stringify(schemaObject.example, null, 2),
+											},
+										]
+									: []),
+							].filter(Boolean),
+						},
+					]
+				: [],
+		declarations: [
+			{
+				name: validatorName,
+				initializer: schemaToValidator(validators, schemaObject),
+			},
+		],
+	});
+}
+
+/**
+ * Creates validator schemas for operation input (body, params, query) in the valibot file.
+ * Returns the schema names for use in middleware generation.
+ */
+export function createValidatorForOperationInput(
+	validatorSchemas: Map<string, string>,
+	valibotFile: SourceFile,
+	commandName: string,
+	input: {
+		body?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
+		params: oas30.ParameterObject[];
+		query: oas30.ParameterObject[];
+	},
+): { json?: string; param?: string; query?: string } {
+	const schemas: { json?: string; param?: string; query?: string } = {};
+
+	// 1. Generate the JSON Body Schema
+	if (input.body) {
+		const name = camelcase([commandName, "body", "schema"]);
+		schemas.json = name;
+		valibotFile.addVariableStatement({
+			isExported: true,
+			declarationKind: VariableDeclarationKind.Const,
+			declarations: [
+				{
+					name,
+					initializer: schemaToValidator(validatorSchemas, input.body),
+				},
+			],
+		});
+	}
+
+	// 2. Helper for Params/Query (Strict Objects)
+	const addParams = (
+		type: "params" | "query",
+		list: oas30.ParameterObject[],
+	) => {
+		if (list.length === 0) return;
+		const name = camelcase([commandName, type, "schema"]);
+		schemas[type === "params" ? "param" : "query"] = name;
+
+		const propertyMap = Object.fromEntries(
+			list.map((p) => [
+				JSON.stringify(p.name),
+				p.required
+					? schemaToValidator(validatorSchemas, p.schema ?? { type: "string" })
+					: vcall(
+							"exactOptional",
+							schemaToValidator(
+								validatorSchemas,
+								p.schema ?? { type: "string" },
+							),
+						),
+			]),
+		);
+
+		valibotFile.addVariableStatement({
+			isExported: true,
+			declarationKind: VariableDeclarationKind.Const,
+			declarations: [
+				{
+					name,
+					initializer: vcall("strictObject", Writers.object(propertyMap)),
+				},
+			],
+		});
+	};
+
+	addParams("params", input.params);
+	addParams("query", input.query);
+
+	return schemas;
+}
