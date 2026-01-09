@@ -3,18 +3,18 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:04:36.476Z
+ * Generated on 2026-01-09T08:12:14.784Z
  *
  */
 /** eslint-disable max-classes */
-import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
+import { Command, jsonStringify, stripUndefined } from "@block65/rest-client";
 import type {
-	FindPetsCommandQuery,
-	FindPetsCommandInput,
-	Pet,
 	AddPetCommandInput,
-	FindPetByIdCommandInput,
 	DeletePetCommandInput,
+	FindPetByIdCommandInput,
+	FindPetsCommandInput,
+	FindPetsCommandQuery,
+	Pet,
 } from "./types.js";
 
 /**
@@ -52,7 +52,7 @@ export class FindPetsCommand extends Command<
 
 	constructor(input: FindPetsCommandInput) {
 		const { tags, limit } = input;
-		super(`/pets`, undefined, stripUndefined({ tags, limit }));
+		super("/pets", undefined, stripUndefined({ tags, limit }));
 	}
 }
 
@@ -65,7 +65,7 @@ export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
 
 	constructor(input: AddPetCommandInput) {
 		const body = input;
-		super(`/pets`, jsonStringify(body));
+		super("/pets", jsonStringify(body));
 	}
 }
 

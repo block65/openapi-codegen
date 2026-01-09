@@ -3,187 +3,187 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:04:40.265Z
+ * Generated on 2026-01-09T08:12:18.614Z
  *
  */
 /** eslint-disable max-classes */
-import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
+import { Command, jsonStringify, stripUndefined } from "@block65/rest-client";
 import type {
+	AddUploadPartCommandInput,
+	ArchiveProjectCommandInput,
+	AssistantObject,
+	Batch,
+	CancelBatchCommandInput,
+	CancelFineTuningJobCommandInput,
+	CancelRunCommandInput,
+	CancelUploadCommandInput,
+	CancelVectorStoreFileBatchCommandInput,
+	CompleteUploadCommandInput,
+	CreateAssistantCommandInput,
+	CreateBatchCommandInput,
 	CreateChatCompletionCommandInput,
 	CreateChatCompletionResponse,
 	CreateCompletionCommandInput,
 	CreateCompletionResponse,
-	CreateImageCommandInput,
-	ImagesResponse,
-	CreateImageEditCommandInput,
-	CreateImageVariationCommandInput,
 	CreateEmbeddingCommandInput,
 	CreateEmbeddingResponse,
+	CreateFileCommandInput,
+	CreateFineTuningJobCommandInput,
+	CreateImageCommandInput,
+	CreateImageEditCommandInput,
+	CreateImageVariationCommandInput,
+	CreateMessageCommandInput,
+	CreateModerationCommandInput,
+	CreateModerationResponse,
+	CreateProjectCommandInput,
+	CreateProjectServiceAccountCommandInput,
+	CreateProjectUserCommandInput,
+	CreateRunCommandInput,
+	CreateRunCommandQuery,
 	CreateSpeechCommandInput,
+	CreateThreadAndRunCommandInput,
+	CreateThreadCommandInput,
 	CreateTranscriptionCommandInput,
 	CreateTranscriptionCommandOutput,
 	CreateTranslationCommandInput,
 	CreateTranslationCommandOutput,
-	ListFilesCommandQuery,
-	ListFilesCommandInput,
-	ListFilesResponse,
-	CreateFileCommandInput,
-	OpenAiFile,
-	DeleteFileCommandInput,
-	DeleteFileResponse,
-	RetrieveFileCommandInput,
-	DownloadFileCommandInput,
-	DownloadFileCommandOutput,
 	CreateUploadCommandInput,
-	Upload,
-	AddUploadPartCommandInput,
-	UploadPart,
-	CompleteUploadCommandInput,
-	CancelUploadCommandInput,
-	CreateFineTuningJobCommandInput,
-	FineTuningJob,
-	ListPaginatedFineTuningJobsCommandQuery,
-	ListPaginatedFineTuningJobsCommandInput,
-	ListPaginatedFineTuningJobsResponse,
-	RetrieveFineTuningJobCommandInput,
-	ListFineTuningEventsCommandQuery,
-	ListFineTuningEventsCommandInput,
-	ListFineTuningJobEventsResponse,
-	CancelFineTuningJobCommandInput,
-	ListFineTuningJobCheckpointsCommandQuery,
-	ListFineTuningJobCheckpointsCommandInput,
-	ListFineTuningJobCheckpointsResponse,
-	ListModelsCommandInput,
-	ListModelsResponse,
-	RetrieveModelCommandInput,
-	Model,
-	DeleteModelCommandInput,
-	DeleteModelResponse,
-	CreateModerationCommandInput,
-	CreateModerationResponse,
-	ListAssistantsCommandQuery,
-	ListAssistantsCommandInput,
-	ListAssistantsResponse,
-	CreateAssistantCommandInput,
-	AssistantObject,
-	GetAssistantCommandInput,
-	ModifyAssistantCommandInput,
+	CreateVectorStoreCommandInput,
+	CreateVectorStoreFileBatchCommandInput,
+	CreateVectorStoreFileCommandInput,
 	DeleteAssistantCommandInput,
 	DeleteAssistantResponse,
-	CreateThreadCommandInput,
-	ThreadObject,
-	GetThreadCommandInput,
-	ModifyThreadCommandInput,
-	DeleteThreadCommandInput,
-	DeleteThreadResponse,
-	ListMessagesCommandQuery,
-	ListMessagesCommandInput,
-	ListMessagesResponse,
-	CreateMessageCommandInput,
-	MessageObject,
-	GetMessageCommandInput,
-	ModifyMessageCommandInput,
+	DeleteFileCommandInput,
+	DeleteFileResponse,
+	DeleteInviteCommandInput,
 	DeleteMessageCommandInput,
 	DeleteMessageResponse,
-	CreateThreadAndRunCommandInput,
-	RunObject,
-	ListRunsCommandQuery,
-	ListRunsCommandInput,
-	ListRunsResponse,
-	CreateRunCommandQuery,
-	CreateRunCommandInput,
-	GetRunCommandInput,
-	ModifyRunCommandInput,
-	SubmitToolOuputsToRunCommandInput,
-	CancelRunCommandInput,
-	ListRunStepsCommandQuery,
-	ListRunStepsCommandInput,
-	ListRunStepsResponse,
-	GetRunStepCommandQuery,
-	GetRunStepCommandInput,
-	RunStepObject,
-	ListVectorStoresCommandQuery,
-	ListVectorStoresCommandInput,
-	ListVectorStoresResponse,
-	CreateVectorStoreCommandInput,
-	VectorStoreObject,
-	GetVectorStoreCommandInput,
-	ModifyVectorStoreCommandInput,
+	DeleteModelCommandInput,
+	DeleteModelResponse,
+	DeleteProjectApiKeyCommandInput,
+	DeleteProjectServiceAccountCommandInput,
+	DeleteProjectUserCommandInput,
+	DeleteThreadCommandInput,
+	DeleteThreadResponse,
+	DeleteUserCommandInput,
 	DeleteVectorStoreCommandInput,
-	DeleteVectorStoreResponse,
-	ListVectorStoreFilesCommandQuery,
-	ListVectorStoreFilesCommandInput,
-	ListVectorStoreFilesResponse,
-	CreateVectorStoreFileCommandInput,
-	VectorStoreFileObject,
-	GetVectorStoreFileCommandInput,
 	DeleteVectorStoreFileCommandInput,
 	DeleteVectorStoreFileResponse,
-	CreateVectorStoreFileBatchCommandInput,
-	VectorStoreFileBatchObject,
+	DeleteVectorStoreResponse,
+	DownloadFileCommandInput,
+	DownloadFileCommandOutput,
+	FineTuningJob,
+	GetAssistantCommandInput,
+	GetMessageCommandInput,
+	GetRunCommandInput,
+	GetRunStepCommandInput,
+	GetRunStepCommandQuery,
+	GetThreadCommandInput,
+	GetVectorStoreCommandInput,
 	GetVectorStoreFileBatchCommandInput,
-	CancelVectorStoreFileBatchCommandInput,
-	ListFilesInVectorStoreBatchCommandQuery,
-	ListFilesInVectorStoreBatchCommandInput,
-	CreateBatchCommandInput,
-	Batch,
-	ListBatchesCommandQuery,
-	ListBatchesCommandInput,
-	ListBatchesResponse,
-	RetrieveBatchCommandInput,
-	CancelBatchCommandInput,
-	ListAuditLogsCommandQuery,
-	ListAuditLogsCommandInput,
-	ListAuditLogsResponse,
-	ListInvitesCommandQuery,
-	ListInvitesCommandInput,
+	GetVectorStoreFileCommandInput,
+	ImagesResponse,
+	Invite,
+	InviteDeleteResponse,
 	InviteListResponse,
 	InviteUserCommandInput,
-	Invite,
-	RetrieveInviteCommandInput,
-	DeleteInviteCommandInput,
-	InviteDeleteResponse,
-	ListUsersCommandQuery,
-	ListUsersCommandInput,
-	UserListResponse,
-	RetrieveUserCommandInput,
-	User,
-	ModifyUserCommandInput,
-	DeleteUserCommandInput,
-	UserDeleteResponse,
-	ListProjectsCommandQuery,
-	ListProjectsCommandInput,
-	ProjectListResponse,
-	CreateProjectCommandInput,
-	Project,
-	RetrieveProjectCommandInput,
-	ModifyProjectCommandInput,
-	ArchiveProjectCommandInput,
-	ListProjectUsersCommandQuery,
-	ListProjectUsersCommandInput,
-	ProjectUserListResponse,
-	CreateProjectUserCommandInput,
-	ProjectUser,
-	RetrieveProjectUserCommandInput,
-	ModifyProjectUserCommandInput,
-	DeleteProjectUserCommandInput,
-	ProjectUserDeleteResponse,
-	ListProjectServiceAccountsCommandQuery,
-	ListProjectServiceAccountsCommandInput,
-	ProjectServiceAccountListResponse,
-	CreateProjectServiceAccountCommandInput,
-	ProjectServiceAccountCreateResponse,
-	RetrieveProjectServiceAccountCommandInput,
-	ProjectServiceAccount,
-	DeleteProjectServiceAccountCommandInput,
-	ProjectServiceAccountDeleteResponse,
-	ListProjectApiKeysCommandQuery,
+	ListAssistantsCommandInput,
+	ListAssistantsCommandQuery,
+	ListAssistantsResponse,
+	ListAuditLogsCommandInput,
+	ListAuditLogsCommandQuery,
+	ListAuditLogsResponse,
+	ListBatchesCommandInput,
+	ListBatchesCommandQuery,
+	ListBatchesResponse,
+	ListFilesCommandInput,
+	ListFilesCommandQuery,
+	ListFilesInVectorStoreBatchCommandInput,
+	ListFilesInVectorStoreBatchCommandQuery,
+	ListFilesResponse,
+	ListFineTuningEventsCommandInput,
+	ListFineTuningEventsCommandQuery,
+	ListFineTuningJobCheckpointsCommandInput,
+	ListFineTuningJobCheckpointsCommandQuery,
+	ListFineTuningJobCheckpointsResponse,
+	ListFineTuningJobEventsResponse,
+	ListInvitesCommandInput,
+	ListInvitesCommandQuery,
+	ListMessagesCommandInput,
+	ListMessagesCommandQuery,
+	ListMessagesResponse,
+	ListModelsCommandInput,
+	ListModelsResponse,
+	ListPaginatedFineTuningJobsCommandInput,
+	ListPaginatedFineTuningJobsCommandQuery,
+	ListPaginatedFineTuningJobsResponse,
 	ListProjectApiKeysCommandInput,
-	ProjectApiKeyListResponse,
-	RetrieveProjectApiKeyCommandInput,
+	ListProjectApiKeysCommandQuery,
+	ListProjectServiceAccountsCommandInput,
+	ListProjectServiceAccountsCommandQuery,
+	ListProjectsCommandInput,
+	ListProjectsCommandQuery,
+	ListProjectUsersCommandInput,
+	ListProjectUsersCommandQuery,
+	ListRunStepsCommandInput,
+	ListRunStepsCommandQuery,
+	ListRunStepsResponse,
+	ListRunsCommandInput,
+	ListRunsCommandQuery,
+	ListRunsResponse,
+	ListUsersCommandInput,
+	ListUsersCommandQuery,
+	ListVectorStoreFilesCommandInput,
+	ListVectorStoreFilesCommandQuery,
+	ListVectorStoreFilesResponse,
+	ListVectorStoresCommandInput,
+	ListVectorStoresCommandQuery,
+	ListVectorStoresResponse,
+	MessageObject,
+	Model,
+	ModifyAssistantCommandInput,
+	ModifyMessageCommandInput,
+	ModifyProjectCommandInput,
+	ModifyProjectUserCommandInput,
+	ModifyRunCommandInput,
+	ModifyThreadCommandInput,
+	ModifyUserCommandInput,
+	ModifyVectorStoreCommandInput,
+	OpenAiFile,
+	Project,
 	ProjectApiKey,
-	DeleteProjectApiKeyCommandInput,
 	ProjectApiKeyDeleteResponse,
+	ProjectApiKeyListResponse,
+	ProjectListResponse,
+	ProjectServiceAccount,
+	ProjectServiceAccountCreateResponse,
+	ProjectServiceAccountDeleteResponse,
+	ProjectServiceAccountListResponse,
+	ProjectUser,
+	ProjectUserDeleteResponse,
+	ProjectUserListResponse,
+	RetrieveBatchCommandInput,
+	RetrieveFileCommandInput,
+	RetrieveFineTuningJobCommandInput,
+	RetrieveInviteCommandInput,
+	RetrieveModelCommandInput,
+	RetrieveProjectApiKeyCommandInput,
+	RetrieveProjectCommandInput,
+	RetrieveProjectServiceAccountCommandInput,
+	RetrieveProjectUserCommandInput,
+	RetrieveUserCommandInput,
+	RunObject,
+	RunStepObject,
+	SubmitToolOuputsToRunCommandInput,
+	ThreadObject,
+	Upload,
+	UploadPart,
+	User,
+	UserDeleteResponse,
+	UserListResponse,
+	VectorStoreFileBatchObject,
+	VectorStoreFileObject,
+	VectorStoreObject,
 } from "./types.js";
 
 /**
@@ -199,7 +199,7 @@ export class CreateChatCompletionCommand extends Command<
 
 	constructor(input: CreateChatCompletionCommandInput) {
 		const body = input;
-		super(`/chat/completions`, jsonStringify(body));
+		super("/chat/completions", jsonStringify(body));
 	}
 }
 
@@ -216,7 +216,7 @@ export class CreateCompletionCommand extends Command<
 
 	constructor(input: CreateCompletionCommandInput) {
 		const body = input;
-		super(`/completions`, jsonStringify(body));
+		super("/completions", jsonStringify(body));
 	}
 }
 
@@ -233,7 +233,7 @@ export class CreateImageCommand extends Command<
 
 	constructor(input: CreateImageCommandInput) {
 		const body = input;
-		super(`/images/generations`, jsonStringify(body));
+		super("/images/generations", jsonStringify(body));
 	}
 }
 
@@ -250,7 +250,7 @@ export class CreateImageEditCommand extends Command<
 
 	constructor(input: CreateImageEditCommandInput) {
 		const { body } = input;
-		super(`/images/edits`, body);
+		super("/images/edits", body);
 	}
 }
 
@@ -267,7 +267,7 @@ export class CreateImageVariationCommand extends Command<
 
 	constructor(input: CreateImageVariationCommandInput) {
 		const { body } = input;
-		super(`/images/variations`, body);
+		super("/images/variations", body);
 	}
 }
 
@@ -284,7 +284,7 @@ export class CreateEmbeddingCommand extends Command<
 
 	constructor(input: CreateEmbeddingCommandInput) {
 		const body = input;
-		super(`/embeddings`, jsonStringify(body));
+		super("/embeddings", jsonStringify(body));
 	}
 }
 
@@ -301,7 +301,7 @@ export class CreateSpeechCommand extends Command<
 
 	constructor(input: CreateSpeechCommandInput) {
 		const body = input;
-		super(`/audio/speech`, jsonStringify(body));
+		super("/audio/speech", jsonStringify(body));
 	}
 }
 
@@ -318,7 +318,7 @@ export class CreateTranscriptionCommand extends Command<
 
 	constructor(input: CreateTranscriptionCommandInput) {
 		const { body } = input;
-		super(`/audio/transcriptions`, body);
+		super("/audio/transcriptions", body);
 	}
 }
 
@@ -335,7 +335,7 @@ export class CreateTranslationCommand extends Command<
 
 	constructor(input: CreateTranslationCommandInput) {
 		const { body } = input;
-		super(`/audio/translations`, body);
+		super("/audio/translations", body);
 	}
 }
 
@@ -353,7 +353,7 @@ export class ListFilesCommand extends Command<
 
 	constructor(input: ListFilesCommandInput) {
 		const { purpose } = input;
-		super(`/files`, undefined, stripUndefined({ purpose }));
+		super("/files", undefined, stripUndefined({ purpose }));
 	}
 }
 
@@ -388,7 +388,7 @@ export class CreateFileCommand extends Command<
 
 	constructor(input: CreateFileCommandInput) {
 		const { body } = input;
-		super(`/files`, body);
+		super("/files", body);
 	}
 }
 
@@ -472,7 +472,7 @@ export class CreateUploadCommand extends Command<
 
 	constructor(input: CreateUploadCommandInput) {
 		const body = input;
-		super(`/uploads`, jsonStringify(body));
+		super("/uploads", jsonStringify(body));
 	}
 }
 
@@ -566,7 +566,7 @@ export class CreateFineTuningJobCommand extends Command<
 
 	constructor(input: CreateFineTuningJobCommandInput) {
 		const body = input;
-		super(`/fine_tuning/jobs`, jsonStringify(body));
+		super("/fine_tuning/jobs", jsonStringify(body));
 	}
 }
 
@@ -584,7 +584,7 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
 
 	constructor(input: ListPaginatedFineTuningJobsCommandInput) {
 		const { after, limit } = input;
-		super(`/fine_tuning/jobs`, undefined, stripUndefined({ after, limit }));
+		super("/fine_tuning/jobs", undefined, stripUndefined({ after, limit }));
 	}
 }
 
@@ -731,7 +731,7 @@ export class CreateModerationCommand extends Command<
 
 	constructor(input: CreateModerationCommandInput) {
 		const body = input;
-		super(`/moderations`, jsonStringify(body));
+		super("/moderations", jsonStringify(body));
 	}
 }
 
@@ -750,7 +750,7 @@ export class ListAssistantsCommand extends Command<
 	constructor(input: ListAssistantsCommandInput) {
 		const { limit, order, after, before } = input;
 		super(
-			`/assistants`,
+			"/assistants",
 			undefined,
 			stripUndefined({ limit, order, after, before }),
 		);
@@ -770,7 +770,7 @@ export class CreateAssistantCommand extends Command<
 
 	constructor(input: CreateAssistantCommandInput) {
 		const body = input;
-		super(`/assistants`, jsonStringify(body));
+		super("/assistants", jsonStringify(body));
 	}
 }
 
@@ -838,7 +838,7 @@ export class CreateThreadCommand extends Command<
 
 	constructor(input: CreateThreadCommandInput) {
 		const body = input;
-		super(`/threads`, jsonStringify(body));
+		super("/threads", jsonStringify(body));
 	}
 }
 
@@ -996,7 +996,7 @@ export class CreateThreadAndRunCommand extends Command<
 
 	constructor(input: CreateThreadAndRunCommandInput) {
 		const body = input;
-		super(`/threads/runs`, jsonStringify(body));
+		super("/threads/runs", jsonStringify(body));
 	}
 }
 
@@ -1174,7 +1174,7 @@ export class ListVectorStoresCommand extends Command<
 	constructor(input: ListVectorStoresCommandInput) {
 		const { limit, order, after, before } = input;
 		super(
-			`/vector_stores`,
+			"/vector_stores",
 			undefined,
 			stripUndefined({ limit, order, after, before }),
 		);
@@ -1194,7 +1194,7 @@ export class CreateVectorStoreCommand extends Command<
 
 	constructor(input: CreateVectorStoreCommandInput) {
 		const body = input;
-		super(`/vector_stores`, jsonStringify(body));
+		super("/vector_stores", jsonStringify(body));
 	}
 }
 
@@ -1416,7 +1416,7 @@ export class CreateBatchCommand extends Command<
 
 	constructor(input: CreateBatchCommandInput) {
 		const body = input;
-		super(`/batches`, jsonStringify(body));
+		super("/batches", jsonStringify(body));
 	}
 }
 
@@ -1434,7 +1434,7 @@ export class ListBatchesCommand extends Command<
 
 	constructor(input: ListBatchesCommandInput) {
 		const { after, limit } = input;
-		super(`/batches`, undefined, stripUndefined({ after, limit }));
+		super("/batches", undefined, stripUndefined({ after, limit }));
 	}
 }
 
@@ -1499,7 +1499,7 @@ export class ListAuditLogsCommand extends Command<
 			before,
 		} = input;
 		super(
-			`/organization/audit_logs`,
+			"/organization/audit_logs",
 			undefined,
 			stripUndefined({
 				effective_at,
@@ -1530,7 +1530,7 @@ export class ListInvitesCommand extends Command<
 
 	constructor(input: ListInvitesCommandInput) {
 		const { limit, after } = input;
-		super(`/organization/invites`, undefined, stripUndefined({ limit, after }));
+		super("/organization/invites", undefined, stripUndefined({ limit, after }));
 	}
 }
 
@@ -1545,7 +1545,7 @@ export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
 
 	constructor(input: InviteUserCommandInput) {
 		const body = input;
-		super(`/organization/invites`, jsonStringify(body));
+		super("/organization/invites", jsonStringify(body));
 	}
 }
 
@@ -1598,7 +1598,7 @@ export class ListUsersCommand extends Command<
 
 	constructor(input: ListUsersCommandInput) {
 		const { limit, after } = input;
-		super(`/organization/users`, undefined, stripUndefined({ limit, after }));
+		super("/organization/users", undefined, stripUndefined({ limit, after }));
 	}
 }
 
@@ -1665,7 +1665,7 @@ export class ListProjectsCommand extends Command<
 	constructor(input: ListProjectsCommandInput) {
 		const { limit, after, include_archived } = input;
 		super(
-			`/organization/projects`,
+			"/organization/projects",
 			undefined,
 			stripUndefined({ limit, after, include_archived }),
 		);
@@ -1686,7 +1686,7 @@ export class CreateProjectCommand extends Command<
 
 	constructor(input: CreateProjectCommandInput) {
 		const body = input;
-		super(`/organization/projects`, jsonStringify(body));
+		super("/organization/projects", jsonStringify(body));
 	}
 }
 

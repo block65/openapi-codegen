@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:04:40.265Z
+ * Generated on 2026-01-09T08:12:18.614Z
  *
  */
 import {
@@ -74,9 +74,9 @@ import type {
 	DeleteVectorStoreResponse,
 	DownloadFileCommandInput,
 	DownloadFileCommandOutput,
+	FineTuningJob,
 	FinetuneChatRequestInput,
 	FinetuneCompletionRequestInput,
-	FineTuningJob,
 	GetAssistantCommandInput,
 	GetMessageCommandInput,
 	GetRunCommandInput,
@@ -111,13 +111,13 @@ import type {
 	ListPaginatedFineTuningJobsCommandInput,
 	ListPaginatedFineTuningJobsResponse,
 	ListProjectApiKeysCommandInput,
-	ListProjectsCommandInput,
 	ListProjectServiceAccountsCommandInput,
+	ListProjectsCommandInput,
 	ListProjectUsersCommandInput,
-	ListRunsCommandInput,
-	ListRunsResponse,
 	ListRunStepsCommandInput,
 	ListRunStepsResponse,
+	ListRunsCommandInput,
+	ListRunsResponse,
 	ListUsersCommandInput,
 	ListVectorStoreFilesCommandInput,
 	ListVectorStoreFilesResponse,

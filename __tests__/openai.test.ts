@@ -1,4 +1,4 @@
-import { test, expect } from "vitest";
+import { expect, test } from "vitest";
 import { CreateModerationCommand } from "./fixtures/openai/commands.ts";
 import { OpenAiApiRestClient } from "./fixtures/openai/main.ts";
 

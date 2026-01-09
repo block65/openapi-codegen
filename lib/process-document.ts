@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
-import { $RefParser } from "@apidevtools/json-schema-ref-parser";
-import camelcase from "camelcase";
+
 import { join, relative } from "node:path";
+import { $RefParser } from "@apidevtools/json-schema-ref-parser";
 import type { oas30, oas31 } from "openapi3-ts";
 import toposort from "toposort";
 import {

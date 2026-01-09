@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:04:38.060Z
+ * Generated on 2026-01-09T08:12:16.337Z
  *
  */
 import * as v from "valibot";

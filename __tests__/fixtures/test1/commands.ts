@@ -3,40 +3,40 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:04:38.060Z
+ * Generated on 2026-01-09T08:12:16.337Z
  *
  */
 /** eslint-disable max-classes */
 import { Command, jsonStringify } from "@block65/rest-client";
 import type {
-	GetOperationCommandInput,
-	LongRunningOperation,
-	ListBillingAccountsCommandInput,
-	BillingAccountList,
-	CreateBillingAccountCommandInput,
 	BillingAccount,
-	GetBillingAccountCommandInput,
-	UpdateBillingAccountCommandInput,
-	GetBillingAccountPortalCommandInput,
+	BillingAccountList,
 	BillingAccountPortal,
-	LinkBillingAccountCommandInput,
-	ListPaymentMethodsCommandInput,
-	PaymentMethods,
-	CreatePaymentMethodCommandInput,
-	PaymentMethodIntendedLro,
-	GetPaymentMethodFromStripeCommandInput,
-	PaymentMethod,
-	GetPaymentMethodCommandInput,
-	UpdatePaymentMethodCommandInput,
-	DeletePaymentMethodCommandInput,
-	PaymentMethodDeletedLro,
-	ListBillingSubscriptionsCommandInput,
-	BillingSubscriptions,
-	CreateBillingSubscriptionCommandInput,
 	BillingSubscriptionLro,
-	UpdateBillingSubscriptionCommandInput,
+	BillingSubscriptions,
 	CancelSubscriptionCommandInput,
+	CreateBillingAccountCommandInput,
+	CreateBillingSubscriptionCommandInput,
+	CreatePaymentMethodCommandInput,
+	DeletePaymentMethodCommandInput,
+	GetBillingAccountCommandInput,
+	GetBillingAccountPortalCommandInput,
+	GetOperationCommandInput,
+	GetPaymentMethodCommandInput,
+	GetPaymentMethodFromStripeCommandInput,
+	LinkBillingAccountCommandInput,
+	ListBillingAccountsCommandInput,
+	ListBillingSubscriptionsCommandInput,
+	ListPaymentMethodsCommandInput,
+	LongRunningOperation,
+	PaymentMethod,
+	PaymentMethodDeletedLro,
+	PaymentMethodIntendedLro,
+	PaymentMethods,
+	UpdateBillingAccountCommandInput,
+	UpdateBillingSubscriptionCommandInput,
 	UpdateBillingSubscriptionPromoCodeCommandInput,
+	UpdatePaymentMethodCommandInput,
 } from "./types.js";
 
 /**
@@ -78,7 +78,7 @@ export class CreateBillingAccountCommand extends Command<
 
 	constructor(input: CreateBillingAccountCommandInput) {
 		const body = input;
-		super(`/billing-accounts`, jsonStringify(body));
+		super("/billing-accounts", jsonStringify(body));
 	}
 }
 

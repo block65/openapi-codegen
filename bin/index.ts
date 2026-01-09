@@ -32,5 +32,5 @@ const cliArgs = await yargs(hideBin(process.argv))
 await build(
 	join(process.cwd(), String(cliArgs.i)),
 	join(process.cwd(), String(cliArgs.o)),
-	cliArgs["t"] as Array<string>,
+	cliArgs.t as Array<string>,
 );

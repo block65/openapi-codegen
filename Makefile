@@ -34,14 +34,14 @@ petstore:  __tests__/fixtures/petstore.json
 	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/petstore
-	pnpm exec biome format --write __tests__/fixtures/petstore
+	pnpm exec biome check --unsafe --write __tests__/fixtures/petstore
 
 .PHONY: test1
 test1:  __tests__/fixtures/test1.json
 	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/test1
-	pnpm exec biome format --write __tests__/fixtures/test1
+	pnpm exec biome check --unsafe --write __tests__/fixtures/test1
 
 
 __tests__/fixtures/openai.json: __tests__/fixtures/openai.yaml
@@ -56,14 +56,14 @@ openai: __tests__/fixtures/openai.json
 	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/openai
-	pnpm exec biome format --write __tests__/fixtures/openai
+	pnpm exec biome check --unsafe --write __tests__/fixtures/openai
 
 .PHONY: docker
 docker: __tests__/fixtures/docker.json
 	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o __tests__/fixtures/docker
-	pnpm exec biome format --write __tests__/fixtures/docker
+	pnpm exec biome check --unsafe --write __tests__/fixtures/docker
 	
 
 # .PHONY: cloudflare
@@ -76,4 +76,4 @@ docker: __tests__/fixtures/docker.json
 .PHONY: pretty
 pretty: node_modules
 	pnpm exec eslint --fix . || true
-	pnpm exec biome format --write .
+	pnpm exec biome check --unsafe --write .

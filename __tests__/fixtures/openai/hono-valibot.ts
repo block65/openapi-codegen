@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:04:40.265Z
+ * Generated on 2026-01-09T08:12:18.614Z
  *
  */
 import { validator } from "hono/validator";
@@ -86,9 +86,9 @@ import {
 	listProjectApiKeysCommandQuerySchema,
 	listProjectServiceAccountsCommandParamsSchema,
 	listProjectServiceAccountsCommandQuerySchema,
+	listProjectsCommandQuerySchema,
 	listProjectUsersCommandParamsSchema,
 	listProjectUsersCommandQuerySchema,
-	listProjectsCommandQuerySchema,
 	listRunStepsCommandParamsSchema,
 	listRunStepsCommandQuerySchema,
 	listRunsCommandParamsSchema,
