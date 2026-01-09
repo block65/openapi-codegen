@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:12:37.078Z
+ * Generated on 2026-01-09T08:22:09.389Z
  *
  */
 import type { Jsonifiable } from "type-fest";
@@ -7380,7 +7380,7 @@ type ContainerCreateJsonBody = {
 		Isolation?: "default" | "process" | "hyperv" | "";
 		MaskedPaths?: readonly string[];
 		ReadonlyPaths?: readonly string[];
-	} & null;
+	};
 	/**
 	 * NetworkingConfig represents the container's networking configuration for
 	 * each of its interfaces.
@@ -7394,7 +7394,7 @@ type ContainerCreateJsonBody = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	};
-} & null;
+};
 export type ContainerCreateCommandBody = ContainerCreateJsonBody;
 export type ContainerCreateCommandInput = ContainerCreateJsonBody &
 	ContainerCreateCommandQuery;
@@ -7778,7 +7778,7 @@ export type ContainerInspectCommandOutput = {
 		Isolation?: "default" | "process" | "hyperv" | "";
 		MaskedPaths?: readonly string[];
 		ReadonlyPaths?: readonly string[];
-	} & null;
+	};
 	GraphDriver?: {
 		/**
 		 * Name of the storage driver.
@@ -8293,7 +8293,7 @@ type ContainerUpdateJsonBody = {
 		Name?: "" | "no" | "always" | "unless-stopped" | "on-failure";
 		MaximumRetryCount?: number;
 	};
-} & null;
+};
 export type ContainerUpdateCommandParams = {
 	id: string;
 };
@@ -12550,7 +12550,7 @@ export type SwarmInspectCommandOutput = {
 		 */
 		Manager?: string;
 	};
-} & null;
+};
 type SwarmInitJsonBody = {
 	ListenAddr?: string;
 	AdvertiseAddr?: string;
@@ -13719,8 +13719,7 @@ type ServiceCreateJsonBody = {
 			PublishMode?: "ingress" | "host";
 		}[];
 	};
-} & Record<string | number, Jsonifiable> &
-	null;
+} & Record<string | number, Jsonifiable>;
 export type ServiceCreateCommandBody = ServiceCreateJsonBody;
 export type ServiceCreateCommandInput = ServiceCreateJsonBody;
 export type ServiceCreateCommandOutput = {
@@ -14654,8 +14653,7 @@ type ServiceUpdateJsonBody = {
 			PublishMode?: "ingress" | "host";
 		}[];
 	};
-} & Record<string | number, Jsonifiable> &
-	null;
+} & Record<string | number, Jsonifiable>;
 export type ServiceUpdateCommandParams = {
 	id: string;
 };
@@ -15554,8 +15552,7 @@ type SecretCreateJsonBody = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	};
-} & Record<string | number, Jsonifiable> &
-	null;
+} & Record<string | number, Jsonifiable>;
 export type SecretCreateCommandBody = SecretCreateJsonBody;
 export type SecretCreateCommandInput = SecretCreateJsonBody;
 export type SecretCreateCommandOutput = {
@@ -15714,8 +15711,7 @@ type ConfigCreateJsonBody = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	};
-} & Record<string | number, Jsonifiable> &
-	null;
+} & Record<string | number, Jsonifiable>;
 export type ConfigCreateCommandBody = ConfigCreateJsonBody;
 export type ConfigCreateCommandInput = ConfigCreateJsonBody;
 export type ConfigCreateCommandOutput = {

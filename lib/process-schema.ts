@@ -263,25 +263,35 @@ export function schemaToType(
 
 		const intersect = "allOf" in schemaObject;
 
-		// already got a null type, no need to add another null
-		if (types.some((t) => t === "null")) {
+		const filteredTypes = types.filter(isNotNullOrUndefined);
+		const hasNullType = types.some((t) => t === "null");
+		const isNullable = schemaTypeIsNull(schemaObject);
+
+		if (intersect) {
+			// For allOf: intersect non-null types, wrap in union with null if nullable
+			const nonNullTypes = filteredTypes.filter((t) => t !== "null");
+			const intersectionType = maybeIntersection(...nonNullTypes);
 			return {
 				name,
 				hasQuestionToken,
-				type: intersect
-					? maybeIntersection(...types.filter(isNotNullOrUndefined))
-					: maybeUnion(...types.filter(isNotNullOrUndefined)),
+				type: isNullable
+					? maybeUnion(intersectionType, "null")
+					: intersectionType,
 				docs,
 			};
 		}
 
-		// add null
+		// For oneOf/anyOf: union all types (include null if present or if nullable)
 		return {
 			name,
 			hasQuestionToken,
-			type: intersect
-				? maybeIntersection(...types.filter(isNotNullOrUndefined), "null")
-				: maybeUnion(...types.filter(isNotNullOrUndefined), "null"),
+			type:
+				hasNullType || isNullable
+					? maybeUnion(
+							...filteredTypes.filter((t) => t !== "null"),
+							"null",
+						)
+					: maybeUnion(...filteredTypes),
 			docs,
 		};
 	}
