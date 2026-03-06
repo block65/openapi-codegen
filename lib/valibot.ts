@@ -103,9 +103,18 @@ export function schemaToValidator(
 				isNullable,
 			);
 		}
+
+		// NOTE: these should be ordered so the most helpful validations come first
+		// (ie digits before maxLen) and also it must ensure that valibot type check
+		// is not violated
 		return maybeNullable(
 			maybePipe(
 				vcall("string"),
+				schema.format === "email" ? vcall("email") : undefined,
+				schema.format === "uuid" ? vcall("uuid") : undefined,
+				schema.format === "int32" ? vcall("digits") : undefined,
+				schema.format === "int64" ? vcall("digits") : undefined,
+
 				schema.minLength !== undefined
 					? vcall("minLength", schema.minLength)
 					: undefined,
@@ -115,8 +124,20 @@ export function schemaToValidator(
 				schema.pattern
 					? vcall("regex", `/${schema.pattern.replaceAll("/", "\\/")}/`)
 					: undefined,
-				schema.format === "email" ? vcall("email") : undefined,
-				schema.format === "uuid" ? vcall("uuid") : undefined,
+
+				...(schema.format?.startsWith("int")
+					? [
+							"v.transform((n) => Number.parseInt(n, 10))",
+							vcall("number"),
+							vcall("integer"),
+							schema.minimum !== undefined
+								? vcall("minValue", schema.minimum)
+								: undefined,
+							schema.maximum !== undefined
+								? vcall("maxValue", schema.maximum)
+								: undefined,
+						]
+					: []),
 				typescriptHintSchema,
 			),
 			isNullable,
@@ -127,7 +148,7 @@ export function schemaToValidator(
 		return maybeNullable(
 			maybePipe(
 				vcall("number"),
-				schema.type === "integer" ? vcall("integer") : undefined,
+				schema.type.startsWith("int") ? vcall("integer") : undefined,
 				schema.minimum !== undefined
 					? vcall("minValue", schema.minimum)
 					: undefined,
@@ -299,8 +320,8 @@ export function registerValidatorFromSchema(
 }
 
 /**
- * Creates validator schemas for operation input (body, params, query) in the valibot file.
- * Returns the schema names for use in middleware generation.
+ * Creates validator schemas for operation input (body, params, query) in the
+ * valibot file. Returns the schema names for use in middleware generation.
  */
 export function createValidatorForOperationInput(
 	validatorSchemas: Map<string, string>,

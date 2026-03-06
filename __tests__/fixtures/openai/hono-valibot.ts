@@ -3,9 +3,11 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:35:34.785Z
+ * Generated on 2026-03-06T07:45:26.343Z
  *
  */
+
+import { PublicValibotHonoError } from "@block65/rest-client";
 import { validator } from "hono/validator";
 import * as v from "valibot";
 import {
@@ -127,533 +129,772 @@ import {
 	submitToolOuputsToRunCommandParamsSchema,
 } from "./valibot.js";
 
+function toPublicValibotHonoError(err: unknown): never {
+	if (err instanceof v.ValiError) {
+		throw PublicValibotHonoError.from(err);
+	}
+	throw err;
+}
+
 export const createChatCompletion = [
 	validator("json", (value) => {
-		return v.parse(createChatCompletionCommandBodySchema, value);
+		return v
+			.parseAsync(createChatCompletionCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createCompletion = [
 	validator("json", (value) => {
-		return v.parse(createCompletionCommandBodySchema, value);
+		return v
+			.parseAsync(createCompletionCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createImage = [
 	validator("json", (value) => {
-		return v.parse(createImageCommandBodySchema, value);
+		return v
+			.parseAsync(createImageCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createImageEdit = [] as const;
 export const createImageVariation = [] as const;
 export const createEmbedding = [
 	validator("json", (value) => {
-		return v.parse(createEmbeddingCommandBodySchema, value);
+		return v
+			.parseAsync(createEmbeddingCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createSpeech = [
 	validator("json", (value) => {
-		return v.parse(createSpeechCommandBodySchema, value);
+		return v
+			.parseAsync(createSpeechCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createTranscription = [] as const;
 export const createTranslation = [] as const;
 export const listFiles = [
 	validator("query", (value) => {
-		return v.parse(listFilesCommandQuerySchema, value);
+		return v
+			.parseAsync(listFilesCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createFile = [] as const;
 export const deleteFile = [
 	validator("param", (value) => {
-		return v.parse(deleteFileCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteFileCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveFile = [
 	validator("param", (value) => {
-		return v.parse(retrieveFileCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveFileCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const downloadFile = [
 	validator("param", (value) => {
-		return v.parse(downloadFileCommandParamsSchema, value);
+		return v
+			.parseAsync(downloadFileCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createUpload = [
 	validator("json", (value) => {
-		return v.parse(createUploadCommandBodySchema, value);
+		return v
+			.parseAsync(createUploadCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const addUploadPart = [
 	validator("param", (value) => {
-		return v.parse(addUploadPartCommandParamsSchema, value);
+		return v
+			.parseAsync(addUploadPartCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const completeUpload = [
 	validator("json", (value) => {
-		return v.parse(completeUploadCommandBodySchema, value);
+		return v
+			.parseAsync(completeUploadCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(completeUploadCommandParamsSchema, value);
+		return v
+			.parseAsync(completeUploadCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelUpload = [
 	validator("param", (value) => {
-		return v.parse(cancelUploadCommandParamsSchema, value);
+		return v
+			.parseAsync(cancelUploadCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createFineTuningJob = [
 	validator("json", (value) => {
-		return v.parse(createFineTuningJobCommandBodySchema, value);
+		return v
+			.parseAsync(createFineTuningJobCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listPaginatedFineTuningJobs = [
 	validator("query", (value) => {
-		return v.parse(listPaginatedFineTuningJobsCommandQuerySchema, value);
+		return v
+			.parseAsync(listPaginatedFineTuningJobsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveFineTuningJob = [
 	validator("param", (value) => {
-		return v.parse(retrieveFineTuningJobCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveFineTuningJobCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listFineTuningEvents = [
 	validator("param", (value) => {
-		return v.parse(listFineTuningEventsCommandParamsSchema, value);
+		return v
+			.parseAsync(listFineTuningEventsCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listFineTuningEventsCommandQuerySchema, value);
+		return v
+			.parseAsync(listFineTuningEventsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelFineTuningJob = [
 	validator("param", (value) => {
-		return v.parse(cancelFineTuningJobCommandParamsSchema, value);
+		return v
+			.parseAsync(cancelFineTuningJobCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listFineTuningJobCheckpoints = [
 	validator("param", (value) => {
-		return v.parse(listFineTuningJobCheckpointsCommandParamsSchema, value);
+		return v
+			.parseAsync(listFineTuningJobCheckpointsCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listFineTuningJobCheckpointsCommandQuerySchema, value);
+		return v
+			.parseAsync(listFineTuningJobCheckpointsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listModels = [] as const;
 export const retrieveModel = [
 	validator("param", (value) => {
-		return v.parse(retrieveModelCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveModelCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteModel = [
 	validator("param", (value) => {
-		return v.parse(deleteModelCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteModelCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createModeration = [
 	validator("json", (value) => {
-		return v.parse(createModerationCommandBodySchema, value);
+		return v
+			.parseAsync(createModerationCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listAssistants = [
 	validator("query", (value) => {
-		return v.parse(listAssistantsCommandQuerySchema, value);
+		return v
+			.parseAsync(listAssistantsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createAssistant = [
 	validator("json", (value) => {
-		return v.parse(createAssistantCommandBodySchema, value);
+		return v
+			.parseAsync(createAssistantCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getAssistant = [
 	validator("param", (value) => {
-		return v.parse(getAssistantCommandParamsSchema, value);
+		return v
+			.parseAsync(getAssistantCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyAssistant = [
 	validator("json", (value) => {
-		return v.parse(modifyAssistantCommandBodySchema, value);
+		return v
+			.parseAsync(modifyAssistantCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyAssistantCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyAssistantCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteAssistant = [
 	validator("param", (value) => {
-		return v.parse(deleteAssistantCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteAssistantCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createThread = [
 	validator("json", (value) => {
-		return v.parse(createThreadCommandBodySchema, value);
+		return v
+			.parseAsync(createThreadCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getThread = [
 	validator("param", (value) => {
-		return v.parse(getThreadCommandParamsSchema, value);
+		return v
+			.parseAsync(getThreadCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyThread = [
 	validator("json", (value) => {
-		return v.parse(modifyThreadCommandBodySchema, value);
+		return v
+			.parseAsync(modifyThreadCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyThreadCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyThreadCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteThread = [
 	validator("param", (value) => {
-		return v.parse(deleteThreadCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteThreadCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listMessages = [
 	validator("param", (value) => {
-		return v.parse(listMessagesCommandParamsSchema, value);
+		return v
+			.parseAsync(listMessagesCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listMessagesCommandQuerySchema, value);
+		return v
+			.parseAsync(listMessagesCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createMessage = [
 	validator("json", (value) => {
-		return v.parse(createMessageCommandBodySchema, value);
+		return v
+			.parseAsync(createMessageCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(createMessageCommandParamsSchema, value);
+		return v
+			.parseAsync(createMessageCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getMessage = [
 	validator("param", (value) => {
-		return v.parse(getMessageCommandParamsSchema, value);
+		return v
+			.parseAsync(getMessageCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyMessage = [
 	validator("json", (value) => {
-		return v.parse(modifyMessageCommandBodySchema, value);
+		return v
+			.parseAsync(modifyMessageCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyMessageCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyMessageCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteMessage = [
 	validator("param", (value) => {
-		return v.parse(deleteMessageCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteMessageCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createThreadAndRun = [
 	validator("json", (value) => {
-		return v.parse(createThreadAndRunCommandBodySchema, value);
+		return v
+			.parseAsync(createThreadAndRunCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listRuns = [
 	validator("param", (value) => {
-		return v.parse(listRunsCommandParamsSchema, value);
+		return v
+			.parseAsync(listRunsCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listRunsCommandQuerySchema, value);
+		return v
+			.parseAsync(listRunsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createRun = [
 	validator("json", (value) => {
-		return v.parse(createRunCommandBodySchema, value);
+		return v
+			.parseAsync(createRunCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(createRunCommandParamsSchema, value);
+		return v
+			.parseAsync(createRunCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(createRunCommandQuerySchema, value);
+		return v
+			.parseAsync(createRunCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getRun = [
 	validator("param", (value) => {
-		return v.parse(getRunCommandParamsSchema, value);
+		return v
+			.parseAsync(getRunCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyRun = [
 	validator("json", (value) => {
-		return v.parse(modifyRunCommandBodySchema, value);
+		return v
+			.parseAsync(modifyRunCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyRunCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyRunCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const submitToolOuputsToRun = [
 	validator("json", (value) => {
-		return v.parse(submitToolOuputsToRunCommandBodySchema, value);
+		return v
+			.parseAsync(submitToolOuputsToRunCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(submitToolOuputsToRunCommandParamsSchema, value);
+		return v
+			.parseAsync(submitToolOuputsToRunCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelRun = [
 	validator("param", (value) => {
-		return v.parse(cancelRunCommandParamsSchema, value);
+		return v
+			.parseAsync(cancelRunCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listRunSteps = [
 	validator("param", (value) => {
-		return v.parse(listRunStepsCommandParamsSchema, value);
+		return v
+			.parseAsync(listRunStepsCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listRunStepsCommandQuerySchema, value);
+		return v
+			.parseAsync(listRunStepsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getRunStep = [
 	validator("param", (value) => {
-		return v.parse(getRunStepCommandParamsSchema, value);
+		return v
+			.parseAsync(getRunStepCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(getRunStepCommandQuerySchema, value);
+		return v
+			.parseAsync(getRunStepCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listVectorStores = [
 	validator("query", (value) => {
-		return v.parse(listVectorStoresCommandQuerySchema, value);
+		return v
+			.parseAsync(listVectorStoresCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createVectorStore = [
 	validator("json", (value) => {
-		return v.parse(createVectorStoreCommandBodySchema, value);
+		return v
+			.parseAsync(createVectorStoreCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getVectorStore = [
 	validator("param", (value) => {
-		return v.parse(getVectorStoreCommandParamsSchema, value);
+		return v
+			.parseAsync(getVectorStoreCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyVectorStore = [
 	validator("json", (value) => {
-		return v.parse(modifyVectorStoreCommandBodySchema, value);
+		return v
+			.parseAsync(modifyVectorStoreCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyVectorStoreCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyVectorStoreCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteVectorStore = [
 	validator("param", (value) => {
-		return v.parse(deleteVectorStoreCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteVectorStoreCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listVectorStoreFiles = [
 	validator("param", (value) => {
-		return v.parse(listVectorStoreFilesCommandParamsSchema, value);
+		return v
+			.parseAsync(listVectorStoreFilesCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listVectorStoreFilesCommandQuerySchema, value);
+		return v
+			.parseAsync(listVectorStoreFilesCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createVectorStoreFile = [
 	validator("json", (value) => {
-		return v.parse(createVectorStoreFileCommandBodySchema, value);
+		return v
+			.parseAsync(createVectorStoreFileCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(createVectorStoreFileCommandParamsSchema, value);
+		return v
+			.parseAsync(createVectorStoreFileCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getVectorStoreFile = [
 	validator("param", (value) => {
-		return v.parse(getVectorStoreFileCommandParamsSchema, value);
+		return v
+			.parseAsync(getVectorStoreFileCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteVectorStoreFile = [
 	validator("param", (value) => {
-		return v.parse(deleteVectorStoreFileCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteVectorStoreFileCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createVectorStoreFileBatch = [
 	validator("json", (value) => {
-		return v.parse(createVectorStoreFileBatchCommandBodySchema, value);
+		return v
+			.parseAsync(createVectorStoreFileBatchCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(createVectorStoreFileBatchCommandParamsSchema, value);
+		return v
+			.parseAsync(createVectorStoreFileBatchCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getVectorStoreFileBatch = [
 	validator("param", (value) => {
-		return v.parse(getVectorStoreFileBatchCommandParamsSchema, value);
+		return v
+			.parseAsync(getVectorStoreFileBatchCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelVectorStoreFileBatch = [
 	validator("param", (value) => {
-		return v.parse(cancelVectorStoreFileBatchCommandParamsSchema, value);
+		return v
+			.parseAsync(cancelVectorStoreFileBatchCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listFilesInVectorStoreBatch = [
 	validator("param", (value) => {
-		return v.parse(listFilesInVectorStoreBatchCommandParamsSchema, value);
+		return v
+			.parseAsync(listFilesInVectorStoreBatchCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listFilesInVectorStoreBatchCommandQuerySchema, value);
+		return v
+			.parseAsync(listFilesInVectorStoreBatchCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createBatch = [
 	validator("json", (value) => {
-		return v.parse(createBatchCommandBodySchema, value);
+		return v
+			.parseAsync(createBatchCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listBatches = [
 	validator("query", (value) => {
-		return v.parse(listBatchesCommandQuerySchema, value);
+		return v
+			.parseAsync(listBatchesCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveBatch = [
 	validator("param", (value) => {
-		return v.parse(retrieveBatchCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveBatchCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelBatch = [
 	validator("param", (value) => {
-		return v.parse(cancelBatchCommandParamsSchema, value);
+		return v
+			.parseAsync(cancelBatchCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listauditlogs = [
 	validator("query", (value) => {
-		return v.parse(listAuditLogsCommandQuerySchema, value);
+		return v
+			.parseAsync(listAuditLogsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listinvites = [
 	validator("query", (value) => {
-		return v.parse(listInvitesCommandQuerySchema, value);
+		return v
+			.parseAsync(listInvitesCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const inviteUser = [
 	validator("json", (value) => {
-		return v.parse(inviteUserCommandBodySchema, value);
+		return v
+			.parseAsync(inviteUserCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveinvite = [
 	validator("param", (value) => {
-		return v.parse(retrieveInviteCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveInviteCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteinvite = [
 	validator("param", (value) => {
-		return v.parse(deleteInviteCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteInviteCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listusers = [
 	validator("query", (value) => {
-		return v.parse(listUsersCommandQuerySchema, value);
+		return v
+			.parseAsync(listUsersCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveuser = [
 	validator("param", (value) => {
-		return v.parse(retrieveUserCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyuser = [
 	validator("json", (value) => {
-		return v.parse(modifyUserCommandBodySchema, value);
+		return v
+			.parseAsync(modifyUserCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyUserCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteuser = [
 	validator("param", (value) => {
-		return v.parse(deleteUserCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojects = [
 	validator("query", (value) => {
-		return v.parse(listProjectsCommandQuerySchema, value);
+		return v
+			.parseAsync(listProjectsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createproject = [
 	validator("json", (value) => {
-		return v.parse(createProjectCommandBodySchema, value);
+		return v
+			.parseAsync(createProjectCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveproject = [
 	validator("param", (value) => {
-		return v.parse(retrieveProjectCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveProjectCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyproject = [
 	validator("json", (value) => {
-		return v.parse(modifyProjectCommandBodySchema, value);
+		return v
+			.parseAsync(modifyProjectCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyProjectCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyProjectCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const archiveproject = [
 	validator("param", (value) => {
-		return v.parse(archiveProjectCommandParamsSchema, value);
+		return v
+			.parseAsync(archiveProjectCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojectusers = [
 	validator("param", (value) => {
-		return v.parse(listProjectUsersCommandParamsSchema, value);
+		return v
+			.parseAsync(listProjectUsersCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listProjectUsersCommandQuerySchema, value);
+		return v
+			.parseAsync(listProjectUsersCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createprojectuser = [
 	validator("json", (value) => {
-		return v.parse(createProjectUserCommandBodySchema, value);
+		return v
+			.parseAsync(createProjectUserCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(createProjectUserCommandParamsSchema, value);
+		return v
+			.parseAsync(createProjectUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveprojectuser = [
 	validator("param", (value) => {
-		return v.parse(retrieveProjectUserCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveProjectUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyprojectuser = [
 	validator("json", (value) => {
-		return v.parse(modifyProjectUserCommandBodySchema, value);
+		return v
+			.parseAsync(modifyProjectUserCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(modifyProjectUserCommandParamsSchema, value);
+		return v
+			.parseAsync(modifyProjectUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteprojectuser = [
 	validator("param", (value) => {
-		return v.parse(deleteProjectUserCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteProjectUserCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojectserviceaccounts = [
 	validator("param", (value) => {
-		return v.parse(listProjectServiceAccountsCommandParamsSchema, value);
+		return v
+			.parseAsync(listProjectServiceAccountsCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listProjectServiceAccountsCommandQuerySchema, value);
+		return v
+			.parseAsync(listProjectServiceAccountsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createprojectserviceaccount = [
 	validator("json", (value) => {
-		return v.parse(createProjectServiceAccountCommandBodySchema, value);
+		return v
+			.parseAsync(createProjectServiceAccountCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
-		return v.parse(createProjectServiceAccountCommandParamsSchema, value);
+		return v
+			.parseAsync(createProjectServiceAccountCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveprojectserviceaccount = [
 	validator("param", (value) => {
-		return v.parse(retrieveProjectServiceAccountCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveProjectServiceAccountCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteprojectserviceaccount = [
 	validator("param", (value) => {
-		return v.parse(deleteProjectServiceAccountCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteProjectServiceAccountCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojectapikeys = [
 	validator("param", (value) => {
-		return v.parse(listProjectApiKeysCommandParamsSchema, value);
+		return v
+			.parseAsync(listProjectApiKeysCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
-		return v.parse(listProjectApiKeysCommandQuerySchema, value);
+		return v
+			.parseAsync(listProjectApiKeysCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveprojectapikey = [
 	validator("param", (value) => {
-		return v.parse(retrieveProjectApiKeyCommandParamsSchema, value);
+		return v
+			.parseAsync(retrieveProjectApiKeyCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteprojectapikey = [
 	validator("param", (value) => {
-		return v.parse(deleteProjectApiKeyCommandParamsSchema, value);
+		return v
+			.parseAsync(deleteProjectApiKeyCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;

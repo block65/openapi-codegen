@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:35:53.827Z
+ * Generated on 2026-03-06T07:45:59.608Z
  *
  */
 import type { Jsonifiable } from "type-fest";
@@ -8165,8 +8165,8 @@ export type ContainerStatsCommandOutput =
 	| Record<string | number, Jsonifiable>
 	| undefined;
 export type ContainerResizeCommandQuery = {
-	h?: `${number}` | undefined;
-	w?: `${number}` | undefined;
+	h: `${number}`;
+	w: `${number}`;
 };
 export type ContainerResizeCommandParams = {
 	id: string;
@@ -8304,7 +8304,7 @@ export type ContainerUpdateCommandOutput = {
 	Warnings?: readonly string[];
 };
 export type ContainerRenameCommandQuery = {
-	name?: string | undefined;
+	name: string;
 };
 export type ContainerRenameCommandParams = {
 	id: string;
@@ -8370,7 +8370,7 @@ export type ContainerDeleteCommandParams = {
 export type ContainerDeleteCommandInput = ContainerDeleteCommandParams &
 	ContainerDeleteCommandQuery;
 export type ContainerArchiveCommandQuery = {
-	path?: string | undefined;
+	path: string;
 };
 export type ContainerArchiveCommandParams = {
 	id: string;
@@ -8378,26 +8378,16 @@ export type ContainerArchiveCommandParams = {
 export type ContainerArchiveCommandInput = ContainerArchiveCommandParams &
 	ContainerArchiveCommandQuery;
 export type PutContainerArchiveCommandQuery = {
-	path?: string | undefined;
+	path: string;
 	noOverwriteDirNonDir?: string | undefined;
 	copyUIDGID?: string | undefined;
 };
-type PutContainerArchiveCommandBodyApplicationXTar =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
-type PutContainerArchiveCommandBodyApplicationOctetStream =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type PutContainerArchiveCommandBodyApplicationXTar = NonNullable<
+	RequestInit["body"]
+>;
+type PutContainerArchiveCommandBodyApplicationOctetStream = NonNullable<
+	RequestInit["body"]
+>;
 export type PutContainerArchiveCommandBodyNonJson = {
 	body:
 		| PutContainerArchiveCommandBodyApplicationOctetStream
@@ -8411,7 +8401,7 @@ export type PutContainerArchiveCommandInput =
 		PutContainerArchiveCommandParams &
 		PutContainerArchiveCommandQuery;
 export type ContainerArchiveInfoCommandQuery = {
-	path?: string | undefined;
+	path: string;
 };
 export type ContainerArchiveInfoCommandParams = {
 	id: string;
@@ -8550,14 +8540,9 @@ export type ImageBuildCommandQuery = {
 	outputs?: string | undefined;
 	version?: "1" | "2";
 };
-type ImageBuildCommandBodyApplicationOctetStream =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type ImageBuildCommandBodyApplicationOctetStream = NonNullable<
+	RequestInit["body"]
+>;
 export type ImageBuildCommandBodyNonJson = {
 	body: ImageBuildCommandBodyApplicationOctetStream;
 };
@@ -8582,22 +8567,10 @@ export type ImageCreateCommandQuery = {
 	changes?: readonly string[] | undefined;
 	platform?: string | undefined;
 };
-type ImageCreateCommandBodyTextPlain =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
-type ImageCreateCommandBodyApplicationOctetStream =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type ImageCreateCommandBodyTextPlain = NonNullable<RequestInit["body"]>;
+type ImageCreateCommandBodyApplicationOctetStream = NonNullable<
+	RequestInit["body"]
+>;
 export type ImageCreateCommandBodyNonJson = {
 	body:
 		| ImageCreateCommandBodyApplicationOctetStream
@@ -9066,7 +9039,7 @@ export type ImageDeleteCommandOutput = readonly {
 	Deleted?: string;
 }[];
 export type ImageSearchCommandQuery = {
-	term?: string | undefined;
+	term: string;
 	limit?: `${number}` | undefined;
 	filters?: string | undefined;
 };
@@ -10526,14 +10499,7 @@ export type ImageGetAllCommandInput = ImageGetAllCommandQuery;
 export type ImageLoadCommandQuery = {
 	quiet?: "true" | "false";
 };
-type ImageLoadCommandBodyApplicationXTar =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type ImageLoadCommandBodyApplicationXTar = NonNullable<RequestInit["body"]>;
 export type ImageLoadCommandBodyNonJson = {
 	body: ImageLoadCommandBodyApplicationXTar;
 };
@@ -10572,8 +10538,8 @@ export type ExecStartCommandParams = {
 export type ExecStartCommandBody = ExecStartJsonBody;
 export type ExecStartCommandInput = ExecStartJsonBody & ExecStartCommandParams;
 export type ExecResizeCommandQuery = {
-	h?: `${number}` | undefined;
-	w?: `${number}` | undefined;
+	h: `${number}`;
+	w: `${number}`;
 };
 export type ExecResizeCommandParams = {
 	id: string;
@@ -11182,7 +11148,7 @@ export type VolumeInspectCommandOutput = {
 	};
 };
 export type VolumeUpdateCommandQuery = {
-	version?: `${number}` | undefined;
+	version: `${number}`;
 };
 type VolumeUpdateJsonBody = {
 	Spec?: {
@@ -11785,7 +11751,7 @@ export type PluginListCommandOutput = readonly {
 	};
 }[];
 export type GetPluginPrivilegesCommandQuery = {
-	remote?: string | undefined;
+	remote: string;
 };
 export type GetPluginPrivilegesCommandInput = GetPluginPrivilegesCommandQuery;
 export type GetPluginPrivilegesCommandOutput = readonly {
@@ -11794,7 +11760,7 @@ export type GetPluginPrivilegesCommandOutput = readonly {
 	Value?: readonly string[];
 }[];
 export type PluginPullCommandQuery = {
-	remote?: string | undefined;
+	remote: string;
 	name?: string | undefined;
 };
 type PluginPullJsonBody = readonly {
@@ -12042,7 +12008,7 @@ export type PluginDisableCommandParams = {
 export type PluginDisableCommandInput = PluginDisableCommandParams &
 	PluginDisableCommandQuery;
 export type PluginUpgradeCommandQuery = {
-	remote?: string | undefined;
+	remote: string;
 };
 type PluginUpgradeJsonBody = readonly {
 	Name?: string;
@@ -12057,16 +12023,9 @@ export type PluginUpgradeCommandInput = PluginUpgradeJsonBody &
 	PluginUpgradeCommandParams &
 	PluginUpgradeCommandQuery;
 export type PluginCreateCommandQuery = {
-	name?: string | undefined;
+	name: string;
 };
-type PluginCreateCommandBodyApplicationXTar =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type PluginCreateCommandBodyApplicationXTar = NonNullable<RequestInit["body"]>;
 export type PluginCreateCommandBodyNonJson = {
 	body: PluginCreateCommandBodyApplicationXTar;
 };
@@ -12349,7 +12308,7 @@ export type NodeDeleteCommandParams = {
 export type NodeDeleteCommandInput = NodeDeleteCommandParams &
 	NodeDeleteCommandQuery;
 export type NodeUpdateCommandQuery = {
-	version?: `${number}` | undefined;
+	version: `${number}`;
 };
 type NodeUpdateJsonBody = {
 	/**
@@ -12682,7 +12641,7 @@ export type SwarmLeaveCommandQuery = {
 };
 export type SwarmLeaveCommandInput = SwarmLeaveCommandQuery;
 export type SwarmUpdateCommandQuery = {
-	version?: `${number}` | undefined;
+	version: `${number}`;
 	rotateWorkerToken?: "true" | "false";
 	rotateManagerToken?: "true" | "false";
 	rotateManagerUnlockKey?: "true" | "false";
@@ -14244,7 +14203,7 @@ export type ServiceDeleteCommandParams = {
 };
 export type ServiceDeleteCommandInput = ServiceDeleteCommandParams;
 export type ServiceUpdateCommandQuery = {
-	version?: `${number}` | undefined;
+	version: `${number}`;
 	registryAuthFrom?: "spec" | "previous-spec";
 	rollback?: string | undefined;
 };
@@ -15614,7 +15573,7 @@ export type SecretDeleteCommandParams = {
 };
 export type SecretDeleteCommandInput = SecretDeleteCommandParams;
 export type SecretUpdateCommandQuery = {
-	version?: `${number}` | undefined;
+	version: `${number}`;
 };
 type SecretUpdateJsonBody = {
 	Name?: string;
@@ -15753,7 +15712,7 @@ export type ConfigDeleteCommandParams = {
 };
 export type ConfigDeleteCommandInput = ConfigDeleteCommandParams;
 export type ConfigUpdateCommandQuery = {
-	version?: `${number}` | undefined;
+	version: `${number}`;
 };
 type ConfigUpdateJsonBody = {
 	Name?: string;

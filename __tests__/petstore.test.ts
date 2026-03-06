@@ -21,7 +21,7 @@ const apiUrl = "http://192.2.0.1";
 describe("Petstore", () => {
 	const pool = mockAgent.get(apiUrl);
 
-	const bodySpy = vi.fn(() => ({ ok: true }));
+	const bodySpy = vi.fn((_body: string) => ({ ok: true }));
 
 	pool
 		.intercept({

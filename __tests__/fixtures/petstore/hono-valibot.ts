@@ -3,9 +3,11 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:35:30.757Z
+ * Generated on 2026-03-06T07:45:20.003Z
  *
  */
+
+import { PublicValibotHonoError } from "@block65/rest-client";
 import { validator } from "hono/validator";
 import * as v from "valibot";
 import {
@@ -15,23 +17,38 @@ import {
 	findPetsCommandQuerySchema,
 } from "./valibot.js";
 
+function toPublicValibotHonoError(err: unknown): never {
+	if (err instanceof v.ValiError) {
+		throw PublicValibotHonoError.from(err);
+	}
+	throw err;
+}
+
 export const findPets = [
 	validator("query", (value) => {
-		return v.parse(findPetsCommandQuerySchema, value);
+		return v
+			.parseAsync(findPetsCommandQuerySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const addPet = [
 	validator("json", (value) => {
-		return v.parse(addPetCommandBodySchema, value);
+		return v
+			.parseAsync(addPetCommandBodySchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const findpetbyid = [
 	validator("param", (value) => {
-		return v.parse(findPetByIdCommandParamsSchema, value);
+		return v
+			.parseAsync(findPetByIdCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deletePet = [
 	validator("param", (value) => {
-		return v.parse(deletePetCommandParamsSchema, value);
+		return v
+			.parseAsync(deletePetCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
 	}),
 ] as const;

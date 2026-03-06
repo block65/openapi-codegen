@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:35:32.381Z
+ * Generated on 2026-03-06T07:45:22.551Z
  *
  */
 import type { Jsonifiable, Jsonify } from "type-fest";
@@ -67,6 +67,7 @@ export type UpdateBillingSubscriptionPromoCodeRequest = {
 /** Reasonable string to be used as a name of a person, or an object */
 export type Name = string;
 export type UpdateBillingSubscriptionRequest = {
+	/** Reasonable string to be used as a name of a person, or an object */
 	label?: Name;
 	trialEndTime?: DateTime;
 };
@@ -90,6 +91,7 @@ export type PaymentMethodIdentifiers = {
 	paymentMethodId: Id;
 };
 export type PaymentMethod = PaymentMethodIdentifiers & {
+	/** Reasonable string to be used as a name of a person, or an object */
 	label: Name;
 	expireTime: DateTime;
 	humanId: StringU8;
@@ -123,6 +125,7 @@ export type PaymentMethodIntendedLro =
 	| PaymentMethodLongRunningOperationSuccess
 	| LongRunningOperationFail;
 export type UpdatePaymentMethodRequest = {
+	/** Reasonable string to be used as a name of a person, or an object */
 	label?: Name;
 	isDefault?: boolean;
 };
@@ -150,7 +153,9 @@ export type BillingAccountIdentifiers = {
 	billingAccountId: Id;
 };
 export type BillingAccount = BillingAccountIdentifiers & {
+	/** Reasonable string to be used as a name of a person, or an object */
 	name: Name;
+	/** Valid email address with fully qualified public top-level domain */
 	email: Email;
 	country: BillingCountry;
 	status: BillingAccountStatus;
@@ -166,7 +171,9 @@ export type BillingAccount = BillingAccountIdentifiers & {
 };
 export type BillingAccountList = BillingAccount[];
 export type BillingAccountUpdateRequest = {
+	/** Reasonable string to be used as a name of a person, or an object */
 	name?: Name;
+	/** Valid email address with fully qualified public top-level domain */
 	email?: Email;
 	country?: BillingCountry;
 	timeZone?: TimeZone;
@@ -176,7 +183,9 @@ export type BillingAccountUpdateRequest = {
 	taxId?: StringU8 | null;
 };
 export type BillingAccountCreateRequest = {
+	/** Reasonable string to be used as a name of a person, or an object */
 	name: Name;
+	/** Valid email address with fully qualified public top-level domain */
 	email: Email;
 	country: BillingCountry;
 	timeZone: TimeZone;

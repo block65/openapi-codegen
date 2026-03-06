@@ -1,29 +1,26 @@
 
 SRCS = $(wildcard lib/**)
 
-all: test
+all: typecheck
 
 .PHONY: deps
 deps: node_modules
 
-.PHONY: clean
-clean:
-	pnpm exec tsc -b --clean
-	rm -rf dist
-	rm -rf __tests__/dist
-	rm __tests__/fixtures/*/*.ts
+.PHONY: distclean
+distclean:
+	rm -rf node_modules
+
+.PHONY: typecheck
+typecheck: node_modules tsconfig.json $(SRCS)
+	pnpm exec tsc
 
 .PHONY: test
 test: node_modules
-	pnpm exec tsc -b
+	pnpm exec tsc
 	pnpm exec vitest
 
 node_modules: package.json
 	pnpm install
-
-.PHONY: dev
-dev:
-	pnpm tsc -b -w
 
 .PHONY: fixtures
 fixtures:
@@ -64,14 +61,6 @@ docker: __tests__/fixtures/docker.json
 		-i $< \
 		-o __tests__/fixtures/docker
 	pnpm exec biome check --unsafe --write __tests__/fixtures/docker
-	
-
-# .PHONY: cloudflare
-# cloudflare: __tests__/fixtures/cloudflare/openapi.json
-# 	node --enable-source-maps bin/index.js \
-# 		-i __tests__/fixtures/cloudflare/openapi.json \
-# 		-o __tests__/fixtures/cloudflare
-# 	pnpm prettier --write __tests__/fixtures/cloudflare
 
 .PHONY: pretty
 pretty: node_modules

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:35:34.785Z
+ * Generated on 2026-03-06T07:45:26.343Z
  *
  */
 import type { Jsonifiable } from "type-fest";
@@ -1148,7 +1148,9 @@ export type ProjectApiKey = {
 		 * @enum user,service_account
 		 */
 		type?: "user" | "service_account";
+		/** Represents an individual user in a project. */
 		user?: ProjectUser;
+		/** Represents an individual service account in a project. */
 		service_account?: ProjectServiceAccount;
 	};
 };
@@ -1298,11 +1300,14 @@ export type AuditLogActorApiKey = {
 	 * @enum user,service_account
 	 */
 	type?: "user" | "service_account";
+	/** The user who performed the audit logged action. */
 	user?: AuditLogActorUser;
+	/** The service account that performed the audit logged action. */
 	service_account?: AuditLogActorServiceAccount;
 };
 /** The session in which the audit logged action was performed. */
 export type AuditLogActorSession = {
+	/** The user who performed the audit logged action. */
 	user?: AuditLogActorUser;
 	ip_address?: string;
 };
@@ -1313,7 +1318,9 @@ export type AuditLogActor = {
 	 * @enum session,api_key
 	 */
 	type?: "session" | "api_key";
+	/** The session in which the audit logged action was performed. */
 	session?: AuditLogActorSession;
+	/** The API Key used to perform the audit logged action. */
 	api_key?: AuditLogActorApiKey;
 };
 /** The event type. */
@@ -1341,12 +1348,14 @@ export type AuditLogEventType =
 /** A log of a user action or configuration change within this organization. */
 export type AuditLog = {
 	id: string;
+	/** The event type. */
 	type: AuditLogEventType;
 	effective_at: number;
 	project?: {
 		id?: string;
 		name?: string;
 	};
+	/** The actor who performed the audit logged action. */
 	actor: AuditLogActor;
 	"api_key.created"?: {
 		id?: string;
@@ -1603,22 +1612,30 @@ export type MessageObject = {
 export type MessageStreamEvent =
 	| {
 			event: "thread.message.created";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
 			data: MessageObject;
 	  }
 	| {
 			event: "thread.message.in_progress";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
 			data: MessageObject;
 	  }
 	| {
 			event: "thread.message.delta";
+			/**
+			 * Represents a message delta i.e. any changed fields on a message during
+			 * streaming.
+			 */
 			data: MessageDeltaObject;
 	  }
 	| {
 			event: "thread.message.completed";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
 			data: MessageObject;
 	  }
 	| {
 			event: "thread.message.incomplete";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
 			data: MessageObject;
 	  };
 /** Details of the tool call. */
@@ -1735,35 +1752,49 @@ export type RunStepObject = {
 	failed_at: number | null;
 	completed_at: number | null;
 	metadata: Record<string | number, Jsonifiable>;
+	/**
+	 * Usage statistics related to the run step. This value will be `null` while
+	 * the run step's status is `in_progress`.
+	 */
 	usage: RunStepCompletionUsage;
 };
 export type RunStepStreamEvent =
 	| {
 			event: "thread.run.step.created";
+			/** Represents a step in execution of a run. */
 			data: RunStepObject;
 	  }
 	| {
 			event: "thread.run.step.in_progress";
+			/** Represents a step in execution of a run. */
 			data: RunStepObject;
 	  }
 	| {
 			event: "thread.run.step.delta";
+			/**
+			 * Represents a run step delta i.e. any changed fields on a run step during
+			 * streaming.
+			 */
 			data: RunStepDeltaObject;
 	  }
 	| {
 			event: "thread.run.step.completed";
+			/** Represents a step in execution of a run. */
 			data: RunStepObject;
 	  }
 	| {
 			event: "thread.run.step.failed";
+			/** Represents a step in execution of a run. */
 			data: RunStepObject;
 	  }
 	| {
 			event: "thread.run.step.cancelled";
+			/** Represents a step in execution of a run. */
 			data: RunStepObject;
 	  }
 	| {
 			event: "thread.run.step.expired";
+			/** Represents a step in execution of a run. */
 			data: RunStepObject;
 	  };
 /** The schema for the response format, described as a JSON Schema object. */
@@ -1780,6 +1811,7 @@ export type ResponseFormatJsonSchema = {
 	json_schema: {
 		description?: string;
 		name: string;
+		/** The schema for the response format, described as a JSON Schema object. */
 		schema?: ResponseFormatJsonSchemaSchema;
 		strict?: boolean | null;
 	};
@@ -1968,55 +2000,112 @@ export type RunObject = {
 	 */
 	tools: readonly (AssistantToolsCode | never | never)[];
 	metadata: Record<string | number, Jsonifiable>;
+	/**
+	 * Usage statistics related to the run. This value will be `null` if the run
+	 * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+	 */
 	usage: RunCompletionUsage;
 	temperature?: number | null;
 	top_p?: number | null;
 	max_prompt_tokens: number | null;
 	max_completion_tokens: number | null;
+	/**
+	 * Controls for how a thread will be truncated prior to the run. Use this to
+	 * control the intial context window of the run.
+	 */
 	truncation_strategy: TruncationObject;
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tools and instead generates a
+	 * message.
+	 * `auto` is the default value and means the model can pick between generating
+	 * a message or calling one or more tools.
+	 * `required` means the model must call one or more tools before responding to
+	 * the user.
+	 * Specifying a particular tool like `{"type": "file_search"}` or `{"type":
+	 * "function", "function": {"name": "my_function"}}` forces the model to call
+	 * that tool.
+	 */
 	tool_choice: AssistantsApiToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
 	parallel_tool_calls: ParallelToolCalls;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
 	response_format: AssistantsApiResponseFormatOption;
 };
 export type RunStreamEvent =
 	| {
 			event: "thread.run.created";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.queued";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.in_progress";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.requires_action";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.completed";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.incomplete";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.failed";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.cancelling";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.cancelled";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  }
 	| {
 			event: "thread.run.expired";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
 			data: RunObject;
 	  };
 /** Represents a thread that contains [messages](/docs/api-reference/messages). */
@@ -2046,6 +2135,7 @@ export type ThreadObject = {
 };
 export type ThreadStreamEvent = {
 	event: "thread.created";
+	/** Represents a thread that contains [messages](/docs/api-reference/messages). */
 	data: ThreadObject;
 };
 /**
@@ -2116,6 +2206,10 @@ export type ChunkingStrategyRequestParam =
 	| StaticChunkingStrategyRequestParam;
 export type CreateVectorStoreFileBatchRequest = {
 	file_ids: readonly string[];
+	/**
+	 * The chunking strategy used to chunk the file(s). If not set, will use the
+	 * `auto` strategy.
+	 */
 	chunking_strategy?: ChunkingStrategyRequestParam;
 };
 /**
@@ -2177,6 +2271,10 @@ export type ListVectorStoreFilesResponse = {
 };
 export type CreateVectorStoreFileRequest = {
 	file_id: string;
+	/**
+	 * The chunking strategy used to chunk the file(s). If not set, will use the
+	 * `auto` strategy.
+	 */
 	chunking_strategy?: ChunkingStrategyRequestParam;
 };
 /** The expiration policy for a vector store. */
@@ -2217,6 +2315,7 @@ export type VectorStoreObject = {
 	 * @enum expired,in_progress,completed
 	 */
 	status: "expired" | "in_progress" | "completed";
+	/** The expiration policy for a vector store. */
 	expires_after?: VectorStoreExpirationAfter;
 	expires_at?: number | null;
 	last_active_at: number | null;
@@ -2231,12 +2330,14 @@ export type ListVectorStoresResponse = {
 };
 export type UpdateVectorStoreRequest = {
 	name?: string;
+	/** The expiration policy for a vector store. */
 	expires_after?: VectorStoreExpirationAfter;
 	metadata?: Record<string | number, Jsonifiable>;
 };
 export type CreateVectorStoreRequest = {
 	file_ids?: readonly string[];
 	name?: string;
+	/** The expiration policy for a vector store. */
 	expires_after?: VectorStoreExpirationAfter;
 	chunking_strategy?:
 		| AutoChunkingStrategyRequestParam
@@ -2275,6 +2376,7 @@ export type RunStepDetailsToolCallsFileSearchObject = {
 	 */
 	type: "file_search";
 	file_search: {
+		/** The ranking options for the file search. */
 		ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
 		results?: readonly RunStepDetailsToolCallsFileSearchResultObject[];
 	};
@@ -2416,9 +2518,52 @@ export type CreateThreadAndRunRequest = {
 	stream?: boolean | null;
 	max_prompt_tokens?: number | null;
 	max_completion_tokens?: number | null;
+	/**
+	 * Controls for how a thread will be truncated prior to the run. Use this to
+	 * control the intial context window of the run.
+	 */
 	truncation_strategy?: TruncationObject;
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tools and instead generates a
+	 * message.
+	 * `auto` is the default value and means the model can pick between generating
+	 * a message or calling one or more tools.
+	 * `required` means the model must call one or more tools before responding to
+	 * the user.
+	 * Specifying a particular tool like `{"type": "file_search"}` or `{"type":
+	 * "function", "function": {"name": "my_function"}}` forces the model to call
+	 * that tool.
+	 */
 	tool_choice?: AssistantsApiToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
 	parallel_tool_calls?: ParallelToolCalls;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
 	response_format?: AssistantsApiResponseFormatOption;
 };
 export type ListRunsResponse = {
@@ -2491,9 +2636,52 @@ export type CreateRunRequest = {
 	stream?: boolean | null;
 	max_prompt_tokens?: number | null;
 	max_completion_tokens?: number | null;
+	/**
+	 * Controls for how a thread will be truncated prior to the run. Use this to
+	 * control the intial context window of the run.
+	 */
 	truncation_strategy?: TruncationObject;
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tools and instead generates a
+	 * message.
+	 * `auto` is the default value and means the model can pick between generating
+	 * a message or calling one or more tools.
+	 * `required` means the model must call one or more tools before responding to
+	 * the user.
+	 * Specifying a particular tool like `{"type": "file_search"}` or `{"type":
+	 * "function", "function": {"name": "my_function"}}` forces the model to call
+	 * that tool.
+	 */
 	tool_choice?: AssistantsApiToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
 	parallel_tool_calls?: ParallelToolCalls;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
 	response_format?: AssistantsApiResponseFormatOption;
 };
 /**
@@ -2508,6 +2696,14 @@ export type FunctionParameters = Record<string | number, Jsonifiable>;
 export type FunctionObject = {
 	description?: string;
 	name: string;
+	/**
+	 * The parameters the functions accepts, described as a JSON Schema object.
+	 * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+	 * Schema reference](https://json-schema.org/understanding-json-schema/) for
+	 * documentation about the format.
+	 *
+	 * Omitting `parameters` defines a function with an empty parameter list.
+	 */
 	parameters?: FunctionParameters;
 	strict?: boolean | null;
 };
@@ -2544,6 +2740,14 @@ export type AssistantToolsFileSearch = {
 	type: "file_search";
 	file_search?: {
 		max_num_results?: number;
+		/**
+		 * The ranking options for the file search. If not specified, the file search
+		 * tool will use the `auto` ranker and a score_threshold of 0.
+		 *
+		 * See the [file search tool
+		 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+		 * for more information.
+		 */
 		ranking_options?: FileSearchRankingOptions;
 	};
 };
@@ -2605,6 +2809,28 @@ export type AssistantObject = {
 	 * @example 1
 	 */
 	top_p?: number | null;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
 	response_format?: AssistantsApiResponseFormatOption;
 };
 export type ListAssistantsResponse = {
@@ -2664,6 +2890,28 @@ export type ModifyAssistantRequest = {
 	 * @example 1
 	 */
 	top_p?: number | null;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
 	response_format?: AssistantsApiResponseFormatOption;
 };
 export type CreateAssistantRequest = {
@@ -2746,11 +2994,41 @@ export type CreateAssistantRequest = {
 	 * @example 1
 	 */
 	top_p?: number | null;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
 	response_format?: AssistantsApiResponseFormatOption;
 };
 export type ChatCompletionFunctions = {
 	description?: string;
 	name: string;
+	/**
+	 * The parameters the functions accepts, described as a JSON Schema object.
+	 * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+	 * Schema reference](https://json-schema.org/understanding-json-schema/) for
+	 * documentation about the format.
+	 *
+	 * Omitting `parameters` defines a function with an empty parameter list.
+	 */
 	parameters?: FunctionParameters;
 };
 export type ChatCompletionTool = {
@@ -2765,6 +3043,11 @@ export type ChatCompletionTool = {
 export type FinetuneChatRequestInput = {
 	messages?: readonly (never | never | never | never | never)[];
 	tools?: readonly ChatCompletionTool[];
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
 	parallel_tool_calls?: ParallelToolCalls;
 	/**
 	 * A list of functions the model may generate JSON inputs for.
@@ -2829,6 +3112,7 @@ export type Upload = {
 	 * @enum upload
 	 */
 	object?: "upload";
+	/** The `File` object represents a document that has been uploaded to OpenAI. */
 	file?: OpenAiFile;
 };
 export type TranscriptionSegment = {
@@ -2868,6 +3152,10 @@ export type CreateTranslationRequest = {
 	 */
 	model: string | "whisper-1";
 	prompt?: string;
+	/**
+	 * The format of the output, in one of these options: `json`, `text`, `srt`,
+	 * `verbose_json`, or `vtt`.
+	 */
 	response_format?: AudioResponseFormat;
 	temperature?: number;
 };
@@ -2897,6 +3185,10 @@ export type CreateTranscriptionRequest = {
 	model: string | "whisper-1";
 	language?: string;
 	prompt?: string;
+	/**
+	 * The format of the output, in one of these options: `json`, `text`, `srt`,
+	 * `verbose_json`, or `vtt`.
+	 */
 	response_format?: AudioResponseFormat;
 	temperature?: number;
 	/**
@@ -3085,6 +3377,7 @@ export type CreateChatCompletionFunctionResponse = {
 	 * @enum chat.completion
 	 */
 	object: "chat.completion";
+	/** Usage statistics for the completion request. */
 	usage?: CompletionUsage;
 };
 /**
@@ -3134,6 +3427,7 @@ export type CreateChatCompletionResponse = {
 	 * @enum chat.completion
 	 */
 	object: "chat.completion";
+	/** Usage statistics for the completion request. */
 	usage?: CompletionUsage;
 };
 /**
@@ -3244,6 +3538,7 @@ export type ChatCompletionRequestAssistantMessage = {
 	 */
 	role: "assistant";
 	name?: string;
+	/** The tool calls generated by the model, such as function calls. */
 	tool_calls?: ChatCompletionMessageToolCalls;
 	/**
 	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
@@ -3397,6 +3692,7 @@ export type CreateChatCompletionRequest = {
 	service_tier?: "auto" | "default";
 	stop?: string | readonly string[];
 	stream?: boolean | null;
+	/** Options for streaming response. Only set this when you set `stream: true`. */
 	stream_options?: ChatCompletionStreamOptions;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
@@ -3420,7 +3716,25 @@ export type CreateChatCompletionRequest = {
 	 */
 	top_p?: number | null;
 	tools?: readonly ChatCompletionTool[];
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tool and instead generates a
+	 * message.
+	 * `auto` means the model can pick between generating a message or calling one
+	 * or more tools.
+	 * `required` means the model must call one or more tools.
+	 * Specifying a particular tool via `{"type": "function", "function": {"name":
+	 * "my_function"}}` forces the model to call that tool.
+	 *
+	 * `none` is the default when no tools are present. `auto` is the default if
+	 * tools are present.
+	 */
 	tool_choice?: ChatCompletionToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
 	parallel_tool_calls?: ParallelToolCalls;
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
@@ -3490,6 +3804,7 @@ export type ChatCompletionStreamResponseDelta = {
 export type ChatCompletionResponseMessage = {
 	content: string;
 	refusal: string;
+	/** The tool calls generated by the model, such as function calls. */
 	tool_calls?: ChatCompletionMessageToolCalls;
 	/**
 	 * The role of the author of this message.
@@ -3552,6 +3867,7 @@ export type CreateCompletionResponse = {
 	 * @enum text_completion
 	 */
 	object: "text_completion";
+	/** Usage statistics for the completion request. */
 	usage?: CompletionUsage;
 };
 export type CreateCompletionRequest = {
@@ -3617,6 +3933,7 @@ export type CreateCompletionRequest = {
 	seed?: number | null;
 	stop?: string | readonly string[] | null;
 	stream?: boolean | null;
+	/** Options for streaming response. Only set this when you set `stream: true`. */
 	stream_options?: ChatCompletionStreamOptions;
 	/**
 	 * The suffix that comes after a completion of inserted text.
@@ -3678,26 +3995,16 @@ export type CreateCompletionCommandBody = CreateCompletionRequest;
 export type CreateCompletionCommandInput = CreateCompletionRequest;
 export type CreateImageCommandBody = CreateImageRequest;
 export type CreateImageCommandInput = CreateImageRequest;
-type CreateImageEditCommandBodyMultipartFormData =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type CreateImageEditCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
 export type CreateImageEditCommandBodyNonJson = {
 	body: CreateImageEditCommandBodyMultipartFormData;
 };
 export type CreateImageEditCommandInput = CreateImageEditCommandBodyNonJson;
-type CreateImageVariationCommandBodyMultipartFormData =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type CreateImageVariationCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
 export type CreateImageVariationCommandBodyNonJson = {
 	body: CreateImageVariationCommandBodyMultipartFormData;
 };
@@ -3707,14 +4014,9 @@ export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
 export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
 export type CreateSpeechCommandBody = CreateSpeechRequest;
 export type CreateSpeechCommandInput = CreateSpeechRequest;
-type CreateTranscriptionCommandBodyMultipartFormData =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type CreateTranscriptionCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
 export type CreateTranscriptionCommandBodyNonJson = {
 	body: CreateTranscriptionCommandBodyMultipartFormData;
 };
@@ -3723,14 +4025,9 @@ export type CreateTranscriptionCommandInput =
 export type CreateTranscriptionCommandOutput =
 	| CreateTranscriptionResponseJson
 	| CreateTranscriptionResponseVerboseJson;
-type CreateTranslationCommandBodyMultipartFormData =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type CreateTranslationCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
 export type CreateTranslationCommandBodyNonJson = {
 	body: CreateTranslationCommandBodyMultipartFormData;
 };
@@ -3742,14 +4039,7 @@ export type ListFilesCommandQuery = {
 	purpose?: string | undefined;
 };
 export type ListFilesCommandInput = ListFilesCommandQuery;
-type CreateFileCommandBodyMultipartFormData =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type CreateFileCommandBodyMultipartFormData = NonNullable<RequestInit["body"]>;
 export type CreateFileCommandBodyNonJson = {
 	body: CreateFileCommandBodyMultipartFormData;
 };
@@ -3769,14 +4059,9 @@ export type DownloadFileCommandInput = DownloadFileCommandParams;
 export type DownloadFileCommandOutput = string | undefined;
 export type CreateUploadCommandBody = CreateUploadRequest;
 export type CreateUploadCommandInput = CreateUploadRequest;
-type AddUploadPartCommandBodyMultipartFormData =
-	| ArrayBuffer
-	| ArrayBufferView
-	| Blob
-	| FormData
-	| ReadableStream<Uint8Array>
-	| string
-	| URLSearchParams;
+type AddUploadPartCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
 export type AddUploadPartCommandBodyNonJson = {
 	body: AddUploadPartCommandBodyMultipartFormData;
 };

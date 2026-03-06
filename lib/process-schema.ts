@@ -93,10 +93,35 @@ export function schemaToType(
 			};
 		}
 
+		// Propagate JSDoc from the referenced type to the property
+		const refDocs = existingSchema.getJsDocs();
+		const docs: OptionalKind<JSDocStructure>[] = refDocs.flatMap((jsDoc) => {
+			const description = jsDoc.getDescription();
+			const tags = jsDoc
+				.getTags()
+				.map((tag) => {
+					const text = tag.getCommentText();
+					return text ? { tagName: tag.getTagName(), text } : undefined;
+				})
+				.filter((tag): tag is { tagName: string; text: string } => !!tag);
+
+			if (!description && tags.length === 0) {
+				return [];
+			}
+
+			return [
+				{
+					...(description && { description }),
+					...(tags.length > 0 && { tags }),
+				},
+			];
+		});
+
 		return {
 			name,
 			hasQuestionToken,
 			type: existingSchema.getName(),
+			...(docs.length > 0 && { docs }),
 		};
 	}
 

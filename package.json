@@ -1,58 +1,66 @@
 {
 	"name": "@block65/openapi-codegen",
-	"version": "6.0.3",
+	"version": "9.0.0",
 	"private": false,
 	"license": "UNLICENSED",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/block65/openapi-codegen"
+	},
 	"sideEffects": false,
 	"type": "module",
 	"bin": {
 		"openapi-codegen": "./bin/index.ts"
 	},
+	"files": [
+		"bin",
+		"lib"
+	],
 	"scripts": {
 		"preversion": "make test"
 	},
 	"dependencies": {
-		"@apidevtools/json-schema-ref-parser": "catalog:default",
-		"@block65/toolkit": "workspace:^",
+		"@apidevtools/json-schema-ref-parser": "^15.2.2",
 		"camelcase": "^9.0.0",
 		"toposort": "^2.0.2",
 		"ts-morph": "^27.0.2",
-		"type-fest": "catalog:default",
+		"type-fest": "^5.0.0",
 		"word-wrap": "^1.2.5",
 		"yargs": "^18.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "catalog:default",
-		"@block65/shared-config": "workspace:*",
-		"@block65/rest-client": "workspace:^",
-
+		"@biomejs/biome": "^2.0.0",
+		"@block65/custom-error": "^14.0.0",
+		"@block65/rest-client": "^12.0.2",
 		"@hapi/bourne": "^3.0.0",
 		"@ts-morph/common": "^0.28.1",
+		"@tsconfig/node24": "^24.0.0",
+		"@tsconfig/strictest": "^2.0.0",
 		"@types/eslint": "^9.6.1",
-		"@types/node": "catalog:",
+		"@types/node": "^24.0.0",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
-		"@typescript-eslint/eslint-plugin": "^8.50.0",
-		"@typescript-eslint/parser": "^8.50.0",
-		"eslint": "catalog:default",
+		"@typescript-eslint/eslint-plugin": "^8.53.1",
+		"@typescript-eslint/parser": "^8.53.1",
+		"eslint": "^9.0.0",
 		"eslint-plugin-import": "^2.32.0",
+		"hono": "^4.0.0",
 		"js-yaml": "^4.1.1",
-		"openapi3-ts": "catalog:default",
-		"prettier": "^3.7.4",
-		"typescript": "catalog:default",
-		"undici": "^7.16.0",
-		"hono": "catalog:default",
-		"valibot": "catalog:default",
-		"vitest": "catalog:default"
+		"openapi3-ts": "^4.0.0",
+		"prettier": "^3.8.1",
+		"typescript": "^5.8.0",
+		"undici": "^7.19.0",
+		"valibot": "^1.0.0",
+		"vitest": "^3.0.0"
 	},
 	"peerDependencies": {
-		"@block65/eslint-config": "workspace:^",
-		"@block65/rest-client": "workspace:^",
-		"valibot": "catalog:default",
-		"hono": "catalog:default",
-		"prettier": "catalog:default"
+		"@block65/custom-error": "^14.0.0",
+		"@block65/rest-client": "^12.0.0",
+		"hono": "^4.0.0",
+		"valibot": "^1.0.0"
 	},
 	"engines": {
 		"node": ">=24.0.0"
-	}
+	},
+	"packageManager": "pnpm@10.30.3"
 }

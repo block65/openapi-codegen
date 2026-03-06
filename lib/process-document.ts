@@ -6,7 +6,9 @@ import type { oas30, oas31 } from "openapi3-ts";
 import toposort from "toposort";
 import {
 	type InterfaceDeclaration,
+	type JSDocStructure,
 	Node,
+	type OptionalKind,
 	Project,
 	Scope,
 	StructureKind,
@@ -234,6 +236,21 @@ export async function processOpenApiDocument(
 					typeof operationObject === "object" &&
 					"operationId" in operationObject
 				) {
+					const isOperationDeprecated = operationObject.deprecated === true;
+					const deprecationDocs: (OptionalKind<JSDocStructure> | string)[] =
+						isOperationDeprecated
+							? [
+									{
+										kind: StructureKind.JSDoc,
+										tags: [
+											{
+												tagName: "deprecated",
+											},
+										],
+									},
+								]
+							: [];
+
 					const pathParameters: oas30.ParameterObject[] = [];
 
 					const commandName = pascalCase(
@@ -245,6 +262,7 @@ export async function processOpenApiDocument(
 						name: commandName,
 						isExported: true,
 						extends: "Command",
+						docs: [...deprecationDocs],
 						properties: [
 							{
 								name: "method",
@@ -274,7 +292,7 @@ export async function processOpenApiDocument(
 
 					const jsdoc = commandClassDeclaration.addJsDoc(jsDocStructure);
 
-					if (operationObject.deprecated) {
+					if (isOperationDeprecated) {
 						jsdoc.addTag({
 							tagName: "deprecated",
 						});
@@ -292,8 +310,10 @@ export async function processOpenApiDocument(
 						...(operationObject.parameters || []),
 						...(pathItemObject.parameters || []),
 					]) {
-						const resolvedParameter: oas30.ParameterObject =
-							"$ref" in parameter ? refs.get(parameter.$ref) : parameter;
+						const resolvedParameter =
+							("$ref" in parameter
+								? refs.get(parameter.$ref)
+								: parameter) as oas30.ParameterObject;
 
 						if (resolvedParameter.in === "path") {
 							pathParameters.push(resolvedParameter);
@@ -319,7 +339,7 @@ export async function processOpenApiDocument(
 						const alreadyDeclared = pathParameters.some(
 							(p) => p.name === paramName,
 						);
-						if (!alreadyDeclared) {
+						if (!alreadyDeclared && paramName) {
 							pathParameters.push({
 								name: paramName,
 								in: "path",
@@ -336,6 +356,7 @@ export async function processOpenApiDocument(
 										commandClassDeclaration.getName() || "INVALID",
 										"Query",
 									),
+									docs: deprecationDocs,
 									isExported: true,
 									type: Writers.objectType({
 										properties: queryParameters.map((qp) => {
@@ -364,17 +385,19 @@ export async function processOpenApiDocument(
 												},
 											);
 
+											const resolvedType = qp.required
+												? type.type
+												: typeof type.type === "function"
+													? type.type
+													: type.type
+														? Writers.unionType(`${type.type}`, "undefined")
+														: undefined;
+
 											return {
-												// ...type,
+												...type,
 												name,
-												// query parameters need to allow undefined due to the
-												// rest client spreading all of the parameters
-												hasQuestionToken: true,
-												type:
-													// I dont know how to do nested writer functions
-													typeof type.type === "function"
-														? type.type
-														: Writers.unionType(`${type.type}`, "undefined"),
+												hasQuestionToken: !qp.required,
+												...(resolvedType !== undefined && { type: resolvedType }),
 											};
 										}),
 									}),
@@ -435,6 +458,7 @@ export async function processOpenApiDocument(
 
 						return typesFile.addTypeAlias({
 							name,
+							docs: deprecationDocs,
 							type:
 								// I dont know how to do nested writer functions
 								typeof type.type === "function" ? type.type : String(type.type),
@@ -464,6 +488,7 @@ export async function processOpenApiDocument(
 					const nonJsonBodyType =
 						!jsonBodyType && nonJsonBodyEntries.length > 0
 							? typesFile.addTypeAlias({
+									docs: deprecationDocs,
 									name: pascalCase(
 										`${commandClassDeclaration.getName() || "INVALID"} Body NonJson`,
 									),
@@ -479,17 +504,7 @@ export async function processOpenApiDocument(
 																name: pascalCase(
 																	`${commandClassDeclaration.getName() || "INVALID"} Body ${contentType}`,
 																),
-																type: createUnion(
-																	...[
-																		"ReadableStream<Uint8Array>",
-																		"string",
-																		"ArrayBuffer",
-																		"ArrayBufferView",
-																		"Blob",
-																		"URLSearchParams",
-																		"FormData",
-																	],
-																),
+																type: "NonNullable<RequestInit['body']>",
 															});
 
 															// nonJsonBody.addJsDoc({
@@ -533,6 +548,7 @@ export async function processOpenApiDocument(
 									name: pascalCase(
 										`${commandClassDeclaration.getName() || "INVALID"}Params`,
 									),
+									docs: deprecationDocs,
 									type: Writers.objectType({
 										properties: pathParameters.map((p) => {
 											const name = castToValidJsIdentifier(p.name);
@@ -558,6 +574,7 @@ export async function processOpenApiDocument(
 											);
 
 											return {
+												...type,
 												name,
 												type: type.type || unspecifiedKeyword,
 											};

@@ -22,6 +22,23 @@ export function createHonoValibotFile(
 		namespaceImport: "v",
 	});
 
+	file.addImportDeclaration({
+		moduleSpecifier: "@block65/rest-client",
+		namedImports: ["PublicValibotHonoError"],
+	});
+
+	file.addFunction({
+		name: "toPublicValibotHonoError",
+		parameters: [{ name: "err", type: "unknown" }],
+		returnType: "never",
+		statements: `
+      if (err instanceof v.ValiError) {
+        throw PublicValibotHonoError.from(err);
+      }
+      throw err;
+    `,
+	});
+
 	return file;
 }
 
@@ -44,7 +61,9 @@ export function createHonoValibotMiddleware(
 								`validator(${JSON.stringify(target)}, (value) => {`,
 							);
 							writer.indent(() => {
-								writer.writeLine(`return v.parse(${schemaName}, value);`);
+								writer.writeLine(
+									`return v.parseAsync(${schemaName}, value).catch(toPublicValibotHonoError);`,
+								);
 							});
 							writer.writeLine("}),");
 						}

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-01-09T08:35:32.381Z
+ * Generated on 2026-03-06T07:45:22.551Z
  *
  */
 import * as v from "valibot";
@@ -205,9 +205,9 @@ export const billingCountrySchema = v.picklist(["us", "au", "sg", "my", "gb"]);
 /** Valid email address with fully qualified public top-level domain */
 export const emailSchema = v.pipe(
 	v.string(),
+	v.email(),
 	v.minLength(6),
 	v.maxLength(512),
-	v.email(),
 );
 export const billingAccountIdentifiersSchema = v.strictObject({
 	billingAccountId: idSchema,
