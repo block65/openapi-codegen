@@ -1,33 +1,12 @@
 {
-  "compilerOptions": {
-    "moduleResolution": "node16",
-    "target": "es2022",
-    "lib": ["es2022"],
-    "module": "node16",
-    "composite": true,
-    "incremental": true,
-    "strict": true,
-    "declaration": true,
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "preserveSymlinks": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    "exactOptionalPropertyTypes": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "verbatimModuleSyntax": true,
-    "removeComments": true,
-    "resolveJsonModule": true,
-    "sourceMap": true
-  },
-  "include": ["./lib", "./bin"],
-  "exclude": ["./dist", "node_modules"]
+	"extends": ["@tsconfig/node24", "@tsconfig/strictest"],
+	"compilerOptions": {
+		"noEmit": true,
+		"allowImportingTsExtensions": true,
+		"noPropertyAccessFromIndexSignature": false,
+		"resolveJsonModule": true,
+		"skipLibCheck": true
+	},
+	"include": ["./lib", "./bin", "__tests__"],
+	"exclude": ["./dist", "node_modules"]
 }

@@ -3,768 +3,760 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:31.654Z
+ * Generated on 2026-03-06T07:45:26.343Z
  *
  */
-import type { JsonifiableObject } from 'type-fest/source/jsonifiable.js';
+import type { Jsonifiable } from "type-fest";
 
 export type DeleteModelResponse = {
-  id: string;
-  deleted: boolean;
-  object: string;
+	id: string;
+	deleted: boolean;
+	object: string;
 };
-
-export enum ChatCompletionRoleEnum {
-  System = 'system',
-  User = 'user',
-  Assistant = 'assistant',
-  Tool = 'tool',
-  Function = 'function',
-}
-
 /** The role of the author of a message */
 export type ChatCompletionRole =
-  | ChatCompletionRoleEnum
-  | 'system'
-  | 'user'
-  | 'assistant'
-  | 'tool'
-  | 'function';
+	| "system"
+	| "user"
+	| "assistant"
+	| "tool"
+	| "function";
 export type ChatCompletionTokenLogprob = {
-  token: string;
-  logprob: number;
-  readonly bytes: number[];
-  readonly top_logprobs: {
-    token: string;
-    logprob: number;
-    readonly bytes: number[];
-  }[];
+	token: string;
+	logprob: number;
+	bytes: readonly number[];
+	top_logprobs: readonly {
+		token: string;
+		logprob: number;
+		bytes: readonly number[];
+	}[];
 };
 /**
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
 export type CreateChatCompletionStreamResponse = {
-  id: string;
-  readonly choices: {
-    /** WARN: $ref used before available - #/components/schemas/ChatCompletionStreamResponseDelta */
-    delta: never;
-    logprobs?: {
-      readonly content: ChatCompletionTokenLogprob[];
-      readonly refusal: ChatCompletionTokenLogprob[];
-    };
-    /**
-     * The reason the model stopped generating tokens. This will be `stop` if the
-     * model hit a natural stop point or a provided stop sequence,
-     * `length` if the maximum number of tokens specified in the request was
-     * reached,
-     * `content_filter` if content was omitted due to a flag from our content
-     * filters,
-     * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
-     * the model called a function.
-     * @enum stop,length,tool_calls,content_filter,function_call
-     */
-    finish_reason:
-      | 'stop'
-      | 'length'
-      | 'tool_calls'
-      | 'content_filter'
-      | 'function_call';
-    index: number;
-  }[];
-  created: number;
-  model: string;
-  /**
-   * The service tier used for processing the request. This field is only
-   * included if the `service_tier` parameter is specified in the request.
-   * @enum scale,default
-   * @example scale
-   */
-  service_tier?: 'scale' | 'default';
-  system_fingerprint?: string;
-  /**
-   * The object type, which is always `chat.completion.chunk`.
-   * @enum chat.completion.chunk
-   */
-  object: 'chat.completion.chunk';
-  usage?: {
-    completion_tokens: number;
-    prompt_tokens: number;
-    total_tokens: number;
-  };
+	id: string;
+	choices: readonly {
+		/** WARN: $ref used before available - schema={"$ref":"#/components/schemas/ChatCompletionStreamResponseDelta"} */
+		delta: never;
+		logprobs?: {
+			content: readonly ChatCompletionTokenLogprob[];
+			refusal: readonly ChatCompletionTokenLogprob[];
+		};
+		/**
+		 * The reason the model stopped generating tokens. This will be `stop` if the
+		 * model hit a natural stop point or a provided stop sequence,
+		 * `length` if the maximum number of tokens specified in the request was
+		 * reached,
+		 * `content_filter` if content was omitted due to a flag from our content
+		 * filters,
+		 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+		 * the model called a function.
+		 * @enum stop,length,tool_calls,content_filter,function_call
+		 */
+		finish_reason:
+			| "stop"
+			| "length"
+			| "tool_calls"
+			| "content_filter"
+			| "function_call";
+		index: number;
+	}[];
+	created: number;
+	model: string;
+	/**
+	 * The service tier used for processing the request. This field is only
+	 * included if the `service_tier` parameter is specified in the request.
+	 * @enum scale,default
+	 * @example scale
+	 */
+	service_tier?: "scale" | "default";
+	system_fingerprint?: string;
+	/**
+	 * The object type, which is always `chat.completion.chunk`.
+	 * @enum chat.completion.chunk
+	 */
+	object: "chat.completion.chunk";
+	usage?: {
+		completion_tokens: number;
+		prompt_tokens: number;
+		total_tokens: number;
+	};
 };
 /**
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export type CreateChatCompletionImageResponse = JsonifiableObject;
+export type CreateChatCompletionImageResponse = Record<
+	string | number,
+	Jsonifiable
+>;
 export type CreateImageRequest = {
-  /**
-   * A text description of the desired image(s). The maximum length is 1000
-   * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
-   * @example A cute baby sea otter
-   */
-  prompt: string;
-  /**
-   * The model to use for image generation.
-   * @default dall-e-2
-   * @example dall-e-3
-   */
-  model?: string | 'dall-e-2' | 'dall-e-3' | null;
-  /**
-   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
-   * only `n=1` is supported.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  /**
-   * The quality of the image that will be generated. `hd` creates images with
-   * finer details and greater consistency across the image. This param is only
-   * supported for `dall-e-3`.
-   * @default standard
-   * @enum standard,hd
-   * @example standard
-   */
-  quality?: 'standard' | 'hd';
-  /**
-   * The format in which the generated images are returned. Must be one of `url`
-   * or `b64_json`. URLs are only valid for 60 minutes after the image has been
-   * generated.
-   * @default url
-   * @enum url,b64_json
-   * @example url
-   */
-  response_format?: 'url' | 'b64_json';
-  /**
-   * The size of the generated images. Must be one of `256x256`, `512x512`, or
-   * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
-   * `1024x1792` for `dall-e-3` models.
-   * @default 1024x1024
-   * @enum 256x256,512x512,1024x1024,1792x1024,1024x1792
-   * @example 1024x1024
-   */
-  size?: '256x256' | '512x512' | '1024x1024' | '1792x1024' | '1024x1792';
-  /**
-   * The style of the generated images. Must be one of `vivid` or `natural`.
-   * Vivid causes the model to lean towards generating hyper-real and dramatic
-   * images. Natural causes the model to produce more natural, less hyper-real
-   * looking images. This param is only supported for `dall-e-3`.
-   * @default vivid
-   * @enum vivid,natural
-   * @example vivid
-   */
-  style?: 'vivid' | 'natural';
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string;
+	/**
+	 * A text description of the desired image(s). The maximum length is 1000
+	 * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
+	 * @example A cute baby sea otter
+	 */
+	prompt: string;
+	/**
+	 * The model to use for image generation.
+	 * @default dall-e-2
+	 * @example dall-e-3
+	 */
+	model?: string | "dall-e-2" | "dall-e-3" | null;
+	/**
+	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
+	 * only `n=1` is supported.
+	 * @default 1
+	 * @example 1
+	 */
+	n?: number | null;
+	/**
+	 * The quality of the image that will be generated. `hd` creates images with
+	 * finer details and greater consistency across the image. This param is only
+	 * supported for `dall-e-3`.
+	 * @default standard
+	 * @enum standard,hd
+	 * @example standard
+	 */
+	quality?: "standard" | "hd";
+	/**
+	 * The format in which the generated images are returned. Must be one of `url`
+	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
+	 * generated.
+	 * @default url
+	 * @enum url,b64_json
+	 * @example url
+	 */
+	response_format?: "url" | "b64_json";
+	/**
+	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
+	 * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
+	 * `1024x1792` for `dall-e-3` models.
+	 * @default 1024x1024
+	 * @enum 256x256,512x512,1024x1024,1792x1024,1024x1792
+	 * @example 1024x1024
+	 */
+	size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792";
+	/**
+	 * The style of the generated images. Must be one of `vivid` or `natural`.
+	 * Vivid causes the model to lean towards generating hyper-real and dramatic
+	 * images. Natural causes the model to produce more natural, less hyper-real
+	 * looking images. This param is only supported for `dall-e-3`.
+	 * @default vivid
+	 * @enum vivid,natural
+	 * @example vivid
+	 */
+	style?: "vivid" | "natural";
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 * @example user-1234
+	 */
+	user?: string;
 };
 export type CreateImageEditRequest = {
-  image: string;
-  /**
-   * A text description of the desired image(s). The maximum length is 1000
-   * characters.
-   * @example A cute baby sea otter wearing a beret
-   */
-  prompt: string;
-  mask?: string;
-  /**
-   * The model to use for image generation. Only `dall-e-2` is supported at this
-   * time.
-   * @default dall-e-2
-   * @example dall-e-2
-   */
-  model?: string | 'dall-e-2' | null;
-  /**
-   * The number of images to generate. Must be between 1 and 10.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  /**
-   * The size of the generated images. Must be one of `256x256`, `512x512`, or
-   * `1024x1024`.
-   * @default 1024x1024
-   * @enum 256x256,512x512,1024x1024
-   * @example 1024x1024
-   */
-  size?: '256x256' | '512x512' | '1024x1024';
-  /**
-   * The format in which the generated images are returned. Must be one of `url`
-   * or `b64_json`. URLs are only valid for 60 minutes after the image has been
-   * generated.
-   * @default url
-   * @enum url,b64_json
-   * @example url
-   */
-  response_format?: 'url' | 'b64_json';
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string;
+	image: string;
+	/**
+	 * A text description of the desired image(s). The maximum length is 1000
+	 * characters.
+	 * @example A cute baby sea otter wearing a beret
+	 */
+	prompt: string;
+	mask?: string;
+	/**
+	 * The model to use for image generation. Only `dall-e-2` is supported at this
+	 * time.
+	 * @default dall-e-2
+	 * @example dall-e-2
+	 */
+	model?: string | "dall-e-2" | null;
+	/**
+	 * The number of images to generate. Must be between 1 and 10.
+	 * @default 1
+	 * @example 1
+	 */
+	n?: number | null;
+	/**
+	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
+	 * `1024x1024`.
+	 * @default 1024x1024
+	 * @enum 256x256,512x512,1024x1024
+	 * @example 1024x1024
+	 */
+	size?: "256x256" | "512x512" | "1024x1024";
+	/**
+	 * The format in which the generated images are returned. Must be one of `url`
+	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
+	 * generated.
+	 * @default url
+	 * @enum url,b64_json
+	 * @example url
+	 */
+	response_format?: "url" | "b64_json";
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 * @example user-1234
+	 */
+	user?: string;
 };
 export type CreateImageVariationRequest = {
-  image: string;
-  /**
-   * The model to use for image generation. Only `dall-e-2` is supported at this
-   * time.
-   * @default dall-e-2
-   * @example dall-e-2
-   */
-  model?: string | 'dall-e-2' | null;
-  /**
-   * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
-   * only `n=1` is supported.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  /**
-   * The format in which the generated images are returned. Must be one of `url`
-   * or `b64_json`. URLs are only valid for 60 minutes after the image has been
-   * generated.
-   * @default url
-   * @enum url,b64_json
-   * @example url
-   */
-  response_format?: 'url' | 'b64_json';
-  /**
-   * The size of the generated images. Must be one of `256x256`, `512x512`, or
-   * `1024x1024`.
-   * @default 1024x1024
-   * @enum 256x256,512x512,1024x1024
-   * @example 1024x1024
-   */
-  size?: '256x256' | '512x512' | '1024x1024';
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string;
+	image: string;
+	/**
+	 * The model to use for image generation. Only `dall-e-2` is supported at this
+	 * time.
+	 * @default dall-e-2
+	 * @example dall-e-2
+	 */
+	model?: string | "dall-e-2" | null;
+	/**
+	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
+	 * only `n=1` is supported.
+	 * @default 1
+	 * @example 1
+	 */
+	n?: number | null;
+	/**
+	 * The format in which the generated images are returned. Must be one of `url`
+	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
+	 * generated.
+	 * @default url
+	 * @enum url,b64_json
+	 * @example url
+	 */
+	response_format?: "url" | "b64_json";
+	/**
+	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
+	 * `1024x1024`.
+	 * @default 1024x1024
+	 * @enum 256x256,512x512,1024x1024
+	 * @example 1024x1024
+	 */
+	size?: "256x256" | "512x512" | "1024x1024";
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 * @example user-1234
+	 */
+	user?: string;
 };
 export type CreateModerationRequest = {
-  input:
-    | string
-    | string[]
-    | (
-        | {
-            /**
-             * Always `image_url`.
-             * @enum image_url
-             */
-            type: 'image_url';
-            image_url: {
-              /**
-               * Either a URL of the image or the base64 encoded image data.
-               * @example https://example.com/image.jpg
-               */
-              url: string;
-            };
-          }
-        | {
-            /**
-             * Always `text`.
-             * @enum text
-             */
-            type: 'text';
-            /**
-             * A string of text to classify.
-             * @example I want to kill them
-             */
-            text: string;
-          }
-        | null
-      )[]
-    | null;
-  /**
-   * The content moderation model you would like to use. Learn more in
-   * [the moderation guide](/docs/guides/moderation), and learn about
-   * available models [here](/docs/models/moderation).
-   * @default omni-moderation-latest
-   * @example omni-moderation-2024-09-26
-   */
-  model?:
-    | string
-    | 'omni-moderation-latest'
-    | 'omni-moderation-2024-09-26'
-    | 'text-moderation-latest'
-    | 'text-moderation-stable'
-    | null;
+	input:
+		| string
+		| readonly string[]
+		| readonly (
+				| {
+						/**
+						 * Always `image_url`.
+						 * @enum image_url
+						 */
+						type: "image_url";
+						image_url: {
+							/**
+							 * Either a URL of the image or the base64 encoded image data.
+							 * @example https://example.com/image.jpg
+							 */
+							url: string;
+						};
+				  }
+				| {
+						/**
+						 * Always `text`.
+						 * @enum text
+						 */
+						type: "text";
+						/**
+						 * A string of text to classify.
+						 * @example I want to kill them
+						 */
+						text: string;
+				  }
+		  )[];
+	/**
+	 * The content moderation model you would like to use. Learn more in
+	 * [the moderation guide](/docs/guides/moderation), and learn about
+	 * available models [here](/docs/models/moderation).
+	 * @default omni-moderation-latest
+	 * @example omni-moderation-2024-09-26
+	 */
+	model?:
+		| string
+		| "omni-moderation-latest"
+		| "omni-moderation-2024-09-26"
+		| "text-moderation-latest"
+		| "text-moderation-stable";
 };
 /** Represents if a given text input is potentially harmful. */
 export type CreateModerationResponse = {
-  id: string;
-  model: string;
-  readonly results: {
-    flagged: boolean;
-    categories: {
-      hate: boolean;
-      'hate/threatening': boolean;
-      harassment: boolean;
-      'harassment/threatening': boolean;
-      illicit: boolean;
-      'illicit/violent': boolean;
-      'self-harm': boolean;
-      'self-harm/intent': boolean;
-      'self-harm/instructions': boolean;
-      sexual: boolean;
-      'sexual/minors': boolean;
-      violence: boolean;
-      'violence/graphic': boolean;
-    };
-    category_scores: {
-      hate: number;
-      'hate/threatening': number;
-      harassment: number;
-      'harassment/threatening': number;
-      illicit: number;
-      'illicit/violent': number;
-      'self-harm': number;
-      'self-harm/intent': number;
-      'self-harm/instructions': number;
-      sexual: number;
-      'sexual/minors': number;
-      violence: number;
-      'violence/graphic': number;
-    };
-    category_applied_input_types: {
-      readonly hate: 'text'[];
-      readonly 'hate/threatening': 'text'[];
-      readonly harassment: 'text'[];
-      readonly 'harassment/threatening': 'text'[];
-      readonly illicit: 'text'[];
-      readonly 'illicit/violent': 'text'[];
-      readonly 'self-harm': ('text' | 'image')[];
-      readonly 'self-harm/intent': ('text' | 'image')[];
-      readonly 'self-harm/instructions': ('text' | 'image')[];
-      readonly sexual: ('text' | 'image')[];
-      readonly 'sexual/minors': 'text'[];
-      readonly violence: ('text' | 'image')[];
-      readonly 'violence/graphic': ('text' | 'image')[];
-    };
-  }[];
+	id: string;
+	model: string;
+	results: readonly {
+		flagged: boolean;
+		categories: {
+			hate: boolean;
+			"hate/threatening": boolean;
+			harassment: boolean;
+			"harassment/threatening": boolean;
+			illicit: boolean;
+			"illicit/violent": boolean;
+			"self-harm": boolean;
+			"self-harm/intent": boolean;
+			"self-harm/instructions": boolean;
+			sexual: boolean;
+			"sexual/minors": boolean;
+			violence: boolean;
+			"violence/graphic": boolean;
+		};
+		category_scores: {
+			hate: number;
+			"hate/threatening": number;
+			harassment: number;
+			"harassment/threatening": number;
+			illicit: number;
+			"illicit/violent": number;
+			"self-harm": number;
+			"self-harm/intent": number;
+			"self-harm/instructions": number;
+			sexual: number;
+			"sexual/minors": number;
+			violence: number;
+			"violence/graphic": number;
+		};
+		category_applied_input_types: {
+			hate: readonly "text"[];
+			"hate/threatening": readonly "text"[];
+			harassment: readonly "text"[];
+			"harassment/threatening": readonly "text"[];
+			illicit: readonly "text"[];
+			"illicit/violent": readonly "text"[];
+			"self-harm": readonly ("text" | "image")[];
+			"self-harm/intent": readonly ("text" | "image")[];
+			"self-harm/instructions": readonly ("text" | "image")[];
+			sexual: readonly ("text" | "image")[];
+			"sexual/minors": readonly "text"[];
+			violence: readonly ("text" | "image")[];
+			"violence/graphic": readonly ("text" | "image")[];
+		};
+	}[];
 };
 export type CreateFileRequest = {
-  file: string;
-  /**
-   * The intended purpose of the uploaded file.
-   *
-   * Use "assistants" for [Assistants](/docs/api-reference/assistants) and
-   * [Message](/docs/api-reference/messages) files, "vision" for Assistants
-   * image file inputs, "batch" for [Batch API](/docs/guides/batch), and
-   * "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
-   * @enum assistants,batch,fine-tune,vision
-   */
-  purpose: 'assistants' | 'batch' | 'fine-tune' | 'vision';
+	file: string;
+	/**
+	 * The intended purpose of the uploaded file.
+	 *
+	 * Use "assistants" for [Assistants](/docs/api-reference/assistants) and
+	 * [Message](/docs/api-reference/messages) files, "vision" for Assistants
+	 * image file inputs, "batch" for [Batch API](/docs/guides/batch), and
+	 * "fine-tune" for [Fine-tuning](/docs/api-reference/fine-tuning).
+	 * @enum assistants,batch,fine-tune,vision
+	 */
+	purpose: "assistants" | "batch" | "fine-tune" | "vision";
 };
 export type DeleteFileResponse = {
-  id: string;
-  object: 'file';
-  deleted: boolean;
+	id: string;
+	object: "file";
+	deleted: boolean;
 };
 export type CreateUploadRequest = {
-  filename: string;
-  /**
-   * The intended purpose of the uploaded file.
-   *
-   * See the [documentation on File
-   * purposes](/docs/api-reference/files/create#files-create-purpose).
-   * @enum assistants,batch,fine-tune,vision
-   */
-  purpose: 'assistants' | 'batch' | 'fine-tune' | 'vision';
-  bytes: number;
-  mime_type: string;
+	filename: string;
+	/**
+	 * The intended purpose of the uploaded file.
+	 *
+	 * See the [documentation on File
+	 * purposes](/docs/api-reference/files/create#files-create-purpose).
+	 * @enum assistants,batch,fine-tune,vision
+	 */
+	purpose: "assistants" | "batch" | "fine-tune" | "vision";
+	bytes: number;
+	mime_type: string;
 };
 export type AddUploadPartRequest = {
-  data: string;
+	data: string;
 };
 export type CompleteUploadRequest = {
-  readonly part_ids: string[];
-  md5?: string;
+	part_ids: readonly string[];
+	md5?: string;
 };
-export type CancelUploadRequest = JsonifiableObject;
+export type CancelUploadRequest = Record<string | number, Jsonifiable>;
 export type CreateFineTuningJobRequest = {
-  /**
-   * The name of the model to fine-tune. You can select one of the
-   * [supported
-   * models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
-   * @example gpt-4o-mini
-   */
-  model:
-    | string
-    | 'babbage-002'
-    | 'davinci-002'
-    | 'gpt-3.5-turbo'
-    | 'gpt-4o-mini'
-    | null;
-  /**
-   * The ID of an uploaded file that contains training data.
-   *
-   * See [upload file](/docs/api-reference/files/create) for how to upload a
-   * file.
-   *
-   * Your dataset must be formatted as a JSONL file. Additionally, you must
-   * upload your file with the purpose `fine-tune`.
-   *
-   * The contents of the file should differ depending on if the model uses the
-   * [chat](/docs/api-reference/fine-tuning/chat-input) or
-   * [completions](/docs/api-reference/fine-tuning/completions-input) format.
-   *
-   * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-   * @example file-abc123
-   */
-  training_file: string;
-  hyperparameters?: {
-    /**
-     * Number of examples in each batch. A larger batch size means that model
-     * parameters
-     * are updated less frequently, but with lower variance.
-     * @default auto
-     */
-    batch_size?: 'auto' | number | null;
-    /**
-     * Scaling factor for the learning rate. A smaller learning rate may be useful
-     * to avoid
-     * overfitting.
-     * @default auto
-     */
-    learning_rate_multiplier?: 'auto' | number | null;
-    /**
-     * The number of epochs to train the model for. An epoch refers to one full
-     * cycle
-     * through the training dataset.
-     * @default auto
-     */
-    n_epochs?: 'auto' | number | null;
-  };
-  suffix?: string;
-  /**
-   * The ID of an uploaded file that contains validation data.
-   *
-   * If you provide this file, the data is used to generate validation
-   * metrics periodically during fine-tuning. These metrics can be viewed in
-   * the fine-tuning results file.
-   * The same data should not be present in both train and validation files.
-   *
-   * Your dataset must be formatted as a JSONL file. You must upload your file
-   * with the purpose `fine-tune`.
-   *
-   * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-   * @example file-abc123
-   */
-  validation_file?: string;
-  readonly integrations?: {
-    type: 'wandb';
-    wandb: {
-      /**
-       * The name of the project that the new run will be created under.
-       * @example my-wandb-project
-       */
-      project: string;
-      name?: string;
-      entity?: string;
-      readonly tags?: string[];
-    };
-  }[];
-  /**
-   * The seed controls the reproducibility of the job. Passing in the same seed
-   * and job parameters should produce the same results, but may differ in rare
-   * cases.
-   * If a seed is not specified, one will be generated for you.
-   * @example 42
-   */
-  seed?: number | null;
+	/**
+	 * The name of the model to fine-tune. You can select one of the
+	 * [supported
+	 * models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
+	 * @example gpt-4o-mini
+	 */
+	model:
+		| string
+		| "babbage-002"
+		| "davinci-002"
+		| "gpt-3.5-turbo"
+		| "gpt-4o-mini";
+	/**
+	 * The ID of an uploaded file that contains training data.
+	 *
+	 * See [upload file](/docs/api-reference/files/create) for how to upload a
+	 * file.
+	 *
+	 * Your dataset must be formatted as a JSONL file. Additionally, you must
+	 * upload your file with the purpose `fine-tune`.
+	 *
+	 * The contents of the file should differ depending on if the model uses the
+	 * [chat](/docs/api-reference/fine-tuning/chat-input) or
+	 * [completions](/docs/api-reference/fine-tuning/completions-input) format.
+	 *
+	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+	 * @example file-abc123
+	 */
+	training_file: string;
+	hyperparameters?: {
+		/**
+		 * Number of examples in each batch. A larger batch size means that model
+		 * parameters
+		 * are updated less frequently, but with lower variance.
+		 * @default auto
+		 */
+		batch_size?: "auto" | number;
+		/**
+		 * Scaling factor for the learning rate. A smaller learning rate may be useful
+		 * to avoid
+		 * overfitting.
+		 * @default auto
+		 */
+		learning_rate_multiplier?: "auto" | number;
+		/**
+		 * The number of epochs to train the model for. An epoch refers to one full
+		 * cycle
+		 * through the training dataset.
+		 * @default auto
+		 */
+		n_epochs?: "auto" | number;
+	};
+	suffix?: string;
+	/**
+	 * The ID of an uploaded file that contains validation data.
+	 *
+	 * If you provide this file, the data is used to generate validation
+	 * metrics periodically during fine-tuning. These metrics can be viewed in
+	 * the fine-tuning results file.
+	 * The same data should not be present in both train and validation files.
+	 *
+	 * Your dataset must be formatted as a JSONL file. You must upload your file
+	 * with the purpose `fine-tune`.
+	 *
+	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+	 * @example file-abc123
+	 */
+	validation_file?: string;
+	integrations?: readonly {
+		type: "wandb";
+		wandb: {
+			/**
+			 * The name of the project that the new run will be created under.
+			 * @example my-wandb-project
+			 */
+			project: string;
+			name?: string;
+			entity?: string;
+			tags?: readonly string[];
+		};
+	}[];
+	/**
+	 * The seed controls the reproducibility of the job. Passing in the same seed
+	 * and job parameters should produce the same results, but may differ in rare
+	 * cases.
+	 * If a seed is not specified, one will be generated for you.
+	 * @example 42
+	 */
+	seed?: number | null;
 };
 export type CreateEmbeddingRequest = {
-  /**
-   * Input text to embed, encoded as a string or array of tokens. To embed
-   * multiple inputs in a single request, pass an array of strings or array of
-   * token arrays. The input must not exceed the max input tokens for the model
-   * (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and
-   * any array must be 2048 dimensions or less. [Example Python
-   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-   * for counting tokens.
-   * @example The quick brown fox jumped over the lazy dog
-   */
-  input: string | string[] | number[] | number[][] | null;
-  /**
-   * ID of the model to use. You can use the [List
-   * models](/docs/api-reference/models/list) API to see all of your available
-   * models, or see our [Model overview](/docs/models/overview) for descriptions
-   * of them.
-   * @example text-embedding-3-small
-   */
-  model:
-    | string
-    | 'text-embedding-ada-002'
-    | 'text-embedding-3-small'
-    | 'text-embedding-3-large'
-    | null;
-  /**
-   * The format to return the embeddings in. Can be either `float` or
-   * [`base64`](https://pypi.org/project/pybase64/).
-   * @default float
-   * @enum float,base64
-   * @example float
-   */
-  encoding_format?: 'float' | 'base64';
-  dimensions?: number;
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string;
+	/**
+	 * Input text to embed, encoded as a string or array of tokens. To embed
+	 * multiple inputs in a single request, pass an array of strings or array of
+	 * token arrays. The input must not exceed the max input tokens for the model
+	 * (8192 tokens for `text-embedding-ada-002`), cannot be an empty string, and
+	 * any array must be 2048 dimensions or less. [Example Python
+	 * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
+	 * for counting tokens.
+	 * @example The quick brown fox jumped over the lazy dog
+	 */
+	input:
+		| string
+		| readonly string[]
+		| readonly number[]
+		| readonly (readonly number[])[];
+	/**
+	 * ID of the model to use. You can use the [List
+	 * models](/docs/api-reference/models/list) API to see all of your available
+	 * models, or see our [Model overview](/docs/models/overview) for descriptions
+	 * of them.
+	 * @example text-embedding-3-small
+	 */
+	model:
+		| string
+		| "text-embedding-ada-002"
+		| "text-embedding-3-small"
+		| "text-embedding-3-large";
+	/**
+	 * The format to return the embeddings in. Can be either `float` or
+	 * [`base64`](https://pypi.org/project/pybase64/).
+	 * @default float
+	 * @enum float,base64
+	 * @example float
+	 */
+	encoding_format?: "float" | "base64";
+	dimensions?: number;
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 * @example user-1234
+	 */
+	user?: string;
 };
 /**
  * Represents a transcription response returned by model, based on the
  * provided input.
  */
 export type CreateTranscriptionResponseJson = {
-  text: string;
+	text: string;
 };
 export type CreateTranslationResponseJson = {
-  text: string;
+	text: string;
 };
 export type CreateSpeechRequest = {
-  model: string | 'tts-1' | 'tts-1-hd' | null;
-  input: string;
-  /**
-   * The voice to use when generating the audio. Supported voices are `alloy`,
-   * `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are
-   * available in the [Text to speech
-   * guide](/docs/guides/text-to-speech/voice-options).
-   * @enum alloy,echo,fable,onyx,nova,shimmer
-   */
-  voice: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
-  /**
-   * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`,
-   * `wav`, and `pcm`.
-   * @default mp3
-   * @enum mp3,opus,aac,flac,wav,pcm
-   */
-  response_format?: 'mp3' | 'opus' | 'aac' | 'flac' | 'wav' | 'pcm';
-  /**
-   * The speed of the generated audio. Select a value from `0.25` to `4.0`.
-   * `1.0` is the default.
-   * @default 1
-   */
-  speed?: number;
+	model: string | "tts-1" | "tts-1-hd";
+	input: string;
+	/**
+	 * The voice to use when generating the audio. Supported voices are `alloy`,
+	 * `echo`, `fable`, `onyx`, `nova`, and `shimmer`. Previews of the voices are
+	 * available in the [Text to speech
+	 * guide](/docs/guides/text-to-speech/voice-options).
+	 * @enum alloy,echo,fable,onyx,nova,shimmer
+	 */
+	voice: "alloy" | "echo" | "fable" | "onyx" | "nova" | "shimmer";
+	/**
+	 * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`,
+	 * `wav`, and `pcm`.
+	 * @default mp3
+	 * @enum mp3,opus,aac,flac,wav,pcm
+	 */
+	response_format?: "mp3" | "opus" | "aac" | "flac" | "wav" | "pcm";
+	/**
+	 * The speed of the generated audio. Select a value from `0.25` to `4.0`.
+	 * `1.0` is the default.
+	 * @default 1
+	 */
+	speed?: number;
 };
 /** The upload Part represents a chunk of bytes we can add to an Upload object. */
 export type UploadPart = {
-  id: string;
-  created_at: number;
-  upload_id: string;
-  /**
-   * The object type, which is always `upload.part`.
-   * @enum upload.part
-   */
-  object: 'upload.part';
+	id: string;
+	created_at: number;
+	upload_id: string;
+	/**
+	 * The object type, which is always `upload.part`.
+	 * @enum upload.part
+	 */
+	object: "upload.part";
 };
 export type FineTuningIntegration = {
-  /**
-   * The type of the integration being enabled for the fine-tuning job
-   * @enum wandb
-   */
-  type: 'wandb';
-  wandb: {
-    /**
-     * The name of the project that the new run will be created under.
-     * @example my-wandb-project
-     */
-    project: string;
-    name?: string;
-    entity?: string;
-    readonly tags?: string[];
-  };
+	/**
+	 * The type of the integration being enabled for the fine-tuning job
+	 * @enum wandb
+	 */
+	type: "wandb";
+	wandb: {
+		/**
+		 * The name of the project that the new run will be created under.
+		 * @example my-wandb-project
+		 */
+		project: string;
+		name?: string;
+		entity?: string;
+		tags?: readonly string[];
+	};
 };
 /**
  * The per-line training example of a fine-tuning input file for completions
  * models
  */
 export type FinetuneCompletionRequestInput = {
-  prompt?: string;
-  completion?: string;
+	prompt?: string;
+	completion?: string;
 };
 export type DeleteAssistantResponse = {
-  id: string;
-  deleted: boolean;
-  object: 'assistant.deleted';
+	id: string;
+	deleted: boolean;
+	object: "assistant.deleted";
 };
 export type AssistantToolsCode = {
-  /**
-   * The type of tool being defined: `code_interpreter`
-   * @enum code_interpreter
-   */
-  type: 'code_interpreter';
+	/**
+	 * The type of tool being defined: `code_interpreter`
+	 * @enum code_interpreter
+	 */
+	type: "code_interpreter";
 };
 export type AssistantToolsFileSearchTypeOnly = {
-  /**
-   * The type of tool being defined: `file_search`
-   * @enum file_search
-   */
-  type: 'file_search';
+	/**
+	 * The type of tool being defined: `file_search`
+	 * @enum file_search
+	 */
+	type: "file_search";
 };
 export type ModifyRunRequest = {
-  metadata?: JsonifiableObject;
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type SubmitToolOutputsRunRequest = {
-  readonly tool_outputs: {
-    tool_call_id?: string;
-    output?: string;
-  }[];
-  stream?: boolean | null;
+	tool_outputs: readonly {
+		tool_call_id?: string;
+		output?: string;
+	}[];
+	stream?: boolean | null;
 };
 export type ModifyThreadRequest = {
-  tool_resources?: {
-    code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter` tool. There can be a maximum of 20 files associated with
-       * the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: {
-      readonly vector_store_ids?: string[];
-    };
-  };
-  metadata?: JsonifiableObject;
+	tool_resources?: {
+		code_interpreter?: {
+			/**
+			 * A list of [file](/docs/api-reference/files) IDs made available to the
+			 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+			 * the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: {
+			vector_store_ids?: readonly string[];
+		};
+	};
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type DeleteThreadResponse = {
-  id: string;
-  deleted: boolean;
-  object: 'thread.deleted';
+	id: string;
+	deleted: boolean;
+	object: "thread.deleted";
 };
 export type ModifyMessageRequest = {
-  metadata?: JsonifiableObject;
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type DeleteMessageResponse = {
-  id: string;
-  deleted: boolean;
-  object: 'thread.message.deleted';
+	id: string;
+	deleted: boolean;
+	object: "thread.message.deleted";
 };
 /**
  * References an image [File](/docs/api-reference/files) in the content of a
  * message.
  */
 export type MessageContentImageFileObject = {
-  /**
-   * Always `image_file`.
-   * @enum image_file
-   */
-  type: 'image_file';
-  image_file: {
-    file_id: string;
-    /**
-     * Specifies the detail level of the image if specified by the user. `low`
-     * uses fewer tokens, you can opt in to high resolution using `high`.
-     * @default auto
-     * @enum auto,low,high
-     */
-    detail?: 'auto' | 'low' | 'high';
-  };
+	/**
+	 * Always `image_file`.
+	 * @enum image_file
+	 */
+	type: "image_file";
+	image_file: {
+		file_id: string;
+		/**
+		 * Specifies the detail level of the image if specified by the user. `low`
+		 * uses fewer tokens, you can opt in to high resolution using `high`.
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 /**
  * References an image [File](/docs/api-reference/files) in the content of a
  * message.
  */
 export type MessageDeltaContentImageFileObject = {
-  index: number;
-  /**
-   * Always `image_file`.
-   * @enum image_file
-   */
-  type: 'image_file';
-  image_file?: {
-    file_id?: string;
-    /**
-     * Specifies the detail level of the image if specified by the user. `low`
-     * uses fewer tokens, you can opt in to high resolution using `high`.
-     * @default auto
-     * @enum auto,low,high
-     */
-    detail?: 'auto' | 'low' | 'high';
-  };
+	index: number;
+	/**
+	 * Always `image_file`.
+	 * @enum image_file
+	 */
+	type: "image_file";
+	image_file?: {
+		file_id?: string;
+		/**
+		 * Specifies the detail level of the image if specified by the user. `low`
+		 * uses fewer tokens, you can opt in to high resolution using `high`.
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 /** References an image URL in the content of a message. */
 export type MessageContentImageUrlObject = {
-  /**
-   * The type of the content part.
-   * @enum image_url
-   */
-  type: 'image_url';
-  image_url: {
-    url: string;
-    /**
-     * Specifies the detail level of the image. `low` uses fewer tokens, you can
-     * opt in to high resolution using `high`. Default value is `auto`
-     * @default auto
-     * @enum auto,low,high
-     */
-    detail?: 'auto' | 'low' | 'high';
-  };
+	/**
+	 * The type of the content part.
+	 * @enum image_url
+	 */
+	type: "image_url";
+	image_url: {
+		url: string;
+		/**
+		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+		 * opt in to high resolution using `high`. Default value is `auto`
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 /** References an image URL in the content of a message. */
 export type MessageDeltaContentImageUrlObject = {
-  index: number;
-  /**
-   * Always `image_url`.
-   * @enum image_url
-   */
-  type: 'image_url';
-  image_url?: {
-    url?: string;
-    /**
-     * Specifies the detail level of the image. `low` uses fewer tokens, you can
-     * opt in to high resolution using `high`.
-     * @default auto
-     * @enum auto,low,high
-     */
-    detail?: 'auto' | 'low' | 'high';
-  };
+	index: number;
+	/**
+	 * Always `image_url`.
+	 * @enum image_url
+	 */
+	type: "image_url";
+	image_url?: {
+		url?: string;
+		/**
+		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+		 * opt in to high resolution using `high`.
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 /** The text content that is part of a message. */
 export type MessageContentTextObject = {
-  /**
-   * Always `text`.
-   * @enum text
-   */
-  type: 'text';
-  text: {
-    value: string;
-    readonly annotations: (never | never | null)[];
-  };
+	/**
+	 * Always `text`.
+	 * @enum text
+	 */
+	type: "text";
+	text: {
+		value: string;
+		annotations: readonly (never | never)[];
+	};
 };
 /** The refusal content generated by the assistant. */
 export type MessageContentRefusalObject = {
-  /**
-   * Always `refusal`.
-   * @enum refusal
-   */
-  type: 'refusal';
-  refusal: string;
+	/**
+	 * Always `refusal`.
+	 * @enum refusal
+	 */
+	type: "refusal";
+	refusal: string;
 };
 /** The text content that is part of a message. */
 export type MessageRequestContentTextObject = {
-  /**
-   * Always `text`.
-   * @enum text
-   */
-  type: 'text';
-  text: string;
+	/**
+	 * Always `text`.
+	 * @enum text
+	 */
+	type: "text";
+	text: string;
 };
 /**
  * A citation within the message that points to a specific quote from a
@@ -772,57 +764,57 @@ export type MessageRequestContentTextObject = {
  * the assistant uses the "file_search" tool to search files.
  */
 export type MessageContentTextAnnotationsFileCitationObject = {
-  /**
-   * Always `file_citation`.
-   * @enum file_citation
-   */
-  type: 'file_citation';
-  text: string;
-  file_citation: {
-    file_id: string;
-  };
-  start_index: number;
-  end_index: number;
+	/**
+	 * Always `file_citation`.
+	 * @enum file_citation
+	 */
+	type: "file_citation";
+	text: string;
+	file_citation: {
+		file_id: string;
+	};
+	start_index: number;
+	end_index: number;
 };
 /**
  * A URL for the file that's generated when the assistant used the
  * `code_interpreter` tool to generate a file.
  */
 export type MessageContentTextAnnotationsFilePathObject = {
-  /**
-   * Always `file_path`.
-   * @enum file_path
-   */
-  type: 'file_path';
-  text: string;
-  file_path: {
-    file_id: string;
-  };
-  start_index: number;
-  end_index: number;
+	/**
+	 * Always `file_path`.
+	 * @enum file_path
+	 */
+	type: "file_path";
+	text: string;
+	file_path: {
+		file_id: string;
+	};
+	start_index: number;
+	end_index: number;
 };
 /** The text content that is part of a message. */
 export type MessageDeltaContentTextObject = {
-  index: number;
-  /**
-   * Always `text`.
-   * @enum text
-   */
-  type: 'text';
-  text?: {
-    value?: string;
-    readonly annotations?: (never | never | null)[];
-  };
+	index: number;
+	/**
+	 * Always `text`.
+	 * @enum text
+	 */
+	type: "text";
+	text?: {
+		value?: string;
+		annotations?: readonly (never | never)[];
+	};
 };
 /** The refusal content that is part of a message. */
 export type MessageDeltaContentRefusalObject = {
-  index: number;
-  /**
-   * Always `refusal`.
-   * @enum refusal
-   */
-  type: 'refusal';
-  refusal?: string;
+	index: number;
+	/**
+	 * Always `refusal`.
+	 * @enum refusal
+	 */
+	type: "refusal";
+	refusal?: string;
 };
 /**
  * A citation within the message that points to a specific quote from a
@@ -830,1013 +822,1013 @@ export type MessageDeltaContentRefusalObject = {
  * the assistant uses the "file_search" tool to search files.
  */
 export type MessageDeltaContentTextAnnotationsFileCitationObject = {
-  index: number;
-  /**
-   * Always `file_citation`.
-   * @enum file_citation
-   */
-  type: 'file_citation';
-  text?: string;
-  file_citation?: {
-    file_id?: string;
-    quote?: string;
-  };
-  start_index?: number;
-  end_index?: number;
+	index: number;
+	/**
+	 * Always `file_citation`.
+	 * @enum file_citation
+	 */
+	type: "file_citation";
+	text?: string;
+	file_citation?: {
+		file_id?: string;
+		quote?: string;
+	};
+	start_index?: number;
+	end_index?: number;
 };
 /**
  * A URL for the file that's generated when the assistant used the
  * `code_interpreter` tool to generate a file.
  */
 export type MessageDeltaContentTextAnnotationsFilePathObject = {
-  index: number;
-  /**
-   * Always `file_path`.
-   * @enum file_path
-   */
-  type: 'file_path';
-  text?: string;
-  file_path?: {
-    file_id?: string;
-  };
-  start_index?: number;
-  end_index?: number;
+	index: number;
+	/**
+	 * Always `file_path`.
+	 * @enum file_path
+	 */
+	type: "file_path";
+	text?: string;
+	file_path?: {
+		file_id?: string;
+	};
+	start_index?: number;
+	end_index?: number;
 };
 /** Details of the Code Interpreter tool call the run step was involved in. */
 export type RunStepDetailsToolCallsCodeObject = {
-  id: string;
-  /**
-   * The type of tool call. This is always going to be `code_interpreter` for
-   * this type of tool call.
-   * @enum code_interpreter
-   */
-  type: 'code_interpreter';
-  code_interpreter: {
-    input: string;
-    readonly outputs: (never | never | null)[];
-  };
+	id: string;
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 * @enum code_interpreter
+	 */
+	type: "code_interpreter";
+	code_interpreter: {
+		input: string;
+		outputs: readonly (never | never)[];
+	};
 };
 /** Details of the Code Interpreter tool call the run step was involved in. */
 export type RunStepDeltaStepDetailsToolCallsCodeObject = {
-  index: number;
-  id?: string;
-  /**
-   * The type of tool call. This is always going to be `code_interpreter` for
-   * this type of tool call.
-   * @enum code_interpreter
-   */
-  type: 'code_interpreter';
-  code_interpreter?: {
-    input?: string;
-    readonly outputs?: (never | never | null)[];
-  };
+	index: number;
+	id?: string;
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 * @enum code_interpreter
+	 */
+	type: "code_interpreter";
+	code_interpreter?: {
+		input?: string;
+		outputs?: readonly (never | never)[];
+	};
 };
 /** Text output from the Code Interpreter tool call as part of a run step. */
 export type RunStepDetailsToolCallsCodeOutputLogsObject = {
-  /**
-   * Always `logs`.
-   * @enum logs
-   */
-  type: 'logs';
-  logs: string;
+	/**
+	 * Always `logs`.
+	 * @enum logs
+	 */
+	type: "logs";
+	logs: string;
 };
 /** Text output from the Code Interpreter tool call as part of a run step. */
 export type RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject = {
-  index: number;
-  /**
-   * Always `logs`.
-   * @enum logs
-   */
-  type: 'logs';
-  logs?: string;
+	index: number;
+	/**
+	 * Always `logs`.
+	 * @enum logs
+	 */
+	type: "logs";
+	logs?: string;
 };
 export type RunStepDetailsToolCallsCodeOutputImageObject = {
-  /**
-   * Always `image`.
-   * @enum image
-   */
-  type: 'image';
-  image: {
-    file_id: string;
-  };
+	/**
+	 * Always `image`.
+	 * @enum image
+	 */
+	type: "image";
+	image: {
+		file_id: string;
+	};
 };
 export type RunStepDeltaStepDetailsToolCallsCodeOutputImageObject = {
-  index: number;
-  /**
-   * Always `image`.
-   * @enum image
-   */
-  type: 'image';
-  image?: {
-    file_id?: string;
-  };
+	index: number;
+	/**
+	 * Always `image`.
+	 * @enum image
+	 */
+	type: "image";
+	image?: {
+		file_id?: string;
+	};
 };
 export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
-  index: number;
-  id?: string;
-  /**
-   * The type of tool call. This is always going to be `file_search` for this
-   * type of tool call.
-   * @enum file_search
-   */
-  type: 'file_search';
-  file_search: JsonifiableObject;
+	index: number;
+	id?: string;
+	/**
+	 * The type of tool call. This is always going to be `file_search` for this
+	 * type of tool call.
+	 * @enum file_search
+	 */
+	type: "file_search";
+	file_search: Record<string | number, Jsonifiable>;
 };
 export type RunStepDetailsToolCallsFunctionObject = {
-  id: string;
-  /**
-   * The type of tool call. This is always going to be `function` for this type
-   * of tool call.
-   * @enum function
-   */
-  type: 'function';
-  function: {
-    name: string;
-    arguments: string;
-    output: string;
-  };
+	id: string;
+	/**
+	 * The type of tool call. This is always going to be `function` for this type
+	 * of tool call.
+	 * @enum function
+	 */
+	type: "function";
+	function: {
+		name: string;
+		arguments: string;
+		output: string;
+	};
 };
 export type RunStepDeltaStepDetailsToolCallsFunctionObject = {
-  index: number;
-  id?: string;
-  /**
-   * The type of tool call. This is always going to be `function` for this type
-   * of tool call.
-   * @enum function
-   */
-  type: 'function';
-  function?: {
-    name?: string;
-    arguments?: string;
-    output?: string;
-  };
+	index: number;
+	id?: string;
+	/**
+	 * The type of tool call. This is always going to be `function` for this type
+	 * of tool call.
+	 * @enum function
+	 */
+	type: "function";
+	function?: {
+		name?: string;
+		arguments?: string;
+		output?: string;
+	};
 };
 export type DeleteVectorStoreResponse = {
-  id: string;
-  deleted: boolean;
-  object: 'vector_store.deleted';
+	id: string;
+	deleted: boolean;
+	object: "vector_store.deleted";
 };
 export type DeleteVectorStoreFileResponse = {
-  id: string;
-  deleted: boolean;
-  object: 'vector_store.file.deleted';
+	id: string;
+	deleted: boolean;
+	object: "vector_store.file.deleted";
 };
 /** A batch of files attached to a vector store. */
 export type VectorStoreFileBatchObject = {
-  id: string;
-  /**
-   * The object type, which is always `vector_store.file_batch`.
-   * @enum vector_store.files_batch
-   */
-  object: 'vector_store.files_batch';
-  created_at: number;
-  vector_store_id: string;
-  /**
-   * The status of the vector store files batch, which can be either
-   * `in_progress`, `completed`, `cancelled` or `failed`.
-   * @enum in_progress,completed,cancelled,failed
-   */
-  status: 'in_progress' | 'completed' | 'cancelled' | 'failed';
-  file_counts: {
-    in_progress: number;
-    completed: number;
-    failed: number;
-    cancelled: number;
-    total: number;
-  };
+	id: string;
+	/**
+	 * The object type, which is always `vector_store.file_batch`.
+	 * @enum vector_store.files_batch
+	 */
+	object: "vector_store.files_batch";
+	created_at: number;
+	vector_store_id: string;
+	/**
+	 * The status of the vector store files batch, which can be either
+	 * `in_progress`, `completed`, `cancelled` or `failed`.
+	 * @enum in_progress,completed,cancelled,failed
+	 */
+	status: "in_progress" | "completed" | "cancelled" | "failed";
+	file_counts: {
+		in_progress: number;
+		completed: number;
+		failed: number;
+		cancelled: number;
+		total: number;
+	};
 };
 /** The per-line object of the batch input file */
 export type BatchRequestInput = {
-  custom_id?: string;
-  /**
-   * The HTTP method to be used for the request. Currently only `POST` is
-   * supported.
-   * @enum POST
-   */
-  method?: 'POST';
-  url?: string;
+	custom_id?: string;
+	/**
+	 * The HTTP method to be used for the request. Currently only `POST` is
+	 * supported.
+	 * @enum POST
+	 */
+	method?: "POST";
+	url?: string;
 };
 /** The per-line object of the batch output and error files */
 export type BatchRequestOutput = {
-  id?: string;
-  custom_id?: string;
-  response?: {
-    status_code?: number;
-    request_id?: string;
-    body?: JsonifiableObject;
-  };
-  error?: {
-    code?: string;
-    message?: string;
-  };
+	id?: string;
+	custom_id?: string;
+	response?: {
+		status_code?: number;
+		request_id?: string;
+		body?: Record<string | number, Jsonifiable>;
+	};
+	error?: {
+		code?: string;
+		message?: string;
+	};
 };
 export type InviteRequest = {
-  email: string;
-  /**
-   * `owner` or `reader`
-   * @enum reader,owner
-   */
-  role: 'reader' | 'owner';
+	email: string;
+	/**
+	 * `owner` or `reader`
+	 * @enum reader,owner
+	 */
+	role: "reader" | "owner";
 };
 export type InviteDeleteResponse = {
-  /**
-   * The object type, which is always `organization.invite.deleted`
-   * @enum organization.invite.deleted
-   */
-  object: 'organization.invite.deleted';
-  id: string;
-  deleted: boolean;
+	/**
+	 * The object type, which is always `organization.invite.deleted`
+	 * @enum organization.invite.deleted
+	 */
+	object: "organization.invite.deleted";
+	id: string;
+	deleted: boolean;
 };
 export type UserRoleUpdateRequest = {
-  /**
-   * `owner` or `reader`
-   * @enum owner,reader
-   */
-  role: 'owner' | 'reader';
+	/**
+	 * `owner` or `reader`
+	 * @enum owner,reader
+	 */
+	role: "owner" | "reader";
 };
 export type UserDeleteResponse = {
-  object: 'organization.user.deleted';
-  id: string;
-  deleted: boolean;
+	object: "organization.user.deleted";
+	id: string;
+	deleted: boolean;
 };
 export type ProjectCreateRequest = {
-  name: string;
-  app_use_case?: string;
-  business_website?: string;
+	name: string;
+	app_use_case?: string;
+	business_website?: string;
 };
 export type ProjectUpdateRequest = {
-  name: string;
-  app_use_case?: string;
-  business_website?: string;
+	name: string;
+	app_use_case?: string;
+	business_website?: string;
 };
 export type DefaultProjectErrorResponse = {
-  code: number;
-  message: string;
+	code: number;
+	message: string;
 };
 export type ProjectUserCreateRequest = {
-  user_id: string;
-  /**
-   * `owner` or `member`
-   * @enum owner,member
-   */
-  role: 'owner' | 'member';
+	user_id: string;
+	/**
+	 * `owner` or `member`
+	 * @enum owner,member
+	 */
+	role: "owner" | "member";
 };
 export type ProjectUserUpdateRequest = {
-  /**
-   * `owner` or `member`
-   * @enum owner,member
-   */
-  role: 'owner' | 'member';
+	/**
+	 * `owner` or `member`
+	 * @enum owner,member
+	 */
+	role: "owner" | "member";
 };
 export type ProjectUserDeleteResponse = {
-  object: 'organization.project.user.deleted';
-  id: string;
-  deleted: boolean;
+	object: "organization.project.user.deleted";
+	id: string;
+	deleted: boolean;
 };
 export type ProjectServiceAccountCreateRequest = {
-  name: string;
+	name: string;
 };
 export type ProjectServiceAccountDeleteResponse = {
-  object: 'organization.project.service_account.deleted';
-  id: string;
-  deleted: boolean;
+	object: "organization.project.service_account.deleted";
+	id: string;
+	deleted: boolean;
 };
 export type ProjectApiKeyDeleteResponse = {
-  object: 'organization.project.api_key.deleted';
-  id: string;
-  deleted: boolean;
+	object: "organization.project.api_key.deleted";
+	id: string;
+	deleted: boolean;
 };
 /** Represents an individual service account in a project. */
 export type ProjectServiceAccount = {
-  /**
-   * The object type, which is always `organization.project.service_account`
-   * @enum organization.project.service_account
-   */
-  object: 'organization.project.service_account';
-  id: string;
-  name: string;
-  /**
-   * `owner` or `member`
-   * @enum owner,member
-   */
-  role: 'owner' | 'member';
-  created_at: number;
+	/**
+	 * The object type, which is always `organization.project.service_account`
+	 * @enum organization.project.service_account
+	 */
+	object: "organization.project.service_account";
+	id: string;
+	name: string;
+	/**
+	 * `owner` or `member`
+	 * @enum owner,member
+	 */
+	role: "owner" | "member";
+	created_at: number;
 };
 /** Represents an individual user in a project. */
 export type ProjectUser = {
-  /**
-   * The object type, which is always `organization.project.user`
-   * @enum organization.project.user
-   */
-  object: 'organization.project.user';
-  id: string;
-  name: string;
-  email: string;
-  /**
-   * `owner` or `member`
-   * @enum owner,member
-   */
-  role: 'owner' | 'member';
-  added_at: number;
+	/**
+	 * The object type, which is always `organization.project.user`
+	 * @enum organization.project.user
+	 */
+	object: "organization.project.user";
+	id: string;
+	name: string;
+	email: string;
+	/**
+	 * `owner` or `member`
+	 * @enum owner,member
+	 */
+	role: "owner" | "member";
+	added_at: number;
 };
 /** Represents an individual API key in a project. */
 export type ProjectApiKey = {
-  /**
-   * The object type, which is always `organization.project.api_key`
-   * @enum organization.project.api_key
-   */
-  object: 'organization.project.api_key';
-  redacted_value: string;
-  name: string;
-  created_at: number;
-  id: string;
-  owner: {
-    /**
-     * `user` or `service_account`
-     * @enum user,service_account
-     */
-    type?: 'user' | 'service_account';
-    user?: ProjectUser;
-    service_account?: ProjectServiceAccount;
-  };
+	/**
+	 * The object type, which is always `organization.project.api_key`
+	 * @enum organization.project.api_key
+	 */
+	object: "organization.project.api_key";
+	redacted_value: string;
+	name: string;
+	created_at: number;
+	id: string;
+	owner: {
+		/**
+		 * `user` or `service_account`
+		 * @enum user,service_account
+		 */
+		type?: "user" | "service_account";
+		/** Represents an individual user in a project. */
+		user?: ProjectUser;
+		/** Represents an individual service account in a project. */
+		service_account?: ProjectServiceAccount;
+	};
 };
 export type ProjectApiKeyListResponse = {
-  object: 'list';
-  readonly data: ProjectApiKey[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: "list";
+	data: readonly ProjectApiKey[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type ProjectServiceAccountApiKey = {
-  /**
-   * The object type, which is always
-   * `organization.project.service_account.api_key`
-   * @enum organization.project.service_account.api_key
-   */
-  object: 'organization.project.service_account.api_key';
-  value: string;
-  name: string;
-  created_at: number;
-  id: string;
+	/**
+	 * The object type, which is always
+	 * `organization.project.service_account.api_key`
+	 * @enum organization.project.service_account.api_key
+	 */
+	object: "organization.project.service_account.api_key";
+	value: string;
+	name: string;
+	created_at: number;
+	id: string;
 };
 export type ProjectServiceAccountCreateResponse = {
-  object: 'organization.project.service_account';
-  id: string;
-  name: string;
-  /**
-   * Service accounts can only have one role of type `member`
-   * @enum member
-   */
-  role: 'member';
-  created_at: number;
-  api_key: ProjectServiceAccountApiKey;
+	object: "organization.project.service_account";
+	id: string;
+	name: string;
+	/**
+	 * Service accounts can only have one role of type `member`
+	 * @enum member
+	 */
+	role: "member";
+	created_at: number;
+	api_key: ProjectServiceAccountApiKey;
 };
 export type ProjectServiceAccountListResponse = {
-  object: 'list';
-  readonly data: ProjectServiceAccount[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: "list";
+	data: readonly ProjectServiceAccount[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type ProjectUserListResponse = {
-  object: string;
-  readonly data: ProjectUser[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly ProjectUser[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 /** Represents an individual project. */
 export type Project = {
-  id: string;
-  /**
-   * The object type, which is always `organization.project`
-   * @enum organization.project
-   */
-  object: 'organization.project';
-  name: string;
-  created_at: number;
-  archived_at?: number | null;
-  /**
-   * `active` or `archived`
-   * @enum active,archived
-   */
-  status: 'active' | 'archived';
-  app_use_case?: string;
-  business_website?: string;
+	id: string;
+	/**
+	 * The object type, which is always `organization.project`
+	 * @enum organization.project
+	 */
+	object: "organization.project";
+	name: string;
+	created_at: number;
+	archived_at?: number | null;
+	/**
+	 * `active` or `archived`
+	 * @enum active,archived
+	 */
+	status: "active" | "archived";
+	app_use_case?: string;
+	business_website?: string;
 };
 export type ProjectListResponse = {
-  object: 'list';
-  readonly data: Project[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: "list";
+	data: readonly Project[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 /** Represents an individual `user` within an organization. */
 export type User = {
-  /**
-   * The object type, which is always `organization.user`
-   * @enum organization.user
-   */
-  object: 'organization.user';
-  id: string;
-  name: string;
-  email: string;
-  /**
-   * `owner` or `reader`
-   * @enum owner,reader
-   */
-  role: 'owner' | 'reader';
-  added_at: number;
+	/**
+	 * The object type, which is always `organization.user`
+	 * @enum organization.user
+	 */
+	object: "organization.user";
+	id: string;
+	name: string;
+	email: string;
+	/**
+	 * `owner` or `reader`
+	 * @enum owner,reader
+	 */
+	role: "owner" | "reader";
+	added_at: number;
 };
 export type UserListResponse = {
-  object: 'list';
-  readonly data: User[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: "list";
+	data: readonly User[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 /** Represents an individual `invite` to the organization. */
 export type Invite = {
-  /**
-   * The object type, which is always `organization.invite`
-   * @enum organization.invite
-   */
-  object: 'organization.invite';
-  id: string;
-  email: string;
-  /**
-   * `owner` or `reader`
-   * @enum owner,reader
-   */
-  role: 'owner' | 'reader';
-  /**
-   * `accepted`,`expired`, or `pending`
-   * @enum accepted,expired,pending
-   */
-  status: 'accepted' | 'expired' | 'pending';
-  invited_at: number;
-  expires_at: number;
-  accepted_at?: number;
+	/**
+	 * The object type, which is always `organization.invite`
+	 * @enum organization.invite
+	 */
+	object: "organization.invite";
+	id: string;
+	email: string;
+	/**
+	 * `owner` or `reader`
+	 * @enum owner,reader
+	 */
+	role: "owner" | "reader";
+	/**
+	 * `accepted`,`expired`, or `pending`
+	 * @enum accepted,expired,pending
+	 */
+	status: "accepted" | "expired" | "pending";
+	invited_at: number;
+	expires_at: number;
+	accepted_at?: number;
 };
 export type InviteListResponse = {
-  /**
-   * The object type, which is always `list`
-   * @enum list
-   */
-  object: 'list';
-  readonly data: Invite[];
-  first_id?: string;
-  last_id?: string;
-  has_more?: boolean;
+	/**
+	 * The object type, which is always `list`
+	 * @enum list
+	 */
+	object: "list";
+	data: readonly Invite[];
+	first_id?: string;
+	last_id?: string;
+	has_more?: boolean;
 };
 /** The service account that performed the audit logged action. */
 export type AuditLogActorServiceAccount = {
-  id?: string;
+	id?: string;
 };
 /** The user who performed the audit logged action. */
 export type AuditLogActorUser = {
-  id?: string;
-  email?: string;
+	id?: string;
+	email?: string;
 };
 /** The API Key used to perform the audit logged action. */
 export type AuditLogActorApiKey = {
-  id?: string;
-  /**
-   * The type of API key. Can be either `user` or `service_account`.
-   * @enum user,service_account
-   */
-  type?: 'user' | 'service_account';
-  user?: AuditLogActorUser;
-  service_account?: AuditLogActorServiceAccount;
+	id?: string;
+	/**
+	 * The type of API key. Can be either `user` or `service_account`.
+	 * @enum user,service_account
+	 */
+	type?: "user" | "service_account";
+	/** The user who performed the audit logged action. */
+	user?: AuditLogActorUser;
+	/** The service account that performed the audit logged action. */
+	service_account?: AuditLogActorServiceAccount;
 };
 /** The session in which the audit logged action was performed. */
 export type AuditLogActorSession = {
-  user?: AuditLogActorUser;
-  ip_address?: string;
+	/** The user who performed the audit logged action. */
+	user?: AuditLogActorUser;
+	ip_address?: string;
 };
 /** The actor who performed the audit logged action. */
 export type AuditLogActor = {
-  /**
-   * The type of actor. Is either `session` or `api_key`.
-   * @enum session,api_key
-   */
-  type?: 'session' | 'api_key';
-  session?: AuditLogActorSession;
-  api_key?: AuditLogActorApiKey;
+	/**
+	 * The type of actor. Is either `session` or `api_key`.
+	 * @enum session,api_key
+	 */
+	type?: "session" | "api_key";
+	/** The session in which the audit logged action was performed. */
+	session?: AuditLogActorSession;
+	/** The API Key used to perform the audit logged action. */
+	api_key?: AuditLogActorApiKey;
 };
-
-export enum AuditLogEventTypeEnum {
-  ApiKeyCreated = 'api_key.created',
-  ApiKeyUpdated = 'api_key.updated',
-  ApiKeyDeleted = 'api_key.deleted',
-  InviteSent = 'invite.sent',
-  InviteAccepted = 'invite.accepted',
-  InviteDeleted = 'invite.deleted',
-  LoginSucceeded = 'login.succeeded',
-  LoginFailed = 'login.failed',
-  LogoutSucceeded = 'logout.succeeded',
-  LogoutFailed = 'logout.failed',
-  OrganizationUpdated = 'organization.updated',
-  ProjectCreated = 'project.created',
-  ProjectUpdated = 'project.updated',
-  ProjectArchived = 'project.archived',
-  ServiceAccountCreated = 'service_account.created',
-  ServiceAccountUpdated = 'service_account.updated',
-  ServiceAccountDeleted = 'service_account.deleted',
-  UserAdded = 'user.added',
-  UserUpdated = 'user.updated',
-  UserDeleted = 'user.deleted',
-}
-
 /** The event type. */
 export type AuditLogEventType =
-  | AuditLogEventTypeEnum
-  | 'api_key.created'
-  | 'api_key.updated'
-  | 'api_key.deleted'
-  | 'invite.sent'
-  | 'invite.accepted'
-  | 'invite.deleted'
-  | 'login.succeeded'
-  | 'login.failed'
-  | 'logout.succeeded'
-  | 'logout.failed'
-  | 'organization.updated'
-  | 'project.created'
-  | 'project.updated'
-  | 'project.archived'
-  | 'service_account.created'
-  | 'service_account.updated'
-  | 'service_account.deleted'
-  | 'user.added'
-  | 'user.updated'
-  | 'user.deleted';
+	| "api_key.created"
+	| "api_key.updated"
+	| "api_key.deleted"
+	| "invite.sent"
+	| "invite.accepted"
+	| "invite.deleted"
+	| "login.succeeded"
+	| "login.failed"
+	| "logout.succeeded"
+	| "logout.failed"
+	| "organization.updated"
+	| "project.created"
+	| "project.updated"
+	| "project.archived"
+	| "service_account.created"
+	| "service_account.updated"
+	| "service_account.deleted"
+	| "user.added"
+	| "user.updated"
+	| "user.deleted";
 /** A log of a user action or configuration change within this organization. */
 export type AuditLog = {
-  id: string;
-  type: AuditLogEventType;
-  effective_at: number;
-  project?: {
-    id?: string;
-    name?: string;
-  };
-  actor: AuditLogActor;
-  'api_key.created'?: {
-    id?: string;
-    data?: {
-      readonly scopes?: string[];
-    };
-  };
-  'api_key.updated'?: {
-    id?: string;
-    changes_requested?: {
-      readonly scopes?: string[];
-    };
-  };
-  'api_key.deleted'?: {
-    id?: string;
-  };
-  'invite.sent'?: {
-    id?: string;
-    data?: {
-      email?: string;
-      role?: string;
-    };
-  };
-  'invite.accepted'?: {
-    id?: string;
-  };
-  'invite.deleted'?: {
-    id?: string;
-  };
-  'login.failed'?: {
-    error_code?: string;
-    error_message?: string;
-  };
-  'logout.failed'?: {
-    error_code?: string;
-    error_message?: string;
-  };
-  'organization.updated'?: {
-    id?: string;
-    changes_requested?: {
-      title?: string;
-      description?: string;
-      name?: string;
-      settings?: {
-        threads_ui_visibility?: string;
-        usage_dashboard_visibility?: string;
-      };
-    };
-  };
-  'project.created'?: {
-    id?: string;
-    data?: {
-      name?: string;
-      title?: string;
-    };
-  };
-  'project.updated'?: {
-    id?: string;
-    changes_requested?: {
-      title?: string;
-    };
-  };
-  'project.archived'?: {
-    id?: string;
-  };
-  'service_account.created'?: {
-    id?: string;
-    data?: {
-      role?: string;
-    };
-  };
-  'service_account.updated'?: {
-    id?: string;
-    changes_requested?: {
-      role?: string;
-    };
-  };
-  'service_account.deleted'?: {
-    id?: string;
-  };
-  'user.added'?: {
-    id?: string;
-    data?: {
-      role?: string;
-    };
-  };
-  'user.updated'?: {
-    id?: string;
-    changes_requested?: {
-      role?: string;
-    };
-  };
-  'user.deleted'?: {
-    id?: string;
-  };
+	id: string;
+	/** The event type. */
+	type: AuditLogEventType;
+	effective_at: number;
+	project?: {
+		id?: string;
+		name?: string;
+	};
+	/** The actor who performed the audit logged action. */
+	actor: AuditLogActor;
+	"api_key.created"?: {
+		id?: string;
+		data?: {
+			scopes?: readonly string[];
+		};
+	};
+	"api_key.updated"?: {
+		id?: string;
+		changes_requested?: {
+			scopes?: readonly string[];
+		};
+	};
+	"api_key.deleted"?: {
+		id?: string;
+	};
+	"invite.sent"?: {
+		id?: string;
+		data?: {
+			email?: string;
+			role?: string;
+		};
+	};
+	"invite.accepted"?: {
+		id?: string;
+	};
+	"invite.deleted"?: {
+		id?: string;
+	};
+	"login.failed"?: {
+		error_code?: string;
+		error_message?: string;
+	};
+	"logout.failed"?: {
+		error_code?: string;
+		error_message?: string;
+	};
+	"organization.updated"?: {
+		id?: string;
+		changes_requested?: {
+			title?: string;
+			description?: string;
+			name?: string;
+			settings?: {
+				threads_ui_visibility?: string;
+				usage_dashboard_visibility?: string;
+			};
+		};
+	};
+	"project.created"?: {
+		id?: string;
+		data?: {
+			name?: string;
+			title?: string;
+		};
+	};
+	"project.updated"?: {
+		id?: string;
+		changes_requested?: {
+			title?: string;
+		};
+	};
+	"project.archived"?: {
+		id?: string;
+	};
+	"service_account.created"?: {
+		id?: string;
+		data?: {
+			role?: string;
+		};
+	};
+	"service_account.updated"?: {
+		id?: string;
+		changes_requested?: {
+			role?: string;
+		};
+	};
+	"service_account.deleted"?: {
+		id?: string;
+	};
+	"user.added"?: {
+		id?: string;
+		data?: {
+			role?: string;
+		};
+	};
+	"user.updated"?: {
+		id?: string;
+		changes_requested?: {
+			role?: string;
+		};
+	};
+	"user.deleted"?: {
+		id?: string;
+	};
 };
 export type ListAuditLogsResponse = {
-  object: 'list';
-  readonly data: AuditLog[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: "list";
+	data: readonly AuditLog[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type Batch = {
-  id: string;
-  /**
-   * The object type, which is always `batch`.
-   * @enum batch
-   */
-  object: 'batch';
-  endpoint: string;
-  errors?: {
-    object?: string;
-    readonly data?: {
-      code?: string;
-      message?: string;
-      param?: string;
-      line?: number | null;
-    }[];
-  };
-  input_file_id: string;
-  completion_window: string;
-  /**
-   * The current status of the batch.
-   * @enum validating,failed,in_progress,finalizing,completed,expired,cancelling,cancelled
-   */
-  status:
-    | 'validating'
-    | 'failed'
-    | 'in_progress'
-    | 'finalizing'
-    | 'completed'
-    | 'expired'
-    | 'cancelling'
-    | 'cancelled';
-  output_file_id?: string;
-  error_file_id?: string;
-  created_at: number;
-  in_progress_at?: number;
-  expires_at?: number;
-  finalizing_at?: number;
-  completed_at?: number;
-  failed_at?: number;
-  expired_at?: number;
-  cancelling_at?: number;
-  cancelled_at?: number;
-  request_counts?: {
-    total: number;
-    completed: number;
-    failed: number;
-  };
-  metadata?: JsonifiableObject;
+	id: string;
+	/**
+	 * The object type, which is always `batch`.
+	 * @enum batch
+	 */
+	object: "batch";
+	endpoint: string;
+	errors?: {
+		object?: string;
+		data?: readonly {
+			code?: string;
+			message?: string;
+			param?: string;
+			line?: number | null;
+		}[];
+	};
+	input_file_id: string;
+	completion_window: string;
+	/**
+	 * The current status of the batch.
+	 * @enum validating,failed,in_progress,finalizing,completed,expired,cancelling,cancelled
+	 */
+	status:
+		| "validating"
+		| "failed"
+		| "in_progress"
+		| "finalizing"
+		| "completed"
+		| "expired"
+		| "cancelling"
+		| "cancelled";
+	output_file_id?: string;
+	error_file_id?: string;
+	created_at: number;
+	in_progress_at?: number;
+	expires_at?: number;
+	finalizing_at?: number;
+	completed_at?: number;
+	failed_at?: number;
+	expired_at?: number;
+	cancelling_at?: number;
+	cancelled_at?: number;
+	request_counts?: {
+		total: number;
+		completed: number;
+		failed: number;
+	};
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type ListBatchesResponse = {
-  readonly data: Batch[];
-  first_id?: string;
-  last_id?: string;
-  has_more: boolean;
-  object: 'list';
+	data: readonly Batch[];
+	first_id?: string;
+	last_id?: string;
+	has_more: boolean;
+	object: "list";
 };
 /**
  * Represents a message delta i.e. any changed fields on a message during
  * streaming.
  */
 export type MessageDeltaObject = {
-  id: string;
-  /**
-   * The object type, which is always `thread.message.delta`.
-   * @enum thread.message.delta
-   */
-  object: 'thread.message.delta';
-  delta: {
-    /**
-     * The entity that produced the message. One of `user` or `assistant`.
-     * @enum user,assistant
-     */
-    role?: 'user' | 'assistant';
-    readonly content?: (
-      | MessageDeltaContentImageFileObject
-      | MessageDeltaContentTextObject
-      | MessageDeltaContentRefusalObject
-      | MessageDeltaContentImageUrlObject
-      | null
-    )[];
-  };
+	id: string;
+	/**
+	 * The object type, which is always `thread.message.delta`.
+	 * @enum thread.message.delta
+	 */
+	object: "thread.message.delta";
+	delta: {
+		/**
+		 * The entity that produced the message. One of `user` or `assistant`.
+		 * @enum user,assistant
+		 */
+		role?: "user" | "assistant";
+		content?: readonly (
+			| MessageDeltaContentImageFileObject
+			| MessageDeltaContentTextObject
+			| MessageDeltaContentRefusalObject
+			| MessageDeltaContentImageUrlObject
+		)[];
+	};
 };
 /** Occurs when a stream ends. */
 export type DoneEvent = {
-  event: 'done';
-  data: '[DONE]';
+	event: "done";
+	data: "[DONE]";
 };
 export type Error = {
-  code: string;
-  message: string;
-  param: string;
-  type: string;
+	code: string;
+	message: string;
+	param: string;
+	type: string;
 };
 /**
  * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
  * can happen due to an internal server error or a timeout.
  */
 export type ErrorEvent = {
-  event: 'error';
-  data: Error;
+	event: "error";
+	data: Error;
 };
 /** Represents a message within a [thread](/docs/api-reference/threads). */
 export type MessageObject = {
-  id: string;
-  /**
-   * The object type, which is always `thread.message`.
-   * @enum thread.message
-   */
-  object: 'thread.message';
-  created_at: number;
-  thread_id: string;
-  /**
-   * The status of the message, which can be either `in_progress`, `incomplete`,
-   * or `completed`.
-   * @enum in_progress,incomplete,completed
-   */
-  status: 'in_progress' | 'incomplete' | 'completed';
-  incomplete_details: {
-    /**
-     * The reason the message is incomplete.
-     * @enum content_filter,max_tokens,run_cancelled,run_expired,run_failed
-     */
-    reason:
-      | 'content_filter'
-      | 'max_tokens'
-      | 'run_cancelled'
-      | 'run_expired'
-      | 'run_failed';
-  };
-  completed_at: number | null;
-  incomplete_at: number | null;
-  /**
-   * The entity that produced the message. One of `user` or `assistant`.
-   * @enum user,assistant
-   */
-  role: 'user' | 'assistant';
-  readonly content: (
-    | MessageContentImageFileObject
-    | MessageContentImageUrlObject
-    | MessageContentTextObject
-    | MessageContentRefusalObject
-    | null
-  )[];
-  assistant_id: string;
-  run_id: string;
-  readonly attachments: {
-    file_id?: string;
-    readonly tools?: (
-      | AssistantToolsCode
-      | AssistantToolsFileSearchTypeOnly
-      | null
-    )[];
-  }[];
-  metadata: JsonifiableObject;
+	id: string;
+	/**
+	 * The object type, which is always `thread.message`.
+	 * @enum thread.message
+	 */
+	object: "thread.message";
+	created_at: number;
+	thread_id: string;
+	/**
+	 * The status of the message, which can be either `in_progress`, `incomplete`,
+	 * or `completed`.
+	 * @enum in_progress,incomplete,completed
+	 */
+	status: "in_progress" | "incomplete" | "completed";
+	incomplete_details: {
+		/**
+		 * The reason the message is incomplete.
+		 * @enum content_filter,max_tokens,run_cancelled,run_expired,run_failed
+		 */
+		reason:
+			| "content_filter"
+			| "max_tokens"
+			| "run_cancelled"
+			| "run_expired"
+			| "run_failed";
+	};
+	completed_at: number | null;
+	incomplete_at: number | null;
+	/**
+	 * The entity that produced the message. One of `user` or `assistant`.
+	 * @enum user,assistant
+	 */
+	role: "user" | "assistant";
+	content: readonly (
+		| MessageContentImageFileObject
+		| MessageContentImageUrlObject
+		| MessageContentTextObject
+		| MessageContentRefusalObject
+	)[];
+	assistant_id: string;
+	run_id: string;
+	attachments: readonly {
+		file_id?: string;
+		tools?: readonly (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
+	}[];
+	metadata: Record<string | number, Jsonifiable>;
 };
 export type MessageStreamEvent =
-  | {
-      event: 'thread.message.created';
-      data: MessageObject;
-    }
-  | {
-      event: 'thread.message.in_progress';
-      data: MessageObject;
-    }
-  | {
-      event: 'thread.message.delta';
-      data: MessageDeltaObject;
-    }
-  | {
-      event: 'thread.message.completed';
-      data: MessageObject;
-    }
-  | {
-      event: 'thread.message.incomplete';
-      data: MessageObject;
-    };
+	| {
+			event: "thread.message.created";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
+			data: MessageObject;
+	  }
+	| {
+			event: "thread.message.in_progress";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
+			data: MessageObject;
+	  }
+	| {
+			event: "thread.message.delta";
+			/**
+			 * Represents a message delta i.e. any changed fields on a message during
+			 * streaming.
+			 */
+			data: MessageDeltaObject;
+	  }
+	| {
+			event: "thread.message.completed";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
+			data: MessageObject;
+	  }
+	| {
+			event: "thread.message.incomplete";
+			/** Represents a message within a [thread](/docs/api-reference/threads). */
+			data: MessageObject;
+	  };
 /** Details of the tool call. */
 export type RunStepDeltaStepDetailsToolCallsObject = {
-  /**
-   * Always `tool_calls`.
-   * @enum tool_calls
-   */
-  type: 'tool_calls';
-  readonly tool_calls?: (
-    | RunStepDeltaStepDetailsToolCallsCodeObject
-    | RunStepDeltaStepDetailsToolCallsFileSearchObject
-    | RunStepDeltaStepDetailsToolCallsFunctionObject
-    | null
-  )[];
+	/**
+	 * Always `tool_calls`.
+	 * @enum tool_calls
+	 */
+	type: "tool_calls";
+	tool_calls?: readonly (
+		| RunStepDeltaStepDetailsToolCallsCodeObject
+		| RunStepDeltaStepDetailsToolCallsFileSearchObject
+		| RunStepDeltaStepDetailsToolCallsFunctionObject
+	)[];
 };
 /** Details of the message creation by the run step. */
 export type RunStepDeltaStepDetailsMessageCreationObject = {
-  /**
-   * Always `message_creation`.
-   * @enum message_creation
-   */
-  type: 'message_creation';
-  message_creation?: {
-    message_id?: string;
-  };
+	/**
+	 * Always `message_creation`.
+	 * @enum message_creation
+	 */
+	type: "message_creation";
+	message_creation?: {
+		message_id?: string;
+	};
 };
 /**
  * Represents a run step delta i.e. any changed fields on a run step during
  * streaming.
  */
 export type RunStepDeltaObject = {
-  id: string;
-  /**
-   * The object type, which is always `thread.run.step.delta`.
-   * @enum thread.run.step.delta
-   */
-  object: 'thread.run.step.delta';
-  delta: {
-    step_details?:
-      | RunStepDeltaStepDetailsMessageCreationObject
-      | RunStepDeltaStepDetailsToolCallsObject
-      | null;
-  };
+	id: string;
+	/**
+	 * The object type, which is always `thread.run.step.delta`.
+	 * @enum thread.run.step.delta
+	 */
+	object: "thread.run.step.delta";
+	delta: {
+		step_details?:
+			| RunStepDeltaStepDetailsMessageCreationObject
+			| RunStepDeltaStepDetailsToolCallsObject;
+	};
 };
 /**
  * Usage statistics related to the run step. This value will be `null` while
  * the run step's status is `in_progress`.
  */
 export type RunStepCompletionUsage = {
-  completion_tokens: number;
-  prompt_tokens: number;
-  total_tokens: number;
+	completion_tokens: number;
+	prompt_tokens: number;
+	total_tokens: number;
 };
 /** Details of the tool call. */
 export type RunStepDetailsToolCallsObject = {
-  /**
-   * Always `tool_calls`.
-   * @enum tool_calls
-   */
-  type: 'tool_calls';
-  readonly tool_calls: (
-    | RunStepDetailsToolCallsCodeObject
-    | never
-    | RunStepDetailsToolCallsFunctionObject
-    | null
-  )[];
+	/**
+	 * Always `tool_calls`.
+	 * @enum tool_calls
+	 */
+	type: "tool_calls";
+	tool_calls: readonly (
+		| RunStepDetailsToolCallsCodeObject
+		| never
+		| RunStepDetailsToolCallsFunctionObject
+	)[];
 };
 /** Details of the message creation by the run step. */
 export type RunStepDetailsMessageCreationObject = {
-  /**
-   * Always `message_creation`.
-   * @enum message_creation
-   */
-  type: 'message_creation';
-  message_creation: {
-    message_id: string;
-  };
+	/**
+	 * Always `message_creation`.
+	 * @enum message_creation
+	 */
+	type: "message_creation";
+	message_creation: {
+		message_id: string;
+	};
 };
 /** Represents a step in execution of a run. */
 export type RunStepObject = {
-  id: string;
-  /**
-   * The object type, which is always `thread.run.step`.
-   * @enum thread.run.step
-   */
-  object: 'thread.run.step';
-  created_at: number;
-  assistant_id: string;
-  thread_id: string;
-  run_id: string;
-  /**
-   * The type of run step, which can be either `message_creation` or
-   * `tool_calls`.
-   * @enum message_creation,tool_calls
-   */
-  type: 'message_creation' | 'tool_calls';
-  /**
-   * The status of the run step, which can be either `in_progress`, `cancelled`,
-   * `failed`, `completed`, or `expired`.
-   * @enum in_progress,cancelled,failed,completed,expired
-   */
-  status: 'in_progress' | 'cancelled' | 'failed' | 'completed' | 'expired';
-  step_details:
-    | RunStepDetailsMessageCreationObject
-    | RunStepDetailsToolCallsObject
-    | null;
-  last_error: {
-    /**
-     * One of `server_error` or `rate_limit_exceeded`.
-     * @enum server_error,rate_limit_exceeded
-     */
-    code: 'server_error' | 'rate_limit_exceeded';
-    message: string;
-  };
-  expired_at: number | null;
-  cancelled_at: number | null;
-  failed_at: number | null;
-  completed_at: number | null;
-  metadata: JsonifiableObject;
-  usage: RunStepCompletionUsage;
+	id: string;
+	/**
+	 * The object type, which is always `thread.run.step`.
+	 * @enum thread.run.step
+	 */
+	object: "thread.run.step";
+	created_at: number;
+	assistant_id: string;
+	thread_id: string;
+	run_id: string;
+	/**
+	 * The type of run step, which can be either `message_creation` or
+	 * `tool_calls`.
+	 * @enum message_creation,tool_calls
+	 */
+	type: "message_creation" | "tool_calls";
+	/**
+	 * The status of the run step, which can be either `in_progress`, `cancelled`,
+	 * `failed`, `completed`, or `expired`.
+	 * @enum in_progress,cancelled,failed,completed,expired
+	 */
+	status: "in_progress" | "cancelled" | "failed" | "completed" | "expired";
+	step_details:
+		| RunStepDetailsMessageCreationObject
+		| RunStepDetailsToolCallsObject;
+	last_error: {
+		/**
+		 * One of `server_error` or `rate_limit_exceeded`.
+		 * @enum server_error,rate_limit_exceeded
+		 */
+		code: "server_error" | "rate_limit_exceeded";
+		message: string;
+	};
+	expired_at: number | null;
+	cancelled_at: number | null;
+	failed_at: number | null;
+	completed_at: number | null;
+	metadata: Record<string | number, Jsonifiable>;
+	/**
+	 * Usage statistics related to the run step. This value will be `null` while
+	 * the run step's status is `in_progress`.
+	 */
+	usage: RunStepCompletionUsage;
 };
 export type RunStepStreamEvent =
-  | {
-      event: 'thread.run.step.created';
-      data: RunStepObject;
-    }
-  | {
-      event: 'thread.run.step.in_progress';
-      data: RunStepObject;
-    }
-  | {
-      event: 'thread.run.step.delta';
-      data: RunStepDeltaObject;
-    }
-  | {
-      event: 'thread.run.step.completed';
-      data: RunStepObject;
-    }
-  | {
-      event: 'thread.run.step.failed';
-      data: RunStepObject;
-    }
-  | {
-      event: 'thread.run.step.cancelled';
-      data: RunStepObject;
-    }
-  | {
-      event: 'thread.run.step.expired';
-      data: RunStepObject;
-    };
+	| {
+			event: "thread.run.step.created";
+			/** Represents a step in execution of a run. */
+			data: RunStepObject;
+	  }
+	| {
+			event: "thread.run.step.in_progress";
+			/** Represents a step in execution of a run. */
+			data: RunStepObject;
+	  }
+	| {
+			event: "thread.run.step.delta";
+			/**
+			 * Represents a run step delta i.e. any changed fields on a run step during
+			 * streaming.
+			 */
+			data: RunStepDeltaObject;
+	  }
+	| {
+			event: "thread.run.step.completed";
+			/** Represents a step in execution of a run. */
+			data: RunStepObject;
+	  }
+	| {
+			event: "thread.run.step.failed";
+			/** Represents a step in execution of a run. */
+			data: RunStepObject;
+	  }
+	| {
+			event: "thread.run.step.cancelled";
+			/** Represents a step in execution of a run. */
+			data: RunStepObject;
+	  }
+	| {
+			event: "thread.run.step.expired";
+			/** Represents a step in execution of a run. */
+			data: RunStepObject;
+	  };
 /** The schema for the response format, described as a JSON Schema object. */
-export type ResponseFormatJsonSchemaSchema = JsonifiableObject;
+export type ResponseFormatJsonSchemaSchema = Record<
+	string | number,
+	Jsonifiable
+>;
 export type ResponseFormatJsonSchema = {
-  /**
-   * The type of response format being defined: `json_schema`
-   * @enum json_schema
-   */
-  type: 'json_schema';
-  json_schema: {
-    description?: string;
-    name: string;
-    schema?: ResponseFormatJsonSchemaSchema;
-    strict?: boolean | null;
-  };
+	/**
+	 * The type of response format being defined: `json_schema`
+	 * @enum json_schema
+	 */
+	type: "json_schema";
+	json_schema: {
+		description?: string;
+		name: string;
+		/** The schema for the response format, described as a JSON Schema object. */
+		schema?: ResponseFormatJsonSchemaSchema;
+		strict?: boolean | null;
+	};
 };
 export type ResponseFormatJsonObject = {
-  /**
-   * The type of response format being defined: `json_object`
-   * @enum json_object
-   */
-  type: 'json_object';
+	/**
+	 * The type of response format being defined: `json_object`
+	 * @enum json_object
+	 */
+	type: "json_object";
 };
 export type ResponseFormatText = {
-  /**
-   * The type of response format being defined: `text`
-   * @enum text
-   */
-  type: 'text';
+	/**
+	 * The type of response format being defined: `text`
+	 * @enum text
+	 */
+	type: "text";
 };
 /**
  * Specifies the format that the model must output. Compatible with
@@ -1861,10 +1853,10 @@ export type ResponseFormatText = {
  * `max_tokens` or the conversation exceeded the max context length.
  */
 export type AssistantsApiResponseFormatOption =
-  | ResponseFormatText
-  | ResponseFormatJsonObject
-  | ResponseFormatJsonSchema
-  | 'auto';
+	| ResponseFormatText
+	| ResponseFormatJsonObject
+	| ResponseFormatJsonSchema
+	| "auto";
 /**
  * Whether to enable [parallel function
  * calling](/docs/guides/function-calling/parallel-function-calling) during
@@ -1876,14 +1868,14 @@ export type ParallelToolCalls = boolean;
  * specific tool.
  */
 export type AssistantsNamedToolChoice = {
-  /**
-   * The type of the tool. If type is `function`, the function name must be set
-   * @enum function,code_interpreter,file_search
-   */
-  type: 'function' | 'code_interpreter' | 'file_search';
-  function?: {
-    name: string;
-  };
+	/**
+	 * The type of the tool. If type is `function`, the function name must be set
+	 * @enum function,code_interpreter,file_search
+	 */
+	type: "function" | "code_interpreter" | "file_search";
+	function?: {
+		name: string;
+	};
 };
 /**
  * Controls which (if any) tool is called by the model.
@@ -1898,195 +1890,253 @@ export type AssistantsNamedToolChoice = {
  * that tool.
  */
 export type AssistantsApiToolChoiceOption =
-  | AssistantsNamedToolChoice
-  | 'none'
-  | 'auto'
-  | 'required';
+	| AssistantsNamedToolChoice
+	| "none"
+	| "auto"
+	| "required";
 /**
  * Controls for how a thread will be truncated prior to the run. Use this to
  * control the intial context window of the run.
  */
 export type TruncationObject = {
-  /**
-   * The truncation strategy to use for the thread. The default is `auto`. If
-   * set to `last_messages`, the thread will be truncated to the n most recent
-   * messages in the thread. When set to `auto`, messages in the middle of the
-   * thread will be dropped to fit the context length of the model,
-   * `max_prompt_tokens`.
-   * @enum auto,last_messages
-   */
-  type: 'auto' | 'last_messages';
-  last_messages?: number | null;
+	/**
+	 * The truncation strategy to use for the thread. The default is `auto`. If
+	 * set to `last_messages`, the thread will be truncated to the n most recent
+	 * messages in the thread. When set to `auto`, messages in the middle of the
+	 * thread will be dropped to fit the context length of the model,
+	 * `max_prompt_tokens`.
+	 * @enum auto,last_messages
+	 */
+	type: "auto" | "last_messages";
+	last_messages?: number | null;
 };
 /**
  * Usage statistics related to the run. This value will be `null` if the run
  * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
  */
 export type RunCompletionUsage = {
-  completion_tokens: number;
-  prompt_tokens: number;
-  total_tokens: number;
+	completion_tokens: number;
+	prompt_tokens: number;
+	total_tokens: number;
 };
 /** Tool call objects */
 export type RunToolCallObject = {
-  id: string;
-  /**
-   * The type of tool call the output is required for. For now, this is always
-   * `function`.
-   * @enum function
-   */
-  type: 'function';
-  function: {
-    name: string;
-    arguments: string;
-  };
+	id: string;
+	/**
+	 * The type of tool call the output is required for. For now, this is always
+	 * `function`.
+	 * @enum function
+	 */
+	type: "function";
+	function: {
+		name: string;
+		arguments: string;
+	};
 };
 /** Represents an execution run on a [thread](/docs/api-reference/threads). */
 export type RunObject = {
-  id: string;
-  /**
-   * The object type, which is always `thread.run`.
-   * @enum thread.run
-   */
-  object: 'thread.run';
-  created_at: number;
-  thread_id: string;
-  assistant_id: string;
-  /**
-   * The status of the run, which can be either `queued`, `in_progress`,
-   * `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`,
-   * `incomplete`, or `expired`.
-   * @enum queued,in_progress,requires_action,cancelling,cancelled,failed,completed,incomplete,expired
-   */
-  status:
-    | 'queued'
-    | 'in_progress'
-    | 'requires_action'
-    | 'cancelling'
-    | 'cancelled'
-    | 'failed'
-    | 'completed'
-    | 'incomplete'
-    | 'expired';
-  required_action: {
-    /**
-     * For now, this is always `submit_tool_outputs`.
-     * @enum submit_tool_outputs
-     */
-    type: 'submit_tool_outputs';
-    submit_tool_outputs: {
-      readonly tool_calls: RunToolCallObject[];
-    };
-  };
-  last_error: {
-    /**
-     * One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
-     * @enum server_error,rate_limit_exceeded,invalid_prompt
-     */
-    code: 'server_error' | 'rate_limit_exceeded' | 'invalid_prompt';
-    message: string;
-  };
-  expires_at: number | null;
-  started_at: number | null;
-  cancelled_at: number | null;
-  failed_at: number | null;
-  completed_at: number | null;
-  incomplete_details: {
-    /**
-     * The reason why the run is incomplete. This will point to which specific
-     * token limit was reached over the course of the run.
-     * @enum max_completion_tokens,max_prompt_tokens
-     */
-    reason?: 'max_completion_tokens' | 'max_prompt_tokens';
-  };
-  model: string;
-  instructions: string;
-  /**
-   * The list of tools that the [assistant](/docs/api-reference/assistants) used
-   * for this run.
-   * @default
-   */
-  readonly tools: (AssistantToolsCode | never | never | null)[];
-  metadata: JsonifiableObject;
-  usage: RunCompletionUsage;
-  temperature?: number | null;
-  top_p?: number | null;
-  max_prompt_tokens: number | null;
-  max_completion_tokens: number | null;
-  truncation_strategy: TruncationObject;
-  tool_choice: AssistantsApiToolChoiceOption;
-  parallel_tool_calls: ParallelToolCalls;
-  response_format: AssistantsApiResponseFormatOption;
+	id: string;
+	/**
+	 * The object type, which is always `thread.run`.
+	 * @enum thread.run
+	 */
+	object: "thread.run";
+	created_at: number;
+	thread_id: string;
+	assistant_id: string;
+	/**
+	 * The status of the run, which can be either `queued`, `in_progress`,
+	 * `requires_action`, `cancelling`, `cancelled`, `failed`, `completed`,
+	 * `incomplete`, or `expired`.
+	 * @enum queued,in_progress,requires_action,cancelling,cancelled,failed,completed,incomplete,expired
+	 */
+	status:
+		| "queued"
+		| "in_progress"
+		| "requires_action"
+		| "cancelling"
+		| "cancelled"
+		| "failed"
+		| "completed"
+		| "incomplete"
+		| "expired";
+	required_action: {
+		/**
+		 * For now, this is always `submit_tool_outputs`.
+		 * @enum submit_tool_outputs
+		 */
+		type: "submit_tool_outputs";
+		submit_tool_outputs: {
+			tool_calls: readonly RunToolCallObject[];
+		};
+	};
+	last_error: {
+		/**
+		 * One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
+		 * @enum server_error,rate_limit_exceeded,invalid_prompt
+		 */
+		code: "server_error" | "rate_limit_exceeded" | "invalid_prompt";
+		message: string;
+	};
+	expires_at: number | null;
+	started_at: number | null;
+	cancelled_at: number | null;
+	failed_at: number | null;
+	completed_at: number | null;
+	incomplete_details: {
+		/**
+		 * The reason why the run is incomplete. This will point to which specific
+		 * token limit was reached over the course of the run.
+		 * @enum max_completion_tokens,max_prompt_tokens
+		 */
+		reason?: "max_completion_tokens" | "max_prompt_tokens";
+	};
+	model: string;
+	instructions: string;
+	/**
+	 * The list of tools that the [assistant](/docs/api-reference/assistants) used
+	 * for this run.
+	 * @default
+	 */
+	tools: readonly (AssistantToolsCode | never | never)[];
+	metadata: Record<string | number, Jsonifiable>;
+	/**
+	 * Usage statistics related to the run. This value will be `null` if the run
+	 * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
+	 */
+	usage: RunCompletionUsage;
+	temperature?: number | null;
+	top_p?: number | null;
+	max_prompt_tokens: number | null;
+	max_completion_tokens: number | null;
+	/**
+	 * Controls for how a thread will be truncated prior to the run. Use this to
+	 * control the intial context window of the run.
+	 */
+	truncation_strategy: TruncationObject;
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tools and instead generates a
+	 * message.
+	 * `auto` is the default value and means the model can pick between generating
+	 * a message or calling one or more tools.
+	 * `required` means the model must call one or more tools before responding to
+	 * the user.
+	 * Specifying a particular tool like `{"type": "file_search"}` or `{"type":
+	 * "function", "function": {"name": "my_function"}}` forces the model to call
+	 * that tool.
+	 */
+	tool_choice: AssistantsApiToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
+	parallel_tool_calls: ParallelToolCalls;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format: AssistantsApiResponseFormatOption;
 };
 export type RunStreamEvent =
-  | {
-      event: 'thread.run.created';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.queued';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.in_progress';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.requires_action';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.completed';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.incomplete';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.failed';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.cancelling';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.cancelled';
-      data: RunObject;
-    }
-  | {
-      event: 'thread.run.expired';
-      data: RunObject;
-    };
+	| {
+			event: "thread.run.created";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.queued";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.in_progress";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.requires_action";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.completed";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.incomplete";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.failed";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.cancelling";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.cancelled";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  }
+	| {
+			event: "thread.run.expired";
+			/** Represents an execution run on a [thread](/docs/api-reference/threads). */
+			data: RunObject;
+	  };
 /** Represents a thread that contains [messages](/docs/api-reference/messages). */
 export type ThreadObject = {
-  id: string;
-  /**
-   * The object type, which is always `thread`.
-   * @enum thread
-   */
-  object: 'thread';
-  created_at: number;
-  tool_resources: {
-    code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter` tool. There can be a maximum of 20 files associated with
-       * the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: {
-      readonly vector_store_ids?: string[];
-    };
-  };
-  metadata: JsonifiableObject;
+	id: string;
+	/**
+	 * The object type, which is always `thread`.
+	 * @enum thread
+	 */
+	object: "thread";
+	created_at: number;
+	tool_resources: {
+		code_interpreter?: {
+			/**
+			 * A list of [file](/docs/api-reference/files) IDs made available to the
+			 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+			 * the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: {
+			vector_store_ids?: readonly string[];
+		};
+	};
+	metadata: Record<string | number, Jsonifiable>;
 };
 export type ThreadStreamEvent = {
-  event: 'thread.created';
-  data: ThreadObject;
+	event: "thread.created";
+	/** Represents a thread that contains [messages](/docs/api-reference/messages). */
+	data: ThreadObject;
 };
 /**
  * Represents an event emitted when streaming a Run.
@@ -2118,45 +2168,49 @@ export type ThreadStreamEvent = {
  * integrate the Assistants API with streaming.
  */
 export type AssistantStreamEvent =
-  | ThreadStreamEvent
-  | RunStreamEvent
-  | RunStepStreamEvent
-  | MessageStreamEvent
-  | ErrorEvent
-  | DoneEvent;
+	| ThreadStreamEvent
+	| RunStreamEvent
+	| RunStepStreamEvent
+	| MessageStreamEvent
+	| ErrorEvent
+	| DoneEvent;
 export type StaticChunkingStrategy = {
-  max_chunk_size_tokens: number;
-  chunk_overlap_tokens: number;
+	max_chunk_size_tokens: number;
+	chunk_overlap_tokens: number;
 };
 export type StaticChunkingStrategyRequestParam = {
-  /**
-   * Always `static`.
-   * @enum static
-   */
-  type: 'static';
-  static: StaticChunkingStrategy;
+	/**
+	 * Always `static`.
+	 * @enum static
+	 */
+	type: "static";
+	static: StaticChunkingStrategy;
 };
 /**
  * The default strategy. This strategy currently uses a
  * `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
  */
 export type AutoChunkingStrategyRequestParam = {
-  /**
-   * Always `auto`.
-   * @enum auto
-   */
-  type: 'auto';
+	/**
+	 * Always `auto`.
+	 * @enum auto
+	 */
+	type: "auto";
 };
 /**
  * The chunking strategy used to chunk the file(s). If not set, will use the
  * `auto` strategy.
  */
 export type ChunkingStrategyRequestParam =
-  | AutoChunkingStrategyRequestParam
-  | StaticChunkingStrategyRequestParam;
+	| AutoChunkingStrategyRequestParam
+	| StaticChunkingStrategyRequestParam;
 export type CreateVectorStoreFileBatchRequest = {
-  readonly file_ids: string[];
-  chunking_strategy?: ChunkingStrategyRequestParam;
+	file_ids: readonly string[];
+	/**
+	 * The chunking strategy used to chunk the file(s). If not set, will use the
+	 * `auto` strategy.
+	 */
+	chunking_strategy?: ChunkingStrategyRequestParam;
 };
 /**
  * This is returned when the chunking strategy is unknown. Typically, this is
@@ -2164,385 +2218,471 @@ export type CreateVectorStoreFileBatchRequest = {
  * introduced in the API.
  */
 export type OtherChunkingStrategyResponseParam = {
-  /**
-   * Always `other`.
-   * @enum other
-   */
-  type: 'other';
+	/**
+	 * Always `other`.
+	 * @enum other
+	 */
+	type: "other";
 };
 export type StaticChunkingStrategyResponseParam = {
-  /**
-   * Always `static`.
-   * @enum static
-   */
-  type: 'static';
-  static: StaticChunkingStrategy;
+	/**
+	 * Always `static`.
+	 * @enum static
+	 */
+	type: "static";
+	static: StaticChunkingStrategy;
 };
 /** A list of files attached to a vector store. */
 export type VectorStoreFileObject = {
-  id: string;
-  /**
-   * The object type, which is always `vector_store.file`.
-   * @enum vector_store.file
-   */
-  object: 'vector_store.file';
-  usage_bytes: number;
-  created_at: number;
-  vector_store_id: string;
-  /**
-   * The status of the vector store file, which can be either `in_progress`,
-   * `completed`, `cancelled`, or `failed`. The status `completed` indicates
-   * that the vector store file is ready for use.
-   * @enum in_progress,completed,cancelled,failed
-   */
-  status: 'in_progress' | 'completed' | 'cancelled' | 'failed';
-  last_error: {
-    /**
-     * One of `server_error` or `rate_limit_exceeded`.
-     * @enum server_error,unsupported_file,invalid_file
-     */
-    code: 'server_error' | 'unsupported_file' | 'invalid_file';
-    message: string;
-  };
-  chunking_strategy?:
-    | StaticChunkingStrategyResponseParam
-    | OtherChunkingStrategyResponseParam
-    | null;
+	id: string;
+	/**
+	 * The object type, which is always `vector_store.file`.
+	 * @enum vector_store.file
+	 */
+	object: "vector_store.file";
+	usage_bytes: number;
+	created_at: number;
+	vector_store_id: string;
+	/**
+	 * The status of the vector store file, which can be either `in_progress`,
+	 * `completed`, `cancelled`, or `failed`. The status `completed` indicates
+	 * that the vector store file is ready for use.
+	 * @enum in_progress,completed,cancelled,failed
+	 */
+	status: "in_progress" | "completed" | "cancelled" | "failed";
+	last_error: {
+		/**
+		 * One of `server_error` or `rate_limit_exceeded`.
+		 * @enum server_error,unsupported_file,invalid_file
+		 */
+		code: "server_error" | "unsupported_file" | "invalid_file";
+		message: string;
+	};
+	chunking_strategy?:
+		| StaticChunkingStrategyResponseParam
+		| OtherChunkingStrategyResponseParam;
 };
 export type ListVectorStoreFilesResponse = {
-  object: string;
-  readonly data: VectorStoreFileObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly VectorStoreFileObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type CreateVectorStoreFileRequest = {
-  file_id: string;
-  chunking_strategy?: ChunkingStrategyRequestParam;
+	file_id: string;
+	/**
+	 * The chunking strategy used to chunk the file(s). If not set, will use the
+	 * `auto` strategy.
+	 */
+	chunking_strategy?: ChunkingStrategyRequestParam;
 };
 /** The expiration policy for a vector store. */
 export type VectorStoreExpirationAfter = {
-  /**
-   * Anchor timestamp after which the expiration policy applies. Supported
-   * anchors: `last_active_at`.
-   * @enum last_active_at
-   */
-  anchor: 'last_active_at';
-  days: number;
+	/**
+	 * Anchor timestamp after which the expiration policy applies. Supported
+	 * anchors: `last_active_at`.
+	 * @enum last_active_at
+	 */
+	anchor: "last_active_at";
+	days: number;
 };
 /**
  * A vector store is a collection of processed files can be used by the
  * `file_search` tool.
  */
 export type VectorStoreObject = {
-  id: string;
-  /**
-   * The object type, which is always `vector_store`.
-   * @enum vector_store
-   */
-  object: 'vector_store';
-  created_at: number;
-  name: string;
-  usage_bytes: number;
-  file_counts: {
-    in_progress: number;
-    completed: number;
-    failed: number;
-    cancelled: number;
-    total: number;
-  };
-  /**
-   * The status of the vector store, which can be either `expired`,
-   * `in_progress`, or `completed`. A status of `completed` indicates that the
-   * vector store is ready for use.
-   * @enum expired,in_progress,completed
-   */
-  status: 'expired' | 'in_progress' | 'completed';
-  expires_after?: VectorStoreExpirationAfter;
-  expires_at?: number | null;
-  last_active_at: number | null;
-  metadata: JsonifiableObject;
+	id: string;
+	/**
+	 * The object type, which is always `vector_store`.
+	 * @enum vector_store
+	 */
+	object: "vector_store";
+	created_at: number;
+	name: string;
+	usage_bytes: number;
+	file_counts: {
+		in_progress: number;
+		completed: number;
+		failed: number;
+		cancelled: number;
+		total: number;
+	};
+	/**
+	 * The status of the vector store, which can be either `expired`,
+	 * `in_progress`, or `completed`. A status of `completed` indicates that the
+	 * vector store is ready for use.
+	 * @enum expired,in_progress,completed
+	 */
+	status: "expired" | "in_progress" | "completed";
+	/** The expiration policy for a vector store. */
+	expires_after?: VectorStoreExpirationAfter;
+	expires_at?: number | null;
+	last_active_at: number | null;
+	metadata: Record<string | number, Jsonifiable>;
 };
 export type ListVectorStoresResponse = {
-  object: string;
-  readonly data: VectorStoreObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly VectorStoreObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type UpdateVectorStoreRequest = {
-  name?: string;
-  expires_after?: VectorStoreExpirationAfter;
-  metadata?: JsonifiableObject;
+	name?: string;
+	/** The expiration policy for a vector store. */
+	expires_after?: VectorStoreExpirationAfter;
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type CreateVectorStoreRequest = {
-  readonly file_ids?: string[];
-  name?: string;
-  expires_after?: VectorStoreExpirationAfter;
-  chunking_strategy?:
-    | AutoChunkingStrategyRequestParam
-    | StaticChunkingStrategyRequestParam
-    | null;
-  metadata?: JsonifiableObject;
+	file_ids?: readonly string[];
+	name?: string;
+	/** The expiration policy for a vector store. */
+	expires_after?: VectorStoreExpirationAfter;
+	chunking_strategy?:
+		| AutoChunkingStrategyRequestParam
+		| StaticChunkingStrategyRequestParam;
+	metadata?: Record<string | number, Jsonifiable>;
 };
 /** A result instance of the file search. */
 export type RunStepDetailsToolCallsFileSearchResultObject = {
-  file_id: string;
-  file_name: string;
-  score: number;
-  readonly content?: {
-    /**
-     * The type of the content.
-     * @enum text
-     */
-    type?: 'text';
-    text?: string;
-  }[];
+	file_id: string;
+	file_name: string;
+	score: number;
+	content?: readonly {
+		/**
+		 * The type of the content.
+		 * @enum text
+		 */
+		type?: "text";
+		text?: string;
+	}[];
 };
 /** The ranking options for the file search. */
 export type RunStepDetailsToolCallsFileSearchRankingOptionsObject = {
-  /**
-   * The ranker used for the file search.
-   * @enum default_2024_08_21
-   */
-  ranker: 'default_2024_08_21';
-  score_threshold: number;
+	/**
+	 * The ranker used for the file search.
+	 * @enum default_2024_08_21
+	 */
+	ranker: "default_2024_08_21";
+	score_threshold: number;
 };
 export type RunStepDetailsToolCallsFileSearchObject = {
-  id: string;
-  /**
-   * The type of tool call. This is always going to be `file_search` for this
-   * type of tool call.
-   * @enum file_search
-   */
-  type: 'file_search';
-  file_search: {
-    ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
-    readonly results?: RunStepDetailsToolCallsFileSearchResultObject[];
-  };
+	id: string;
+	/**
+	 * The type of tool call. This is always going to be `file_search` for this
+	 * type of tool call.
+	 * @enum file_search
+	 */
+	type: "file_search";
+	file_search: {
+		/** The ranking options for the file search. */
+		ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
+		results?: readonly RunStepDetailsToolCallsFileSearchResultObject[];
+	};
 };
 export type ListRunStepsResponse = {
-  object: string;
-  readonly data: RunStepObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly RunStepObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type ListMessagesResponse = {
-  object: string;
-  readonly data: MessageObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly MessageObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type ListThreadsResponse = {
-  object: string;
-  readonly data: ThreadObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly ThreadObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type CreateMessageRequest = {
-  /**
-   * The role of the entity that is creating the message. Allowed values
-   * include:
-   * - `user`: Indicates the message is sent by an actual user and should be
-   * used in most cases to represent user-generated messages.
-   * - `assistant`: Indicates the message is generated by the assistant. Use
-   * this value to insert messages from the assistant into the conversation.
-   * @enum user,assistant
-   */
-  role: 'user' | 'assistant';
-  content:
-    | string
-    | (
-        | MessageContentImageFileObject
-        | MessageContentImageUrlObject
-        | MessageRequestContentTextObject
-        | null
-      )[]
-    | null;
-  readonly attachments?: {
-    file_id?: string;
-    readonly tools?: (
-      | AssistantToolsCode
-      | AssistantToolsFileSearchTypeOnly
-      | null
-    )[];
-  }[];
-  metadata?: JsonifiableObject;
+	/**
+	 * The role of the entity that is creating the message. Allowed values
+	 * include:
+	 * - `user`: Indicates the message is sent by an actual user and should be
+	 * used in most cases to represent user-generated messages.
+	 * - `assistant`: Indicates the message is generated by the assistant. Use
+	 * this value to insert messages from the assistant into the conversation.
+	 * @enum user,assistant
+	 */
+	role: "user" | "assistant";
+	content:
+		| string
+		| readonly (
+				| MessageContentImageFileObject
+				| MessageContentImageUrlObject
+				| MessageRequestContentTextObject
+		  )[];
+	attachments?: readonly {
+		file_id?: string;
+		tools?: readonly (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
+	}[];
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type CreateThreadRequest = {
-  readonly messages?: CreateMessageRequest[];
-  tool_resources?: {
-    code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter` tool. There can be a maximum of 20 files associated with
-       * the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: unknown | unknown | null;
-  };
-  metadata?: JsonifiableObject;
+	messages?: readonly CreateMessageRequest[];
+	tool_resources?: {
+		code_interpreter?: {
+			/**
+			 * A list of [file](/docs/api-reference/files) IDs made available to the
+			 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+			 * the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: unknown | unknown;
+	};
+	metadata?: Record<string | number, Jsonifiable>;
 };
 export type CreateThreadAndRunRequest = {
-  assistant_id: string;
-  thread?: CreateThreadRequest;
-  /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute
-   * this run. If a value is provided here, it will override the model
-   * associated with the assistant. If not, the model associated with the
-   * assistant will be used.
-   * @example gpt-4o
-   */
-  model?:
-    | string
-    | 'gpt-4o'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-2024-05-13'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-mini'
-    | 'gpt-4o-mini-2024-07-18'
-    | 'gpt-4-turbo'
-    | 'gpt-4-turbo-2024-04-09'
-    | 'gpt-4-0125-preview'
-    | 'gpt-4-turbo-preview'
-    | 'gpt-4-1106-preview'
-    | 'gpt-4-vision-preview'
-    | 'gpt-4'
-    | 'gpt-4-0314'
-    | 'gpt-4-0613'
-    | 'gpt-4-32k'
-    | 'gpt-4-32k-0314'
-    | 'gpt-4-32k-0613'
-    | 'gpt-3.5-turbo'
-    | 'gpt-3.5-turbo-16k'
-    | 'gpt-3.5-turbo-0613'
-    | 'gpt-3.5-turbo-1106'
-    | 'gpt-3.5-turbo-0125'
-    | 'gpt-3.5-turbo-16k-0613'
-    | null;
-  instructions?: string;
-  readonly tools?: (AssistantToolsCode | never | never | null)[];
-  tool_resources?: {
-    code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter` tool. There can be a maximum of 20 files associated with
-       * the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: {
-      readonly vector_store_ids?: string[];
-    };
-  };
-  metadata?: JsonifiableObject;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or temperature but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  stream?: boolean | null;
-  max_prompt_tokens?: number | null;
-  max_completion_tokens?: number | null;
-  truncation_strategy?: TruncationObject;
-  tool_choice?: AssistantsApiToolChoiceOption;
-  parallel_tool_calls?: ParallelToolCalls;
-  response_format?: AssistantsApiResponseFormatOption;
+	assistant_id: string;
+	thread?: CreateThreadRequest;
+	/**
+	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
+	 * this run. If a value is provided here, it will override the model
+	 * associated with the assistant. If not, the model associated with the
+	 * assistant will be used.
+	 * @example gpt-4o
+	 */
+	model?:
+		| string
+		| "gpt-4o"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-2024-05-13"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-mini"
+		| "gpt-4o-mini-2024-07-18"
+		| "gpt-4-turbo"
+		| "gpt-4-turbo-2024-04-09"
+		| "gpt-4-0125-preview"
+		| "gpt-4-turbo-preview"
+		| "gpt-4-1106-preview"
+		| "gpt-4-vision-preview"
+		| "gpt-4"
+		| "gpt-4-0314"
+		| "gpt-4-0613"
+		| "gpt-4-32k"
+		| "gpt-4-32k-0314"
+		| "gpt-4-32k-0613"
+		| "gpt-3.5-turbo"
+		| "gpt-3.5-turbo-16k"
+		| "gpt-3.5-turbo-0613"
+		| "gpt-3.5-turbo-1106"
+		| "gpt-3.5-turbo-0125"
+		| "gpt-3.5-turbo-16k-0613"
+		| null;
+	instructions?: string;
+	tools?: readonly (AssistantToolsCode | never | never)[];
+	tool_resources?: {
+		code_interpreter?: {
+			/**
+			 * A list of [file](/docs/api-reference/files) IDs made available to the
+			 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+			 * the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: {
+			vector_store_ids?: readonly string[];
+		};
+	};
+	metadata?: Record<string | number, Jsonifiable>;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	stream?: boolean | null;
+	max_prompt_tokens?: number | null;
+	max_completion_tokens?: number | null;
+	/**
+	 * Controls for how a thread will be truncated prior to the run. Use this to
+	 * control the intial context window of the run.
+	 */
+	truncation_strategy?: TruncationObject;
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tools and instead generates a
+	 * message.
+	 * `auto` is the default value and means the model can pick between generating
+	 * a message or calling one or more tools.
+	 * `required` means the model must call one or more tools before responding to
+	 * the user.
+	 * Specifying a particular tool like `{"type": "file_search"}` or `{"type":
+	 * "function", "function": {"name": "my_function"}}` forces the model to call
+	 * that tool.
+	 */
+	tool_choice?: AssistantsApiToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
+	parallel_tool_calls?: ParallelToolCalls;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format?: AssistantsApiResponseFormatOption;
 };
 export type ListRunsResponse = {
-  object: string;
-  readonly data: RunObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly RunObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type CreateRunRequest = {
-  assistant_id: string;
-  /**
-   * The ID of the [Model](/docs/api-reference/models) to be used to execute
-   * this run. If a value is provided here, it will override the model
-   * associated with the assistant. If not, the model associated with the
-   * assistant will be used.
-   * @example gpt-4o
-   */
-  model?:
-    | string
-    | 'gpt-4o'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-2024-05-13'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-mini'
-    | 'gpt-4o-mini-2024-07-18'
-    | 'gpt-4-turbo'
-    | 'gpt-4-turbo-2024-04-09'
-    | 'gpt-4-0125-preview'
-    | 'gpt-4-turbo-preview'
-    | 'gpt-4-1106-preview'
-    | 'gpt-4-vision-preview'
-    | 'gpt-4'
-    | 'gpt-4-0314'
-    | 'gpt-4-0613'
-    | 'gpt-4-32k'
-    | 'gpt-4-32k-0314'
-    | 'gpt-4-32k-0613'
-    | 'gpt-3.5-turbo'
-    | 'gpt-3.5-turbo-16k'
-    | 'gpt-3.5-turbo-0613'
-    | 'gpt-3.5-turbo-1106'
-    | 'gpt-3.5-turbo-0125'
-    | 'gpt-3.5-turbo-16k-0613'
-    | null;
-  instructions?: string;
-  additional_instructions?: string;
-  readonly additional_messages?: CreateMessageRequest[];
-  readonly tools?: (AssistantToolsCode | never | never | null)[];
-  metadata?: JsonifiableObject;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or temperature but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  stream?: boolean | null;
-  max_prompt_tokens?: number | null;
-  max_completion_tokens?: number | null;
-  truncation_strategy?: TruncationObject;
-  tool_choice?: AssistantsApiToolChoiceOption;
-  parallel_tool_calls?: ParallelToolCalls;
-  response_format?: AssistantsApiResponseFormatOption;
+	assistant_id: string;
+	/**
+	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
+	 * this run. If a value is provided here, it will override the model
+	 * associated with the assistant. If not, the model associated with the
+	 * assistant will be used.
+	 * @example gpt-4o
+	 */
+	model?:
+		| string
+		| "gpt-4o"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-2024-05-13"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-mini"
+		| "gpt-4o-mini-2024-07-18"
+		| "gpt-4-turbo"
+		| "gpt-4-turbo-2024-04-09"
+		| "gpt-4-0125-preview"
+		| "gpt-4-turbo-preview"
+		| "gpt-4-1106-preview"
+		| "gpt-4-vision-preview"
+		| "gpt-4"
+		| "gpt-4-0314"
+		| "gpt-4-0613"
+		| "gpt-4-32k"
+		| "gpt-4-32k-0314"
+		| "gpt-4-32k-0613"
+		| "gpt-3.5-turbo"
+		| "gpt-3.5-turbo-16k"
+		| "gpt-3.5-turbo-0613"
+		| "gpt-3.5-turbo-1106"
+		| "gpt-3.5-turbo-0125"
+		| "gpt-3.5-turbo-16k-0613"
+		| null;
+	instructions?: string;
+	additional_instructions?: string;
+	additional_messages?: readonly CreateMessageRequest[];
+	tools?: readonly (AssistantToolsCode | never | never)[];
+	metadata?: Record<string | number, Jsonifiable>;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	stream?: boolean | null;
+	max_prompt_tokens?: number | null;
+	max_completion_tokens?: number | null;
+	/**
+	 * Controls for how a thread will be truncated prior to the run. Use this to
+	 * control the intial context window of the run.
+	 */
+	truncation_strategy?: TruncationObject;
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tools and instead generates a
+	 * message.
+	 * `auto` is the default value and means the model can pick between generating
+	 * a message or calling one or more tools.
+	 * `required` means the model must call one or more tools before responding to
+	 * the user.
+	 * Specifying a particular tool like `{"type": "file_search"}` or `{"type":
+	 * "function", "function": {"name": "my_function"}}` forces the model to call
+	 * that tool.
+	 */
+	tool_choice?: AssistantsApiToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
+	parallel_tool_calls?: ParallelToolCalls;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format?: AssistantsApiResponseFormatOption;
 };
 /**
  * The parameters the functions accepts, described as a JSON Schema object.
@@ -2552,20 +2692,28 @@ export type CreateRunRequest = {
  *
  * Omitting `parameters` defines a function with an empty parameter list.
  */
-export type FunctionParameters = JsonifiableObject;
+export type FunctionParameters = Record<string | number, Jsonifiable>;
 export type FunctionObject = {
-  description?: string;
-  name: string;
-  parameters?: FunctionParameters;
-  strict?: boolean | null;
+	description?: string;
+	name: string;
+	/**
+	 * The parameters the functions accepts, described as a JSON Schema object.
+	 * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+	 * Schema reference](https://json-schema.org/understanding-json-schema/) for
+	 * documentation about the format.
+	 *
+	 * Omitting `parameters` defines a function with an empty parameter list.
+	 */
+	parameters?: FunctionParameters;
+	strict?: boolean | null;
 };
 export type AssistantToolsFunction = {
-  /**
-   * The type of tool being defined: `function`
-   * @enum function
-   */
-  type: 'function';
-  function: FunctionObject;
+	/**
+	 * The type of tool being defined: `function`
+	 * @enum function
+	 */
+	type: "function";
+	function: FunctionObject;
 };
 /**
  * The ranking options for the file search. If not specified, the file search
@@ -2576,648 +2724,732 @@ export type AssistantToolsFunction = {
  * for more information.
  */
 export type FileSearchRankingOptions = {
-  /**
-   * The ranker to use for the file search. If not specified will use the `auto`
-   * ranker.
-   * @enum auto,default_2024_08_21
-   */
-  ranker?: 'auto' | 'default_2024_08_21';
-  score_threshold: number;
+	/**
+	 * The ranker to use for the file search. If not specified will use the `auto`
+	 * ranker.
+	 * @enum auto,default_2024_08_21
+	 */
+	ranker?: "auto" | "default_2024_08_21";
+	score_threshold: number;
 };
 export type AssistantToolsFileSearch = {
-  /**
-   * The type of tool being defined: `file_search`
-   * @enum file_search
-   */
-  type: 'file_search';
-  file_search?: {
-    max_num_results?: number;
-    ranking_options?: FileSearchRankingOptions;
-  };
+	/**
+	 * The type of tool being defined: `file_search`
+	 * @enum file_search
+	 */
+	type: "file_search";
+	file_search?: {
+		max_num_results?: number;
+		/**
+		 * The ranking options for the file search. If not specified, the file search
+		 * tool will use the `auto` ranker and a score_threshold of 0.
+		 *
+		 * See the [file search tool
+		 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+		 * for more information.
+		 */
+		ranking_options?: FileSearchRankingOptions;
+	};
 };
 /** Represents an `assistant` that can call the model and use tools. */
 export type AssistantObject = {
-  id: string;
-  /**
-   * The object type, which is always `assistant`.
-   * @enum assistant
-   */
-  object: 'assistant';
-  created_at: number;
-  name: string;
-  description: string;
-  model: string;
-  instructions: string;
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128
-   * tools per assistant. Tools can be of types `code_interpreter`,
-   * `file_search`, or `function`.
-   * @default
-   */
-  readonly tools: (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null
-  )[];
-  tool_resources?: {
-    code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter`` tool. There can be a maximum of 20 files associated
-       * with the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: {
-      readonly vector_store_ids?: string[];
-    };
-  };
-  metadata: JsonifiableObject;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or temperature but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  response_format?: AssistantsApiResponseFormatOption;
+	id: string;
+	/**
+	 * The object type, which is always `assistant`.
+	 * @enum assistant
+	 */
+	object: "assistant";
+	created_at: number;
+	name: string;
+	description: string;
+	model: string;
+	instructions: string;
+	/**
+	 * A list of tool enabled on the assistant. There can be a maximum of 128
+	 * tools per assistant. Tools can be of types `code_interpreter`,
+	 * `file_search`, or `function`.
+	 * @default
+	 */
+	tools: readonly (
+		| AssistantToolsCode
+		| AssistantToolsFileSearch
+		| AssistantToolsFunction
+	)[];
+	tool_resources?: {
+		code_interpreter?: {
+			/**
+			 * A list of [file](/docs/api-reference/files) IDs made available to the
+			 * `code_interpreter`` tool. There can be a maximum of 20 files associated
+			 * with the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: {
+			vector_store_ids?: readonly string[];
+		};
+	};
+	metadata: Record<string | number, Jsonifiable>;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format?: AssistantsApiResponseFormatOption;
 };
 export type ListAssistantsResponse = {
-  object: string;
-  readonly data: AssistantObject[];
-  first_id: string;
-  last_id: string;
-  has_more: boolean;
+	object: string;
+	data: readonly AssistantObject[];
+	first_id: string;
+	last_id: string;
+	has_more: boolean;
 };
 export type ModifyAssistantRequest = {
-  model?: string;
-  name?: string;
-  description?: string;
-  instructions?: string;
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128
-   * tools per assistant. Tools can be of types `code_interpreter`,
-   * `file_search`, or `function`.
-   * @default
-   */
-  readonly tools?: (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null
-  )[];
-  tool_resources?: {
-    code_interpreter?: {
-      /**
-       * Overrides the list of [file](/docs/api-reference/files) IDs made available
-       * to the `code_interpreter` tool. There can be a maximum of 20 files
-       * associated with the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: {
-      readonly vector_store_ids?: string[];
-    };
-  };
-  metadata?: JsonifiableObject;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or temperature but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  response_format?: AssistantsApiResponseFormatOption;
+	model?: string;
+	name?: string;
+	description?: string;
+	instructions?: string;
+	/**
+	 * A list of tool enabled on the assistant. There can be a maximum of 128
+	 * tools per assistant. Tools can be of types `code_interpreter`,
+	 * `file_search`, or `function`.
+	 * @default
+	 */
+	tools?: readonly (
+		| AssistantToolsCode
+		| AssistantToolsFileSearch
+		| AssistantToolsFunction
+	)[];
+	tool_resources?: {
+		code_interpreter?: {
+			/**
+			 * Overrides the list of [file](/docs/api-reference/files) IDs made available
+			 * to the `code_interpreter` tool. There can be a maximum of 20 files
+			 * associated with the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: {
+			vector_store_ids?: readonly string[];
+		};
+	};
+	metadata?: Record<string | number, Jsonifiable>;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format?: AssistantsApiResponseFormatOption;
 };
 export type CreateAssistantRequest = {
-  /**
-   * ID of the model to use. You can use the [List
-   * models](/docs/api-reference/models/list) API to see all of your available
-   * models, or see our [Model overview](/docs/models/overview) for descriptions
-   * of them.
-   * @example gpt-4o
-   */
-  model:
-    | string
-    | 'gpt-4o'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-2024-05-13'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-mini'
-    | 'gpt-4o-mini-2024-07-18'
-    | 'gpt-4-turbo'
-    | 'gpt-4-turbo-2024-04-09'
-    | 'gpt-4-0125-preview'
-    | 'gpt-4-turbo-preview'
-    | 'gpt-4-1106-preview'
-    | 'gpt-4-vision-preview'
-    | 'gpt-4'
-    | 'gpt-4-0314'
-    | 'gpt-4-0613'
-    | 'gpt-4-32k'
-    | 'gpt-4-32k-0314'
-    | 'gpt-4-32k-0613'
-    | 'gpt-3.5-turbo'
-    | 'gpt-3.5-turbo-16k'
-    | 'gpt-3.5-turbo-0613'
-    | 'gpt-3.5-turbo-1106'
-    | 'gpt-3.5-turbo-0125'
-    | 'gpt-3.5-turbo-16k-0613'
-    | null;
-  name?: string;
-  description?: string;
-  instructions?: string;
-  /**
-   * A list of tool enabled on the assistant. There can be a maximum of 128
-   * tools per assistant. Tools can be of types `code_interpreter`,
-   * `file_search`, or `function`.
-   * @default
-   */
-  readonly tools?: (
-    | AssistantToolsCode
-    | AssistantToolsFileSearch
-    | AssistantToolsFunction
-    | null
-  )[];
-  tool_resources?: {
-    code_interpreter?: {
-      /**
-       * A list of [file](/docs/api-reference/files) IDs made available to the
-       * `code_interpreter` tool. There can be a maximum of 20 files associated with
-       * the tool.
-       * @default
-       */
-      readonly file_ids?: string[];
-    };
-    file_search?: unknown | unknown | null;
-  };
-  metadata?: JsonifiableObject;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or temperature but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  response_format?: AssistantsApiResponseFormatOption;
+	/**
+	 * ID of the model to use. You can use the [List
+	 * models](/docs/api-reference/models/list) API to see all of your available
+	 * models, or see our [Model overview](/docs/models/overview) for descriptions
+	 * of them.
+	 * @example gpt-4o
+	 */
+	model:
+		| string
+		| "gpt-4o"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-2024-05-13"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-mini"
+		| "gpt-4o-mini-2024-07-18"
+		| "gpt-4-turbo"
+		| "gpt-4-turbo-2024-04-09"
+		| "gpt-4-0125-preview"
+		| "gpt-4-turbo-preview"
+		| "gpt-4-1106-preview"
+		| "gpt-4-vision-preview"
+		| "gpt-4"
+		| "gpt-4-0314"
+		| "gpt-4-0613"
+		| "gpt-4-32k"
+		| "gpt-4-32k-0314"
+		| "gpt-4-32k-0613"
+		| "gpt-3.5-turbo"
+		| "gpt-3.5-turbo-16k"
+		| "gpt-3.5-turbo-0613"
+		| "gpt-3.5-turbo-1106"
+		| "gpt-3.5-turbo-0125"
+		| "gpt-3.5-turbo-16k-0613";
+	name?: string;
+	description?: string;
+	instructions?: string;
+	/**
+	 * A list of tool enabled on the assistant. There can be a maximum of 128
+	 * tools per assistant. Tools can be of types `code_interpreter`,
+	 * `file_search`, or `function`.
+	 * @default
+	 */
+	tools?: readonly (
+		| AssistantToolsCode
+		| AssistantToolsFileSearch
+		| AssistantToolsFunction
+	)[];
+	tool_resources?: {
+		code_interpreter?: {
+			/**
+			 * A list of [file](/docs/api-reference/files) IDs made available to the
+			 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+			 * the tool.
+			 * @default
+			 */
+			file_ids?: readonly string[];
+		};
+		file_search?: unknown | unknown;
+	};
+	metadata?: Record<string | number, Jsonifiable>;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	/**
+	 * Specifies the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4
+	 * Turbo](/docs/models/gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models
+	 * since `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format?: AssistantsApiResponseFormatOption;
 };
 export type ChatCompletionFunctions = {
-  description?: string;
-  name: string;
-  parameters?: FunctionParameters;
+	description?: string;
+	name: string;
+	/**
+	 * The parameters the functions accepts, described as a JSON Schema object.
+	 * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+	 * Schema reference](https://json-schema.org/understanding-json-schema/) for
+	 * documentation about the format.
+	 *
+	 * Omitting `parameters` defines a function with an empty parameter list.
+	 */
+	parameters?: FunctionParameters;
 };
 export type ChatCompletionTool = {
-  /**
-   * The type of the tool. Currently, only `function` is supported.
-   * @enum function
-   */
-  type: 'function';
-  function: FunctionObject;
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 * @enum function
+	 */
+	type: "function";
+	function: FunctionObject;
 };
 /** The per-line training example of a fine-tuning input file for chat models */
 export type FinetuneChatRequestInput = {
-  readonly messages?: (never | never | never | never | never | null)[];
-  readonly tools?: ChatCompletionTool[];
-  parallel_tool_calls?: ParallelToolCalls;
-  /**
-   * A list of functions the model may generate JSON inputs for.
-   * @deprecated
-   */
-  readonly functions?: ChatCompletionFunctions[];
+	messages?: readonly (never | never | never | never | never)[];
+	tools?: readonly ChatCompletionTool[];
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
+	parallel_tool_calls?: ParallelToolCalls;
+	/**
+	 * A list of functions the model may generate JSON inputs for.
+	 * @deprecated
+	 */
+	functions?: readonly ChatCompletionFunctions[];
 };
 /** The `File` object represents a document that has been uploaded to OpenAI. */
 export type OpenAiFile = {
-  id: string;
-  bytes: number;
-  created_at: number;
-  filename: string;
-  /**
-   * The object type, which is always `file`.
-   * @enum file
-   */
-  object: 'file';
-  /**
-   * The intended purpose of the file. Supported values are `assistants`,
-   * `assistants_output`, `batch`, `batch_output`, `fine-tune`,
-   * `fine-tune-results` and `vision`.
-   * @enum assistants,assistants_output,batch,batch_output,fine-tune,fine-tune-results,vision
-   */
-  purpose:
-    | 'assistants'
-    | 'assistants_output'
-    | 'batch'
-    | 'batch_output'
-    | 'fine-tune'
-    | 'fine-tune-results'
-    | 'vision';
-  /**
-   * Deprecated. The current status of the file, which can be either `uploaded`,
-   * `processed`, or `error`.
-   * @enum uploaded,processed,error
-   * @deprecated
-   */
-  status: 'uploaded' | 'processed' | 'error';
-  /**
-   * Deprecated. For details on why a fine-tuning training file failed
-   * validation, see the `error` field on `fine_tuning.job`.
-   * @deprecated
-   */
-  status_details: string;
+	id: string;
+	bytes: number;
+	created_at: number;
+	filename: string;
+	/**
+	 * The object type, which is always `file`.
+	 * @enum file
+	 */
+	object: "file";
+	/**
+	 * The intended purpose of the file. Supported values are `assistants`,
+	 * `assistants_output`, `batch`, `batch_output`, `fine-tune`,
+	 * `fine-tune-results` and `vision`.
+	 * @enum assistants,assistants_output,batch,batch_output,fine-tune,fine-tune-results,vision
+	 */
+	purpose:
+		| "assistants"
+		| "assistants_output"
+		| "batch"
+		| "batch_output"
+		| "fine-tune"
+		| "fine-tune-results"
+		| "vision";
+	/**
+	 * Deprecated. The current status of the file, which can be either `uploaded`,
+	 * `processed`, or `error`.
+	 * @enum uploaded,processed,error
+	 * @deprecated
+	 */
+	status: "uploaded" | "processed" | "error";
+	/**
+	 * Deprecated. For details on why a fine-tuning training file failed
+	 * validation, see the `error` field on `fine_tuning.job`.
+	 * @deprecated
+	 */
+	status_details: string;
 };
 /** The Upload object can accept byte chunks in the form of Parts. */
 export type Upload = {
-  id: string;
-  created_at: number;
-  filename: string;
-  bytes: number;
-  purpose: string;
-  /**
-   * The status of the Upload.
-   * @enum pending,completed,cancelled,expired
-   */
-  status: 'pending' | 'completed' | 'cancelled' | 'expired';
-  expires_at: number;
-  /**
-   * The object type, which is always "upload".
-   * @enum upload
-   */
-  object?: 'upload';
-  file?: OpenAiFile;
+	id: string;
+	created_at: number;
+	filename: string;
+	bytes: number;
+	purpose: string;
+	/**
+	 * The status of the Upload.
+	 * @enum pending,completed,cancelled,expired
+	 */
+	status: "pending" | "completed" | "cancelled" | "expired";
+	expires_at: number;
+	/**
+	 * The object type, which is always "upload".
+	 * @enum upload
+	 */
+	object?: "upload";
+	/** The `File` object represents a document that has been uploaded to OpenAI. */
+	file?: OpenAiFile;
 };
 export type TranscriptionSegment = {
-  id: number;
-  seek: number;
-  start: number;
-  end: number;
-  text: string;
-  readonly tokens: number[];
-  temperature: number;
-  avg_logprob: number;
-  compression_ratio: number;
-  no_speech_prob: number;
+	id: number;
+	seek: number;
+	start: number;
+	end: number;
+	text: string;
+	tokens: readonly number[];
+	temperature: number;
+	avg_logprob: number;
+	compression_ratio: number;
+	no_speech_prob: number;
 };
 export type CreateTranslationResponseVerboseJson = {
-  language: string;
-  duration: string;
-  text: string;
-  readonly segments?: TranscriptionSegment[];
+	language: string;
+	duration: string;
+	text: string;
+	segments?: readonly TranscriptionSegment[];
 };
-
-export enum AudioResponseFormatEnum {
-  Json = 'json',
-  Text = 'text',
-  Srt = 'srt',
-  VerboseJson = 'verbose_json',
-  Vtt = 'vtt',
-}
-
 /**
  * The format of the output, in one of these options: `json`, `text`, `srt`,
  * `verbose_json`, or `vtt`.
  */
 export type AudioResponseFormat =
-  | AudioResponseFormatEnum
-  | 'json'
-  | 'text'
-  | 'srt'
-  | 'verbose_json'
-  | 'vtt';
+	| "json"
+	| "text"
+	| "srt"
+	| "verbose_json"
+	| "vtt";
 export type CreateTranslationRequest = {
-  file: string;
-  /**
-   * ID of the model to use. Only `whisper-1` (which is powered by our open
-   * source Whisper V2 model) is currently available.
-   * @example whisper-1
-   */
-  model: string | 'whisper-1' | null;
-  prompt?: string;
-  response_format?: AudioResponseFormat;
-  temperature?: number;
+	file: string;
+	/**
+	 * ID of the model to use. Only `whisper-1` (which is powered by our open
+	 * source Whisper V2 model) is currently available.
+	 * @example whisper-1
+	 */
+	model: string | "whisper-1";
+	prompt?: string;
+	/**
+	 * The format of the output, in one of these options: `json`, `text`, `srt`,
+	 * `verbose_json`, or `vtt`.
+	 */
+	response_format?: AudioResponseFormat;
+	temperature?: number;
 };
 export type TranscriptionWord = {
-  word: string;
-  start: number;
-  end: number;
+	word: string;
+	start: number;
+	end: number;
 };
 /**
  * Represents a verbose json transcription response returned by model, based
  * on the provided input.
  */
 export type CreateTranscriptionResponseVerboseJson = {
-  language: string;
-  duration: string;
-  text: string;
-  readonly words?: TranscriptionWord[];
-  readonly segments?: TranscriptionSegment[];
+	language: string;
+	duration: string;
+	text: string;
+	words?: readonly TranscriptionWord[];
+	segments?: readonly TranscriptionSegment[];
 };
 export type CreateTranscriptionRequest = {
-  file: string;
-  /**
-   * ID of the model to use. Only `whisper-1` (which is powered by our open
-   * source Whisper V2 model) is currently available.
-   * @example whisper-1
-   */
-  model: string | 'whisper-1' | null;
-  language?: string;
-  prompt?: string;
-  response_format?: AudioResponseFormat;
-  temperature?: number;
-  /**
-   * The timestamp granularities to populate for this transcription.
-   * `response_format` must be set `verbose_json` to use timestamp
-   * granularities. Either or both of these options are supported: `word`, or
-   * `segment`. Note: There is no additional latency for segment timestamps, but
-   * generating word timestamps incurs additional latency.
-   * @default segment
-   */
-  readonly 'timestamp_granularities[]'?: ('word' | 'segment')[];
+	file: string;
+	/**
+	 * ID of the model to use. Only `whisper-1` (which is powered by our open
+	 * source Whisper V2 model) is currently available.
+	 * @example whisper-1
+	 */
+	model: string | "whisper-1";
+	language?: string;
+	prompt?: string;
+	/**
+	 * The format of the output, in one of these options: `json`, `text`, `srt`,
+	 * `verbose_json`, or `vtt`.
+	 */
+	response_format?: AudioResponseFormat;
+	temperature?: number;
+	/**
+	 * The timestamp granularities to populate for this transcription.
+	 * `response_format` must be set `verbose_json` to use timestamp
+	 * granularities. Either or both of these options are supported: `word`, or
+	 * `segment`. Note: There is no additional latency for segment timestamps, but
+	 * generating word timestamps incurs additional latency.
+	 * @default segment
+	 */
+	"timestamp_granularities[]"?: readonly ("word" | "segment")[];
 };
 /** Represents an embedding vector returned by embedding endpoint. */
 export type Embedding = {
-  index: number;
-  readonly embedding: number[];
-  /**
-   * The object type, which is always "embedding".
-   * @enum embedding
-   */
-  object: 'embedding';
+	index: number;
+	embedding: readonly number[];
+	/**
+	 * The object type, which is always "embedding".
+	 * @enum embedding
+	 */
+	object: "embedding";
 };
 export type CreateEmbeddingResponse = {
-  readonly data: Embedding[];
-  model: string;
-  /**
-   * The object type, which is always "list".
-   * @enum list
-   */
-  object: 'list';
-  usage: {
-    prompt_tokens: number;
-    total_tokens: number;
-  };
+	data: readonly Embedding[];
+	model: string;
+	/**
+	 * The object type, which is always "list".
+	 * @enum list
+	 */
+	object: "list";
+	usage: {
+		prompt_tokens: number;
+		total_tokens: number;
+	};
 };
 /**
  * The `fine_tuning.job.checkpoint` object represents a model checkpoint for a
  * fine-tuning job that is ready to use.
  */
 export type FineTuningJobCheckpoint = {
-  id: string;
-  created_at: number;
-  fine_tuned_model_checkpoint: string;
-  step_number: number;
-  metrics: {
-    step?: number;
-    train_loss?: number;
-    train_mean_token_accuracy?: number;
-    valid_loss?: number;
-    valid_mean_token_accuracy?: number;
-    full_valid_loss?: number;
-    full_valid_mean_token_accuracy?: number;
-  };
-  fine_tuning_job_id: string;
-  /**
-   * The object type, which is always "fine_tuning.job.checkpoint".
-   * @enum fine_tuning.job.checkpoint
-   */
-  object: 'fine_tuning.job.checkpoint';
+	id: string;
+	created_at: number;
+	fine_tuned_model_checkpoint: string;
+	step_number: number;
+	metrics: {
+		step?: number;
+		train_loss?: number;
+		train_mean_token_accuracy?: number;
+		valid_loss?: number;
+		valid_mean_token_accuracy?: number;
+		full_valid_loss?: number;
+		full_valid_mean_token_accuracy?: number;
+	};
+	fine_tuning_job_id: string;
+	/**
+	 * The object type, which is always "fine_tuning.job.checkpoint".
+	 * @enum fine_tuning.job.checkpoint
+	 */
+	object: "fine_tuning.job.checkpoint";
 };
 export type ListFineTuningJobCheckpointsResponse = {
-  readonly data: FineTuningJobCheckpoint[];
-  object: 'list';
-  first_id?: string;
-  last_id?: string;
-  has_more: boolean;
+	data: readonly FineTuningJobCheckpoint[];
+	object: "list";
+	first_id?: string;
+	last_id?: string;
+	has_more: boolean;
 };
 /** Fine-tuning job event object */
 export type FineTuningJobEvent = {
-  id: string;
-  created_at: number;
-  level: 'info' | 'warn' | 'error';
-  message: string;
-  object: 'fine_tuning.job.event';
+	id: string;
+	created_at: number;
+	level: "info" | "warn" | "error";
+	message: string;
+	object: "fine_tuning.job.event";
 };
 export type ListFineTuningJobEventsResponse = {
-  readonly data: FineTuningJobEvent[];
-  object: 'list';
+	data: readonly FineTuningJobEvent[];
+	object: "list";
 };
 export type ListFilesResponse = {
-  readonly data: OpenAiFile[];
-  object: 'list';
+	data: readonly OpenAiFile[];
+	object: "list";
 };
 /** Represents the url or the content of an image generated by the OpenAI API. */
 export type Image = {
-  b64_json?: string;
-  url?: string;
-  revised_prompt?: string;
+	b64_json?: string;
+	url?: string;
+	revised_prompt?: string;
 };
 export type ImagesResponse = {
-  created: number;
-  readonly data: Image[];
+	created: number;
+	data: readonly Image[];
 };
 /**
  * The `fine_tuning.job` object represents a fine-tuning job that has been
  * created through the API.
  */
 export type FineTuningJob = {
-  id: string;
-  created_at: number;
-  error: {
-    code: string;
-    message: string;
-    param: string;
-  };
-  fine_tuned_model: string;
-  finished_at: number | null;
-  hyperparameters: {
-    /**
-     * The number of epochs to train the model for. An epoch refers to one full
-     * cycle through the training dataset.
-     * "auto" decides the optimal number of epochs based on the size of the
-     * dataset. If setting the number manually, we support any number between 1
-     * and 50 epochs.
-     * @default auto
-     */
-    n_epochs: 'auto' | number | null;
-  };
-  model: string;
-  /**
-   * The object type, which is always "fine_tuning.job".
-   * @enum fine_tuning.job
-   */
-  object: 'fine_tuning.job';
-  organization_id: string;
-  readonly result_files: string[];
-  /**
-   * The current status of the fine-tuning job, which can be either
-   * `validating_files`, `queued`, `running`, `succeeded`, `failed`, or
-   * `cancelled`.
-   * @enum validating_files,queued,running,succeeded,failed,cancelled
-   */
-  status:
-    | 'validating_files'
-    | 'queued'
-    | 'running'
-    | 'succeeded'
-    | 'failed'
-    | 'cancelled';
-  trained_tokens: number | null;
-  training_file: string;
-  validation_file: string;
-  readonly integrations?: FineTuningIntegration[];
-  seed: number;
-  estimated_finish?: number | null;
+	id: string;
+	created_at: number;
+	error: {
+		code: string;
+		message: string;
+		param: string;
+	};
+	fine_tuned_model: string;
+	finished_at: number | null;
+	hyperparameters: {
+		/**
+		 * The number of epochs to train the model for. An epoch refers to one full
+		 * cycle through the training dataset.
+		 * "auto" decides the optimal number of epochs based on the size of the
+		 * dataset. If setting the number manually, we support any number between 1
+		 * and 50 epochs.
+		 * @default auto
+		 */
+		n_epochs: "auto" | number;
+	};
+	model: string;
+	/**
+	 * The object type, which is always "fine_tuning.job".
+	 * @enum fine_tuning.job
+	 */
+	object: "fine_tuning.job";
+	organization_id: string;
+	result_files: readonly string[];
+	/**
+	 * The current status of the fine-tuning job, which can be either
+	 * `validating_files`, `queued`, `running`, `succeeded`, `failed`, or
+	 * `cancelled`.
+	 * @enum validating_files,queued,running,succeeded,failed,cancelled
+	 */
+	status:
+		| "validating_files"
+		| "queued"
+		| "running"
+		| "succeeded"
+		| "failed"
+		| "cancelled";
+	trained_tokens: number | null;
+	training_file: string;
+	validation_file: string;
+	integrations?: readonly FineTuningIntegration[];
+	seed: number;
+	estimated_finish?: number | null;
 };
 export type ListPaginatedFineTuningJobsResponse = {
-  readonly data: FineTuningJob[];
-  has_more: boolean;
-  object: 'list';
+	data: readonly FineTuningJob[];
+	has_more: boolean;
+	object: "list";
 };
 /** Usage statistics for the completion request. */
 export type CompletionUsage = {
-  completion_tokens: number;
-  prompt_tokens: number;
-  total_tokens: number;
-  completion_tokens_details?: {
-    reasoning_tokens?: number;
-  };
+	completion_tokens: number;
+	prompt_tokens: number;
+	total_tokens: number;
+	completion_tokens_details?: {
+		reasoning_tokens?: number;
+	};
 };
 /**
  * Represents a chat completion response returned by model, based on the
  * provided input.
  */
 export type CreateChatCompletionFunctionResponse = {
-  id: string;
-  readonly choices: {
-    /**
-     * The reason the model stopped generating tokens. This will be `stop` if the
-     * model hit a natural stop point or a provided stop sequence, `length` if the
-     * maximum number of tokens specified in the request was reached,
-     * `content_filter` if content was omitted due to a flag from our content
-     * filters, or `function_call` if the model called a function.
-     * @enum stop,length,function_call,content_filter
-     */
-    finish_reason: 'stop' | 'length' | 'function_call' | 'content_filter';
-    index: number;
-    /** WARN: $ref used before available - #/components/schemas/ChatCompletionResponseMessage */
-    message: never;
-  }[];
-  created: number;
-  model: string;
-  system_fingerprint?: string;
-  /**
-   * The object type, which is always `chat.completion`.
-   * @enum chat.completion
-   */
-  object: 'chat.completion';
-  usage?: CompletionUsage;
+	id: string;
+	choices: readonly {
+		/**
+		 * The reason the model stopped generating tokens. This will be `stop` if the
+		 * model hit a natural stop point or a provided stop sequence, `length` if the
+		 * maximum number of tokens specified in the request was reached,
+		 * `content_filter` if content was omitted due to a flag from our content
+		 * filters, or `function_call` if the model called a function.
+		 * @enum stop,length,function_call,content_filter
+		 */
+		finish_reason: "stop" | "length" | "function_call" | "content_filter";
+		index: number;
+		/** WARN: $ref used before available - schema={"$ref":"#/components/schemas/ChatCompletionResponseMessage"} */
+		message: never;
+	}[];
+	created: number;
+	model: string;
+	system_fingerprint?: string;
+	/**
+	 * The object type, which is always `chat.completion`.
+	 * @enum chat.completion
+	 */
+	object: "chat.completion";
+	/** Usage statistics for the completion request. */
+	usage?: CompletionUsage;
 };
 /**
  * Represents a chat completion response returned by model, based on the
  * provided input.
  */
 export type CreateChatCompletionResponse = {
-  id: string;
-  readonly choices: {
-    /**
-     * The reason the model stopped generating tokens. This will be `stop` if the
-     * model hit a natural stop point or a provided stop sequence,
-     * `length` if the maximum number of tokens specified in the request was
-     * reached,
-     * `content_filter` if content was omitted due to a flag from our content
-     * filters,
-     * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
-     * the model called a function.
-     * @enum stop,length,tool_calls,content_filter,function_call
-     */
-    finish_reason:
-      | 'stop'
-      | 'length'
-      | 'tool_calls'
-      | 'content_filter'
-      | 'function_call';
-    index: number;
-    /** WARN: $ref used before available - #/components/schemas/ChatCompletionResponseMessage */
-    message: never;
-    logprobs: {
-      readonly content: ChatCompletionTokenLogprob[];
-      readonly refusal: ChatCompletionTokenLogprob[];
-    };
-  }[];
-  created: number;
-  model: string;
-  /**
-   * The service tier used for processing the request. This field is only
-   * included if the `service_tier` parameter is specified in the request.
-   * @enum scale,default
-   * @example scale
-   */
-  service_tier?: 'scale' | 'default';
-  system_fingerprint?: string;
-  /**
-   * The object type, which is always `chat.completion`.
-   * @enum chat.completion
-   */
-  object: 'chat.completion';
-  usage?: CompletionUsage;
+	id: string;
+	choices: readonly {
+		/**
+		 * The reason the model stopped generating tokens. This will be `stop` if the
+		 * model hit a natural stop point or a provided stop sequence,
+		 * `length` if the maximum number of tokens specified in the request was
+		 * reached,
+		 * `content_filter` if content was omitted due to a flag from our content
+		 * filters,
+		 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+		 * the model called a function.
+		 * @enum stop,length,tool_calls,content_filter,function_call
+		 */
+		finish_reason:
+			| "stop"
+			| "length"
+			| "tool_calls"
+			| "content_filter"
+			| "function_call";
+		index: number;
+		/** WARN: $ref used before available - schema={"$ref":"#/components/schemas/ChatCompletionResponseMessage"} */
+		message: never;
+		logprobs: {
+			content: readonly ChatCompletionTokenLogprob[];
+			refusal: readonly ChatCompletionTokenLogprob[];
+		};
+	}[];
+	created: number;
+	model: string;
+	/**
+	 * The service tier used for processing the request. This field is only
+	 * included if the `service_tier` parameter is specified in the request.
+	 * @enum scale,default
+	 * @example scale
+	 */
+	service_tier?: "scale" | "default";
+	system_fingerprint?: string;
+	/**
+	 * The object type, which is always `chat.completion`.
+	 * @enum chat.completion
+	 */
+	object: "chat.completion";
+	/** Usage statistics for the completion request. */
+	usage?: CompletionUsage;
 };
 /**
  * Specifying a particular function via `{"name": "my_function"}` forces the
  * model to call that function.
  */
 export type ChatCompletionFunctionCallOption = {
-  name: string;
+	name: string;
 };
 /**
  * Specifies a tool the model should use. Use to force the model to call a
  * specific function.
  */
 export type ChatCompletionNamedToolChoice = {
-  /**
-   * The type of the tool. Currently, only `function` is supported.
-   * @enum function
-   */
-  type: 'function';
-  function: {
-    name: string;
-  };
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 * @enum function
+	 */
+	type: "function";
+	function: {
+		name: string;
+	};
 };
 /**
  * Controls which (if any) tool is called by the model.
@@ -3233,976 +3465,1088 @@ export type ChatCompletionNamedToolChoice = {
  * tools are present.
  */
 export type ChatCompletionToolChoiceOption =
-  | ChatCompletionNamedToolChoice
-  | 'none'
-  | 'auto'
-  | 'required';
+	| ChatCompletionNamedToolChoice
+	| "none"
+	| "auto"
+	| "required";
 /** Options for streaming response. Only set this when you set `stream: true`. */
 export type ChatCompletionStreamOptions = {
-  include_usage?: boolean;
+	include_usage?: boolean;
 };
 export type ChatCompletionRequestFunctionMessage = {
-  /**
-   * The role of the messages author, in this case `function`.
-   * @enum function
-   */
-  role: 'function';
-  content: string;
-  name: string;
+	/**
+	 * The role of the messages author, in this case `function`.
+	 * @enum function
+	 */
+	role: "function";
+	content: string;
+	name: string;
 };
 export type ChatCompletionRequestMessageContentPartText = {
-  /**
-   * The type of the content part.
-   * @enum text
-   */
-  type: 'text';
-  text: string;
+	/**
+	 * The type of the content part.
+	 * @enum text
+	 */
+	type: "text";
+	text: string;
 };
 export type ChatCompletionRequestToolMessageContentPart =
-  ChatCompletionRequestMessageContentPartText;
+	ChatCompletionRequestMessageContentPartText;
 export type ChatCompletionRequestToolMessage = {
-  /**
-   * The role of the messages author, in this case `tool`.
-   * @enum tool
-   */
-  role: 'tool';
-  content: string | ChatCompletionRequestToolMessageContentPart[] | null;
-  tool_call_id: string;
+	/**
+	 * The role of the messages author, in this case `tool`.
+	 * @enum tool
+	 */
+	role: "tool";
+	content: string | readonly ChatCompletionRequestToolMessageContentPart[];
+	tool_call_id: string;
 };
 export type ChatCompletionMessageToolCall = {
-  id: string;
-  /**
-   * The type of the tool. Currently, only `function` is supported.
-   * @enum function
-   */
-  type: 'function';
-  function: {
-    name: string;
-    arguments: string;
-  };
+	id: string;
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 * @enum function
+	 */
+	type: "function";
+	function: {
+		name: string;
+		arguments: string;
+	};
 };
 /** The tool calls generated by the model, such as function calls. */
 export type ChatCompletionMessageToolCalls = ChatCompletionMessageToolCall[];
 export type ChatCompletionRequestMessageContentPartRefusal = {
-  /**
-   * The type of the content part.
-   * @enum refusal
-   */
-  type: 'refusal';
-  refusal: string;
+	/**
+	 * The type of the content part.
+	 * @enum refusal
+	 */
+	type: "refusal";
+	refusal: string;
 };
 export type ChatCompletionRequestAssistantMessageContentPart =
-  | ChatCompletionRequestMessageContentPartText
-  | ChatCompletionRequestMessageContentPartRefusal;
+	| ChatCompletionRequestMessageContentPartText
+	| ChatCompletionRequestMessageContentPartRefusal;
 export type ChatCompletionRequestAssistantMessage = {
-  content?: string | ChatCompletionRequestAssistantMessageContentPart[] | null;
-  refusal?: string;
-  /**
-   * The role of the messages author, in this case `assistant`.
-   * @enum assistant
-   */
-  role: 'assistant';
-  name?: string;
-  tool_calls?: ChatCompletionMessageToolCalls;
-  /**
-   * Deprecated and replaced by `tool_calls`. The name and arguments of a
-   * function that should be called, as generated by the model.
-   * @deprecated
-   */
-  function_call?: {
-    arguments: string;
-    name: string;
-  };
+	content?:
+		| string
+		| readonly ChatCompletionRequestAssistantMessageContentPart[]
+		| null;
+	refusal?: string;
+	/**
+	 * The role of the messages author, in this case `assistant`.
+	 * @enum assistant
+	 */
+	role: "assistant";
+	name?: string;
+	/** The tool calls generated by the model, such as function calls. */
+	tool_calls?: ChatCompletionMessageToolCalls;
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 * @deprecated
+	 */
+	function_call?: {
+		arguments: string;
+		name: string;
+	};
 };
 export type ChatCompletionRequestMessageContentPartImage = {
-  /**
-   * The type of the content part.
-   * @enum image_url
-   */
-  type: 'image_url';
-  image_url: {
-    url: string;
-    /**
-     * Specifies the detail level of the image. Learn more in the [Vision
-     * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-     * @default auto
-     * @enum auto,low,high
-     */
-    detail?: 'auto' | 'low' | 'high';
-  };
+	/**
+	 * The type of the content part.
+	 * @enum image_url
+	 */
+	type: "image_url";
+	image_url: {
+		url: string;
+		/**
+		 * Specifies the detail level of the image. Learn more in the [Vision
+		 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 export type ChatCompletionRequestUserMessageContentPart =
-  | ChatCompletionRequestMessageContentPartText
-  | ChatCompletionRequestMessageContentPartImage;
+	| ChatCompletionRequestMessageContentPartText
+	| ChatCompletionRequestMessageContentPartImage;
 export type ChatCompletionRequestUserMessage = {
-  content: string | ChatCompletionRequestUserMessageContentPart[] | null;
-  /**
-   * The role of the messages author, in this case `user`.
-   * @enum user
-   */
-  role: 'user';
-  name?: string;
+	content: string | readonly ChatCompletionRequestUserMessageContentPart[];
+	/**
+	 * The role of the messages author, in this case `user`.
+	 * @enum user
+	 */
+	role: "user";
+	name?: string;
 };
 export type ChatCompletionRequestSystemMessageContentPart =
-  ChatCompletionRequestMessageContentPartText;
+	ChatCompletionRequestMessageContentPartText;
 export type ChatCompletionRequestSystemMessage = {
-  content: string | ChatCompletionRequestSystemMessageContentPart[] | null;
-  /**
-   * The role of the messages author, in this case `system`.
-   * @enum system
-   */
-  role: 'system';
-  name?: string;
+	content: string | readonly ChatCompletionRequestSystemMessageContentPart[];
+	/**
+	 * The role of the messages author, in this case `system`.
+	 * @enum system
+	 */
+	role: "system";
+	name?: string;
 };
 export type ChatCompletionRequestMessage =
-  | ChatCompletionRequestSystemMessage
-  | ChatCompletionRequestUserMessage
-  | ChatCompletionRequestAssistantMessage
-  | ChatCompletionRequestToolMessage
-  | ChatCompletionRequestFunctionMessage;
+	| ChatCompletionRequestSystemMessage
+	| ChatCompletionRequestUserMessage
+	| ChatCompletionRequestAssistantMessage
+	| ChatCompletionRequestToolMessage
+	| ChatCompletionRequestFunctionMessage;
 export type CreateChatCompletionRequest = {
-  readonly messages: ChatCompletionRequestMessage[];
-  /**
-   * ID of the model to use. See the [model endpoint
-   * compatibility](/docs/models/model-endpoint-compatibility) table for details
-   * on which models work with the Chat API.
-   * @example gpt-4o
-   */
-  model:
-    | string
-    | 'o1-preview'
-    | 'o1-preview-2024-09-12'
-    | 'o1-mini'
-    | 'o1-mini-2024-09-12'
-    | 'gpt-4o'
-    | 'gpt-4o-2024-08-06'
-    | 'gpt-4o-2024-05-13'
-    | 'gpt-4o-2024-08-06'
-    | 'chatgpt-4o-latest'
-    | 'gpt-4o-mini'
-    | 'gpt-4o-mini-2024-07-18'
-    | 'gpt-4-turbo'
-    | 'gpt-4-turbo-2024-04-09'
-    | 'gpt-4-0125-preview'
-    | 'gpt-4-turbo-preview'
-    | 'gpt-4-1106-preview'
-    | 'gpt-4-vision-preview'
-    | 'gpt-4'
-    | 'gpt-4-0314'
-    | 'gpt-4-0613'
-    | 'gpt-4-32k'
-    | 'gpt-4-32k-0314'
-    | 'gpt-4-32k-0613'
-    | 'gpt-3.5-turbo'
-    | 'gpt-3.5-turbo-16k'
-    | 'gpt-3.5-turbo-0301'
-    | 'gpt-3.5-turbo-0613'
-    | 'gpt-3.5-turbo-1106'
-    | 'gpt-3.5-turbo-0125'
-    | 'gpt-3.5-turbo-16k-0613'
-    | null;
-  frequency_penalty?: number | null;
-  logit_bias?: JsonifiableObject;
-  logprobs?: boolean | null;
-  top_logprobs?: number | null;
-  /**
-   * The maximum number of [tokens](/tokenizer) that can be generated in the
-   * chat completion. This value can be used to control
-   * [costs](https://openai.com/api/pricing/) for text generated via API.
-   *
-   * This value is now deprecated in favor of `max_completion_tokens`, and is
-   * not compatible with [o1 series models](/docs/guides/reasoning).
-   * @deprecated
-   */
-  max_tokens?: number | null;
-  max_completion_tokens?: number | null;
-  /**
-   * How many chat completion choices to generate for each input message. Note
-   * that you will be charged based on the number of generated tokens across all
-   * of the choices. Keep `n` as `1` to minimize costs.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  presence_penalty?: number | null;
-  response_format?:
-    | ResponseFormatText
-    | ResponseFormatJsonObject
-    | ResponseFormatJsonSchema
-    | null;
-  seed?: number | null;
-  /**
-   * Specifies the latency tier to use for processing the request. This
-   * parameter is relevant for customers subscribed to the scale tier service:
-   *
-   * - If set to 'auto', and the Project is Scale tier enabled, the system will
-   * utilize scale tier credits until they are exhausted.
-   *
-   * - If set to 'auto', and the Project is not Scale tier enabled, the request
-   * will be processed using the default service tier with a lower uptime SLA
-   * and no latency guarentee.
-   *
-   * - If set to 'default', the request will be processed using the default
-   * service tier with a lower uptime SLA and no latency guarentee.
-   *
-   * - When not set, the default behavior is 'auto'.
-   *
-   *
-   * When this parameter is set, the response body will include the
-   * `service_tier` utilized.
-   * @enum auto,default
-   */
-  service_tier?: 'auto' | 'default';
-  stop?: string | string[] | null;
-  stream?: boolean | null;
-  stream_options?: ChatCompletionStreamOptions;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   *
-   * We generally recommend altering this or `top_p` but not both.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or `temperature` but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  readonly tools?: ChatCompletionTool[];
-  tool_choice?: ChatCompletionToolChoiceOption;
-  parallel_tool_calls?: ParallelToolCalls;
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string;
-  /**
-   * Deprecated in favor of `tool_choice`.
-   *
-   * Controls which (if any) function is called by the model.
-   * `none` means the model will not call a function and instead generates a
-   * message.
-   * `auto` means the model can pick between generating a message or calling a
-   * function.
-   * Specifying a particular function via `{"name": "my_function"}` forces the
-   * model to call that function.
-   *
-   * `none` is the default when no functions are present. `auto` is the default
-   * if functions are present.
-   * @deprecated
-   */
-  function_call?: 'none' | 'auto' | ChatCompletionFunctionCallOption | null;
-  /**
-   * Deprecated in favor of `tools`.
-   *
-   * A list of functions the model may generate JSON inputs for.
-   * @deprecated
-   */
-  readonly functions?: ChatCompletionFunctions[];
+	messages: readonly ChatCompletionRequestMessage[];
+	/**
+	 * ID of the model to use. See the [model endpoint
+	 * compatibility](/docs/models/model-endpoint-compatibility) table for details
+	 * on which models work with the Chat API.
+	 * @example gpt-4o
+	 */
+	model:
+		| string
+		| "o1-preview"
+		| "o1-preview-2024-09-12"
+		| "o1-mini"
+		| "o1-mini-2024-09-12"
+		| "gpt-4o"
+		| "gpt-4o-2024-08-06"
+		| "gpt-4o-2024-05-13"
+		| "gpt-4o-2024-08-06"
+		| "chatgpt-4o-latest"
+		| "gpt-4o-mini"
+		| "gpt-4o-mini-2024-07-18"
+		| "gpt-4-turbo"
+		| "gpt-4-turbo-2024-04-09"
+		| "gpt-4-0125-preview"
+		| "gpt-4-turbo-preview"
+		| "gpt-4-1106-preview"
+		| "gpt-4-vision-preview"
+		| "gpt-4"
+		| "gpt-4-0314"
+		| "gpt-4-0613"
+		| "gpt-4-32k"
+		| "gpt-4-32k-0314"
+		| "gpt-4-32k-0613"
+		| "gpt-3.5-turbo"
+		| "gpt-3.5-turbo-16k"
+		| "gpt-3.5-turbo-0301"
+		| "gpt-3.5-turbo-0613"
+		| "gpt-3.5-turbo-1106"
+		| "gpt-3.5-turbo-0125"
+		| "gpt-3.5-turbo-16k-0613";
+	frequency_penalty?: number | null;
+	logit_bias?: Record<
+		string | number,
+		/* additionalProperties is not handled yet */ unknown
+	>;
+	logprobs?: boolean | null;
+	top_logprobs?: number | null;
+	/**
+	 * The maximum number of [tokens](/tokenizer) that can be generated in the
+	 * chat completion. This value can be used to control
+	 * [costs](https://openai.com/api/pricing/) for text generated via API.
+	 *
+	 * This value is now deprecated in favor of `max_completion_tokens`, and is
+	 * not compatible with [o1 series models](/docs/guides/reasoning).
+	 * @deprecated
+	 */
+	max_tokens?: number | null;
+	max_completion_tokens?: number | null;
+	/**
+	 * How many chat completion choices to generate for each input message. Note
+	 * that you will be charged based on the number of generated tokens across all
+	 * of the choices. Keep `n` as `1` to minimize costs.
+	 * @default 1
+	 * @example 1
+	 */
+	n?: number | null;
+	presence_penalty?: number | null;
+	response_format?:
+		| ResponseFormatText
+		| ResponseFormatJsonObject
+		| ResponseFormatJsonSchema;
+	seed?: number | null;
+	/**
+	 * Specifies the latency tier to use for processing the request. This
+	 * parameter is relevant for customers subscribed to the scale tier service:
+	 *
+	 * - If set to 'auto', and the Project is Scale tier enabled, the system will
+	 * utilize scale tier credits until they are exhausted.
+	 *
+	 * - If set to 'auto', and the Project is not Scale tier enabled, the request
+	 * will be processed using the default service tier with a lower uptime SLA
+	 * and no latency guarentee.
+	 *
+	 * - If set to 'default', the request will be processed using the default
+	 * service tier with a lower uptime SLA and no latency guarentee.
+	 *
+	 * - When not set, the default behavior is 'auto'.
+	 *
+	 *
+	 * When this parameter is set, the response body will include the
+	 * `service_tier` utilized.
+	 * @enum auto,default
+	 */
+	service_tier?: "auto" | "default";
+	stop?: string | readonly string[];
+	stream?: boolean | null;
+	/** Options for streaming response. Only set this when you set `stream: true`. */
+	stream_options?: ChatCompletionStreamOptions;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 *
+	 * We generally recommend altering this or `top_p` but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or `temperature` but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	tools?: readonly ChatCompletionTool[];
+	/**
+	 * Controls which (if any) tool is called by the model.
+	 * `none` means the model will not call any tool and instead generates a
+	 * message.
+	 * `auto` means the model can pick between generating a message or calling one
+	 * or more tools.
+	 * `required` means the model must call one or more tools.
+	 * Specifying a particular tool via `{"type": "function", "function": {"name":
+	 * "my_function"}}` forces the model to call that tool.
+	 *
+	 * `none` is the default when no tools are present. `auto` is the default if
+	 * tools are present.
+	 */
+	tool_choice?: ChatCompletionToolChoiceOption;
+	/**
+	 * Whether to enable [parallel function
+	 * calling](/docs/guides/function-calling/parallel-function-calling) during
+	 * tool use.
+	 */
+	parallel_tool_calls?: ParallelToolCalls;
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 * @example user-1234
+	 */
+	user?: string;
+	/**
+	 * Deprecated in favor of `tool_choice`.
+	 *
+	 * Controls which (if any) function is called by the model.
+	 * `none` means the model will not call a function and instead generates a
+	 * message.
+	 * `auto` means the model can pick between generating a message or calling a
+	 * function.
+	 * Specifying a particular function via `{"name": "my_function"}` forces the
+	 * model to call that function.
+	 *
+	 * `none` is the default when no functions are present. `auto` is the default
+	 * if functions are present.
+	 * @deprecated
+	 */
+	function_call?: "none" | "auto" | ChatCompletionFunctionCallOption;
+	/**
+	 * Deprecated in favor of `tools`.
+	 *
+	 * A list of functions the model may generate JSON inputs for.
+	 * @deprecated
+	 */
+	functions?: readonly ChatCompletionFunctions[];
 };
 export type ChatCompletionMessageToolCallChunk = {
-  index: number;
-  id?: string;
-  /**
-   * The type of the tool. Currently, only `function` is supported.
-   * @enum function
-   */
-  type?: 'function';
-  function?: {
-    name?: string;
-    arguments?: string;
-  };
+	index: number;
+	id?: string;
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 * @enum function
+	 */
+	type?: "function";
+	function?: {
+		name?: string;
+		arguments?: string;
+	};
 };
 /** A chat completion delta generated by streamed model responses. */
 export type ChatCompletionStreamResponseDelta = {
-  content?: string;
-  /**
-   * Deprecated and replaced by `tool_calls`. The name and arguments of a
-   * function that should be called, as generated by the model.
-   * @deprecated
-   */
-  function_call?: {
-    arguments?: string;
-    name?: string;
-  };
-  readonly tool_calls?: ChatCompletionMessageToolCallChunk[];
-  /**
-   * The role of the author of this message.
-   * @enum system,user,assistant,tool
-   */
-  role?: 'system' | 'user' | 'assistant' | 'tool';
-  refusal?: string;
+	content?: string;
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 * @deprecated
+	 */
+	function_call?: {
+		arguments?: string;
+		name?: string;
+	};
+	tool_calls?: readonly ChatCompletionMessageToolCallChunk[];
+	/**
+	 * The role of the author of this message.
+	 * @enum system,user,assistant,tool
+	 */
+	role?: "system" | "user" | "assistant" | "tool";
+	refusal?: string;
 };
 /** A chat completion message generated by the model. */
 export type ChatCompletionResponseMessage = {
-  content: string;
-  refusal: string;
-  tool_calls?: ChatCompletionMessageToolCalls;
-  /**
-   * The role of the author of this message.
-   * @enum assistant
-   */
-  role: 'assistant';
-  /**
-   * Deprecated and replaced by `tool_calls`. The name and arguments of a
-   * function that should be called, as generated by the model.
-   * @deprecated
-   */
-  function_call?: {
-    arguments: string;
-    name: string;
-  };
+	content: string;
+	refusal: string;
+	/** The tool calls generated by the model, such as function calls. */
+	tool_calls?: ChatCompletionMessageToolCalls;
+	/**
+	 * The role of the author of this message.
+	 * @enum assistant
+	 */
+	role: "assistant";
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 * @deprecated
+	 */
+	function_call?: {
+		arguments: string;
+		name: string;
+	};
 };
 export type FineTuneChatCompletionRequestAssistantMessage =
-  ChatCompletionRequestAssistantMessage & {
-    /**
-     * Controls whether the assistant message is trained against (0 or 1)
-     * @enum 0,1
-     */
-    weight?: number;
-  };
+	ChatCompletionRequestAssistantMessage & {
+		/**
+		 * Controls whether the assistant message is trained against (0 or 1)
+		 * @enum 0,1
+		 */
+		weight?: number;
+	};
 /**
  * Represents a completion response from the API. Note: both the streamed and
  * non-streamed response objects share the same shape (unlike the chat
  * endpoint).
  */
 export type CreateCompletionResponse = {
-  id: string;
-  readonly choices: {
-    /**
-     * The reason the model stopped generating tokens. This will be `stop` if the
-     * model hit a natural stop point or a provided stop sequence,
-     * `length` if the maximum number of tokens specified in the request was
-     * reached,
-     * or `content_filter` if content was omitted due to a flag from our content
-     * filters.
-     * @enum stop,length,content_filter
-     */
-    finish_reason: 'stop' | 'length' | 'content_filter';
-    index: number;
-    logprobs: {
-      readonly text_offset?: number[];
-      readonly token_logprobs?: number[];
-      readonly tokens?: string[];
-      readonly top_logprobs?: JsonifiableObject[];
-    };
-    text: string;
-  }[];
-  created: number;
-  model: string;
-  system_fingerprint?: string;
-  /**
-   * The object type, which is always "text_completion"
-   * @enum text_completion
-   */
-  object: 'text_completion';
-  usage?: CompletionUsage;
+	id: string;
+	choices: readonly {
+		/**
+		 * The reason the model stopped generating tokens. This will be `stop` if the
+		 * model hit a natural stop point or a provided stop sequence,
+		 * `length` if the maximum number of tokens specified in the request was
+		 * reached,
+		 * or `content_filter` if content was omitted due to a flag from our content
+		 * filters.
+		 * @enum stop,length,content_filter
+		 */
+		finish_reason: "stop" | "length" | "content_filter";
+		index: number;
+		logprobs: {
+			text_offset?: readonly number[];
+			token_logprobs?: readonly number[];
+			tokens?: readonly string[];
+			top_logprobs?: readonly Record<
+				string | number,
+				/* additionalProperties is not handled yet */ unknown
+			>[];
+		};
+		text: string;
+	}[];
+	created: number;
+	model: string;
+	system_fingerprint?: string;
+	/**
+	 * The object type, which is always "text_completion"
+	 * @enum text_completion
+	 */
+	object: "text_completion";
+	/** Usage statistics for the completion request. */
+	usage?: CompletionUsage;
 };
 export type CreateCompletionRequest = {
-  model:
-    | string
-    | 'gpt-3.5-turbo-instruct'
-    | 'davinci-002'
-    | 'babbage-002'
-    | null;
-  /**
-   * The prompt(s) to generate completions for, encoded as a string, array of
-   * strings, array of tokens, or array of token arrays.
-   *
-   * Note that <|endoftext|> is the document separator that the model sees
-   * during training, so if a prompt is not specified the model will generate as
-   * if from the beginning of a new document.
-   * @default <|endoftext|>
-   */
-  prompt: string | string[] | number[] | number[][] | null;
-  /**
-   * Generates `best_of` completions server-side and returns the "best" (the one
-   * with the highest log probability per token). Results cannot be streamed.
-   *
-   * When used with `n`, `best_of` controls the number of candidate completions
-   * and `n` specifies how many to return – `best_of` must be greater than `n`.
-   *
-   * **Note:** Because this parameter generates many completions, it can quickly
-   * consume your token quota. Use carefully and ensure that you have reasonable
-   * settings for `max_tokens` and `stop`.
-   * @default 1
-   */
-  best_of?: number | null;
-  echo?: boolean | null;
-  frequency_penalty?: number | null;
-  logit_bias?: JsonifiableObject;
-  logprobs?: number | null;
-  /**
-   * The maximum number of [tokens](/tokenizer) that can be generated in the
-   * completion.
-   *
-   * The token count of your prompt plus `max_tokens` cannot exceed the model's
-   * context length. [Example Python
-   * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-   * for counting tokens.
-   * @default 16
-   * @example 16
-   */
-  max_tokens?: number | null;
-  /**
-   * How many completions to generate for each prompt.
-   *
-   * **Note:** Because this parameter generates many completions, it can quickly
-   * consume your token quota. Use carefully and ensure that you have reasonable
-   * settings for `max_tokens` and `stop`.
-   * @default 1
-   * @example 1
-   */
-  n?: number | null;
-  presence_penalty?: number | null;
-  seed?: number | null;
-  stop?: string | string[] | null;
-  stream?: boolean | null;
-  stream_options?: ChatCompletionStreamOptions;
-  /**
-   * The suffix that comes after a completion of inserted text.
-   *
-   * This parameter is only supported for `gpt-3.5-turbo-instruct`.
-   * @example test.
-   */
-  suffix?: string;
-  /**
-   * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-   * will make the output more random, while lower values like 0.2 will make it
-   * more focused and deterministic.
-   *
-   * We generally recommend altering this or `top_p` but not both.
-   * @default 1
-   * @example 1
-   */
-  temperature?: number | null;
-  /**
-   * An alternative to sampling with temperature, called nucleus sampling, where
-   * the model considers the results of the tokens with top_p probability mass.
-   * So 0.1 means only the tokens comprising the top 10% probability mass are
-   * considered.
-   *
-   * We generally recommend altering this or `temperature` but not both.
-   * @default 1
-   * @example 1
-   */
-  top_p?: number | null;
-  /**
-   * A unique identifier representing your end-user, which can help OpenAI to
-   * monitor and detect abuse. [Learn
-   * more](/docs/guides/safety-best-practices/end-user-ids).
-   * @example user-1234
-   */
-  user?: string;
+	model: string | "gpt-3.5-turbo-instruct" | "davinci-002" | "babbage-002";
+	/**
+	 * The prompt(s) to generate completions for, encoded as a string, array of
+	 * strings, array of tokens, or array of token arrays.
+	 *
+	 * Note that <|endoftext|> is the document separator that the model sees
+	 * during training, so if a prompt is not specified the model will generate as
+	 * if from the beginning of a new document.
+	 * @default <|endoftext|>
+	 */
+	prompt:
+		| string
+		| readonly string[]
+		| readonly number[]
+		| readonly (readonly number[])[]
+		| null;
+	/**
+	 * Generates `best_of` completions server-side and returns the "best" (the one
+	 * with the highest log probability per token). Results cannot be streamed.
+	 *
+	 * When used with `n`, `best_of` controls the number of candidate completions
+	 * and `n` specifies how many to return – `best_of` must be greater than `n`.
+	 *
+	 * **Note:** Because this parameter generates many completions, it can quickly
+	 * consume your token quota. Use carefully and ensure that you have reasonable
+	 * settings for `max_tokens` and `stop`.
+	 * @default 1
+	 */
+	best_of?: number | null;
+	echo?: boolean | null;
+	frequency_penalty?: number | null;
+	logit_bias?: Record<
+		string | number,
+		/* additionalProperties is not handled yet */ unknown
+	>;
+	logprobs?: number | null;
+	/**
+	 * The maximum number of [tokens](/tokenizer) that can be generated in the
+	 * completion.
+	 *
+	 * The token count of your prompt plus `max_tokens` cannot exceed the model's
+	 * context length. [Example Python
+	 * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
+	 * for counting tokens.
+	 * @default 16
+	 * @example 16
+	 */
+	max_tokens?: number | null;
+	/**
+	 * How many completions to generate for each prompt.
+	 *
+	 * **Note:** Because this parameter generates many completions, it can quickly
+	 * consume your token quota. Use carefully and ensure that you have reasonable
+	 * settings for `max_tokens` and `stop`.
+	 * @default 1
+	 * @example 1
+	 */
+	n?: number | null;
+	presence_penalty?: number | null;
+	seed?: number | null;
+	stop?: string | readonly string[] | null;
+	stream?: boolean | null;
+	/** Options for streaming response. Only set this when you set `stream: true`. */
+	stream_options?: ChatCompletionStreamOptions;
+	/**
+	 * The suffix that comes after a completion of inserted text.
+	 *
+	 * This parameter is only supported for `gpt-3.5-turbo-instruct`.
+	 * @example test.
+	 */
+	suffix?: string;
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 *
+	 * We generally recommend altering this or `top_p` but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	temperature?: number | null;
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or `temperature` but not both.
+	 * @default 1
+	 * @example 1
+	 */
+	top_p?: number | null;
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 * @example user-1234
+	 */
+	user?: string;
 };
 /** Describes an OpenAI model offering that can be used with the API. */
 export type Model = {
-  id: string;
-  created: number;
-  /**
-   * The object type, which is always "model".
-   * @enum model
-   */
-  object: 'model';
-  owned_by: string;
+	id: string;
+	created: number;
+	/**
+	 * The object type, which is always "model".
+	 * @enum model
+	 */
+	object: "model";
+	owned_by: string;
 };
 export type ListModelsResponse = {
-  object: 'list';
-  readonly data: Model[];
+	object: "list";
+	data: readonly Model[];
 };
 export type ErrorResponse = {
-  error: Error;
+	error: Error;
 };
-export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
 export type CreateChatCompletionCommandBody = CreateChatCompletionRequest;
-export type CreateCompletionCommandInput = CreateCompletionRequest;
+export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
 export type CreateCompletionCommandBody = CreateCompletionRequest;
-export type CreateImageCommandInput = CreateImageRequest;
+export type CreateCompletionCommandInput = CreateCompletionRequest;
 export type CreateImageCommandBody = CreateImageRequest;
-export type CreateImageEditCommandInput = never;
-export type CreateImageVariationCommandInput = never;
-export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
+export type CreateImageCommandInput = CreateImageRequest;
+type CreateImageEditCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
+export type CreateImageEditCommandBodyNonJson = {
+	body: CreateImageEditCommandBodyMultipartFormData;
+};
+export type CreateImageEditCommandInput = CreateImageEditCommandBodyNonJson;
+type CreateImageVariationCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
+export type CreateImageVariationCommandBodyNonJson = {
+	body: CreateImageVariationCommandBodyMultipartFormData;
+};
+export type CreateImageVariationCommandInput =
+	CreateImageVariationCommandBodyNonJson;
 export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
-export type CreateSpeechCommandInput = CreateSpeechRequest;
+export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
 export type CreateSpeechCommandBody = CreateSpeechRequest;
-export type CreateTranscriptionCommandInput = never;
-export type CreateTranslationCommandInput = never;
+export type CreateSpeechCommandInput = CreateSpeechRequest;
+type CreateTranscriptionCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
+export type CreateTranscriptionCommandBodyNonJson = {
+	body: CreateTranscriptionCommandBodyMultipartFormData;
+};
+export type CreateTranscriptionCommandInput =
+	CreateTranscriptionCommandBodyNonJson;
+export type CreateTranscriptionCommandOutput =
+	| CreateTranscriptionResponseJson
+	| CreateTranscriptionResponseVerboseJson;
+type CreateTranslationCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
+export type CreateTranslationCommandBodyNonJson = {
+	body: CreateTranslationCommandBodyMultipartFormData;
+};
+export type CreateTranslationCommandInput = CreateTranslationCommandBodyNonJson;
+export type CreateTranslationCommandOutput =
+	| CreateTranslationResponseJson
+	| CreateTranslationResponseVerboseJson;
 export type ListFilesCommandQuery = {
-  purpose?: string | undefined;
+	purpose?: string | undefined;
 };
 export type ListFilesCommandInput = ListFilesCommandQuery;
-export type CreateFileCommandInput = never;
+type CreateFileCommandBodyMultipartFormData = NonNullable<RequestInit["body"]>;
+export type CreateFileCommandBodyNonJson = {
+	body: CreateFileCommandBodyMultipartFormData;
+};
+export type CreateFileCommandInput = CreateFileCommandBodyNonJson;
 export type DeleteFileCommandParams = {
-  file_id: string;
+	file_id: string;
 };
 export type DeleteFileCommandInput = DeleteFileCommandParams;
 export type RetrieveFileCommandParams = {
-  file_id: string;
+	file_id: string;
 };
 export type RetrieveFileCommandInput = RetrieveFileCommandParams;
 export type DownloadFileCommandParams = {
-  file_id: string;
+	file_id: string;
 };
 export type DownloadFileCommandInput = DownloadFileCommandParams;
-export type CreateUploadCommandInput = CreateUploadRequest;
+export type DownloadFileCommandOutput = string | undefined;
 export type CreateUploadCommandBody = CreateUploadRequest;
+export type CreateUploadCommandInput = CreateUploadRequest;
+type AddUploadPartCommandBodyMultipartFormData = NonNullable<
+	RequestInit["body"]
+>;
+export type AddUploadPartCommandBodyNonJson = {
+	body: AddUploadPartCommandBodyMultipartFormData;
+};
 export type AddUploadPartCommandParams = {
-  upload_id: string;
+	upload_id: string;
 };
-export type AddUploadPartCommandInput = AddUploadPartCommandParams;
+export type AddUploadPartCommandInput = AddUploadPartCommandBodyNonJson &
+	AddUploadPartCommandParams;
 export type CompleteUploadCommandParams = {
-  upload_id: string;
+	upload_id: string;
 };
-export type CompleteUploadCommandInput = CompleteUploadRequest &
-  CompleteUploadCommandParams;
 export type CompleteUploadCommandBody = CompleteUploadRequest;
+export type CompleteUploadCommandInput = CompleteUploadRequest &
+	CompleteUploadCommandParams;
 export type CancelUploadCommandParams = {
-  upload_id: string;
+	upload_id: string;
 };
 export type CancelUploadCommandInput = CancelUploadCommandParams;
-export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
 export type CreateFineTuningJobCommandBody = CreateFineTuningJobRequest;
+export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
 export type ListPaginatedFineTuningJobsCommandQuery = {
-  after?: string | undefined;
-  limit?: `${number}` | undefined;
+	after?: string | undefined;
+	limit?: `${number}` | undefined;
 };
 export type ListPaginatedFineTuningJobsCommandInput =
-  ListPaginatedFineTuningJobsCommandQuery;
+	ListPaginatedFineTuningJobsCommandQuery;
 export type RetrieveFineTuningJobCommandParams = {
-  fine_tuning_job_id: string;
+	fine_tuning_job_id: string;
 };
 export type RetrieveFineTuningJobCommandInput =
-  RetrieveFineTuningJobCommandParams;
+	RetrieveFineTuningJobCommandParams;
 export type ListFineTuningEventsCommandQuery = {
-  after?: string | undefined;
-  limit?: `${number}` | undefined;
+	after?: string | undefined;
+	limit?: `${number}` | undefined;
 };
 export type ListFineTuningEventsCommandParams = {
-  fine_tuning_job_id: string;
+	fine_tuning_job_id: string;
 };
 export type ListFineTuningEventsCommandInput =
-  ListFineTuningEventsCommandParams & ListFineTuningEventsCommandQuery;
+	ListFineTuningEventsCommandParams & ListFineTuningEventsCommandQuery;
 export type CancelFineTuningJobCommandParams = {
-  fine_tuning_job_id: string;
+	fine_tuning_job_id: string;
 };
 export type CancelFineTuningJobCommandInput = CancelFineTuningJobCommandParams;
 export type ListFineTuningJobCheckpointsCommandQuery = {
-  after?: string | undefined;
-  limit?: `${number}` | undefined;
+	after?: string | undefined;
+	limit?: `${number}` | undefined;
 };
 export type ListFineTuningJobCheckpointsCommandParams = {
-  fine_tuning_job_id: string;
+	fine_tuning_job_id: string;
 };
 export type ListFineTuningJobCheckpointsCommandInput =
-  ListFineTuningJobCheckpointsCommandParams &
-    ListFineTuningJobCheckpointsCommandQuery;
+	ListFineTuningJobCheckpointsCommandParams &
+		ListFineTuningJobCheckpointsCommandQuery;
 export type ListModelsCommandInput = never;
 export type RetrieveModelCommandParams = {
-  model: string;
+	model: string;
 };
 export type RetrieveModelCommandInput = RetrieveModelCommandParams;
 export type DeleteModelCommandParams = {
-  model: string;
+	model: string;
 };
 export type DeleteModelCommandInput = DeleteModelCommandParams;
-export type CreateModerationCommandInput = CreateModerationRequest;
 export type CreateModerationCommandBody = CreateModerationRequest;
+export type CreateModerationCommandInput = CreateModerationRequest;
 export type ListAssistantsCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
 };
 export type ListAssistantsCommandInput = ListAssistantsCommandQuery;
-export type CreateAssistantCommandInput = CreateAssistantRequest;
 export type CreateAssistantCommandBody = CreateAssistantRequest;
+export type CreateAssistantCommandInput = CreateAssistantRequest;
 export type GetAssistantCommandParams = {
-  assistant_id: string;
+	assistant_id: string;
 };
 export type GetAssistantCommandInput = GetAssistantCommandParams;
 export type ModifyAssistantCommandParams = {
-  assistant_id: string;
+	assistant_id: string;
 };
-export type ModifyAssistantCommandInput = ModifyAssistantRequest &
-  ModifyAssistantCommandParams;
 export type ModifyAssistantCommandBody = ModifyAssistantRequest;
+export type ModifyAssistantCommandInput = ModifyAssistantRequest &
+	ModifyAssistantCommandParams;
 export type DeleteAssistantCommandParams = {
-  assistant_id: string;
+	assistant_id: string;
 };
 export type DeleteAssistantCommandInput = DeleteAssistantCommandParams;
-export type CreateThreadCommandInput = CreateThreadRequest;
 export type CreateThreadCommandBody = CreateThreadRequest;
+export type CreateThreadCommandInput = CreateThreadRequest;
 export type GetThreadCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
 export type GetThreadCommandInput = GetThreadCommandParams;
 export type ModifyThreadCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
-export type ModifyThreadCommandInput = ModifyThreadRequest &
-  ModifyThreadCommandParams;
 export type ModifyThreadCommandBody = ModifyThreadRequest;
+export type ModifyThreadCommandInput = ModifyThreadRequest &
+	ModifyThreadCommandParams;
 export type DeleteThreadCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
 export type DeleteThreadCommandInput = DeleteThreadCommandParams;
 export type ListMessagesCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
-  run_id?: string | undefined;
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
+	run_id?: string | undefined;
 };
 export type ListMessagesCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
 export type ListMessagesCommandInput = ListMessagesCommandParams &
-  ListMessagesCommandQuery;
+	ListMessagesCommandQuery;
 export type CreateMessageCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
-export type CreateMessageCommandInput = CreateMessageRequest &
-  CreateMessageCommandParams;
 export type CreateMessageCommandBody = CreateMessageRequest;
+export type CreateMessageCommandInput = CreateMessageRequest &
+	CreateMessageCommandParams;
 export type GetMessageCommandParams = {
-  thread_id: string;
-  message_id: string;
+	thread_id: string;
+	message_id: string;
 };
 export type GetMessageCommandInput = GetMessageCommandParams;
 export type ModifyMessageCommandParams = {
-  thread_id: string;
-  message_id: string;
+	thread_id: string;
+	message_id: string;
 };
-export type ModifyMessageCommandInput = ModifyMessageRequest &
-  ModifyMessageCommandParams;
 export type ModifyMessageCommandBody = ModifyMessageRequest;
+export type ModifyMessageCommandInput = ModifyMessageRequest &
+	ModifyMessageCommandParams;
 export type DeleteMessageCommandParams = {
-  thread_id: string;
-  message_id: string;
+	thread_id: string;
+	message_id: string;
 };
 export type DeleteMessageCommandInput = DeleteMessageCommandParams;
-export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
 export type CreateThreadAndRunCommandBody = CreateThreadAndRunRequest;
+export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
 export type ListRunsCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
 };
 export type ListRunsCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
 export type ListRunsCommandInput = ListRunsCommandParams & ListRunsCommandQuery;
 export type CreateRunCommandQuery = {
-  include?:
-    | 'step_details.tool_calls[*].file_search.results[*].content'[]
-    | undefined;
+	include?:
+		| readonly "step_details.tool_calls[*].file_search.results[*].content"[]
+		| undefined;
 };
 export type CreateRunCommandParams = {
-  thread_id: string;
+	thread_id: string;
 };
-export type CreateRunCommandInput = CreateRunRequest &
-  CreateRunCommandParams &
-  CreateRunCommandQuery;
 export type CreateRunCommandBody = CreateRunRequest;
+export type CreateRunCommandInput = CreateRunRequest &
+	CreateRunCommandParams &
+	CreateRunCommandQuery;
 export type GetRunCommandParams = {
-  thread_id: string;
-  run_id: string;
+	thread_id: string;
+	run_id: string;
 };
 export type GetRunCommandInput = GetRunCommandParams;
 export type ModifyRunCommandParams = {
-  thread_id: string;
-  run_id: string;
+	thread_id: string;
+	run_id: string;
 };
-export type ModifyRunCommandInput = ModifyRunRequest & ModifyRunCommandParams;
 export type ModifyRunCommandBody = ModifyRunRequest;
+export type ModifyRunCommandInput = ModifyRunRequest & ModifyRunCommandParams;
 export type SubmitToolOuputsToRunCommandParams = {
-  thread_id: string;
-  run_id: string;
+	thread_id: string;
+	run_id: string;
 };
-export type SubmitToolOuputsToRunCommandInput = SubmitToolOutputsRunRequest &
-  SubmitToolOuputsToRunCommandParams;
 export type SubmitToolOuputsToRunCommandBody = SubmitToolOutputsRunRequest;
+export type SubmitToolOuputsToRunCommandInput = SubmitToolOutputsRunRequest &
+	SubmitToolOuputsToRunCommandParams;
 export type CancelRunCommandParams = {
-  thread_id: string;
-  run_id: string;
+	thread_id: string;
+	run_id: string;
 };
 export type CancelRunCommandInput = CancelRunCommandParams;
 export type ListRunStepsCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
-  include?:
-    | 'step_details.tool_calls[*].file_search.results[*].content'[]
-    | undefined;
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
+	include?:
+		| readonly "step_details.tool_calls[*].file_search.results[*].content"[]
+		| undefined;
 };
 export type ListRunStepsCommandParams = {
-  thread_id: string;
-  run_id: string;
+	thread_id: string;
+	run_id: string;
 };
 export type ListRunStepsCommandInput = ListRunStepsCommandParams &
-  ListRunStepsCommandQuery;
+	ListRunStepsCommandQuery;
 export type GetRunStepCommandQuery = {
-  include?:
-    | 'step_details.tool_calls[*].file_search.results[*].content'[]
-    | undefined;
+	include?:
+		| readonly "step_details.tool_calls[*].file_search.results[*].content"[]
+		| undefined;
 };
 export type GetRunStepCommandParams = {
-  thread_id: string;
-  run_id: string;
-  step_id: string;
+	thread_id: string;
+	run_id: string;
+	step_id: string;
 };
 export type GetRunStepCommandInput = GetRunStepCommandParams &
-  GetRunStepCommandQuery;
+	GetRunStepCommandQuery;
 export type ListVectorStoresCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
 };
 export type ListVectorStoresCommandInput = ListVectorStoresCommandQuery;
-export type CreateVectorStoreCommandInput = CreateVectorStoreRequest;
 export type CreateVectorStoreCommandBody = CreateVectorStoreRequest;
+export type CreateVectorStoreCommandInput = CreateVectorStoreRequest;
 export type GetVectorStoreCommandParams = {
-  vector_store_id: string;
+	vector_store_id: string;
 };
 export type GetVectorStoreCommandInput = GetVectorStoreCommandParams;
 export type ModifyVectorStoreCommandParams = {
-  vector_store_id: string;
+	vector_store_id: string;
 };
-export type ModifyVectorStoreCommandInput = UpdateVectorStoreRequest &
-  ModifyVectorStoreCommandParams;
 export type ModifyVectorStoreCommandBody = UpdateVectorStoreRequest;
+export type ModifyVectorStoreCommandInput = UpdateVectorStoreRequest &
+	ModifyVectorStoreCommandParams;
 export type DeleteVectorStoreCommandParams = {
-  vector_store_id: string;
+	vector_store_id: string;
 };
 export type DeleteVectorStoreCommandInput = DeleteVectorStoreCommandParams;
 export type ListVectorStoreFilesCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
-  filter?: 'in_progress' | 'completed' | 'failed' | 'cancelled';
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
+	filter?: "in_progress" | "completed" | "failed" | "cancelled";
 };
 export type ListVectorStoreFilesCommandParams = {
-  vector_store_id: string;
+	vector_store_id: string;
 };
 export type ListVectorStoreFilesCommandInput =
-  ListVectorStoreFilesCommandParams & ListVectorStoreFilesCommandQuery;
+	ListVectorStoreFilesCommandParams & ListVectorStoreFilesCommandQuery;
 export type CreateVectorStoreFileCommandParams = {
-  vector_store_id: string;
+	vector_store_id: string;
 };
-export type CreateVectorStoreFileCommandInput = CreateVectorStoreFileRequest &
-  CreateVectorStoreFileCommandParams;
 export type CreateVectorStoreFileCommandBody = CreateVectorStoreFileRequest;
+export type CreateVectorStoreFileCommandInput = CreateVectorStoreFileRequest &
+	CreateVectorStoreFileCommandParams;
 export type GetVectorStoreFileCommandParams = {
-  vector_store_id: string;
-  file_id: string;
+	vector_store_id: string;
+	file_id: string;
 };
 export type GetVectorStoreFileCommandInput = GetVectorStoreFileCommandParams;
 export type DeleteVectorStoreFileCommandParams = {
-  vector_store_id: string;
-  file_id: string;
+	vector_store_id: string;
+	file_id: string;
 };
 export type DeleteVectorStoreFileCommandInput =
-  DeleteVectorStoreFileCommandParams;
+	DeleteVectorStoreFileCommandParams;
 export type CreateVectorStoreFileBatchCommandParams = {
-  vector_store_id: string;
+	vector_store_id: string;
 };
-export type CreateVectorStoreFileBatchCommandInput =
-  CreateVectorStoreFileBatchRequest & CreateVectorStoreFileBatchCommandParams;
 export type CreateVectorStoreFileBatchCommandBody =
-  CreateVectorStoreFileBatchRequest;
+	CreateVectorStoreFileBatchRequest;
+export type CreateVectorStoreFileBatchCommandInput =
+	CreateVectorStoreFileBatchRequest & CreateVectorStoreFileBatchCommandParams;
 export type GetVectorStoreFileBatchCommandParams = {
-  vector_store_id: string;
-  batch_id: string;
+	vector_store_id: string;
+	batch_id: string;
 };
 export type GetVectorStoreFileBatchCommandInput =
-  GetVectorStoreFileBatchCommandParams;
+	GetVectorStoreFileBatchCommandParams;
 export type CancelVectorStoreFileBatchCommandParams = {
-  vector_store_id: string;
-  batch_id: string;
+	vector_store_id: string;
+	batch_id: string;
 };
 export type CancelVectorStoreFileBatchCommandInput =
-  CancelVectorStoreFileBatchCommandParams;
+	CancelVectorStoreFileBatchCommandParams;
 export type ListFilesInVectorStoreBatchCommandQuery = {
-  limit?: `${number}` | undefined;
-  order?: 'asc' | 'desc';
-  after?: string | undefined;
-  before?: string | undefined;
-  filter?: 'in_progress' | 'completed' | 'failed' | 'cancelled';
+	limit?: `${number}` | undefined;
+	order?: "asc" | "desc";
+	after?: string | undefined;
+	before?: string | undefined;
+	filter?: "in_progress" | "completed" | "failed" | "cancelled";
 };
 export type ListFilesInVectorStoreBatchCommandParams = {
-  vector_store_id: string;
-  batch_id: string;
+	vector_store_id: string;
+	batch_id: string;
 };
 export type ListFilesInVectorStoreBatchCommandInput =
-  ListFilesInVectorStoreBatchCommandParams &
-    ListFilesInVectorStoreBatchCommandQuery;
-export type CreateBatchCommandInput = never;
+	ListFilesInVectorStoreBatchCommandParams &
+		ListFilesInVectorStoreBatchCommandQuery;
+type createBatchJsonBody = {
+	input_file_id: string;
+	/**
+	 * The endpoint to be used for all requests in the batch. Currently
+	 * `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are
+	 * supported. Note that `/v1/embeddings` batches are also restricted to a
+	 * maximum of 50,000 embedding inputs across all requests in the batch.
+	 * @enum /v1/chat/completions,/v1/embeddings,/v1/completions
+	 */
+	endpoint: "/v1/chat/completions" | "/v1/embeddings" | "/v1/completions";
+	/**
+	 * The time frame within which the batch should be processed. Currently only
+	 * `24h` is supported.
+	 * @enum 24h
+	 */
+	completion_window: "24h";
+	metadata?: Record<
+		string | number,
+		/* additionalProperties is not handled yet */ unknown
+	>;
+};
+export type CreateBatchCommandBody = createBatchJsonBody;
+export type CreateBatchCommandInput = createBatchJsonBody;
 export type ListBatchesCommandQuery = {
-  after?: string | undefined;
-  limit?: `${number}` | undefined;
+	after?: string | undefined;
+	limit?: `${number}` | undefined;
 };
 export type ListBatchesCommandInput = ListBatchesCommandQuery;
 export type RetrieveBatchCommandParams = {
-  batch_id: string;
+	batch_id: string;
 };
 export type RetrieveBatchCommandInput = RetrieveBatchCommandParams;
 export type CancelBatchCommandParams = {
-  batch_id: string;
+	batch_id: string;
 };
 export type CancelBatchCommandInput = CancelBatchCommandParams;
 export type ListAuditLogsCommandQuery = {
-  effective_at?: {
-    gt?: number;
-    gte?: number;
-    lt?: number;
-    lte?: number;
-  };
-  project_ids?: string[] | undefined;
-  event_types?: AuditLogEventType[] | undefined;
-  actor_ids?: string[] | undefined;
-  actor_emails?: string[] | undefined;
-  resource_ids?: string[] | undefined;
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
-  before?: string | undefined;
+	effective_at?: {
+		gt?: number;
+		gte?: number;
+		lt?: number;
+		lte?: number;
+	};
+	project_ids?: readonly string[] | undefined;
+	event_types?: readonly AuditLogEventType[] | undefined;
+	actor_ids?: readonly string[] | undefined;
+	actor_emails?: readonly string[] | undefined;
+	resource_ids?: readonly string[] | undefined;
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
+	before?: string | undefined;
 };
 export type ListAuditLogsCommandInput = ListAuditLogsCommandQuery;
 export type ListInvitesCommandQuery = {
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
 };
 export type ListInvitesCommandInput = ListInvitesCommandQuery;
-export type InviteUserCommandInput = InviteRequest;
 export type InviteUserCommandBody = InviteRequest;
+export type InviteUserCommandInput = InviteRequest;
 export type RetrieveInviteCommandParams = {
-  invite_id: string;
+	invite_id: string;
 };
 export type RetrieveInviteCommandInput = RetrieveInviteCommandParams;
 export type DeleteInviteCommandParams = {
-  invite_id: string;
+	invite_id: string;
 };
 export type DeleteInviteCommandInput = DeleteInviteCommandParams;
 export type ListUsersCommandQuery = {
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
 };
 export type ListUsersCommandInput = ListUsersCommandQuery;
 export type RetrieveUserCommandParams = {
-  user_id: string;
+	user_id: string;
 };
 export type RetrieveUserCommandInput = RetrieveUserCommandParams;
-export type ModifyUserCommandInput = UserRoleUpdateRequest;
+export type ModifyUserCommandParams = {
+	user_id: string;
+};
 export type ModifyUserCommandBody = UserRoleUpdateRequest;
+export type ModifyUserCommandInput = UserRoleUpdateRequest &
+	ModifyUserCommandParams;
 export type DeleteUserCommandParams = {
-  user_id: string;
+	user_id: string;
 };
 export type DeleteUserCommandInput = DeleteUserCommandParams;
 export type ListProjectsCommandQuery = {
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
-  include_archived?: 'true' | 'false';
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
+	include_archived?: "true" | "false";
 };
 export type ListProjectsCommandInput = ListProjectsCommandQuery;
-export type CreateProjectCommandInput = ProjectCreateRequest;
 export type CreateProjectCommandBody = ProjectCreateRequest;
+export type CreateProjectCommandInput = ProjectCreateRequest;
 export type RetrieveProjectCommandParams = {
-  project_id: string;
+	project_id: string;
 };
 export type RetrieveProjectCommandInput = RetrieveProjectCommandParams;
-export type ModifyProjectCommandInput = ProjectUpdateRequest;
+export type ModifyProjectCommandParams = {
+	project_id: string;
+};
 export type ModifyProjectCommandBody = ProjectUpdateRequest;
+export type ModifyProjectCommandInput = ProjectUpdateRequest &
+	ModifyProjectCommandParams;
 export type ArchiveProjectCommandParams = {
-  project_id: string;
+	project_id: string;
 };
 export type ArchiveProjectCommandInput = ArchiveProjectCommandParams;
 export type ListProjectUsersCommandQuery = {
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
 };
 export type ListProjectUsersCommandParams = {
-  project_id: string;
+	project_id: string;
 };
 export type ListProjectUsersCommandInput = ListProjectUsersCommandParams &
-  ListProjectUsersCommandQuery;
+	ListProjectUsersCommandQuery;
 export type CreateProjectUserCommandParams = {
-  project_id: string;
+	project_id: string;
 };
-export type CreateProjectUserCommandInput = ProjectUserCreateRequest &
-  CreateProjectUserCommandParams;
 export type CreateProjectUserCommandBody = ProjectUserCreateRequest;
+export type CreateProjectUserCommandInput = ProjectUserCreateRequest &
+	CreateProjectUserCommandParams;
 export type RetrieveProjectUserCommandParams = {
-  project_id: string;
-  user_id: string;
+	project_id: string;
+	user_id: string;
 };
 export type RetrieveProjectUserCommandInput = RetrieveProjectUserCommandParams;
-export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest;
+export type ModifyProjectUserCommandParams = {
+	project_id: string;
+	user_id: string;
+};
 export type ModifyProjectUserCommandBody = ProjectUserUpdateRequest;
+export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest &
+	ModifyProjectUserCommandParams;
 export type DeleteProjectUserCommandParams = {
-  project_id: string;
-  user_id: string;
+	project_id: string;
+	user_id: string;
 };
 export type DeleteProjectUserCommandInput = DeleteProjectUserCommandParams;
 export type ListProjectServiceAccountsCommandQuery = {
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
 };
 export type ListProjectServiceAccountsCommandParams = {
-  project_id: string;
+	project_id: string;
 };
 export type ListProjectServiceAccountsCommandInput =
-  ListProjectServiceAccountsCommandParams &
-    ListProjectServiceAccountsCommandQuery;
+	ListProjectServiceAccountsCommandParams &
+		ListProjectServiceAccountsCommandQuery;
 export type CreateProjectServiceAccountCommandParams = {
-  project_id: string;
+	project_id: string;
 };
-export type CreateProjectServiceAccountCommandInput =
-  ProjectServiceAccountCreateRequest & CreateProjectServiceAccountCommandParams;
 export type CreateProjectServiceAccountCommandBody =
-  ProjectServiceAccountCreateRequest;
+	ProjectServiceAccountCreateRequest;
+export type CreateProjectServiceAccountCommandInput =
+	ProjectServiceAccountCreateRequest & CreateProjectServiceAccountCommandParams;
 export type RetrieveProjectServiceAccountCommandParams = {
-  project_id: string;
-  service_account_id: string;
+	project_id: string;
+	service_account_id: string;
 };
 export type RetrieveProjectServiceAccountCommandInput =
-  RetrieveProjectServiceAccountCommandParams;
+	RetrieveProjectServiceAccountCommandParams;
 export type DeleteProjectServiceAccountCommandParams = {
-  project_id: string;
-  service_account_id: string;
+	project_id: string;
+	service_account_id: string;
 };
 export type DeleteProjectServiceAccountCommandInput =
-  DeleteProjectServiceAccountCommandParams;
+	DeleteProjectServiceAccountCommandParams;
 export type ListProjectApiKeysCommandQuery = {
-  limit?: `${number}` | undefined;
-  after?: string | undefined;
+	limit?: `${number}` | undefined;
+	after?: string | undefined;
 };
 export type ListProjectApiKeysCommandParams = {
-  project_id: string;
+	project_id: string;
 };
 export type ListProjectApiKeysCommandInput = ListProjectApiKeysCommandParams &
-  ListProjectApiKeysCommandQuery;
+	ListProjectApiKeysCommandQuery;
 export type RetrieveProjectApiKeyCommandParams = {
-  project_id: string;
-  key_id: string;
+	project_id: string;
+	key_id: string;
 };
 export type RetrieveProjectApiKeyCommandInput =
-  RetrieveProjectApiKeyCommandParams;
+	RetrieveProjectApiKeyCommandParams;
 export type DeleteProjectApiKeyCommandParams = {
-  project_id: string;
-  key_id: string;
+	project_id: string;
+	key_id: string;
 };
 export type DeleteProjectApiKeyCommandInput = DeleteProjectApiKeyCommandParams;
