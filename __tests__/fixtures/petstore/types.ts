@@ -3,33 +3,33 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2024-10-13T02:06:27.975Z
+ * Generated on 2026-03-06T07:45:20.003Z
  *
  */
 
 export type Error = {
-  code: number;
-  message: string;
+	code: number;
+	message: string;
 };
 export type NewPet = {
-  name: string;
-  tag?: string;
+	name: string;
+	tag?: string;
 };
 export type Pet = NewPet & {
-  id: number;
+	id: number;
 };
 export type FindPetsCommandQuery = {
-  tags?: string[] | undefined;
-  limit?: `${number}` | undefined;
+	tags?: readonly string[] | undefined;
+	limit?: `${number}` | undefined;
 };
 export type FindPetsCommandInput = FindPetsCommandQuery;
-export type AddPetCommandInput = NewPet;
 export type AddPetCommandBody = NewPet;
+export type AddPetCommandInput = NewPet;
 export type FindPetByIdCommandParams = {
-  id: `${number}`;
+	id: `${number}`;
 };
 export type FindPetByIdCommandInput = FindPetByIdCommandParams;
 export type DeletePetCommandParams = {
-  id: `${number}`;
+	id: `${number}`;
 };
 export type DeletePetCommandInput = DeletePetCommandParams;
