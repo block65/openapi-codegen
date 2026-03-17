@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import camelcase from "camelcase";
 import type { Project, SourceFile } from "ts-morph";
 import { VariableDeclarationKind } from "ts-morph";
 
@@ -52,7 +53,7 @@ export function createHonoValibotMiddleware(
 		declarationKind: VariableDeclarationKind.Const,
 		declarations: [
 			{
-				name: exportName,
+				name: camelcase(exportName),
 				initializer: (writer) => {
 					writer.write("[");
 					writer.indent(() => {
