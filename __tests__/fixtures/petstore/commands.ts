@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-06T07:45:20.003Z
+ * Generated on 2026-03-17T13:15:35.006Z
  *
  */
 /** eslint-disable max-classes */
@@ -16,6 +16,17 @@ import type {
 	FindPetsCommandQuery,
 	Pet,
 } from "./types.js";
+
+/**
+ * Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.
+ * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
+ */
+function encodePath(
+	strings: TemplateStringsArray,
+	...values: string[]
+): string {
+	return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+}
 
 /**
  * Returns all pets from the system that the user has access to
@@ -79,7 +90,7 @@ export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
 
 	constructor(input: FindPetByIdCommandInput) {
 		const { id } = input;
-		super(`/pets/${id}`);
+		super(encodePath`/pets/${id}`);
 	}
 }
 
@@ -95,6 +106,6 @@ export class DeletePetCommand extends Command<
 
 	constructor(input: DeletePetCommandInput) {
 		const { id } = input;
-		super(`/pets/${id}`);
+		super(encodePath`/pets/${id}`);
 	}
 }

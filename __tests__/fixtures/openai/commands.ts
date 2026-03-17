@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-06T07:45:26.343Z
+ * Generated on 2026-03-17T13:15:43.170Z
  *
  */
 /** eslint-disable max-classes */
@@ -185,6 +185,17 @@ import type {
 	VectorStoreFileObject,
 	VectorStoreObject,
 } from "./types.js";
+
+/**
+ * Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.
+ * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
+ */
+function encodePath(
+	strings: TemplateStringsArray,
+	...values: string[]
+): string {
+	return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+}
 
 /**
  * CreateChatCompletionCommand
@@ -405,7 +416,7 @@ export class DeleteFileCommand extends Command<
 
 	constructor(input: DeleteFileCommandInput) {
 		const { file_id } = input;
-		super(`/files/${file_id}`);
+		super(encodePath`/files/${file_id}`);
 	}
 }
 
@@ -422,7 +433,7 @@ export class RetrieveFileCommand extends Command<
 
 	constructor(input: RetrieveFileCommandInput) {
 		const { file_id } = input;
-		super(`/files/${file_id}`);
+		super(encodePath`/files/${file_id}`);
 	}
 }
 
@@ -439,7 +450,7 @@ export class DownloadFileCommand extends Command<
 
 	constructor(input: DownloadFileCommandInput) {
 		const { file_id } = input;
-		super(`/files/${file_id}/content`);
+		super(encodePath`/files/${file_id}/content`);
 	}
 }
 
@@ -498,7 +509,7 @@ export class AddUploadPartCommand extends Command<
 
 	constructor(input: AddUploadPartCommandInput) {
 		const { upload_id, body } = input;
-		super(`/uploads/${upload_id}/parts`, body);
+		super(encodePath`/uploads/${upload_id}/parts`, body);
 	}
 }
 
@@ -526,7 +537,7 @@ export class CompleteUploadCommand extends Command<
 
 	constructor(input: CompleteUploadCommandInput) {
 		const { upload_id, ...body } = input;
-		super(`/uploads/${upload_id}/complete`, jsonStringify(body));
+		super(encodePath`/uploads/${upload_id}/complete`, jsonStringify(body));
 	}
 }
 
@@ -543,7 +554,7 @@ export class CancelUploadCommand extends Command<
 
 	constructor(input: CancelUploadCommandInput) {
 		const { upload_id } = input;
-		super(`/uploads/${upload_id}/cancel`);
+		super(encodePath`/uploads/${upload_id}/cancel`);
 	}
 }
 
@@ -603,7 +614,7 @@ export class RetrieveFineTuningJobCommand extends Command<
 
 	constructor(input: RetrieveFineTuningJobCommandInput) {
 		const { fine_tuning_job_id } = input;
-		super(`/fine_tuning/jobs/${fine_tuning_job_id}`);
+		super(encodePath`/fine_tuning/jobs/${fine_tuning_job_id}`);
 	}
 }
 
@@ -622,7 +633,7 @@ export class ListFineTuningEventsCommand extends Command<
 	constructor(input: ListFineTuningEventsCommandInput) {
 		const { fine_tuning_job_id, after, limit } = input;
 		super(
-			`/fine_tuning/jobs/${fine_tuning_job_id}/events`,
+			encodePath`/fine_tuning/jobs/${fine_tuning_job_id}/events`,
 			undefined,
 			stripUndefined({ after, limit }),
 		);
@@ -642,7 +653,7 @@ export class CancelFineTuningJobCommand extends Command<
 
 	constructor(input: CancelFineTuningJobCommandInput) {
 		const { fine_tuning_job_id } = input;
-		super(`/fine_tuning/jobs/${fine_tuning_job_id}/cancel`);
+		super(encodePath`/fine_tuning/jobs/${fine_tuning_job_id}/cancel`);
 	}
 }
 
@@ -661,7 +672,7 @@ export class ListFineTuningJobCheckpointsCommand extends Command<
 	constructor(input: ListFineTuningJobCheckpointsCommandInput) {
 		const { fine_tuning_job_id, after, limit } = input;
 		super(
-			`/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`,
+			encodePath`/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`,
 			undefined,
 			stripUndefined({ after, limit }),
 		);
@@ -695,7 +706,7 @@ export class RetrieveModelCommand extends Command<
 
 	constructor(input: RetrieveModelCommandInput) {
 		const { model } = input;
-		super(`/models/${model}`);
+		super(encodePath`/models/${model}`);
 	}
 }
 
@@ -713,7 +724,7 @@ export class DeleteModelCommand extends Command<
 
 	constructor(input: DeleteModelCommandInput) {
 		const { model } = input;
-		super(`/models/${model}`);
+		super(encodePath`/models/${model}`);
 	}
 }
 
@@ -787,7 +798,7 @@ export class GetAssistantCommand extends Command<
 
 	constructor(input: GetAssistantCommandInput) {
 		const { assistant_id } = input;
-		super(`/assistants/${assistant_id}`);
+		super(encodePath`/assistants/${assistant_id}`);
 	}
 }
 
@@ -804,7 +815,7 @@ export class ModifyAssistantCommand extends Command<
 
 	constructor(input: ModifyAssistantCommandInput) {
 		const { assistant_id, ...body } = input;
-		super(`/assistants/${assistant_id}`, jsonStringify(body));
+		super(encodePath`/assistants/${assistant_id}`, jsonStringify(body));
 	}
 }
 
@@ -821,7 +832,7 @@ export class DeleteAssistantCommand extends Command<
 
 	constructor(input: DeleteAssistantCommandInput) {
 		const { assistant_id } = input;
-		super(`/assistants/${assistant_id}`);
+		super(encodePath`/assistants/${assistant_id}`);
 	}
 }
 
@@ -855,7 +866,7 @@ export class GetThreadCommand extends Command<
 
 	constructor(input: GetThreadCommandInput) {
 		const { thread_id } = input;
-		super(`/threads/${thread_id}`);
+		super(encodePath`/threads/${thread_id}`);
 	}
 }
 
@@ -872,7 +883,7 @@ export class ModifyThreadCommand extends Command<
 
 	constructor(input: ModifyThreadCommandInput) {
 		const { thread_id, ...body } = input;
-		super(`/threads/${thread_id}`, jsonStringify(body));
+		super(encodePath`/threads/${thread_id}`, jsonStringify(body));
 	}
 }
 
@@ -889,7 +900,7 @@ export class DeleteThreadCommand extends Command<
 
 	constructor(input: DeleteThreadCommandInput) {
 		const { thread_id } = input;
-		super(`/threads/${thread_id}`);
+		super(encodePath`/threads/${thread_id}`);
 	}
 }
 
@@ -908,7 +919,7 @@ export class ListMessagesCommand extends Command<
 	constructor(input: ListMessagesCommandInput) {
 		const { thread_id, limit, order, after, before, run_id } = input;
 		super(
-			`/threads/${thread_id}/messages`,
+			encodePath`/threads/${thread_id}/messages`,
 			undefined,
 			stripUndefined({ limit, order, after, before, run_id }),
 		);
@@ -928,7 +939,7 @@ export class CreateMessageCommand extends Command<
 
 	constructor(input: CreateMessageCommandInput) {
 		const { thread_id, ...body } = input;
-		super(`/threads/${thread_id}/messages`, jsonStringify(body));
+		super(encodePath`/threads/${thread_id}/messages`, jsonStringify(body));
 	}
 }
 
@@ -945,7 +956,7 @@ export class GetMessageCommand extends Command<
 
 	constructor(input: GetMessageCommandInput) {
 		const { thread_id, message_id } = input;
-		super(`/threads/${thread_id}/messages/${message_id}`);
+		super(encodePath`/threads/${thread_id}/messages/${message_id}`);
 	}
 }
 
@@ -962,7 +973,10 @@ export class ModifyMessageCommand extends Command<
 
 	constructor(input: ModifyMessageCommandInput) {
 		const { thread_id, message_id, ...body } = input;
-		super(`/threads/${thread_id}/messages/${message_id}`, jsonStringify(body));
+		super(
+			encodePath`/threads/${thread_id}/messages/${message_id}`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -979,7 +993,7 @@ export class DeleteMessageCommand extends Command<
 
 	constructor(input: DeleteMessageCommandInput) {
 		const { thread_id, message_id } = input;
-		super(`/threads/${thread_id}/messages/${message_id}`);
+		super(encodePath`/threads/${thread_id}/messages/${message_id}`);
 	}
 }
 
@@ -1015,7 +1029,7 @@ export class ListRunsCommand extends Command<
 	constructor(input: ListRunsCommandInput) {
 		const { thread_id, limit, order, after, before } = input;
 		super(
-			`/threads/${thread_id}/runs`,
+			encodePath`/threads/${thread_id}/runs`,
 			undefined,
 			stripUndefined({ limit, order, after, before }),
 		);
@@ -1037,7 +1051,7 @@ export class CreateRunCommand extends Command<
 	constructor(input: CreateRunCommandInput) {
 		const { thread_id, include, ...body } = input;
 		super(
-			`/threads/${thread_id}/runs`,
+			encodePath`/threads/${thread_id}/runs`,
 			jsonStringify(body),
 			stripUndefined({ include }),
 		);
@@ -1054,7 +1068,7 @@ export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
 
 	constructor(input: GetRunCommandInput) {
 		const { thread_id, run_id } = input;
-		super(`/threads/${thread_id}/runs/${run_id}`);
+		super(encodePath`/threads/${thread_id}/runs/${run_id}`);
 	}
 }
 
@@ -1071,7 +1085,10 @@ export class ModifyRunCommand extends Command<
 
 	constructor(input: ModifyRunCommandInput) {
 		const { thread_id, run_id, ...body } = input;
-		super(`/threads/${thread_id}/runs/${run_id}`, jsonStringify(body));
+		super(
+			encodePath`/threads/${thread_id}/runs/${run_id}`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -1092,7 +1109,7 @@ export class SubmitToolOuputsToRunCommand extends Command<
 	constructor(input: SubmitToolOuputsToRunCommandInput) {
 		const { thread_id, run_id, ...body } = input;
 		super(
-			`/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`,
+			encodePath`/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`,
 			jsonStringify(body),
 		);
 	}
@@ -1111,7 +1128,7 @@ export class CancelRunCommand extends Command<
 
 	constructor(input: CancelRunCommandInput) {
 		const { thread_id, run_id } = input;
-		super(`/threads/${thread_id}/runs/${run_id}/cancel`);
+		super(encodePath`/threads/${thread_id}/runs/${run_id}/cancel`);
 	}
 }
 
@@ -1130,7 +1147,7 @@ export class ListRunStepsCommand extends Command<
 	constructor(input: ListRunStepsCommandInput) {
 		const { thread_id, run_id, limit, order, after, before, include } = input;
 		super(
-			`/threads/${thread_id}/runs/${run_id}/steps`,
+			encodePath`/threads/${thread_id}/runs/${run_id}/steps`,
 			undefined,
 			stripUndefined({ limit, order, after, before, include }),
 		);
@@ -1152,7 +1169,7 @@ export class GetRunStepCommand extends Command<
 	constructor(input: GetRunStepCommandInput) {
 		const { thread_id, run_id, step_id, include } = input;
 		super(
-			`/threads/${thread_id}/runs/${run_id}/steps/${step_id}`,
+			encodePath`/threads/${thread_id}/runs/${run_id}/steps/${step_id}`,
 			undefined,
 			stripUndefined({ include }),
 		);
@@ -1211,7 +1228,7 @@ export class GetVectorStoreCommand extends Command<
 
 	constructor(input: GetVectorStoreCommandInput) {
 		const { vector_store_id } = input;
-		super(`/vector_stores/${vector_store_id}`);
+		super(encodePath`/vector_stores/${vector_store_id}`);
 	}
 }
 
@@ -1228,7 +1245,7 @@ export class ModifyVectorStoreCommand extends Command<
 
 	constructor(input: ModifyVectorStoreCommandInput) {
 		const { vector_store_id, ...body } = input;
-		super(`/vector_stores/${vector_store_id}`, jsonStringify(body));
+		super(encodePath`/vector_stores/${vector_store_id}`, jsonStringify(body));
 	}
 }
 
@@ -1245,7 +1262,7 @@ export class DeleteVectorStoreCommand extends Command<
 
 	constructor(input: DeleteVectorStoreCommandInput) {
 		const { vector_store_id } = input;
-		super(`/vector_stores/${vector_store_id}`);
+		super(encodePath`/vector_stores/${vector_store_id}`);
 	}
 }
 
@@ -1264,7 +1281,7 @@ export class ListVectorStoreFilesCommand extends Command<
 	constructor(input: ListVectorStoreFilesCommandInput) {
 		const { vector_store_id, limit, order, after, before, filter } = input;
 		super(
-			`/vector_stores/${vector_store_id}/files`,
+			encodePath`/vector_stores/${vector_store_id}/files`,
 			undefined,
 			stripUndefined({ limit, order, after, before, filter }),
 		);
@@ -1285,7 +1302,10 @@ export class CreateVectorStoreFileCommand extends Command<
 
 	constructor(input: CreateVectorStoreFileCommandInput) {
 		const { vector_store_id, ...body } = input;
-		super(`/vector_stores/${vector_store_id}/files`, jsonStringify(body));
+		super(
+			encodePath`/vector_stores/${vector_store_id}/files`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -1302,7 +1322,7 @@ export class GetVectorStoreFileCommand extends Command<
 
 	constructor(input: GetVectorStoreFileCommandInput) {
 		const { vector_store_id, file_id } = input;
-		super(`/vector_stores/${vector_store_id}/files/${file_id}`);
+		super(encodePath`/vector_stores/${vector_store_id}/files/${file_id}`);
 	}
 }
 
@@ -1321,7 +1341,7 @@ export class DeleteVectorStoreFileCommand extends Command<
 
 	constructor(input: DeleteVectorStoreFileCommandInput) {
 		const { vector_store_id, file_id } = input;
-		super(`/vector_stores/${vector_store_id}/files/${file_id}`);
+		super(encodePath`/vector_stores/${vector_store_id}/files/${file_id}`);
 	}
 }
 
@@ -1339,7 +1359,7 @@ export class CreateVectorStoreFileBatchCommand extends Command<
 	constructor(input: CreateVectorStoreFileBatchCommandInput) {
 		const { vector_store_id, ...body } = input;
 		super(
-			`/vector_stores/${vector_store_id}/file_batches`,
+			encodePath`/vector_stores/${vector_store_id}/file_batches`,
 			jsonStringify(body),
 		);
 	}
@@ -1358,7 +1378,9 @@ export class GetVectorStoreFileBatchCommand extends Command<
 
 	constructor(input: GetVectorStoreFileBatchCommandInput) {
 		const { vector_store_id, batch_id } = input;
-		super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}`);
+		super(
+			encodePath`/vector_stores/${vector_store_id}/file_batches/${batch_id}`,
+		);
 	}
 }
 
@@ -1376,7 +1398,9 @@ export class CancelVectorStoreFileBatchCommand extends Command<
 
 	constructor(input: CancelVectorStoreFileBatchCommandInput) {
 		const { vector_store_id, batch_id } = input;
-		super(`/vector_stores/${vector_store_id}/file_batches/${batch_id}/cancel`);
+		super(
+			encodePath`/vector_stores/${vector_store_id}/file_batches/${batch_id}/cancel`,
+		);
 	}
 }
 
@@ -1396,7 +1420,7 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
 		const { vector_store_id, batch_id, limit, order, after, before, filter } =
 			input;
 		super(
-			`/vector_stores/${vector_store_id}/file_batches/${batch_id}/files`,
+			encodePath`/vector_stores/${vector_store_id}/file_batches/${batch_id}/files`,
 			undefined,
 			stripUndefined({ limit, order, after, before, filter }),
 		);
@@ -1451,7 +1475,7 @@ export class RetrieveBatchCommand extends Command<
 
 	constructor(input: RetrieveBatchCommandInput) {
 		const { batch_id } = input;
-		super(`/batches/${batch_id}`);
+		super(encodePath`/batches/${batch_id}`);
 	}
 }
 
@@ -1470,7 +1494,7 @@ export class CancelBatchCommand extends Command<
 
 	constructor(input: CancelBatchCommandInput) {
 		const { batch_id } = input;
-		super(`/batches/${batch_id}/cancel`);
+		super(encodePath`/batches/${batch_id}/cancel`);
 	}
 }
 
@@ -1562,7 +1586,7 @@ export class RetrieveInviteCommand extends Command<
 
 	constructor(input: RetrieveInviteCommandInput) {
 		const { invite_id } = input;
-		super(`/organization/invites/${invite_id}`);
+		super(encodePath`/organization/invites/${invite_id}`);
 	}
 }
 
@@ -1580,7 +1604,7 @@ export class DeleteInviteCommand extends Command<
 
 	constructor(input: DeleteInviteCommandInput) {
 		const { invite_id } = input;
-		super(`/organization/invites/${invite_id}`);
+		super(encodePath`/organization/invites/${invite_id}`);
 	}
 }
 
@@ -1615,7 +1639,7 @@ export class RetrieveUserCommand extends Command<
 
 	constructor(input: RetrieveUserCommandInput) {
 		const { user_id } = input;
-		super(`/organization/users/${user_id}`);
+		super(encodePath`/organization/users/${user_id}`);
 	}
 }
 
@@ -1629,7 +1653,7 @@ export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
 
 	constructor(input: ModifyUserCommandInput) {
 		const { user_id, ...body } = input;
-		super(`/organization/users/${user_id}`, jsonStringify(body));
+		super(encodePath`/organization/users/${user_id}`, jsonStringify(body));
 	}
 }
 
@@ -1646,7 +1670,7 @@ export class DeleteUserCommand extends Command<
 
 	constructor(input: DeleteUserCommandInput) {
 		const { user_id } = input;
-		super(`/organization/users/${user_id}`);
+		super(encodePath`/organization/users/${user_id}`);
 	}
 }
 
@@ -1703,7 +1727,7 @@ export class RetrieveProjectCommand extends Command<
 
 	constructor(input: RetrieveProjectCommandInput) {
 		const { project_id } = input;
-		super(`/organization/projects/${project_id}`);
+		super(encodePath`/organization/projects/${project_id}`);
 	}
 }
 
@@ -1720,7 +1744,10 @@ export class ModifyProjectCommand extends Command<
 
 	constructor(input: ModifyProjectCommandInput) {
 		const { project_id, ...body } = input;
-		super(`/organization/projects/${project_id}`, jsonStringify(body));
+		super(
+			encodePath`/organization/projects/${project_id}`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -1738,7 +1765,7 @@ export class ArchiveProjectCommand extends Command<
 
 	constructor(input: ArchiveProjectCommandInput) {
 		const { project_id } = input;
-		super(`/organization/projects/${project_id}/archive`);
+		super(encodePath`/organization/projects/${project_id}/archive`);
 	}
 }
 
@@ -1757,7 +1784,7 @@ export class ListProjectUsersCommand extends Command<
 	constructor(input: ListProjectUsersCommandInput) {
 		const { project_id, limit, after } = input;
 		super(
-			`/organization/projects/${project_id}/users`,
+			encodePath`/organization/projects/${project_id}/users`,
 			undefined,
 			stripUndefined({ limit, after }),
 		);
@@ -1778,7 +1805,10 @@ export class CreateProjectUserCommand extends Command<
 
 	constructor(input: CreateProjectUserCommandInput) {
 		const { project_id, ...body } = input;
-		super(`/organization/projects/${project_id}/users`, jsonStringify(body));
+		super(
+			encodePath`/organization/projects/${project_id}/users`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -1795,7 +1825,7 @@ export class RetrieveProjectUserCommand extends Command<
 
 	constructor(input: RetrieveProjectUserCommandInput) {
 		const { project_id, user_id } = input;
-		super(`/organization/projects/${project_id}/users/${user_id}`);
+		super(encodePath`/organization/projects/${project_id}/users/${user_id}`);
 	}
 }
 
@@ -1813,7 +1843,7 @@ export class ModifyProjectUserCommand extends Command<
 	constructor(input: ModifyProjectUserCommandInput) {
 		const { project_id, user_id, ...body } = input;
 		super(
-			`/organization/projects/${project_id}/users/${user_id}`,
+			encodePath`/organization/projects/${project_id}/users/${user_id}`,
 			jsonStringify(body),
 		);
 	}
@@ -1832,7 +1862,7 @@ export class DeleteProjectUserCommand extends Command<
 
 	constructor(input: DeleteProjectUserCommandInput) {
 		const { project_id, user_id } = input;
-		super(`/organization/projects/${project_id}/users/${user_id}`);
+		super(encodePath`/organization/projects/${project_id}/users/${user_id}`);
 	}
 }
 
@@ -1851,7 +1881,7 @@ export class ListProjectServiceAccountsCommand extends Command<
 	constructor(input: ListProjectServiceAccountsCommandInput) {
 		const { project_id, limit, after } = input;
 		super(
-			`/organization/projects/${project_id}/service_accounts`,
+			encodePath`/organization/projects/${project_id}/service_accounts`,
 			undefined,
 			stripUndefined({ limit, after }),
 		);
@@ -1873,7 +1903,7 @@ export class CreateProjectServiceAccountCommand extends Command<
 	constructor(input: CreateProjectServiceAccountCommandInput) {
 		const { project_id, ...body } = input;
 		super(
-			`/organization/projects/${project_id}/service_accounts`,
+			encodePath`/organization/projects/${project_id}/service_accounts`,
 			jsonStringify(body),
 		);
 	}
@@ -1893,7 +1923,7 @@ export class RetrieveProjectServiceAccountCommand extends Command<
 	constructor(input: RetrieveProjectServiceAccountCommandInput) {
 		const { project_id, service_account_id } = input;
 		super(
-			`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
+			encodePath`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
 		);
 	}
 }
@@ -1912,7 +1942,7 @@ export class DeleteProjectServiceAccountCommand extends Command<
 	constructor(input: DeleteProjectServiceAccountCommandInput) {
 		const { project_id, service_account_id } = input;
 		super(
-			`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
+			encodePath`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
 		);
 	}
 }
@@ -1932,7 +1962,7 @@ export class ListProjectApiKeysCommand extends Command<
 	constructor(input: ListProjectApiKeysCommandInput) {
 		const { project_id, limit, after } = input;
 		super(
-			`/organization/projects/${project_id}/api_keys`,
+			encodePath`/organization/projects/${project_id}/api_keys`,
 			undefined,
 			stripUndefined({ limit, after }),
 		);
@@ -1952,7 +1982,7 @@ export class RetrieveProjectApiKeyCommand extends Command<
 
 	constructor(input: RetrieveProjectApiKeyCommandInput) {
 		const { project_id, key_id } = input;
-		super(`/organization/projects/${project_id}/api_keys/${key_id}`);
+		super(encodePath`/organization/projects/${project_id}/api_keys/${key_id}`);
 	}
 }
 
@@ -1969,6 +1999,6 @@ export class DeleteProjectApiKeyCommand extends Command<
 
 	constructor(input: DeleteProjectApiKeyCommandInput) {
 		const { project_id, key_id } = input;
-		super(`/organization/projects/${project_id}/api_keys/${key_id}`);
+		super(encodePath`/organization/projects/${project_id}/api_keys/${key_id}`);
 	}
 }
