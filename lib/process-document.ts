@@ -136,6 +136,30 @@ export async function processOpenApiDocument(
 		moduleSpecifier: "@block65/rest-client",
 	});
 
+	commandsFile.addFunction({
+		name: "encodePath",
+		docs: [
+			{
+				description: wordWrap(
+					"Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.",
+				),
+				tags: [
+					{
+						tagName: "example",
+						text: 'encodePath`/users/${userId}` // "/users/foo%2Fbar"',
+					},
+				],
+			},
+		],
+		parameters: [
+			{ name: "strings", type: "TemplateStringsArray" },
+			{ name: "...values", type: "string[]" },
+		],
+		returnType: "string",
+		statements:
+			"return String.raw({ raw: strings }, ...values.map(encodeURIComponent));",
+	});
+
 	commandsFile.addImportDeclaration({
 		namedImports: ["Jsonifiable"],
 		moduleSpecifier: "type-fest",
@@ -786,9 +810,10 @@ export async function processOpenApiDocument(
 							?.addTypeArgument(queryType.getName());
 					}
 
-					const pathname = `\`${path
-						// .replaceAll(/\{(\w+)\}/g, camelcase)
-						.replaceAll(/{/g, "${")}\``;
+					const hasPathParams = path.includes("{");
+					const pathname = hasPathParams
+						? `encodePath\`${path.replaceAll(/{/g, "${")}\``
+						: `"${path}"`;
 
 					const hasJsonBody = !!jsonBodyType;
 
