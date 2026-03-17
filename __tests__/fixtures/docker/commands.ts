@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-06T07:45:59.608Z
+ * Generated on 2026-03-17T13:16:20.373Z
  *
  */
 /** eslint-disable max-classes */
@@ -238,6 +238,18 @@ import type {
 } from "./types.js";
 
 /**
+ * Tagged template literal that applies encodeURIComponent to all interpolated
+ * values, protecting path integrity from characters like `/` and `#`.
+ * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
+ */
+function encodePath(
+	strings: TemplateStringsArray,
+	...values: string[]
+): string {
+	return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+}
+
+/**
  * Returns a list of containers. For details on the format, see the
  * [inspect endpoint](#operation/ContainerInspect).
  *
@@ -300,7 +312,11 @@ export class ContainerInspectCommand extends Command<
 
 	constructor(input: ContainerInspectCommandInput) {
 		const { id, size } = input;
-		super(`/containers/${id}/json`, undefined, stripUndefined({ size }));
+		super(
+			encodePath`/containers/${id}/json`,
+			undefined,
+			stripUndefined({ size }),
+		);
 	}
 }
 
@@ -319,7 +335,11 @@ export class ContainerTopCommand extends Command<
 
 	constructor(input: ContainerTopCommandInput) {
 		const { id, ps_args } = input;
-		super(`/containers/${id}/top`, undefined, stripUndefined({ ps_args }));
+		super(
+			encodePath`/containers/${id}/top`,
+			undefined,
+			stripUndefined({ ps_args }),
+		);
 	}
 }
 
@@ -342,7 +362,7 @@ export class ContainerLogsCommand extends Command<
 		const { id, follow, stdout, stderr, since, until, timestamps, tail } =
 			input;
 		super(
-			`/containers/${id}/logs`,
+			encodePath`/containers/${id}/logs`,
 			undefined,
 			stripUndefined({
 				follow,
@@ -375,7 +395,7 @@ export class ContainerChangesCommand extends Command<
 
 	constructor(input: ContainerChangesCommandInput) {
 		const { id } = input;
-		super(`/containers/${id}/changes`);
+		super(encodePath`/containers/${id}/changes`);
 	}
 }
 
@@ -392,7 +412,7 @@ export class ContainerExportCommand extends Command<
 
 	constructor(input: ContainerExportCommandInput) {
 		const { id } = input;
-		super(`/containers/${id}/export`);
+		super(encodePath`/containers/${id}/export`);
 	}
 }
 
@@ -439,7 +459,7 @@ export class ContainerStatsCommand extends Command<
 	constructor(input: ContainerStatsCommandInput) {
 		const { id, stream, oneshot } = input;
 		super(
-			`/containers/${id}/stats`,
+			encodePath`/containers/${id}/stats`,
 			undefined,
 			stripUndefined({ stream, oneshot }),
 		);
@@ -460,7 +480,11 @@ export class ContainerResizeCommand extends Command<
 
 	constructor(input: ContainerResizeCommandInput) {
 		const { id, h, w } = input;
-		super(`/containers/${id}/resize`, undefined, stripUndefined({ h, w }));
+		super(
+			encodePath`/containers/${id}/resize`,
+			undefined,
+			stripUndefined({ h, w }),
+		);
 	}
 }
 
@@ -478,7 +502,11 @@ export class ContainerStartCommand extends Command<
 
 	constructor(input: ContainerStartCommandInput) {
 		const { id, detachKeys } = input;
-		super(`/containers/${id}/start`, undefined, stripUndefined({ detachKeys }));
+		super(
+			encodePath`/containers/${id}/start`,
+			undefined,
+			stripUndefined({ detachKeys }),
+		);
 	}
 }
 
@@ -496,7 +524,11 @@ export class ContainerStopCommand extends Command<
 
 	constructor(input: ContainerStopCommandInput) {
 		const { id, signal, t } = input;
-		super(`/containers/${id}/stop`, undefined, stripUndefined({ signal, t }));
+		super(
+			encodePath`/containers/${id}/stop`,
+			undefined,
+			stripUndefined({ signal, t }),
+		);
 	}
 }
 
@@ -515,7 +547,7 @@ export class ContainerRestartCommand extends Command<
 	constructor(input: ContainerRestartCommandInput) {
 		const { id, signal, t } = input;
 		super(
-			`/containers/${id}/restart`,
+			encodePath`/containers/${id}/restart`,
 			undefined,
 			stripUndefined({ signal, t }),
 		);
@@ -537,7 +569,11 @@ export class ContainerKillCommand extends Command<
 
 	constructor(input: ContainerKillCommandInput) {
 		const { id, signal } = input;
-		super(`/containers/${id}/kill`, undefined, stripUndefined({ signal }));
+		super(
+			encodePath`/containers/${id}/kill`,
+			undefined,
+			stripUndefined({ signal }),
+		);
 	}
 }
 
@@ -555,7 +591,7 @@ export class ContainerUpdateCommand extends Command<
 
 	constructor(input: ContainerUpdateCommandInput) {
 		const { id, ...body } = input;
-		super(`/containers/${id}/update`, jsonStringify(body));
+		super(encodePath`/containers/${id}/update`, jsonStringify(body));
 	}
 }
 
@@ -573,7 +609,11 @@ export class ContainerRenameCommand extends Command<
 
 	constructor(input: ContainerRenameCommandInput) {
 		const { id, name } = input;
-		super(`/containers/${id}/rename`, undefined, stripUndefined({ name }));
+		super(
+			encodePath`/containers/${id}/rename`,
+			undefined,
+			stripUndefined({ name }),
+		);
 	}
 }
 
@@ -595,7 +635,7 @@ export class ContainerPauseCommand extends Command<
 
 	constructor(input: ContainerPauseCommandInput) {
 		const { id } = input;
-		super(`/containers/${id}/pause`);
+		super(encodePath`/containers/${id}/pause`);
 	}
 }
 
@@ -612,7 +652,7 @@ export class ContainerUnpauseCommand extends Command<
 
 	constructor(input: ContainerUnpauseCommandInput) {
 		const { id } = input;
-		super(`/containers/${id}/unpause`);
+		super(encodePath`/containers/${id}/unpause`);
 	}
 }
 
@@ -728,7 +768,7 @@ export class ContainerAttachCommand extends Command<
 	constructor(input: ContainerAttachCommandInput) {
 		const { id, detachKeys, logs, stream, stdin, stdout, stderr } = input;
 		super(
-			`/containers/${id}/attach`,
+			encodePath`/containers/${id}/attach`,
 			undefined,
 			stripUndefined({ detachKeys, logs, stream, stdin, stdout, stderr }),
 		);
@@ -750,7 +790,7 @@ export class ContainerAttachWebsocketCommand extends Command<
 	constructor(input: ContainerAttachWebsocketCommandInput) {
 		const { id, detachKeys, logs, stream, stdin, stdout, stderr } = input;
 		super(
-			`/containers/${id}/attach/ws`,
+			encodePath`/containers/${id}/attach/ws`,
 			undefined,
 			stripUndefined({ detachKeys, logs, stream, stdin, stdout, stderr }),
 		);
@@ -771,7 +811,11 @@ export class ContainerWaitCommand extends Command<
 
 	constructor(input: ContainerWaitCommandInput) {
 		const { id, condition } = input;
-		super(`/containers/${id}/wait`, undefined, stripUndefined({ condition }));
+		super(
+			encodePath`/containers/${id}/wait`,
+			undefined,
+			stripUndefined({ condition }),
+		);
 	}
 }
 
@@ -789,7 +833,11 @@ export class ContainerDeleteCommand extends Command<
 
 	constructor(input: ContainerDeleteCommandInput) {
 		const { id, v, force, link } = input;
-		super(`/containers/${id}`, undefined, stripUndefined({ v, force, link }));
+		super(
+			encodePath`/containers/${id}`,
+			undefined,
+			stripUndefined({ v, force, link }),
+		);
 	}
 }
 
@@ -807,7 +855,11 @@ export class ContainerArchiveCommand extends Command<
 
 	constructor(input: ContainerArchiveCommandInput) {
 		const { id, path } = input;
-		super(`/containers/${id}/archive`, undefined, stripUndefined({ path }));
+		super(
+			encodePath`/containers/${id}/archive`,
+			undefined,
+			stripUndefined({ path }),
+		);
 	}
 }
 
@@ -830,7 +882,7 @@ export class PutContainerArchiveCommand extends Command<
 	constructor(input: PutContainerArchiveCommandInput) {
 		const { id, path, noOverwriteDirNonDir, copyUIDGID, body } = input;
 		super(
-			`/containers/${id}/archive`,
+			encodePath`/containers/${id}/archive`,
 			body,
 			stripUndefined({ path, noOverwriteDirNonDir, copyUIDGID }),
 		);
@@ -853,7 +905,11 @@ export class ContainerArchiveInfoCommand extends Command<
 
 	constructor(input: ContainerArchiveInfoCommandInput) {
 		const { id, path } = input;
-		super(`/containers/${id}/archive`, undefined, stripUndefined({ path }));
+		super(
+			encodePath`/containers/${id}/archive`,
+			undefined,
+			stripUndefined({ path }),
+		);
 	}
 }
 
@@ -1053,7 +1109,7 @@ export class ImageInspectCommand extends Command<
 
 	constructor(input: ImageInspectCommandInput) {
 		const { name } = input;
-		super(`/images/${name}/json`);
+		super(encodePath`/images/${name}/json`);
 	}
 }
 
@@ -1070,7 +1126,7 @@ export class ImageHistoryCommand extends Command<
 
 	constructor(input: ImageHistoryCommandInput) {
 		const { name } = input;
-		super(`/images/${name}/history`);
+		super(encodePath`/images/${name}/history`);
 	}
 }
 
@@ -1094,7 +1150,7 @@ export class ImagePushCommand extends Command<
 
 	constructor(input: ImagePushCommandInput) {
 		const { name, tag } = input;
-		super(`/images/${name}/push`, undefined, stripUndefined({ tag }));
+		super(encodePath`/images/${name}/push`, undefined, stripUndefined({ tag }));
 	}
 }
 
@@ -1112,7 +1168,11 @@ export class ImageTagCommand extends Command<
 
 	constructor(input: ImageTagCommandInput) {
 		const { name, repo, tag } = input;
-		super(`/images/${name}/tag`, undefined, stripUndefined({ repo, tag }));
+		super(
+			encodePath`/images/${name}/tag`,
+			undefined,
+			stripUndefined({ repo, tag }),
+		);
 	}
 }
 
@@ -1134,7 +1194,11 @@ export class ImageDeleteCommand extends Command<
 
 	constructor(input: ImageDeleteCommandInput) {
 		const { name, force, noprune } = input;
-		super(`/images/${name}`, undefined, stripUndefined({ force, noprune }));
+		super(
+			encodePath`/images/${name}`,
+			undefined,
+			stripUndefined({ force, noprune }),
+		);
 	}
 }
 
@@ -1378,7 +1442,7 @@ export class ImageGetCommand extends Command<ImageGetCommandInput, unknown> {
 
 	constructor(input: ImageGetCommandInput) {
 		const { name } = input;
-		super(`/images/${name}/get`);
+		super(encodePath`/images/${name}/get`);
 	}
 }
 
@@ -1444,7 +1508,7 @@ export class ContainerExecCommand extends Command<
 
 	constructor(input: ContainerExecCommandInput) {
 		const { id, ...body } = input;
-		super(`/containers/${id}/exec`, jsonStringify(body));
+		super(encodePath`/containers/${id}/exec`, jsonStringify(body));
 	}
 }
 
@@ -1460,7 +1524,7 @@ export class ExecStartCommand extends Command<ExecStartCommandInput, unknown> {
 
 	constructor(input: ExecStartCommandInput) {
 		const { id, ...body } = input;
-		super(`/exec/${id}/start`, jsonStringify(body));
+		super(encodePath`/exec/${id}/start`, jsonStringify(body));
 	}
 }
 
@@ -1479,7 +1543,7 @@ export class ExecResizeCommand extends Command<
 
 	constructor(input: ExecResizeCommandInput) {
 		const { id, h, w } = input;
-		super(`/exec/${id}/resize`, undefined, stripUndefined({ h, w }));
+		super(encodePath`/exec/${id}/resize`, undefined, stripUndefined({ h, w }));
 	}
 }
 
@@ -1496,7 +1560,7 @@ export class ExecInspectCommand extends Command<
 
 	constructor(input: ExecInspectCommandInput) {
 		const { id } = input;
-		super(`/exec/${id}/json`);
+		super(encodePath`/exec/${id}/json`);
 	}
 }
 
@@ -1548,7 +1612,7 @@ export class VolumeInspectCommand extends Command<
 
 	constructor(input: VolumeInspectCommandInput) {
 		const { name } = input;
-		super(`/volumes/${name}`);
+		super(encodePath`/volumes/${name}`);
 	}
 }
 
@@ -1566,7 +1630,11 @@ export class VolumeUpdateCommand extends Command<
 
 	constructor(input: VolumeUpdateCommandInput) {
 		const { name, version, ...body } = input;
-		super(`/volumes/${name}`, jsonStringify(body), stripUndefined({ version }));
+		super(
+			encodePath`/volumes/${name}`,
+			jsonStringify(body),
+			stripUndefined({ version }),
+		);
 	}
 }
 
@@ -1584,7 +1652,7 @@ export class VolumeDeleteCommand extends Command<
 
 	constructor(input: VolumeDeleteCommandInput) {
 		const { name, force } = input;
-		super(`/volumes/${name}`, undefined, stripUndefined({ force }));
+		super(encodePath`/volumes/${name}`, undefined, stripUndefined({ force }));
 	}
 }
 
@@ -1643,7 +1711,11 @@ export class NetworkInspectCommand extends Command<
 
 	constructor(input: NetworkInspectCommandInput) {
 		const { id, verbose, scope } = input;
-		super(`/networks/${id}`, undefined, stripUndefined({ verbose, scope }));
+		super(
+			encodePath`/networks/${id}`,
+			undefined,
+			stripUndefined({ verbose, scope }),
+		);
 	}
 }
 
@@ -1660,7 +1732,7 @@ export class NetworkDeleteCommand extends Command<
 
 	constructor(input: NetworkDeleteCommandInput) {
 		const { id } = input;
-		super(`/networks/${id}`);
+		super(encodePath`/networks/${id}`);
 	}
 }
 
@@ -1694,7 +1766,7 @@ export class NetworkConnectCommand extends Command<
 
 	constructor(input: NetworkConnectCommandInput) {
 		const { id, ...body } = input;
-		super(`/networks/${id}/connect`, jsonStringify(body));
+		super(encodePath`/networks/${id}/connect`, jsonStringify(body));
 	}
 }
 
@@ -1711,7 +1783,7 @@ export class NetworkDisconnectCommand extends Command<
 
 	constructor(input: NetworkDisconnectCommandInput) {
 		const { id, ...body } = input;
-		super(`/networks/${id}/disconnect`, jsonStringify(body));
+		super(encodePath`/networks/${id}/disconnect`, jsonStringify(body));
 	}
 }
 
@@ -1806,7 +1878,7 @@ export class PluginInspectCommand extends Command<
 
 	constructor(input: PluginInspectCommandInput) {
 		const { name } = input;
-		super(`/plugins/${name}/json`);
+		super(encodePath`/plugins/${name}/json`);
 	}
 }
 
@@ -1824,7 +1896,7 @@ export class PluginDeleteCommand extends Command<
 
 	constructor(input: PluginDeleteCommandInput) {
 		const { name, force } = input;
-		super(`/plugins/${name}`, undefined, stripUndefined({ force }));
+		super(encodePath`/plugins/${name}`, undefined, stripUndefined({ force }));
 	}
 }
 
@@ -1842,7 +1914,11 @@ export class PluginEnableCommand extends Command<
 
 	constructor(input: PluginEnableCommandInput) {
 		const { name, timeout } = input;
-		super(`/plugins/${name}/enable`, undefined, stripUndefined({ timeout }));
+		super(
+			encodePath`/plugins/${name}/enable`,
+			undefined,
+			stripUndefined({ timeout }),
+		);
 	}
 }
 
@@ -1860,7 +1936,11 @@ export class PluginDisableCommand extends Command<
 
 	constructor(input: PluginDisableCommandInput) {
 		const { name, force } = input;
-		super(`/plugins/${name}/disable`, undefined, stripUndefined({ force }));
+		super(
+			encodePath`/plugins/${name}/disable`,
+			undefined,
+			stripUndefined({ force }),
+		);
 	}
 }
 
@@ -1879,7 +1959,7 @@ export class PluginUpgradeCommand extends Command<
 	constructor(input: PluginUpgradeCommandInput) {
 		const { name, remote, ...body } = input;
 		super(
-			`/plugins/${name}/upgrade`,
+			encodePath`/plugins/${name}/upgrade`,
 			jsonStringify(body),
 			stripUndefined({ remote }),
 		);
@@ -1917,7 +1997,7 @@ export class PluginPushCommand extends Command<
 
 	constructor(input: PluginPushCommandInput) {
 		const { name } = input;
-		super(`/plugins/${name}/push`);
+		super(encodePath`/plugins/${name}/push`);
 	}
 }
 
@@ -1934,7 +2014,7 @@ export class PluginSetCommand extends Command<
 
 	constructor(input: PluginSetCommandInput) {
 		const { name, ...body } = input;
-		super(`/plugins/${name}/set`, jsonStringify(body));
+		super(encodePath`/plugins/${name}/set`, jsonStringify(body));
 	}
 }
 
@@ -1969,7 +2049,7 @@ export class NodeInspectCommand extends Command<
 
 	constructor(input: NodeInspectCommandInput) {
 		const { id } = input;
-		super(`/nodes/${id}`);
+		super(encodePath`/nodes/${id}`);
 	}
 }
 
@@ -1987,7 +2067,7 @@ export class NodeDeleteCommand extends Command<
 
 	constructor(input: NodeDeleteCommandInput) {
 		const { id, force } = input;
-		super(`/nodes/${id}`, undefined, stripUndefined({ force }));
+		super(encodePath`/nodes/${id}`, undefined, stripUndefined({ force }));
 	}
 }
 
@@ -2006,7 +2086,7 @@ export class NodeUpdateCommand extends Command<
 	constructor(input: NodeUpdateCommandInput) {
 		const { id, version, ...body } = input;
 		super(
-			`/nodes/${id}/update`,
+			encodePath`/nodes/${id}/update`,
 			jsonStringify(body),
 			stripUndefined({ version }),
 		);
@@ -2185,7 +2265,11 @@ export class ServiceInspectCommand extends Command<
 
 	constructor(input: ServiceInspectCommandInput) {
 		const { id, insertDefaults } = input;
-		super(`/services/${id}`, undefined, stripUndefined({ insertDefaults }));
+		super(
+			encodePath`/services/${id}`,
+			undefined,
+			stripUndefined({ insertDefaults }),
+		);
 	}
 }
 
@@ -2202,7 +2286,7 @@ export class ServiceDeleteCommand extends Command<
 
 	constructor(input: ServiceDeleteCommandInput) {
 		const { id } = input;
-		super(`/services/${id}`);
+		super(encodePath`/services/${id}`);
 	}
 }
 
@@ -2221,7 +2305,7 @@ export class ServiceUpdateCommand extends Command<
 	constructor(input: ServiceUpdateCommandInput) {
 		const { id, version, registryAuthFrom, rollback, ...body } = input;
 		super(
-			`/services/${id}/update`,
+			encodePath`/services/${id}/update`,
 			jsonStringify(body),
 			stripUndefined({ version, registryAuthFrom, rollback }),
 		);
@@ -2248,7 +2332,7 @@ export class ServiceLogsCommand extends Command<
 		const { id, details, follow, stdout, stderr, since, timestamps, tail } =
 			input;
 		super(
-			`/services/${id}/logs`,
+			encodePath`/services/${id}/logs`,
 			undefined,
 			stripUndefined({
 				details,
@@ -2294,7 +2378,7 @@ export class TaskInspectCommand extends Command<
 
 	constructor(input: TaskInspectCommandInput) {
 		const { id } = input;
-		super(`/tasks/${id}`);
+		super(encodePath`/tasks/${id}`);
 	}
 }
 
@@ -2318,7 +2402,7 @@ export class TaskLogsCommand extends Command<
 		const { id, details, follow, stdout, stderr, since, timestamps, tail } =
 			input;
 		super(
-			`/tasks/${id}/logs`,
+			encodePath`/tasks/${id}/logs`,
 			undefined,
 			stripUndefined({
 				details,
@@ -2381,7 +2465,7 @@ export class SecretInspectCommand extends Command<
 
 	constructor(input: SecretInspectCommandInput) {
 		const { id } = input;
-		super(`/secrets/${id}`);
+		super(encodePath`/secrets/${id}`);
 	}
 }
 
@@ -2398,7 +2482,7 @@ export class SecretDeleteCommand extends Command<
 
 	constructor(input: SecretDeleteCommandInput) {
 		const { id } = input;
-		super(`/secrets/${id}`);
+		super(encodePath`/secrets/${id}`);
 	}
 }
 
@@ -2417,7 +2501,7 @@ export class SecretUpdateCommand extends Command<
 	constructor(input: SecretUpdateCommandInput) {
 		const { id, version, ...body } = input;
 		super(
-			`/secrets/${id}/update`,
+			encodePath`/secrets/${id}/update`,
 			jsonStringify(body),
 			stripUndefined({ version }),
 		);
@@ -2472,7 +2556,7 @@ export class ConfigInspectCommand extends Command<
 
 	constructor(input: ConfigInspectCommandInput) {
 		const { id } = input;
-		super(`/configs/${id}`);
+		super(encodePath`/configs/${id}`);
 	}
 }
 
@@ -2489,7 +2573,7 @@ export class ConfigDeleteCommand extends Command<
 
 	constructor(input: ConfigDeleteCommandInput) {
 		const { id } = input;
-		super(`/configs/${id}`);
+		super(encodePath`/configs/${id}`);
 	}
 }
 
@@ -2508,7 +2592,7 @@ export class ConfigUpdateCommand extends Command<
 	constructor(input: ConfigUpdateCommandInput) {
 		const { id, version, ...body } = input;
 		super(
-			`/configs/${id}/update`,
+			encodePath`/configs/${id}/update`,
 			jsonStringify(body),
 			stripUndefined({ version }),
 		);
@@ -2528,7 +2612,7 @@ export class DistributionInspectCommand extends Command<
 
 	constructor(input: DistributionInspectCommandInput) {
 		const { name } = input;
-		super(`/distribution/${name}/json`);
+		super(encodePath`/distribution/${name}/json`);
 	}
 }
 

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-06T07:45:22.551Z
+ * Generated on 2026-03-17T13:15:38.356Z
  *
  */
 /** eslint-disable max-classes */
@@ -40,6 +40,17 @@ import type {
 } from "./types.js";
 
 /**
+ * Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.
+ * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
+ */
+function encodePath(
+	strings: TemplateStringsArray,
+	...values: string[]
+): string {
+	return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+}
+
+/**
  * GetOperationCommand
  *
  */
@@ -51,7 +62,7 @@ export class GetOperationCommand extends Command<
 
 	constructor(input: GetOperationCommandInput) {
 		const { operationId } = input;
-		super(`/operations/${operationId}`);
+		super(encodePath`/operations/${operationId}`);
 	}
 }
 
@@ -94,7 +105,7 @@ export class GetBillingAccountCommand extends Command<
 
 	constructor(input: GetBillingAccountCommandInput) {
 		const { billingAccountId } = input;
-		super(`/billing-accounts/${billingAccountId}`);
+		super(encodePath`/billing-accounts/${billingAccountId}`);
 	}
 }
 
@@ -110,7 +121,10 @@ export class UpdateBillingAccountCommand extends Command<
 
 	constructor(input: UpdateBillingAccountCommandInput) {
 		const { billingAccountId, ...body } = input;
-		super(`/billing-accounts/${billingAccountId}`, jsonStringify(body));
+		super(
+			encodePath`/billing-accounts/${billingAccountId}`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -126,7 +140,10 @@ export class GetBillingAccountPortalCommand extends Command<
 
 	constructor(input: GetBillingAccountPortalCommandInput) {
 		const { billingAccountId, ...body } = input;
-		super(`/billing-accounts/${billingAccountId}/portal`, jsonStringify(body));
+		super(
+			encodePath`/billing-accounts/${billingAccountId}/portal`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -142,7 +159,10 @@ export class LinkBillingAccountCommand extends Command<
 
 	constructor(input: LinkBillingAccountCommandInput) {
 		const { billingAccountId, ...body } = input;
-		super(`/billing-accounts/${billingAccountId}/link`, jsonStringify(body));
+		super(
+			encodePath`/billing-accounts/${billingAccountId}/link`,
+			jsonStringify(body),
+		);
 	}
 }
 
@@ -158,7 +178,7 @@ export class ListPaymentMethodsCommand extends Command<
 
 	constructor(input: ListPaymentMethodsCommandInput) {
 		const { billingAccountId } = input;
-		super(`/billing-accounts/${billingAccountId}/payment-methods`);
+		super(encodePath`/billing-accounts/${billingAccountId}/payment-methods`);
 	}
 }
 
@@ -174,7 +194,7 @@ export class CreatePaymentMethodCommand extends Command<
 
 	constructor(input: CreatePaymentMethodCommandInput) {
 		const { billingAccountId } = input;
-		super(`/billing-accounts/${billingAccountId}/payment-methods`);
+		super(encodePath`/billing-accounts/${billingAccountId}/payment-methods`);
 	}
 }
 
@@ -191,7 +211,7 @@ export class GetPaymentMethodFromStripeCommand extends Command<
 	constructor(input: GetPaymentMethodFromStripeCommandInput) {
 		const { billingAccountId, stripePaymentMethodId } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/payment-methods/stripe/${stripePaymentMethodId}`,
+			encodePath`/billing-accounts/${billingAccountId}/payment-methods/stripe/${stripePaymentMethodId}`,
 		);
 	}
 }
@@ -209,7 +229,7 @@ export class GetPaymentMethodCommand extends Command<
 	constructor(input: GetPaymentMethodCommandInput) {
 		const { billingAccountId, paymentMethodId } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
+			encodePath`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
 		);
 	}
 }
@@ -227,7 +247,7 @@ export class UpdatePaymentMethodCommand extends Command<
 	constructor(input: UpdatePaymentMethodCommandInput) {
 		const { billingAccountId, paymentMethodId, ...body } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
+			encodePath`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
 			jsonStringify(body),
 		);
 	}
@@ -246,7 +266,7 @@ export class DeletePaymentMethodCommand extends Command<
 	constructor(input: DeletePaymentMethodCommandInput) {
 		const { billingAccountId, paymentMethodId } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
+			encodePath`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
 		);
 	}
 }
@@ -263,7 +283,7 @@ export class ListBillingSubscriptionsCommand extends Command<
 
 	constructor(input: ListBillingSubscriptionsCommandInput) {
 		const { billingAccountId } = input;
-		super(`/billing-accounts/${billingAccountId}/subscriptions`);
+		super(encodePath`/billing-accounts/${billingAccountId}/subscriptions`);
 	}
 }
 
@@ -280,7 +300,7 @@ export class CreateBillingSubscriptionCommand extends Command<
 	constructor(input: CreateBillingSubscriptionCommandInput) {
 		const { billingAccountId, ...body } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/subscriptions`,
+			encodePath`/billing-accounts/${billingAccountId}/subscriptions`,
 			jsonStringify(body),
 		);
 	}
@@ -299,7 +319,7 @@ export class UpdateBillingSubscriptionCommand extends Command<
 	constructor(input: UpdateBillingSubscriptionCommandInput) {
 		const { billingAccountId, subscriptionId, ...body } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
+			encodePath`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
 			jsonStringify(body),
 		);
 	}
@@ -318,7 +338,7 @@ export class CancelSubscriptionCommand extends Command<
 	constructor(input: CancelSubscriptionCommandInput) {
 		const { billingAccountId, subscriptionId } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
+			encodePath`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
 		);
 	}
 }
@@ -336,7 +356,7 @@ export class UpdateBillingSubscriptionPromoCodeCommand extends Command<
 	constructor(input: UpdateBillingSubscriptionPromoCodeCommandInput) {
 		const { billingAccountId, subscriptionId, ...body } = input;
 		super(
-			`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}/promo-code`,
+			encodePath`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}/promo-code`,
 			jsonStringify(body),
 		);
 	}
