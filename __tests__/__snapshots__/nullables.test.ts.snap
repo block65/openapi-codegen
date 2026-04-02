@@ -1,6 +1,47 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`const values 1`] = `
+"export type StringConst = "hello";
+export type NumberConst = 42;
+export type BooleanConst = true;
+export type NullConst = null;
+"
+`;
+
+exports[`const values 2`] = `
+"import * as v from "valibot";
+
+export const stringConstSchema = v.literal("hello");
+export const numberConstSchema = v.literal(42);
+export const booleanConstSchema = v.literal(true);
+export const nullConstSchema = v.null();
+"
+`;
+
 exports[`nullables 1`] = `
 "export type MySchemaLolOrNullable = "lol" | "kek" | null;
+"
+`;
+
+exports[`top-level type array with null 1`] = `
+"export type NullableString = string | null;
+export type NullableStringEnum = "active" | "inactive" | null;
+export type NullableInteger = number | null;
+export type MultiType = string | number;
+"
+`;
+
+exports[`top-level type array with null 2`] = `
+"import * as v from "valibot";
+
+export const nullableStringSchema = v.nullable(v.string());
+export const nullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));
+export const nullableIntegerSchema = v.nullable(v.pipe(v.number(), v.integer()));
+export const multiTypeSchema = v.union([v.string(), v.number()]);
+"
+`;
+
+exports[`top-level type array with null 3`] = `
+"export const nullableStringEnum = ["active", "inactive"] as const;
 "
 `;

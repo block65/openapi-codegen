@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:15:38.356Z
+ * Generated on 2026-04-02T04:52:00.193Z
  *
  */
 import * as v from "valibot";
@@ -14,6 +14,17 @@ export const promoCodeSchema = v.pipe(
 	v.maxLength(256),
 	v.regex(/\/^[A-Z0-9]$\//),
 );
+/** The API version */
+export const apiVersionSchema = v.literal("2024-01-01");
+export const maxRetriesSchema = v.literal(3);
+export const defaultEnabledSchema = v.literal(true);
+/** Optional notes field */
+export const nullableNotesSchema = v.nullable(v.string());
+export const nullableDiscountSchema = v.nullable(v.number());
+export const nullableStatusSchema = v.nullable(
+	v.picklist(["active", "paused", "cancelled"]),
+);
+export const accountTierSchema = v.picklist(["free", "pro", "enterprise"]);
 export const stripeIdSchema = v.pipe(
 	v.string(),
 	v.minLength(11),

@@ -29,3 +29,75 @@ test("nullables", async () => {
 
 	expect(result.typesFile.getText()).toMatchSnapshot();
 });
+
+test("top-level type array with null", async () => {
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		{
+			openapi: "3.1.0",
+			info: {
+				title: "Test",
+				version: "1.0.0",
+			},
+			paths: {},
+			components: {
+				schemas: {
+					NullableString: {
+						type: ["string", "null"],
+					},
+					NullableStringEnum: {
+						type: ["string", "null"],
+						enum: ["active", "inactive"],
+					},
+					NullableInteger: {
+						type: ["integer", "null"],
+					},
+					MultiType: {
+						type: ["string", "number"],
+					},
+				},
+			},
+		},
+		[],
+	);
+
+	expect(result.typesFile.getText()).toMatchSnapshot();
+	expect(result.valibotFile?.getText()).toMatchSnapshot();
+	expect(result.enumsFile.getText()).toMatchSnapshot();
+});
+
+test("const values", async () => {
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		{
+			openapi: "3.1.0",
+			info: {
+				title: "Test",
+				version: "1.0.0",
+			},
+			paths: {},
+			components: {
+				schemas: {
+					StringConst: {
+						type: "string",
+						const: "hello",
+					},
+					NumberConst: {
+						type: "integer",
+						const: 42,
+					},
+					BooleanConst: {
+						const: true,
+					},
+					NullConst: {
+						const: null,
+					},
+				},
+			},
+		},
+		[],
+	);
+
+	expect(result.typesFile.getText()).toMatchSnapshot();
+	expect(result.valibotFile?.getText()).toMatchSnapshot();
+});
