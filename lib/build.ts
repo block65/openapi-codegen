@@ -21,8 +21,14 @@ export async function build(
    *
   */`.trim();
 
-	const { commandsFile, typesFile, mainFile, valibotFile, honoValibotFile } =
-		await processOpenApiDocument(outputDir, apischema.default, tags);
+	const {
+		commandsFile,
+		typesFile,
+		mainFile,
+		valibotFile,
+		honoValibotFile,
+		enumsFile,
+	} = await processOpenApiDocument(outputDir, apischema.default, tags);
 
 	const files = [
 		commandsFile,
@@ -30,6 +36,7 @@ export async function build(
 		mainFile,
 		valibotFile,
 		honoValibotFile,
+		...(enumsFile.getStatements().length > 0 ? [enumsFile] : []),
 	];
 
 	commandsFile.insertStatements(0, "/** eslint-disable max-classes */");

@@ -25,6 +25,7 @@ import {
 } from "./hono-valibot.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
+	camelCase,
 	castToValidJsIdentifier,
 	getDependents,
 	iife,
@@ -107,6 +108,13 @@ export async function processOpenApiDocument(
 	const mainFile = project.createSourceFile(join(outputDir, "main.ts"), "", {
 		overwrite: true,
 	});
+
+	// Enums file for runtime enum values
+	const enumsFile = project.createSourceFile(
+		join(outputDir, "enums.ts"),
+		"",
+		{ overwrite: true },
+	);
 
 	// Validators file for Valibot schemas
 	const valibotFile = createValibotFile(project, outputDir);
@@ -243,6 +251,52 @@ export async function processOpenApiDocument(
 			schemaName,
 			schemaObject,
 		);
+
+		// Add enum values to enums file
+		if (
+			!("$ref" in schemaObject) &&
+			"enum" in schemaObject &&
+			Array.isArray(schemaObject.enum)
+		) {
+			const values = schemaObject.enum.filter(
+				(v): v is string => v !== null,
+			);
+
+			if (values.length > 0) {
+				enumsFile.addVariableStatement({
+					isExported: true,
+					declarationKind: VariableDeclarationKind.Const,
+					docs: schemaObject.description
+						? [
+								{
+									description: wordWrap(schemaObject.description),
+									tags: [
+										...(schemaObject.deprecated
+											? [{ tagName: "deprecated" }]
+											: []),
+									].filter(Boolean),
+								},
+							]
+						: [],
+					declarations: [
+						{
+							name: camelCase(schemaName),
+							initializer: Writers.assertion(
+								(writer) => {
+									writer.write("[");
+									values.forEach((value, index) => {
+										writer.write(JSON.stringify(value));
+										if (index < values.length - 1) writer.write(", ");
+									});
+									writer.write("]");
+								},
+								"const",
+							),
+						},
+					],
+				});
+			}
+		}
 	}
 
 	for (const [path, pathItemObject] of Object.entries<oas31.PathItemObject>(
@@ -1073,5 +1127,6 @@ export async function processOpenApiDocument(
 		mainFile,
 		valibotFile,
 		honoValibotFile,
+		enumsFile,
 	};
 }

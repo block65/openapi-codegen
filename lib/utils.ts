@@ -69,6 +69,10 @@ export function refToName(ref: string): string {
 	return name;
 }
 
+export function camelCase(...str: string[]): string {
+	return camelcase(str.flatMap((s) => s.split("/")));
+}
+
 export function pascalCase(...str: string[]): string {
 	return camelcase(
 		str.flatMap((s) => s.split("/")),
