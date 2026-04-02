@@ -93,6 +93,43 @@ export function schemaToValidator(
 		? `v.custom<${typescriptHint}>(() => true)`
 		: undefined;
 
+	// Handle const values (OpenAPI 3.1: const: "value")
+	if ("const" in schema) {
+		return schema.const === null
+			? vcall("null")
+			: maybeNullable(
+					vcall("literal", JSON.stringify(schema.const)),
+					isNullable,
+				);
+	}
+
+	// Handle type arrays (OpenAPI 3.1: type: ["string", "null"])
+	if (Array.isArray(schema.type)) {
+		const nonNullTypes = schema.type.filter((t) => t !== "null");
+		const [singleType] = nonNullTypes;
+
+		if (nonNullTypes.length === 1 && singleType) {
+			return maybeNullable(
+				schemaToValidator(validators, {
+					...schema,
+					type: singleType,
+				} satisfies typeof schema),
+				isNullable,
+			);
+		}
+
+		const variants = nonNullTypes.map((t) =>
+			schemaToValidator(validators, {
+				...schema,
+				type: t,
+			} satisfies typeof schema),
+		);
+		return maybeNullable(
+			variants.length > 0 ? vcall("union", variants) : vcall("unknown"),
+			isNullable,
+		);
+	}
+
 	if (schema.type === "string") {
 		if (schema.enum) {
 			return maybeNullable(
