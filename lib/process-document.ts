@@ -25,6 +25,7 @@ import {
 } from "./hono-valibot.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
+	camelCase,
 	castToValidJsIdentifier,
 	getDependents,
 	iife,
@@ -39,7 +40,7 @@ import {
 
 interface OperationMiddlewareInfo {
 	exportName: string;
-	schemas: { json?: string; param?: string; query?: string };
+	schemas: { json?: string; param?: string; query?: string; header?: string };
 }
 
 const neverKeyword = "never" as const;
@@ -107,6 +108,13 @@ export async function processOpenApiDocument(
 	const mainFile = project.createSourceFile(join(outputDir, "main.ts"), "", {
 		overwrite: true,
 	});
+
+	// Enums file for runtime enum values
+	const enumsFile = project.createSourceFile(
+		join(outputDir, "enums.ts"),
+		"",
+		{ overwrite: true },
+	);
 
 	// Validators file for Valibot schemas
 	const valibotFile = createValibotFile(project, outputDir);
@@ -243,6 +251,52 @@ export async function processOpenApiDocument(
 			schemaName,
 			schemaObject,
 		);
+
+		// Add enum values to enums file
+		if (
+			!("$ref" in schemaObject) &&
+			"enum" in schemaObject &&
+			Array.isArray(schemaObject.enum)
+		) {
+			const values = schemaObject.enum.filter(
+				(v): v is string => v !== null,
+			);
+
+			if (values.length > 0) {
+				enumsFile.addVariableStatement({
+					isExported: true,
+					declarationKind: VariableDeclarationKind.Const,
+					docs: schemaObject.description
+						? [
+								{
+									description: wordWrap(schemaObject.description),
+									tags: [
+										...(schemaObject.deprecated
+											? [{ tagName: "deprecated" }]
+											: []),
+									].filter(Boolean),
+								},
+							]
+						: [],
+					declarations: [
+						{
+							name: camelCase(schemaName),
+							initializer: Writers.assertion(
+								(writer) => {
+									writer.write("[");
+									values.forEach((value, index) => {
+										writer.write(JSON.stringify(value));
+										if (index < values.length - 1) writer.write(", ");
+									});
+									writer.write("]");
+								},
+								"const",
+							),
+						},
+					],
+				});
+			}
+		}
 	}
 
 	for (const [path, pathItemObject] of Object.entries<oas31.PathItemObject>(
@@ -329,6 +383,7 @@ export async function processOpenApiDocument(
 							: undefined;
 
 					const queryParameters: oas30.ParameterObject[] = [];
+					const headerParameters: oas30.ParameterObject[] = [];
 
 					for (const parameter of [
 						...(operationObject.parameters || []),
@@ -354,6 +409,10 @@ export async function processOpenApiDocument(
 
 						if (resolvedParameter.in === "query") {
 							queryParameters.push(resolvedParameter);
+						}
+
+						if (resolvedParameter.in === "header") {
+							headerParameters.push(resolvedParameter);
 						}
 					}
 
@@ -429,6 +488,64 @@ export async function processOpenApiDocument(
 							: undefined;
 
 					ensureImport(queryType);
+
+					const headerType =
+						headerParameters.length > 0
+							? typesFile.addTypeAlias({
+									name: pascalCase(
+										commandClassDeclaration.getName() || "INVALID",
+										"Header",
+									),
+									docs: deprecationDocs,
+									isExported: true,
+									type: Writers.objectType({
+										properties: headerParameters.map((hp) => {
+											const name = hp.name.toLowerCase();
+
+											if (!hp.schema) {
+												return {
+													name: JSON.stringify(name),
+													hasQuestionToken: !hp.required,
+												};
+											}
+
+											const type = schemaToType(
+												typesAndInterfaces,
+												hp.required
+													? {
+															required: [name],
+														}
+													: {},
+												name,
+												hp.schema,
+												{
+													// headers are strings on the wire but
+													// valibot parses them to native types
+													booleanAsStringish: false,
+													integerAsStringish: false,
+												},
+											);
+
+											const resolvedType = hp.required
+												? type.type
+												: typeof type.type === "function"
+													? type.type
+													: type.type
+														? Writers.unionType(`${type.type}`, "undefined")
+														: undefined;
+
+											return {
+												...type,
+												name: JSON.stringify(name),
+												hasQuestionToken: !hp.required,
+												...(resolvedType !== undefined && { type: resolvedType }),
+											};
+										}),
+									}),
+								})
+							: undefined;
+
+					ensureImport(headerType);
 
 					const jsonRequestBodyObject =
 						requestBodyObject?.content["application/json"];
@@ -646,6 +763,7 @@ export async function processOpenApiDocument(
 							}),
 							params: pathParameters,
 							query: queryParameters,
+							header: headerParameters,
 						},
 					);
 
@@ -1073,5 +1191,6 @@ export async function processOpenApiDocument(
 		mainFile,
 		valibotFile,
 		honoValibotFile,
+		enumsFile,
 	};
 }

@@ -568,6 +568,50 @@ export function registerTypesFromSchema(
 		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
 	}
 
+	// deal with type arrays (OpenAPI 3.1: type: ["string", "null"])
+	else if (Array.isArray(schemaObject.type)) {
+		const prop = schemaToType(
+			typesAndInterfaces,
+			{},
+			schemaName,
+			schemaObject,
+		);
+
+		const typeAlias = typesFile.addTypeAlias({
+			name: pascalCase(schemaName),
+			isExported: true,
+			type: prop.type || "unknown",
+		});
+
+		if (schemaObject.description) {
+			typeAlias.addJsDoc({
+				description: wordWrap(schemaObject.description),
+			});
+		}
+
+		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
+	}
+
+	// deal with const values
+	else if ("const" in schemaObject) {
+		const constDeclaration = typesFile.addTypeAlias({
+			isExported: true,
+			name: pascalCase(schemaName),
+			type: JSON.stringify(schemaObject.const),
+		});
+
+		if (schemaObject.description) {
+			constDeclaration.addJsDoc({
+				description: wordWrap(schemaObject.description),
+			});
+		}
+
+		typesAndInterfaces.set(
+			`#/components/schemas/${schemaName}`,
+			constDeclaration,
+		);
+	}
+
 	// deal with objects
 	else if (!schemaObject.type || schemaObject.type === "object") {
 		const newIf = typesFile.addTypeAlias({
@@ -641,26 +685,6 @@ export function registerTypesFromSchema(
 		//   `#/components/schemas/${enumDeclaration.getName()}`,
 		//   enumDeclaration,
 		// );
-	}
-
-	// deal with string consts
-	else if (schemaObject.type === "string" && "const" in schemaObject) {
-		const constDeclaration = typesFile.addTypeAlias({
-			isExported: true,
-			name: pascalCase(schemaName),
-			type: JSON.stringify(schemaObject.const),
-		});
-
-		if (schemaObject.description) {
-			constDeclaration.addJsDoc({
-				description: wordWrap(schemaObject.description),
-			});
-		}
-
-		typesAndInterfaces.set(
-			`#/components/schemas/${schemaName}`,
-			constDeclaration,
-		);
 	}
 
 	// deal with non-enum strings

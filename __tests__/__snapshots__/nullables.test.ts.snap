@@ -1,6 +1,99 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`const values 1`] = `
+"export type StringConst = "hello";
+export type NumberConst = 42;
+export type BooleanConst = true;
+export type NullConst = null;
+"
+`;
+
+exports[`const values 2`] = `
+"import * as v from "valibot";
+
+export const stringConstSchema = v.literal("hello");
+export const numberConstSchema = v.literal(42);
+export const booleanConstSchema = v.literal(true);
+export const nullConstSchema = v.null();
+"
+`;
+
+exports[`header parameters 1`] = `
+"export type UploadStatus = "pending" | "complete";
+export type UploadDataCommandHeader = {
+        "content-type": "application/json" | "text/csv" | "application/xml";
+        "content-length": number;
+        "x-idempotency-key"?: string | undefined;
+    };
+export type UploadDataCommandParams = {
+        uploadId: string;
+    };
+export type UploadDataCommandInput = UploadDataCommandParams;
+"
+`;
+
+exports[`header parameters 2`] = `
+"import * as v from "valibot";
+
+export const uploadStatusSchema = v.picklist(["pending", "complete"]);
+export const uploadDataCommandParamsSchema = v.strictObject({
+        "uploadId": v.string()
+    });
+export const uploadDataCommandHeaderSchema = v.object({
+        "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
+        "content-length": v.pipe(v.number(), v.integer()),
+        "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
+    });
+"
+`;
+
+exports[`header parameters 3`] = `
+"import { validator } from "hono/validator";
+import * as v from "valibot";
+import { PublicValibotHonoError } from "@block65/rest-client";
+import { uploadDataCommandParamsSchema } from "./valibot.js";
+
+function toPublicValibotHonoError(err: unknown): never {
+
+          if (err instanceof v.ValiError) {
+            throw PublicValibotHonoError.from(err);
+          }
+          throw err;
+        
+}
+
+export const uploadData = [
+        validator("param", (value) => {
+            return v.parseAsync(uploadDataCommandParamsSchema, value).catch(toPublicValibotHonoError);
+        }),
+    ] as const;
+"
+`;
+
 exports[`nullables 1`] = `
 "export type MySchemaLolOrNullable = "lol" | "kek" | null;
+"
+`;
+
+exports[`top-level type array with null 1`] = `
+"export type NullableString = string | null;
+export type NullableStringEnum = "active" | "inactive" | null;
+export type NullableInteger = number | null;
+export type MultiType = string | number;
+"
+`;
+
+exports[`top-level type array with null 2`] = `
+"import * as v from "valibot";
+
+export const nullableStringSchema = v.nullable(v.string());
+export const nullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));
+export const nullableIntegerSchema = v.nullable(v.pipe(v.number(), v.integer()));
+export const multiTypeSchema = v.union([v.string(), v.number()]);
+"
+`;
+
+exports[`top-level type array with null 3`] = `
+"export const nullableStringEnum = ["active", "inactive"] as const;
 "
 `;

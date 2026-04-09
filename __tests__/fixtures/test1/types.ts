@@ -3,12 +3,21 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:15:38.356Z
+ * Generated on 2026-04-02T04:52:00.193Z
  *
  */
 import type { Jsonifiable, Jsonify } from "type-fest";
 
 export type PromoCode = string;
+/** The API version */
+export type ApiVersion = "2024-01-01";
+export type MaxRetries = 3;
+export type DefaultEnabled = true;
+/** Optional notes field */
+export type NullableNotes = string | null;
+export type NullableDiscount = number | null;
+export type NullableStatus = "active" | "paused" | "cancelled" | null;
+export type AccountTier = "free" | "pro" | "enterprise";
 export type StripeId = string;
 export type DateTime = Jsonify<Date>;
 export type BillingSubscriptionStatus = "active" | "inactive";

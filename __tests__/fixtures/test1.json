@@ -1,5 +1,5 @@
 {
-	"openapi": "3.0.3",
+	"openapi": "3.1.0",
 	"info": {
 		"title": "Billing Service REST API",
 		"version": "1.0.0"
@@ -57,6 +57,33 @@
 				"minLength": 1,
 				"maxLength": 256,
 				"pattern": "/^[A-Z0-9]$/"
+			},
+			"ApiVersion": {
+				"type": "string",
+				"const": "2024-01-01",
+				"description": "The API version"
+			},
+			"MaxRetries": {
+				"type": "integer",
+				"const": 3
+			},
+			"DefaultEnabled": {
+				"const": true
+			},
+			"NullableNotes": {
+				"type": ["string", "null"],
+				"description": "Optional notes field"
+			},
+			"NullableDiscount": {
+				"type": ["number", "null"]
+			},
+			"NullableStatus": {
+				"type": ["string", "null"],
+				"enum": ["active", "paused", "cancelled"]
+			},
+			"AccountTier": {
+				"type": "string",
+				"enum": ["free", "pro", "enterprise"]
 			},
 			"LongRunningOperationIndeterminate": {
 				"type": "object",
@@ -778,6 +805,74 @@
 		}
 	},
 	"paths": {
+		"/billing-accounts/{billingAccountId}/import": {
+			"post": {
+				"operationId": "importBillingDataCommand",
+				"tags": [],
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/BillingAccountIdParameter"
+					},
+					{
+						"name": "Content-Type",
+						"in": "header",
+						"required": true,
+						"description": "The content type of the import data",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"application/json",
+								"text/csv",
+								"application/xml"
+							]
+						}
+					},
+					{
+						"name": "Content-Length",
+						"in": "header",
+						"required": true,
+						"description": "The size of the import data in bytes",
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "X-Idempotency-Key",
+						"in": "header",
+						"required": false,
+						"description": "Optional idempotency key for safe retries",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/octet-stream": {
+							"schema": {
+								"type": "string",
+								"format": "binary"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Import 200 response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LongRunningOperation"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/operations/{operationId}": {
 			"get": {
 				"operationId": "getOperationCommand",

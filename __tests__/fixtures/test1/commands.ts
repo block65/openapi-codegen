@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:15:38.356Z
+ * Generated on 2026-04-02T04:52:00.193Z
  *
  */
 /** eslint-disable max-classes */
@@ -40,7 +40,8 @@ import type {
 } from "./types.js";
 
 /**
- * Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.
+ * Tagged template literal that applies encodeURIComponent to all interpolated
+ * values, protecting path integrity from characters like `/` and `#`.
  * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
  */
 function encodePath(
