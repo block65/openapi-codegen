@@ -33,6 +33,34 @@ export type UploadDataCommandInput = UploadDataCommandParams;
 `;
 
 exports[`header parameters 2`] = `
+"import { Command } from "@block65/rest-client";
+import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.js";
+
+/**
+ * Tagged template literal that applies encodeURIComponent to all interpolated 
+ * values, protecting path integrity from characters like \`/\` and \`#\`.
+ * @example encodePath\`/users/\${userId}\` // "/users/foo%2Fbar"
+ */
+function encodePath(strings: TemplateStringsArray, ...values: string[]): string {
+    return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+}
+
+/**
+ * UploadDataCommand
+ *
+ */
+export class UploadDataCommand extends Command<UploadDataCommandInput, UploadStatus, never, UploadDataCommandHeader> {
+    public override method = "post" as const;
+
+    constructor(input: UploadDataCommandInput, headers: UploadDataCommandHeader) {
+        const {uploadId } = input;
+        super(encodePath\`/uploads/\${uploadId}\`, undefined, undefined, headers);
+    }
+}
+"
+`;
+
+exports[`header parameters 3`] = `
 "import * as v from "valibot";
 
 export const uploadStatusSchema = v.picklist(["pending", "complete"]);
@@ -47,7 +75,7 @@ export const uploadDataCommandHeaderSchema = v.object({
 "
 `;
 
-exports[`header parameters 3`] = `
+exports[`header parameters 4`] = `
 "import { validator } from "hono/validator";
 import * as v from "valibot";
 import { PublicValibotHonoError } from "@block65/rest-client";
