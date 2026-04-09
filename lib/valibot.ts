@@ -394,6 +394,24 @@ export function createValidatorForOperationInput(
 		});
 	}
 
+	// HTTP params (query, header) arrive as strings. When the schema
+	// declares type: "integer" or "number", rewrite it to type: "string"
+	// with an int format so the existing string→number coercion pipeline
+	// handles parsing and validation.
+	const asHttpParamSchema = (
+		schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	): oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject => {
+		if ("$ref" in schema) return schema;
+		if (schema.type === "integer" || schema.type === "number") {
+			return {
+				...schema,
+				type: "string",
+				format: schema.type === "integer" ? "int64" : "int64",
+			};
+		}
+		return schema;
+	};
+
 	// 2. Helper for Params/Query (Strict Objects)
 	const addParams = (
 		type: "params" | "query",
@@ -403,19 +421,23 @@ export function createValidatorForOperationInput(
 		const name = camelcase([commandName, type, "schema"]);
 		schemas[type === "params" ? "param" : "query"] = name;
 
+		const coerce = type === "query";
+
 		const propertyMap = Object.fromEntries(
-			list.map((p) => [
-				JSON.stringify(p.name),
-				p.required
-					? schemaToValidator(validatorSchemas, p.schema ?? { type: "string" })
-					: vcall(
-							"exactOptional",
-							schemaToValidator(
-								validatorSchemas,
-								p.schema ?? { type: "string" },
+			list.map((p) => {
+				const paramSchema = coerce
+					? asHttpParamSchema(p.schema ?? { type: "string" })
+					: (p.schema ?? { type: "string" });
+				return [
+					JSON.stringify(p.name),
+					p.required
+						? schemaToValidator(validatorSchemas, paramSchema)
+						: vcall(
+								"exactOptional",
+								schemaToValidator(validatorSchemas, paramSchema),
 							),
-						),
-			]),
+				];
+			}),
 		);
 
 		valibotFile.addVariableStatement({
@@ -439,18 +461,20 @@ export function createValidatorForOperationInput(
 		schemas.header = name;
 
 		const propertyMap = Object.fromEntries(
-			input.header.map((p) => [
-				JSON.stringify(p.name.toLowerCase()),
-				p.required
-					? schemaToValidator(validatorSchemas, p.schema ?? { type: "string" })
-					: vcall(
-							"exactOptional",
-							schemaToValidator(
-								validatorSchemas,
-								p.schema ?? { type: "string" },
+			input.header.map((p) => {
+				const paramSchema = asHttpParamSchema(
+					p.schema ?? { type: "string" },
+				);
+				return [
+					JSON.stringify(p.name.toLowerCase()),
+					p.required
+						? schemaToValidator(validatorSchemas, paramSchema)
+						: vcall(
+								"exactOptional",
+								schemaToValidator(validatorSchemas, paramSchema),
 							),
-						),
-			]),
+				];
+			}),
 		);
 
 		valibotFile.addVariableStatement({

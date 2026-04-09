@@ -103,6 +103,79 @@ test("const values", async () => {
 	expect(result.valibotFile?.getText()).toMatchSnapshot();
 });
 
+test("query and header integer params coerce strings to numbers", async () => {
+	const schema: oas31.OpenAPIObject = {
+		openapi: "3.1.0",
+		info: {
+			title: "Test",
+			version: "1.0.0",
+		},
+		components: {
+			schemas: {
+				Dummy: { type: "string" },
+			},
+		},
+		paths: {
+			"/files": {
+				get: {
+					operationId: "listFilesCommand",
+					parameters: [
+						{
+							name: "exp",
+							in: "query",
+							required: true,
+							schema: {
+								type: "integer",
+								format: "int64",
+								minimum: 0,
+							},
+						},
+						{
+							name: "limit",
+							in: "query",
+							required: false,
+							schema: {
+								type: "integer",
+								minimum: 1,
+								maximum: 100,
+							},
+						},
+						{
+							name: "X-Rate-Limit",
+							in: "header",
+							required: true,
+							schema: {
+								type: "integer",
+								minimum: 0,
+							},
+						},
+					],
+					responses: {
+						"200": {
+							description: "OK",
+							content: {
+								"application/json": {
+									schema: {
+										$ref: "#/components/schemas/Dummy",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		schema,
+	);
+
+	expect(result.typesFile.getText()).toMatchSnapshot();
+	expect(result.valibotFile.getText()).toMatchSnapshot();
+});
+
 test("header parameters", async () => {
 	const schema: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
