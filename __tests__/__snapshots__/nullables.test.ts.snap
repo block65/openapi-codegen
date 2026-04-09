@@ -41,7 +41,7 @@ export const uploadDataCommandParamsSchema = v.strictObject({
     });
 export const uploadDataCommandHeaderSchema = v.object({
         "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
-        "content-length": v.pipe(v.number(), v.integer()),
+        "content-length": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer()),
         "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
     });
 "
@@ -72,6 +72,33 @@ export const uploadData = [
 
 exports[`nullables 1`] = `
 "export type MySchemaLolOrNullable = "lol" | "kek" | null;
+"
+`;
+
+exports[`query and header integer params coerce strings to numbers 1`] = `
+"export type Dummy = string;
+export type ListFilesCommandQuery = {
+        exp: \`\${number}\`;
+        limit?: \`\${number}\` | undefined;
+    };
+export type ListFilesCommandHeader = {
+        "x-rate-limit": number;
+    };
+export type ListFilesCommandInput = ListFilesCommandQuery;
+"
+`;
+
+exports[`query and header integer params coerce strings to numbers 2`] = `
+"import * as v from "valibot";
+
+export const dummySchema = v.string();
+export const listFilesCommandQuerySchema = v.strictObject({
+        "exp": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(0)),
+        "limit": v.exactOptional(v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
+    });
+export const listFilesCommandHeaderSchema = v.object({
+        "x-rate-limit": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(0))
+    });
 "
 `;
 
