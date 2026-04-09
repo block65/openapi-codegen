@@ -113,6 +113,11 @@ test("query and header integer params coerce strings to numbers", async () => {
 		components: {
 			schemas: {
 				Dummy: { type: "string" },
+				ExpireTime: {
+					type: "integer",
+					format: "int64",
+					minimum: 0,
+				},
 			},
 		},
 		paths: {
@@ -125,9 +130,7 @@ test("query and header integer params coerce strings to numbers", async () => {
 							in: "query",
 							required: true,
 							schema: {
-								type: "integer",
-								format: "int64",
-								minimum: 0,
+								$ref: "#/components/schemas/ExpireTime",
 							},
 						},
 						{
