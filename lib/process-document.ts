@@ -948,6 +948,19 @@ export async function processOpenApiDocument(
 							?.addTypeArgument(queryType.getName());
 					}
 
+					// headers type argument (4th generic on Command)
+					if (headerType) {
+						// fill in query slot if missing
+						if (!queryType) {
+							commandClassDeclaration
+								.getExtends()
+								?.addTypeArgument(neverKeyword);
+						}
+						commandClassDeclaration
+							.getExtends()
+							?.addTypeArgument(headerType.getName());
+					}
+
 					const hasPathParams = path.includes("{");
 					const pathname = hasPathParams
 						? `encodePath\`${path.replaceAll(/{/g, "${")}\``
@@ -967,7 +980,9 @@ export async function processOpenApiDocument(
 						!isUnspecifiedKeyword(paramsType) &&
 						pathParameters.length > 0;
 
-					if (hasNonJsonBody || hasJsonBody || hasQuery || hasParams) {
+					const hasHeaders = !!headerType && headerParameters.length > 0;
+
+					if (hasNonJsonBody || hasJsonBody || hasQuery || hasParams || hasHeaders) {
 						const ctor = commandClassDeclaration.addConstructor();
 
 						const queryParameterNames = queryParameters
@@ -988,6 +1003,13 @@ export async function processOpenApiDocument(
 								name: "input",
 								type: inputType.getName(),
 							});
+
+							if (hasHeaders) {
+								ctor.addParameter({
+									name: "headers",
+									type: headerType.getName(),
+								});
+							}
 
 							ctor.addStatements([
 								{
@@ -1034,6 +1056,8 @@ export async function processOpenApiDocument(
 							SyntaxKind.CallExpression,
 						);
 
+						const headersArg = hasHeaders ? "headers" : undefined;
+
 						// type narrowing
 						if (Node.isCallExpression(callExpr)) {
 							if (hasJsonBody) {
@@ -1042,7 +1066,10 @@ export async function processOpenApiDocument(
 									`jsonStringify(${inputBodyName})`,
 									...(hasQuery
 										? [`stripUndefined({${queryParameterNames.join(", ")}})`]
-										: []),
+										: hasHeaders
+											? [emptyKeyword]
+											: []),
+									...(headersArg ? [headersArg] : []),
 								]);
 							} else if (hasNonJsonBody) {
 								callExpr.addArguments([
@@ -1050,15 +1077,24 @@ export async function processOpenApiDocument(
 									nonJsonBodyPropName,
 									...(hasQuery
 										? [`stripUndefined({${queryParameterNames.join(", ")}})`]
-										: []),
+										: hasHeaders
+											? [emptyKeyword]
+											: []),
+									...(headersArg ? [headersArg] : []),
 								]);
 							} else if (hasQuery) {
 								callExpr.addArguments([
 									pathname,
 									emptyKeyword,
-									...(hasQuery
-										? [`stripUndefined({${queryParameterNames.join(", ")}})`]
-										: []),
+									`stripUndefined({${queryParameterNames.join(", ")}})`,
+									...(headersArg ? [headersArg] : []),
+								]);
+							} else if (hasHeaders && headersArg) {
+								callExpr.addArguments([
+									pathname,
+									emptyKeyword,
+									emptyKeyword,
+									headersArg,
 								]);
 							} else {
 								callExpr.addArguments([pathname]);
