@@ -40,7 +40,7 @@ import {
 
 interface OperationMiddlewareInfo {
 	exportName: string;
-	schemas: { json?: string; param?: string; query?: string };
+	schemas: { json?: string; param?: string; query?: string; header?: string };
 }
 
 const neverKeyword = "never" as const;
@@ -383,6 +383,7 @@ export async function processOpenApiDocument(
 							: undefined;
 
 					const queryParameters: oas30.ParameterObject[] = [];
+					const headerParameters: oas30.ParameterObject[] = [];
 
 					for (const parameter of [
 						...(operationObject.parameters || []),
@@ -408,6 +409,10 @@ export async function processOpenApiDocument(
 
 						if (resolvedParameter.in === "query") {
 							queryParameters.push(resolvedParameter);
+						}
+
+						if (resolvedParameter.in === "header") {
+							headerParameters.push(resolvedParameter);
 						}
 					}
 
@@ -483,6 +488,64 @@ export async function processOpenApiDocument(
 							: undefined;
 
 					ensureImport(queryType);
+
+					const headerType =
+						headerParameters.length > 0
+							? typesFile.addTypeAlias({
+									name: pascalCase(
+										commandClassDeclaration.getName() || "INVALID",
+										"Header",
+									),
+									docs: deprecationDocs,
+									isExported: true,
+									type: Writers.objectType({
+										properties: headerParameters.map((hp) => {
+											const name = hp.name.toLowerCase();
+
+											if (!hp.schema) {
+												return {
+													name: JSON.stringify(name),
+													hasQuestionToken: !hp.required,
+												};
+											}
+
+											const type = schemaToType(
+												typesAndInterfaces,
+												hp.required
+													? {
+															required: [name],
+														}
+													: {},
+												name,
+												hp.schema,
+												{
+													// headers are strings on the wire but
+													// valibot parses them to native types
+													booleanAsStringish: false,
+													integerAsStringish: false,
+												},
+											);
+
+											const resolvedType = hp.required
+												? type.type
+												: typeof type.type === "function"
+													? type.type
+													: type.type
+														? Writers.unionType(`${type.type}`, "undefined")
+														: undefined;
+
+											return {
+												...type,
+												name: JSON.stringify(name),
+												hasQuestionToken: !hp.required,
+												...(resolvedType !== undefined && { type: resolvedType }),
+											};
+										}),
+									}),
+								})
+							: undefined;
+
+					ensureImport(headerType);
 
 					const jsonRequestBodyObject =
 						requestBodyObject?.content["application/json"];
@@ -700,6 +763,7 @@ export async function processOpenApiDocument(
 							}),
 							params: pathParameters,
 							query: queryParameters,
+							header: headerParameters,
 						},
 					);
 

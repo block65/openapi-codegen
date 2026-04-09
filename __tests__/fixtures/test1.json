@@ -805,6 +805,74 @@
 		}
 	},
 	"paths": {
+		"/billing-accounts/{billingAccountId}/import": {
+			"post": {
+				"operationId": "importBillingDataCommand",
+				"tags": [],
+				"parameters": [
+					{
+						"$ref": "#/components/parameters/BillingAccountIdParameter"
+					},
+					{
+						"name": "Content-Type",
+						"in": "header",
+						"required": true,
+						"description": "The content type of the import data",
+						"schema": {
+							"type": "string",
+							"enum": [
+								"application/json",
+								"text/csv",
+								"application/xml"
+							]
+						}
+					},
+					{
+						"name": "Content-Length",
+						"in": "header",
+						"required": true,
+						"description": "The size of the import data in bytes",
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "X-Idempotency-Key",
+						"in": "header",
+						"required": false,
+						"description": "Optional idempotency key for safe retries",
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/octet-stream": {
+							"schema": {
+								"type": "string",
+								"format": "binary"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Import 200 response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LongRunningOperation"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/operations/{operationId}": {
 			"get": {
 				"operationId": "getOperationCommand",

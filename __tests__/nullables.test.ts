@@ -1,4 +1,5 @@
 import { expect, test } from "vitest";
+import type { oas31 } from "openapi3-ts";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
 test("nullables", async () => {
@@ -100,4 +101,89 @@ test("const values", async () => {
 
 	expect(result.typesFile.getText()).toMatchSnapshot();
 	expect(result.valibotFile?.getText()).toMatchSnapshot();
+});
+
+test("header parameters", async () => {
+	const schema: oas31.OpenAPIObject = {
+		openapi: "3.1.0",
+		info: {
+			title: "Test",
+			version: "1.0.0",
+		},
+		components: {
+			schemas: {
+				UploadStatus: {
+					type: "string",
+					enum: ["pending", "complete"],
+				},
+			},
+		},
+		paths: {
+			"/uploads/{uploadId}": {
+				post: {
+					operationId: "uploadDataCommand",
+					parameters: [
+						{
+							name: "uploadId",
+							in: "path",
+							required: true,
+							schema: { type: "string" },
+						},
+						{
+							name: "Content-Type",
+							in: "header",
+							required: true,
+							schema: {
+								type: "string",
+								enum: [
+									"application/json",
+									"text/csv",
+									"application/xml",
+								],
+							},
+						},
+						{
+							name: "Content-Length",
+							in: "header",
+							required: true,
+							schema: {
+								type: "integer",
+								format: "int64",
+							},
+						},
+						{
+							name: "X-Idempotency-Key",
+							in: "header",
+							required: false,
+							schema: {
+								type: "string",
+								format: "uuid",
+							},
+						},
+					],
+					responses: {
+						"200": {
+							description: "OK",
+							content: {
+								"application/json": {
+									schema: {
+										$ref: "#/components/schemas/UploadStatus",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		schema,
+	);
+
+	expect(result.typesFile.getText()).toMatchSnapshot();
+	expect(result.valibotFile.getText()).toMatchSnapshot();
+	expect(result.honoValibotFile.getText()).toMatchSnapshot();
 });

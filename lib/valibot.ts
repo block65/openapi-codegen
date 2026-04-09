@@ -368,9 +368,15 @@ export function createValidatorForOperationInput(
 		body?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
 		params: oas30.ParameterObject[];
 		query: oas30.ParameterObject[];
+		header: oas30.ParameterObject[];
 	},
-): { json?: string; param?: string; query?: string } {
-	const schemas: { json?: string; param?: string; query?: string } = {};
+): { json?: string; param?: string; query?: string; header?: string } {
+	const schemas: {
+		json?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	} = {};
 
 	// 1. Generate the JSON Body Schema
 	if (input.body) {
@@ -426,6 +432,38 @@ export function createValidatorForOperationInput(
 
 	addParams("params", input.params);
 	addParams("query", input.query);
+
+	// 3. Header schema (non-strict to allow extra HTTP headers)
+	if (input.header.length > 0) {
+		const name = camelcase([commandName, "header", "schema"]);
+		schemas.header = name;
+
+		const propertyMap = Object.fromEntries(
+			input.header.map((p) => [
+				JSON.stringify(p.name.toLowerCase()),
+				p.required
+					? schemaToValidator(validatorSchemas, p.schema ?? { type: "string" })
+					: vcall(
+							"exactOptional",
+							schemaToValidator(
+								validatorSchemas,
+								p.schema ?? { type: "string" },
+							),
+						),
+			]),
+		);
+
+		valibotFile.addVariableStatement({
+			isExported: true,
+			declarationKind: VariableDeclarationKind.Const,
+			declarations: [
+				{
+					name,
+					initializer: vcall("object", Writers.object(propertyMap)),
+				},
+			],
+		});
+	}
 
 	return schemas;
 }

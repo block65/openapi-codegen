@@ -46,7 +46,7 @@ export function createHonoValibotFile(
 export function createHonoValibotMiddleware(
 	honoValibotFile: SourceFile,
 	exportName: string,
-	schemas: { json?: string; param?: string; query?: string },
+	schemas: { json?: string; param?: string; query?: string; header?: string },
 ): void {
 	honoValibotFile.addVariableStatement({
 		isExported: true,
@@ -57,7 +57,9 @@ export function createHonoValibotMiddleware(
 				initializer: (writer) => {
 					writer.write("[");
 					writer.indent(() => {
-						for (const [target, schemaName] of Object.entries(schemas)) {
+						for (const [target, schemaName] of Object.entries(schemas).filter(
+							([t]) => t !== "header",
+						)) {
 							writer.writeLine(
 								`validator(${JSON.stringify(target)}, (value) => {`,
 							);
