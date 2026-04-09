@@ -407,12 +407,32 @@ export async function processOpenApiDocument(
 							// });
 						}
 
-						if (resolvedParameter.in === "query") {
-							queryParameters.push(resolvedParameter);
-						}
+						if (
+							resolvedParameter.in === "query" ||
+							resolvedParameter.in === "header"
+						) {
+							// Resolve $ref schemas so the valibot coercion
+							// pipeline can inspect the underlying type
+							const resolvedSchema =
+								resolvedParameter.schema &&
+								"$ref" in resolvedParameter.schema
+									? (refs.get(resolvedParameter.schema.$ref) ?? undefined)
+									: undefined;
 
-						if (resolvedParameter.in === "header") {
-							headerParameters.push(resolvedParameter);
+							const paramWithResolvedSchema: oas30.ParameterObject = {
+								...resolvedParameter,
+								...(resolvedSchema &&
+									typeof resolvedSchema === "object" &&
+									!Array.isArray(resolvedSchema) && {
+										schema: resolvedSchema,
+									}),
+							};
+
+							if (resolvedParameter.in === "query") {
+								queryParameters.push(paramWithResolvedSchema);
+							} else {
+								headerParameters.push(paramWithResolvedSchema);
+							}
 						}
 					}
 

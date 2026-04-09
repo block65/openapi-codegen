@@ -77,6 +77,7 @@ exports[`nullables 1`] = `
 
 exports[`query and header integer params coerce strings to numbers 1`] = `
 "export type Dummy = string;
+export type ExpireTime = number;
 export type ListFilesCommandQuery = {
         exp: \`\${number}\`;
         limit?: \`\${number}\` | undefined;
@@ -92,6 +93,7 @@ exports[`query and header integer params coerce strings to numbers 2`] = `
 "import * as v from "valibot";
 
 export const dummySchema = v.string();
+export const expireTimeSchema = v.pipe(v.number(), v.integer(), v.minValue(0));
 export const listFilesCommandQuerySchema = v.strictObject({
         "exp": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(0)),
         "limit": v.exactOptional(v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
