@@ -284,6 +284,10 @@ export function schemaToValidator(
 		return maybeNullable(vcall("strictObject", strictObjectWriter), isNullable);
 	}
 
+	if (schema.type === "null") {
+		return vcall("null");
+	}
+
 	return vcall("unknown");
 }
 

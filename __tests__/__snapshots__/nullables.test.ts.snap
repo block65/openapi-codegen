@@ -75,6 +75,13 @@ exports[`nullables 1`] = `
 "
 `;
 
+exports[`oneOf with type null generates v.null() 1`] = `
+"import * as v from "valibot";
+
+export const nullableImageSchema = v.union([v.string(), v.null()]);
+"
+`;
+
 exports[`query and header integer params coerce strings to numbers 1`] = `
 "export type Dummy = string;
 export type ExpireTime = number;
