@@ -103,6 +103,26 @@ test("const values", async () => {
 	expect(result.valibotFile?.getText()).toMatchSnapshot();
 });
 
+test("oneOf with type null generates v.null()", async () => {
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		{
+			openapi: "3.1.0",
+			info: { title: "Test", version: "1.0.0" },
+			paths: {},
+			components: {
+				schemas: {
+					NullableImage: {
+						oneOf: [{ type: "string", format: "uri" }, { type: "null" }],
+					},
+				},
+			},
+		},
+	);
+
+	expect(result.valibotFile.getText()).toMatchSnapshot();
+});
+
 test("query and header integer params coerce strings to numbers", async () => {
 	const schema: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
