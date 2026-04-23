@@ -159,7 +159,7 @@ export function schemaToValidator(
 					? vcall("maxLength", schema.maxLength)
 					: undefined,
 				schema.pattern
-					? vcall("regex", `/${schema.pattern.replaceAll("/", "\\/")}/`)
+					? vcall("regex", `new RegExp(${JSON.stringify(schema.pattern)})`)
 					: undefined,
 
 				...(schema.format?.startsWith("int")
