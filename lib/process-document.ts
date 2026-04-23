@@ -547,13 +547,7 @@ export async function processOpenApiDocument(
 												},
 											);
 
-											const resolvedType = hp.required
-												? type.type
-												: typeof type.type === "function"
-													? type.type
-													: type.type
-														? Writers.unionType(`${type.type}`, "undefined")
-														: undefined;
+											const resolvedType = type.type;
 
 											return {
 												...type,

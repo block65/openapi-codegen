@@ -23,7 +23,7 @@ exports[`header parameters 1`] = `
 export type UploadDataCommandHeader = {
         "content-type": "application/json" | "text/csv" | "application/xml";
         "content-length": number;
-        "x-idempotency-key"?: string | undefined;
+        "x-idempotency-key"?: string;
     };
 export type UploadDataCommandParams = {
         uploadId: string;

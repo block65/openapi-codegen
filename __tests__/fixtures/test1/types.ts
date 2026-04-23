@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-12T05:31:16.393Z
+ * Generated on 2026-04-23T13:57:43.818Z
  *
  */
 import type { Jsonifiable, Jsonify } from "type-fest";
@@ -217,7 +217,7 @@ export type LongRunningOperation =
 export type ImportBillingDataCommandHeader = {
 	"content-type": "application/json" | "text/csv" | "application/xml";
 	"content-length": number;
-	"x-idempotency-key"?: string | undefined;
+	"x-idempotency-key"?: string;
 };
 type ImportBillingDataCommandBodyApplicationOctetStream = NonNullable<
 	RequestInit["body"]
