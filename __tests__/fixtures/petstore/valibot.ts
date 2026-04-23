@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:15:35.006Z
+ * Generated on 2026-04-23T13:57:47.210Z
  *
  */
 import * as v from "valibot";
@@ -24,7 +24,15 @@ export const petSchema = v.intersect([
 ]);
 export const findPetsCommandQuerySchema = v.strictObject({
 	tags: v.exactOptional(v.array(v.string())),
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
+	limit: v.exactOptional(
+		v.pipe(
+			v.string(),
+			v.digits(),
+			v.transform((n) => Number.parseInt(n, 10)),
+			v.number(),
+			v.integer(),
+		),
+	),
 });
 export const addPetCommandBodySchema = newPetSchema;
 export const findPetByIdCommandParamsSchema = v.strictObject({

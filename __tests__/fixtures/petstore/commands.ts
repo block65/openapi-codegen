@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:15:35.006Z
+ * Generated on 2026-04-23T13:57:47.210Z
  *
  */
 /** eslint-disable max-classes */
@@ -18,7 +18,8 @@ import type {
 } from "./types.js";
 
 /**
- * Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.
+ * Tagged template literal that applies encodeURIComponent to all interpolated
+ * values, protecting path integrity from characters like `/` and `#`.
  * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
  */
 function encodePath(
@@ -61,8 +62,8 @@ export class FindPetsCommand extends Command<
 > {
 	public override method = "get" as const;
 
-	constructor(input: FindPetsCommandInput) {
-		const { tags, limit } = input;
+	constructor(input?: FindPetsCommandInput) {
+		const { tags, limit } = input ?? {};
 		super("/pets", undefined, stripUndefined({ tags, limit }));
 	}
 }

@@ -971,6 +971,16 @@ export async function processOpenApiDocument(
 
 					const hasHeaders = !!headerType && headerParameters.length > 0;
 
+					const allInputOptional =
+						!hasParams &&
+						!hasJsonBody &&
+						!hasNonJsonBody &&
+						queryParameters.every((qp) => !qp.required);
+
+					const allHeadersOptional = headerParameters.every(
+						(hp) => !hp.required,
+					);
+
 					if (hasNonJsonBody || hasJsonBody || hasQuery || hasParams || hasHeaders) {
 						const ctor = commandClassDeclaration.addConstructor();
 
@@ -991,12 +1001,14 @@ export async function processOpenApiDocument(
 							const cctorParam = ctor.addParameter({
 								name: "input",
 								type: inputType.getName(),
+								...(allInputOptional && { hasQuestionToken: true }),
 							});
 
 							if (hasHeaders) {
 								ctor.addParameter({
 									name: "headers",
 									type: headerType.getName(),
+									...(allHeadersOptional && { hasQuestionToken: true }),
 								});
 							}
 
@@ -1007,7 +1019,9 @@ export async function processOpenApiDocument(
 									declarations: [
 										{
 											kind: StructureKind.VariableDeclaration,
-											initializer: cctorParam.getName(),
+											initializer: allInputOptional
+											? `${cctorParam.getName()} ?? {}`
+											: cctorParam.getName(),
 											name: iife(() => {
 												switch (true) {
 													case paramsToDestructure.length > 0 && hasNonJsonBody:
