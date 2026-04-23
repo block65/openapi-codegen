@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-02T04:52:00.193Z
+ * Generated on 2026-04-12T05:31:16.393Z
  *
  */
 import * as v from "valibot";
@@ -292,6 +292,24 @@ export const longRunningOperationSchema = v.union([
 	longRunningOperationFailSchema,
 	longRunningOperationSuccessSchema,
 ]);
+export const importBillingDataCommandParamsSchema = v.strictObject({
+	billingAccountId: idSchema,
+});
+export const importBillingDataCommandHeaderSchema = v.object({
+	"content-type": v.picklist([
+		"application/json",
+		"text/csv",
+		"application/xml",
+	]),
+	"content-length": v.pipe(
+		v.string(),
+		v.digits(),
+		v.transform((n) => Number.parseInt(n, 10)),
+		v.number(),
+		v.integer(),
+	),
+	"x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid())),
+});
 export const getOperationCommandParamsSchema = v.strictObject({
 	operationId: uuidSchema,
 });

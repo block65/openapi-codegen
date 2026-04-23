@@ -1095,6 +1095,9 @@ export async function processOpenApiDocument(
 								callExpr.addArguments([pathname]);
 							}
 						}
+					} else {
+						const ctor = commandClassDeclaration.addConstructor();
+						ctor.addStatements([`super(${pathname});`]);
 					}
 				}
 			}

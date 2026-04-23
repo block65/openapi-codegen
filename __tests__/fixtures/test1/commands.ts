@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-02T04:52:00.193Z
+ * Generated on 2026-04-12T05:31:16.393Z
  *
  */
 /** eslint-disable max-classes */
@@ -24,6 +24,8 @@ import type {
 	GetOperationCommandInput,
 	GetPaymentMethodCommandInput,
 	GetPaymentMethodFromStripeCommandInput,
+	ImportBillingDataCommandHeader,
+	ImportBillingDataCommandInput,
 	LinkBillingAccountCommandInput,
 	ListBillingAccountsCommandInput,
 	ListBillingSubscriptionsCommandInput,
@@ -52,6 +54,32 @@ function encodePath(
 }
 
 /**
+ * ImportBillingDataCommand
+ *
+ */
+export class ImportBillingDataCommand extends Command<
+	ImportBillingDataCommandInput,
+	LongRunningOperation,
+	never,
+	ImportBillingDataCommandHeader
+> {
+	public override method = "post" as const;
+
+	constructor(
+		input: ImportBillingDataCommandInput,
+		headers: ImportBillingDataCommandHeader,
+	) {
+		const { billingAccountId, body } = input;
+		super(
+			encodePath`/billing-accounts/${billingAccountId}/import`,
+			body,
+			undefined,
+			headers,
+		);
+	}
+}
+
+/**
  * GetOperationCommand
  *
  */
@@ -76,6 +104,10 @@ export class ListBillingAccountsCommand extends Command<
 	BillingAccountList
 > {
 	public override method = "get" as const;
+
+	constructor() {
+		super("/billing-accounts");
+	}
 }
 
 /**

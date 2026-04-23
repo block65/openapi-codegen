@@ -1,6 +1,9 @@
 import { MockAgent, setGlobalDispatcher } from "undici";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
-import { GetBillingAccountCommand } from "./fixtures/test1/commands.ts";
+import {
+	GetBillingAccountCommand,
+	ListBillingAccountsCommand,
+} from "./fixtures/test1/commands.ts";
 import { BillingServiceRestApiRestClient } from "./fixtures/test1/main.ts";
 
 const mockAgent = new MockAgent();
@@ -35,6 +38,11 @@ describe("Test1", () => {
 		})
 		.reply(200, { ok: 1 })
 		.times(1);
+
+	test("zero-input command has correct pathname", () => {
+		const command = new ListBillingAccountsCommand();
+		expect(command.pathname).toBe("/billing-accounts");
+	});
 
 	test("get billing account", async () => {
 		const client = new BillingServiceRestApiRestClient(apiUrl, {

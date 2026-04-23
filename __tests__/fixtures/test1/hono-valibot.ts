@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-02T04:52:00.193Z
+ * Generated on 2026-04-12T05:31:16.393Z
  *
  */
 
@@ -23,6 +23,7 @@ import {
 	getOperationCommandParamsSchema,
 	getPaymentMethodCommandParamsSchema,
 	getPaymentMethodFromStripeCommandParamsSchema,
+	importBillingDataCommandParamsSchema,
 	linkBillingAccountCommandBodySchema,
 	linkBillingAccountCommandParamsSchema,
 	listBillingSubscriptionsCommandParamsSchema,
@@ -44,6 +45,13 @@ function toPublicValibotHonoError(err: unknown): never {
 	throw err;
 }
 
+export const importBillingData = [
+	validator("param", (value) => {
+		return v
+			.parseAsync(importBillingDataCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
+	}),
+] as const;
 export const getOperation = [
 	validator("param", (value) => {
 		return v

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-02T04:52:00.193Z
+ * Generated on 2026-04-12T05:31:16.393Z
  *
  */
 import {
@@ -26,6 +26,7 @@ import type {
 	GetOperationCommandInput,
 	GetPaymentMethodCommandInput,
 	GetPaymentMethodFromStripeCommandInput,
+	ImportBillingDataCommandInput,
 	LinkBillingAccountCommandInput,
 	ListBillingAccountsCommandInput,
 	ListBillingSubscriptionsCommandInput,
@@ -52,6 +53,7 @@ type AllInputs =
 	| GetOperationCommandInput
 	| GetPaymentMethodCommandInput
 	| GetPaymentMethodFromStripeCommandInput
+	| ImportBillingDataCommandInput
 	| LinkBillingAccountCommandInput
 	| ListBillingAccountsCommandInput
 	| ListBillingSubscriptionsCommandInput

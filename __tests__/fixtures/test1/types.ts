@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-02T04:52:00.193Z
+ * Generated on 2026-04-12T05:31:16.393Z
  *
  */
 import type { Jsonifiable, Jsonify } from "type-fest";
@@ -214,6 +214,22 @@ export type LongRunningOperation =
 	| LongRunningOperationIndeterminate
 	| LongRunningOperationFail
 	| LongRunningOperationSuccess;
+export type ImportBillingDataCommandHeader = {
+	"content-type": "application/json" | "text/csv" | "application/xml";
+	"content-length": number;
+	"x-idempotency-key"?: string | undefined;
+};
+type ImportBillingDataCommandBodyApplicationOctetStream = NonNullable<
+	RequestInit["body"]
+>;
+export type ImportBillingDataCommandBodyNonJson = {
+	body: ImportBillingDataCommandBodyApplicationOctetStream;
+};
+export type ImportBillingDataCommandParams = {
+	billingAccountId: Id;
+};
+export type ImportBillingDataCommandInput =
+	ImportBillingDataCommandBodyNonJson & ImportBillingDataCommandParams;
 export type GetOperationCommandParams = {
 	operationId: Uuid;
 };
