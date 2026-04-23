@@ -54,6 +54,7 @@ function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
 }
 
 const emptyKeyword = "undefined" as const;
+
 // function isEmptyKeyword(type: TypeAliasDeclaration) {
 //   return type?.getTypeNode()?.getKindName() === emptyKeyword;
 // }
@@ -855,14 +856,18 @@ export async function processOpenApiDocument(
 
 						const jsonResponse = response.content?.["application/json"];
 
+						if (!jsonResponse) {
+							break;
+						}
+
 						const arrayRef =
-							jsonResponse?.schema &&
+							jsonResponse.schema &&
 							"items" in jsonResponse.schema &&
 							"$ref" in jsonResponse.schema.items &&
 							jsonResponse.schema.items.$ref;
 
 						const regularRef =
-							jsonResponse?.schema &&
+							jsonResponse.schema &&
 							"$ref" in jsonResponse.schema &&
 							jsonResponse.schema.$ref;
 
@@ -892,7 +897,7 @@ export async function processOpenApiDocument(
 							//   tagName: 'returns',
 							//   text: `{${retVal}} HTTP ${statusCode}`,
 							// });
-						} else if (jsonResponse?.schema) {
+						} else if (jsonResponse.schema) {
 							const outputType = schemaToType(
 								typesAndInterfaces,
 								{},
@@ -919,16 +924,6 @@ export async function processOpenApiDocument(
 								.getExtends()
 								?.addTypeArgument(responseTypeAlias.getName());
 							outputTypes.add(responseTypeAlias);
-
-							// jsdoc.addTag({
-							//   tagName: 'returns',
-							//   text: `{${retVal}} HTTP ${statusCode}`,
-							// });
-						} else {
-							const retVal = unspecifiedKeyword;
-
-							commandClassDeclaration.getExtends()?.addTypeArgument(retVal);
-							outputTypes.add(retVal);
 						}
 					}
 
