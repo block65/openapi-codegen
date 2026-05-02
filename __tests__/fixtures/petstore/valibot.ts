@@ -3,41 +3,80 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-23T14:04:54.067Z
+ * Generated on 2026-05-02T05:45:07.106Z
  *
  */
 import * as v from "valibot";
 
-export const errorSchema = v.strictObject({
+export const exactErrorSchema = v.strictObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.string(),
 });
-export const newPetSchema = v.strictObject({
+export const errorSchema = v.strictObject({
+	code: v.pipe(v.number(), v.integer()),
+	message: v.pipe(v.string(), v.trim()),
+});
+export const exactNewPetSchema = v.strictObject({
 	name: v.string(),
 	tag: v.exactOptional(v.string()),
 });
+export const newPetSchema = v.strictObject({
+	name: v.pipe(v.string(), v.trim()),
+	tag: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactPetSchema = v.intersect([
+	exactNewPetSchema,
+	v.strictObject({
+		id: v.bigint(),
+	}),
+]);
 export const petSchema = v.intersect([
 	newPetSchema,
 	v.strictObject({
-		id: v.pipe(v.number(), v.integer()),
+		id: v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
 	}),
 ]);
-export const findPetsCommandQuerySchema = v.strictObject({
+export const exactFindPetsCommandQuerySchema = v.strictObject({
 	tags: v.exactOptional(v.array(v.string())),
-	limit: v.exactOptional(
-		v.pipe(
-			v.string(),
-			v.digits(),
-			v.transform((n) => Number.parseInt(n, 10)),
-			v.number(),
-			v.integer(),
-		),
+	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
+});
+export const findPetsCommandQuerySchema = v.strictObject({
+	tags: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	limit: v.optional(
+		v.union([
+			v.pipe(
+				v.string(),
+				v.decimal(),
+				v.toNumber(),
+				v.pipe(v.number(), v.integer()),
+			),
+			v.pipe(v.number(), v.integer()),
+		]),
 	),
 });
+export const exactAddPetCommandBodySchema = exactNewPetSchema;
 export const addPetCommandBodySchema = newPetSchema;
+export const exactFindPetByIdCommandParamsSchema = v.strictObject({
+	id: v.bigint(),
+});
 export const findPetByIdCommandParamsSchema = v.strictObject({
-	id: v.pipe(v.number(), v.integer()),
+	id: v.union([
+		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+		v.bigint(),
+	]),
+});
+export const exactDeletePetCommandParamsSchema = v.strictObject({
+	id: v.bigint(),
 });
 export const deletePetCommandParamsSchema = v.strictObject({
-	id: v.pipe(v.number(), v.integer()),
+	id: v.union([
+		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+		v.bigint(),
+	]),
 });

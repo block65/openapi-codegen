@@ -284,3 +284,64 @@ test("header parameters", async () => {
 	expect(result.valibotFile.getText()).toMatchSnapshot();
 	expect(result.honoValibotFile.getText()).toMatchSnapshot();
 });
+
+test("exact-only mode omits coerced schemas", async () => {
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		{
+			openapi: "3.1.0",
+			info: { title: "Test", version: "1.0.0" },
+			components: {
+				schemas: {
+					Name: {
+						type: "string",
+						minLength: 1,
+					},
+					Amount: {
+						type: "integer",
+						format: "int64",
+						minimum: 0,
+					},
+				},
+			},
+			paths: {
+				"/items": {
+					get: {
+						operationId: "listItemsCommand",
+						parameters: [
+							{
+								name: "limit",
+								in: "query",
+								required: false,
+								schema: { type: "integer", minimum: 1 },
+							},
+						],
+						responses: {
+							"200": {
+								description: "OK",
+								content: {
+									"application/json": {
+										schema: { $ref: "#/components/schemas/Name" },
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		[],
+		{ exactOnly: true },
+	);
+
+	const valibotText = result.valibotFile.getText();
+
+	expect(valibotText).toContain("exactNameSchema");
+	expect(valibotText).toContain("exactAmountSchema");
+	expect(valibotText).not.toMatch(/export const nameSchema\b/);
+	expect(valibotText).not.toMatch(/export const amountSchema\b/);
+	expect(valibotText).not.toContain("v.trim()");
+	expect(valibotText).not.toContain("v.toNumber()");
+	expect(valibotText).not.toContain("v.toBigint()");
+	expect(valibotText).not.toMatch(/export const listItemsCommandQuerySchema\b/);
+});

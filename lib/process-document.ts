@@ -38,6 +38,10 @@ import {
 	registerValidatorFromSchema,
 } from "./valibot.ts";
 
+export interface CodegenOptions {
+	exactOnly?: boolean;
+}
+
 interface OperationMiddlewareInfo {
 	exportName: string;
 	schemas: { json?: string; param?: string; query?: string; header?: string };
@@ -86,6 +90,7 @@ export async function processOpenApiDocument(
 	outputDir: string,
 	schema: Simplify<oas31.OpenAPIObject>,
 	tags?: string[] | undefined,
+	options?: CodegenOptions,
 ) {
 	const project = new Project();
 
@@ -121,7 +126,7 @@ export async function processOpenApiDocument(
 	const valibotFile = createValibotFile(project, outputDir);
 
 	// Track registered validators by their $ref path
-	const validators = new Map<string, string>();
+	const validators = new Map<string, { exact: string; coerced: string }>();
 
 	// Track all operations for middleware generation
 	const allOperations: OperationMiddlewareInfo[] = [];
@@ -180,6 +185,9 @@ export async function processOpenApiDocument(
 		moduleSpecifier: "type-fest",
 		isTypeOnly: true,
 	});
+
+	const valibotModuleSpecifier = `./${valibotFile.getBaseNameWithoutExtension()}.js`;
+	const commandValibotImports = new Set<string>();
 
 	const typesModuleSpecifier =
 		`./${typesFile.getBaseNameWithoutExtension()}.js` ||
@@ -251,6 +259,7 @@ export async function processOpenApiDocument(
 			valibotFile,
 			schemaName,
 			schemaObject,
+			options?.exactOnly,
 		);
 
 		// Add enum values to enums file
@@ -780,15 +789,16 @@ export async function processOpenApiDocument(
 							query: queryParameters,
 							header: headerParameters,
 						},
+						options?.exactOnly,
 					);
 
-					// Track operation for middleware generation
+					// Track operation for middleware generation (use coerced schemas)
 					const middlewareExportName = castToValidJsIdentifier(
 						operationObject.operationId.replace(/Command$/i, ""),
 					);
 					allOperations.push({
 						exportName: middlewareExportName,
-						schemas: operationSchemas,
+						schemas: operationSchemas.exact,
 					});
 
 					// CommandInput
@@ -921,14 +931,75 @@ export async function processOpenApiDocument(
 						}
 					}
 
-					// body
-					// commandClassDeclaration
-					//   .getExtends()
-					//   ?.addTypeArgument(
-					//     bodyType ? bodyType.getName() :
+					// Static schema properties for rest-client integration
+					const coercedSchemas = options?.exactOnly
+						? operationSchemas.exact
+						: operationSchemas.coerced;
 
-					//       neverKeyword,
-					//   );
+					const staticSchemaProps: { name: string; initializer: string }[] = [];
+					if (coercedSchemas.json) {
+						staticSchemaProps.push({
+							name: "bodySchema",
+							initializer: coercedSchemas.json,
+						});
+					}
+					if (coercedSchemas.param) {
+						staticSchemaProps.push({
+							name: "paramsSchema",
+							initializer: coercedSchemas.param,
+						});
+					}
+					if (coercedSchemas.query) {
+						staticSchemaProps.push({
+							name: "querySchema",
+							initializer: coercedSchemas.query,
+						});
+					}
+
+					// Resolve response schema from the 2xx response $ref
+					const responseRef = iife(() => {
+						for (const [statusCode, response] of Object.entries(
+							operationObject.responses ?? {},
+						).filter(([s]) => s.startsWith("2"))) {
+							if (statusCode === "204" || "$ref" in response) return undefined;
+							const jsonResp = response.content?.["application/json"];
+							if (!jsonResp?.schema) return undefined;
+							if ("$ref" in jsonResp.schema) return jsonResp.schema.$ref;
+							if (
+								"items" in jsonResp.schema &&
+								"$ref" in jsonResp.schema.items
+							) {
+								return jsonResp.schema.items.$ref;
+							}
+							return undefined;
+						}
+						return undefined;
+					});
+
+					const responseSchemaEntry = responseRef
+						? validators.get(responseRef)
+						: undefined;
+					const responseSchemaName = responseSchemaEntry
+						? (options?.exactOnly
+								? responseSchemaEntry.exact
+								: responseSchemaEntry.coerced)
+						: undefined;
+
+					if (responseSchemaName) {
+						staticSchemaProps.push({
+							name: "responseSchema",
+							initializer: responseSchemaName,
+						});
+					}
+
+					for (const prop of staticSchemaProps) {
+						commandClassDeclaration.addProperty({
+							name: prop.name,
+							isStatic: true,
+							initializer: prop.initializer,
+						});
+						commandValibotImports.add(prop.initializer);
+					}
 
 					// query
 					if (queryType) {
@@ -1215,6 +1286,14 @@ export async function processOpenApiDocument(
 			// fetcherParam.getName(),
 			configParam.getName(),
 		]);
+	}
+
+	// Add valibot schema imports to commands file for static properties
+	if (commandValibotImports.size > 0) {
+		commandsFile.addImportDeclaration({
+			moduleSpecifier: valibotModuleSpecifier,
+			namedImports: [...commandValibotImports].sort().map((name) => ({ name })),
+		});
 	}
 
 	mainFile.organizeImports();

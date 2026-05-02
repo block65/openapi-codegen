@@ -3,191 +3,367 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:15:43.170Z
+ * Generated on 2026-05-02T05:45:12.436Z
  *
  */
 /** eslint-disable max-classes */
-import { Command, jsonStringify, stripUndefined } from "@block65/rest-client";
+import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type {
-	AddUploadPartCommandInput,
-	ArchiveProjectCommandInput,
-	AssistantObject,
-	Batch,
-	CancelBatchCommandInput,
-	CancelFineTuningJobCommandInput,
-	CancelRunCommandInput,
-	CancelUploadCommandInput,
-	CancelVectorStoreFileBatchCommandInput,
-	CompleteUploadCommandInput,
-	CreateAssistantCommandInput,
-	CreateBatchCommandInput,
 	CreateChatCompletionCommandInput,
 	CreateChatCompletionResponse,
 	CreateCompletionCommandInput,
 	CreateCompletionResponse,
-	CreateEmbeddingCommandInput,
-	CreateEmbeddingResponse,
-	CreateFileCommandInput,
-	CreateFineTuningJobCommandInput,
 	CreateImageCommandInput,
+	ImagesResponse,
 	CreateImageEditCommandInput,
 	CreateImageVariationCommandInput,
-	CreateMessageCommandInput,
-	CreateModerationCommandInput,
-	CreateModerationResponse,
-	CreateProjectCommandInput,
-	CreateProjectServiceAccountCommandInput,
-	CreateProjectUserCommandInput,
-	CreateRunCommandInput,
-	CreateRunCommandQuery,
+	CreateEmbeddingCommandInput,
+	CreateEmbeddingResponse,
 	CreateSpeechCommandInput,
-	CreateThreadAndRunCommandInput,
-	CreateThreadCommandInput,
 	CreateTranscriptionCommandInput,
 	CreateTranscriptionCommandOutput,
 	CreateTranslationCommandInput,
 	CreateTranslationCommandOutput,
-	CreateUploadCommandInput,
-	CreateVectorStoreCommandInput,
-	CreateVectorStoreFileBatchCommandInput,
-	CreateVectorStoreFileCommandInput,
-	DeleteAssistantCommandInput,
-	DeleteAssistantResponse,
+	ListFilesCommandQuery,
+	ListFilesCommandInput,
+	ListFilesResponse,
+	CreateFileCommandInput,
+	OpenAiFile,
 	DeleteFileCommandInput,
 	DeleteFileResponse,
-	DeleteInviteCommandInput,
-	DeleteMessageCommandInput,
-	DeleteMessageResponse,
-	DeleteModelCommandInput,
-	DeleteModelResponse,
-	DeleteProjectApiKeyCommandInput,
-	DeleteProjectServiceAccountCommandInput,
-	DeleteProjectUserCommandInput,
-	DeleteThreadCommandInput,
-	DeleteThreadResponse,
-	DeleteUserCommandInput,
-	DeleteVectorStoreCommandInput,
-	DeleteVectorStoreFileCommandInput,
-	DeleteVectorStoreFileResponse,
-	DeleteVectorStoreResponse,
+	RetrieveFileCommandInput,
 	DownloadFileCommandInput,
 	DownloadFileCommandOutput,
+	CreateUploadCommandInput,
+	Upload,
+	AddUploadPartCommandInput,
+	UploadPart,
+	CompleteUploadCommandInput,
+	CancelUploadCommandInput,
+	CreateFineTuningJobCommandInput,
 	FineTuningJob,
-	GetAssistantCommandInput,
-	GetMessageCommandInput,
-	GetRunCommandInput,
-	GetRunStepCommandInput,
-	GetRunStepCommandQuery,
-	GetThreadCommandInput,
-	GetVectorStoreCommandInput,
-	GetVectorStoreFileBatchCommandInput,
-	GetVectorStoreFileCommandInput,
-	ImagesResponse,
-	Invite,
-	InviteDeleteResponse,
-	InviteListResponse,
-	InviteUserCommandInput,
-	ListAssistantsCommandInput,
-	ListAssistantsCommandQuery,
-	ListAssistantsResponse,
-	ListAuditLogsCommandInput,
-	ListAuditLogsCommandQuery,
-	ListAuditLogsResponse,
-	ListBatchesCommandInput,
-	ListBatchesCommandQuery,
-	ListBatchesResponse,
-	ListFilesCommandInput,
-	ListFilesCommandQuery,
-	ListFilesInVectorStoreBatchCommandInput,
-	ListFilesInVectorStoreBatchCommandQuery,
-	ListFilesResponse,
-	ListFineTuningEventsCommandInput,
+	ListPaginatedFineTuningJobsCommandQuery,
+	ListPaginatedFineTuningJobsCommandInput,
+	ListPaginatedFineTuningJobsResponse,
+	RetrieveFineTuningJobCommandInput,
 	ListFineTuningEventsCommandQuery,
-	ListFineTuningJobCheckpointsCommandInput,
-	ListFineTuningJobCheckpointsCommandQuery,
-	ListFineTuningJobCheckpointsResponse,
+	ListFineTuningEventsCommandInput,
 	ListFineTuningJobEventsResponse,
-	ListInvitesCommandInput,
-	ListInvitesCommandQuery,
-	ListMessagesCommandInput,
-	ListMessagesCommandQuery,
-	ListMessagesResponse,
+	CancelFineTuningJobCommandInput,
+	ListFineTuningJobCheckpointsCommandQuery,
+	ListFineTuningJobCheckpointsCommandInput,
+	ListFineTuningJobCheckpointsResponse,
 	ListModelsCommandInput,
 	ListModelsResponse,
-	ListPaginatedFineTuningJobsCommandInput,
-	ListPaginatedFineTuningJobsCommandQuery,
-	ListPaginatedFineTuningJobsResponse,
-	ListProjectApiKeysCommandInput,
-	ListProjectApiKeysCommandQuery,
-	ListProjectServiceAccountsCommandInput,
-	ListProjectServiceAccountsCommandQuery,
-	ListProjectsCommandInput,
-	ListProjectsCommandQuery,
-	ListProjectUsersCommandInput,
-	ListProjectUsersCommandQuery,
-	ListRunStepsCommandInput,
-	ListRunStepsCommandQuery,
-	ListRunStepsResponse,
-	ListRunsCommandInput,
-	ListRunsCommandQuery,
-	ListRunsResponse,
-	ListUsersCommandInput,
-	ListUsersCommandQuery,
-	ListVectorStoreFilesCommandInput,
-	ListVectorStoreFilesCommandQuery,
-	ListVectorStoreFilesResponse,
-	ListVectorStoresCommandInput,
-	ListVectorStoresCommandQuery,
-	ListVectorStoresResponse,
-	MessageObject,
-	Model,
-	ModifyAssistantCommandInput,
-	ModifyMessageCommandInput,
-	ModifyProjectCommandInput,
-	ModifyProjectUserCommandInput,
-	ModifyRunCommandInput,
-	ModifyThreadCommandInput,
-	ModifyUserCommandInput,
-	ModifyVectorStoreCommandInput,
-	OpenAiFile,
-	Project,
-	ProjectApiKey,
-	ProjectApiKeyDeleteResponse,
-	ProjectApiKeyListResponse,
-	ProjectListResponse,
-	ProjectServiceAccount,
-	ProjectServiceAccountCreateResponse,
-	ProjectServiceAccountDeleteResponse,
-	ProjectServiceAccountListResponse,
-	ProjectUser,
-	ProjectUserDeleteResponse,
-	ProjectUserListResponse,
-	RetrieveBatchCommandInput,
-	RetrieveFileCommandInput,
-	RetrieveFineTuningJobCommandInput,
-	RetrieveInviteCommandInput,
 	RetrieveModelCommandInput,
-	RetrieveProjectApiKeyCommandInput,
-	RetrieveProjectCommandInput,
-	RetrieveProjectServiceAccountCommandInput,
-	RetrieveProjectUserCommandInput,
-	RetrieveUserCommandInput,
-	RunObject,
-	RunStepObject,
-	SubmitToolOuputsToRunCommandInput,
+	Model,
+	DeleteModelCommandInput,
+	DeleteModelResponse,
+	CreateModerationCommandInput,
+	CreateModerationResponse,
+	ListAssistantsCommandQuery,
+	ListAssistantsCommandInput,
+	ListAssistantsResponse,
+	CreateAssistantCommandInput,
+	AssistantObject,
+	GetAssistantCommandInput,
+	ModifyAssistantCommandInput,
+	DeleteAssistantCommandInput,
+	DeleteAssistantResponse,
+	CreateThreadCommandInput,
 	ThreadObject,
-	Upload,
-	UploadPart,
-	User,
-	UserDeleteResponse,
-	UserListResponse,
-	VectorStoreFileBatchObject,
-	VectorStoreFileObject,
+	GetThreadCommandInput,
+	ModifyThreadCommandInput,
+	DeleteThreadCommandInput,
+	DeleteThreadResponse,
+	ListMessagesCommandQuery,
+	ListMessagesCommandInput,
+	ListMessagesResponse,
+	CreateMessageCommandInput,
+	MessageObject,
+	GetMessageCommandInput,
+	ModifyMessageCommandInput,
+	DeleteMessageCommandInput,
+	DeleteMessageResponse,
+	CreateThreadAndRunCommandInput,
+	RunObject,
+	ListRunsCommandQuery,
+	ListRunsCommandInput,
+	ListRunsResponse,
+	CreateRunCommandQuery,
+	CreateRunCommandInput,
+	GetRunCommandInput,
+	ModifyRunCommandInput,
+	SubmitToolOuputsToRunCommandInput,
+	CancelRunCommandInput,
+	ListRunStepsCommandQuery,
+	ListRunStepsCommandInput,
+	ListRunStepsResponse,
+	GetRunStepCommandQuery,
+	GetRunStepCommandInput,
+	RunStepObject,
+	ListVectorStoresCommandQuery,
+	ListVectorStoresCommandInput,
+	ListVectorStoresResponse,
+	CreateVectorStoreCommandInput,
 	VectorStoreObject,
+	GetVectorStoreCommandInput,
+	ModifyVectorStoreCommandInput,
+	DeleteVectorStoreCommandInput,
+	DeleteVectorStoreResponse,
+	ListVectorStoreFilesCommandQuery,
+	ListVectorStoreFilesCommandInput,
+	ListVectorStoreFilesResponse,
+	CreateVectorStoreFileCommandInput,
+	VectorStoreFileObject,
+	GetVectorStoreFileCommandInput,
+	DeleteVectorStoreFileCommandInput,
+	DeleteVectorStoreFileResponse,
+	CreateVectorStoreFileBatchCommandInput,
+	VectorStoreFileBatchObject,
+	GetVectorStoreFileBatchCommandInput,
+	CancelVectorStoreFileBatchCommandInput,
+	ListFilesInVectorStoreBatchCommandQuery,
+	ListFilesInVectorStoreBatchCommandInput,
+	CreateBatchCommandInput,
+	Batch,
+	ListBatchesCommandQuery,
+	ListBatchesCommandInput,
+	ListBatchesResponse,
+	RetrieveBatchCommandInput,
+	CancelBatchCommandInput,
+	ListAuditLogsCommandQuery,
+	ListAuditLogsCommandInput,
+	ListAuditLogsResponse,
+	ListInvitesCommandQuery,
+	ListInvitesCommandInput,
+	InviteListResponse,
+	InviteUserCommandInput,
+	Invite,
+	RetrieveInviteCommandInput,
+	DeleteInviteCommandInput,
+	InviteDeleteResponse,
+	ListUsersCommandQuery,
+	ListUsersCommandInput,
+	UserListResponse,
+	RetrieveUserCommandInput,
+	User,
+	ModifyUserCommandInput,
+	DeleteUserCommandInput,
+	UserDeleteResponse,
+	ListProjectsCommandQuery,
+	ListProjectsCommandInput,
+	ProjectListResponse,
+	CreateProjectCommandInput,
+	Project,
+	RetrieveProjectCommandInput,
+	ModifyProjectCommandInput,
+	ArchiveProjectCommandInput,
+	ListProjectUsersCommandQuery,
+	ListProjectUsersCommandInput,
+	ProjectUserListResponse,
+	CreateProjectUserCommandInput,
+	ProjectUser,
+	RetrieveProjectUserCommandInput,
+	ModifyProjectUserCommandInput,
+	DeleteProjectUserCommandInput,
+	ProjectUserDeleteResponse,
+	ListProjectServiceAccountsCommandQuery,
+	ListProjectServiceAccountsCommandInput,
+	ProjectServiceAccountListResponse,
+	CreateProjectServiceAccountCommandInput,
+	ProjectServiceAccountCreateResponse,
+	RetrieveProjectServiceAccountCommandInput,
+	ProjectServiceAccount,
+	DeleteProjectServiceAccountCommandInput,
+	ProjectServiceAccountDeleteResponse,
+	ListProjectApiKeysCommandQuery,
+	ListProjectApiKeysCommandInput,
+	ProjectApiKeyListResponse,
+	RetrieveProjectApiKeyCommandInput,
+	ProjectApiKey,
+	DeleteProjectApiKeyCommandInput,
+	ProjectApiKeyDeleteResponse,
 } from "./types.js";
+import {
+	addUploadPartCommandParamsSchema,
+	archiveProjectCommandParamsSchema,
+	assistantObjectSchema,
+	batchSchema,
+	cancelBatchCommandParamsSchema,
+	cancelFineTuningJobCommandParamsSchema,
+	cancelRunCommandParamsSchema,
+	cancelUploadCommandParamsSchema,
+	cancelVectorStoreFileBatchCommandParamsSchema,
+	completeUploadCommandBodySchema,
+	completeUploadCommandParamsSchema,
+	createAssistantCommandBodySchema,
+	createBatchCommandBodySchema,
+	createChatCompletionCommandBodySchema,
+	createChatCompletionResponseSchema,
+	createCompletionCommandBodySchema,
+	createCompletionResponseSchema,
+	createEmbeddingCommandBodySchema,
+	createEmbeddingResponseSchema,
+	createFineTuningJobCommandBodySchema,
+	createImageCommandBodySchema,
+	createMessageCommandBodySchema,
+	createMessageCommandParamsSchema,
+	createModerationCommandBodySchema,
+	createModerationResponseSchema,
+	createProjectCommandBodySchema,
+	createProjectServiceAccountCommandBodySchema,
+	createProjectServiceAccountCommandParamsSchema,
+	createProjectUserCommandBodySchema,
+	createProjectUserCommandParamsSchema,
+	createRunCommandBodySchema,
+	createRunCommandParamsSchema,
+	createRunCommandQuerySchema,
+	createSpeechCommandBodySchema,
+	createThreadAndRunCommandBodySchema,
+	createThreadCommandBodySchema,
+	createUploadCommandBodySchema,
+	createVectorStoreCommandBodySchema,
+	createVectorStoreFileBatchCommandBodySchema,
+	createVectorStoreFileBatchCommandParamsSchema,
+	createVectorStoreFileCommandBodySchema,
+	createVectorStoreFileCommandParamsSchema,
+	deleteAssistantCommandParamsSchema,
+	deleteAssistantResponseSchema,
+	deleteFileCommandParamsSchema,
+	deleteFileResponseSchema,
+	deleteInviteCommandParamsSchema,
+	deleteMessageCommandParamsSchema,
+	deleteMessageResponseSchema,
+	deleteModelCommandParamsSchema,
+	deleteModelResponseSchema,
+	deleteProjectApiKeyCommandParamsSchema,
+	deleteProjectServiceAccountCommandParamsSchema,
+	deleteProjectUserCommandParamsSchema,
+	deleteThreadCommandParamsSchema,
+	deleteThreadResponseSchema,
+	deleteUserCommandParamsSchema,
+	deleteVectorStoreCommandParamsSchema,
+	deleteVectorStoreFileCommandParamsSchema,
+	deleteVectorStoreFileResponseSchema,
+	deleteVectorStoreResponseSchema,
+	downloadFileCommandParamsSchema,
+	fineTuningJobSchema,
+	getAssistantCommandParamsSchema,
+	getMessageCommandParamsSchema,
+	getRunCommandParamsSchema,
+	getRunStepCommandParamsSchema,
+	getRunStepCommandQuerySchema,
+	getThreadCommandParamsSchema,
+	getVectorStoreCommandParamsSchema,
+	getVectorStoreFileBatchCommandParamsSchema,
+	getVectorStoreFileCommandParamsSchema,
+	imagesResponseSchema,
+	inviteDeleteResponseSchema,
+	inviteListResponseSchema,
+	inviteSchema,
+	inviteUserCommandBodySchema,
+	listAssistantsCommandQuerySchema,
+	listAssistantsResponseSchema,
+	listAuditLogsCommandQuerySchema,
+	listAuditLogsResponseSchema,
+	listBatchesCommandQuerySchema,
+	listBatchesResponseSchema,
+	listFilesCommandQuerySchema,
+	listFilesInVectorStoreBatchCommandParamsSchema,
+	listFilesInVectorStoreBatchCommandQuerySchema,
+	listFilesResponseSchema,
+	listFineTuningEventsCommandParamsSchema,
+	listFineTuningEventsCommandQuerySchema,
+	listFineTuningJobCheckpointsCommandParamsSchema,
+	listFineTuningJobCheckpointsCommandQuerySchema,
+	listFineTuningJobCheckpointsResponseSchema,
+	listFineTuningJobEventsResponseSchema,
+	listInvitesCommandQuerySchema,
+	listMessagesCommandParamsSchema,
+	listMessagesCommandQuerySchema,
+	listMessagesResponseSchema,
+	listModelsResponseSchema,
+	listPaginatedFineTuningJobsCommandQuerySchema,
+	listPaginatedFineTuningJobsResponseSchema,
+	listProjectApiKeysCommandParamsSchema,
+	listProjectApiKeysCommandQuerySchema,
+	listProjectServiceAccountsCommandParamsSchema,
+	listProjectServiceAccountsCommandQuerySchema,
+	listProjectUsersCommandParamsSchema,
+	listProjectUsersCommandQuerySchema,
+	listProjectsCommandQuerySchema,
+	listRunStepsCommandParamsSchema,
+	listRunStepsCommandQuerySchema,
+	listRunStepsResponseSchema,
+	listRunsCommandParamsSchema,
+	listRunsCommandQuerySchema,
+	listRunsResponseSchema,
+	listUsersCommandQuerySchema,
+	listVectorStoreFilesCommandParamsSchema,
+	listVectorStoreFilesCommandQuerySchema,
+	listVectorStoreFilesResponseSchema,
+	listVectorStoresCommandQuerySchema,
+	listVectorStoresResponseSchema,
+	messageObjectSchema,
+	modelSchema,
+	modifyAssistantCommandBodySchema,
+	modifyAssistantCommandParamsSchema,
+	modifyMessageCommandBodySchema,
+	modifyMessageCommandParamsSchema,
+	modifyProjectCommandBodySchema,
+	modifyProjectCommandParamsSchema,
+	modifyProjectUserCommandBodySchema,
+	modifyProjectUserCommandParamsSchema,
+	modifyRunCommandBodySchema,
+	modifyRunCommandParamsSchema,
+	modifyThreadCommandBodySchema,
+	modifyThreadCommandParamsSchema,
+	modifyUserCommandBodySchema,
+	modifyUserCommandParamsSchema,
+	modifyVectorStoreCommandBodySchema,
+	modifyVectorStoreCommandParamsSchema,
+	openAiFileSchema,
+	projectApiKeyDeleteResponseSchema,
+	projectApiKeyListResponseSchema,
+	projectApiKeySchema,
+	projectListResponseSchema,
+	projectSchema,
+	projectServiceAccountCreateResponseSchema,
+	projectServiceAccountDeleteResponseSchema,
+	projectServiceAccountListResponseSchema,
+	projectServiceAccountSchema,
+	projectUserDeleteResponseSchema,
+	projectUserListResponseSchema,
+	projectUserSchema,
+	retrieveBatchCommandParamsSchema,
+	retrieveFileCommandParamsSchema,
+	retrieveFineTuningJobCommandParamsSchema,
+	retrieveInviteCommandParamsSchema,
+	retrieveModelCommandParamsSchema,
+	retrieveProjectApiKeyCommandParamsSchema,
+	retrieveProjectCommandParamsSchema,
+	retrieveProjectServiceAccountCommandParamsSchema,
+	retrieveProjectUserCommandParamsSchema,
+	retrieveUserCommandParamsSchema,
+	runObjectSchema,
+	runStepObjectSchema,
+	submitToolOuputsToRunCommandBodySchema,
+	submitToolOuputsToRunCommandParamsSchema,
+	threadObjectSchema,
+	uploadPartSchema,
+	uploadSchema,
+	userDeleteResponseSchema,
+	userListResponseSchema,
+	userSchema,
+	vectorStoreFileBatchObjectSchema,
+	vectorStoreFileObjectSchema,
+	vectorStoreObjectSchema,
+} from "./valibot.js";
 
 /**
- * Tagged template literal that applies encodeURIComponent to all interpolated values, protecting path integrity from characters like `/` and `#`.
+ * Tagged template literal that applies encodeURIComponent to all interpolated
+ * values, protecting path integrity from characters like `/` and `#`.
  * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
  */
 function encodePath(
@@ -207,6 +383,8 @@ export class CreateChatCompletionCommand extends Command<
 	CreateChatCompletionResponse
 > {
 	public override method = "post" as const;
+	static bodySchema = createChatCompletionCommandBodySchema;
+	static responseSchema = createChatCompletionResponseSchema;
 
 	constructor(input: CreateChatCompletionCommandInput) {
 		const body = input;
@@ -224,6 +402,8 @@ export class CreateCompletionCommand extends Command<
 	CreateCompletionResponse
 > {
 	public override method = "post" as const;
+	static bodySchema = createCompletionCommandBodySchema;
+	static responseSchema = createCompletionResponseSchema;
 
 	constructor(input: CreateCompletionCommandInput) {
 		const body = input;
@@ -241,6 +421,8 @@ export class CreateImageCommand extends Command<
 	ImagesResponse
 > {
 	public override method = "post" as const;
+	static bodySchema = createImageCommandBodySchema;
+	static responseSchema = imagesResponseSchema;
 
 	constructor(input: CreateImageCommandInput) {
 		const body = input;
@@ -258,6 +440,7 @@ export class CreateImageEditCommand extends Command<
 	ImagesResponse
 > {
 	public override method = "post" as const;
+	static responseSchema = imagesResponseSchema;
 
 	constructor(input: CreateImageEditCommandInput) {
 		const { body } = input;
@@ -275,6 +458,7 @@ export class CreateImageVariationCommand extends Command<
 	ImagesResponse
 > {
 	public override method = "post" as const;
+	static responseSchema = imagesResponseSchema;
 
 	constructor(input: CreateImageVariationCommandInput) {
 		const { body } = input;
@@ -292,6 +476,8 @@ export class CreateEmbeddingCommand extends Command<
 	CreateEmbeddingResponse
 > {
 	public override method = "post" as const;
+	static bodySchema = createEmbeddingCommandBodySchema;
+	static responseSchema = createEmbeddingResponseSchema;
 
 	constructor(input: CreateEmbeddingCommandInput) {
 		const body = input;
@@ -304,11 +490,9 @@ export class CreateEmbeddingCommand extends Command<
  *
  * @summary Generates audio from the input text.
  */
-export class CreateSpeechCommand extends Command<
-	CreateSpeechCommandInput,
-	unknown
-> {
+export class CreateSpeechCommand extends Command<CreateSpeechCommandInput> {
 	public override method = "post" as const;
+	static bodySchema = createSpeechCommandBodySchema;
 
 	constructor(input: CreateSpeechCommandInput) {
 		const body = input;
@@ -361,9 +545,11 @@ export class ListFilesCommand extends Command<
 	ListFilesCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listFilesCommandQuerySchema;
+	static responseSchema = listFilesResponseSchema;
 
-	constructor(input: ListFilesCommandInput) {
-		const { purpose } = input;
+	constructor(input?: ListFilesCommandInput) {
+		const { purpose } = input ?? {};
 		super("/files", undefined, stripUndefined({ purpose }));
 	}
 }
@@ -396,6 +582,7 @@ export class CreateFileCommand extends Command<
 	OpenAiFile
 > {
 	public override method = "post" as const;
+	static responseSchema = openAiFileSchema;
 
 	constructor(input: CreateFileCommandInput) {
 		const { body } = input;
@@ -413,6 +600,8 @@ export class DeleteFileCommand extends Command<
 	DeleteFileResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteFileCommandParamsSchema;
+	static responseSchema = deleteFileResponseSchema;
 
 	constructor(input: DeleteFileCommandInput) {
 		const { file_id } = input;
@@ -430,6 +619,8 @@ export class RetrieveFileCommand extends Command<
 	OpenAiFile
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveFileCommandParamsSchema;
+	static responseSchema = openAiFileSchema;
 
 	constructor(input: RetrieveFileCommandInput) {
 		const { file_id } = input;
@@ -447,6 +638,7 @@ export class DownloadFileCommand extends Command<
 	DownloadFileCommandOutput
 > {
 	public override method = "get" as const;
+	static paramsSchema = downloadFileCommandParamsSchema;
 
 	constructor(input: DownloadFileCommandInput) {
 		const { file_id } = input;
@@ -480,6 +672,8 @@ export class CreateUploadCommand extends Command<
 	Upload
 > {
 	public override method = "post" as const;
+	static bodySchema = createUploadCommandBodySchema;
+	static responseSchema = uploadSchema;
 
 	constructor(input: CreateUploadCommandInput) {
 		const body = input;
@@ -506,6 +700,8 @@ export class AddUploadPartCommand extends Command<
 	UploadPart
 > {
 	public override method = "post" as const;
+	static paramsSchema = addUploadPartCommandParamsSchema;
+	static responseSchema = uploadPartSchema;
 
 	constructor(input: AddUploadPartCommandInput) {
 		const { upload_id, body } = input;
@@ -534,6 +730,9 @@ export class CompleteUploadCommand extends Command<
 	Upload
 > {
 	public override method = "post" as const;
+	static bodySchema = completeUploadCommandBodySchema;
+	static paramsSchema = completeUploadCommandParamsSchema;
+	static responseSchema = uploadSchema;
 
 	constructor(input: CompleteUploadCommandInput) {
 		const { upload_id, ...body } = input;
@@ -551,6 +750,8 @@ export class CancelUploadCommand extends Command<
 	Upload
 > {
 	public override method = "post" as const;
+	static paramsSchema = cancelUploadCommandParamsSchema;
+	static responseSchema = uploadSchema;
 
 	constructor(input: CancelUploadCommandInput) {
 		const { upload_id } = input;
@@ -574,6 +775,8 @@ export class CreateFineTuningJobCommand extends Command<
 	FineTuningJob
 > {
 	public override method = "post" as const;
+	static bodySchema = createFineTuningJobCommandBodySchema;
+	static responseSchema = fineTuningJobSchema;
 
 	constructor(input: CreateFineTuningJobCommandInput) {
 		const body = input;
@@ -592,9 +795,11 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
 	ListPaginatedFineTuningJobsCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listPaginatedFineTuningJobsCommandQuerySchema;
+	static responseSchema = listPaginatedFineTuningJobsResponseSchema;
 
-	constructor(input: ListPaginatedFineTuningJobsCommandInput) {
-		const { after, limit } = input;
+	constructor(input?: ListPaginatedFineTuningJobsCommandInput) {
+		const { after, limit } = input ?? {};
 		super("/fine_tuning/jobs", undefined, stripUndefined({ after, limit }));
 	}
 }
@@ -611,6 +816,8 @@ export class RetrieveFineTuningJobCommand extends Command<
 	FineTuningJob
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveFineTuningJobCommandParamsSchema;
+	static responseSchema = fineTuningJobSchema;
 
 	constructor(input: RetrieveFineTuningJobCommandInput) {
 		const { fine_tuning_job_id } = input;
@@ -629,6 +836,9 @@ export class ListFineTuningEventsCommand extends Command<
 	ListFineTuningEventsCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listFineTuningEventsCommandParamsSchema;
+	static querySchema = listFineTuningEventsCommandQuerySchema;
+	static responseSchema = listFineTuningJobEventsResponseSchema;
 
 	constructor(input: ListFineTuningEventsCommandInput) {
 		const { fine_tuning_job_id, after, limit } = input;
@@ -650,6 +860,8 @@ export class CancelFineTuningJobCommand extends Command<
 	FineTuningJob
 > {
 	public override method = "post" as const;
+	static paramsSchema = cancelFineTuningJobCommandParamsSchema;
+	static responseSchema = fineTuningJobSchema;
 
 	constructor(input: CancelFineTuningJobCommandInput) {
 		const { fine_tuning_job_id } = input;
@@ -668,6 +880,9 @@ export class ListFineTuningJobCheckpointsCommand extends Command<
 	ListFineTuningJobCheckpointsCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listFineTuningJobCheckpointsCommandParamsSchema;
+	static querySchema = listFineTuningJobCheckpointsCommandQuerySchema;
+	static responseSchema = listFineTuningJobCheckpointsResponseSchema;
 
 	constructor(input: ListFineTuningJobCheckpointsCommandInput) {
 		const { fine_tuning_job_id, after, limit } = input;
@@ -690,6 +905,11 @@ export class ListModelsCommand extends Command<
 	ListModelsResponse
 > {
 	public override method = "get" as const;
+	static responseSchema = listModelsResponseSchema;
+
+	constructor() {
+		super("/models");
+	}
 }
 
 /**
@@ -703,6 +923,8 @@ export class RetrieveModelCommand extends Command<
 	Model
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveModelCommandParamsSchema;
+	static responseSchema = modelSchema;
 
 	constructor(input: RetrieveModelCommandInput) {
 		const { model } = input;
@@ -721,6 +943,8 @@ export class DeleteModelCommand extends Command<
 	DeleteModelResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteModelCommandParamsSchema;
+	static responseSchema = deleteModelResponseSchema;
 
 	constructor(input: DeleteModelCommandInput) {
 		const { model } = input;
@@ -739,6 +963,8 @@ export class CreateModerationCommand extends Command<
 	CreateModerationResponse
 > {
 	public override method = "post" as const;
+	static bodySchema = createModerationCommandBodySchema;
+	static responseSchema = createModerationResponseSchema;
 
 	constructor(input: CreateModerationCommandInput) {
 		const body = input;
@@ -757,9 +983,11 @@ export class ListAssistantsCommand extends Command<
 	ListAssistantsCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listAssistantsCommandQuerySchema;
+	static responseSchema = listAssistantsResponseSchema;
 
-	constructor(input: ListAssistantsCommandInput) {
-		const { limit, order, after, before } = input;
+	constructor(input?: ListAssistantsCommandInput) {
+		const { limit, order, after, before } = input ?? {};
 		super(
 			"/assistants",
 			undefined,
@@ -778,6 +1006,8 @@ export class CreateAssistantCommand extends Command<
 	AssistantObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createAssistantCommandBodySchema;
+	static responseSchema = assistantObjectSchema;
 
 	constructor(input: CreateAssistantCommandInput) {
 		const body = input;
@@ -795,6 +1025,8 @@ export class GetAssistantCommand extends Command<
 	AssistantObject
 > {
 	public override method = "get" as const;
+	static paramsSchema = getAssistantCommandParamsSchema;
+	static responseSchema = assistantObjectSchema;
 
 	constructor(input: GetAssistantCommandInput) {
 		const { assistant_id } = input;
@@ -812,6 +1044,9 @@ export class ModifyAssistantCommand extends Command<
 	AssistantObject
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyAssistantCommandBodySchema;
+	static paramsSchema = modifyAssistantCommandParamsSchema;
+	static responseSchema = assistantObjectSchema;
 
 	constructor(input: ModifyAssistantCommandInput) {
 		const { assistant_id, ...body } = input;
@@ -829,6 +1064,8 @@ export class DeleteAssistantCommand extends Command<
 	DeleteAssistantResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteAssistantCommandParamsSchema;
+	static responseSchema = deleteAssistantResponseSchema;
 
 	constructor(input: DeleteAssistantCommandInput) {
 		const { assistant_id } = input;
@@ -846,6 +1083,8 @@ export class CreateThreadCommand extends Command<
 	ThreadObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createThreadCommandBodySchema;
+	static responseSchema = threadObjectSchema;
 
 	constructor(input: CreateThreadCommandInput) {
 		const body = input;
@@ -863,6 +1102,8 @@ export class GetThreadCommand extends Command<
 	ThreadObject
 > {
 	public override method = "get" as const;
+	static paramsSchema = getThreadCommandParamsSchema;
+	static responseSchema = threadObjectSchema;
 
 	constructor(input: GetThreadCommandInput) {
 		const { thread_id } = input;
@@ -880,6 +1121,9 @@ export class ModifyThreadCommand extends Command<
 	ThreadObject
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyThreadCommandBodySchema;
+	static paramsSchema = modifyThreadCommandParamsSchema;
+	static responseSchema = threadObjectSchema;
 
 	constructor(input: ModifyThreadCommandInput) {
 		const { thread_id, ...body } = input;
@@ -897,6 +1141,8 @@ export class DeleteThreadCommand extends Command<
 	DeleteThreadResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteThreadCommandParamsSchema;
+	static responseSchema = deleteThreadResponseSchema;
 
 	constructor(input: DeleteThreadCommandInput) {
 		const { thread_id } = input;
@@ -915,6 +1161,9 @@ export class ListMessagesCommand extends Command<
 	ListMessagesCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listMessagesCommandParamsSchema;
+	static querySchema = listMessagesCommandQuerySchema;
+	static responseSchema = listMessagesResponseSchema;
 
 	constructor(input: ListMessagesCommandInput) {
 		const { thread_id, limit, order, after, before, run_id } = input;
@@ -936,6 +1185,9 @@ export class CreateMessageCommand extends Command<
 	MessageObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createMessageCommandBodySchema;
+	static paramsSchema = createMessageCommandParamsSchema;
+	static responseSchema = messageObjectSchema;
 
 	constructor(input: CreateMessageCommandInput) {
 		const { thread_id, ...body } = input;
@@ -953,6 +1205,8 @@ export class GetMessageCommand extends Command<
 	MessageObject
 > {
 	public override method = "get" as const;
+	static paramsSchema = getMessageCommandParamsSchema;
+	static responseSchema = messageObjectSchema;
 
 	constructor(input: GetMessageCommandInput) {
 		const { thread_id, message_id } = input;
@@ -970,6 +1224,9 @@ export class ModifyMessageCommand extends Command<
 	MessageObject
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyMessageCommandBodySchema;
+	static paramsSchema = modifyMessageCommandParamsSchema;
+	static responseSchema = messageObjectSchema;
 
 	constructor(input: ModifyMessageCommandInput) {
 		const { thread_id, message_id, ...body } = input;
@@ -990,6 +1247,8 @@ export class DeleteMessageCommand extends Command<
 	DeleteMessageResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteMessageCommandParamsSchema;
+	static responseSchema = deleteMessageResponseSchema;
 
 	constructor(input: DeleteMessageCommandInput) {
 		const { thread_id, message_id } = input;
@@ -1007,6 +1266,8 @@ export class CreateThreadAndRunCommand extends Command<
 	RunObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createThreadAndRunCommandBodySchema;
+	static responseSchema = runObjectSchema;
 
 	constructor(input: CreateThreadAndRunCommandInput) {
 		const body = input;
@@ -1025,6 +1286,9 @@ export class ListRunsCommand extends Command<
 	ListRunsCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listRunsCommandParamsSchema;
+	static querySchema = listRunsCommandQuerySchema;
+	static responseSchema = listRunsResponseSchema;
 
 	constructor(input: ListRunsCommandInput) {
 		const { thread_id, limit, order, after, before } = input;
@@ -1047,6 +1311,10 @@ export class CreateRunCommand extends Command<
 	CreateRunCommandQuery
 > {
 	public override method = "post" as const;
+	static bodySchema = createRunCommandBodySchema;
+	static paramsSchema = createRunCommandParamsSchema;
+	static querySchema = createRunCommandQuerySchema;
+	static responseSchema = runObjectSchema;
 
 	constructor(input: CreateRunCommandInput) {
 		const { thread_id, include, ...body } = input;
@@ -1065,6 +1333,8 @@ export class CreateRunCommand extends Command<
  */
 export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
 	public override method = "get" as const;
+	static paramsSchema = getRunCommandParamsSchema;
+	static responseSchema = runObjectSchema;
 
 	constructor(input: GetRunCommandInput) {
 		const { thread_id, run_id } = input;
@@ -1082,6 +1352,9 @@ export class ModifyRunCommand extends Command<
 	RunObject
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyRunCommandBodySchema;
+	static paramsSchema = modifyRunCommandParamsSchema;
+	static responseSchema = runObjectSchema;
 
 	constructor(input: ModifyRunCommandInput) {
 		const { thread_id, run_id, ...body } = input;
@@ -1105,6 +1378,9 @@ export class SubmitToolOuputsToRunCommand extends Command<
 	RunObject
 > {
 	public override method = "post" as const;
+	static bodySchema = submitToolOuputsToRunCommandBodySchema;
+	static paramsSchema = submitToolOuputsToRunCommandParamsSchema;
+	static responseSchema = runObjectSchema;
 
 	constructor(input: SubmitToolOuputsToRunCommandInput) {
 		const { thread_id, run_id, ...body } = input;
@@ -1125,6 +1401,8 @@ export class CancelRunCommand extends Command<
 	RunObject
 > {
 	public override method = "post" as const;
+	static paramsSchema = cancelRunCommandParamsSchema;
+	static responseSchema = runObjectSchema;
 
 	constructor(input: CancelRunCommandInput) {
 		const { thread_id, run_id } = input;
@@ -1143,6 +1421,9 @@ export class ListRunStepsCommand extends Command<
 	ListRunStepsCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listRunStepsCommandParamsSchema;
+	static querySchema = listRunStepsCommandQuerySchema;
+	static responseSchema = listRunStepsResponseSchema;
 
 	constructor(input: ListRunStepsCommandInput) {
 		const { thread_id, run_id, limit, order, after, before, include } = input;
@@ -1165,6 +1446,9 @@ export class GetRunStepCommand extends Command<
 	GetRunStepCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = getRunStepCommandParamsSchema;
+	static querySchema = getRunStepCommandQuerySchema;
+	static responseSchema = runStepObjectSchema;
 
 	constructor(input: GetRunStepCommandInput) {
 		const { thread_id, run_id, step_id, include } = input;
@@ -1187,9 +1471,11 @@ export class ListVectorStoresCommand extends Command<
 	ListVectorStoresCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listVectorStoresCommandQuerySchema;
+	static responseSchema = listVectorStoresResponseSchema;
 
-	constructor(input: ListVectorStoresCommandInput) {
-		const { limit, order, after, before } = input;
+	constructor(input?: ListVectorStoresCommandInput) {
+		const { limit, order, after, before } = input ?? {};
 		super(
 			"/vector_stores",
 			undefined,
@@ -1208,6 +1494,8 @@ export class CreateVectorStoreCommand extends Command<
 	VectorStoreObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createVectorStoreCommandBodySchema;
+	static responseSchema = vectorStoreObjectSchema;
 
 	constructor(input: CreateVectorStoreCommandInput) {
 		const body = input;
@@ -1225,6 +1513,8 @@ export class GetVectorStoreCommand extends Command<
 	VectorStoreObject
 > {
 	public override method = "get" as const;
+	static paramsSchema = getVectorStoreCommandParamsSchema;
+	static responseSchema = vectorStoreObjectSchema;
 
 	constructor(input: GetVectorStoreCommandInput) {
 		const { vector_store_id } = input;
@@ -1242,6 +1532,9 @@ export class ModifyVectorStoreCommand extends Command<
 	VectorStoreObject
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyVectorStoreCommandBodySchema;
+	static paramsSchema = modifyVectorStoreCommandParamsSchema;
+	static responseSchema = vectorStoreObjectSchema;
 
 	constructor(input: ModifyVectorStoreCommandInput) {
 		const { vector_store_id, ...body } = input;
@@ -1259,6 +1552,8 @@ export class DeleteVectorStoreCommand extends Command<
 	DeleteVectorStoreResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteVectorStoreCommandParamsSchema;
+	static responseSchema = deleteVectorStoreResponseSchema;
 
 	constructor(input: DeleteVectorStoreCommandInput) {
 		const { vector_store_id } = input;
@@ -1277,6 +1572,9 @@ export class ListVectorStoreFilesCommand extends Command<
 	ListVectorStoreFilesCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listVectorStoreFilesCommandParamsSchema;
+	static querySchema = listVectorStoreFilesCommandQuerySchema;
+	static responseSchema = listVectorStoreFilesResponseSchema;
 
 	constructor(input: ListVectorStoreFilesCommandInput) {
 		const { vector_store_id, limit, order, after, before, filter } = input;
@@ -1299,6 +1597,9 @@ export class CreateVectorStoreFileCommand extends Command<
 	VectorStoreFileObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createVectorStoreFileCommandBodySchema;
+	static paramsSchema = createVectorStoreFileCommandParamsSchema;
+	static responseSchema = vectorStoreFileObjectSchema;
 
 	constructor(input: CreateVectorStoreFileCommandInput) {
 		const { vector_store_id, ...body } = input;
@@ -1319,6 +1620,8 @@ export class GetVectorStoreFileCommand extends Command<
 	VectorStoreFileObject
 > {
 	public override method = "get" as const;
+	static paramsSchema = getVectorStoreFileCommandParamsSchema;
+	static responseSchema = vectorStoreFileObjectSchema;
 
 	constructor(input: GetVectorStoreFileCommandInput) {
 		const { vector_store_id, file_id } = input;
@@ -1338,6 +1641,8 @@ export class DeleteVectorStoreFileCommand extends Command<
 	DeleteVectorStoreFileResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteVectorStoreFileCommandParamsSchema;
+	static responseSchema = deleteVectorStoreFileResponseSchema;
 
 	constructor(input: DeleteVectorStoreFileCommandInput) {
 		const { vector_store_id, file_id } = input;
@@ -1355,6 +1660,9 @@ export class CreateVectorStoreFileBatchCommand extends Command<
 	VectorStoreFileBatchObject
 > {
 	public override method = "post" as const;
+	static bodySchema = createVectorStoreFileBatchCommandBodySchema;
+	static paramsSchema = createVectorStoreFileBatchCommandParamsSchema;
+	static responseSchema = vectorStoreFileBatchObjectSchema;
 
 	constructor(input: CreateVectorStoreFileBatchCommandInput) {
 		const { vector_store_id, ...body } = input;
@@ -1375,6 +1683,8 @@ export class GetVectorStoreFileBatchCommand extends Command<
 	VectorStoreFileBatchObject
 > {
 	public override method = "get" as const;
+	static paramsSchema = getVectorStoreFileBatchCommandParamsSchema;
+	static responseSchema = vectorStoreFileBatchObjectSchema;
 
 	constructor(input: GetVectorStoreFileBatchCommandInput) {
 		const { vector_store_id, batch_id } = input;
@@ -1395,6 +1705,8 @@ export class CancelVectorStoreFileBatchCommand extends Command<
 	VectorStoreFileBatchObject
 > {
 	public override method = "post" as const;
+	static paramsSchema = cancelVectorStoreFileBatchCommandParamsSchema;
+	static responseSchema = vectorStoreFileBatchObjectSchema;
 
 	constructor(input: CancelVectorStoreFileBatchCommandInput) {
 		const { vector_store_id, batch_id } = input;
@@ -1415,6 +1727,9 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
 	ListFilesInVectorStoreBatchCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listFilesInVectorStoreBatchCommandParamsSchema;
+	static querySchema = listFilesInVectorStoreBatchCommandQuerySchema;
+	static responseSchema = listVectorStoreFilesResponseSchema;
 
 	constructor(input: ListFilesInVectorStoreBatchCommandInput) {
 		const { vector_store_id, batch_id, limit, order, after, before, filter } =
@@ -1437,6 +1752,8 @@ export class CreateBatchCommand extends Command<
 	Batch
 > {
 	public override method = "post" as const;
+	static bodySchema = createBatchCommandBodySchema;
+	static responseSchema = batchSchema;
 
 	constructor(input: CreateBatchCommandInput) {
 		const body = input;
@@ -1455,9 +1772,11 @@ export class ListBatchesCommand extends Command<
 	ListBatchesCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listBatchesCommandQuerySchema;
+	static responseSchema = listBatchesResponseSchema;
 
-	constructor(input: ListBatchesCommandInput) {
-		const { after, limit } = input;
+	constructor(input?: ListBatchesCommandInput) {
+		const { after, limit } = input ?? {};
 		super("/batches", undefined, stripUndefined({ after, limit }));
 	}
 }
@@ -1472,6 +1791,8 @@ export class RetrieveBatchCommand extends Command<
 	Batch
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveBatchCommandParamsSchema;
+	static responseSchema = batchSchema;
 
 	constructor(input: RetrieveBatchCommandInput) {
 		const { batch_id } = input;
@@ -1491,6 +1812,8 @@ export class CancelBatchCommand extends Command<
 	Batch
 > {
 	public override method = "post" as const;
+	static paramsSchema = cancelBatchCommandParamsSchema;
+	static responseSchema = batchSchema;
 
 	constructor(input: CancelBatchCommandInput) {
 		const { batch_id } = input;
@@ -1509,8 +1832,10 @@ export class ListAuditLogsCommand extends Command<
 	ListAuditLogsCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listAuditLogsCommandQuerySchema;
+	static responseSchema = listAuditLogsResponseSchema;
 
-	constructor(input: ListAuditLogsCommandInput) {
+	constructor(input?: ListAuditLogsCommandInput) {
 		const {
 			effective_at,
 			project_ids,
@@ -1521,7 +1846,7 @@ export class ListAuditLogsCommand extends Command<
 			limit,
 			after,
 			before,
-		} = input;
+		} = input ?? {};
 		super(
 			"/organization/audit_logs",
 			undefined,
@@ -1551,9 +1876,11 @@ export class ListInvitesCommand extends Command<
 	ListInvitesCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listInvitesCommandQuerySchema;
+	static responseSchema = inviteListResponseSchema;
 
-	constructor(input: ListInvitesCommandInput) {
-		const { limit, after } = input;
+	constructor(input?: ListInvitesCommandInput) {
+		const { limit, after } = input ?? {};
 		super("/organization/invites", undefined, stripUndefined({ limit, after }));
 	}
 }
@@ -1566,6 +1893,8 @@ export class ListInvitesCommand extends Command<
  */
 export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
 	public override method = "post" as const;
+	static bodySchema = inviteUserCommandBodySchema;
+	static responseSchema = inviteSchema;
 
 	constructor(input: InviteUserCommandInput) {
 		const body = input;
@@ -1583,6 +1912,8 @@ export class RetrieveInviteCommand extends Command<
 	Invite
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveInviteCommandParamsSchema;
+	static responseSchema = inviteSchema;
 
 	constructor(input: RetrieveInviteCommandInput) {
 		const { invite_id } = input;
@@ -1601,6 +1932,8 @@ export class DeleteInviteCommand extends Command<
 	InviteDeleteResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteInviteCommandParamsSchema;
+	static responseSchema = inviteDeleteResponseSchema;
 
 	constructor(input: DeleteInviteCommandInput) {
 		const { invite_id } = input;
@@ -1619,9 +1952,11 @@ export class ListUsersCommand extends Command<
 	ListUsersCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listUsersCommandQuerySchema;
+	static responseSchema = userListResponseSchema;
 
-	constructor(input: ListUsersCommandInput) {
-		const { limit, after } = input;
+	constructor(input?: ListUsersCommandInput) {
+		const { limit, after } = input ?? {};
 		super("/organization/users", undefined, stripUndefined({ limit, after }));
 	}
 }
@@ -1636,6 +1971,8 @@ export class RetrieveUserCommand extends Command<
 	User
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveUserCommandParamsSchema;
+	static responseSchema = userSchema;
 
 	constructor(input: RetrieveUserCommandInput) {
 		const { user_id } = input;
@@ -1650,6 +1987,9 @@ export class RetrieveUserCommand extends Command<
  */
 export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
 	public override method = "post" as const;
+	static bodySchema = modifyUserCommandBodySchema;
+	static paramsSchema = modifyUserCommandParamsSchema;
+	static responseSchema = userSchema;
 
 	constructor(input: ModifyUserCommandInput) {
 		const { user_id, ...body } = input;
@@ -1667,6 +2007,8 @@ export class DeleteUserCommand extends Command<
 	UserDeleteResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteUserCommandParamsSchema;
+	static responseSchema = userDeleteResponseSchema;
 
 	constructor(input: DeleteUserCommandInput) {
 		const { user_id } = input;
@@ -1685,9 +2027,11 @@ export class ListProjectsCommand extends Command<
 	ListProjectsCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = listProjectsCommandQuerySchema;
+	static responseSchema = projectListResponseSchema;
 
-	constructor(input: ListProjectsCommandInput) {
-		const { limit, after, include_archived } = input;
+	constructor(input?: ListProjectsCommandInput) {
+		const { limit, after, include_archived } = input ?? {};
 		super(
 			"/organization/projects",
 			undefined,
@@ -1707,6 +2051,8 @@ export class CreateProjectCommand extends Command<
 	Project
 > {
 	public override method = "post" as const;
+	static bodySchema = createProjectCommandBodySchema;
+	static responseSchema = projectSchema;
 
 	constructor(input: CreateProjectCommandInput) {
 		const body = input;
@@ -1724,6 +2070,8 @@ export class RetrieveProjectCommand extends Command<
 	Project
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveProjectCommandParamsSchema;
+	static responseSchema = projectSchema;
 
 	constructor(input: RetrieveProjectCommandInput) {
 		const { project_id } = input;
@@ -1741,6 +2089,9 @@ export class ModifyProjectCommand extends Command<
 	Project
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyProjectCommandBodySchema;
+	static paramsSchema = modifyProjectCommandParamsSchema;
+	static responseSchema = projectSchema;
 
 	constructor(input: ModifyProjectCommandInput) {
 		const { project_id, ...body } = input;
@@ -1762,6 +2113,8 @@ export class ArchiveProjectCommand extends Command<
 	Project
 > {
 	public override method = "post" as const;
+	static paramsSchema = archiveProjectCommandParamsSchema;
+	static responseSchema = projectSchema;
 
 	constructor(input: ArchiveProjectCommandInput) {
 		const { project_id } = input;
@@ -1780,6 +2133,9 @@ export class ListProjectUsersCommand extends Command<
 	ListProjectUsersCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listProjectUsersCommandParamsSchema;
+	static querySchema = listProjectUsersCommandQuerySchema;
+	static responseSchema = projectUserListResponseSchema;
 
 	constructor(input: ListProjectUsersCommandInput) {
 		const { project_id, limit, after } = input;
@@ -1802,6 +2158,9 @@ export class CreateProjectUserCommand extends Command<
 	ProjectUser
 > {
 	public override method = "post" as const;
+	static bodySchema = createProjectUserCommandBodySchema;
+	static paramsSchema = createProjectUserCommandParamsSchema;
+	static responseSchema = projectUserSchema;
 
 	constructor(input: CreateProjectUserCommandInput) {
 		const { project_id, ...body } = input;
@@ -1822,6 +2181,8 @@ export class RetrieveProjectUserCommand extends Command<
 	ProjectUser
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveProjectUserCommandParamsSchema;
+	static responseSchema = projectUserSchema;
 
 	constructor(input: RetrieveProjectUserCommandInput) {
 		const { project_id, user_id } = input;
@@ -1839,6 +2200,9 @@ export class ModifyProjectUserCommand extends Command<
 	ProjectUser
 > {
 	public override method = "post" as const;
+	static bodySchema = modifyProjectUserCommandBodySchema;
+	static paramsSchema = modifyProjectUserCommandParamsSchema;
+	static responseSchema = projectUserSchema;
 
 	constructor(input: ModifyProjectUserCommandInput) {
 		const { project_id, user_id, ...body } = input;
@@ -1859,6 +2223,8 @@ export class DeleteProjectUserCommand extends Command<
 	ProjectUserDeleteResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteProjectUserCommandParamsSchema;
+	static responseSchema = projectUserDeleteResponseSchema;
 
 	constructor(input: DeleteProjectUserCommandInput) {
 		const { project_id, user_id } = input;
@@ -1877,6 +2243,9 @@ export class ListProjectServiceAccountsCommand extends Command<
 	ListProjectServiceAccountsCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listProjectServiceAccountsCommandParamsSchema;
+	static querySchema = listProjectServiceAccountsCommandQuerySchema;
+	static responseSchema = projectServiceAccountListResponseSchema;
 
 	constructor(input: ListProjectServiceAccountsCommandInput) {
 		const { project_id, limit, after } = input;
@@ -1899,6 +2268,9 @@ export class CreateProjectServiceAccountCommand extends Command<
 	ProjectServiceAccountCreateResponse
 > {
 	public override method = "post" as const;
+	static bodySchema = createProjectServiceAccountCommandBodySchema;
+	static paramsSchema = createProjectServiceAccountCommandParamsSchema;
+	static responseSchema = projectServiceAccountCreateResponseSchema;
 
 	constructor(input: CreateProjectServiceAccountCommandInput) {
 		const { project_id, ...body } = input;
@@ -1919,6 +2291,8 @@ export class RetrieveProjectServiceAccountCommand extends Command<
 	ProjectServiceAccount
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveProjectServiceAccountCommandParamsSchema;
+	static responseSchema = projectServiceAccountSchema;
 
 	constructor(input: RetrieveProjectServiceAccountCommandInput) {
 		const { project_id, service_account_id } = input;
@@ -1938,6 +2312,8 @@ export class DeleteProjectServiceAccountCommand extends Command<
 	ProjectServiceAccountDeleteResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteProjectServiceAccountCommandParamsSchema;
+	static responseSchema = projectServiceAccountDeleteResponseSchema;
 
 	constructor(input: DeleteProjectServiceAccountCommandInput) {
 		const { project_id, service_account_id } = input;
@@ -1958,6 +2334,9 @@ export class ListProjectApiKeysCommand extends Command<
 	ListProjectApiKeysCommandQuery
 > {
 	public override method = "get" as const;
+	static paramsSchema = listProjectApiKeysCommandParamsSchema;
+	static querySchema = listProjectApiKeysCommandQuerySchema;
+	static responseSchema = projectApiKeyListResponseSchema;
 
 	constructor(input: ListProjectApiKeysCommandInput) {
 		const { project_id, limit, after } = input;
@@ -1979,6 +2358,8 @@ export class RetrieveProjectApiKeyCommand extends Command<
 	ProjectApiKey
 > {
 	public override method = "get" as const;
+	static paramsSchema = retrieveProjectApiKeyCommandParamsSchema;
+	static responseSchema = projectApiKeySchema;
 
 	constructor(input: RetrieveProjectApiKeyCommandInput) {
 		const { project_id, key_id } = input;
@@ -1996,6 +2377,8 @@ export class DeleteProjectApiKeyCommand extends Command<
 	ProjectApiKeyDeleteResponse
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deleteProjectApiKeyCommandParamsSchema;
+	static responseSchema = projectApiKeyDeleteResponseSchema;
 
 	constructor(input: DeleteProjectApiKeyCommandInput) {
 		const { project_id, key_id } = input;

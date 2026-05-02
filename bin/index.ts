@@ -25,6 +25,11 @@ const cliArgs = await yargs(hideBin(process.argv))
 				coerce(arg: string[] | string): string[] {
 					return Array.isArray(arg) ? arg : [arg];
 				},
+			})
+			.option("exact-only", {
+				type: "boolean",
+				description: "Only emit exact schemas, skip coerced variants",
+				default: false,
 			});
 	})
 	.help().argv;
@@ -33,4 +38,5 @@ await build(
 	join(process.cwd(), String(cliArgs.i)),
 	join(process.cwd(), String(cliArgs.o)),
 	cliArgs.t as Array<string>,
+	{ exactOnly: Boolean(cliArgs.exactOnly) },
 );

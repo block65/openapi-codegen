@@ -1,11 +1,12 @@
 import { writeFile } from "node:fs/promises";
 import type { oas31 } from "openapi3-ts";
-import { processOpenApiDocument } from "./process-document.ts";
+import { type CodegenOptions, processOpenApiDocument } from "./process-document.ts";
 
 export async function build(
 	inputFile: string,
 	outputDir: string,
 	tags?: string[],
+	options?: CodegenOptions,
 ) {
 	const apischema = (await import(inputFile, {
 		with: { type: "json" },
@@ -28,7 +29,7 @@ export async function build(
 		valibotFile,
 		honoValibotFile,
 		enumsFile,
-	} = await processOpenApiDocument(outputDir, apischema.default, tags);
+	} = await processOpenApiDocument(outputDir, apischema.default, tags, options);
 
 	const files = [
 		commandsFile,

@@ -3,19 +3,26 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-23T14:04:54.067Z
+ * Generated on 2026-05-02T05:45:07.106Z
  *
  */
 /** eslint-disable max-classes */
-import { Command, jsonStringify, stripUndefined } from "@block65/rest-client";
+import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type {
-	AddPetCommandInput,
-	DeletePetCommandInput,
-	FindPetByIdCommandInput,
-	FindPetsCommandInput,
 	FindPetsCommandQuery,
+	FindPetsCommandInput,
 	Pet,
+	AddPetCommandInput,
+	FindPetByIdCommandInput,
+	DeletePetCommandInput,
 } from "./types.js";
+import {
+	addPetCommandBodySchema,
+	deletePetCommandParamsSchema,
+	findPetByIdCommandParamsSchema,
+	findPetsCommandQuerySchema,
+	petSchema,
+} from "./valibot.js";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated
@@ -61,6 +68,8 @@ export class FindPetsCommand extends Command<
 	FindPetsCommandQuery
 > {
 	public override method = "get" as const;
+	static querySchema = findPetsCommandQuerySchema;
+	static responseSchema = petSchema;
 
 	constructor(input?: FindPetsCommandInput) {
 		const { tags, limit } = input ?? {};
@@ -74,6 +83,8 @@ export class FindPetsCommand extends Command<
  */
 export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
 	public override method = "post" as const;
+	static bodySchema = addPetCommandBodySchema;
+	static responseSchema = petSchema;
 
 	constructor(input: AddPetCommandInput) {
 		const body = input;
@@ -88,6 +99,8 @@ export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
  */
 export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
 	public override method = "get" as const;
+	static paramsSchema = findPetByIdCommandParamsSchema;
+	static responseSchema = petSchema;
 
 	constructor(input: FindPetByIdCommandInput) {
 		const { id } = input;
@@ -104,6 +117,7 @@ export class DeletePetCommand extends Command<
 	undefined
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deletePetCommandParamsSchema;
 
 	constructor(input: DeletePetCommandInput) {
 		const { id } = input;

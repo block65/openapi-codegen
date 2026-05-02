@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:16:20.373Z
+ * Generated on 2026-05-02T05:45:49.139Z
  *
  */
 import type { Jsonifiable } from "type-fest";
@@ -8540,6 +8540,10 @@ export type ImageBuildCommandQuery = {
 	outputs?: string | undefined;
 	version?: "1" | "2";
 };
+export type ImageBuildCommandHeader = {
+	"content-type"?: "application/x-tar";
+	"x-registry-config"?: string;
+};
 type ImageBuildCommandBodyApplicationOctetStream = NonNullable<
 	RequestInit["body"]
 >;
@@ -8566,6 +8570,9 @@ export type ImageCreateCommandQuery = {
 	message?: string | undefined;
 	changes?: readonly string[] | undefined;
 	platform?: string | undefined;
+};
+export type ImageCreateCommandHeader = {
+	"x-registry-auth"?: string;
 };
 type ImageCreateCommandBodyTextPlain = NonNullable<RequestInit["body"]>;
 type ImageCreateCommandBodyApplicationOctetStream = NonNullable<
@@ -9011,6 +9018,9 @@ export type ImageHistoryCommandOutput = readonly {
 }[];
 export type ImagePushCommandQuery = {
 	tag?: string | undefined;
+};
+export type ImagePushCommandHeader = {
+	"x-registry-auth": string;
 };
 export type ImagePushCommandParams = {
 	name: string;
@@ -11763,6 +11773,9 @@ export type PluginPullCommandQuery = {
 	remote: string;
 	name?: string | undefined;
 };
+export type PluginPullCommandHeader = {
+	"x-registry-auth"?: string;
+};
 type PluginPullJsonBody = readonly {
 	Name?: string;
 	Description?: string;
@@ -12009,6 +12022,9 @@ export type PluginDisableCommandInput = PluginDisableCommandParams &
 	PluginDisableCommandQuery;
 export type PluginUpgradeCommandQuery = {
 	remote: string;
+};
+export type PluginUpgradeCommandHeader = {
+	"x-registry-auth"?: string;
 };
 type PluginUpgradeJsonBody = readonly {
 	Name?: string;
@@ -13273,6 +13289,9 @@ export type ServiceListCommandOutput = readonly {
 		LastExecution?: string;
 	};
 }[];
+export type ServiceCreateCommandHeader = {
+	"x-registry-auth"?: string;
+};
 type ServiceCreateJsonBody = {
 	Name?: string;
 	Labels?: Record<
@@ -14206,6 +14225,9 @@ export type ServiceUpdateCommandQuery = {
 	version: `${number}`;
 	registryAuthFrom?: "spec" | "previous-spec";
 	rollback?: string | undefined;
+};
+export type ServiceUpdateCommandHeader = {
+	"x-registry-auth"?: string;
 };
 type ServiceUpdateJsonBody = {
 	Name?: string;

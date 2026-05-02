@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-03-17T13:16:20.373Z
+ * Generated on 2026-05-02T05:45:49.139Z
  *
  */
 import {
@@ -334,7 +334,6 @@ type AllOutputs =
 	| TaskInspectCommandOutput
 	| TaskListCommandOutput
 	| undefined
-	| unknown
 	| VolumeCreateCommandOutput
 	| VolumeInspectCommandOutput
 	| VolumeListCommandOutput

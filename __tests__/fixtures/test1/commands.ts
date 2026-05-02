@@ -3,43 +3,80 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-04-23T14:04:50.561Z
+ * Generated on 2026-05-02T05:45:09.114Z
  *
  */
 /** eslint-disable max-classes */
 import { Command, jsonStringify } from "@block65/rest-client";
 import type {
-	BillingAccount,
-	BillingAccountList,
-	BillingAccountPortal,
-	BillingSubscriptionLro,
-	BillingSubscriptions,
-	CancelSubscriptionCommandInput,
-	CreateBillingAccountCommandInput,
-	CreateBillingSubscriptionCommandInput,
-	CreatePaymentMethodCommandInput,
-	DeletePaymentMethodCommandInput,
-	GetBillingAccountCommandInput,
-	GetBillingAccountPortalCommandInput,
-	GetOperationCommandInput,
-	GetPaymentMethodCommandInput,
-	GetPaymentMethodFromStripeCommandInput,
 	ImportBillingDataCommandHeader,
 	ImportBillingDataCommandInput,
-	LinkBillingAccountCommandInput,
-	ListBillingAccountsCommandInput,
-	ListBillingSubscriptionsCommandInput,
-	ListPaymentMethodsCommandInput,
 	LongRunningOperation,
-	PaymentMethod,
-	PaymentMethodDeletedLro,
-	PaymentMethodIntendedLro,
-	PaymentMethods,
+	GetOperationCommandInput,
+	ListBillingAccountsCommandInput,
+	BillingAccountList,
+	CreateBillingAccountCommandInput,
+	BillingAccount,
+	GetBillingAccountCommandInput,
 	UpdateBillingAccountCommandInput,
-	UpdateBillingSubscriptionCommandInput,
-	UpdateBillingSubscriptionPromoCodeCommandInput,
+	GetBillingAccountPortalCommandInput,
+	BillingAccountPortal,
+	LinkBillingAccountCommandInput,
+	ListPaymentMethodsCommandInput,
+	PaymentMethods,
+	CreatePaymentMethodCommandInput,
+	PaymentMethodIntendedLro,
+	GetPaymentMethodFromStripeCommandInput,
+	PaymentMethod,
+	GetPaymentMethodCommandInput,
 	UpdatePaymentMethodCommandInput,
+	DeletePaymentMethodCommandInput,
+	PaymentMethodDeletedLro,
+	ListBillingSubscriptionsCommandInput,
+	BillingSubscriptions,
+	CreateBillingSubscriptionCommandInput,
+	BillingSubscriptionLro,
+	UpdateBillingSubscriptionCommandInput,
+	CancelSubscriptionCommandInput,
+	UpdateBillingSubscriptionPromoCodeCommandInput,
 } from "./types.js";
+import {
+	billingAccountListSchema,
+	billingAccountPortalSchema,
+	billingAccountSchema,
+	billingSubscriptionLroSchema,
+	billingSubscriptionsSchema,
+	cancelSubscriptionCommandParamsSchema,
+	createBillingAccountCommandBodySchema,
+	createBillingSubscriptionCommandBodySchema,
+	createBillingSubscriptionCommandParamsSchema,
+	createPaymentMethodCommandParamsSchema,
+	deletePaymentMethodCommandParamsSchema,
+	getBillingAccountCommandParamsSchema,
+	getBillingAccountPortalCommandBodySchema,
+	getBillingAccountPortalCommandParamsSchema,
+	getOperationCommandParamsSchema,
+	getPaymentMethodCommandParamsSchema,
+	getPaymentMethodFromStripeCommandParamsSchema,
+	importBillingDataCommandParamsSchema,
+	linkBillingAccountCommandBodySchema,
+	linkBillingAccountCommandParamsSchema,
+	listBillingSubscriptionsCommandParamsSchema,
+	listPaymentMethodsCommandParamsSchema,
+	longRunningOperationSchema,
+	paymentMethodDeletedLroSchema,
+	paymentMethodIntendedLroSchema,
+	paymentMethodSchema,
+	paymentMethodsSchema,
+	updateBillingAccountCommandBodySchema,
+	updateBillingAccountCommandParamsSchema,
+	updateBillingSubscriptionCommandBodySchema,
+	updateBillingSubscriptionCommandParamsSchema,
+	updateBillingSubscriptionPromoCodeCommandBodySchema,
+	updateBillingSubscriptionPromoCodeCommandParamsSchema,
+	updatePaymentMethodCommandBodySchema,
+	updatePaymentMethodCommandParamsSchema,
+} from "./valibot.js";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated
@@ -64,6 +101,8 @@ export class ImportBillingDataCommand extends Command<
 	ImportBillingDataCommandHeader
 > {
 	public override method = "post" as const;
+	static paramsSchema = importBillingDataCommandParamsSchema;
+	static responseSchema = longRunningOperationSchema;
 
 	constructor(
 		input: ImportBillingDataCommandInput,
@@ -88,6 +127,8 @@ export class GetOperationCommand extends Command<
 	LongRunningOperation
 > {
 	public override method = "get" as const;
+	static paramsSchema = getOperationCommandParamsSchema;
+	static responseSchema = longRunningOperationSchema;
 
 	constructor(input: GetOperationCommandInput) {
 		const { operationId } = input;
@@ -104,6 +145,7 @@ export class ListBillingAccountsCommand extends Command<
 	BillingAccountList
 > {
 	public override method = "get" as const;
+	static responseSchema = billingAccountListSchema;
 
 	constructor() {
 		super("/billing-accounts");
@@ -119,6 +161,8 @@ export class CreateBillingAccountCommand extends Command<
 	BillingAccount
 > {
 	public override method = "post" as const;
+	static bodySchema = createBillingAccountCommandBodySchema;
+	static responseSchema = billingAccountSchema;
 
 	constructor(input: CreateBillingAccountCommandInput) {
 		const body = input;
@@ -135,6 +179,8 @@ export class GetBillingAccountCommand extends Command<
 	BillingAccount
 > {
 	public override method = "get" as const;
+	static paramsSchema = getBillingAccountCommandParamsSchema;
+	static responseSchema = billingAccountSchema;
 
 	constructor(input: GetBillingAccountCommandInput) {
 		const { billingAccountId } = input;
@@ -151,6 +197,9 @@ export class UpdateBillingAccountCommand extends Command<
 	BillingAccount
 > {
 	public override method = "put" as const;
+	static bodySchema = updateBillingAccountCommandBodySchema;
+	static paramsSchema = updateBillingAccountCommandParamsSchema;
+	static responseSchema = billingAccountSchema;
 
 	constructor(input: UpdateBillingAccountCommandInput) {
 		const { billingAccountId, ...body } = input;
@@ -170,6 +219,9 @@ export class GetBillingAccountPortalCommand extends Command<
 	BillingAccountPortal
 > {
 	public override method = "post" as const;
+	static bodySchema = getBillingAccountPortalCommandBodySchema;
+	static paramsSchema = getBillingAccountPortalCommandParamsSchema;
+	static responseSchema = billingAccountPortalSchema;
 
 	constructor(input: GetBillingAccountPortalCommandInput) {
 		const { billingAccountId, ...body } = input;
@@ -189,6 +241,8 @@ export class LinkBillingAccountCommand extends Command<
 	unknown
 > {
 	public override method = "post" as const;
+	static bodySchema = linkBillingAccountCommandBodySchema;
+	static paramsSchema = linkBillingAccountCommandParamsSchema;
 
 	constructor(input: LinkBillingAccountCommandInput) {
 		const { billingAccountId, ...body } = input;
@@ -208,6 +262,8 @@ export class ListPaymentMethodsCommand extends Command<
 	PaymentMethods
 > {
 	public override method = "get" as const;
+	static paramsSchema = listPaymentMethodsCommandParamsSchema;
+	static responseSchema = paymentMethodsSchema;
 
 	constructor(input: ListPaymentMethodsCommandInput) {
 		const { billingAccountId } = input;
@@ -224,6 +280,8 @@ export class CreatePaymentMethodCommand extends Command<
 	PaymentMethodIntendedLro
 > {
 	public override method = "post" as const;
+	static paramsSchema = createPaymentMethodCommandParamsSchema;
+	static responseSchema = paymentMethodIntendedLroSchema;
 
 	constructor(input: CreatePaymentMethodCommandInput) {
 		const { billingAccountId } = input;
@@ -240,6 +298,8 @@ export class GetPaymentMethodFromStripeCommand extends Command<
 	PaymentMethod
 > {
 	public override method = "get" as const;
+	static paramsSchema = getPaymentMethodFromStripeCommandParamsSchema;
+	static responseSchema = paymentMethodSchema;
 
 	constructor(input: GetPaymentMethodFromStripeCommandInput) {
 		const { billingAccountId, stripePaymentMethodId } = input;
@@ -258,6 +318,8 @@ export class GetPaymentMethodCommand extends Command<
 	PaymentMethod
 > {
 	public override method = "get" as const;
+	static paramsSchema = getPaymentMethodCommandParamsSchema;
+	static responseSchema = paymentMethodSchema;
 
 	constructor(input: GetPaymentMethodCommandInput) {
 		const { billingAccountId, paymentMethodId } = input;
@@ -276,6 +338,8 @@ export class UpdatePaymentMethodCommand extends Command<
 	undefined
 > {
 	public override method = "put" as const;
+	static bodySchema = updatePaymentMethodCommandBodySchema;
+	static paramsSchema = updatePaymentMethodCommandParamsSchema;
 
 	constructor(input: UpdatePaymentMethodCommandInput) {
 		const { billingAccountId, paymentMethodId, ...body } = input;
@@ -295,6 +359,8 @@ export class DeletePaymentMethodCommand extends Command<
 	PaymentMethodDeletedLro
 > {
 	public override method = "delete" as const;
+	static paramsSchema = deletePaymentMethodCommandParamsSchema;
+	static responseSchema = paymentMethodDeletedLroSchema;
 
 	constructor(input: DeletePaymentMethodCommandInput) {
 		const { billingAccountId, paymentMethodId } = input;
@@ -313,6 +379,8 @@ export class ListBillingSubscriptionsCommand extends Command<
 	BillingSubscriptions
 > {
 	public override method = "get" as const;
+	static paramsSchema = listBillingSubscriptionsCommandParamsSchema;
+	static responseSchema = billingSubscriptionsSchema;
 
 	constructor(input: ListBillingSubscriptionsCommandInput) {
 		const { billingAccountId } = input;
@@ -329,6 +397,9 @@ export class CreateBillingSubscriptionCommand extends Command<
 	BillingSubscriptionLro
 > {
 	public override method = "post" as const;
+	static bodySchema = createBillingSubscriptionCommandBodySchema;
+	static paramsSchema = createBillingSubscriptionCommandParamsSchema;
+	static responseSchema = billingSubscriptionLroSchema;
 
 	constructor(input: CreateBillingSubscriptionCommandInput) {
 		const { billingAccountId, ...body } = input;
@@ -348,6 +419,8 @@ export class UpdateBillingSubscriptionCommand extends Command<
 	undefined
 > {
 	public override method = "put" as const;
+	static bodySchema = updateBillingSubscriptionCommandBodySchema;
+	static paramsSchema = updateBillingSubscriptionCommandParamsSchema;
 
 	constructor(input: UpdateBillingSubscriptionCommandInput) {
 		const { billingAccountId, subscriptionId, ...body } = input;
@@ -367,6 +440,7 @@ export class CancelSubscriptionCommand extends Command<
 	undefined
 > {
 	public override method = "delete" as const;
+	static paramsSchema = cancelSubscriptionCommandParamsSchema;
 
 	constructor(input: CancelSubscriptionCommandInput) {
 		const { billingAccountId, subscriptionId } = input;
@@ -385,6 +459,9 @@ export class UpdateBillingSubscriptionPromoCodeCommand extends Command<
 	BillingSubscriptionLro
 > {
 	public override method = "put" as const;
+	static bodySchema = updateBillingSubscriptionPromoCodeCommandBodySchema;
+	static paramsSchema = updateBillingSubscriptionPromoCodeCommandParamsSchema;
+	static responseSchema = billingSubscriptionLroSchema;
 
 	constructor(input: UpdateBillingSubscriptionPromoCodeCommandInput) {
 		const { billingAccountId, subscriptionId, ...body } = input;

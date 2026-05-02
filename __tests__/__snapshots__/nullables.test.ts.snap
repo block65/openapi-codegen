@@ -11,10 +11,14 @@ export type NullConst = null;
 exports[`const values 2`] = `
 "import * as v from "valibot";
 
-export const stringConstSchema = v.literal("hello");
-export const numberConstSchema = v.literal(42);
-export const booleanConstSchema = v.literal(true);
-export const nullConstSchema = v.null();
+export const exactStringConstSchema = v.literal("hello");
+export const stringConstSchema = exactStringConstSchema;
+export const exactNumberConstSchema = v.literal(42);
+export const numberConstSchema = exactNumberConstSchema;
+export const exactBooleanConstSchema = v.literal(true);
+export const booleanConstSchema = exactBooleanConstSchema;
+export const exactNullConstSchema = v.null();
+export const nullConstSchema = exactNullConstSchema;
 "
 `;
 
@@ -35,6 +39,7 @@ export type UploadDataCommandInput = UploadDataCommandParams;
 exports[`header parameters 2`] = `
 "import { Command } from "@block65/rest-client";
 import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.js";
+import { uploadDataCommandParamsSchema, uploadStatusSchema } from "./valibot.js";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated 
@@ -51,6 +56,8 @@ function encodePath(strings: TemplateStringsArray, ...values: string[]): string 
  */
 export class UploadDataCommand extends Command<UploadDataCommandInput, UploadStatus, never, UploadDataCommandHeader> {
     public override method = "post" as const;
+    static paramsSchema = uploadDataCommandParamsSchema;
+    static responseSchema = uploadStatusSchema;
 
     constructor(input: UploadDataCommandInput, headers: UploadDataCommandHeader) {
         const {uploadId } = input;
@@ -63,14 +70,23 @@ export class UploadDataCommand extends Command<UploadDataCommandInput, UploadSta
 exports[`header parameters 3`] = `
 "import * as v from "valibot";
 
-export const uploadStatusSchema = v.picklist(["pending", "complete"]);
-export const uploadDataCommandParamsSchema = v.strictObject({
+export const exactUploadStatusSchema = v.picklist(["pending", "complete"]);
+export const uploadStatusSchema = exactUploadStatusSchema;
+export const exactUploadDataCommandParamsSchema = v.strictObject({
         "uploadId": v.string()
+    });
+export const uploadDataCommandParamsSchema = v.strictObject({
+        "uploadId": v.pipe(v.string(), v.trim())
+    });
+export const exactUploadDataCommandHeaderSchema = v.object({
+        "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
+        "content-length": v.bigint(),
+        "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
     });
 export const uploadDataCommandHeaderSchema = v.object({
         "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
-        "content-length": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer()),
-        "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
+        "content-length": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]),
+        "x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid()))
     });
 "
 `;
@@ -79,7 +95,7 @@ exports[`header parameters 4`] = `
 "import { validator } from "hono/validator";
 import * as v from "valibot";
 import { PublicValibotHonoError } from "@block65/rest-client";
-import { uploadDataCommandParamsSchema } from "./valibot.js";
+import { exactUploadDataCommandParamsSchema } from "./valibot.js";
 
 function toPublicValibotHonoError(err: unknown): never {
 
@@ -92,7 +108,7 @@ function toPublicValibotHonoError(err: unknown): never {
 
 export const uploadData = [
         validator("param", (value) => {
-            return v.parseAsync(uploadDataCommandParamsSchema, value).catch(toPublicValibotHonoError);
+            return v.parseAsync(exactUploadDataCommandParamsSchema, value).catch(toPublicValibotHonoError);
         }),
     ] as const;
 "
@@ -106,7 +122,8 @@ exports[`nullables 1`] = `
 exports[`oneOf with type null generates v.null() 1`] = `
 "import * as v from "valibot";
 
-export const nullableImageSchema = v.union([v.string(), v.null()]);
+export const exactNullableImageSchema = v.union([v.string(), v.null()]);
+export const nullableImageSchema = v.union([v.pipe(v.string(), v.trim()), v.null()]);
 "
 `;
 
@@ -127,14 +144,23 @@ export type ListFilesCommandInput = ListFilesCommandQuery;
 exports[`query and header integer params coerce strings to numbers 2`] = `
 "import * as v from "valibot";
 
-export const dummySchema = v.string();
-export const expireTimeSchema = v.pipe(v.number(), v.integer(), v.minValue(0));
+export const exactDummySchema = v.string();
+export const dummySchema = v.pipe(v.string(), v.trim());
+export const exactExpireTimeSchema = v.pipe(v.bigint(), v.minValue(BigInt(0)));
+export const expireTimeSchema = v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]);
+export const exactListFilesCommandQuerySchema = v.strictObject({
+        "exp": v.pipe(v.bigint(), v.minValue(BigInt(0))),
+        "limit": v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
+    });
 export const listFilesCommandQuerySchema = v.strictObject({
-        "exp": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(0)),
-        "limit": v.exactOptional(v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
+        "exp": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]),
+        "limit": v.optional(v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))]))
+    });
+export const exactListFilesCommandHeaderSchema = v.object({
+        "x-rate-limit": v.pipe(v.number(), v.integer(), v.minValue(0))
     });
 export const listFilesCommandHeaderSchema = v.object({
-        "x-rate-limit": v.pipe(v.string(), v.digits(), v.transform((n) => Number.parseInt(n, 10)), v.number(), v.integer(), v.minValue(0))
+        "x-rate-limit": v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(0))), v.pipe(v.number(), v.integer(), v.minValue(0))])
     });
 "
 `;
@@ -150,10 +176,14 @@ export type MultiType = string | number;
 exports[`top-level type array with null 2`] = `
 "import * as v from "valibot";
 
-export const nullableStringSchema = v.nullable(v.string());
-export const nullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));
-export const nullableIntegerSchema = v.nullable(v.pipe(v.number(), v.integer()));
-export const multiTypeSchema = v.union([v.string(), v.number()]);
+export const exactNullableStringSchema = v.nullable(v.string());
+export const nullableStringSchema = exactNullableStringSchema;
+export const exactNullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));
+export const nullableStringEnumSchema = exactNullableStringEnumSchema;
+export const exactNullableIntegerSchema = v.nullable(v.pipe(v.number(), v.integer()));
+export const nullableIntegerSchema = exactNullableIntegerSchema;
+export const exactMultiTypeSchema = v.union([v.string(), v.number()]);
+export const multiTypeSchema = exactMultiTypeSchema;
 "
 `;
 

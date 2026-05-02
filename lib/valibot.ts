@@ -13,6 +13,13 @@ import type { Primitive } from "type-fest";
 import type * as v from "valibot";
 import { wordWrap } from "./utils.ts";
 
+type SchemaMode = "exact" | "coerced";
+
+interface ValidatorEntry {
+	exact: string;
+	coerced: string;
+}
+
 /**
  * Helper to generate v.name(...args) using ts-morph Writers
  */
@@ -73,12 +80,49 @@ function maybePipe(
 	return valid.length > 0 ? vcall("pipe", base, ...valid) : base;
 }
 
-export function schemaToValidator(
-	validators: Map<string, string>,
+const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
+
+function schemaNeedsCoercion(
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+): boolean {
+	if ("$ref" in schema) return false;
+	if ("const" in schema) return false;
+	if (schema.type === "integer" && schema.format === "int64") return true;
+	if (schema.type === "string" && !schema.enum && !schema.pattern &&
+		(!schema.format || !noTrimFormats.has(schema.format))) return true;
+	if (schema.properties) {
+		const required = new Set(schema.required ?? []);
+		const hasOptional = Object.keys(schema.properties).some((k) => !required.has(k));
+		if (hasOptional) return true;
+		return Object.values(schema.properties).some((s) => schemaNeedsCoercion(s));
+	}
+	if (schema.items && !("$ref" in schema.items)) {
+		return schemaNeedsCoercion(schema.items);
+	}
+	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
+	if (combinator) {
+		return combinator.some((s) => schemaNeedsCoercion(s));
+	}
+	return false;
+}
+
+function resolveRef(
+	validators: Map<string, ValidatorEntry>,
+	ref: string,
+	mode: SchemaMode,
+): string | WriterFunction {
+	const entry = validators.get(ref);
+	if (!entry) return vcall("unknown");
+	return mode === "exact" ? entry.exact : entry.coerced;
+}
+
+export function schemaToValidator(
+	validators: Map<string, ValidatorEntry>,
+	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	mode: SchemaMode,
 ): WriterFunction | string {
 	if ("$ref" in schema) {
-		return validators.get(schema.$ref) ?? vcall("unknown");
+		return resolveRef(validators, schema.$ref, mode);
 	}
 
 	const isNullable = schemaIsNullable(schema);
@@ -110,19 +154,27 @@ export function schemaToValidator(
 
 		if (nonNullTypes.length === 1 && singleType) {
 			return maybeNullable(
-				schemaToValidator(validators, {
-					...schema,
-					type: singleType,
-				} satisfies typeof schema),
+				schemaToValidator(
+					validators,
+					{
+						...schema,
+						type: singleType,
+					} satisfies typeof schema,
+					mode,
+				),
 				isNullable,
 			);
 		}
 
 		const variants = nonNullTypes.map((t) =>
-			schemaToValidator(validators, {
-				...schema,
-				type: t,
-			} satisfies typeof schema),
+			schemaToValidator(
+				validators,
+				{
+					...schema,
+					type: t,
+				} satisfies typeof schema,
+				mode,
+			),
 		);
 		return maybeNullable(
 			variants.length > 0 ? vcall("union", variants) : vcall("unknown"),
@@ -131,6 +183,11 @@ export function schemaToValidator(
 	}
 
 	if (schema.type === "string") {
+		const shouldTrim =
+			mode === "coerced" &&
+			!schema.pattern &&
+			(!schema.format || !noTrimFormats.has(schema.format));
+
 		if (schema.enum) {
 			return maybeNullable(
 				vcall(
@@ -141,16 +198,12 @@ export function schemaToValidator(
 			);
 		}
 
-		// NOTE: these should be ordered so the most helpful validations come first
-		// (ie digits before maxLen) and also it must ensure that valibot type check
-		// is not violated
 		return maybeNullable(
 			maybePipe(
 				vcall("string"),
+				shouldTrim ? vcall("trim") : undefined,
 				schema.format === "email" ? vcall("email") : undefined,
 				schema.format === "uuid" ? vcall("uuid") : undefined,
-				schema.format === "int32" ? vcall("digits") : undefined,
-				schema.format === "int64" ? vcall("digits") : undefined,
 
 				schema.minLength !== undefined
 					? vcall("minLength", schema.minLength)
@@ -161,31 +214,44 @@ export function schemaToValidator(
 				schema.pattern
 					? vcall("regex", `new RegExp(${JSON.stringify(schema.pattern)})`)
 					: undefined,
-
-				...(schema.format?.startsWith("int")
-					? [
-							"v.transform((n) => Number.parseInt(n, 10))",
-							vcall("number"),
-							vcall("integer"),
-							schema.minimum !== undefined
-								? vcall("minValue", schema.minimum)
-								: undefined,
-							schema.maximum !== undefined
-								? vcall("maxValue", schema.maximum)
-								: undefined,
-						]
-					: []),
 				typescriptHintSchema,
 			),
 			isNullable,
 		);
 	}
 
+	if (schema.type === "integer" && schema.format === "int64") {
+		const exactValidator = maybePipe(
+			vcall("bigint"),
+			schema.minimum !== undefined
+				? vcall("minValue", `BigInt(${schema.minimum})`)
+				: undefined,
+			schema.maximum !== undefined
+				? vcall("maxValue", `BigInt(${schema.maximum})`)
+				: undefined,
+			typescriptHintSchema,
+		);
+
+		if (mode === "exact") {
+			return maybeNullable(exactValidator, isNullable);
+		}
+
+		return maybeNullable(
+			vcall("union", [
+				vcall("pipe", vcall("string"), vcall("decimal"), vcall("toBigint"), exactValidator),
+				vcall("pipe", vcall("number"), vcall("integer"), vcall("toBigint"), exactValidator),
+				exactValidator,
+			]),
+			isNullable,
+		);
+	}
+
 	if (schema.type === "number" || schema.type === "integer") {
+		const isInteger = schema.type === "integer";
 		return maybeNullable(
 			maybePipe(
 				vcall("number"),
-				schema.type.startsWith("int") ? vcall("integer") : undefined,
+				isInteger ? vcall("integer") : undefined,
 				schema.minimum !== undefined
 					? vcall("minValue", schema.minimum)
 					: undefined,
@@ -204,7 +270,7 @@ export function schemaToValidator(
 
 	if (schema.type === "array") {
 		const items = schema.items
-			? schemaToValidator(validators, schema.items)
+			? schemaToValidator(validators, schema.items, mode)
 			: vcall("unknown");
 
 		return maybeNullable(
@@ -223,7 +289,9 @@ export function schemaToValidator(
 
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
 	if (combinator) {
-		const variants = combinator.map((s) => schemaToValidator(validators, s));
+		const variants = combinator.map((s) =>
+			schemaToValidator(validators, s, mode),
+		);
 		const type = schema.allOf ? "intersect" : "union";
 
 		if (schema.oneOf && schema.discriminator?.propertyName) {
@@ -249,16 +317,17 @@ export function schemaToValidator(
 		}
 
 		const requiredProps = new Set(schema.required ?? []);
+		const optionalWrapper = mode === "exact" ? "exactOptional" : "optional";
 
 		const strictObjectWriter = (writer: CodeBlockWriter) => {
 			writer.writeLine("{");
 			writer.indent(() => {
 				Object.entries(props).forEach(([name, s]) => {
 					const isRequired = requiredProps.has(name);
-					const validator = schemaToValidator(validators, s);
+					const validator = schemaToValidator(validators, s, mode);
 					const finalValidator = isRequired
 						? validator
-						: vcall("exactOptional", validator);
+						: vcall(optionalWrapper, validator);
 
 					// write comment
 					if (!("$ref" in s) && s.description) {
@@ -306,58 +375,133 @@ export function createValibotFile(project: Project, outputDir: string) {
 }
 
 export function registerValidatorFromSchema(
-	validators: Map<string, string>,
+	validators: Map<string, ValidatorEntry>,
 	valibotFile: SourceFile,
 	schemaName: string,
 	schemaObject: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	exactOnly?: boolean,
 ) {
-	const validatorName = camelcase([schemaName, "schema"]);
+	const exactName = camelcase(["exact", schemaName, "schema"]);
+	const coercedName = camelcase([schemaName, "schema"]);
 
-	validators.set(`#/components/schemas/${schemaName}`, validatorName);
+	validators.set(`#/components/schemas/${schemaName}`, {
+		exact: exactName,
+		coerced: coercedName,
+	});
 
+	const docs =
+		!("$ref" in schemaObject) && schemaObject.description
+			? [
+					{
+						description: wordWrap(schemaObject.description),
+						tags: [
+							...(schemaObject.deprecated
+								? [
+										{
+											tagName: "deprecated",
+										},
+									]
+								: []),
+							...(schemaObject.title
+								? [
+										{
+											tagName: "title",
+											text: schemaObject.title,
+										},
+									]
+								: []),
+							...(schemaObject.example
+								? [
+										{
+											tagName: "example",
+											text: JSON.stringify(schemaObject.example, null, 2),
+										},
+									]
+								: []),
+						].filter(Boolean),
+					},
+				]
+			: [];
+
+	// Exact schema — always emitted
 	valibotFile.addVariableStatement({
 		isExported: true,
 		declarationKind: VariableDeclarationKind.Const,
-		docs:
-			!("$ref" in schemaObject) && schemaObject.description
-				? [
-						{
-							description: wordWrap(schemaObject.description),
-							tags: [
-								...(schemaObject.deprecated
-									? [
-											{
-												tagName: "deprecated",
-											},
-										]
-									: []),
-								...(schemaObject.title
-									? [
-											{
-												tagName: "title",
-												text: schemaObject.title,
-											},
-										]
-									: []),
-								...(schemaObject.example
-									? [
-											{
-												tagName: "example",
-												text: JSON.stringify(schemaObject.example, null, 2),
-											},
-										]
-									: []),
-							].filter(Boolean),
-						},
-					]
-				: [],
+		docs,
 		declarations: [
 			{
-				name: validatorName,
-				initializer: schemaToValidator(validators, schemaObject),
+				name: exactName,
+				initializer: schemaToValidator(validators, schemaObject, "exact"),
 			},
 		],
 	});
+
+	// Coerced schema — unless --exact-only
+	if (!exactOnly) {
+		if (schemaNeedsCoercion(schemaObject)) {
+			valibotFile.addVariableStatement({
+				isExported: true,
+				declarationKind: VariableDeclarationKind.Const,
+				declarations: [
+					{
+						name: coercedName,
+						initializer: schemaToValidator(validators, schemaObject, "coerced"),
+					},
+				],
+			});
+		} else {
+			valibotFile.addVariableStatement({
+				isExported: true,
+				declarationKind: VariableDeclarationKind.Const,
+				declarations: [
+					{
+						name: coercedName,
+						initializer: exactName,
+					},
+				],
+			});
+		}
+	}
+}
+
+/**
+ * Wraps a validator with string-to-native coercion for HTTP params (query/header).
+ * These always arrive as strings on the wire, so coercion is justified.
+ * For non-numeric types, returns the validator unchanged.
+ */
+function asHttpParamValidator(
+	validatorSchemas: Map<string, ValidatorEntry>,
+	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+): WriterFunction | string {
+	if ("$ref" in schema) {
+		return resolveRef(validatorSchemas, schema.$ref, "coerced");
+	}
+
+	const exactValidator = schemaToValidator(validatorSchemas, schema, "exact");
+
+	if (schema.type === "integer" && schema.format === "int64") {
+		return vcall("union", [
+			vcall("pipe", vcall("string"), vcall("decimal"), vcall("toBigint"), exactValidator),
+			vcall("pipe", vcall("number"), vcall("integer"), vcall("toBigint"), exactValidator),
+			exactValidator,
+		]);
+	}
+
+	if (schema.type === "integer") {
+		return vcall("union", [
+			vcall("pipe", vcall("string"), vcall("decimal"), vcall("toNumber"), exactValidator),
+			exactValidator,
+		]);
+	}
+
+	if (schema.type === "number") {
+		return vcall("union", [
+			vcall("pipe", vcall("string"), vcall("decimal"), vcall("toNumber"), exactValidator),
+			exactValidator,
+		]);
+	}
+
+	return schemaToValidator(validatorSchemas, schema, "coerced");
 }
 
 /**
@@ -365,7 +509,7 @@ export function registerValidatorFromSchema(
  * valibot file. Returns the schema names for use in middleware generation.
  */
 export function createValidatorForOperationInput(
-	validatorSchemas: Map<string, string>,
+	validatorSchemas: Map<string, ValidatorEntry>,
 	valibotFile: SourceFile,
 	commandName: string,
 	input: {
@@ -374,47 +518,45 @@ export function createValidatorForOperationInput(
 		query: oas30.ParameterObject[];
 		header: oas30.ParameterObject[];
 	},
-): { json?: string; param?: string; query?: string; header?: string } {
-	const schemas: {
-		json?: string;
-		param?: string;
-		query?: string;
-		header?: string;
-	} = {};
+	exactOnly?: boolean,
+): {
+	exact: { json?: string; param?: string; query?: string; header?: string };
+	coerced: { json?: string; param?: string; query?: string; header?: string };
+} {
+	const exact: { json?: string; param?: string; query?: string; header?: string } = {};
+	const coerced: { json?: string; param?: string; query?: string; header?: string } = {};
 
 	// 1. Generate the JSON Body Schema
 	if (input.body) {
-		const name = camelcase([commandName, "body", "schema"]);
-		schemas.json = name;
+		const exactName = camelcase(["exact", commandName, "body", "schema"]);
+		const coercedName = camelcase([commandName, "body", "schema"]);
+		exact.json = exactName;
+		coerced.json = coercedName;
+
 		valibotFile.addVariableStatement({
 			isExported: true,
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
 				{
-					name,
-					initializer: schemaToValidator(validatorSchemas, input.body),
+					name: exactName,
+					initializer: schemaToValidator(validatorSchemas, input.body, "exact"),
 				},
 			],
 		});
-	}
 
-	// HTTP params (query, header) arrive as strings. When the schema
-	// declares type: "integer" or "number", rewrite it to type: "string"
-	// with an int format so the existing string→number coercion pipeline
-	// handles parsing and validation.
-	const asHttpParamSchema = (
-		schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
-	): oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject => {
-		if ("$ref" in schema) return schema;
-		if (schema.type === "integer" || schema.type === "number") {
-			return {
-				...schema,
-				type: "string",
-				format: schema.type === "integer" ? "int64" : "int64",
-			};
+		if (!exactOnly) {
+			valibotFile.addVariableStatement({
+				isExported: true,
+				declarationKind: VariableDeclarationKind.Const,
+				declarations: [
+					{
+						name: coercedName,
+						initializer: schemaToValidator(validatorSchemas, input.body, "coerced"),
+					},
+				],
+			});
 		}
-		return schema;
-	};
+	}
 
 	// 2. Helper for Params/Query (Strict Objects)
 	const addParams = (
@@ -422,38 +564,56 @@ export function createValidatorForOperationInput(
 		list: oas30.ParameterObject[],
 	) => {
 		if (list.length === 0) return;
-		const name = camelcase([commandName, type, "schema"]);
-		schemas[type === "params" ? "param" : "query"] = name;
+		const schemaKey = type === "params" ? "param" : "query";
 
-		const coerce = type === "query";
+		const exactName = camelcase(["exact", commandName, type, "schema"]);
+		const coercedName = camelcase([commandName, type, "schema"]);
+		exact[schemaKey] = exactName;
+		coerced[schemaKey] = coercedName;
 
-		const propertyMap = Object.fromEntries(
-			list.map((p) => {
-				const paramSchema = coerce
-					? asHttpParamSchema(p.schema ?? { type: "string" })
-					: (p.schema ?? { type: "string" });
-				return [
-					JSON.stringify(p.name),
-					p.required
-						? schemaToValidator(validatorSchemas, paramSchema)
-						: vcall(
-								"exactOptional",
-								schemaToValidator(validatorSchemas, paramSchema),
-							),
-				];
-			}),
-		);
+		const isHttpParam = type === "query";
+
+		const buildPropertyMap = (mode: SchemaMode) =>
+			Object.fromEntries(
+				list.map((p) => {
+					const paramSchema = p.schema ?? { type: "string" as const };
+					const optionalWrapper = mode === "exact" ? "exactOptional" : "optional";
+					const validator =
+						mode === "coerced" && isHttpParam
+							? asHttpParamValidator(validatorSchemas, paramSchema)
+							: schemaToValidator(validatorSchemas, paramSchema, mode);
+					return [
+						JSON.stringify(p.name),
+						p.required
+							? validator
+							: vcall(optionalWrapper, validator),
+					];
+				}),
+			);
 
 		valibotFile.addVariableStatement({
 			isExported: true,
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
 				{
-					name,
-					initializer: vcall("strictObject", Writers.object(propertyMap)),
+					name: exactName,
+					initializer: vcall("strictObject", Writers.object(buildPropertyMap("exact"))),
 				},
 			],
 		});
+
+		if (!exactOnly) {
+			valibotFile.addVariableStatement({
+				isExported: true,
+				declarationKind: VariableDeclarationKind.Const,
+				declarations: [
+					{
+						name: coercedName,
+						initializer: vcall("strictObject", Writers.object(buildPropertyMap("coerced"))),
+					},
+				],
+			});
+		}
 	};
 
 	addParams("params", input.params);
@@ -461,37 +621,53 @@ export function createValidatorForOperationInput(
 
 	// 3. Header schema (non-strict to allow extra HTTP headers)
 	if (input.header.length > 0) {
-		const name = camelcase([commandName, "header", "schema"]);
-		schemas.header = name;
+		const exactName = camelcase(["exact", commandName, "header", "schema"]);
+		const coercedName = camelcase([commandName, "header", "schema"]);
+		exact.header = exactName;
+		coerced.header = coercedName;
 
-		const propertyMap = Object.fromEntries(
-			input.header.map((p) => {
-				const paramSchema = asHttpParamSchema(
-					p.schema ?? { type: "string" },
-				);
-				return [
-					JSON.stringify(p.name.toLowerCase()),
-					p.required
-						? schemaToValidator(validatorSchemas, paramSchema)
-						: vcall(
-								"exactOptional",
-								schemaToValidator(validatorSchemas, paramSchema),
-							),
-				];
-			}),
-		);
+		const buildPropertyMap = (mode: SchemaMode) =>
+			Object.fromEntries(
+				input.header.map((p) => {
+					const paramSchema = p.schema ?? { type: "string" as const };
+					const optionalWrapper = mode === "exact" ? "exactOptional" : "optional";
+					const validator =
+						mode === "coerced"
+							? asHttpParamValidator(validatorSchemas, paramSchema)
+							: schemaToValidator(validatorSchemas, paramSchema, mode);
+					return [
+						JSON.stringify(p.name.toLowerCase()),
+						p.required
+							? validator
+							: vcall(optionalWrapper, validator),
+					];
+				}),
+			);
 
 		valibotFile.addVariableStatement({
 			isExported: true,
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
 				{
-					name,
-					initializer: vcall("object", Writers.object(propertyMap)),
+					name: exactName,
+					initializer: vcall("object", Writers.object(buildPropertyMap("exact"))),
 				},
 			],
 		});
+
+		if (!exactOnly) {
+			valibotFile.addVariableStatement({
+				isExported: true,
+				declarationKind: VariableDeclarationKind.Const,
+				declarations: [
+					{
+						name: coercedName,
+						initializer: vcall("object", Writers.object(buildPropertyMap("coerced"))),
+					},
+				],
+			});
+		}
 	}
 
-	return schemas;
+	return { exact, coerced };
 }
