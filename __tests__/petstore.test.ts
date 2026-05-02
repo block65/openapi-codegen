@@ -29,7 +29,13 @@ describe("Petstore", () => {
 		const petStoreClient = new SwaggerPetstoreRestClient(apiUrl, {
 			logger: console.log,
 			fetch: (input, init) =>
-				undiciFetch(input, { ...init, dispatcher: mockAgent }),
+				undiciFetch(
+					// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
+				// import undici@8 directly — Request.headers.keys() iterator types diverge.
+				// Fix: remove when @types/node ships undici-types@8
+					input,
+					{ ...init, dispatcher: mockAgent },
+				),
 		});
 		const command = new FindPetsCommand({
 			limit: "10",
