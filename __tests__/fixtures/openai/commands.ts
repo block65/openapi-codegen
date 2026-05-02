@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T05:45:12.436Z
+ * Generated on 2026-05-02T06:44:56.439Z
  *
  */
 /** eslint-disable max-classes */
@@ -490,7 +490,10 @@ export class CreateEmbeddingCommand extends Command<
  *
  * @summary Generates audio from the input text.
  */
-export class CreateSpeechCommand extends Command<CreateSpeechCommandInput> {
+export class CreateSpeechCommand extends Command<
+	CreateSpeechCommandInput,
+	unknown
+> {
 	public override method = "post" as const;
 	static bodySchema = createSpeechCommandBodySchema;
 

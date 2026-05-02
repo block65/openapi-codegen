@@ -826,6 +826,8 @@ export async function processOpenApiDocument(
 					// }
 
 					// this is just like a 204 response.
+					let hasOutputType = false;
+
 					if (
 						!operationObject.responses ||
 						Object.keys(operationObject.responses).length === 0
@@ -833,6 +835,7 @@ export async function processOpenApiDocument(
 						commandClassDeclaration
 							.getExtends()
 							?.addTypeArgument(unspecifiedKeyword);
+						hasOutputType = true;
 					}
 
 					for (const [statusCode, response] of Object.entries({
@@ -845,6 +848,7 @@ export async function processOpenApiDocument(
 								?.addTypeArgument(emptyKeyword);
 
 							outputTypes.add(emptyKeyword);
+							hasOutputType = true;
 							break;
 						}
 
@@ -891,6 +895,7 @@ export async function processOpenApiDocument(
 							commandClassDeclaration
 								.getExtends()
 								?.addTypeArgument(`${outputTypeName}`);
+							hasOutputType = true;
 
 							// jsdoc.addTag({
 							//   tagName: 'returns',
@@ -923,7 +928,14 @@ export async function processOpenApiDocument(
 								.getExtends()
 								?.addTypeArgument(responseTypeAlias.getName());
 							outputTypes.add(responseTypeAlias);
+							hasOutputType = true;
 						}
+					}
+
+					if (!hasOutputType) {
+						commandClassDeclaration
+							.getExtends()
+							?.addTypeArgument(unspecifiedKeyword);
 					}
 
 					// Static schema properties for rest-client integration

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T05:45:49.139Z
+ * Generated on 2026-05-02T06:45:34.878Z
  *
  */
 /** eslint-disable max-classes */
@@ -521,6 +521,7 @@ export class ContainerTopCommand extends Command<
  */
 export class ContainerLogsCommand extends Command<
 	ContainerLogsCommandInput,
+	unknown,
 	ContainerLogsCommandQuery
 > {
 	public override method = "get" as const;
@@ -574,7 +575,10 @@ export class ContainerChangesCommand extends Command<
  *
  * @summary Export a container
  */
-export class ContainerExportCommand extends Command<ContainerExportCommandInput> {
+export class ContainerExportCommand extends Command<
+	ContainerExportCommandInput,
+	unknown
+> {
 	public override method = "get" as const;
 	static paramsSchema = containerExportCommandParamsSchema;
 
@@ -643,6 +647,7 @@ export class ContainerStatsCommand extends Command<
  */
 export class ContainerResizeCommand extends Command<
 	ContainerResizeCommandInput,
+	unknown,
 	ContainerResizeCommandQuery
 > {
 	public override method = "post" as const;
@@ -945,6 +950,7 @@ export class ContainerUnpauseCommand extends Command<
  */
 export class ContainerAttachCommand extends Command<
 	ContainerAttachCommandInput,
+	unknown,
 	ContainerAttachCommandQuery
 > {
 	public override method = "post" as const;
@@ -968,6 +974,7 @@ export class ContainerAttachCommand extends Command<
  */
 export class ContainerAttachWebsocketCommand extends Command<
 	ContainerAttachWebsocketCommandInput,
+	unknown,
 	ContainerAttachWebsocketCommandQuery
 > {
 	public override method = "get" as const;
@@ -1039,6 +1046,7 @@ export class ContainerDeleteCommand extends Command<
  */
 export class ContainerArchiveCommand extends Command<
 	ContainerArchiveCommandInput,
+	unknown,
 	ContainerArchiveCommandQuery
 > {
 	public override method = "get" as const;
@@ -1066,6 +1074,7 @@ export class ContainerArchiveCommand extends Command<
  */
 export class PutContainerArchiveCommand extends Command<
 	PutContainerArchiveCommandInput,
+	unknown,
 	PutContainerArchiveCommandQuery
 > {
 	public override method = "put" as const;
@@ -1091,6 +1100,7 @@ export class PutContainerArchiveCommand extends Command<
  */
 export class ContainerArchiveInfoCommand extends Command<
 	ContainerArchiveInfoCommandInput,
+	unknown,
 	ContainerArchiveInfoCommandQuery
 > {
 	public override method = "head" as const;
@@ -1171,6 +1181,7 @@ export class ImageListCommand extends Command<
  */
 export class ImageBuildCommand extends Command<
 	ImageBuildCommandInput,
+	unknown,
 	ImageBuildCommandQuery,
 	ImageBuildCommandHeader
 > {
@@ -1274,6 +1285,7 @@ export class BuildPruneCommand extends Command<
  */
 export class ImageCreateCommand extends Command<
 	ImageCreateCommandInput,
+	unknown,
 	ImageCreateCommandQuery,
 	ImageCreateCommandHeader
 > {
@@ -1352,6 +1364,7 @@ export class ImageHistoryCommand extends Command<
  */
 export class ImagePushCommand extends Command<
 	ImagePushCommandInput,
+	unknown,
 	ImagePushCommandQuery,
 	ImagePushCommandHeader
 > {
@@ -1377,6 +1390,7 @@ export class ImagePushCommand extends Command<
  */
 export class ImageTagCommand extends Command<
 	ImageTagCommandInput,
+	unknown,
 	ImageTagCommandQuery
 > {
 	public override method = "post" as const;
@@ -1521,7 +1535,10 @@ export class SystemVersionCommand extends Command<
  *
  * @summary Ping
  */
-export class SystemPingCommand extends Command<SystemPingCommandInput> {
+export class SystemPingCommand extends Command<
+	SystemPingCommandInput,
+	unknown
+> {
 	public override method = "get" as const;
 
 	constructor() {
@@ -1534,7 +1551,10 @@ export class SystemPingCommand extends Command<SystemPingCommandInput> {
  *
  * @summary Ping
  */
-export class SystemPingHeadCommand extends Command<SystemPingHeadCommandInput> {
+export class SystemPingHeadCommand extends Command<
+	SystemPingHeadCommandInput,
+	unknown
+> {
 	public override method = "head" as const;
 
 	constructor() {
@@ -1673,7 +1693,7 @@ export class SystemDataUsageCommand extends Command<
  *
  * @summary Export an image
  */
-export class ImageGetCommand extends Command<ImageGetCommandInput> {
+export class ImageGetCommand extends Command<ImageGetCommandInput, unknown> {
 	public override method = "get" as const;
 	static paramsSchema = imageGetCommandParamsSchema;
 
@@ -1700,6 +1720,7 @@ export class ImageGetCommand extends Command<ImageGetCommandInput> {
  */
 export class ImageGetAllCommand extends Command<
 	ImageGetAllCommandInput,
+	unknown,
 	ImageGetAllCommandQuery
 > {
 	public override method = "get" as const;
@@ -1721,6 +1742,7 @@ export class ImageGetAllCommand extends Command<
  */
 export class ImageLoadCommand extends Command<
 	ImageLoadCommandInput,
+	unknown,
 	ImageLoadCommandQuery
 > {
 	public override method = "post" as const;
@@ -1758,7 +1780,7 @@ export class ContainerExecCommand extends Command<
  *
  * @summary Start an exec instance
  */
-export class ExecStartCommand extends Command<ExecStartCommandInput> {
+export class ExecStartCommand extends Command<ExecStartCommandInput, unknown> {
 	public override method = "post" as const;
 	static bodySchema = execStartCommandBodySchema;
 	static paramsSchema = execStartCommandParamsSchema;
@@ -1777,6 +1799,7 @@ export class ExecStartCommand extends Command<ExecStartCommandInput> {
  */
 export class ExecResizeCommand extends Command<
 	ExecResizeCommandInput,
+	unknown,
 	ExecResizeCommandQuery
 > {
 	public override method = "post" as const;
@@ -1869,6 +1892,7 @@ export class VolumeInspectCommand extends Command<
  */
 export class VolumeUpdateCommand extends Command<
 	VolumeUpdateCommandInput,
+	unknown,
 	VolumeUpdateCommandQuery
 > {
 	public override method = "put" as const;
@@ -2014,7 +2038,10 @@ export class NetworkCreateCommand extends Command<
  *
  * @summary Connect a container to a network
  */
-export class NetworkConnectCommand extends Command<NetworkConnectCommandInput> {
+export class NetworkConnectCommand extends Command<
+	NetworkConnectCommandInput,
+	unknown
+> {
 	public override method = "post" as const;
 	static bodySchema = networkConnectCommandBodySchema;
 	static paramsSchema = networkConnectCommandParamsSchema;
@@ -2030,7 +2057,10 @@ export class NetworkConnectCommand extends Command<NetworkConnectCommandInput> {
  *
  * @summary Disconnect a container from a network
  */
-export class NetworkDisconnectCommand extends Command<NetworkDisconnectCommandInput> {
+export class NetworkDisconnectCommand extends Command<
+	NetworkDisconnectCommandInput,
+	unknown
+> {
 	public override method = "post" as const;
 	static bodySchema = networkDisconnectCommandBodySchema;
 	static paramsSchema = networkDisconnectCommandParamsSchema;
@@ -2174,6 +2204,7 @@ export class PluginDeleteCommand extends Command<
  */
 export class PluginEnableCommand extends Command<
 	PluginEnableCommandInput,
+	unknown,
 	PluginEnableCommandQuery
 > {
 	public override method = "post" as const;
@@ -2197,6 +2228,7 @@ export class PluginEnableCommand extends Command<
  */
 export class PluginDisableCommand extends Command<
 	PluginDisableCommandInput,
+	unknown,
 	PluginDisableCommandQuery
 > {
 	public override method = "post" as const;
@@ -2267,7 +2299,10 @@ export class PluginCreateCommand extends Command<
  *
  * @summary Push a plugin
  */
-export class PluginPushCommand extends Command<PluginPushCommandInput> {
+export class PluginPushCommand extends Command<
+	PluginPushCommandInput,
+	unknown
+> {
 	public override method = "post" as const;
 	static paramsSchema = pluginPushCommandParamsSchema;
 
@@ -2340,6 +2375,7 @@ export class NodeInspectCommand extends Command<
  */
 export class NodeDeleteCommand extends Command<
 	NodeDeleteCommandInput,
+	unknown,
 	NodeDeleteCommandQuery
 > {
 	public override method = "delete" as const;
@@ -2359,6 +2395,7 @@ export class NodeDeleteCommand extends Command<
  */
 export class NodeUpdateCommand extends Command<
 	NodeUpdateCommandInput,
+	unknown,
 	NodeUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2415,7 +2452,7 @@ export class SwarmInitCommand extends Command<
  *
  * @summary Join an existing swarm
  */
-export class SwarmJoinCommand extends Command<SwarmJoinCommandInput> {
+export class SwarmJoinCommand extends Command<SwarmJoinCommandInput, unknown> {
 	public override method = "post" as const;
 	static bodySchema = swarmJoinCommandBodySchema;
 
@@ -2432,6 +2469,7 @@ export class SwarmJoinCommand extends Command<SwarmJoinCommandInput> {
  */
 export class SwarmLeaveCommand extends Command<
 	SwarmLeaveCommandInput,
+	unknown,
 	SwarmLeaveCommandQuery
 > {
 	public override method = "post" as const;
@@ -2450,6 +2488,7 @@ export class SwarmLeaveCommand extends Command<
  */
 export class SwarmUpdateCommand extends Command<
 	SwarmUpdateCommandInput,
+	unknown,
 	SwarmUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2498,7 +2537,10 @@ export class SwarmUnlockkeyCommand extends Command<
  *
  * @summary Unlock a locked manager
  */
-export class SwarmUnlockCommand extends Command<SwarmUnlockCommandInput> {
+export class SwarmUnlockCommand extends Command<
+	SwarmUnlockCommandInput,
+	unknown
+> {
 	public override method = "post" as const;
 	static bodySchema = swarmUnlockCommandBodySchema;
 
@@ -2579,7 +2621,10 @@ export class ServiceInspectCommand extends Command<
  *
  * @summary Delete a service
  */
-export class ServiceDeleteCommand extends Command<ServiceDeleteCommandInput> {
+export class ServiceDeleteCommand extends Command<
+	ServiceDeleteCommandInput,
+	unknown
+> {
 	public override method = "delete" as const;
 	static paramsSchema = serviceDeleteCommandParamsSchema;
 
@@ -2630,6 +2675,7 @@ export class ServiceUpdateCommand extends Command<
  */
 export class ServiceLogsCommand extends Command<
 	ServiceLogsCommandInput,
+	unknown,
 	ServiceLogsCommandQuery
 > {
 	public override method = "get" as const;
@@ -2703,6 +2749,7 @@ export class TaskInspectCommand extends Command<
  */
 export class TaskLogsCommand extends Command<
 	TaskLogsCommandInput,
+	unknown,
 	TaskLogsCommandQuery
 > {
 	public override method = "get" as const;
@@ -2808,6 +2855,7 @@ export class SecretDeleteCommand extends Command<
  */
 export class SecretUpdateCommand extends Command<
 	SecretUpdateCommandInput,
+	unknown,
 	SecretUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2905,6 +2953,7 @@ export class ConfigDeleteCommand extends Command<
  */
 export class ConfigUpdateCommand extends Command<
 	ConfigUpdateCommandInput,
+	unknown,
 	ConfigUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2968,7 +3017,7 @@ export class DistributionInspectCommand extends Command<
  *
  * @summary Initialize interactive session
  */
-export class SessionCommand extends Command<SessionCommandInput> {
+export class SessionCommand extends Command<SessionCommandInput, unknown> {
 	public override method = "post" as const;
 
 	constructor() {
