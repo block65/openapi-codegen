@@ -1,6 +1,9 @@
 import { writeFile } from "node:fs/promises";
 import type { oas31 } from "openapi3-ts";
-import { type CodegenOptions, processOpenApiDocument } from "./process-document.ts";
+import {
+	type CodegenOptions,
+	processOpenApiDocument,
+} from "./process-document.ts";
 
 export async function build(
 	inputFile: string,

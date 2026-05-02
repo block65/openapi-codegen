@@ -7,8 +7,6 @@
 		"type": "git",
 		"url": "https://github.com/block65/openapi-codegen"
 	},
-	"sideEffects": false,
-	"type": "module",
 	"bin": {
 		"openapi-codegen": "./bin/index.ts"
 	},
@@ -16,6 +14,8 @@
 		"bin",
 		"lib"
 	],
+	"type": "module",
+	"sideEffects": false,
 	"scripts": {
 		"preversion": "make test"
 	},

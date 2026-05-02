@@ -1,7 +1,7 @@
-declare module '@block65/eslint-config/prettier' {
-  import { Options } from 'prettier';
+declare module "@block65/eslint-config/prettier" {
+	import { Options } from "prettier";
 
-  declare const options: Options;
+	declare const options: Options;
 
-  export default options;
+	export default options;
 }

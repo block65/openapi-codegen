@@ -1,5 +1,5 @@
-import { expect, test } from "vitest";
 import type { oas31 } from "openapi3-ts";
+import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
 test("nullables", async () => {
@@ -104,21 +104,18 @@ test("const values", async () => {
 });
 
 test("oneOf with type null generates v.null()", async () => {
-	const result = await processOpenApiDocument(
-		"/tmp/like-you-know-whatever",
-		{
-			openapi: "3.1.0",
-			info: { title: "Test", version: "1.0.0" },
-			paths: {},
-			components: {
-				schemas: {
-					NullableImage: {
-						oneOf: [{ type: "string", format: "uri" }, { type: "null" }],
-					},
+	const result = await processOpenApiDocument("/tmp/like-you-know-whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				NullableImage: {
+					oneOf: [{ type: "string", format: "uri" }, { type: "null" }],
 				},
 			},
 		},
-	);
+	});
 
 	expect(result.valibotFile.getText()).toMatchSnapshot();
 });
@@ -231,11 +228,7 @@ test("header parameters", async () => {
 							required: true,
 							schema: {
 								type: "string",
-								enum: [
-									"application/json",
-									"text/csv",
-									"application/xml",
-								],
+								enum: ["application/json", "text/csv", "application/xml"],
 							},
 						},
 						{

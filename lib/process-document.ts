@@ -116,11 +116,9 @@ export async function processOpenApiDocument(
 	});
 
 	// Enums file for runtime enum values
-	const enumsFile = project.createSourceFile(
-		join(outputDir, "enums.ts"),
-		"",
-		{ overwrite: true },
-	);
+	const enumsFile = project.createSourceFile(join(outputDir, "enums.ts"), "", {
+		overwrite: true,
+	});
 
 	// Validators file for Valibot schemas
 	const valibotFile = createValibotFile(project, outputDir);
@@ -268,9 +266,7 @@ export async function processOpenApiDocument(
 			"enum" in schemaObject &&
 			Array.isArray(schemaObject.enum)
 		) {
-			const values = schemaObject.enum.filter(
-				(v): v is string => v !== null,
-			);
+			const values = schemaObject.enum.filter((v): v is string => v !== null);
 
 			if (values.length > 0) {
 				enumsFile.addVariableStatement({
@@ -291,17 +287,14 @@ export async function processOpenApiDocument(
 					declarations: [
 						{
 							name: camelCase(schemaName),
-							initializer: Writers.assertion(
-								(writer) => {
-									writer.write("[");
-									values.forEach((value, index) => {
-										writer.write(JSON.stringify(value));
-										if (index < values.length - 1) writer.write(", ");
-									});
-									writer.write("]");
-								},
-								"const",
-							),
+							initializer: Writers.assertion((writer) => {
+								writer.write("[");
+								values.forEach((value, index) => {
+									writer.write(JSON.stringify(value));
+									if (index < values.length - 1) writer.write(", ");
+								});
+								writer.write("]");
+							}, "const"),
 						},
 					],
 				});
@@ -399,10 +392,9 @@ export async function processOpenApiDocument(
 						...(operationObject.parameters || []),
 						...(pathItemObject.parameters || []),
 					]) {
-						const resolvedParameter =
-							("$ref" in parameter
-								? refs.get(parameter.$ref)
-								: parameter) as oas30.ParameterObject;
+						const resolvedParameter = (
+							"$ref" in parameter ? refs.get(parameter.$ref) : parameter
+						) as oas30.ParameterObject;
 
 						if (resolvedParameter.in === "path") {
 							pathParameters.push(resolvedParameter);
@@ -424,8 +416,7 @@ export async function processOpenApiDocument(
 							// Resolve $ref schemas so the valibot coercion
 							// pipeline can inspect the underlying type
 							const resolvedSchema =
-								resolvedParameter.schema &&
-								"$ref" in resolvedParameter.schema
+								resolvedParameter.schema && "$ref" in resolvedParameter.schema
 									? (refs.get(resolvedParameter.schema.$ref) ?? undefined)
 									: undefined;
 
@@ -510,7 +501,9 @@ export async function processOpenApiDocument(
 												...type,
 												name,
 												hasQuestionToken: !qp.required,
-												...(resolvedType !== undefined && { type: resolvedType }),
+												...(resolvedType !== undefined && {
+													type: resolvedType,
+												}),
 											};
 										}),
 									}),
@@ -562,7 +555,9 @@ export async function processOpenApiDocument(
 												...type,
 												name: JSON.stringify(name),
 												hasQuestionToken: !hp.required,
-												...(resolvedType !== undefined && { type: resolvedType }),
+												...(resolvedType !== undefined && {
+													type: resolvedType,
+												}),
 											};
 										}),
 									}),
@@ -980,9 +975,9 @@ export async function processOpenApiDocument(
 						? validators.get(responseRef)
 						: undefined;
 					const responseSchemaName = responseSchemaEntry
-						? (options?.exactOnly
-								? responseSchemaEntry.exact
-								: responseSchemaEntry.coerced)
+						? options?.exactOnly
+							? responseSchemaEntry.exact
+							: responseSchemaEntry.coerced
 						: undefined;
 
 					if (responseSchemaName) {
@@ -1052,7 +1047,13 @@ export async function processOpenApiDocument(
 						(hp) => !hp.required,
 					);
 
-					if (hasNonJsonBody || hasJsonBody || hasQuery || hasParams || hasHeaders) {
+					if (
+						hasNonJsonBody ||
+						hasJsonBody ||
+						hasQuery ||
+						hasParams ||
+						hasHeaders
+					) {
 						const ctor = commandClassDeclaration.addConstructor();
 
 						const queryParameterNames = queryParameters
@@ -1091,8 +1092,8 @@ export async function processOpenApiDocument(
 										{
 											kind: StructureKind.VariableDeclaration,
 											initializer: allInputOptional
-											? `${cctorParam.getName()} ?? {}`
-											: cctorParam.getName(),
+												? `${cctorParam.getName()} ?? {}`
+												: cctorParam.getName(),
 											name: iife(() => {
 												switch (true) {
 													case paramsToDestructure.length > 0 && hasNonJsonBody:

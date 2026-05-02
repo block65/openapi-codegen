@@ -820,11 +820,7 @@
 						"description": "The content type of the import data",
 						"schema": {
 							"type": "string",
-							"enum": [
-								"application/json",
-								"text/csv",
-								"application/xml"
-							]
+							"enum": ["application/json", "text/csv", "application/xml"]
 						}
 					},
 					{

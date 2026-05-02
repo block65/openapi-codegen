@@ -570,12 +570,7 @@ export function registerTypesFromSchema(
 
 	// deal with type arrays (OpenAPI 3.1: type: ["string", "null"])
 	else if (Array.isArray(schemaObject.type)) {
-		const prop = schemaToType(
-			typesAndInterfaces,
-			{},
-			schemaName,
-			schemaObject,
-		);
+		const prop = schemaToType(typesAndInterfaces, {}, schemaName, schemaObject);
 
 		const typeAlias = typesFile.addTypeAlias({
 			name: pascalCase(schemaName),
@@ -634,7 +629,7 @@ export function registerTypesFromSchema(
 						),
 					})
 				: typeof schemaObject.additionalProperties === "object" &&
-						"type" in schemaObject.additionalProperties
+					  "type" in schemaObject.additionalProperties
 					? `Record<string, ${schemaObject.additionalProperties.type === "array" ? "unknown[]" : schemaObject.additionalProperties.type}>`
 					: "Record<string | number, Jsonifiable>",
 		});

@@ -45,13 +45,17 @@ function vcall(
 					} else {
 						writer.write(String(item));
 					}
-					if (itemIndex < arg.length - 1) writer.write(", ");
+					if (itemIndex < arg.length - 1) {
+						writer.write(", ");
+					}
 				});
 				writer.write("]");
 			} else {
 				writer.write(String(arg));
 			}
-			if (index < args.length - 1) writer.write(", ");
+			if (index < args.length - 1) {
+				writer.write(", ");
+			}
 		});
 		writer.write(")");
 	};
@@ -85,15 +89,31 @@ const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 function schemaNeedsCoercion(
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 ): boolean {
-	if ("$ref" in schema) return false;
-	if ("const" in schema) return false;
-	if (schema.type === "integer" && schema.format === "int64") return true;
-	if (schema.type === "string" && !schema.enum && !schema.pattern &&
-		(!schema.format || !noTrimFormats.has(schema.format))) return true;
+	if ("$ref" in schema) {
+		return false;
+	}
+	if ("const" in schema) {
+		return false;
+	}
+	if (schema.type === "integer" && schema.format === "int64") {
+		return true;
+	}
+	if (
+		schema.type === "string" &&
+		!schema.enum &&
+		!schema.pattern &&
+		(!schema.format || !noTrimFormats.has(schema.format))
+	) {
+		return true;
+	}
 	if (schema.properties) {
 		const required = new Set(schema.required ?? []);
-		const hasOptional = Object.keys(schema.properties).some((k) => !required.has(k));
-		if (hasOptional) return true;
+		const hasOptional = Object.keys(schema.properties).some(
+			(k) => !required.has(k),
+		);
+		if (hasOptional) {
+			return true;
+		}
 		return Object.values(schema.properties).some((s) => schemaNeedsCoercion(s));
 	}
 	if (schema.items && !("$ref" in schema.items)) {
@@ -112,7 +132,9 @@ function resolveRef(
 	mode: SchemaMode,
 ): string | WriterFunction {
 	const entry = validators.get(ref);
-	if (!entry) return vcall("unknown");
+	if (!entry) {
+		return vcall("unknown");
+	}
 	return mode === "exact" ? entry.exact : entry.coerced;
 }
 
@@ -238,8 +260,20 @@ export function schemaToValidator(
 
 		return maybeNullable(
 			vcall("union", [
-				vcall("pipe", vcall("string"), vcall("decimal"), vcall("toBigint"), exactValidator),
-				vcall("pipe", vcall("number"), vcall("integer"), vcall("toBigint"), exactValidator),
+				vcall(
+					"pipe",
+					vcall("string"),
+					vcall("decimal"),
+					vcall("toBigint"),
+					exactValidator,
+				),
+				vcall(
+					"pipe",
+					vcall("number"),
+					vcall("integer"),
+					vcall("toBigint"),
+					exactValidator,
+				),
 				exactValidator,
 			]),
 			isNullable,
@@ -481,22 +515,46 @@ function asHttpParamValidator(
 
 	if (schema.type === "integer" && schema.format === "int64") {
 		return vcall("union", [
-			vcall("pipe", vcall("string"), vcall("decimal"), vcall("toBigint"), exactValidator),
-			vcall("pipe", vcall("number"), vcall("integer"), vcall("toBigint"), exactValidator),
+			vcall(
+				"pipe",
+				vcall("string"),
+				vcall("decimal"),
+				vcall("toBigint"),
+				exactValidator,
+			),
+			vcall(
+				"pipe",
+				vcall("number"),
+				vcall("integer"),
+				vcall("toBigint"),
+				exactValidator,
+			),
 			exactValidator,
 		]);
 	}
 
 	if (schema.type === "integer") {
 		return vcall("union", [
-			vcall("pipe", vcall("string"), vcall("decimal"), vcall("toNumber"), exactValidator),
+			vcall(
+				"pipe",
+				vcall("string"),
+				vcall("decimal"),
+				vcall("toNumber"),
+				exactValidator,
+			),
 			exactValidator,
 		]);
 	}
 
 	if (schema.type === "number") {
 		return vcall("union", [
-			vcall("pipe", vcall("string"), vcall("decimal"), vcall("toNumber"), exactValidator),
+			vcall(
+				"pipe",
+				vcall("string"),
+				vcall("decimal"),
+				vcall("toNumber"),
+				exactValidator,
+			),
 			exactValidator,
 		]);
 	}
@@ -523,8 +581,18 @@ export function createValidatorForOperationInput(
 	exact: { json?: string; param?: string; query?: string; header?: string };
 	coerced: { json?: string; param?: string; query?: string; header?: string };
 } {
-	const exact: { json?: string; param?: string; query?: string; header?: string } = {};
-	const coerced: { json?: string; param?: string; query?: string; header?: string } = {};
+	const exact: {
+		json?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	} = {};
+	const coerced: {
+		json?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	} = {};
 
 	// 1. Generate the JSON Body Schema
 	if (input.body) {
@@ -551,7 +619,11 @@ export function createValidatorForOperationInput(
 				declarations: [
 					{
 						name: coercedName,
-						initializer: schemaToValidator(validatorSchemas, input.body, "coerced"),
+						initializer: schemaToValidator(
+							validatorSchemas,
+							input.body,
+							"coerced",
+						),
 					},
 				],
 			});
@@ -563,7 +635,9 @@ export function createValidatorForOperationInput(
 		type: "params" | "query",
 		list: oas30.ParameterObject[],
 	) => {
-		if (list.length === 0) return;
+		if (list.length === 0) {
+			return;
+		}
 		const schemaKey = type === "params" ? "param" : "query";
 
 		const exactName = camelcase(["exact", commandName, type, "schema"]);
@@ -577,16 +651,15 @@ export function createValidatorForOperationInput(
 			Object.fromEntries(
 				list.map((p) => {
 					const paramSchema = p.schema ?? { type: "string" as const };
-					const optionalWrapper = mode === "exact" ? "exactOptional" : "optional";
+					const optionalWrapper =
+						mode === "exact" ? "exactOptional" : "optional";
 					const validator =
 						mode === "coerced" && isHttpParam
 							? asHttpParamValidator(validatorSchemas, paramSchema)
 							: schemaToValidator(validatorSchemas, paramSchema, mode);
 					return [
 						JSON.stringify(p.name),
-						p.required
-							? validator
-							: vcall(optionalWrapper, validator),
+						p.required ? validator : vcall(optionalWrapper, validator),
 					];
 				}),
 			);
@@ -597,7 +670,10 @@ export function createValidatorForOperationInput(
 			declarations: [
 				{
 					name: exactName,
-					initializer: vcall("strictObject", Writers.object(buildPropertyMap("exact"))),
+					initializer: vcall(
+						"strictObject",
+						Writers.object(buildPropertyMap("exact")),
+					),
 				},
 			],
 		});
@@ -609,7 +685,10 @@ export function createValidatorForOperationInput(
 				declarations: [
 					{
 						name: coercedName,
-						initializer: vcall("strictObject", Writers.object(buildPropertyMap("coerced"))),
+						initializer: vcall(
+							"strictObject",
+							Writers.object(buildPropertyMap("coerced")),
+						),
 					},
 				],
 			});
@@ -630,16 +709,15 @@ export function createValidatorForOperationInput(
 			Object.fromEntries(
 				input.header.map((p) => {
 					const paramSchema = p.schema ?? { type: "string" as const };
-					const optionalWrapper = mode === "exact" ? "exactOptional" : "optional";
+					const optionalWrapper =
+						mode === "exact" ? "exactOptional" : "optional";
 					const validator =
 						mode === "coerced"
 							? asHttpParamValidator(validatorSchemas, paramSchema)
 							: schemaToValidator(validatorSchemas, paramSchema, mode);
 					return [
 						JSON.stringify(p.name.toLowerCase()),
-						p.required
-							? validator
-							: vcall(optionalWrapper, validator),
+						p.required ? validator : vcall(optionalWrapper, validator),
 					];
 				}),
 			);
@@ -650,7 +728,10 @@ export function createValidatorForOperationInput(
 			declarations: [
 				{
 					name: exactName,
-					initializer: vcall("object", Writers.object(buildPropertyMap("exact"))),
+					initializer: vcall(
+						"object",
+						Writers.object(buildPropertyMap("exact")),
+					),
 				},
 			],
 		});
@@ -662,7 +743,10 @@ export function createValidatorForOperationInput(
 				declarations: [
 					{
 						name: coercedName,
-						initializer: vcall("object", Writers.object(buildPropertyMap("coerced"))),
+						initializer: vcall(
+							"object",
+							Writers.object(buildPropertyMap("coerced")),
+						),
 					},
 				],
 			});
