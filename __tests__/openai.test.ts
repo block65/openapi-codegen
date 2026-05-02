@@ -1,19 +1,10 @@
-import { MockAgent, setGlobalDispatcher } from "undici";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { MockAgent, fetch as undiciFetch } from "undici";
+import { describe, expect, test } from "vitest";
 import { CreateModerationCommand } from "./fixtures/openai/commands.ts";
 import { OpenAiApiRestClient } from "./fixtures/openai/main.ts";
 
 const mockAgent = new MockAgent();
-setGlobalDispatcher(mockAgent);
-
-beforeAll(() => {
-	mockAgent.activate();
-	mockAgent.disableNetConnect();
-});
-
-afterAll(() => {
-	mockAgent.assertNoPendingInterceptors();
-});
+mockAgent.disableNetConnect();
 
 const apiUrl = "http://192.2.0.1";
 
@@ -35,6 +26,8 @@ describe("OpenAI", () => {
 	test("CreateModeration", async () => {
 		const openAiClient = new OpenAiApiRestClient(apiUrl, {
 			logger: console.debug,
+			fetch: (input, init) =>
+				undiciFetch(input, { ...init, dispatcher: mockAgent }),
 		});
 
 		const command = new CreateModerationCommand({

@@ -1,21 +1,11 @@
-import { MockAgent, setGlobalDispatcher } from "undici";
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { MockAgent, fetch as undiciFetch } from "undici";
+import { describe, expect, test, vi } from "vitest";
 import { FindPetsCommand } from "./fixtures/petstore/commands.ts";
 import { SwaggerPetstoreRestClient } from "./fixtures/petstore/main.ts";
 
 const mockAgent = new MockAgent();
-setGlobalDispatcher(mockAgent);
-
-beforeAll(() => {
-	mockAgent.activate();
-	mockAgent.disableNetConnect();
-});
-
-afterAll(() => {
-	mockAgent.assertNoPendingInterceptors();
-});
-
 mockAgent.disableNetConnect();
+
 const apiUrl = "http://192.2.0.1";
 
 describe("Petstore", () => {
@@ -26,7 +16,6 @@ describe("Petstore", () => {
 	pool
 		.intercept({
 			path: "/pets?tags=tag1%2Ctag2&limit=10",
-			// query: { limit: '10', tags: ['tag1', 'tag2'] },
 			method: "GET",
 			body(body) {
 				bodySpy(body);
@@ -39,6 +28,8 @@ describe("Petstore", () => {
 	test("find pets", async () => {
 		const petStoreClient = new SwaggerPetstoreRestClient(apiUrl, {
 			logger: console.log,
+			fetch: (input, init) =>
+				undiciFetch(input, { ...init, dispatcher: mockAgent }),
 		});
 		const command = new FindPetsCommand({
 			limit: "10",

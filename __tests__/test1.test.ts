@@ -1,5 +1,5 @@
-import { MockAgent, setGlobalDispatcher } from "undici";
-import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
+import { MockAgent, fetch as undiciFetch } from "undici";
+import { describe, expect, test, vi } from "vitest";
 import {
 	GetBillingAccountCommand,
 	ListBillingAccountsCommand,
@@ -7,19 +7,8 @@ import {
 import { BillingServiceRestApiRestClient } from "./fixtures/test1/main.ts";
 
 const mockAgent = new MockAgent();
-
-beforeAll(() => {
-	mockAgent.activate();
-	mockAgent.disableNetConnect();
-	setGlobalDispatcher(mockAgent);
-});
-
-afterAll(() => {
-	mockAgent.assertNoPendingInterceptors();
-});
-
 mockAgent.disableNetConnect();
-// setGlobalDispatcher(mockAgent);
+
 const apiUrl = "http://192.2.0.1";
 
 describe("Test1", () => {
@@ -47,6 +36,8 @@ describe("Test1", () => {
 	test("get billing account", async () => {
 		const client = new BillingServiceRestApiRestClient(apiUrl, {
 			logger: console.debug,
+			fetch: (input, init) =>
+				undiciFetch(input, { ...init, dispatcher: mockAgent }),
 		});
 		const command = new GetBillingAccountCommand({
 			billingAccountId: "1234",
