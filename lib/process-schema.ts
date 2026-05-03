@@ -412,6 +412,18 @@ export function schemaToType(
 			};
 		}
 
+		if (
+			"x-typescript-hint" in schemaObject &&
+			typeof schemaObject["x-typescript-hint"] === "string"
+		) {
+			return {
+				name,
+				hasQuestionToken,
+				type: schemaObject["x-typescript-hint"],
+				docs,
+			};
+		}
+
 		return {
 			name,
 			hasQuestionToken,

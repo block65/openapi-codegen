@@ -85,6 +85,27 @@
 				"type": "string",
 				"enum": ["free", "pro", "enterprise"]
 			},
+			"EmbedUrl": {
+				"type": "string",
+				"format": "uri",
+				"pattern": "^https://embed\\.example\\.com/.+$",
+				"x-typescript-hint": "`https://embed.example.com/${string}`"
+			},
+			"EventSource": {
+				"oneOf": [
+					{ "type": "string", "enum": ["native"] },
+					{
+						"type": "string",
+						"pattern": "^https://embed\\.example\\.com/.+$",
+						"x-typescript-hint": "`https://embed.example.com/${string}`"
+					},
+					{
+						"type": "string",
+						"pattern": "^https://syndicated\\.example\\.com/.+$",
+						"x-typescript-hint": "`https://syndicated.example.com/${string}`"
+					}
+				]
+			},
 			"LongRunningOperationIndeterminate": {
 				"type": "object",
 				"additionalProperties": false,

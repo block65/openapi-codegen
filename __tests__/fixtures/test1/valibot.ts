@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T06:44:52.639Z
+ * Generated on 2026-05-03T07:07:41.864Z
  *
  */
 import * as v from "valibot";
@@ -33,6 +33,26 @@ export const exactNullableStatusSchema = v.nullable(
 export const nullableStatusSchema = exactNullableStatusSchema;
 export const exactAccountTierSchema = v.picklist(["free", "pro", "enterprise"]);
 export const accountTierSchema = exactAccountTierSchema;
+export const exactEmbedUrlSchema = v.pipe(
+	v.string(),
+	v.regex(new RegExp("^https://embed\\.example\\.com/.+$")),
+	v.custom<`https://embed.example.com/${string}`>(() => true),
+);
+export const embedUrlSchema = exactEmbedUrlSchema;
+export const exactEventSourceSchema = v.union([
+	v.picklist(["native"]),
+	v.pipe(
+		v.string(),
+		v.regex(new RegExp("^https://embed\\.example\\.com/.+$")),
+		v.custom<`https://embed.example.com/${string}`>(() => true),
+	),
+	v.pipe(
+		v.string(),
+		v.regex(new RegExp("^https://syndicated\\.example\\.com/.+$")),
+		v.custom<`https://syndicated.example.com/${string}`>(() => true),
+	),
+]);
+export const eventSourceSchema = exactEventSourceSchema;
 export const exactStripeIdSchema = v.pipe(
 	v.string(),
 	v.minLength(11),

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T06:44:52.639Z
+ * Generated on 2026-05-03T07:07:41.864Z
  *
  */
 import type { Jsonifiable, Jsonify } from "type-fest";
@@ -18,6 +18,11 @@ export type NullableNotes = string | null;
 export type NullableDiscount = number | null;
 export type NullableStatus = "active" | "paused" | "cancelled" | null;
 export type AccountTier = "free" | "pro" | "enterprise";
+export type EmbedUrl = `https://embed.example.com/${string}`;
+export type EventSource =
+	| "native"
+	| `https://embed.example.com/${string}`
+	| `https://syndicated.example.com/${string}`;
 export type StripeId = string;
 export type DateTime = Jsonify<Date>;
 export type BillingSubscriptionStatus = "active" | "inactive";
