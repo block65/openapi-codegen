@@ -2,17 +2,11 @@ import camelcase from "camelcase";
 import type { oas31 } from "openapi3-ts";
 import wrap from "word-wrap";
 
-export function maybeJsDocDescription(
-	...str: (string | undefined | false | null)[]
-): string {
-	return str.length > 0 ? ["", ...str].filter(Boolean).join(" - ").trim() : "";
-}
-
 export function isReferenceObject(obj: unknown): obj is oas31.ReferenceObject {
 	return typeof obj === "object" && obj !== null && "$ref" in obj;
 }
 
-export function getDependency(obj: unknown): string | undefined {
+function getDependency(obj: unknown): string | undefined {
 	return isReferenceObject(obj) ? obj.$ref : undefined;
 }
 
@@ -26,11 +20,11 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && typeof obj !== "undefined";
 }
 
+const strOnly = (x: string | undefined): x is string => typeof x === "string";
+
 export function getDependents(
 	obj: oas31.ReferenceObject | oas31.SchemaObject,
 ): string[] {
-	const strOnly = (x: string | undefined): x is string => typeof x === "string";
-
 	if (isReferenceObject(obj)) {
 		return [getDependency(obj)].filter(strOnly);
 	}
@@ -59,14 +53,6 @@ export function getDependents(
 	}
 
 	return [];
-}
-
-export function refToName(ref: string): string {
-	const name = ref.split("/").at(-1);
-	if (!name) {
-		throw new Error(`invalid ref: ${ref}`);
-	}
-	return name;
 }
 
 export function camelCase(...str: string[]): string {

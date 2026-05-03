@@ -88,6 +88,6 @@ export function addValibotImportsToHonoValibotFile(
 
 	honoValibotFile.addImportDeclaration({
 		moduleSpecifier: "./valibot.js",
-		namedImports: schemaNames.sort(),
+		namedImports: schemaNames.toSorted(),
 	});
 }

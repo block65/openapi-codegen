@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { $RefParser } from "@apidevtools/json-schema-ref-parser";
 import type { oas30, oas31 } from "openapi3-ts";
 import toposort from "toposort";
@@ -79,12 +79,15 @@ function createUnion(...types: (string | undefined)[]) {
 	// create a type  of all the inputs
 	const [type1, type2, ...typeX] = types
 		.filter((t): t is string => !!t)
-		.sort((a, b) => a.localeCompare(b));
+		.toSorted((a, b) => a.localeCompare(b));
 	return (
 		(type1 && type2 ? Writers.unionType(type1, type2, ...typeX) : type1) ||
 		neverKeyword
 	);
 }
+
+const isInput = (t: TypeAliasDeclaration | InterfaceDeclaration) =>
+	t.getName()?.endsWith("Input");
 
 export async function processOpenApiDocument(
 	outputDir: string,
@@ -187,9 +190,7 @@ export async function processOpenApiDocument(
 	const valibotModuleSpecifier = `./${valibotFile.getBaseNameWithoutExtension()}.js`;
 	const commandValibotImports = new Set<string>();
 
-	const typesModuleSpecifier =
-		`./${typesFile.getBaseNameWithoutExtension()}.js` ||
-		relative(commandsFile.getDirectoryPath(), typesFile.getFilePath());
+	const typesModuleSpecifier = `./${typesFile.getBaseNameWithoutExtension()}.js`;
 
 	const typesImportDecl =
 		commandsFile
@@ -236,9 +237,11 @@ export async function processOpenApiDocument(
 		},
 	);
 
-	const sorted = toposort(schemaGraph).reverse();
+	const sorted = toposort(schemaGraph).toReversed();
 
-	const sortedSchemas = Object.entries(schema.components?.schemas || {}).sort(
+	const sortedSchemas = Object.entries(
+		schema.components?.schemas || {},
+	).toSorted(
 		([a], [b]) =>
 			sorted.indexOf(`#/components/schemas/${a}`) -
 			sorted.indexOf(`#/components/schemas/${b}`),
@@ -276,11 +279,10 @@ export async function processOpenApiDocument(
 						? [
 								{
 									description: wordWrap(schemaObject.description),
-									tags: [
-										...(schemaObject.deprecated
-											? [{ tagName: "deprecated" }]
-											: []),
-									].filter(Boolean),
+									tags: (schemaObject.deprecated
+										? [{ tagName: "deprecated" }]
+										: []
+									).filter(Boolean),
 								},
 							]
 						: [],
@@ -291,7 +293,9 @@ export async function processOpenApiDocument(
 								writer.write("[");
 								values.forEach((value, index) => {
 									writer.write(JSON.stringify(value));
-									if (index < values.length - 1) writer.write(", ");
+									if (index < values.length - 1) {
+										writer.write(", ");
+									}
 								});
 								writer.write("]");
 							}, "const"),
@@ -359,16 +363,14 @@ export async function processOpenApiDocument(
 							operationObject.description || commandName,
 						)}\n`,
 
-						tags: [
-							...(operationObject.summary
-								? [
-										{
-											tagName: "summary",
-											text: wordWrap(operationObject.summary),
-										},
-									]
-								: []),
-						],
+						tags: operationObject.summary
+							? [
+									{
+										tagName: "summary",
+										text: wordWrap(operationObject.summary),
+									},
+								]
+							: [],
 					};
 
 					const jsdoc = commandClassDeclaration.addJsDoc(jsDocStructure);
@@ -489,13 +491,18 @@ export async function processOpenApiDocument(
 												},
 											);
 
-											const resolvedType = qp.required
-												? type.type
-												: typeof type.type === "function"
-													? type.type
-													: type.type
-														? Writers.unionType(`${type.type}`, "undefined")
-														: undefined;
+											const resolvedType = iife(() => {
+												if (qp.required) {
+													return type.type;
+												}
+												if (typeof type.type === "function") {
+													return type.type;
+												}
+												if (type.type) {
+													return Writers.unionType(`${type.type}`, "undefined");
+												}
+												return undefined;
+											});
 
 											return {
 												...type,
@@ -963,22 +970,28 @@ export async function processOpenApiDocument(
 						});
 					}
 
-					// Resolve response schema from the 2xx response $ref
+					// Resolve response schema from the first 2xx response $ref
 					const responseRef = iife(() => {
-						for (const [statusCode, response] of Object.entries(
+						const firstSuccess = Object.entries(
 							operationObject.responses ?? {},
-						).filter(([s]) => s.startsWith("2"))) {
-							if (statusCode === "204" || "$ref" in response) return undefined;
-							const jsonResp = response.content?.["application/json"];
-							if (!jsonResp?.schema) return undefined;
-							if ("$ref" in jsonResp.schema) return jsonResp.schema.$ref;
-							if (
-								"items" in jsonResp.schema &&
-								"$ref" in jsonResp.schema.items
-							) {
-								return jsonResp.schema.items.$ref;
-							}
+						).find(([s]) => s.startsWith("2"));
+						if (!firstSuccess) {
 							return undefined;
+						}
+						const [statusCode, response] = firstSuccess;
+						if (statusCode === "204" || "$ref" in response) {
+							return undefined;
+						}
+						const responseSchema =
+							response.content?.["application/json"]?.schema;
+						if (!responseSchema) {
+							return undefined;
+						}
+						if ("$ref" in responseSchema) {
+							return responseSchema.$ref;
+						}
+						if ("items" in responseSchema && "$ref" in responseSchema.items) {
+							return responseSchema.items.$ref;
 						}
 						return undefined;
 					});
@@ -986,11 +999,14 @@ export async function processOpenApiDocument(
 					const responseSchemaEntry = responseRef
 						? validators.get(responseRef)
 						: undefined;
-					const responseSchemaName = responseSchemaEntry
-						? options?.exactOnly
+					const responseSchemaName = iife(() => {
+						if (!responseSchemaEntry) {
+							return undefined;
+						}
+						return options?.exactOnly
 							? responseSchemaEntry.exact
-							: responseSchemaEntry.coerced
-						: undefined;
+							: responseSchemaEntry.coerced;
+					});
 
 					if (responseSchemaName) {
 						staticSchemaProps.push({
@@ -1145,28 +1161,30 @@ export async function processOpenApiDocument(
 
 						const headersArg = hasHeaders ? "headers" : undefined;
 
+						const queryOrHeaderArgs = iife(() => {
+							if (hasQuery) {
+								return [`stripUndefined({${queryParameterNames.join(", ")}})`];
+							}
+							if (hasHeaders) {
+								return [emptyKeyword];
+							}
+							return [];
+						});
+
 						// type narrowing
 						if (Node.isCallExpression(callExpr)) {
 							if (hasJsonBody) {
 								callExpr.addArguments([
 									pathname,
 									`jsonStringify(${inputBodyName})`,
-									...(hasQuery
-										? [`stripUndefined({${queryParameterNames.join(", ")}})`]
-										: hasHeaders
-											? [emptyKeyword]
-											: []),
+									...queryOrHeaderArgs,
 									...(headersArg ? [headersArg] : []),
 								]);
 							} else if (hasNonJsonBody) {
 								callExpr.addArguments([
 									pathname,
 									nonJsonBodyPropName,
-									...(hasQuery
-										? [`stripUndefined({${queryParameterNames.join(", ")}})`]
-										: hasHeaders
-											? [emptyKeyword]
-											: []),
+									...queryOrHeaderArgs,
 									...(headersArg ? [headersArg] : []),
 								]);
 							} else if (hasQuery) {
@@ -1196,13 +1214,9 @@ export async function processOpenApiDocument(
 		}
 	}
 
-	const isInput = (t: TypeAliasDeclaration | InterfaceDeclaration) =>
-		t.getName()?.endsWith("Input");
-	// const isOutput = (t: string) => t.endsWith('Output');
-
 	const inputTypes = typesFile.getTypeAliases().filter((t) => isInput(t));
 	const inputUnion = createUnion(
-		...new Set(inputTypes.sort().map((t) => t.getName())),
+		...new Set(inputTypes.toSorted().map((t) => t.getName())),
 	);
 	const outputUnion = createUnion(
 		...[...outputTypes].map((t) => (typeof t === "string" ? t : t.getName())),
@@ -1247,7 +1261,7 @@ export async function processOpenApiDocument(
 		mainFile.addImportDeclaration({
 			moduleSpecifier: typesModuleSpecifier,
 			namedImports: namedImports
-				.sort((a, b) => a.getName().localeCompare(b.getName()))
+				.toSorted((a, b) => a.getName().localeCompare(b.getName()))
 				.map((t) => ({
 					name: t.getName(),
 				})),
@@ -1305,7 +1319,9 @@ export async function processOpenApiDocument(
 	if (commandValibotImports.size > 0) {
 		commandsFile.addImportDeclaration({
 			moduleSpecifier: valibotModuleSpecifier,
-			namedImports: [...commandValibotImports].sort().map((name) => ({ name })),
+			namedImports: [...commandValibotImports]
+				.toSorted()
+				.map((name) => ({ name })),
 		});
 	}
 

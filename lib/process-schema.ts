@@ -13,6 +13,7 @@ import {
 	Writers,
 } from "ts-morph";
 import {
+	iife,
 	isNotNullOrUndefined,
 	isNotReferenceObject,
 	isReferenceObject,
@@ -234,7 +235,7 @@ export function schemaToType(
 			schemaObject.items || {},
 		);
 
-		if (type.type instanceof Function) {
+		if (typeof type.type === "function") {
 			const typeWriter = type.type;
 			return {
 				name,
@@ -625,25 +626,22 @@ export function registerTypesFromSchema(
 			name: pascalCase(schemaName),
 			isExported: true,
 			// WARN: Duplicated code - the recursion beat me
-			type: schemaObject.properties
-				? Writers.objectType({
+			type: iife(() => {
+				if (schemaObject.properties) {
+					return Writers.objectType({
 						properties: Object.entries(schemaObject.properties).map(
-							([key, schema]) => {
-								const type = schemaToType(
-									typesAndInterfaces,
-									schemaObject,
-									key,
-									schema,
-								);
-
-								return type;
-							},
+							([key, schema]) =>
+								schemaToType(typesAndInterfaces, schemaObject, key, schema),
 						),
-					})
-				: typeof schemaObject.additionalProperties === "object" &&
-					  "type" in schemaObject.additionalProperties
-					? `Record<string, ${schemaObject.additionalProperties.type === "array" ? "unknown[]" : schemaObject.additionalProperties.type}>`
-					: "Record<string | number, Jsonifiable>",
+					});
+				}
+				const ap = schemaObject.additionalProperties;
+				if (typeof ap === "object" && "type" in ap) {
+					const valueType = ap.type === "array" ? "unknown[]" : ap.type;
+					return `Record<string, ${valueType}>`;
+				}
+				return "Record<string | number, Jsonifiable>";
+			}),
 		});
 
 		if (schemaObject.description) {

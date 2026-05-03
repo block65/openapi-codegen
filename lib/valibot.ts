@@ -86,44 +86,47 @@ function maybePipe(
 
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
+function stringNeedsCoercion(
+	schema: oas30.SchemaObject | oas31.SchemaObject,
+): boolean {
+	return (
+		!schema.enum &&
+		!schema.pattern &&
+		(!schema.format || !noTrimFormats.has(schema.format))
+	);
+}
+
+function propertiesNeedCoercion(
+	schema: oas30.SchemaObject | oas31.SchemaObject,
+): boolean {
+	const properties = schema.properties ?? {};
+	const required = new Set(schema.required ?? []);
+	const hasOptional = Object.keys(properties).some((k) => !required.has(k));
+	return (
+		hasOptional || Object.values(properties).some((s) => schemaNeedsCoercion(s))
+	);
+}
+
 function schemaNeedsCoercion(
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 ): boolean {
-	if ("$ref" in schema) {
-		return false;
-	}
-	if ("const" in schema) {
+	if ("$ref" in schema || "const" in schema) {
 		return false;
 	}
 	if (schema.type === "integer" && schema.format === "int64") {
 		return true;
 	}
-	if (
-		schema.type === "string" &&
-		!schema.enum &&
-		!schema.pattern &&
-		(!schema.format || !noTrimFormats.has(schema.format))
-	) {
+	if (schema.type === "string" && stringNeedsCoercion(schema)) {
 		return true;
 	}
 	if (schema.properties) {
-		const required = new Set(schema.required ?? []);
-		const hasOptional = Object.keys(schema.properties).some(
-			(k) => !required.has(k),
-		);
-		if (hasOptional) {
-			return true;
-		}
-		return Object.values(schema.properties).some((s) => schemaNeedsCoercion(s));
+		return propertiesNeedCoercion(schema);
 	}
 	if (schema.items && !("$ref" in schema.items)) {
 		return schemaNeedsCoercion(schema.items);
 	}
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
-	if (combinator) {
-		return combinator.some((s) => schemaNeedsCoercion(s));
-	}
-	return false;
+	return combinator ? combinator.some((s) => schemaNeedsCoercion(s)) : false;
 }
 
 function resolveRef(
@@ -138,7 +141,7 @@ function resolveRef(
 	return mode === "exact" ? entry.exact : entry.coerced;
 }
 
-export function schemaToValidator(
+function schemaToValidator(
 	validators: Map<string, ValidatorEntry>,
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 	mode: SchemaMode,
