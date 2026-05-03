@@ -1,12 +1,14 @@
 {
 	"extends": ["@tsconfig/node24", "@tsconfig/strictest"],
 	"compilerOptions": {
+		"composite": true,
 		"noEmit": true,
 		"allowImportingTsExtensions": true,
 		"noPropertyAccessFromIndexSignature": false,
 		"resolveJsonModule": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"types": ["node"]
 	},
-	"include": ["./lib", "./bin", "__tests__"],
-	"exclude": ["./dist", "node_modules"]
+	"include": ["./lib", "./bin"],
+	"exclude": ["node_modules"]
 }
