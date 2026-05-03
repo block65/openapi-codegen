@@ -10,7 +10,6 @@
 	"rules": {
 		"typescript/no-non-null-assertion": "error",
 		"no-nested-ternary": "error",
-		"unicorn/no-nested-ternary": "error",
 		"import/no-named-as-default": "error",
 		"max-lines-per-function": "off",
 		"func-style": ["error", "declaration", { "allowArrowFunctions": true }],

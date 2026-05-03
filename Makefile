@@ -64,5 +64,5 @@ docker: __tests__/fixtures/docker.json
 
 .PHONY: pretty
 pretty: node_modules
-	pnpm exec eslint --fix . || true
+	pnpm exec oxlint --fix . || true
 	pnpm exec oxfmt --write .

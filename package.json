@@ -31,7 +31,6 @@
 	"devDependencies": {
 		"@block65/custom-error": "^14.0.0",
 		"@block65/rest-client": "^12.1.1",
-		"@ts-morph/common": "^0.29.0",
 		"@tsconfig/node24": "^24.0.4",
 		"@tsconfig/strictest": "^2.0.8",
 		"@types/node": "^25.6.0",
