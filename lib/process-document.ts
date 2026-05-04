@@ -800,7 +800,9 @@ export async function processOpenApiDocument(
 					);
 					allOperations.push({
 						exportName: middlewareExportName,
-						schemas: operationSchemas.exact,
+						schemas: options?.exactOnly
+							? operationSchemas.exact
+							: operationSchemas.coerced,
 					});
 
 					// CommandInput

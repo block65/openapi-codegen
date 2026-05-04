@@ -95,7 +95,7 @@ exports[`header parameters 4`] = `
 "import { validator } from "hono/validator";
 import * as v from "valibot";
 import { PublicValibotHonoError } from "@block65/rest-client";
-import { exactUploadDataCommandParamsSchema } from "./valibot.js";
+import { uploadDataCommandParamsSchema } from "./valibot.js";
 
 function toPublicValibotHonoError(err: unknown): never {
 
@@ -108,7 +108,7 @@ function toPublicValibotHonoError(err: unknown): never {
 
 export const uploadData = [
         validator("param", (value) => {
-            return v.parseAsync(exactUploadDataCommandParamsSchema, value).catch(toPublicValibotHonoError);
+            return v.parseAsync(uploadDataCommandParamsSchema, value).catch(toPublicValibotHonoError);
         }),
     ] as const;
 "
