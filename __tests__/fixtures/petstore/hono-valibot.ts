@@ -4,16 +4,16 @@ import { PublicValibotHonoError } from "@block65/rest-client";
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T06:44:50.580Z
+ * Generated on 2026-05-09T08:13:11.158Z
  *
  */
 import { validator } from "hono/validator";
 import * as v from "valibot";
 import {
-	exactAddPetCommandBodySchema,
-	exactDeletePetCommandParamsSchema,
-	exactFindPetByIdCommandParamsSchema,
-	exactFindPetsCommandQuerySchema,
+	addPetCommandBodySchema,
+	deletePetCommandParamsSchema,
+	findPetByIdCommandParamsSchema,
+	findPetsCommandQuerySchema,
 } from "./valibot.js";
 
 function toPublicValibotHonoError(err: unknown): never {
@@ -26,28 +26,28 @@ function toPublicValibotHonoError(err: unknown): never {
 export const findPets = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactFindPetsCommandQuerySchema, value)
+			.parseAsync(findPetsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const addPet = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactAddPetCommandBodySchema, value)
+			.parseAsync(addPetCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const findpetbyid = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactFindPetByIdCommandParamsSchema, value)
+			.parseAsync(findPetByIdCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deletePet = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeletePetCommandParamsSchema, value)
+			.parseAsync(deletePetCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;

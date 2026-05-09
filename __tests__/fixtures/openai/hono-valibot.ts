@@ -4,128 +4,128 @@ import { PublicValibotHonoError } from "@block65/rest-client";
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T06:44:56.439Z
+ * Generated on 2026-05-09T08:13:17.420Z
  *
  */
 import { validator } from "hono/validator";
 import * as v from "valibot";
 import {
-	exactAddUploadPartCommandParamsSchema,
-	exactArchiveProjectCommandParamsSchema,
-	exactCancelBatchCommandParamsSchema,
-	exactCancelFineTuningJobCommandParamsSchema,
-	exactCancelRunCommandParamsSchema,
-	exactCancelUploadCommandParamsSchema,
-	exactCancelVectorStoreFileBatchCommandParamsSchema,
-	exactCompleteUploadCommandBodySchema,
-	exactCompleteUploadCommandParamsSchema,
-	exactCreateAssistantCommandBodySchema,
-	exactCreateBatchCommandBodySchema,
-	exactCreateChatCompletionCommandBodySchema,
-	exactCreateCompletionCommandBodySchema,
-	exactCreateEmbeddingCommandBodySchema,
-	exactCreateFineTuningJobCommandBodySchema,
-	exactCreateImageCommandBodySchema,
-	exactCreateMessageCommandBodySchema,
-	exactCreateMessageCommandParamsSchema,
-	exactCreateModerationCommandBodySchema,
-	exactCreateProjectCommandBodySchema,
-	exactCreateProjectServiceAccountCommandBodySchema,
-	exactCreateProjectServiceAccountCommandParamsSchema,
-	exactCreateProjectUserCommandBodySchema,
-	exactCreateProjectUserCommandParamsSchema,
-	exactCreateRunCommandBodySchema,
-	exactCreateRunCommandParamsSchema,
-	exactCreateRunCommandQuerySchema,
-	exactCreateSpeechCommandBodySchema,
-	exactCreateThreadAndRunCommandBodySchema,
-	exactCreateThreadCommandBodySchema,
-	exactCreateUploadCommandBodySchema,
-	exactCreateVectorStoreCommandBodySchema,
-	exactCreateVectorStoreFileBatchCommandBodySchema,
-	exactCreateVectorStoreFileBatchCommandParamsSchema,
-	exactCreateVectorStoreFileCommandBodySchema,
-	exactCreateVectorStoreFileCommandParamsSchema,
-	exactDeleteAssistantCommandParamsSchema,
-	exactDeleteFileCommandParamsSchema,
-	exactDeleteInviteCommandParamsSchema,
-	exactDeleteMessageCommandParamsSchema,
-	exactDeleteModelCommandParamsSchema,
-	exactDeleteProjectApiKeyCommandParamsSchema,
-	exactDeleteProjectServiceAccountCommandParamsSchema,
-	exactDeleteProjectUserCommandParamsSchema,
-	exactDeleteThreadCommandParamsSchema,
-	exactDeleteUserCommandParamsSchema,
-	exactDeleteVectorStoreCommandParamsSchema,
-	exactDeleteVectorStoreFileCommandParamsSchema,
-	exactDownloadFileCommandParamsSchema,
-	exactGetAssistantCommandParamsSchema,
-	exactGetMessageCommandParamsSchema,
-	exactGetRunCommandParamsSchema,
-	exactGetRunStepCommandParamsSchema,
-	exactGetRunStepCommandQuerySchema,
-	exactGetThreadCommandParamsSchema,
-	exactGetVectorStoreCommandParamsSchema,
-	exactGetVectorStoreFileBatchCommandParamsSchema,
-	exactGetVectorStoreFileCommandParamsSchema,
-	exactInviteUserCommandBodySchema,
-	exactListAssistantsCommandQuerySchema,
-	exactListAuditLogsCommandQuerySchema,
-	exactListBatchesCommandQuerySchema,
-	exactListFilesCommandQuerySchema,
-	exactListFilesInVectorStoreBatchCommandParamsSchema,
-	exactListFilesInVectorStoreBatchCommandQuerySchema,
-	exactListFineTuningEventsCommandParamsSchema,
-	exactListFineTuningEventsCommandQuerySchema,
-	exactListFineTuningJobCheckpointsCommandParamsSchema,
-	exactListFineTuningJobCheckpointsCommandQuerySchema,
-	exactListInvitesCommandQuerySchema,
-	exactListMessagesCommandParamsSchema,
-	exactListMessagesCommandQuerySchema,
-	exactListPaginatedFineTuningJobsCommandQuerySchema,
-	exactListProjectApiKeysCommandParamsSchema,
-	exactListProjectApiKeysCommandQuerySchema,
-	exactListProjectServiceAccountsCommandParamsSchema,
-	exactListProjectServiceAccountsCommandQuerySchema,
-	exactListProjectUsersCommandParamsSchema,
-	exactListProjectUsersCommandQuerySchema,
-	exactListProjectsCommandQuerySchema,
-	exactListRunStepsCommandParamsSchema,
-	exactListRunStepsCommandQuerySchema,
-	exactListRunsCommandParamsSchema,
-	exactListRunsCommandQuerySchema,
-	exactListUsersCommandQuerySchema,
-	exactListVectorStoreFilesCommandParamsSchema,
-	exactListVectorStoreFilesCommandQuerySchema,
-	exactListVectorStoresCommandQuerySchema,
-	exactModifyAssistantCommandBodySchema,
-	exactModifyAssistantCommandParamsSchema,
-	exactModifyMessageCommandBodySchema,
-	exactModifyMessageCommandParamsSchema,
-	exactModifyProjectCommandBodySchema,
-	exactModifyProjectCommandParamsSchema,
-	exactModifyProjectUserCommandBodySchema,
-	exactModifyProjectUserCommandParamsSchema,
-	exactModifyRunCommandBodySchema,
-	exactModifyRunCommandParamsSchema,
-	exactModifyThreadCommandBodySchema,
-	exactModifyThreadCommandParamsSchema,
-	exactModifyUserCommandBodySchema,
-	exactModifyUserCommandParamsSchema,
-	exactModifyVectorStoreCommandBodySchema,
-	exactModifyVectorStoreCommandParamsSchema,
-	exactRetrieveBatchCommandParamsSchema,
-	exactRetrieveFileCommandParamsSchema,
-	exactRetrieveFineTuningJobCommandParamsSchema,
-	exactRetrieveInviteCommandParamsSchema,
-	exactRetrieveModelCommandParamsSchema,
-	exactRetrieveProjectApiKeyCommandParamsSchema,
-	exactRetrieveProjectCommandParamsSchema,
-	exactRetrieveProjectServiceAccountCommandParamsSchema,
-	exactRetrieveProjectUserCommandParamsSchema,
-	exactRetrieveUserCommandParamsSchema,
-	exactSubmitToolOuputsToRunCommandBodySchema,
-	exactSubmitToolOuputsToRunCommandParamsSchema,
+	addUploadPartCommandParamsSchema,
+	archiveProjectCommandParamsSchema,
+	cancelBatchCommandParamsSchema,
+	cancelFineTuningJobCommandParamsSchema,
+	cancelRunCommandParamsSchema,
+	cancelUploadCommandParamsSchema,
+	cancelVectorStoreFileBatchCommandParamsSchema,
+	completeUploadCommandBodySchema,
+	completeUploadCommandParamsSchema,
+	createAssistantCommandBodySchema,
+	createBatchCommandBodySchema,
+	createChatCompletionCommandBodySchema,
+	createCompletionCommandBodySchema,
+	createEmbeddingCommandBodySchema,
+	createFineTuningJobCommandBodySchema,
+	createImageCommandBodySchema,
+	createMessageCommandBodySchema,
+	createMessageCommandParamsSchema,
+	createModerationCommandBodySchema,
+	createProjectCommandBodySchema,
+	createProjectServiceAccountCommandBodySchema,
+	createProjectServiceAccountCommandParamsSchema,
+	createProjectUserCommandBodySchema,
+	createProjectUserCommandParamsSchema,
+	createRunCommandBodySchema,
+	createRunCommandParamsSchema,
+	createRunCommandQuerySchema,
+	createSpeechCommandBodySchema,
+	createThreadAndRunCommandBodySchema,
+	createThreadCommandBodySchema,
+	createUploadCommandBodySchema,
+	createVectorStoreCommandBodySchema,
+	createVectorStoreFileBatchCommandBodySchema,
+	createVectorStoreFileBatchCommandParamsSchema,
+	createVectorStoreFileCommandBodySchema,
+	createVectorStoreFileCommandParamsSchema,
+	deleteAssistantCommandParamsSchema,
+	deleteFileCommandParamsSchema,
+	deleteInviteCommandParamsSchema,
+	deleteMessageCommandParamsSchema,
+	deleteModelCommandParamsSchema,
+	deleteProjectApiKeyCommandParamsSchema,
+	deleteProjectServiceAccountCommandParamsSchema,
+	deleteProjectUserCommandParamsSchema,
+	deleteThreadCommandParamsSchema,
+	deleteUserCommandParamsSchema,
+	deleteVectorStoreCommandParamsSchema,
+	deleteVectorStoreFileCommandParamsSchema,
+	downloadFileCommandParamsSchema,
+	getAssistantCommandParamsSchema,
+	getMessageCommandParamsSchema,
+	getRunCommandParamsSchema,
+	getRunStepCommandParamsSchema,
+	getRunStepCommandQuerySchema,
+	getThreadCommandParamsSchema,
+	getVectorStoreCommandParamsSchema,
+	getVectorStoreFileBatchCommandParamsSchema,
+	getVectorStoreFileCommandParamsSchema,
+	inviteUserCommandBodySchema,
+	listAssistantsCommandQuerySchema,
+	listAuditLogsCommandQuerySchema,
+	listBatchesCommandQuerySchema,
+	listFilesCommandQuerySchema,
+	listFilesInVectorStoreBatchCommandParamsSchema,
+	listFilesInVectorStoreBatchCommandQuerySchema,
+	listFineTuningEventsCommandParamsSchema,
+	listFineTuningEventsCommandQuerySchema,
+	listFineTuningJobCheckpointsCommandParamsSchema,
+	listFineTuningJobCheckpointsCommandQuerySchema,
+	listInvitesCommandQuerySchema,
+	listMessagesCommandParamsSchema,
+	listMessagesCommandQuerySchema,
+	listPaginatedFineTuningJobsCommandQuerySchema,
+	listProjectApiKeysCommandParamsSchema,
+	listProjectApiKeysCommandQuerySchema,
+	listProjectServiceAccountsCommandParamsSchema,
+	listProjectServiceAccountsCommandQuerySchema,
+	listProjectUsersCommandParamsSchema,
+	listProjectUsersCommandQuerySchema,
+	listProjectsCommandQuerySchema,
+	listRunStepsCommandParamsSchema,
+	listRunStepsCommandQuerySchema,
+	listRunsCommandParamsSchema,
+	listRunsCommandQuerySchema,
+	listUsersCommandQuerySchema,
+	listVectorStoreFilesCommandParamsSchema,
+	listVectorStoreFilesCommandQuerySchema,
+	listVectorStoresCommandQuerySchema,
+	modifyAssistantCommandBodySchema,
+	modifyAssistantCommandParamsSchema,
+	modifyMessageCommandBodySchema,
+	modifyMessageCommandParamsSchema,
+	modifyProjectCommandBodySchema,
+	modifyProjectCommandParamsSchema,
+	modifyProjectUserCommandBodySchema,
+	modifyProjectUserCommandParamsSchema,
+	modifyRunCommandBodySchema,
+	modifyRunCommandParamsSchema,
+	modifyThreadCommandBodySchema,
+	modifyThreadCommandParamsSchema,
+	modifyUserCommandBodySchema,
+	modifyUserCommandParamsSchema,
+	modifyVectorStoreCommandBodySchema,
+	modifyVectorStoreCommandParamsSchema,
+	retrieveBatchCommandParamsSchema,
+	retrieveFileCommandParamsSchema,
+	retrieveFineTuningJobCommandParamsSchema,
+	retrieveInviteCommandParamsSchema,
+	retrieveModelCommandParamsSchema,
+	retrieveProjectApiKeyCommandParamsSchema,
+	retrieveProjectCommandParamsSchema,
+	retrieveProjectServiceAccountCommandParamsSchema,
+	retrieveProjectUserCommandParamsSchema,
+	retrieveUserCommandParamsSchema,
+	submitToolOuputsToRunCommandBodySchema,
+	submitToolOuputsToRunCommandParamsSchema,
 } from "./valibot.js";
 
 function toPublicValibotHonoError(err: unknown): never {
@@ -138,21 +138,21 @@ function toPublicValibotHonoError(err: unknown): never {
 export const createChatCompletion = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateChatCompletionCommandBodySchema, value)
+			.parseAsync(createChatCompletionCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createCompletion = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateCompletionCommandBodySchema, value)
+			.parseAsync(createCompletionCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createImage = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateImageCommandBodySchema, value)
+			.parseAsync(createImageCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
@@ -161,14 +161,14 @@ export const createImageVariation = [] as const;
 export const createEmbedding = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateEmbeddingCommandBodySchema, value)
+			.parseAsync(createEmbeddingCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createSpeech = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateSpeechCommandBodySchema, value)
+			.parseAsync(createSpeechCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
@@ -177,7 +177,7 @@ export const createTranslation = [] as const;
 export const listFiles = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListFilesCommandQuerySchema, value)
+			.parseAsync(listFilesCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
@@ -185,106 +185,106 @@ export const createFile = [] as const;
 export const deleteFile = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteFileCommandParamsSchema, value)
+			.parseAsync(deleteFileCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveFile = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveFileCommandParamsSchema, value)
+			.parseAsync(retrieveFileCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const downloadFile = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDownloadFileCommandParamsSchema, value)
+			.parseAsync(downloadFileCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createUpload = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateUploadCommandBodySchema, value)
+			.parseAsync(createUploadCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const addUploadPart = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactAddUploadPartCommandParamsSchema, value)
+			.parseAsync(addUploadPartCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const completeUpload = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCompleteUploadCommandBodySchema, value)
+			.parseAsync(completeUploadCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCompleteUploadCommandParamsSchema, value)
+			.parseAsync(completeUploadCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelUpload = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCancelUploadCommandParamsSchema, value)
+			.parseAsync(cancelUploadCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createFineTuningJob = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateFineTuningJobCommandBodySchema, value)
+			.parseAsync(createFineTuningJobCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listPaginatedFineTuningJobs = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListPaginatedFineTuningJobsCommandQuerySchema, value)
+			.parseAsync(listPaginatedFineTuningJobsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveFineTuningJob = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveFineTuningJobCommandParamsSchema, value)
+			.parseAsync(retrieveFineTuningJobCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listFineTuningEvents = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListFineTuningEventsCommandParamsSchema, value)
+			.parseAsync(listFineTuningEventsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListFineTuningEventsCommandQuerySchema, value)
+			.parseAsync(listFineTuningEventsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelFineTuningJob = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCancelFineTuningJobCommandParamsSchema, value)
+			.parseAsync(cancelFineTuningJobCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listFineTuningJobCheckpoints = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListFineTuningJobCheckpointsCommandParamsSchema, value)
+			.parseAsync(listFineTuningJobCheckpointsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListFineTuningJobCheckpointsCommandQuerySchema, value)
+			.parseAsync(listFineTuningJobCheckpointsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
@@ -292,608 +292,608 @@ export const listModels = [] as const;
 export const retrieveModel = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveModelCommandParamsSchema, value)
+			.parseAsync(retrieveModelCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteModel = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteModelCommandParamsSchema, value)
+			.parseAsync(deleteModelCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createModeration = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateModerationCommandBodySchema, value)
+			.parseAsync(createModerationCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listAssistants = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListAssistantsCommandQuerySchema, value)
+			.parseAsync(listAssistantsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createAssistant = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateAssistantCommandBodySchema, value)
+			.parseAsync(createAssistantCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getAssistant = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetAssistantCommandParamsSchema, value)
+			.parseAsync(getAssistantCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyAssistant = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyAssistantCommandBodySchema, value)
+			.parseAsync(modifyAssistantCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyAssistantCommandParamsSchema, value)
+			.parseAsync(modifyAssistantCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteAssistant = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteAssistantCommandParamsSchema, value)
+			.parseAsync(deleteAssistantCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createThread = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateThreadCommandBodySchema, value)
+			.parseAsync(createThreadCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getThread = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetThreadCommandParamsSchema, value)
+			.parseAsync(getThreadCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyThread = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyThreadCommandBodySchema, value)
+			.parseAsync(modifyThreadCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyThreadCommandParamsSchema, value)
+			.parseAsync(modifyThreadCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteThread = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteThreadCommandParamsSchema, value)
+			.parseAsync(deleteThreadCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listMessages = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListMessagesCommandParamsSchema, value)
+			.parseAsync(listMessagesCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListMessagesCommandQuerySchema, value)
+			.parseAsync(listMessagesCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createMessage = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateMessageCommandBodySchema, value)
+			.parseAsync(createMessageCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateMessageCommandParamsSchema, value)
+			.parseAsync(createMessageCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getMessage = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetMessageCommandParamsSchema, value)
+			.parseAsync(getMessageCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyMessage = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyMessageCommandBodySchema, value)
+			.parseAsync(modifyMessageCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyMessageCommandParamsSchema, value)
+			.parseAsync(modifyMessageCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteMessage = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteMessageCommandParamsSchema, value)
+			.parseAsync(deleteMessageCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createThreadAndRun = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateThreadAndRunCommandBodySchema, value)
+			.parseAsync(createThreadAndRunCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listRuns = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListRunsCommandParamsSchema, value)
+			.parseAsync(listRunsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListRunsCommandQuerySchema, value)
+			.parseAsync(listRunsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createRun = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateRunCommandBodySchema, value)
+			.parseAsync(createRunCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateRunCommandParamsSchema, value)
+			.parseAsync(createRunCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactCreateRunCommandQuerySchema, value)
+			.parseAsync(createRunCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getRun = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetRunCommandParamsSchema, value)
+			.parseAsync(getRunCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyRun = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyRunCommandBodySchema, value)
+			.parseAsync(modifyRunCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyRunCommandParamsSchema, value)
+			.parseAsync(modifyRunCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const submitToolOuputsToRun = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactSubmitToolOuputsToRunCommandBodySchema, value)
+			.parseAsync(submitToolOuputsToRunCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactSubmitToolOuputsToRunCommandParamsSchema, value)
+			.parseAsync(submitToolOuputsToRunCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelRun = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCancelRunCommandParamsSchema, value)
+			.parseAsync(cancelRunCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listRunSteps = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListRunStepsCommandParamsSchema, value)
+			.parseAsync(listRunStepsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListRunStepsCommandQuerySchema, value)
+			.parseAsync(listRunStepsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getRunStep = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetRunStepCommandParamsSchema, value)
+			.parseAsync(getRunStepCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactGetRunStepCommandQuerySchema, value)
+			.parseAsync(getRunStepCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listVectorStores = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListVectorStoresCommandQuerySchema, value)
+			.parseAsync(listVectorStoresCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createVectorStore = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateVectorStoreCommandBodySchema, value)
+			.parseAsync(createVectorStoreCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getVectorStore = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetVectorStoreCommandParamsSchema, value)
+			.parseAsync(getVectorStoreCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyVectorStore = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyVectorStoreCommandBodySchema, value)
+			.parseAsync(modifyVectorStoreCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyVectorStoreCommandParamsSchema, value)
+			.parseAsync(modifyVectorStoreCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteVectorStore = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteVectorStoreCommandParamsSchema, value)
+			.parseAsync(deleteVectorStoreCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listVectorStoreFiles = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListVectorStoreFilesCommandParamsSchema, value)
+			.parseAsync(listVectorStoreFilesCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListVectorStoreFilesCommandQuerySchema, value)
+			.parseAsync(listVectorStoreFilesCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createVectorStoreFile = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateVectorStoreFileCommandBodySchema, value)
+			.parseAsync(createVectorStoreFileCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateVectorStoreFileCommandParamsSchema, value)
+			.parseAsync(createVectorStoreFileCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getVectorStoreFile = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetVectorStoreFileCommandParamsSchema, value)
+			.parseAsync(getVectorStoreFileCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteVectorStoreFile = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteVectorStoreFileCommandParamsSchema, value)
+			.parseAsync(deleteVectorStoreFileCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createVectorStoreFileBatch = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateVectorStoreFileBatchCommandBodySchema, value)
+			.parseAsync(createVectorStoreFileBatchCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateVectorStoreFileBatchCommandParamsSchema, value)
+			.parseAsync(createVectorStoreFileBatchCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getVectorStoreFileBatch = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetVectorStoreFileBatchCommandParamsSchema, value)
+			.parseAsync(getVectorStoreFileBatchCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelVectorStoreFileBatch = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCancelVectorStoreFileBatchCommandParamsSchema, value)
+			.parseAsync(cancelVectorStoreFileBatchCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listFilesInVectorStoreBatch = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListFilesInVectorStoreBatchCommandParamsSchema, value)
+			.parseAsync(listFilesInVectorStoreBatchCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListFilesInVectorStoreBatchCommandQuerySchema, value)
+			.parseAsync(listFilesInVectorStoreBatchCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createBatch = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateBatchCommandBodySchema, value)
+			.parseAsync(createBatchCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listBatches = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListBatchesCommandQuerySchema, value)
+			.parseAsync(listBatchesCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveBatch = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveBatchCommandParamsSchema, value)
+			.parseAsync(retrieveBatchCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelBatch = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCancelBatchCommandParamsSchema, value)
+			.parseAsync(cancelBatchCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listauditlogs = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListAuditLogsCommandQuerySchema, value)
+			.parseAsync(listAuditLogsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listinvites = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListInvitesCommandQuerySchema, value)
+			.parseAsync(listInvitesCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const inviteUser = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactInviteUserCommandBodySchema, value)
+			.parseAsync(inviteUserCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveinvite = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveInviteCommandParamsSchema, value)
+			.parseAsync(retrieveInviteCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteinvite = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteInviteCommandParamsSchema, value)
+			.parseAsync(deleteInviteCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listusers = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListUsersCommandQuerySchema, value)
+			.parseAsync(listUsersCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveuser = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveUserCommandParamsSchema, value)
+			.parseAsync(retrieveUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyuser = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyUserCommandBodySchema, value)
+			.parseAsync(modifyUserCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyUserCommandParamsSchema, value)
+			.parseAsync(modifyUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteuser = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteUserCommandParamsSchema, value)
+			.parseAsync(deleteUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojects = [
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListProjectsCommandQuerySchema, value)
+			.parseAsync(listProjectsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createproject = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateProjectCommandBodySchema, value)
+			.parseAsync(createProjectCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveproject = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveProjectCommandParamsSchema, value)
+			.parseAsync(retrieveProjectCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyproject = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyProjectCommandBodySchema, value)
+			.parseAsync(modifyProjectCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyProjectCommandParamsSchema, value)
+			.parseAsync(modifyProjectCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const archiveproject = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactArchiveProjectCommandParamsSchema, value)
+			.parseAsync(archiveProjectCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojectusers = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListProjectUsersCommandParamsSchema, value)
+			.parseAsync(listProjectUsersCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListProjectUsersCommandQuerySchema, value)
+			.parseAsync(listProjectUsersCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createprojectuser = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateProjectUserCommandBodySchema, value)
+			.parseAsync(createProjectUserCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateProjectUserCommandParamsSchema, value)
+			.parseAsync(createProjectUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveprojectuser = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveProjectUserCommandParamsSchema, value)
+			.parseAsync(retrieveProjectUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const modifyprojectuser = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactModifyProjectUserCommandBodySchema, value)
+			.parseAsync(modifyProjectUserCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactModifyProjectUserCommandParamsSchema, value)
+			.parseAsync(modifyProjectUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteprojectuser = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteProjectUserCommandParamsSchema, value)
+			.parseAsync(deleteProjectUserCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojectserviceaccounts = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListProjectServiceAccountsCommandParamsSchema, value)
+			.parseAsync(listProjectServiceAccountsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListProjectServiceAccountsCommandQuerySchema, value)
+			.parseAsync(listProjectServiceAccountsCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createprojectserviceaccount = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateProjectServiceAccountCommandBodySchema, value)
+			.parseAsync(createProjectServiceAccountCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateProjectServiceAccountCommandParamsSchema, value)
+			.parseAsync(createProjectServiceAccountCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveprojectserviceaccount = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveProjectServiceAccountCommandParamsSchema, value)
+			.parseAsync(retrieveProjectServiceAccountCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteprojectserviceaccount = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteProjectServiceAccountCommandParamsSchema, value)
+			.parseAsync(deleteProjectServiceAccountCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listprojectapikeys = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListProjectApiKeysCommandParamsSchema, value)
+			.parseAsync(listProjectApiKeysCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("query", (value) => {
 		return v
-			.parseAsync(exactListProjectApiKeysCommandQuerySchema, value)
+			.parseAsync(listProjectApiKeysCommandQuerySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const retrieveprojectapikey = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactRetrieveProjectApiKeyCommandParamsSchema, value)
+			.parseAsync(retrieveProjectApiKeyCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deleteprojectapikey = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeleteProjectApiKeyCommandParamsSchema, value)
+			.parseAsync(deleteProjectApiKeyCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;

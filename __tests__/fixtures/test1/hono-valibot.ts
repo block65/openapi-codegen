@@ -4,37 +4,37 @@ import { PublicValibotHonoError } from "@block65/rest-client";
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-02T06:44:52.639Z
+ * Generated on 2026-05-09T08:13:13.582Z
  *
  */
 import { validator } from "hono/validator";
 import * as v from "valibot";
 import {
-	exactCancelSubscriptionCommandParamsSchema,
-	exactCreateBillingAccountCommandBodySchema,
-	exactCreateBillingSubscriptionCommandBodySchema,
-	exactCreateBillingSubscriptionCommandParamsSchema,
-	exactCreatePaymentMethodCommandParamsSchema,
-	exactDeletePaymentMethodCommandParamsSchema,
-	exactGetBillingAccountCommandParamsSchema,
-	exactGetBillingAccountPortalCommandBodySchema,
-	exactGetBillingAccountPortalCommandParamsSchema,
-	exactGetOperationCommandParamsSchema,
-	exactGetPaymentMethodCommandParamsSchema,
-	exactGetPaymentMethodFromStripeCommandParamsSchema,
-	exactImportBillingDataCommandParamsSchema,
-	exactLinkBillingAccountCommandBodySchema,
-	exactLinkBillingAccountCommandParamsSchema,
-	exactListBillingSubscriptionsCommandParamsSchema,
-	exactListPaymentMethodsCommandParamsSchema,
-	exactUpdateBillingAccountCommandBodySchema,
-	exactUpdateBillingAccountCommandParamsSchema,
-	exactUpdateBillingSubscriptionCommandBodySchema,
-	exactUpdateBillingSubscriptionCommandParamsSchema,
-	exactUpdateBillingSubscriptionPromoCodeCommandBodySchema,
-	exactUpdateBillingSubscriptionPromoCodeCommandParamsSchema,
-	exactUpdatePaymentMethodCommandBodySchema,
-	exactUpdatePaymentMethodCommandParamsSchema,
+	cancelSubscriptionCommandParamsSchema,
+	createBillingAccountCommandBodySchema,
+	createBillingSubscriptionCommandBodySchema,
+	createBillingSubscriptionCommandParamsSchema,
+	createPaymentMethodCommandParamsSchema,
+	deletePaymentMethodCommandParamsSchema,
+	getBillingAccountCommandParamsSchema,
+	getBillingAccountPortalCommandBodySchema,
+	getBillingAccountPortalCommandParamsSchema,
+	getOperationCommandParamsSchema,
+	getPaymentMethodCommandParamsSchema,
+	getPaymentMethodFromStripeCommandParamsSchema,
+	importBillingDataCommandParamsSchema,
+	linkBillingAccountCommandBodySchema,
+	linkBillingAccountCommandParamsSchema,
+	listBillingSubscriptionsCommandParamsSchema,
+	listPaymentMethodsCommandParamsSchema,
+	updateBillingAccountCommandBodySchema,
+	updateBillingAccountCommandParamsSchema,
+	updateBillingSubscriptionCommandBodySchema,
+	updateBillingSubscriptionCommandParamsSchema,
+	updateBillingSubscriptionPromoCodeCommandBodySchema,
+	updateBillingSubscriptionPromoCodeCommandParamsSchema,
+	updatePaymentMethodCommandBodySchema,
+	updatePaymentMethodCommandParamsSchema,
 } from "./valibot.js";
 
 function toPublicValibotHonoError(err: unknown): never {
@@ -47,14 +47,14 @@ function toPublicValibotHonoError(err: unknown): never {
 export const importBillingData = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactImportBillingDataCommandParamsSchema, value)
+			.parseAsync(importBillingDataCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getOperation = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetOperationCommandParamsSchema, value)
+			.parseAsync(getOperationCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
@@ -62,153 +62,147 @@ export const listBillingAccounts = [] as const;
 export const createBillingAccount = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateBillingAccountCommandBodySchema, value)
+			.parseAsync(createBillingAccountCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getBillingAccount = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetBillingAccountCommandParamsSchema, value)
+			.parseAsync(getBillingAccountCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const updateBillingAccount = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactUpdateBillingAccountCommandBodySchema, value)
+			.parseAsync(updateBillingAccountCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactUpdateBillingAccountCommandParamsSchema, value)
+			.parseAsync(updateBillingAccountCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getBillingAccountPortal = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactGetBillingAccountPortalCommandBodySchema, value)
+			.parseAsync(getBillingAccountPortalCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetBillingAccountPortalCommandParamsSchema, value)
+			.parseAsync(getBillingAccountPortalCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const linkBillingAccount = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactLinkBillingAccountCommandBodySchema, value)
+			.parseAsync(linkBillingAccountCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactLinkBillingAccountCommandParamsSchema, value)
+			.parseAsync(linkBillingAccountCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listPaymentMethods = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListPaymentMethodsCommandParamsSchema, value)
+			.parseAsync(listPaymentMethodsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createPaymentMethod = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreatePaymentMethodCommandParamsSchema, value)
+			.parseAsync(createPaymentMethodCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getPaymentMethodFromStripe = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetPaymentMethodFromStripeCommandParamsSchema, value)
+			.parseAsync(getPaymentMethodFromStripeCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const getPaymentMethod = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactGetPaymentMethodCommandParamsSchema, value)
+			.parseAsync(getPaymentMethodCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const updatePaymentMethod = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactUpdatePaymentMethodCommandBodySchema, value)
+			.parseAsync(updatePaymentMethodCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactUpdatePaymentMethodCommandParamsSchema, value)
+			.parseAsync(updatePaymentMethodCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const deletePaymentMethod = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactDeletePaymentMethodCommandParamsSchema, value)
+			.parseAsync(deletePaymentMethodCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const listBillingSubscriptions = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactListBillingSubscriptionsCommandParamsSchema, value)
+			.parseAsync(listBillingSubscriptionsCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const createBillingSubscription = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactCreateBillingSubscriptionCommandBodySchema, value)
+			.parseAsync(createBillingSubscriptionCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCreateBillingSubscriptionCommandParamsSchema, value)
+			.parseAsync(createBillingSubscriptionCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const updateBillingSubscription = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(exactUpdateBillingSubscriptionCommandBodySchema, value)
+			.parseAsync(updateBillingSubscriptionCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactUpdateBillingSubscriptionCommandParamsSchema, value)
+			.parseAsync(updateBillingSubscriptionCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const cancelSubscription = [
 	validator("param", (value) => {
 		return v
-			.parseAsync(exactCancelSubscriptionCommandParamsSchema, value)
+			.parseAsync(cancelSubscriptionCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
 export const updateBillingSubscriptionPromoCode = [
 	validator("json", (value) => {
 		return v
-			.parseAsync(
-				exactUpdateBillingSubscriptionPromoCodeCommandBodySchema,
-				value,
-			)
+			.parseAsync(updateBillingSubscriptionPromoCodeCommandBodySchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 	validator("param", (value) => {
 		return v
-			.parseAsync(
-				exactUpdateBillingSubscriptionPromoCodeCommandParamsSchema,
-				value,
-			)
+			.parseAsync(updateBillingSubscriptionPromoCodeCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
