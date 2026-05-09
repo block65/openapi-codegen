@@ -26,7 +26,7 @@ exports[`header parameters 1`] = `
 "export type UploadStatus = "pending" | "complete";
 export type UploadDataCommandHeader = {
         "content-type": "application/json" | "text/csv" | "application/xml";
-        "content-length": number;
+        "content-length": \`\${number}\`;
         "x-idempotency-key"?: string;
     };
 export type UploadDataCommandParams = {
@@ -135,7 +135,7 @@ export type ListFilesCommandQuery = {
         limit?: \`\${number}\` | undefined;
     };
 export type ListFilesCommandHeader = {
-        "x-rate-limit": number;
+        "x-rate-limit": \`\${number}\`;
     };
 export type ListFilesCommandInput = ListFilesCommandQuery;
 "

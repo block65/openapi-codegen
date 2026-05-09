@@ -549,10 +549,8 @@ export async function processOpenApiDocument(
 												name,
 												hp.schema,
 												{
-													// headers are strings on the wire but
-													// valibot parses them to native types
-													booleanAsStringish: false,
-													integerAsStringish: false,
+													booleanAsStringish: true,
+													integerAsStringish: true,
 												},
 											);
 
