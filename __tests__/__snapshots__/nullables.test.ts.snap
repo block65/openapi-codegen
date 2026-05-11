@@ -39,7 +39,6 @@ export type UploadDataCommandInput = UploadDataCommandParams;
 exports[`header parameters 2`] = `
 "import { Command } from "@block65/rest-client";
 import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.js";
-import { uploadDataCommandParamsSchema, uploadStatusSchema } from "./valibot.js";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated 
@@ -56,8 +55,6 @@ function encodePath(strings: TemplateStringsArray, ...values: string[]): string 
  */
 export class UploadDataCommand extends Command<UploadDataCommandInput, UploadStatus, never, UploadDataCommandHeader> {
     public override method = "post" as const;
-    static paramsSchema = uploadDataCommandParamsSchema;
-    static responseSchema = uploadStatusSchema;
 
     constructor(input: UploadDataCommandInput, headers: UploadDataCommandHeader) {
         const {uploadId } = input;
@@ -68,10 +65,22 @@ export class UploadDataCommand extends Command<UploadDataCommandInput, UploadSta
 `;
 
 exports[`header parameters 3`] = `
+"import * as commands from "./commands.js";
+import * as schemas from "./valibot.js";
+
+export class UploadDataCommand extends commands.UploadDataCommand {
+    static responseSchema = schemas.uploadDataCommandResponseSchema;
+}
+"
+`;
+
+exports[`header parameters 4`] = `
 "import * as v from "valibot";
 
 export const exactUploadStatusSchema = v.picklist(["pending", "complete"]);
 export const uploadStatusSchema = exactUploadStatusSchema;
+export const exactUploadDataCommandResponseSchema = exactUploadStatusSchema;
+export const uploadDataCommandResponseSchema = uploadStatusSchema;
 export const exactUploadDataCommandParamsSchema = v.strictObject({
         "uploadId": v.string()
     });
@@ -91,7 +100,7 @@ export const uploadDataCommandHeaderSchema = v.object({
 "
 `;
 
-exports[`header parameters 4`] = `
+exports[`header parameters 5`] = `
 "import { validator } from "hono/validator";
 import * as v from "valibot";
 import { PublicValibotHonoError } from "@block65/rest-client";
@@ -148,6 +157,8 @@ export const exactDummySchema = v.string();
 export const dummySchema = v.pipe(v.string(), v.trim());
 export const exactExpireTimeSchema = v.pipe(v.bigint(), v.minValue(BigInt(0)));
 export const expireTimeSchema = v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]);
+export const exactListFilesCommandResponseSchema = exactDummySchema;
+export const listFilesCommandResponseSchema = dummySchema;
 export const exactListFilesCommandQuerySchema = v.strictObject({
         "exp": v.pipe(v.bigint(), v.minValue(BigInt(0))),
         "limit": v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)))

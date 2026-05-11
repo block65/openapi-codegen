@@ -27,6 +27,7 @@ export async function build(
 
 	const {
 		commandsFile,
+		commandsValidatedFile,
 		typesFile,
 		mainFile,
 		valibotFile,
@@ -40,10 +41,14 @@ export async function build(
 		mainFile,
 		valibotFile,
 		honoValibotFile,
+		...(commandsValidatedFile.getStatements().length > 0
+			? [commandsValidatedFile]
+			: []),
 		...(enumsFile.getStatements().length > 0 ? [enumsFile] : []),
 	];
 
 	commandsFile.insertStatements(0, "/** eslint-disable max-classes */");
+	commandsValidatedFile.insertStatements(0, "/** eslint-disable max-classes */");
 
 	// eslint-disable-next-line no-restricted-syntax
 	for await (const file of files) {

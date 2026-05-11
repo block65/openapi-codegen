@@ -575,34 +575,49 @@ export function createValidatorForOperationInput(
 	commandName: string,
 	input: {
 		body?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
+		response?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
 		params: oas30.ParameterObject[];
 		query: oas30.ParameterObject[];
 		header: oas30.ParameterObject[];
 	},
 	exactOnly?: boolean,
 ): {
-	exact: { json?: string; param?: string; query?: string; header?: string };
-	coerced: { json?: string; param?: string; query?: string; header?: string };
+	exact: {
+		json?: string;
+		response?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	};
+	coerced: {
+		json?: string;
+		response?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	};
 } {
 	const exact: {
 		json?: string;
+		response?: string;
 		param?: string;
 		query?: string;
 		header?: string;
 	} = {};
 	const coerced: {
 		json?: string;
+		response?: string;
 		param?: string;
 		query?: string;
 		header?: string;
 	} = {};
 
-	// 1. Generate the JSON Body Schema
-	if (input.body) {
-		const exactName = camelcase(["exact", commandName, "body", "schema"]);
-		const coercedName = camelcase([commandName, "body", "schema"]);
-		exact.json = exactName;
-		coerced.json = coercedName;
+	const emitSchemaPair = (
+		segment: "body" | "response",
+		schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	) => {
+		const exactName = camelcase(["exact", commandName, segment, "schema"]);
+		const coercedName = camelcase([commandName, segment, "schema"]);
 
 		valibotFile.addVariableStatement({
 			isExported: true,
@@ -610,7 +625,7 @@ export function createValidatorForOperationInput(
 			declarations: [
 				{
 					name: exactName,
-					initializer: schemaToValidator(validatorSchemas, input.body, "exact"),
+					initializer: schemaToValidator(validatorSchemas, schema, "exact"),
 				},
 			],
 		});
@@ -622,15 +637,30 @@ export function createValidatorForOperationInput(
 				declarations: [
 					{
 						name: coercedName,
-						initializer: schemaToValidator(
-							validatorSchemas,
-							input.body,
-							"coerced",
-						),
+						initializer: schemaToValidator(validatorSchemas, schema, "coerced"),
 					},
 				],
 			});
 		}
+
+		return { exactName, coercedName };
+	};
+
+	// 1. Generate the JSON Body Schema
+	if (input.body) {
+		const { exactName, coercedName } = emitSchemaPair("body", input.body);
+		exact.json = exactName;
+		coerced.json = coercedName;
+	}
+
+	// 1b. Generate the Response Schema (mirrors body — accepts inline or $ref)
+	if (input.response) {
+		const { exactName, coercedName } = emitSchemaPair(
+			"response",
+			input.response,
+		);
+		exact.response = exactName;
+		coerced.response = coercedName;
 	}
 
 	// 2. Helper for Params/Query (Strict Objects)

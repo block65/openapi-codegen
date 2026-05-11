@@ -184,6 +184,52 @@
 					}
 				}
 			}
+		},
+		"/pets/{id}/wrapped": {
+			"get": {
+				"description": "Returns a pet inside an envelope — exercises inline 2xx response shape with nested $ref",
+				"operationId": "findPetWrapped",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID of pet to fetch",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "wrapped pet response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"required": ["pet"],
+									"properties": {
+										"pet": {
+											"$ref": "#/components/schemas/Pet"
+										}
+									}
+								}
+							}
+						}
+					},
+					"default": {
+						"description": "unexpected error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Error"
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	},
 	"components": {

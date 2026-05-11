@@ -46,7 +46,13 @@ export function createHonoValibotFile(
 export function createHonoValibotMiddleware(
 	honoValibotFile: SourceFile,
 	exportName: string,
-	schemas: { json?: string; param?: string; query?: string; header?: string },
+	schemas: {
+		json?: string;
+		response?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	},
 ): void {
 	honoValibotFile.addVariableStatement({
 		isExported: true,
@@ -57,8 +63,11 @@ export function createHonoValibotMiddleware(
 				initializer: (writer) => {
 					writer.write("[");
 					writer.indent(() => {
+						// Hono validators only run on inbound request data; response
+						// schemas are emitted for client-side consumption only, and
+						// `header` is intentionally skipped (extra HTTP headers ok).
 						for (const [target, schemaName] of Object.entries(schemas).filter(
-							([t]) => t !== "header",
+							([t]) => t !== "header" && t !== "response",
 						)) {
 							writer.writeLine(
 								`validator(${JSON.stringify(target)}, (value) => {`,

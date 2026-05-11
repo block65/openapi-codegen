@@ -44,7 +44,13 @@ export interface CodegenOptions {
 
 interface OperationMiddlewareInfo {
 	exportName: string;
-	schemas: { json?: string; param?: string; query?: string; header?: string };
+	schemas: {
+		json?: string;
+		response?: string;
+		param?: string;
+		query?: string;
+		header?: string;
+	};
 }
 
 const neverKeyword = "never" as const;
@@ -99,6 +105,18 @@ export async function processOpenApiDocument(
 
 	const commandsFile = project.createSourceFile(
 		join(outputDir, "commands.ts"),
+		"",
+		{
+			overwrite: true,
+		},
+	);
+
+	// Parallel file: subclasses that attach `static responseSchema`. Consumers
+	// import from this file (or alias `./commands` → `./commands-validated` in
+	// dev) to opt into runtime response validation. Lean `commands.ts` carries
+	// zero schema imports, so prod bundles stay small.
+	const commandsValidatedFile = project.createSourceFile(
+		join(outputDir, "commands-validated.ts"),
 		"",
 		{
 			overwrite: true,
@@ -188,7 +206,13 @@ export async function processOpenApiDocument(
 	});
 
 	const valibotModuleSpecifier = `./${valibotFile.getBaseNameWithoutExtension()}.js`;
-	const commandValibotImports = new Set<string>();
+
+	// Commands with a response schema → emit a subclass in commands-validated.ts.
+	// Commands without one → re-export the base. Both keep the same exported name
+	// so consumers can swap files (or alias) without changing import sites.
+	const validatedSubclasses: { commandName: string; responseSchema: string }[] =
+		[];
+	const validatedReExports: string[] = [];
 
 	const typesModuleSpecifier = `./${typesFile.getBaseNameWithoutExtension()}.js`;
 
@@ -776,6 +800,22 @@ export async function processOpenApiDocument(
 					});
 					ensureImport(inputType);
 
+					// Resolve the first 2xx JSON response schema (inline or $ref) so the
+					// validator pipeline treats responses the same as request bodies.
+					const firstJsonResponseSchema = iife(() => {
+						const firstSuccess = Object.entries(
+							operationObject.responses ?? {},
+						).find(([s]) => s.startsWith("2"));
+						if (!firstSuccess) {
+							return undefined;
+						}
+						const [statusCode, response] = firstSuccess;
+						if (statusCode === "204" || "$ref" in response) {
+							return undefined;
+						}
+						return response.content?.["application/json"]?.schema;
+					});
+
 					// Hook: Generate Valibot validator for operation input
 					const operationSchemas = createValidatorForOperationInput(
 						validators,
@@ -784,6 +824,9 @@ export async function processOpenApiDocument(
 						{
 							...(jsonRequestBodyObject?.schema && {
 								body: jsonRequestBodyObject?.schema,
+							}),
+							...(firstJsonResponseSchema && {
+								response: firstJsonResponseSchema,
 							}),
 							params: pathParameters,
 							query: queryParameters,
@@ -945,83 +988,22 @@ export async function processOpenApiDocument(
 							?.addTypeArgument(unspecifiedKeyword);
 					}
 
-					// Static schema properties for rest-client integration
+					// Defer static schema attachment to commands-validated.ts. The lean
+					// commands.ts file carries no schema imports — body/param/query
+					// schemas aren't read by rest-client anyway (hono-valibot.ts imports
+					// directly from valibot.ts for server middleware), and the response
+					// schema lives on the validated subclass.
 					const coercedSchemas = options?.exactOnly
 						? operationSchemas.exact
 						: operationSchemas.coerced;
 
-					const staticSchemaProps: { name: string; initializer: string }[] = [];
-					if (coercedSchemas.json) {
-						staticSchemaProps.push({
-							name: "bodySchema",
-							initializer: coercedSchemas.json,
+					if (coercedSchemas.response) {
+						validatedSubclasses.push({
+							commandName,
+							responseSchema: coercedSchemas.response,
 						});
-					}
-					if (coercedSchemas.param) {
-						staticSchemaProps.push({
-							name: "paramsSchema",
-							initializer: coercedSchemas.param,
-						});
-					}
-					if (coercedSchemas.query) {
-						staticSchemaProps.push({
-							name: "querySchema",
-							initializer: coercedSchemas.query,
-						});
-					}
-
-					// Resolve response schema from the first 2xx response $ref
-					const responseRef = iife(() => {
-						const firstSuccess = Object.entries(
-							operationObject.responses ?? {},
-						).find(([s]) => s.startsWith("2"));
-						if (!firstSuccess) {
-							return undefined;
-						}
-						const [statusCode, response] = firstSuccess;
-						if (statusCode === "204" || "$ref" in response) {
-							return undefined;
-						}
-						const responseSchema =
-							response.content?.["application/json"]?.schema;
-						if (!responseSchema) {
-							return undefined;
-						}
-						if ("$ref" in responseSchema) {
-							return responseSchema.$ref;
-						}
-						if ("items" in responseSchema && "$ref" in responseSchema.items) {
-							return responseSchema.items.$ref;
-						}
-						return undefined;
-					});
-
-					const responseSchemaEntry = responseRef
-						? validators.get(responseRef)
-						: undefined;
-					const responseSchemaName = iife(() => {
-						if (!responseSchemaEntry) {
-							return undefined;
-						}
-						return options?.exactOnly
-							? responseSchemaEntry.exact
-							: responseSchemaEntry.coerced;
-					});
-
-					if (responseSchemaName) {
-						staticSchemaProps.push({
-							name: "responseSchema",
-							initializer: responseSchemaName,
-						});
-					}
-
-					for (const prop of staticSchemaProps) {
-						commandClassDeclaration.addProperty({
-							name: prop.name,
-							isStatic: true,
-							initializer: prop.initializer,
-						});
-						commandValibotImports.add(prop.initializer);
+					} else {
+						validatedReExports.push(commandName);
 					}
 
 					// query
@@ -1315,11 +1297,50 @@ export async function processOpenApiDocument(
 		]);
 	}
 
-	// Add valibot schema imports to commands file for static properties
-	if (commandValibotImports.size > 0) {
-		commandsFile.addImportDeclaration({
+	// Build commands-validated.ts: subclasses attach `static responseSchema`,
+	// commands with no response schema are re-exported unchanged so the file
+	// keeps export parity with commands.ts (alias-safe).
+	const commandsModuleSpecifier = `./${commandsFile.getBaseNameWithoutExtension()}.js`;
+
+	if (validatedSubclasses.length > 0) {
+		// Namespace imports keep the generated file compact and stable across
+		// regenerations — adding/removing a single command no longer churns the
+		// import list. Modern bundlers tree-shake namespace imports correctly
+		// when source modules are side-effect-free (which valibot.ts and
+		// commands.ts both are).
+		const commandsNs = "commands";
+		const schemasNs = "schemas";
+
+		commandsValidatedFile.addImportDeclaration({
+			moduleSpecifier: commandsModuleSpecifier,
+			namespaceImport: commandsNs,
+		});
+
+		commandsValidatedFile.addImportDeclaration({
 			moduleSpecifier: valibotModuleSpecifier,
-			namedImports: [...commandValibotImports]
+			namespaceImport: schemasNs,
+		});
+
+		for (const { commandName, responseSchema } of validatedSubclasses) {
+			commandsValidatedFile.addClass({
+				name: commandName,
+				isExported: true,
+				extends: `${commandsNs}.${commandName}`,
+				properties: [
+					{
+						name: "responseSchema",
+						isStatic: true,
+						initializer: `${schemasNs}.${responseSchema}`,
+					},
+				],
+			});
+		}
+	}
+
+	if (validatedReExports.length > 0) {
+		commandsValidatedFile.addExportDeclaration({
+			moduleSpecifier: commandsModuleSpecifier,
+			namedExports: validatedReExports
 				.toSorted()
 				.map((name) => ({ name })),
 		});
@@ -1330,6 +1351,7 @@ export async function processOpenApiDocument(
 	// tidies up any unused type-fest imports
 	typesFile.fixUnusedIdentifiers();
 	commandsFile.fixUnusedIdentifiers();
+	commandsValidatedFile.fixUnusedIdentifiers();
 	valibotFile.fixUnusedIdentifiers();
 
 	// Generate hono-valibot file
@@ -1357,6 +1379,7 @@ export async function processOpenApiDocument(
 
 	return {
 		commandsFile,
+		commandsValidatedFile,
 		typesFile,
 		mainFile,
 		valibotFile,
