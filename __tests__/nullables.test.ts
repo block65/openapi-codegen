@@ -279,7 +279,7 @@ test("header parameters", async () => {
 	expect(result.honoValibotFile.getText()).toMatchSnapshot();
 });
 
-test("exact-only mode omits coerced schemas", async () => {
+test("input-only mode omits wire schemas", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/like-you-know-whatever",
 		{
@@ -325,13 +325,13 @@ test("exact-only mode omits coerced schemas", async () => {
 			},
 		},
 		[],
-		{ exactOnly: true },
+		{ inputOnly: true },
 	);
 
 	const valibotText = result.valibotFile.getText();
 
-	expect(valibotText).toContain("exactNameSchema");
-	expect(valibotText).toContain("exactAmountSchema");
+	expect(valibotText).toContain("inputNameSchema");
+	expect(valibotText).toContain("inputAmountSchema");
 	expect(valibotText).not.toMatch(/export const nameSchema\b/);
 	expect(valibotText).not.toMatch(/export const amountSchema\b/);
 	expect(valibotText).not.toContain("v.trim()");

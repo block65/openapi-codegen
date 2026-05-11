@@ -26,9 +26,10 @@ const cliArgs = await yargs(hideBin(process.argv))
 					return Array.isArray(arg) ? arg : [arg];
 				},
 			})
-			.option("exact-only", {
+			.option("input-only", {
 				type: "boolean",
-				description: "Only emit exact schemas, skip coerced variants",
+				description:
+					"Only emit input schemas (TS-side, v.optional, no wire coercion); skip wire variants",
 				default: false,
 			});
 	})
@@ -38,5 +39,5 @@ await build(
 	join(process.cwd(), String(cliArgs.i)),
 	join(process.cwd(), String(cliArgs.o)),
 	cliArgs.t as Array<string>,
-	{ exactOnly: Boolean(cliArgs.exactOnly) },
+	{ inputOnly: Boolean(cliArgs.inputOnly) },
 );

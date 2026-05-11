@@ -13,11 +13,21 @@ import type { Primitive } from "type-fest";
 import type * as v from "valibot";
 import { wordWrap } from "./utils.ts";
 
-type SchemaMode = "exact" | "coerced";
+// Two variants per type, split by direction of data flow:
+//
+//   input — for outgoing/TS-side values. Uses `v.optional(...)`, so callers can
+//     pass `{ foo: undefined }` (common in destructure-with-default patterns).
+//     No wire coercion since TS types are already native.
+//
+//   wire  — for incoming JSON-parsed values (server middleware, response
+//     parsing). Uses `v.exactOptional(...)` — undefined can't appear on the
+//     wire, so a field is either present-with-a-value or absent. Includes
+//     bigint / number coercion since JSON & HTTP carry those as strings.
+type SchemaMode = "input" | "wire";
 
 interface ValidatorEntry {
-	exact: string;
-	coerced: string;
+	input: string;
+	wire: string;
 }
 
 /**
@@ -138,7 +148,7 @@ function resolveRef(
 	if (!entry) {
 		return vcall("unknown");
 	}
-	return mode === "exact" ? entry.exact : entry.coerced;
+	return mode === "input" ? entry.input : entry.wire;
 }
 
 function schemaToValidator(
@@ -209,7 +219,7 @@ function schemaToValidator(
 
 	if (schema.type === "string") {
 		const shouldTrim =
-			mode === "coerced" &&
+			mode === "wire" &&
 			!schema.pattern &&
 			(!schema.format || !noTrimFormats.has(schema.format));
 
@@ -246,7 +256,7 @@ function schemaToValidator(
 	}
 
 	if (schema.type === "integer" && schema.format === "int64") {
-		const exactValidator = maybePipe(
+		const baseValidator = maybePipe(
 			vcall("bigint"),
 			schema.minimum !== undefined
 				? vcall("minValue", `BigInt(${schema.minimum})`)
@@ -257,8 +267,8 @@ function schemaToValidator(
 			typescriptHintSchema,
 		);
 
-		if (mode === "exact") {
-			return maybeNullable(exactValidator, isNullable);
+		if (mode === "input") {
+			return maybeNullable(baseValidator, isNullable);
 		}
 
 		return maybeNullable(
@@ -268,16 +278,16 @@ function schemaToValidator(
 					vcall("string"),
 					vcall("decimal"),
 					vcall("toBigint"),
-					exactValidator,
+					baseValidator,
 				),
 				vcall(
 					"pipe",
 					vcall("number"),
 					vcall("integer"),
 					vcall("toBigint"),
-					exactValidator,
+					baseValidator,
 				),
-				exactValidator,
+				baseValidator,
 			]),
 			isNullable,
 		);
@@ -354,7 +364,7 @@ function schemaToValidator(
 		}
 
 		const requiredProps = new Set(schema.required ?? []);
-		const optionalWrapper = mode === "exact" ? "exactOptional" : "optional";
+		const optionalWrapper = mode === "input" ? "optional" : "exactOptional";
 
 		const strictObjectWriter = (writer: CodeBlockWriter) => {
 			writer.writeLine("{");
@@ -416,14 +426,14 @@ export function registerValidatorFromSchema(
 	valibotFile: SourceFile,
 	schemaName: string,
 	schemaObject: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
-	exactOnly?: boolean,
+	inputOnly?: boolean,
 ) {
-	const exactName = camelcase(["exact", schemaName, "schema"]);
-	const coercedName = camelcase([schemaName, "schema"]);
+	const inputName = camelcase(["input", schemaName, "schema"]);
+	const wireName = camelcase([schemaName, "schema"]);
 
 	validators.set(`#/components/schemas/${schemaName}`, {
-		exact: exactName,
-		coerced: coercedName,
+		input: inputName,
+		wire: wireName,
 	});
 
 	const docs =
@@ -460,29 +470,32 @@ export function registerValidatorFromSchema(
 				]
 			: [];
 
-	// Exact schema — always emitted
+	// Input schema — always emitted (TS-side, allows undefined, no wire coercion)
 	valibotFile.addVariableStatement({
 		isExported: true,
 		declarationKind: VariableDeclarationKind.Const,
 		docs,
 		declarations: [
 			{
-				name: exactName,
-				initializer: schemaToValidator(validators, schemaObject, "exact"),
+				name: inputName,
+				initializer: schemaToValidator(validators, schemaObject, "input"),
 			},
 		],
 	});
 
-	// Coerced schema — unless --exact-only
-	if (!exactOnly) {
+	// Wire schema — unless --input-only (parses incoming JSON: no undefined,
+	// with bigint/number coercion). Aliases to the input schema when the type
+	// has no coercion concerns and the only difference would be optional vs
+	// exactOptional — both are equivalent on JSON-parsed data anyway.
+	if (!inputOnly) {
 		if (schemaNeedsCoercion(schemaObject)) {
 			valibotFile.addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
 					{
-						name: coercedName,
-						initializer: schemaToValidator(validators, schemaObject, "coerced"),
+						name: wireName,
+						initializer: schemaToValidator(validators, schemaObject, "wire"),
 					},
 				],
 			});
@@ -492,8 +505,8 @@ export function registerValidatorFromSchema(
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
 					{
-						name: coercedName,
-						initializer: exactName,
+						name: wireName,
+						initializer: inputName,
 					},
 				],
 			});
@@ -511,10 +524,10 @@ function asHttpParamValidator(
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 ): WriterFunction | string {
 	if ("$ref" in schema) {
-		return resolveRef(validatorSchemas, schema.$ref, "coerced");
+		return resolveRef(validatorSchemas, schema.$ref, "wire");
 	}
 
-	const exactValidator = schemaToValidator(validatorSchemas, schema, "exact");
+	const baseValidator = schemaToValidator(validatorSchemas, schema, "input");
 
 	if (schema.type === "integer" && schema.format === "int64") {
 		return vcall("union", [
@@ -523,16 +536,16 @@ function asHttpParamValidator(
 				vcall("string"),
 				vcall("decimal"),
 				vcall("toBigint"),
-				exactValidator,
+				baseValidator,
 			),
 			vcall(
 				"pipe",
 				vcall("number"),
 				vcall("integer"),
 				vcall("toBigint"),
-				exactValidator,
+				baseValidator,
 			),
-			exactValidator,
+			baseValidator,
 		]);
 	}
 
@@ -543,9 +556,9 @@ function asHttpParamValidator(
 				vcall("string"),
 				vcall("decimal"),
 				vcall("toNumber"),
-				exactValidator,
+				baseValidator,
 			),
-			exactValidator,
+			baseValidator,
 		]);
 	}
 
@@ -556,13 +569,13 @@ function asHttpParamValidator(
 				vcall("string"),
 				vcall("decimal"),
 				vcall("toNumber"),
-				exactValidator,
+				baseValidator,
 			),
-			exactValidator,
+			baseValidator,
 		]);
 	}
 
-	return schemaToValidator(validatorSchemas, schema, "coerced");
+	return schemaToValidator(validatorSchemas, schema, "wire");
 }
 
 /**
@@ -580,16 +593,16 @@ export function createValidatorForOperationInput(
 		query: oas30.ParameterObject[];
 		header: oas30.ParameterObject[];
 	},
-	exactOnly?: boolean,
+	inputOnly?: boolean,
 ): {
-	exact: {
+	input: {
 		json?: string;
 		response?: string;
 		param?: string;
 		query?: string;
 		header?: string;
 	};
-	coerced: {
+	wire: {
 		json?: string;
 		response?: string;
 		param?: string;
@@ -597,14 +610,14 @@ export function createValidatorForOperationInput(
 		header?: string;
 	};
 } {
-	const exact: {
+	const inputResult: {
 		json?: string;
 		response?: string;
 		param?: string;
 		query?: string;
 		header?: string;
 	} = {};
-	const coerced: {
+	const wireResult: {
 		json?: string;
 		response?: string;
 		param?: string;
@@ -616,51 +629,51 @@ export function createValidatorForOperationInput(
 		segment: "body" | "response",
 		schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 	) => {
-		const exactName = camelcase(["exact", commandName, segment, "schema"]);
-		const coercedName = camelcase([commandName, segment, "schema"]);
+		const inputName = camelcase(["input", commandName, segment, "schema"]);
+		const wireName = camelcase([commandName, segment, "schema"]);
 
 		valibotFile.addVariableStatement({
 			isExported: true,
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
 				{
-					name: exactName,
-					initializer: schemaToValidator(validatorSchemas, schema, "exact"),
+					name: inputName,
+					initializer: schemaToValidator(validatorSchemas, schema, "input"),
 				},
 			],
 		});
 
-		if (!exactOnly) {
+		if (!inputOnly) {
 			valibotFile.addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
 					{
-						name: coercedName,
-						initializer: schemaToValidator(validatorSchemas, schema, "coerced"),
+						name: wireName,
+						initializer: schemaToValidator(validatorSchemas, schema, "wire"),
 					},
 				],
 			});
 		}
 
-		return { exactName, coercedName };
+		return { inputName, wireName };
 	};
 
 	// 1. Generate the JSON Body Schema
 	if (input.body) {
-		const { exactName, coercedName } = emitSchemaPair("body", input.body);
-		exact.json = exactName;
-		coerced.json = coercedName;
+		const { inputName, wireName } = emitSchemaPair("body", input.body);
+		inputResult.json = inputName;
+		wireResult.json = wireName;
 	}
 
 	// 1b. Generate the Response Schema (mirrors body — accepts inline or $ref)
 	if (input.response) {
-		const { exactName, coercedName } = emitSchemaPair(
+		const { inputName, wireName } = emitSchemaPair(
 			"response",
 			input.response,
 		);
-		exact.response = exactName;
-		coerced.response = coercedName;
+		inputResult.response = inputName;
+		wireResult.response = wireName;
 	}
 
 	// 2. Helper for Params/Query (Strict Objects)
@@ -673,10 +686,10 @@ export function createValidatorForOperationInput(
 		}
 		const schemaKey = type === "params" ? "param" : "query";
 
-		const exactName = camelcase(["exact", commandName, type, "schema"]);
-		const coercedName = camelcase([commandName, type, "schema"]);
-		exact[schemaKey] = exactName;
-		coerced[schemaKey] = coercedName;
+		const inputName = camelcase(["input", commandName, type, "schema"]);
+		const wireName = camelcase([commandName, type, "schema"]);
+		inputResult[schemaKey] = inputName;
+		wireResult[schemaKey] = wireName;
 
 		const isHttpParam = type === "query";
 
@@ -685,9 +698,9 @@ export function createValidatorForOperationInput(
 				list.map((p) => {
 					const paramSchema = p.schema ?? { type: "string" as const };
 					const optionalWrapper =
-						mode === "exact" ? "exactOptional" : "optional";
+						mode === "input" ? "optional" : "exactOptional";
 					const validator =
-						mode === "coerced" && isHttpParam
+						mode === "wire" && isHttpParam
 							? asHttpParamValidator(validatorSchemas, paramSchema)
 							: schemaToValidator(validatorSchemas, paramSchema, mode);
 					return [
@@ -702,25 +715,25 @@ export function createValidatorForOperationInput(
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
 				{
-					name: exactName,
+					name: inputName,
 					initializer: vcall(
 						"strictObject",
-						Writers.object(buildPropertyMap("exact")),
+						Writers.object(buildPropertyMap("input")),
 					),
 				},
 			],
 		});
 
-		if (!exactOnly) {
+		if (!inputOnly) {
 			valibotFile.addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
 					{
-						name: coercedName,
+						name: wireName,
 						initializer: vcall(
 							"strictObject",
-							Writers.object(buildPropertyMap("coerced")),
+							Writers.object(buildPropertyMap("wire")),
 						),
 					},
 				],
@@ -733,19 +746,19 @@ export function createValidatorForOperationInput(
 
 	// 3. Header schema (non-strict to allow extra HTTP headers)
 	if (input.header.length > 0) {
-		const exactName = camelcase(["exact", commandName, "header", "schema"]);
-		const coercedName = camelcase([commandName, "header", "schema"]);
-		exact.header = exactName;
-		coerced.header = coercedName;
+		const inputName = camelcase(["input", commandName, "header", "schema"]);
+		const wireName = camelcase([commandName, "header", "schema"]);
+		inputResult.header = inputName;
+		wireResult.header = wireName;
 
 		const buildPropertyMap = (mode: SchemaMode) =>
 			Object.fromEntries(
 				input.header.map((p) => {
 					const paramSchema = p.schema ?? { type: "string" as const };
 					const optionalWrapper =
-						mode === "exact" ? "exactOptional" : "optional";
+						mode === "input" ? "optional" : "exactOptional";
 					const validator =
-						mode === "coerced"
+						mode === "wire"
 							? asHttpParamValidator(validatorSchemas, paramSchema)
 							: schemaToValidator(validatorSchemas, paramSchema, mode);
 					return [
@@ -760,25 +773,25 @@ export function createValidatorForOperationInput(
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
 				{
-					name: exactName,
+					name: inputName,
 					initializer: vcall(
 						"object",
-						Writers.object(buildPropertyMap("exact")),
+						Writers.object(buildPropertyMap("input")),
 					),
 				},
 			],
 		});
 
-		if (!exactOnly) {
+		if (!inputOnly) {
 			valibotFile.addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
 					{
-						name: coercedName,
+						name: wireName,
 						initializer: vcall(
 							"object",
-							Writers.object(buildPropertyMap("coerced")),
+							Writers.object(buildPropertyMap("wire")),
 						),
 					},
 				],
@@ -786,5 +799,5 @@ export function createValidatorForOperationInput(
 		}
 	}
 
-	return { exact, coerced };
+	return { input: inputResult, wire: wireResult };
 }

@@ -11,14 +11,14 @@ export type NullConst = null;
 exports[`const values 2`] = `
 "import * as v from "valibot";
 
-export const exactStringConstSchema = v.literal("hello");
-export const stringConstSchema = exactStringConstSchema;
-export const exactNumberConstSchema = v.literal(42);
-export const numberConstSchema = exactNumberConstSchema;
-export const exactBooleanConstSchema = v.literal(true);
-export const booleanConstSchema = exactBooleanConstSchema;
-export const exactNullConstSchema = v.null();
-export const nullConstSchema = exactNullConstSchema;
+export const inputStringConstSchema = v.literal("hello");
+export const stringConstSchema = inputStringConstSchema;
+export const inputNumberConstSchema = v.literal(42);
+export const numberConstSchema = inputNumberConstSchema;
+export const inputBooleanConstSchema = v.literal(true);
+export const booleanConstSchema = inputBooleanConstSchema;
+export const inputNullConstSchema = v.null();
+export const nullConstSchema = inputNullConstSchema;
 "
 `;
 
@@ -77,25 +77,25 @@ export class UploadDataCommand extends commands.UploadDataCommand {
 exports[`header parameters 4`] = `
 "import * as v from "valibot";
 
-export const exactUploadStatusSchema = v.picklist(["pending", "complete"]);
-export const uploadStatusSchema = exactUploadStatusSchema;
-export const exactUploadDataCommandResponseSchema = exactUploadStatusSchema;
+export const inputUploadStatusSchema = v.picklist(["pending", "complete"]);
+export const uploadStatusSchema = inputUploadStatusSchema;
+export const inputUploadDataCommandResponseSchema = inputUploadStatusSchema;
 export const uploadDataCommandResponseSchema = uploadStatusSchema;
-export const exactUploadDataCommandParamsSchema = v.strictObject({
+export const inputUploadDataCommandParamsSchema = v.strictObject({
         "uploadId": v.string()
     });
 export const uploadDataCommandParamsSchema = v.strictObject({
         "uploadId": v.pipe(v.string(), v.trim())
     });
-export const exactUploadDataCommandHeaderSchema = v.object({
+export const inputUploadDataCommandHeaderSchema = v.object({
         "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
         "content-length": v.bigint(),
-        "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
+        "x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid()))
     });
 export const uploadDataCommandHeaderSchema = v.object({
         "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
         "content-length": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]),
-        "x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid()))
+        "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
     });
 "
 `;
@@ -131,7 +131,7 @@ exports[`nullables 1`] = `
 exports[`oneOf with type null generates v.null() 1`] = `
 "import * as v from "valibot";
 
-export const exactNullableImageSchema = v.union([v.string(), v.null()]);
+export const inputNullableImageSchema = v.union([v.string(), v.null()]);
 export const nullableImageSchema = v.union([v.pipe(v.string(), v.trim()), v.null()]);
 "
 `;
@@ -153,21 +153,21 @@ export type ListFilesCommandInput = ListFilesCommandQuery;
 exports[`query and header integer params coerce strings to numbers 2`] = `
 "import * as v from "valibot";
 
-export const exactDummySchema = v.string();
+export const inputDummySchema = v.string();
 export const dummySchema = v.pipe(v.string(), v.trim());
-export const exactExpireTimeSchema = v.pipe(v.bigint(), v.minValue(BigInt(0)));
+export const inputExpireTimeSchema = v.pipe(v.bigint(), v.minValue(BigInt(0)));
 export const expireTimeSchema = v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]);
-export const exactListFilesCommandResponseSchema = exactDummySchema;
+export const inputListFilesCommandResponseSchema = inputDummySchema;
 export const listFilesCommandResponseSchema = dummySchema;
-export const exactListFilesCommandQuerySchema = v.strictObject({
+export const inputListFilesCommandQuerySchema = v.strictObject({
         "exp": v.pipe(v.bigint(), v.minValue(BigInt(0))),
-        "limit": v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
+        "limit": v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
     });
 export const listFilesCommandQuerySchema = v.strictObject({
         "exp": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]),
-        "limit": v.optional(v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))]))
+        "limit": v.exactOptional(v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))]))
     });
-export const exactListFilesCommandHeaderSchema = v.object({
+export const inputListFilesCommandHeaderSchema = v.object({
         "x-rate-limit": v.pipe(v.number(), v.integer(), v.minValue(0))
     });
 export const listFilesCommandHeaderSchema = v.object({
@@ -187,14 +187,14 @@ export type MultiType = string | number;
 exports[`top-level type array with null 2`] = `
 "import * as v from "valibot";
 
-export const exactNullableStringSchema = v.nullable(v.string());
-export const nullableStringSchema = exactNullableStringSchema;
-export const exactNullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));
-export const nullableStringEnumSchema = exactNullableStringEnumSchema;
-export const exactNullableIntegerSchema = v.nullable(v.pipe(v.number(), v.integer()));
-export const nullableIntegerSchema = exactNullableIntegerSchema;
-export const exactMultiTypeSchema = v.union([v.string(), v.number()]);
-export const multiTypeSchema = exactMultiTypeSchema;
+export const inputNullableStringSchema = v.nullable(v.string());
+export const nullableStringSchema = inputNullableStringSchema;
+export const inputNullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));
+export const nullableStringEnumSchema = inputNullableStringEnumSchema;
+export const inputNullableIntegerSchema = v.nullable(v.pipe(v.number(), v.integer()));
+export const nullableIntegerSchema = inputNullableIntegerSchema;
+export const inputMultiTypeSchema = v.union([v.string(), v.number()]);
+export const multiTypeSchema = inputMultiTypeSchema;
 "
 `;
 

@@ -39,7 +39,12 @@ import {
 } from "./valibot.ts";
 
 export interface CodegenOptions {
-	exactOnly?: boolean;
+	/**
+	 * Emit only `input*` variants (TS-side schemas: `v.optional`, no wire
+	 * coercion). Skips the `*Schema` (wire) variants used by hono middleware
+	 * and response parsing. For non-HTTP / in-memory-only consumers.
+	 */
+	inputOnly?: boolean;
 }
 
 interface OperationMiddlewareInfo {
@@ -145,7 +150,7 @@ export async function processOpenApiDocument(
 	const valibotFile = createValibotFile(project, outputDir);
 
 	// Track registered validators by their $ref path
-	const validators = new Map<string, { exact: string; coerced: string }>();
+	const validators = new Map<string, { input: string; wire: string }>();
 
 	// Track all operations for middleware generation
 	const allOperations: OperationMiddlewareInfo[] = [];
@@ -284,7 +289,7 @@ export async function processOpenApiDocument(
 			valibotFile,
 			schemaName,
 			schemaObject,
-			options?.exactOnly,
+			options?.inputOnly,
 		);
 
 		// Add enum values to enums file
@@ -832,7 +837,7 @@ export async function processOpenApiDocument(
 							query: queryParameters,
 							header: headerParameters,
 						},
-						options?.exactOnly,
+						options?.inputOnly,
 					);
 
 					// Track operation for middleware generation (use coerced schemas)
@@ -841,9 +846,9 @@ export async function processOpenApiDocument(
 					);
 					allOperations.push({
 						exportName: middlewareExportName,
-						schemas: options?.exactOnly
-							? operationSchemas.exact
-							: operationSchemas.coerced,
+						schemas: options?.inputOnly
+							? operationSchemas.input
+							: operationSchemas.wire,
 					});
 
 					// CommandInput
@@ -993,14 +998,16 @@ export async function processOpenApiDocument(
 					// schemas aren't read by rest-client anyway (hono-valibot.ts imports
 					// directly from valibot.ts for server middleware), and the response
 					// schema lives on the validated subclass.
-					const coercedSchemas = options?.exactOnly
-						? operationSchemas.exact
-						: operationSchemas.coerced;
+					// Wire variant is what rest-client + hono consume; falls back to
+					// the input variant under --input-only.
+					const wireSchemas = options?.inputOnly
+						? operationSchemas.input
+						: operationSchemas.wire;
 
-					if (coercedSchemas.response) {
+					if (wireSchemas.response) {
 						validatedSubclasses.push({
 							commandName,
-							responseSchema: coercedSchemas.response,
+							responseSchema: wireSchemas.response,
 						});
 					} else {
 						validatedReExports.push(commandName);
