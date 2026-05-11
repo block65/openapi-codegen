@@ -3,12 +3,12 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T04:55:08.981Z
+ * Generated on 2026-05-11T06:12:45.230Z
  *
  */
 import * as v from "valibot";
 
-export const exactDeleteModelResponseSchema = v.strictObject({
+export const inputDeleteModelResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.string(),
@@ -19,15 +19,15 @@ export const deleteModelResponseSchema = v.strictObject({
 	object: v.pipe(v.string(), v.trim()),
 });
 /** The role of the author of a message */
-export const exactChatCompletionRoleSchema = v.picklist([
+export const inputChatCompletionRoleSchema = v.picklist([
 	"system",
 	"user",
 	"assistant",
 	"tool",
 	"function",
 ]);
-export const chatCompletionRoleSchema = exactChatCompletionRoleSchema;
-export const exactChatCompletionTokenLogprobSchema = v.strictObject({
+export const chatCompletionRoleSchema = inputChatCompletionRoleSchema;
+export const inputChatCompletionTokenLogprobSchema = v.strictObject({
 	/**
 	 * The token.
 	 */
@@ -125,7 +125,7 @@ export const chatCompletionTokenLogprobSchema = v.strictObject({
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export const exactCreateChatCompletionStreamResponseSchema = v.strictObject({
+export const inputCreateChatCompletionStreamResponseSchema = v.strictObject({
 	/**
 	 * A unique identifier for the chat completion. Each chunk has the same ID.
 	 */
@@ -141,17 +141,17 @@ export const exactCreateChatCompletionStreamResponseSchema = v.strictObject({
 			/**
 			 * Log probability information for the choice.
 			 */
-			logprobs: v.exactOptional(
+			logprobs: v.optional(
 				v.nullable(
 					v.strictObject({
 						/**
 						 * A list of message content tokens with log probability information.
 						 */
-						content: v.nullable(v.array(exactChatCompletionTokenLogprobSchema)),
+						content: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
 						/**
 						 * A list of message refusal tokens with log probability information.
 						 */
-						refusal: v.nullable(v.array(exactChatCompletionTokenLogprobSchema)),
+						refusal: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
 					}),
 				),
 			),
@@ -193,14 +193,14 @@ export const exactCreateChatCompletionStreamResponseSchema = v.strictObject({
 	 * The service tier used for processing the request. This field is only
 	 * included if the `service_tier` parameter is specified in the request.
 	 */
-	service_tier: v.exactOptional(v.nullable(v.picklist(["scale", "default"]))),
+	service_tier: v.optional(v.nullable(v.picklist(["scale", "default"]))),
 	/**
 	 * This fingerprint represents the backend configuration that the model runs
 	 * with.
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.exactOptional(v.string()),
+	system_fingerprint: v.optional(v.string()),
 	/**
 	 * The object type, which is always `chat.completion.chunk`.
 	 */
@@ -211,7 +211,7 @@ export const exactCreateChatCompletionStreamResponseSchema = v.strictObject({
 	 * When present, it contains a null value except for the last chunk which
 	 * contains the token usage statistics for the entire request.
 	 */
-	usage: v.exactOptional(
+	usage: v.optional(
 		v.strictObject({
 			/**
 			 * Number of tokens in the generated completion.
@@ -244,7 +244,7 @@ export const createChatCompletionStreamResponseSchema = v.strictObject({
 			/**
 			 * Log probability information for the choice.
 			 */
-			logprobs: v.optional(
+			logprobs: v.exactOptional(
 				v.nullable(
 					v.strictObject({
 						/**
@@ -296,14 +296,14 @@ export const createChatCompletionStreamResponseSchema = v.strictObject({
 	 * The service tier used for processing the request. This field is only
 	 * included if the `service_tier` parameter is specified in the request.
 	 */
-	service_tier: v.optional(v.nullable(v.picklist(["scale", "default"]))),
+	service_tier: v.exactOptional(v.nullable(v.picklist(["scale", "default"]))),
 	/**
 	 * This fingerprint represents the backend configuration that the model runs
 	 * with.
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.optional(v.pipe(v.string(), v.trim())),
+	system_fingerprint: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The object type, which is always `chat.completion.chunk`.
 	 */
@@ -314,7 +314,7 @@ export const createChatCompletionStreamResponseSchema = v.strictObject({
 	 * When present, it contains a null value except for the last chunk which
 	 * contains the token usage statistics for the entire request.
 	 */
-	usage: v.optional(
+	usage: v.exactOptional(
 		v.strictObject({
 			/**
 			 * Number of tokens in the generated completion.
@@ -335,13 +335,13 @@ export const createChatCompletionStreamResponseSchema = v.strictObject({
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export const exactCreateChatCompletionImageResponseSchema = v.record(
+export const inputCreateChatCompletionImageResponseSchema = v.record(
 	v.string(),
 	v.unknown(),
 );
 export const createChatCompletionImageResponseSchema =
-	exactCreateChatCompletionImageResponseSchema;
-export const exactCreateImageRequestSchema = v.strictObject({
+	inputCreateChatCompletionImageResponseSchema;
+export const inputCreateImageRequestSchema = v.strictObject({
 	/**
 	 * A text description of the desired image(s). The maximum length is 1000
 	 * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
@@ -350,68 +350,8 @@ export const exactCreateImageRequestSchema = v.strictObject({
 	/**
 	 * The model to use for image generation.
 	 */
-	model: v.exactOptional(
-		v.nullable(v.union([v.string(), v.picklist(["dall-e-2", "dall-e-3"])])),
-	),
-	/**
-	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
-	 * only `n=1` is supported.
-	 */
-	n: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))),
-	),
-	/**
-	 * The quality of the image that will be generated. `hd` creates images with
-	 * finer details and greater consistency across the image. This param is only
-	 * supported for `dall-e-3`.
-	 */
-	quality: v.exactOptional(v.picklist(["standard", "hd"])),
-	/**
-	 * The format in which the generated images are returned. Must be one of `url`
-	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
-	 * generated.
-	 */
-	response_format: v.exactOptional(v.nullable(v.picklist(["url", "b64_json"]))),
-	/**
-	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
-	 * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
-	 * `1024x1792` for `dall-e-3` models.
-	 */
-	size: v.exactOptional(
-		v.nullable(
-			v.picklist(["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"]),
-		),
-	),
-	/**
-	 * The style of the generated images. Must be one of `vivid` or `natural`.
-	 * Vivid causes the model to lean towards generating hyper-real and dramatic
-	 * images. Natural causes the model to produce more natural, less hyper-real
-	 * looking images. This param is only supported for `dall-e-3`.
-	 */
-	style: v.exactOptional(v.nullable(v.picklist(["vivid", "natural"]))),
-	/**
-	 * A unique identifier representing your end-user, which can help OpenAI to
-	 * monitor and detect abuse. [Learn
-	 * more](/docs/guides/safety-best-practices/end-user-ids).
-	 */
-	user: v.exactOptional(v.string()),
-});
-export const createImageRequestSchema = v.strictObject({
-	/**
-	 * A text description of the desired image(s). The maximum length is 1000
-	 * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
-	 */
-	prompt: v.pipe(v.string(), v.trim()),
-	/**
-	 * The model to use for image generation.
-	 */
 	model: v.optional(
-		v.nullable(
-			v.union([
-				v.pipe(v.string(), v.trim()),
-				v.picklist(["dall-e-2", "dall-e-3"]),
-			]),
-		),
+		v.nullable(v.union([v.string(), v.picklist(["dall-e-2", "dall-e-3"])])),
 	),
 	/**
 	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
@@ -454,9 +394,69 @@ export const createImageRequestSchema = v.strictObject({
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.optional(v.pipe(v.string(), v.trim())),
+	user: v.optional(v.string()),
 });
-export const exactCreateImageEditRequestSchema = v.strictObject({
+export const createImageRequestSchema = v.strictObject({
+	/**
+	 * A text description of the desired image(s). The maximum length is 1000
+	 * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
+	 */
+	prompt: v.pipe(v.string(), v.trim()),
+	/**
+	 * The model to use for image generation.
+	 */
+	model: v.exactOptional(
+		v.nullable(
+			v.union([
+				v.pipe(v.string(), v.trim()),
+				v.picklist(["dall-e-2", "dall-e-3"]),
+			]),
+		),
+	),
+	/**
+	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
+	 * only `n=1` is supported.
+	 */
+	n: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))),
+	),
+	/**
+	 * The quality of the image that will be generated. `hd` creates images with
+	 * finer details and greater consistency across the image. This param is only
+	 * supported for `dall-e-3`.
+	 */
+	quality: v.exactOptional(v.picklist(["standard", "hd"])),
+	/**
+	 * The format in which the generated images are returned. Must be one of `url`
+	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
+	 * generated.
+	 */
+	response_format: v.exactOptional(v.nullable(v.picklist(["url", "b64_json"]))),
+	/**
+	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
+	 * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
+	 * `1024x1792` for `dall-e-3` models.
+	 */
+	size: v.exactOptional(
+		v.nullable(
+			v.picklist(["256x256", "512x512", "1024x1024", "1792x1024", "1024x1792"]),
+		),
+	),
+	/**
+	 * The style of the generated images. Must be one of `vivid` or `natural`.
+	 * Vivid causes the model to lean towards generating hyper-real and dramatic
+	 * images. Natural causes the model to produce more natural, less hyper-real
+	 * looking images. This param is only supported for `dall-e-3`.
+	 */
+	style: v.exactOptional(v.nullable(v.picklist(["vivid", "natural"]))),
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 */
+	user: v.exactOptional(v.pipe(v.string(), v.trim())),
+});
+export const inputCreateImageEditRequestSchema = v.strictObject({
 	/**
 	 * The image to edit. Must be a valid PNG file, less than 4MB, and square. If
 	 * mask is not provided, image must have transparency, which will be used as
@@ -473,39 +473,37 @@ export const exactCreateImageEditRequestSchema = v.strictObject({
 	 * zero) indicate where `image` should be edited. Must be a valid PNG file,
 	 * less than 4MB, and have the same dimensions as `image`.
 	 */
-	mask: v.exactOptional(v.string()),
+	mask: v.optional(v.string()),
 	/**
 	 * The model to use for image generation. Only `dall-e-2` is supported at this
 	 * time.
 	 */
-	model: v.exactOptional(
+	model: v.optional(
 		v.nullable(v.union([v.string(), v.picklist(["dall-e-2"])])),
 	),
 	/**
 	 * The number of images to generate. Must be between 1 and 10.
 	 */
-	n: v.exactOptional(
+	n: v.optional(
 		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))),
 	),
 	/**
 	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
 	 * `1024x1024`.
 	 */
-	size: v.exactOptional(
-		v.nullable(v.picklist(["256x256", "512x512", "1024x1024"])),
-	),
+	size: v.optional(v.nullable(v.picklist(["256x256", "512x512", "1024x1024"]))),
 	/**
 	 * The format in which the generated images are returned. Must be one of `url`
 	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
 	 * generated.
 	 */
-	response_format: v.exactOptional(v.nullable(v.picklist(["url", "b64_json"]))),
+	response_format: v.optional(v.nullable(v.picklist(["url", "b64_json"]))),
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.exactOptional(v.string()),
+	user: v.optional(v.string()),
 });
 export const createImageEditRequestSchema = v.strictObject({
 	/**
@@ -524,12 +522,12 @@ export const createImageEditRequestSchema = v.strictObject({
 	 * zero) indicate where `image` should be edited. Must be a valid PNG file,
 	 * less than 4MB, and have the same dimensions as `image`.
 	 */
-	mask: v.optional(v.string()),
+	mask: v.exactOptional(v.string()),
 	/**
 	 * The model to use for image generation. Only `dall-e-2` is supported at this
 	 * time.
 	 */
-	model: v.optional(
+	model: v.exactOptional(
 		v.nullable(
 			v.union([v.pipe(v.string(), v.trim()), v.picklist(["dall-e-2"])]),
 		),
@@ -537,14 +535,49 @@ export const createImageEditRequestSchema = v.strictObject({
 	/**
 	 * The number of images to generate. Must be between 1 and 10.
 	 */
-	n: v.optional(
+	n: v.exactOptional(
 		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))),
 	),
 	/**
 	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
 	 * `1024x1024`.
 	 */
-	size: v.optional(v.nullable(v.picklist(["256x256", "512x512", "1024x1024"]))),
+	size: v.exactOptional(
+		v.nullable(v.picklist(["256x256", "512x512", "1024x1024"])),
+	),
+	/**
+	 * The format in which the generated images are returned. Must be one of `url`
+	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
+	 * generated.
+	 */
+	response_format: v.exactOptional(v.nullable(v.picklist(["url", "b64_json"]))),
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 */
+	user: v.exactOptional(v.pipe(v.string(), v.trim())),
+});
+export const inputCreateImageVariationRequestSchema = v.strictObject({
+	/**
+	 * The image to use as the basis for the variation(s). Must be a valid PNG
+	 * file, less than 4MB, and square.
+	 */
+	image: v.string(),
+	/**
+	 * The model to use for image generation. Only `dall-e-2` is supported at this
+	 * time.
+	 */
+	model: v.optional(
+		v.nullable(v.union([v.string(), v.picklist(["dall-e-2"])])),
+	),
+	/**
+	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
+	 * only `n=1` is supported.
+	 */
+	n: v.optional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))),
+	),
 	/**
 	 * The format in which the generated images are returned. Must be one of `url`
 	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
@@ -552,13 +585,18 @@ export const createImageEditRequestSchema = v.strictObject({
 	 */
 	response_format: v.optional(v.nullable(v.picklist(["url", "b64_json"]))),
 	/**
+	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
+	 * `1024x1024`.
+	 */
+	size: v.optional(v.nullable(v.picklist(["256x256", "512x512", "1024x1024"]))),
+	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.optional(v.pipe(v.string(), v.trim())),
+	user: v.optional(v.string()),
 });
-export const exactCreateImageVariationRequestSchema = v.strictObject({
+export const createImageVariationRequestSchema = v.strictObject({
 	/**
 	 * The image to use as the basis for the variation(s). Must be a valid PNG
 	 * file, less than 4MB, and square.
@@ -569,7 +607,9 @@ export const exactCreateImageVariationRequestSchema = v.strictObject({
 	 * time.
 	 */
 	model: v.exactOptional(
-		v.nullable(v.union([v.string(), v.picklist(["dall-e-2"])])),
+		v.nullable(
+			v.union([v.pipe(v.string(), v.trim()), v.picklist(["dall-e-2"])]),
+		),
 	),
 	/**
 	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
@@ -596,49 +636,9 @@ export const exactCreateImageVariationRequestSchema = v.strictObject({
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.exactOptional(v.string()),
+	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const createImageVariationRequestSchema = v.strictObject({
-	/**
-	 * The image to use as the basis for the variation(s). Must be a valid PNG
-	 * file, less than 4MB, and square.
-	 */
-	image: v.string(),
-	/**
-	 * The model to use for image generation. Only `dall-e-2` is supported at this
-	 * time.
-	 */
-	model: v.optional(
-		v.nullable(
-			v.union([v.pipe(v.string(), v.trim()), v.picklist(["dall-e-2"])]),
-		),
-	),
-	/**
-	 * The number of images to generate. Must be between 1 and 10. For `dall-e-3`,
-	 * only `n=1` is supported.
-	 */
-	n: v.optional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(10))),
-	),
-	/**
-	 * The format in which the generated images are returned. Must be one of `url`
-	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
-	 * generated.
-	 */
-	response_format: v.optional(v.nullable(v.picklist(["url", "b64_json"]))),
-	/**
-	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
-	 * `1024x1024`.
-	 */
-	size: v.optional(v.nullable(v.picklist(["256x256", "512x512", "1024x1024"]))),
-	/**
-	 * A unique identifier representing your end-user, which can help OpenAI to
-	 * monitor and detect abuse. [Learn
-	 * more](/docs/guides/safety-best-practices/end-user-ids).
-	 */
-	user: v.optional(v.pipe(v.string(), v.trim())),
-});
-export const exactCreateModerationRequestSchema = v.strictObject({
+export const inputCreateModerationRequestSchema = v.strictObject({
 	/**
 	 * Input (or inputs) to classify. Can be a single string, an array of strings,
 	 * or
@@ -682,7 +682,7 @@ export const exactCreateModerationRequestSchema = v.strictObject({
 	 * [the moderation guide](/docs/guides/moderation), and learn about
 	 * available models [here](/docs/models/moderation).
 	 */
-	model: v.exactOptional(
+	model: v.optional(
 		v.union([
 			v.string(),
 			v.picklist([
@@ -738,7 +738,7 @@ export const createModerationRequestSchema = v.strictObject({
 	 * [the moderation guide](/docs/guides/moderation), and learn about
 	 * available models [here](/docs/models/moderation).
 	 */
-	model: v.optional(
+	model: v.exactOptional(
 		v.union([
 			v.pipe(v.string(), v.trim()),
 			v.picklist([
@@ -751,7 +751,7 @@ export const createModerationRequestSchema = v.strictObject({
 	),
 });
 /** Represents if a given text input is potentially harmful. */
-export const exactCreateModerationResponseSchema = v.strictObject({
+export const inputCreateModerationResponseSchema = v.strictObject({
 	/**
 	 * The unique identifier for the moderation request.
 	 */
@@ -1175,7 +1175,7 @@ export const createModerationResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const exactCreateFileRequestSchema = v.strictObject({
+export const inputCreateFileRequestSchema = v.strictObject({
 	/**
 	 * The File object (not file name) to be uploaded.
 	 */
@@ -1190,8 +1190,8 @@ export const exactCreateFileRequestSchema = v.strictObject({
 	 */
 	purpose: v.picklist(["assistants", "batch", "fine-tune", "vision"]),
 });
-export const createFileRequestSchema = exactCreateFileRequestSchema;
-export const exactDeleteFileResponseSchema = v.strictObject({
+export const createFileRequestSchema = inputCreateFileRequestSchema;
+export const inputDeleteFileResponseSchema = v.strictObject({
 	id: v.string(),
 	object: v.picklist(["file"]),
 	deleted: v.boolean(),
@@ -1201,7 +1201,7 @@ export const deleteFileResponseSchema = v.strictObject({
 	object: v.picklist(["file"]),
 	deleted: v.boolean(),
 });
-export const exactCreateUploadRequestSchema = v.strictObject({
+export const inputCreateUploadRequestSchema = v.strictObject({
 	/**
 	 * The name of the file to upload.
 	 */
@@ -1249,14 +1249,14 @@ export const createUploadRequestSchema = v.strictObject({
 	 */
 	mime_type: v.pipe(v.string(), v.trim()),
 });
-export const exactAddUploadPartRequestSchema = v.strictObject({
+export const inputAddUploadPartRequestSchema = v.strictObject({
 	/**
 	 * The chunk of bytes for this Part.
 	 */
 	data: v.string(),
 });
-export const addUploadPartRequestSchema = exactAddUploadPartRequestSchema;
-export const exactCompleteUploadRequestSchema = v.strictObject({
+export const addUploadPartRequestSchema = inputAddUploadPartRequestSchema;
+export const inputCompleteUploadRequestSchema = v.strictObject({
 	/**
 	 * The ordered list of Part IDs.
 	 */
@@ -1265,7 +1265,7 @@ export const exactCompleteUploadRequestSchema = v.strictObject({
 	 * The optional md5 checksum for the file contents to verify if the bytes
 	 * uploaded matches what you expect.
 	 */
-	md5: v.exactOptional(v.string()),
+	md5: v.optional(v.string()),
 });
 export const completeUploadRequestSchema = v.strictObject({
 	/**
@@ -1276,11 +1276,11 @@ export const completeUploadRequestSchema = v.strictObject({
 	 * The optional md5 checksum for the file contents to verify if the bytes
 	 * uploaded matches what you expect.
 	 */
-	md5: v.optional(v.pipe(v.string(), v.trim())),
+	md5: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCancelUploadRequestSchema = v.record(v.string(), v.unknown());
-export const cancelUploadRequestSchema = exactCancelUploadRequestSchema;
-export const exactCreateFineTuningJobRequestSchema = v.strictObject({
+export const inputCancelUploadRequestSchema = v.record(v.string(), v.unknown());
+export const cancelUploadRequestSchema = inputCancelUploadRequestSchema;
+export const inputCreateFineTuningJobRequestSchema = v.strictObject({
 	/**
 	 * The name of the model to fine-tune. You can select one of the
 	 * [supported
@@ -1306,154 +1306,6 @@ export const exactCreateFineTuningJobRequestSchema = v.strictObject({
 	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
 	 */
 	training_file: v.string(),
-	/**
-	 * The hyperparameters used for the fine-tuning job.
-	 */
-	hyperparameters: v.exactOptional(
-		v.strictObject({
-			/**
-			 * Number of examples in each batch. A larger batch size means that model
-			 * parameters
-			 * are updated less frequently, but with lower variance.
-			 */
-			batch_size: v.exactOptional(
-				v.union([
-					v.picklist(["auto"]),
-					v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(256)),
-				]),
-			),
-			/**
-			 * Scaling factor for the learning rate. A smaller learning rate may be useful
-			 * to avoid
-			 * overfitting.
-			 */
-			learning_rate_multiplier: v.exactOptional(
-				v.union([v.picklist(["auto"]), v.pipe(v.number(), v.minValue(0))]),
-			),
-			/**
-			 * The number of epochs to train the model for. An epoch refers to one full
-			 * cycle
-			 * through the training dataset.
-			 */
-			n_epochs: v.exactOptional(
-				v.union([
-					v.picklist(["auto"]),
-					v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
-				]),
-			),
-		}),
-	),
-	/**
-	 * A string of up to 64 characters that will be added to your fine-tuned model
-	 * name.
-	 *
-	 * For example, a `suffix` of "custom-model-name" would produce a model name
-	 * like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
-	 */
-	suffix: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.minLength(1), v.maxLength(64))),
-	),
-	/**
-	 * The ID of an uploaded file that contains validation data.
-	 *
-	 * If you provide this file, the data is used to generate validation
-	 * metrics periodically during fine-tuning. These metrics can be viewed in
-	 * the fine-tuning results file.
-	 * The same data should not be present in both train and validation files.
-	 *
-	 * Your dataset must be formatted as a JSONL file. You must upload your file
-	 * with the purpose `fine-tune`.
-	 *
-	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-	 */
-	validation_file: v.exactOptional(v.nullable(v.string())),
-	/**
-	 * A list of integrations to enable for your fine-tuning job.
-	 */
-	integrations: v.exactOptional(
-		v.nullable(
-			v.array(
-				v.strictObject({
-					/**
-					 * The type of integration to enable. Currently, only "wandb" (Weights and
-					 * Biases) is supported.
-					 */
-					type: v.union([v.picklist(["wandb"])]),
-					/**
-					 * The settings for your integration with Weights and Biases. This payload
-					 * specifies the project that
-					 * metrics will be sent to. Optionally, you can set an explicit display name
-					 * for your run, add tags
-					 * to your run, and set a default entity (team, username, etc) to be
-					 * associated with your run.
-					 */
-					wandb: v.strictObject({
-						/**
-						 * The name of the project that the new run will be created under.
-						 */
-						project: v.string(),
-						/**
-						 * A display name to set for the run. If not set, we will use the Job ID as
-						 * the name.
-						 */
-						name: v.exactOptional(v.nullable(v.string())),
-						/**
-						 * The entity to use for the run. This allows you to set the team or username
-						 * of the WandB user that you would
-						 * like associated with the run. If not set, the default entity for the
-						 * registered WandB API key is used.
-						 */
-						entity: v.exactOptional(v.nullable(v.string())),
-						/**
-						 * A list of tags to be attached to the newly created run. These tags are
-						 * passed through directly to WandB. Some
-						 * default tags are generated by OpenAI: "openai/finetune",
-						 * "openai/{base-model}", "openai/{ftjob-abcdef}".
-						 */
-						tags: v.exactOptional(v.array(v.string())),
-					}),
-				}),
-			),
-		),
-	),
-	/**
-	 * The seed controls the reproducibility of the job. Passing in the same seed
-	 * and job parameters should produce the same results, but may differ in rare
-	 * cases.
-	 * If a seed is not specified, one will be generated for you.
-	 */
-	seed: v.exactOptional(
-		v.nullable(
-			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647)),
-		),
-	),
-});
-export const createFineTuningJobRequestSchema = v.strictObject({
-	/**
-	 * The name of the model to fine-tune. You can select one of the
-	 * [supported
-	 * models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
-	 */
-	model: v.union([
-		v.pipe(v.string(), v.trim()),
-		v.picklist(["babbage-002", "davinci-002", "gpt-3.5-turbo", "gpt-4o-mini"]),
-	]),
-	/**
-	 * The ID of an uploaded file that contains training data.
-	 *
-	 * See [upload file](/docs/api-reference/files/create) for how to upload a
-	 * file.
-	 *
-	 * Your dataset must be formatted as a JSONL file. Additionally, you must
-	 * upload your file with the purpose `fine-tune`.
-	 *
-	 * The contents of the file should differ depending on if the model uses the
-	 * [chat](/docs/api-reference/fine-tuning/chat-input) or
-	 * [completions](/docs/api-reference/fine-tuning/completions-input) format.
-	 *
-	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
-	 */
-	training_file: v.pipe(v.string(), v.trim()),
 	/**
 	 * The hyperparameters used for the fine-tuning job.
 	 */
@@ -1499,6 +1351,154 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 	 * like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
 	 */
 	suffix: v.optional(
+		v.nullable(v.pipe(v.string(), v.minLength(1), v.maxLength(64))),
+	),
+	/**
+	 * The ID of an uploaded file that contains validation data.
+	 *
+	 * If you provide this file, the data is used to generate validation
+	 * metrics periodically during fine-tuning. These metrics can be viewed in
+	 * the fine-tuning results file.
+	 * The same data should not be present in both train and validation files.
+	 *
+	 * Your dataset must be formatted as a JSONL file. You must upload your file
+	 * with the purpose `fine-tune`.
+	 *
+	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+	 */
+	validation_file: v.optional(v.nullable(v.string())),
+	/**
+	 * A list of integrations to enable for your fine-tuning job.
+	 */
+	integrations: v.optional(
+		v.nullable(
+			v.array(
+				v.strictObject({
+					/**
+					 * The type of integration to enable. Currently, only "wandb" (Weights and
+					 * Biases) is supported.
+					 */
+					type: v.union([v.picklist(["wandb"])]),
+					/**
+					 * The settings for your integration with Weights and Biases. This payload
+					 * specifies the project that
+					 * metrics will be sent to. Optionally, you can set an explicit display name
+					 * for your run, add tags
+					 * to your run, and set a default entity (team, username, etc) to be
+					 * associated with your run.
+					 */
+					wandb: v.strictObject({
+						/**
+						 * The name of the project that the new run will be created under.
+						 */
+						project: v.string(),
+						/**
+						 * A display name to set for the run. If not set, we will use the Job ID as
+						 * the name.
+						 */
+						name: v.optional(v.nullable(v.string())),
+						/**
+						 * The entity to use for the run. This allows you to set the team or username
+						 * of the WandB user that you would
+						 * like associated with the run. If not set, the default entity for the
+						 * registered WandB API key is used.
+						 */
+						entity: v.optional(v.nullable(v.string())),
+						/**
+						 * A list of tags to be attached to the newly created run. These tags are
+						 * passed through directly to WandB. Some
+						 * default tags are generated by OpenAI: "openai/finetune",
+						 * "openai/{base-model}", "openai/{ftjob-abcdef}".
+						 */
+						tags: v.optional(v.array(v.string())),
+					}),
+				}),
+			),
+		),
+	),
+	/**
+	 * The seed controls the reproducibility of the job. Passing in the same seed
+	 * and job parameters should produce the same results, but may differ in rare
+	 * cases.
+	 * If a seed is not specified, one will be generated for you.
+	 */
+	seed: v.optional(
+		v.nullable(
+			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647)),
+		),
+	),
+});
+export const createFineTuningJobRequestSchema = v.strictObject({
+	/**
+	 * The name of the model to fine-tune. You can select one of the
+	 * [supported
+	 * models](/docs/guides/fine-tuning/which-models-can-be-fine-tuned).
+	 */
+	model: v.union([
+		v.pipe(v.string(), v.trim()),
+		v.picklist(["babbage-002", "davinci-002", "gpt-3.5-turbo", "gpt-4o-mini"]),
+	]),
+	/**
+	 * The ID of an uploaded file that contains training data.
+	 *
+	 * See [upload file](/docs/api-reference/files/create) for how to upload a
+	 * file.
+	 *
+	 * Your dataset must be formatted as a JSONL file. Additionally, you must
+	 * upload your file with the purpose `fine-tune`.
+	 *
+	 * The contents of the file should differ depending on if the model uses the
+	 * [chat](/docs/api-reference/fine-tuning/chat-input) or
+	 * [completions](/docs/api-reference/fine-tuning/completions-input) format.
+	 *
+	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
+	 */
+	training_file: v.pipe(v.string(), v.trim()),
+	/**
+	 * The hyperparameters used for the fine-tuning job.
+	 */
+	hyperparameters: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Number of examples in each batch. A larger batch size means that model
+			 * parameters
+			 * are updated less frequently, but with lower variance.
+			 */
+			batch_size: v.exactOptional(
+				v.union([
+					v.picklist(["auto"]),
+					v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(256)),
+				]),
+			),
+			/**
+			 * Scaling factor for the learning rate. A smaller learning rate may be useful
+			 * to avoid
+			 * overfitting.
+			 */
+			learning_rate_multiplier: v.exactOptional(
+				v.union([v.picklist(["auto"]), v.pipe(v.number(), v.minValue(0))]),
+			),
+			/**
+			 * The number of epochs to train the model for. An epoch refers to one full
+			 * cycle
+			 * through the training dataset.
+			 */
+			n_epochs: v.exactOptional(
+				v.union([
+					v.picklist(["auto"]),
+					v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
+				]),
+			),
+		}),
+	),
+	/**
+	 * A string of up to 64 characters that will be added to your fine-tuned model
+	 * name.
+	 *
+	 * For example, a `suffix` of "custom-model-name" would produce a model name
+	 * like `ft:gpt-4o-mini:openai:custom-model-name:7p4lURel`.
+	 */
+	suffix: v.exactOptional(
 		v.nullable(v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(64))),
 	),
 	/**
@@ -1514,11 +1514,11 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 	 *
 	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
 	 */
-	validation_file: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	validation_file: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 	/**
 	 * A list of integrations to enable for your fine-tuning job.
 	 */
-	integrations: v.optional(
+	integrations: v.exactOptional(
 		v.nullable(
 			v.array(
 				v.strictObject({
@@ -1544,21 +1544,21 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 						 * A display name to set for the run. If not set, we will use the Job ID as
 						 * the name.
 						 */
-						name: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+						name: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 						/**
 						 * The entity to use for the run. This allows you to set the team or username
 						 * of the WandB user that you would
 						 * like associated with the run. If not set, the default entity for the
 						 * registered WandB API key is used.
 						 */
-						entity: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+						entity: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 						/**
 						 * A list of tags to be attached to the newly created run. These tags are
 						 * passed through directly to WandB. Some
 						 * default tags are generated by OpenAI: "openai/finetune",
 						 * "openai/{base-model}", "openai/{ftjob-abcdef}".
 						 */
-						tags: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						tags: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 					}),
 				}),
 			),
@@ -1570,13 +1570,13 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 	 * cases.
 	 * If a seed is not specified, one will be generated for you.
 	 */
-	seed: v.optional(
+	seed: v.exactOptional(
 		v.nullable(
 			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647)),
 		),
 	),
 });
-export const exactCreateEmbeddingRequestSchema = v.strictObject({
+export const inputCreateEmbeddingRequestSchema = v.strictObject({
 	/**
 	 * Input text to embed, encoded as a string or array of tokens. To embed
 	 * multiple inputs in a single request, pass an array of strings or array of
@@ -1618,18 +1618,18 @@ export const exactCreateEmbeddingRequestSchema = v.strictObject({
 	 * The format to return the embeddings in. Can be either `float` or
 	 * [`base64`](https://pypi.org/project/pybase64/).
 	 */
-	encoding_format: v.exactOptional(v.picklist(["float", "base64"])),
+	encoding_format: v.optional(v.picklist(["float", "base64"])),
 	/**
 	 * The number of dimensions the resulting output embeddings should have. Only
 	 * supported in `text-embedding-3` and later models.
 	 */
-	dimensions: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(1))),
+	dimensions: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.exactOptional(v.string()),
+	user: v.optional(v.string()),
 });
 export const createEmbeddingRequestSchema = v.strictObject({
 	/**
@@ -1677,24 +1677,24 @@ export const createEmbeddingRequestSchema = v.strictObject({
 	 * The format to return the embeddings in. Can be either `float` or
 	 * [`base64`](https://pypi.org/project/pybase64/).
 	 */
-	encoding_format: v.optional(v.picklist(["float", "base64"])),
+	encoding_format: v.exactOptional(v.picklist(["float", "base64"])),
 	/**
 	 * The number of dimensions the resulting output embeddings should have. Only
 	 * supported in `text-embedding-3` and later models.
 	 */
-	dimensions: v.optional(v.pipe(v.number(), v.integer(), v.minValue(1))),
+	dimensions: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(1))),
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.optional(v.pipe(v.string(), v.trim())),
+	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /**
  * Represents a transcription response returned by model, based on the
  * provided input.
  */
-export const exactCreateTranscriptionResponseJsonSchema = v.strictObject({
+export const inputCreateTranscriptionResponseJsonSchema = v.strictObject({
 	/**
 	 * The transcribed text.
 	 */
@@ -1706,13 +1706,13 @@ export const createTranscriptionResponseJsonSchema = v.strictObject({
 	 */
 	text: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateTranslationResponseJsonSchema = v.strictObject({
+export const inputCreateTranslationResponseJsonSchema = v.strictObject({
 	text: v.string(),
 });
 export const createTranslationResponseJsonSchema = v.strictObject({
 	text: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateSpeechRequestSchema = v.strictObject({
+export const inputCreateSpeechRequestSchema = v.strictObject({
 	/**
 	 * One of the available [TTS models](/docs/models/tts): `tts-1` or `tts-1-hd`
 	 */
@@ -1732,14 +1732,14 @@ export const exactCreateSpeechRequestSchema = v.strictObject({
 	 * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`,
 	 * `wav`, and `pcm`.
 	 */
-	response_format: v.exactOptional(
+	response_format: v.optional(
 		v.picklist(["mp3", "opus", "aac", "flac", "wav", "pcm"]),
 	),
 	/**
 	 * The speed of the generated audio. Select a value from `0.25` to `4.0`.
 	 * `1.0` is the default.
 	 */
-	speed: v.exactOptional(v.pipe(v.number(), v.minValue(0.25), v.maxValue(4))),
+	speed: v.optional(v.pipe(v.number(), v.minValue(0.25), v.maxValue(4))),
 });
 export const createSpeechRequestSchema = v.strictObject({
 	/**
@@ -1764,20 +1764,20 @@ export const createSpeechRequestSchema = v.strictObject({
 	 * The format to audio in. Supported formats are `mp3`, `opus`, `aac`, `flac`,
 	 * `wav`, and `pcm`.
 	 */
-	response_format: v.optional(
+	response_format: v.exactOptional(
 		v.picklist(["mp3", "opus", "aac", "flac", "wav", "pcm"]),
 	),
 	/**
 	 * The speed of the generated audio. Select a value from `0.25` to `4.0`.
 	 * `1.0` is the default.
 	 */
-	speed: v.optional(v.pipe(v.number(), v.minValue(0.25), v.maxValue(4))),
+	speed: v.exactOptional(v.pipe(v.number(), v.minValue(0.25), v.maxValue(4))),
 });
 /**
  * The upload Part represents a chunk of bytes we can add to an Upload object.
  * @title UploadPart
  */
-export const exactUploadPartSchema = v.strictObject({
+export const inputUploadPartSchema = v.strictObject({
 	/**
 	 * The upload Part unique identifier, which can be referenced in API
 	 * endpoints.
@@ -1815,7 +1815,7 @@ export const uploadPartSchema = v.strictObject({
 	 */
 	object: v.picklist(["upload.part"]),
 });
-export const exactFineTuningIntegrationSchema = v.strictObject({
+export const inputFineTuningIntegrationSchema = v.strictObject({
 	/**
 	 * The type of the integration being enabled for the fine-tuning job
 	 */
@@ -1837,21 +1837,21 @@ export const exactFineTuningIntegrationSchema = v.strictObject({
 		 * A display name to set for the run. If not set, we will use the Job ID as
 		 * the name.
 		 */
-		name: v.exactOptional(v.nullable(v.string())),
+		name: v.optional(v.nullable(v.string())),
 		/**
 		 * The entity to use for the run. This allows you to set the team or username
 		 * of the WandB user that you would
 		 * like associated with the run. If not set, the default entity for the
 		 * registered WandB API key is used.
 		 */
-		entity: v.exactOptional(v.nullable(v.string())),
+		entity: v.optional(v.nullable(v.string())),
 		/**
 		 * A list of tags to be attached to the newly created run. These tags are
 		 * passed through directly to WandB. Some
 		 * default tags are generated by OpenAI: "openai/finetune",
 		 * "openai/{base-model}", "openai/{ftjob-abcdef}".
 		 */
-		tags: v.exactOptional(v.array(v.string())),
+		tags: v.optional(v.array(v.string())),
 	}),
 });
 export const fineTuningIntegrationSchema = v.strictObject({
@@ -1876,48 +1876,48 @@ export const fineTuningIntegrationSchema = v.strictObject({
 		 * A display name to set for the run. If not set, we will use the Job ID as
 		 * the name.
 		 */
-		name: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+		name: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 		/**
 		 * The entity to use for the run. This allows you to set the team or username
 		 * of the WandB user that you would
 		 * like associated with the run. If not set, the default entity for the
 		 * registered WandB API key is used.
 		 */
-		entity: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+		entity: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 		/**
 		 * A list of tags to be attached to the newly created run. These tags are
 		 * passed through directly to WandB. Some
 		 * default tags are generated by OpenAI: "openai/finetune",
 		 * "openai/{base-model}", "openai/{ftjob-abcdef}".
 		 */
-		tags: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+		tags: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 	}),
 });
 /**
  * The per-line training example of a fine-tuning input file for completions
  * models
  */
-export const exactFinetuneCompletionRequestInputSchema = v.strictObject({
+export const inputFinetuneCompletionRequestInputSchema = v.strictObject({
 	/**
 	 * The input prompt for this training example.
 	 */
-	prompt: v.exactOptional(v.string()),
+	prompt: v.optional(v.string()),
 	/**
 	 * The desired completion for this training example.
 	 */
-	completion: v.exactOptional(v.string()),
+	completion: v.optional(v.string()),
 });
 export const finetuneCompletionRequestInputSchema = v.strictObject({
 	/**
 	 * The input prompt for this training example.
 	 */
-	prompt: v.optional(v.pipe(v.string(), v.trim())),
+	prompt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The desired completion for this training example.
 	 */
-	completion: v.optional(v.pipe(v.string(), v.trim())),
+	completion: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactDeleteAssistantResponseSchema = v.strictObject({
+export const inputDeleteAssistantResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["assistant.deleted"]),
@@ -1927,31 +1927,22 @@ export const deleteAssistantResponseSchema = v.strictObject({
 	deleted: v.boolean(),
 	object: v.picklist(["assistant.deleted"]),
 });
-export const exactAssistantToolsCodeSchema = v.strictObject({
+export const inputAssistantToolsCodeSchema = v.strictObject({
 	/**
 	 * The type of tool being defined: `code_interpreter`
 	 */
 	type: v.picklist(["code_interpreter"]),
 });
-export const assistantToolsCodeSchema = exactAssistantToolsCodeSchema;
-export const exactAssistantToolsFileSearchTypeOnlySchema = v.strictObject({
+export const assistantToolsCodeSchema = inputAssistantToolsCodeSchema;
+export const inputAssistantToolsFileSearchTypeOnlySchema = v.strictObject({
 	/**
 	 * The type of tool being defined: `file_search`
 	 */
 	type: v.picklist(["file_search"]),
 });
 export const assistantToolsFileSearchTypeOnlySchema =
-	exactAssistantToolsFileSearchTypeOnlySchema;
-export const exactModifyRunRequestSchema = v.strictObject({
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-export const modifyRunRequestSchema = v.strictObject({
+	inputAssistantToolsFileSearchTypeOnlySchema;
+export const inputModifyRunRequestSchema = v.strictObject({
 	/**
 	 * Set of 16 key-value pairs that can be attached to an object. This can be
 	 * useful for storing additional information about the object in a structured
@@ -1960,7 +1951,16 @@ export const modifyRunRequestSchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactSubmitToolOutputsRunRequestSchema = v.strictObject({
+export const modifyRunRequestSchema = v.strictObject({
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+});
+export const inputSubmitToolOutputsRunRequestSchema = v.strictObject({
 	/**
 	 * A list of tools for which the outputs are being submitted.
 	 */
@@ -1970,11 +1970,11 @@ export const exactSubmitToolOutputsRunRequestSchema = v.strictObject({
 			 * The ID of the tool call in the `required_action` object within the run
 			 * object the output is being submitted for.
 			 */
-			tool_call_id: v.exactOptional(v.string()),
+			tool_call_id: v.optional(v.string()),
 			/**
 			 * The output of the tool call to be submitted to continue the run.
 			 */
-			output: v.exactOptional(v.string()),
+			output: v.optional(v.string()),
 		}),
 	),
 	/**
@@ -1982,7 +1982,7 @@ export const exactSubmitToolOutputsRunRequestSchema = v.strictObject({
 	 * server-sent events, terminating when the Run enters a terminal state with a
 	 * `data: [DONE]` message.
 	 */
-	stream: v.exactOptional(v.nullable(v.boolean())),
+	stream: v.optional(v.nullable(v.boolean())),
 });
 export const submitToolOutputsRunRequestSchema = v.strictObject({
 	/**
@@ -1994,11 +1994,11 @@ export const submitToolOutputsRunRequestSchema = v.strictObject({
 			 * The ID of the tool call in the `required_action` object within the run
 			 * object the output is being submitted for.
 			 */
-			tool_call_id: v.optional(v.pipe(v.string(), v.trim())),
+			tool_call_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The output of the tool call to be submitted to continue the run.
 			 */
-			output: v.optional(v.pipe(v.string(), v.trim())),
+			output: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
@@ -2006,9 +2006,52 @@ export const submitToolOutputsRunRequestSchema = v.strictObject({
 	 * server-sent events, terminating when the Run enters a terminal state with a
 	 * `data: [DONE]` message.
 	 */
-	stream: v.optional(v.nullable(v.boolean())),
+	stream: v.exactOptional(v.nullable(v.boolean())),
 });
-export const exactModifyThreadRequestSchema = v.strictObject({
+export const inputModifyThreadRequestSchema = v.strictObject({
+	/**
+	 * A set of resources that are made available to the assistant's tools in this
+	 * thread. The resources are specific to the type of tool. For example, the
+	 * `code_interpreter` tool requires a list of file IDs, while the
+	 * `file_search` tool requires a list of vector store IDs.
+	 */
+	tool_resources: v.optional(
+		v.nullable(
+			v.strictObject({
+				code_interpreter: v.optional(
+					v.strictObject({
+						/**
+						 * A list of [file](/docs/api-reference/files) IDs made available to the
+						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+						 * the tool.
+						 */
+						file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
+					}),
+				),
+				file_search: v.optional(
+					v.strictObject({
+						/**
+						 * The [vector store](/docs/api-reference/vector-stores/object) attached to
+						 * this thread. There can be a maximum of 1 vector store attached to the
+						 * thread.
+						 */
+						vector_store_ids: v.optional(
+							v.pipe(v.array(v.string()), v.maxLength(1)),
+						),
+					}),
+				),
+			}),
+		),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+});
+export const modifyThreadRequestSchema = v.strictObject({
 	/**
 	 * A set of resources that are made available to the assistant's tools in this
 	 * thread. The resources are specific to the type of tool. For example, the
@@ -2026,7 +2069,7 @@ export const exactModifyThreadRequestSchema = v.strictObject({
 						 * the tool.
 						 */
 						file_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(20)),
+							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
 						),
 					}),
 				),
@@ -2038,51 +2081,6 @@ export const exactModifyThreadRequestSchema = v.strictObject({
 						 * thread.
 						 */
 						vector_store_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(1)),
-						),
-					}),
-				),
-			}),
-		),
-	),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-export const modifyThreadRequestSchema = v.strictObject({
-	/**
-	 * A set of resources that are made available to the assistant's tools in this
-	 * thread. The resources are specific to the type of tool. For example, the
-	 * `code_interpreter` tool requires a list of file IDs, while the
-	 * `file_search` tool requires a list of vector store IDs.
-	 */
-	tool_resources: v.optional(
-		v.nullable(
-			v.strictObject({
-				code_interpreter: v.optional(
-					v.strictObject({
-						/**
-						 * A list of [file](/docs/api-reference/files) IDs made available to the
-						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
-						 * the tool.
-						 */
-						file_ids: v.optional(
-							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
-						),
-					}),
-				),
-				file_search: v.optional(
-					v.strictObject({
-						/**
-						 * The [vector store](/docs/api-reference/vector-stores/object) attached to
-						 * this thread. There can be a maximum of 1 vector store attached to the
-						 * thread.
-						 */
-						vector_store_ids: v.optional(
 							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
 						),
 					}),
@@ -2096,9 +2094,9 @@ export const modifyThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactDeleteThreadResponseSchema = v.strictObject({
+export const inputDeleteThreadResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["thread.deleted"]),
@@ -2108,16 +2106,7 @@ export const deleteThreadResponseSchema = v.strictObject({
 	deleted: v.boolean(),
 	object: v.picklist(["thread.deleted"]),
 });
-export const exactModifyMessageRequestSchema = v.strictObject({
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-export const modifyMessageRequestSchema = v.strictObject({
+export const inputModifyMessageRequestSchema = v.strictObject({
 	/**
 	 * Set of 16 key-value pairs that can be attached to an object. This can be
 	 * useful for storing additional information about the object in a structured
@@ -2126,7 +2115,16 @@ export const modifyMessageRequestSchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactDeleteMessageResponseSchema = v.strictObject({
+export const modifyMessageRequestSchema = v.strictObject({
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+});
+export const inputDeleteMessageResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["thread.message.deleted"]),
@@ -2141,7 +2139,7 @@ export const deleteMessageResponseSchema = v.strictObject({
  * message.
  * @title Image file
  */
-export const exactMessageContentImageFileObjectSchema = v.strictObject({
+export const inputMessageContentImageFileObjectSchema = v.strictObject({
 	/**
 	 * Always `image_file`.
 	 */
@@ -2157,7 +2155,7 @@ export const exactMessageContentImageFileObjectSchema = v.strictObject({
 		 * Specifies the detail level of the image if specified by the user. `low`
 		 * uses fewer tokens, you can opt in to high resolution using `high`.
 		 */
-		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		detail: v.optional(v.picklist(["auto", "low", "high"])),
 	}),
 });
 export const messageContentImageFileObjectSchema = v.strictObject({
@@ -2176,7 +2174,7 @@ export const messageContentImageFileObjectSchema = v.strictObject({
 		 * Specifies the detail level of the image if specified by the user. `low`
 		 * uses fewer tokens, you can opt in to high resolution using `high`.
 		 */
-		detail: v.optional(v.picklist(["auto", "low", "high"])),
+		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
 	}),
 });
 /**
@@ -2184,32 +2182,7 @@ export const messageContentImageFileObjectSchema = v.strictObject({
  * message.
  * @title Image file
  */
-export const exactMessageDeltaContentImageFileObjectSchema = v.strictObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `image_file`.
-	 */
-	type: v.picklist(["image_file"]),
-	image_file: v.exactOptional(
-		v.strictObject({
-			/**
-			 * The [File](/docs/api-reference/files) ID of the image in the message
-			 * content. Set `purpose="vision"` when uploading the File if you need to
-			 * later display the file content.
-			 */
-			file_id: v.exactOptional(v.string()),
-			/**
-			 * Specifies the detail level of the image if specified by the user. `low`
-			 * uses fewer tokens, you can opt in to high resolution using `high`.
-			 */
-			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-		}),
-	),
-});
-export const messageDeltaContentImageFileObjectSchema = v.strictObject({
+export const inputMessageDeltaContentImageFileObjectSchema = v.strictObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2225,7 +2198,7 @@ export const messageDeltaContentImageFileObjectSchema = v.strictObject({
 			 * content. Set `purpose="vision"` when uploading the File if you need to
 			 * later display the file content.
 			 */
-			file_id: v.optional(v.pipe(v.string(), v.trim())),
+			file_id: v.optional(v.string()),
 			/**
 			 * Specifies the detail level of the image if specified by the user. `low`
 			 * uses fewer tokens, you can opt in to high resolution using `high`.
@@ -2234,11 +2207,36 @@ export const messageDeltaContentImageFileObjectSchema = v.strictObject({
 		}),
 	),
 });
+export const messageDeltaContentImageFileObjectSchema = v.strictObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `image_file`.
+	 */
+	type: v.picklist(["image_file"]),
+	image_file: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The [File](/docs/api-reference/files) ID of the image in the message
+			 * content. Set `purpose="vision"` when uploading the File if you need to
+			 * later display the file content.
+			 */
+			file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Specifies the detail level of the image if specified by the user. `low`
+			 * uses fewer tokens, you can opt in to high resolution using `high`.
+			 */
+			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		}),
+	),
+});
 /**
  * References an image URL in the content of a message.
  * @title Image URL
  */
-export const exactMessageContentImageUrlObjectSchema = v.strictObject({
+export const inputMessageContentImageUrlObjectSchema = v.strictObject({
 	/**
 	 * The type of the content part.
 	 */
@@ -2253,7 +2251,7 @@ export const exactMessageContentImageUrlObjectSchema = v.strictObject({
 		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
 		 * opt in to high resolution using `high`. Default value is `auto`
 		 */
-		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		detail: v.optional(v.picklist(["auto", "low", "high"])),
 	}),
 });
 export const messageContentImageUrlObjectSchema = v.strictObject({
@@ -2271,38 +2269,14 @@ export const messageContentImageUrlObjectSchema = v.strictObject({
 		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
 		 * opt in to high resolution using `high`. Default value is `auto`
 		 */
-		detail: v.optional(v.picklist(["auto", "low", "high"])),
+		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
 	}),
 });
 /**
  * References an image URL in the content of a message.
  * @title Image URL
  */
-export const exactMessageDeltaContentImageUrlObjectSchema = v.strictObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `image_url`.
-	 */
-	type: v.picklist(["image_url"]),
-	image_url: v.exactOptional(
-		v.strictObject({
-			/**
-			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
-			 * webp.
-			 */
-			url: v.exactOptional(v.string()),
-			/**
-			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-			 * opt in to high resolution using `high`.
-			 */
-			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-		}),
-	),
-});
-export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
+export const inputMessageDeltaContentImageUrlObjectSchema = v.strictObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2317,7 +2291,7 @@ export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
 			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
 			 * webp.
 			 */
-			url: v.optional(v.pipe(v.string(), v.trim())),
+			url: v.optional(v.string()),
 			/**
 			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
 			 * opt in to high resolution using `high`.
@@ -2326,11 +2300,35 @@ export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
 		}),
 	),
 });
+export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `image_url`.
+	 */
+	type: v.picklist(["image_url"]),
+	image_url: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
+			 * webp.
+			 */
+			url: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+			 * opt in to high resolution using `high`.
+			 */
+			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		}),
+	),
+});
 /**
  * The text content that is part of a message.
  * @title Text
  */
-export const exactMessageContentTextObjectSchema = v.strictObject({
+export const inputMessageContentTextObjectSchema = v.strictObject({
 	/**
 	 * Always `text`.
 	 */
@@ -2360,7 +2358,7 @@ export const messageContentTextObjectSchema = v.strictObject({
  * The refusal content generated by the assistant.
  * @title Refusal
  */
-export const exactMessageContentRefusalObjectSchema = v.strictObject({
+export const inputMessageContentRefusalObjectSchema = v.strictObject({
 	/**
 	 * Always `refusal`.
 	 */
@@ -2378,7 +2376,7 @@ export const messageContentRefusalObjectSchema = v.strictObject({
  * The text content that is part of a message.
  * @title Text
  */
-export const exactMessageRequestContentTextObjectSchema = v.strictObject({
+export const inputMessageRequestContentTextObjectSchema = v.strictObject({
 	/**
 	 * Always `text`.
 	 */
@@ -2404,7 +2402,7 @@ export const messageRequestContentTextObjectSchema = v.strictObject({
  * the assistant uses the "file_search" tool to search files.
  * @title File citation
  */
-export const exactMessageContentTextAnnotationsFileCitationObjectSchema =
+export const inputMessageContentTextAnnotationsFileCitationObjectSchema =
 	v.strictObject({
 		/**
 		 * Always `file_citation`.
@@ -2447,7 +2445,7 @@ export const messageContentTextAnnotationsFileCitationObjectSchema =
  * `code_interpreter` tool to generate a file.
  * @title File path
  */
-export const exactMessageContentTextAnnotationsFilePathObjectSchema =
+export const inputMessageContentTextAnnotationsFilePathObjectSchema =
 	v.strictObject({
 		/**
 		 * Always `file_path`.
@@ -2490,28 +2488,7 @@ export const messageContentTextAnnotationsFilePathObjectSchema = v.strictObject(
  * The text content that is part of a message.
  * @title Text
  */
-export const exactMessageDeltaContentTextObjectSchema = v.strictObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	text: v.exactOptional(
-		v.strictObject({
-			/**
-			 * The data that makes up the text.
-			 */
-			value: v.exactOptional(v.string()),
-			annotations: v.exactOptional(
-				v.array(v.union([v.unknown(), v.unknown()])),
-			),
-		}),
-	),
-});
-export const messageDeltaContentTextObjectSchema = v.strictObject({
+export const inputMessageDeltaContentTextObjectSchema = v.strictObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2525,8 +2502,29 @@ export const messageDeltaContentTextObjectSchema = v.strictObject({
 			/**
 			 * The data that makes up the text.
 			 */
-			value: v.optional(v.pipe(v.string(), v.trim())),
+			value: v.optional(v.string()),
 			annotations: v.optional(v.array(v.union([v.unknown(), v.unknown()]))),
+		}),
+	),
+});
+export const messageDeltaContentTextObjectSchema = v.strictObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	text: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The data that makes up the text.
+			 */
+			value: v.exactOptional(v.pipe(v.string(), v.trim())),
+			annotations: v.exactOptional(
+				v.array(v.union([v.unknown(), v.unknown()])),
+			),
 		}),
 	),
 });
@@ -2534,7 +2532,7 @@ export const messageDeltaContentTextObjectSchema = v.strictObject({
  * The refusal content that is part of a message.
  * @title Refusal
  */
-export const exactMessageDeltaContentRefusalObjectSchema = v.strictObject({
+export const inputMessageDeltaContentRefusalObjectSchema = v.strictObject({
 	/**
 	 * The index of the refusal part in the message.
 	 */
@@ -2543,7 +2541,7 @@ export const exactMessageDeltaContentRefusalObjectSchema = v.strictObject({
 	 * Always `refusal`.
 	 */
 	type: v.picklist(["refusal"]),
-	refusal: v.exactOptional(v.string()),
+	refusal: v.optional(v.string()),
 });
 export const messageDeltaContentRefusalObjectSchema = v.strictObject({
 	/**
@@ -2554,7 +2552,7 @@ export const messageDeltaContentRefusalObjectSchema = v.strictObject({
 	 * Always `refusal`.
 	 */
 	type: v.picklist(["refusal"]),
-	refusal: v.optional(v.pipe(v.string(), v.trim())),
+	refusal: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /**
  * A citation within the message that points to a specific quote from a
@@ -2562,7 +2560,7 @@ export const messageDeltaContentRefusalObjectSchema = v.strictObject({
  * the assistant uses the "file_search" tool to search files.
  * @title File citation
  */
-export const exactMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
+export const inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the annotation in the text content part.
@@ -2575,23 +2573,21 @@ export const exactMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
 		/**
 		 * The text in the message content that needs to be replaced.
 		 */
-		text: v.exactOptional(v.string()),
-		file_citation: v.exactOptional(
+		text: v.optional(v.string()),
+		file_citation: v.optional(
 			v.strictObject({
 				/**
 				 * The ID of the specific File the citation is from.
 				 */
-				file_id: v.exactOptional(v.string()),
+				file_id: v.optional(v.string()),
 				/**
 				 * The specific quote in the file.
 				 */
-				quote: v.exactOptional(v.string()),
+				quote: v.optional(v.string()),
 			}),
 		),
-		start_index: v.exactOptional(
-			v.pipe(v.number(), v.integer(), v.minValue(0)),
-		),
-		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 	});
 export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
 	v.strictObject({
@@ -2606,28 +2602,30 @@ export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
 		/**
 		 * The text in the message content that needs to be replaced.
 		 */
-		text: v.optional(v.pipe(v.string(), v.trim())),
-		file_citation: v.optional(
+		text: v.exactOptional(v.pipe(v.string(), v.trim())),
+		file_citation: v.exactOptional(
 			v.strictObject({
 				/**
 				 * The ID of the specific File the citation is from.
 				 */
-				file_id: v.optional(v.pipe(v.string(), v.trim())),
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 				/**
 				 * The specific quote in the file.
 				 */
-				quote: v.optional(v.pipe(v.string(), v.trim())),
+				quote: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
 		),
-		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		start_index: v.exactOptional(
+			v.pipe(v.number(), v.integer(), v.minValue(0)),
+		),
+		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 	});
 /**
  * A URL for the file that's generated when the assistant used the
  * `code_interpreter` tool to generate a file.
  * @title File path
  */
-export const exactMessageDeltaContentTextAnnotationsFilePathObjectSchema =
+export const inputMessageDeltaContentTextAnnotationsFilePathObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the annotation in the text content part.
@@ -2640,19 +2638,17 @@ export const exactMessageDeltaContentTextAnnotationsFilePathObjectSchema =
 		/**
 		 * The text in the message content that needs to be replaced.
 		 */
-		text: v.exactOptional(v.string()),
-		file_path: v.exactOptional(
+		text: v.optional(v.string()),
+		file_path: v.optional(
 			v.strictObject({
 				/**
 				 * The ID of the file that was generated.
 				 */
-				file_id: v.exactOptional(v.string()),
+				file_id: v.optional(v.string()),
 			}),
 		),
-		start_index: v.exactOptional(
-			v.pipe(v.number(), v.integer(), v.minValue(0)),
-		),
-		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 	});
 export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
 	v.strictObject({
@@ -2667,23 +2663,25 @@ export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
 		/**
 		 * The text in the message content that needs to be replaced.
 		 */
-		text: v.optional(v.pipe(v.string(), v.trim())),
-		file_path: v.optional(
+		text: v.exactOptional(v.pipe(v.string(), v.trim())),
+		file_path: v.exactOptional(
 			v.strictObject({
 				/**
 				 * The ID of the file that was generated.
 				 */
-				file_id: v.optional(v.pipe(v.string(), v.trim())),
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
 		),
-		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		start_index: v.exactOptional(
+			v.pipe(v.number(), v.integer(), v.minValue(0)),
+		),
+		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 	});
 /**
  * Details of the Code Interpreter tool call the run step was involved in.
  * @title Code Interpreter tool call
  */
-export const exactRunStepDetailsToolCallsCodeObjectSchema = v.strictObject({
+export const inputRunStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 	/**
 	 * The ID of the tool call.
 	 */
@@ -2739,7 +2737,7 @@ export const runStepDetailsToolCallsCodeObjectSchema = v.strictObject({
  * Details of the Code Interpreter tool call the run step was involved in.
  * @title Code interpreter tool call
  */
-export const exactRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
+export const inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the tool call in the tool calls array.
@@ -2748,7 +2746,7 @@ export const exactRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
 		/**
 		 * The ID of the tool call.
 		 */
-		id: v.exactOptional(v.string()),
+		id: v.optional(v.string()),
 		/**
 		 * The type of tool call. This is always going to be `code_interpreter` for
 		 * this type of tool call.
@@ -2757,18 +2755,18 @@ export const exactRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
 		/**
 		 * The Code Interpreter tool call definition.
 		 */
-		code_interpreter: v.exactOptional(
+		code_interpreter: v.optional(
 			v.strictObject({
 				/**
 				 * The input to the Code Interpreter tool call.
 				 */
-				input: v.exactOptional(v.string()),
+				input: v.optional(v.string()),
 				/**
 				 * The outputs from the Code Interpreter tool call. Code Interpreter can
 				 * output one or more items, including text (`logs`) or images (`image`). Each
 				 * of these are represented by a different object type.
 				 */
-				outputs: v.exactOptional(v.array(v.union([v.unknown(), v.unknown()]))),
+				outputs: v.optional(v.array(v.union([v.unknown(), v.unknown()]))),
 			}),
 		),
 	});
@@ -2780,7 +2778,7 @@ export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 	/**
 	 * The ID of the tool call.
 	 */
-	id: v.optional(v.pipe(v.string(), v.trim())),
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The type of tool call. This is always going to be `code_interpreter` for
 	 * this type of tool call.
@@ -2789,18 +2787,18 @@ export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 	/**
 	 * The Code Interpreter tool call definition.
 	 */
-	code_interpreter: v.optional(
+	code_interpreter: v.exactOptional(
 		v.strictObject({
 			/**
 			 * The input to the Code Interpreter tool call.
 			 */
-			input: v.optional(v.pipe(v.string(), v.trim())),
+			input: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The outputs from the Code Interpreter tool call. Code Interpreter can
 			 * output one or more items, including text (`logs`) or images (`image`). Each
 			 * of these are represented by a different object type.
 			 */
-			outputs: v.optional(v.array(v.union([v.unknown(), v.unknown()]))),
+			outputs: v.exactOptional(v.array(v.union([v.unknown(), v.unknown()]))),
 		}),
 	),
 });
@@ -2808,7 +2806,7 @@ export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.strictObject({
  * Text output from the Code Interpreter tool call as part of a run step.
  * @title Code Interpreter log output
  */
-export const exactRunStepDetailsToolCallsCodeOutputLogsObjectSchema =
+export const inputRunStepDetailsToolCallsCodeOutputLogsObjectSchema =
 	v.strictObject({
 		/**
 		 * Always `logs`.
@@ -2835,7 +2833,7 @@ export const runStepDetailsToolCallsCodeOutputLogsObjectSchema = v.strictObject(
  * Text output from the Code Interpreter tool call as part of a run step.
  * @title Code interpreter log output
  */
-export const exactRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
+export const inputRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the output in the outputs array.
@@ -2848,7 +2846,7 @@ export const exactRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
 		/**
 		 * The text output from the Code Interpreter tool call.
 		 */
-		logs: v.exactOptional(v.string()),
+		logs: v.optional(v.string()),
 	});
 export const runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
 	v.strictObject({
@@ -2863,9 +2861,9 @@ export const runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
 		/**
 		 * The text output from the Code Interpreter tool call.
 		 */
-		logs: v.optional(v.pipe(v.string(), v.trim())),
+		logs: v.exactOptional(v.pipe(v.string(), v.trim())),
 	});
-export const exactRunStepDetailsToolCallsCodeOutputImageObjectSchema =
+export const inputRunStepDetailsToolCallsCodeOutputImageObjectSchema =
 	v.strictObject({
 		/**
 		 * Always `image`.
@@ -2891,26 +2889,7 @@ export const runStepDetailsToolCallsCodeOutputImageObjectSchema =
 			file_id: v.pipe(v.string(), v.trim()),
 		}),
 	});
-export const exactRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.strictObject({
-		/**
-		 * The index of the output in the outputs array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `image`.
-		 */
-		type: v.picklist(["image"]),
-		image: v.exactOptional(
-			v.strictObject({
-				/**
-				 * The [file](/docs/api-reference/files) ID of the image.
-				 */
-				file_id: v.exactOptional(v.string()),
-			}),
-		),
-	});
-export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
+export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the output in the outputs array.
@@ -2925,11 +2904,30 @@ export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 				/**
 				 * The [file](/docs/api-reference/files) ID of the image.
 				 */
-				file_id: v.optional(v.pipe(v.string(), v.trim())),
+				file_id: v.optional(v.string()),
 			}),
 		),
 	});
-export const exactRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
+export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
+	v.strictObject({
+		/**
+		 * The index of the output in the outputs array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `image`.
+		 */
+		type: v.picklist(["image"]),
+		image: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The [file](/docs/api-reference/files) ID of the image.
+				 */
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	});
+export const inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the tool call in the tool calls array.
@@ -2938,7 +2936,7 @@ export const exactRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		/**
 		 * The ID of the tool call object.
 		 */
-		id: v.exactOptional(v.string()),
+		id: v.optional(v.string()),
 		/**
 		 * The type of tool call. This is always going to be `file_search` for this
 		 * type of tool call.
@@ -2958,7 +2956,7 @@ export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		/**
 		 * The ID of the tool call object.
 		 */
-		id: v.optional(v.pipe(v.string(), v.trim())),
+		id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		/**
 		 * The type of tool call. This is always going to be `file_search` for this
 		 * type of tool call.
@@ -2969,7 +2967,7 @@ export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		 */
 		file_search: v.record(v.string(), v.unknown()),
 	});
-export const exactRunStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
+export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
 	/**
 	 * The ID of the tool call object.
 	 */
@@ -3027,7 +3025,7 @@ export const runStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
 		output: v.nullable(v.pipe(v.string(), v.trim())),
 	}),
 });
-export const exactRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
+export const inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 	v.strictObject({
 		/**
 		 * The index of the tool call in the tool calls array.
@@ -3036,43 +3034,7 @@ export const exactRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 		/**
 		 * The ID of the tool call object.
 		 */
-		id: v.exactOptional(v.string()),
-		/**
-		 * The type of tool call. This is always going to be `function` for this type
-		 * of tool call.
-		 */
-		type: v.picklist(["function"]),
-		/**
-		 * The definition of the function that was called.
-		 */
-		function: v.exactOptional(
-			v.strictObject({
-				/**
-				 * The name of the function.
-				 */
-				name: v.exactOptional(v.string()),
-				/**
-				 * The arguments passed to the function.
-				 */
-				arguments: v.exactOptional(v.string()),
-				/**
-				 * The output of the function. This will be `null` if the outputs have not
-				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-				 */
-				output: v.exactOptional(v.nullable(v.string())),
-			}),
-		),
-	});
-export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
-	v.strictObject({
-		/**
-		 * The index of the tool call in the tool calls array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * The ID of the tool call object.
-		 */
-		id: v.optional(v.pipe(v.string(), v.trim())),
+		id: v.optional(v.string()),
 		/**
 		 * The type of tool call. This is always going to be `function` for this type
 		 * of tool call.
@@ -3086,20 +3048,56 @@ export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 				/**
 				 * The name of the function.
 				 */
-				name: v.optional(v.pipe(v.string(), v.trim())),
+				name: v.optional(v.string()),
 				/**
 				 * The arguments passed to the function.
 				 */
-				arguments: v.optional(v.pipe(v.string(), v.trim())),
+				arguments: v.optional(v.string()),
 				/**
 				 * The output of the function. This will be `null` if the outputs have not
 				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
 				 */
-				output: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+				output: v.optional(v.nullable(v.string())),
 			}),
 		),
 	});
-export const exactDeleteVectorStoreResponseSchema = v.strictObject({
+export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
+	v.strictObject({
+		/**
+		 * The index of the tool call in the tool calls array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * The ID of the tool call object.
+		 */
+		id: v.exactOptional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The type of tool call. This is always going to be `function` for this type
+		 * of tool call.
+		 */
+		type: v.picklist(["function"]),
+		/**
+		 * The definition of the function that was called.
+		 */
+		function: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The name of the function.
+				 */
+				name: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The arguments passed to the function.
+				 */
+				arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The output of the function. This will be `null` if the outputs have not
+				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+				 */
+				output: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+			}),
+		),
+	});
+export const inputDeleteVectorStoreResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.deleted"]),
@@ -3109,7 +3107,7 @@ export const deleteVectorStoreResponseSchema = v.strictObject({
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.deleted"]),
 });
-export const exactDeleteVectorStoreFileResponseSchema = v.strictObject({
+export const inputDeleteVectorStoreFileResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.file.deleted"]),
@@ -3123,7 +3121,7 @@ export const deleteVectorStoreFileResponseSchema = v.strictObject({
  * A batch of files attached to a vector store.
  * @title Vector store file batch
  */
-export const exactVectorStoreFileBatchObjectSchema = v.strictObject({
+export const inputVectorStoreFileBatchObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -3218,30 +3216,12 @@ export const vectorStoreFileBatchObjectSchema = v.strictObject({
 	}),
 });
 /** The per-line object of the batch input file */
-export const exactBatchRequestInputSchema = v.strictObject({
+export const inputBatchRequestInputSchema = v.strictObject({
 	/**
 	 * A developer-provided per-request id that will be used to match outputs to
 	 * inputs. Must be unique for each request in a batch.
 	 */
-	custom_id: v.exactOptional(v.string()),
-	/**
-	 * The HTTP method to be used for the request. Currently only `POST` is
-	 * supported.
-	 */
-	method: v.exactOptional(v.picklist(["POST"])),
-	/**
-	 * The OpenAI API relative URL to be used for the request. Currently
-	 * `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are
-	 * supported.
-	 */
-	url: v.exactOptional(v.string()),
-});
-export const batchRequestInputSchema = v.strictObject({
-	/**
-	 * A developer-provided per-request id that will be used to match outputs to
-	 * inputs. Must be unique for each request in a batch.
-	 */
-	custom_id: v.optional(v.pipe(v.string(), v.trim())),
+	custom_id: v.optional(v.string()),
 	/**
 	 * The HTTP method to be used for the request. Currently only `POST` is
 	 * supported.
@@ -3252,61 +3232,34 @@ export const batchRequestInputSchema = v.strictObject({
 	 * `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are
 	 * supported.
 	 */
-	url: v.optional(v.pipe(v.string(), v.trim())),
+	url: v.optional(v.string()),
+});
+export const batchRequestInputSchema = v.strictObject({
+	/**
+	 * A developer-provided per-request id that will be used to match outputs to
+	 * inputs. Must be unique for each request in a batch.
+	 */
+	custom_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The HTTP method to be used for the request. Currently only `POST` is
+	 * supported.
+	 */
+	method: v.exactOptional(v.picklist(["POST"])),
+	/**
+	 * The OpenAI API relative URL to be used for the request. Currently
+	 * `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are
+	 * supported.
+	 */
+	url: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The per-line object of the batch output and error files */
-export const exactBatchRequestOutputSchema = v.strictObject({
-	id: v.exactOptional(v.string()),
+export const inputBatchRequestOutputSchema = v.strictObject({
+	id: v.optional(v.string()),
 	/**
 	 * A developer-provided per-request id that will be used to match outputs to
 	 * inputs.
 	 */
-	custom_id: v.exactOptional(v.string()),
-	response: v.exactOptional(
-		v.nullable(
-			v.strictObject({
-				/**
-				 * The HTTP status code of the response
-				 */
-				status_code: v.exactOptional(v.pipe(v.number(), v.integer())),
-				/**
-				 * An unique identifier for the OpenAI API request. Please include this
-				 * request ID when contacting support.
-				 */
-				request_id: v.exactOptional(v.string()),
-				/**
-				 * The JSON body of the response
-				 */
-				body: v.exactOptional(v.record(v.string(), v.unknown())),
-			}),
-		),
-	),
-	/**
-	 * For requests that failed with a non-HTTP error, this will contain more
-	 * information on the cause of the failure.
-	 */
-	error: v.exactOptional(
-		v.nullable(
-			v.strictObject({
-				/**
-				 * A machine-readable error code.
-				 */
-				code: v.exactOptional(v.string()),
-				/**
-				 * A human-readable error message.
-				 */
-				message: v.exactOptional(v.string()),
-			}),
-		),
-	),
-});
-export const batchRequestOutputSchema = v.strictObject({
-	id: v.optional(v.pipe(v.string(), v.trim())),
-	/**
-	 * A developer-provided per-request id that will be used to match outputs to
-	 * inputs.
-	 */
-	custom_id: v.optional(v.pipe(v.string(), v.trim())),
+	custom_id: v.optional(v.string()),
 	response: v.optional(
 		v.nullable(
 			v.strictObject({
@@ -3318,7 +3271,7 @@ export const batchRequestOutputSchema = v.strictObject({
 				 * An unique identifier for the OpenAI API request. Please include this
 				 * request ID when contacting support.
 				 */
-				request_id: v.optional(v.pipe(v.string(), v.trim())),
+				request_id: v.optional(v.string()),
 				/**
 				 * The JSON body of the response
 				 */
@@ -3336,16 +3289,61 @@ export const batchRequestOutputSchema = v.strictObject({
 				/**
 				 * A machine-readable error code.
 				 */
-				code: v.optional(v.pipe(v.string(), v.trim())),
+				code: v.optional(v.string()),
 				/**
 				 * A human-readable error message.
 				 */
-				message: v.optional(v.pipe(v.string(), v.trim())),
+				message: v.optional(v.string()),
 			}),
 		),
 	),
 });
-export const exactInviteRequestSchema = v.strictObject({
+export const batchRequestOutputSchema = v.strictObject({
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * A developer-provided per-request id that will be used to match outputs to
+	 * inputs.
+	 */
+	custom_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	response: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * The HTTP status code of the response
+				 */
+				status_code: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * An unique identifier for the OpenAI API request. Please include this
+				 * request ID when contacting support.
+				 */
+				request_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The JSON body of the response
+				 */
+				body: v.exactOptional(v.record(v.string(), v.unknown())),
+			}),
+		),
+	),
+	/**
+	 * For requests that failed with a non-HTTP error, this will contain more
+	 * information on the cause of the failure.
+	 */
+	error: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * A machine-readable error code.
+				 */
+				code: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * A human-readable error message.
+				 */
+				message: v.exactOptional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	),
+});
+export const inputInviteRequestSchema = v.strictObject({
 	/**
 	 * Send an email to this address
 	 */
@@ -3365,7 +3363,7 @@ export const inviteRequestSchema = v.strictObject({
 	 */
 	role: v.picklist(["reader", "owner"]),
 });
-export const exactInviteDeleteResponseSchema = v.strictObject({
+export const inputInviteDeleteResponseSchema = v.strictObject({
 	/**
 	 * The object type, which is always `organization.invite.deleted`
 	 */
@@ -3381,14 +3379,14 @@ export const inviteDeleteResponseSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const exactUserRoleUpdateRequestSchema = v.strictObject({
+export const inputUserRoleUpdateRequestSchema = v.strictObject({
 	/**
 	 * `owner` or `reader`
 	 */
 	role: v.picklist(["owner", "reader"]),
 });
-export const userRoleUpdateRequestSchema = exactUserRoleUpdateRequestSchema;
-export const exactUserDeleteResponseSchema = v.strictObject({
+export const userRoleUpdateRequestSchema = inputUserRoleUpdateRequestSchema;
+export const inputUserDeleteResponseSchema = v.strictObject({
 	object: v.picklist(["organization.user.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
@@ -3398,7 +3396,7 @@ export const userDeleteResponseSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const exactProjectCreateRequestSchema = v.strictObject({
+export const inputProjectCreateRequestSchema = v.strictObject({
 	/**
 	 * The friendly name of the project, this name appears in reports.
 	 */
@@ -3407,13 +3405,13 @@ export const exactProjectCreateRequestSchema = v.strictObject({
 	 * A description of your business, project, or use case. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	app_use_case: v.exactOptional(v.string()),
+	app_use_case: v.optional(v.string()),
 	/**
 	 * Your business URL, or if you don't have one yet, a URL to your LinkedIn or
 	 * other social media. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	business_website: v.exactOptional(v.string()),
+	business_website: v.optional(v.string()),
 });
 export const projectCreateRequestSchema = v.strictObject({
 	/**
@@ -3424,15 +3422,15 @@ export const projectCreateRequestSchema = v.strictObject({
 	 * A description of your business, project, or use case. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	app_use_case: v.optional(v.pipe(v.string(), v.trim())),
+	app_use_case: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * Your business URL, or if you don't have one yet, a URL to your LinkedIn or
 	 * other social media. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	business_website: v.optional(v.pipe(v.string(), v.trim())),
+	business_website: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactProjectUpdateRequestSchema = v.strictObject({
+export const inputProjectUpdateRequestSchema = v.strictObject({
 	/**
 	 * The updated name of the project, this name appears in reports.
 	 */
@@ -3441,13 +3439,13 @@ export const exactProjectUpdateRequestSchema = v.strictObject({
 	 * A description of your business, project, or use case. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	app_use_case: v.exactOptional(v.string()),
+	app_use_case: v.optional(v.string()),
 	/**
 	 * Your business URL, or if you don't have one yet, a URL to your LinkedIn or
 	 * other social media. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	business_website: v.exactOptional(v.string()),
+	business_website: v.optional(v.string()),
 });
 export const projectUpdateRequestSchema = v.strictObject({
 	/**
@@ -3458,15 +3456,15 @@ export const projectUpdateRequestSchema = v.strictObject({
 	 * A description of your business, project, or use case. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	app_use_case: v.optional(v.pipe(v.string(), v.trim())),
+	app_use_case: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * Your business URL, or if you don't have one yet, a URL to your LinkedIn or
 	 * other social media. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	business_website: v.optional(v.pipe(v.string(), v.trim())),
+	business_website: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactDefaultProjectErrorResponseSchema = v.strictObject({
+export const inputDefaultProjectErrorResponseSchema = v.strictObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.string(),
 });
@@ -3474,7 +3472,7 @@ export const defaultProjectErrorResponseSchema = v.strictObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.pipe(v.string(), v.trim()),
 });
-export const exactProjectUserCreateRequestSchema = v.strictObject({
+export const inputProjectUserCreateRequestSchema = v.strictObject({
 	/**
 	 * The ID of the user.
 	 */
@@ -3494,15 +3492,15 @@ export const projectUserCreateRequestSchema = v.strictObject({
 	 */
 	role: v.picklist(["owner", "member"]),
 });
-export const exactProjectUserUpdateRequestSchema = v.strictObject({
+export const inputProjectUserUpdateRequestSchema = v.strictObject({
 	/**
 	 * `owner` or `member`
 	 */
 	role: v.picklist(["owner", "member"]),
 });
 export const projectUserUpdateRequestSchema =
-	exactProjectUserUpdateRequestSchema;
-export const exactProjectUserDeleteResponseSchema = v.strictObject({
+	inputProjectUserUpdateRequestSchema;
+export const inputProjectUserDeleteResponseSchema = v.strictObject({
 	object: v.picklist(["organization.project.user.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
@@ -3512,7 +3510,7 @@ export const projectUserDeleteResponseSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const exactProjectServiceAccountCreateRequestSchema = v.strictObject({
+export const inputProjectServiceAccountCreateRequestSchema = v.strictObject({
 	/**
 	 * The name of the service account being created.
 	 */
@@ -3524,7 +3522,7 @@ export const projectServiceAccountCreateRequestSchema = v.strictObject({
 	 */
 	name: v.pipe(v.string(), v.trim()),
 });
-export const exactProjectServiceAccountDeleteResponseSchema = v.strictObject({
+export const inputProjectServiceAccountDeleteResponseSchema = v.strictObject({
 	object: v.picklist(["organization.project.service_account.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
@@ -3534,7 +3532,7 @@ export const projectServiceAccountDeleteResponseSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const exactProjectApiKeyDeleteResponseSchema = v.strictObject({
+export const inputProjectApiKeyDeleteResponseSchema = v.strictObject({
 	object: v.picklist(["organization.project.api_key.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
@@ -3545,7 +3543,7 @@ export const projectApiKeyDeleteResponseSchema = v.strictObject({
 	deleted: v.boolean(),
 });
 /** Represents an individual service account in a project. */
-export const exactProjectServiceAccountSchema = v.strictObject({
+export const inputProjectServiceAccountSchema = v.strictObject({
 	/**
 	 * The object type, which is always `organization.project.service_account`
 	 */
@@ -3590,7 +3588,7 @@ export const projectServiceAccountSchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 });
 /** Represents an individual user in a project. */
-export const exactProjectUserSchema = v.strictObject({
+export const inputProjectUserSchema = v.strictObject({
 	/**
 	 * The object type, which is always `organization.project.user`
 	 */
@@ -3643,7 +3641,7 @@ export const projectUserSchema = v.strictObject({
 	added_at: v.pipe(v.number(), v.integer()),
 });
 /** Represents an individual API key in a project. */
-export const exactProjectApiKeySchema = v.strictObject({
+export const inputProjectApiKeySchema = v.strictObject({
 	/**
 	 * The object type, which is always `organization.project.api_key`
 	 */
@@ -3668,9 +3666,9 @@ export const exactProjectApiKeySchema = v.strictObject({
 		/**
 		 * `user` or `service_account`
 		 */
-		type: v.exactOptional(v.picklist(["user", "service_account"])),
-		user: v.exactOptional(exactProjectUserSchema),
-		service_account: v.exactOptional(exactProjectServiceAccountSchema),
+		type: v.optional(v.picklist(["user", "service_account"])),
+		user: v.optional(inputProjectUserSchema),
+		service_account: v.optional(inputProjectServiceAccountSchema),
 	}),
 });
 export const projectApiKeySchema = v.strictObject({
@@ -3698,14 +3696,14 @@ export const projectApiKeySchema = v.strictObject({
 		/**
 		 * `user` or `service_account`
 		 */
-		type: v.optional(v.picklist(["user", "service_account"])),
-		user: v.optional(projectUserSchema),
-		service_account: v.optional(projectServiceAccountSchema),
+		type: v.exactOptional(v.picklist(["user", "service_account"])),
+		user: v.exactOptional(projectUserSchema),
+		service_account: v.exactOptional(projectServiceAccountSchema),
 	}),
 });
-export const exactProjectApiKeyListResponseSchema = v.strictObject({
+export const inputProjectApiKeyListResponseSchema = v.strictObject({
 	object: v.picklist(["list"]),
-	data: v.array(exactProjectApiKeySchema),
+	data: v.array(inputProjectApiKeySchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -3717,7 +3715,7 @@ export const projectApiKeyListResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactProjectServiceAccountApiKeySchema = v.strictObject({
+export const inputProjectServiceAccountApiKeySchema = v.strictObject({
 	/**
 	 * The object type, which is always
 	 * `organization.project.service_account.api_key`
@@ -3739,7 +3737,7 @@ export const projectServiceAccountApiKeySchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 	id: v.pipe(v.string(), v.trim()),
 });
-export const exactProjectServiceAccountCreateResponseSchema = v.strictObject({
+export const inputProjectServiceAccountCreateResponseSchema = v.strictObject({
 	object: v.picklist(["organization.project.service_account"]),
 	id: v.string(),
 	name: v.string(),
@@ -3748,7 +3746,7 @@ export const exactProjectServiceAccountCreateResponseSchema = v.strictObject({
 	 */
 	role: v.picklist(["member"]),
 	created_at: v.pipe(v.number(), v.integer()),
-	api_key: exactProjectServiceAccountApiKeySchema,
+	api_key: inputProjectServiceAccountApiKeySchema,
 });
 export const projectServiceAccountCreateResponseSchema = v.strictObject({
 	object: v.picklist(["organization.project.service_account"]),
@@ -3761,9 +3759,9 @@ export const projectServiceAccountCreateResponseSchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 	api_key: projectServiceAccountApiKeySchema,
 });
-export const exactProjectServiceAccountListResponseSchema = v.strictObject({
+export const inputProjectServiceAccountListResponseSchema = v.strictObject({
 	object: v.picklist(["list"]),
-	data: v.array(exactProjectServiceAccountSchema),
+	data: v.array(inputProjectServiceAccountSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -3775,9 +3773,9 @@ export const projectServiceAccountListResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactProjectUserListResponseSchema = v.strictObject({
+export const inputProjectUserListResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactProjectUserSchema),
+	data: v.array(inputProjectUserSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -3790,7 +3788,7 @@ export const projectUserListResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Represents an individual project. */
-export const exactProjectSchema = v.strictObject({
+export const inputProjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints
 	 */
@@ -3810,7 +3808,7 @@ export const exactProjectSchema = v.strictObject({
 	/**
 	 * The Unix timestamp (in seconds) of when the project was archived or `null`.
 	 */
-	archived_at: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+	archived_at: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
 	/**
 	 * `active` or `archived`
 	 */
@@ -3819,13 +3817,13 @@ export const exactProjectSchema = v.strictObject({
 	 * A description of your business, project, or use case. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	app_use_case: v.exactOptional(v.string()),
+	app_use_case: v.optional(v.string()),
 	/**
 	 * Your business URL, or if you don't have one yet, a URL to your LinkedIn or
 	 * other social media. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	business_website: v.exactOptional(v.string()),
+	business_website: v.optional(v.string()),
 });
 export const projectSchema = v.strictObject({
 	/**
@@ -3847,7 +3845,7 @@ export const projectSchema = v.strictObject({
 	/**
 	 * The Unix timestamp (in seconds) of when the project was archived or `null`.
 	 */
-	archived_at: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+	archived_at: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
 	/**
 	 * `active` or `archived`
 	 */
@@ -3856,17 +3854,17 @@ export const projectSchema = v.strictObject({
 	 * A description of your business, project, or use case. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	app_use_case: v.optional(v.pipe(v.string(), v.trim())),
+	app_use_case: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * Your business URL, or if you don't have one yet, a URL to your LinkedIn or
 	 * other social media. [Why we need this
 	 * information](https://help.openai.com/en/articles/9824607-api-platform-verifications).
 	 */
-	business_website: v.optional(v.pipe(v.string(), v.trim())),
+	business_website: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactProjectListResponseSchema = v.strictObject({
+export const inputProjectListResponseSchema = v.strictObject({
 	object: v.picklist(["list"]),
-	data: v.array(exactProjectSchema),
+	data: v.array(inputProjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -3879,7 +3877,7 @@ export const projectListResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Represents an individual `user` within an organization. */
-export const exactUserSchema = v.strictObject({
+export const inputUserSchema = v.strictObject({
 	/**
 	 * The object type, which is always `organization.user`
 	 */
@@ -3931,9 +3929,9 @@ export const userSchema = v.strictObject({
 	 */
 	added_at: v.pipe(v.number(), v.integer()),
 });
-export const exactUserListResponseSchema = v.strictObject({
+export const inputUserListResponseSchema = v.strictObject({
 	object: v.picklist(["list"]),
-	data: v.array(exactUserSchema),
+	data: v.array(inputUserSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -3946,7 +3944,7 @@ export const userListResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Represents an individual `invite` to the organization. */
-export const exactInviteSchema = v.strictObject({
+export const inputInviteSchema = v.strictObject({
 	/**
 	 * The object type, which is always `organization.invite`
 	 */
@@ -3978,7 +3976,7 @@ export const exactInviteSchema = v.strictObject({
 	/**
 	 * The Unix timestamp (in seconds) of when the invite was accepted.
 	 */
-	accepted_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	accepted_at: v.optional(v.pipe(v.number(), v.integer())),
 });
 export const inviteSchema = v.strictObject({
 	/**
@@ -4012,27 +4010,27 @@ export const inviteSchema = v.strictObject({
 	/**
 	 * The Unix timestamp (in seconds) of when the invite was accepted.
 	 */
-	accepted_at: v.optional(v.pipe(v.number(), v.integer())),
+	accepted_at: v.exactOptional(v.pipe(v.number(), v.integer())),
 });
-export const exactInviteListResponseSchema = v.strictObject({
+export const inputInviteListResponseSchema = v.strictObject({
 	/**
 	 * The object type, which is always `list`
 	 */
 	object: v.picklist(["list"]),
-	data: v.array(exactInviteSchema),
+	data: v.array(inputInviteSchema),
 	/**
 	 * The first `invite_id` in the retrieved `list`
 	 */
-	first_id: v.exactOptional(v.string()),
+	first_id: v.optional(v.string()),
 	/**
 	 * The last `invite_id` in the retrieved `list`
 	 */
-	last_id: v.exactOptional(v.string()),
+	last_id: v.optional(v.string()),
 	/**
 	 * The `has_more` property is used for pagination to indicate there are
 	 * additional results.
 	 */
-	has_more: v.exactOptional(v.boolean()),
+	has_more: v.optional(v.boolean()),
 });
 export const inviteListResponseSchema = v.strictObject({
 	/**
@@ -4043,110 +4041,110 @@ export const inviteListResponseSchema = v.strictObject({
 	/**
 	 * The first `invite_id` in the retrieved `list`
 	 */
-	first_id: v.optional(v.pipe(v.string(), v.trim())),
+	first_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The last `invite_id` in the retrieved `list`
 	 */
-	last_id: v.optional(v.pipe(v.string(), v.trim())),
+	last_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The `has_more` property is used for pagination to indicate there are
 	 * additional results.
 	 */
-	has_more: v.optional(v.boolean()),
+	has_more: v.exactOptional(v.boolean()),
 });
 /** The service account that performed the audit logged action. */
-export const exactAuditLogActorServiceAccountSchema = v.strictObject({
+export const inputAuditLogActorServiceAccountSchema = v.strictObject({
 	/**
 	 * The service account id.
 	 */
-	id: v.exactOptional(v.string()),
+	id: v.optional(v.string()),
 });
 export const auditLogActorServiceAccountSchema = v.strictObject({
 	/**
 	 * The service account id.
 	 */
-	id: v.optional(v.pipe(v.string(), v.trim())),
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The user who performed the audit logged action. */
-export const exactAuditLogActorUserSchema = v.strictObject({
+export const inputAuditLogActorUserSchema = v.strictObject({
 	/**
 	 * The user id.
 	 */
-	id: v.exactOptional(v.string()),
+	id: v.optional(v.string()),
 	/**
 	 * The user email.
 	 */
-	email: v.exactOptional(v.string()),
+	email: v.optional(v.string()),
 });
 export const auditLogActorUserSchema = v.strictObject({
 	/**
 	 * The user id.
 	 */
-	id: v.optional(v.pipe(v.string(), v.trim())),
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The user email.
 	 */
-	email: v.optional(v.pipe(v.string(), v.trim())),
+	email: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The API Key used to perform the audit logged action. */
-export const exactAuditLogActorApiKeySchema = v.strictObject({
+export const inputAuditLogActorApiKeySchema = v.strictObject({
 	/**
 	 * The tracking id of the API key.
 	 */
-	id: v.exactOptional(v.string()),
+	id: v.optional(v.string()),
 	/**
 	 * The type of API key. Can be either `user` or `service_account`.
 	 */
-	type: v.exactOptional(v.picklist(["user", "service_account"])),
-	user: v.exactOptional(exactAuditLogActorUserSchema),
-	service_account: v.exactOptional(exactAuditLogActorServiceAccountSchema),
+	type: v.optional(v.picklist(["user", "service_account"])),
+	user: v.optional(inputAuditLogActorUserSchema),
+	service_account: v.optional(inputAuditLogActorServiceAccountSchema),
 });
 export const auditLogActorApiKeySchema = v.strictObject({
 	/**
 	 * The tracking id of the API key.
 	 */
-	id: v.optional(v.pipe(v.string(), v.trim())),
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The type of API key. Can be either `user` or `service_account`.
 	 */
-	type: v.optional(v.picklist(["user", "service_account"])),
-	user: v.optional(auditLogActorUserSchema),
-	service_account: v.optional(auditLogActorServiceAccountSchema),
+	type: v.exactOptional(v.picklist(["user", "service_account"])),
+	user: v.exactOptional(auditLogActorUserSchema),
+	service_account: v.exactOptional(auditLogActorServiceAccountSchema),
 });
 /** The session in which the audit logged action was performed. */
-export const exactAuditLogActorSessionSchema = v.strictObject({
-	user: v.exactOptional(exactAuditLogActorUserSchema),
+export const inputAuditLogActorSessionSchema = v.strictObject({
+	user: v.optional(inputAuditLogActorUserSchema),
 	/**
 	 * The IP address from which the action was performed.
 	 */
-	ip_address: v.exactOptional(v.string()),
+	ip_address: v.optional(v.string()),
 });
 export const auditLogActorSessionSchema = v.strictObject({
-	user: v.optional(auditLogActorUserSchema),
+	user: v.exactOptional(auditLogActorUserSchema),
 	/**
 	 * The IP address from which the action was performed.
 	 */
-	ip_address: v.optional(v.pipe(v.string(), v.trim())),
+	ip_address: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The actor who performed the audit logged action. */
-export const exactAuditLogActorSchema = v.strictObject({
+export const inputAuditLogActorSchema = v.strictObject({
 	/**
 	 * The type of actor. Is either `session` or `api_key`.
 	 */
-	type: v.exactOptional(v.picklist(["session", "api_key"])),
-	session: v.exactOptional(exactAuditLogActorSessionSchema),
-	api_key: v.exactOptional(exactAuditLogActorApiKeySchema),
+	type: v.optional(v.picklist(["session", "api_key"])),
+	session: v.optional(inputAuditLogActorSessionSchema),
+	api_key: v.optional(inputAuditLogActorApiKeySchema),
 });
 export const auditLogActorSchema = v.strictObject({
 	/**
 	 * The type of actor. Is either `session` or `api_key`.
 	 */
-	type: v.optional(v.picklist(["session", "api_key"])),
-	session: v.optional(auditLogActorSessionSchema),
-	api_key: v.optional(auditLogActorApiKeySchema),
+	type: v.exactOptional(v.picklist(["session", "api_key"])),
+	session: v.exactOptional(auditLogActorSessionSchema),
+	api_key: v.exactOptional(auditLogActorApiKeySchema),
 });
 /** The event type. */
-export const exactAuditLogEventTypeSchema = v.picklist([
+export const inputAuditLogEventTypeSchema = v.picklist([
 	"api_key.created",
 	"api_key.updated",
 	"api_key.deleted",
@@ -4168,14 +4166,14 @@ export const exactAuditLogEventTypeSchema = v.picklist([
 	"user.updated",
 	"user.deleted",
 ]);
-export const auditLogEventTypeSchema = exactAuditLogEventTypeSchema;
+export const auditLogEventTypeSchema = inputAuditLogEventTypeSchema;
 /** A log of a user action or configuration change within this organization. */
-export const exactAuditLogSchema = v.strictObject({
+export const inputAuditLogSchema = v.strictObject({
 	/**
 	 * The ID of this log.
 	 */
 	id: v.string(),
-	type: exactAuditLogEventTypeSchema,
+	type: inputAuditLogEventTypeSchema,
 	/**
 	 * The Unix timestamp (in seconds) of the event.
 	 */
@@ -4184,37 +4182,37 @@ export const exactAuditLogSchema = v.strictObject({
 	 * The project that the action was scoped to. Absent for actions not scoped to
 	 * projects.
 	 */
-	project: v.exactOptional(
+	project: v.optional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The project title.
 			 */
-			name: v.exactOptional(v.string()),
+			name: v.optional(v.string()),
 		}),
 	),
-	actor: exactAuditLogActorSchema,
+	actor: inputAuditLogActorSchema,
 	/**
 	 * The details for events with this `type`.
 	 */
-	"api_key.created": v.exactOptional(
+	"api_key.created": v.optional(
 		v.strictObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to create the API key.
 			 */
-			data: v.exactOptional(
+			data: v.optional(
 				v.strictObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
-					scopes: v.exactOptional(v.array(v.string())),
+					scopes: v.optional(v.array(v.string())),
 				}),
 			),
 		}),
@@ -4222,21 +4220,21 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"api_key.updated": v.exactOptional(
+	"api_key.updated": v.optional(
 		v.strictObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to update the API key.
 			 */
-			changes_requested: v.exactOptional(
+			changes_requested: v.optional(
 				v.strictObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
-					scopes: v.exactOptional(v.array(v.string())),
+					scopes: v.optional(v.array(v.string())),
 				}),
 			),
 		}),
@@ -4244,36 +4242,36 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"api_key.deleted": v.exactOptional(
+	"api_key.deleted": v.optional(
 		v.strictObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"invite.sent": v.exactOptional(
+	"invite.sent": v.optional(
 		v.strictObject({
 			/**
 			 * The ID of the invite.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to create the invite.
 			 */
-			data: v.exactOptional(
+			data: v.optional(
 				v.strictObject({
 					/**
 					 * The email invited to the organization.
 					 */
-					email: v.exactOptional(v.string()),
+					email: v.optional(v.string()),
 					/**
 					 * The role the email was invited to be. Is either `owner` or `member`.
 					 */
-					role: v.exactOptional(v.string()),
+					role: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4281,93 +4279,93 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"invite.accepted": v.exactOptional(
+	"invite.accepted": v.optional(
 		v.strictObject({
 			/**
 			 * The ID of the invite.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"invite.deleted": v.exactOptional(
+	"invite.deleted": v.optional(
 		v.strictObject({
 			/**
 			 * The ID of the invite.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"login.failed": v.exactOptional(
+	"login.failed": v.optional(
 		v.strictObject({
 			/**
 			 * The error code of the failure.
 			 */
-			error_code: v.exactOptional(v.string()),
+			error_code: v.optional(v.string()),
 			/**
 			 * The error message of the failure.
 			 */
-			error_message: v.exactOptional(v.string()),
+			error_message: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"logout.failed": v.exactOptional(
+	"logout.failed": v.optional(
 		v.strictObject({
 			/**
 			 * The error code of the failure.
 			 */
-			error_code: v.exactOptional(v.string()),
+			error_code: v.optional(v.string()),
 			/**
 			 * The error message of the failure.
 			 */
-			error_message: v.exactOptional(v.string()),
+			error_message: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"organization.updated": v.exactOptional(
+	"organization.updated": v.optional(
 		v.strictObject({
 			/**
 			 * The organization ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to update the organization settings.
 			 */
-			changes_requested: v.exactOptional(
+			changes_requested: v.optional(
 				v.strictObject({
 					/**
 					 * The organization title.
 					 */
-					title: v.exactOptional(v.string()),
+					title: v.optional(v.string()),
 					/**
 					 * The organization description.
 					 */
-					description: v.exactOptional(v.string()),
+					description: v.optional(v.string()),
 					/**
 					 * The organization name.
 					 */
-					name: v.exactOptional(v.string()),
-					settings: v.exactOptional(
+					name: v.optional(v.string()),
+					settings: v.optional(
 						v.strictObject({
 							/**
 							 * Visibility of the threads page which shows messages created with the
 							 * Assistants API and Playground. One of `ANY_ROLE`, `OWNERS`, or `NONE`.
 							 */
-							threads_ui_visibility: v.exactOptional(v.string()),
+							threads_ui_visibility: v.optional(v.string()),
 							/**
 							 * Visibility of the usage dashboard which shows activity and costs for your
 							 * organization. One of `ANY_ROLE` or `OWNERS`.
 							 */
-							usage_dashboard_visibility: v.exactOptional(v.string()),
+							usage_dashboard_visibility: v.optional(v.string()),
 						}),
 					),
 				}),
@@ -4377,25 +4375,25 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"project.created": v.exactOptional(
+	"project.created": v.optional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to create the project.
 			 */
-			data: v.exactOptional(
+			data: v.optional(
 				v.strictObject({
 					/**
 					 * The project name.
 					 */
-					name: v.exactOptional(v.string()),
+					name: v.optional(v.string()),
 					/**
 					 * The title of the project as seen on the dashboard.
 					 */
-					title: v.exactOptional(v.string()),
+					title: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4403,21 +4401,21 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"project.updated": v.exactOptional(
+	"project.updated": v.optional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to update the project.
 			 */
-			changes_requested: v.exactOptional(
+			changes_requested: v.optional(
 				v.strictObject({
 					/**
 					 * The title of the project as seen on the dashboard.
 					 */
-					title: v.exactOptional(v.string()),
+					title: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4425,32 +4423,32 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"project.archived": v.exactOptional(
+	"project.archived": v.optional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"service_account.created": v.exactOptional(
+	"service_account.created": v.optional(
 		v.strictObject({
 			/**
 			 * The service account ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to create the service account.
 			 */
-			data: v.exactOptional(
+			data: v.optional(
 				v.strictObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
-					role: v.exactOptional(v.string()),
+					role: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4458,21 +4456,21 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"service_account.updated": v.exactOptional(
+	"service_account.updated": v.optional(
 		v.strictObject({
 			/**
 			 * The service account ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to updated the service account.
 			 */
-			changes_requested: v.exactOptional(
+			changes_requested: v.optional(
 				v.strictObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
-					role: v.exactOptional(v.string()),
+					role: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4480,32 +4478,32 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"service_account.deleted": v.exactOptional(
+	"service_account.deleted": v.optional(
 		v.strictObject({
 			/**
 			 * The service account ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"user.added": v.exactOptional(
+	"user.added": v.optional(
 		v.strictObject({
 			/**
 			 * The user ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to add the user to the project.
 			 */
-			data: v.exactOptional(
+			data: v.optional(
 				v.strictObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
-					role: v.exactOptional(v.string()),
+					role: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4513,21 +4511,21 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"user.updated": v.exactOptional(
+	"user.updated": v.optional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 			/**
 			 * The payload used to update the user.
 			 */
-			changes_requested: v.exactOptional(
+			changes_requested: v.optional(
 				v.strictObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
-					role: v.exactOptional(v.string()),
+					role: v.optional(v.string()),
 				}),
 			),
 		}),
@@ -4535,12 +4533,12 @@ export const exactAuditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"user.deleted": v.exactOptional(
+	"user.deleted": v.optional(
 		v.strictObject({
 			/**
 			 * The user ID.
 			 */
-			id: v.exactOptional(v.string()),
+			id: v.optional(v.string()),
 		}),
 	),
 });
@@ -4558,37 +4556,37 @@ export const auditLogSchema = v.strictObject({
 	 * The project that the action was scoped to. Absent for actions not scoped to
 	 * projects.
 	 */
-	project: v.optional(
+	project: v.exactOptional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The project title.
 			 */
-			name: v.optional(v.pipe(v.string(), v.trim())),
+			name: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	actor: auditLogActorSchema,
 	/**
 	 * The details for events with this `type`.
 	 */
-	"api_key.created": v.optional(
+	"api_key.created": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to create the API key.
 			 */
-			data: v.optional(
+			data: v.exactOptional(
 				v.strictObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
-					scopes: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					scopes: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 				}),
 			),
 		}),
@@ -4596,21 +4594,21 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"api_key.updated": v.optional(
+	"api_key.updated": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to update the API key.
 			 */
-			changes_requested: v.optional(
+			changes_requested: v.exactOptional(
 				v.strictObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
-					scopes: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					scopes: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 				}),
 			),
 		}),
@@ -4618,36 +4616,36 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"api_key.deleted": v.optional(
+	"api_key.deleted": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"invite.sent": v.optional(
+	"invite.sent": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The ID of the invite.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to create the invite.
 			 */
-			data: v.optional(
+			data: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The email invited to the organization.
 					 */
-					email: v.optional(v.pipe(v.string(), v.trim())),
+					email: v.exactOptional(v.pipe(v.string(), v.trim())),
 					/**
 					 * The role the email was invited to be. Is either `owner` or `member`.
 					 */
-					role: v.optional(v.pipe(v.string(), v.trim())),
+					role: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4655,93 +4653,95 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"invite.accepted": v.optional(
+	"invite.accepted": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The ID of the invite.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"invite.deleted": v.optional(
+	"invite.deleted": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The ID of the invite.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"login.failed": v.optional(
+	"login.failed": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The error code of the failure.
 			 */
-			error_code: v.optional(v.pipe(v.string(), v.trim())),
+			error_code: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The error message of the failure.
 			 */
-			error_message: v.optional(v.pipe(v.string(), v.trim())),
+			error_message: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"logout.failed": v.optional(
+	"logout.failed": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The error code of the failure.
 			 */
-			error_code: v.optional(v.pipe(v.string(), v.trim())),
+			error_code: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The error message of the failure.
 			 */
-			error_message: v.optional(v.pipe(v.string(), v.trim())),
+			error_message: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"organization.updated": v.optional(
+	"organization.updated": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The organization ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to update the organization settings.
 			 */
-			changes_requested: v.optional(
+			changes_requested: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The organization title.
 					 */
-					title: v.optional(v.pipe(v.string(), v.trim())),
+					title: v.exactOptional(v.pipe(v.string(), v.trim())),
 					/**
 					 * The organization description.
 					 */
-					description: v.optional(v.pipe(v.string(), v.trim())),
+					description: v.exactOptional(v.pipe(v.string(), v.trim())),
 					/**
 					 * The organization name.
 					 */
-					name: v.optional(v.pipe(v.string(), v.trim())),
-					settings: v.optional(
+					name: v.exactOptional(v.pipe(v.string(), v.trim())),
+					settings: v.exactOptional(
 						v.strictObject({
 							/**
 							 * Visibility of the threads page which shows messages created with the
 							 * Assistants API and Playground. One of `ANY_ROLE`, `OWNERS`, or `NONE`.
 							 */
-							threads_ui_visibility: v.optional(v.pipe(v.string(), v.trim())),
+							threads_ui_visibility: v.exactOptional(
+								v.pipe(v.string(), v.trim()),
+							),
 							/**
 							 * Visibility of the usage dashboard which shows activity and costs for your
 							 * organization. One of `ANY_ROLE` or `OWNERS`.
 							 */
-							usage_dashboard_visibility: v.optional(
+							usage_dashboard_visibility: v.exactOptional(
 								v.pipe(v.string(), v.trim()),
 							),
 						}),
@@ -4753,25 +4753,25 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"project.created": v.optional(
+	"project.created": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to create the project.
 			 */
-			data: v.optional(
+			data: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The project name.
 					 */
-					name: v.optional(v.pipe(v.string(), v.trim())),
+					name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					/**
 					 * The title of the project as seen on the dashboard.
 					 */
-					title: v.optional(v.pipe(v.string(), v.trim())),
+					title: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4779,21 +4779,21 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"project.updated": v.optional(
+	"project.updated": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to update the project.
 			 */
-			changes_requested: v.optional(
+			changes_requested: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The title of the project as seen on the dashboard.
 					 */
-					title: v.optional(v.pipe(v.string(), v.trim())),
+					title: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4801,32 +4801,32 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"project.archived": v.optional(
+	"project.archived": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"service_account.created": v.optional(
+	"service_account.created": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The service account ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to create the service account.
 			 */
-			data: v.optional(
+			data: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
-					role: v.optional(v.pipe(v.string(), v.trim())),
+					role: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4834,21 +4834,21 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"service_account.updated": v.optional(
+	"service_account.updated": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The service account ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to updated the service account.
 			 */
-			changes_requested: v.optional(
+			changes_requested: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
-					role: v.optional(v.pipe(v.string(), v.trim())),
+					role: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4856,32 +4856,32 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"service_account.deleted": v.optional(
+	"service_account.deleted": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The service account ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 	/**
 	 * The details for events with this `type`.
 	 */
-	"user.added": v.optional(
+	"user.added": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The user ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to add the user to the project.
 			 */
-			data: v.optional(
+			data: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
-					role: v.optional(v.pipe(v.string(), v.trim())),
+					role: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4889,21 +4889,21 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"user.updated": v.optional(
+	"user.updated": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The project ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * The payload used to update the user.
 			 */
-			changes_requested: v.optional(
+			changes_requested: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
-					role: v.optional(v.pipe(v.string(), v.trim())),
+					role: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		}),
@@ -4911,18 +4911,18 @@ export const auditLogSchema = v.strictObject({
 	/**
 	 * The details for events with this `type`.
 	 */
-	"user.deleted": v.optional(
+	"user.deleted": v.exactOptional(
 		v.strictObject({
 			/**
 			 * The user ID.
 			 */
-			id: v.optional(v.pipe(v.string(), v.trim())),
+			id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 });
-export const exactListAuditLogsResponseSchema = v.strictObject({
+export const inputListAuditLogsResponseSchema = v.strictObject({
 	object: v.picklist(["list"]),
-	data: v.array(exactAuditLogSchema),
+	data: v.array(inputAuditLogSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -4934,7 +4934,7 @@ export const listAuditLogsResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactBatchSchema = v.strictObject({
+export const inputBatchSchema = v.strictObject({
 	id: v.string(),
 	/**
 	 * The object type, which is always `batch`.
@@ -4944,31 +4944,31 @@ export const exactBatchSchema = v.strictObject({
 	 * The OpenAI API endpoint used by the batch.
 	 */
 	endpoint: v.string(),
-	errors: v.exactOptional(
+	errors: v.optional(
 		v.strictObject({
 			/**
 			 * The object type, which is always `list`.
 			 */
-			object: v.exactOptional(v.string()),
-			data: v.exactOptional(
+			object: v.optional(v.string()),
+			data: v.optional(
 				v.array(
 					v.strictObject({
 						/**
 						 * An error code identifying the error type.
 						 */
-						code: v.exactOptional(v.string()),
+						code: v.optional(v.string()),
 						/**
 						 * A human-readable message providing more details about the error.
 						 */
-						message: v.exactOptional(v.string()),
+						message: v.optional(v.string()),
 						/**
 						 * The name of the parameter that caused the error, if applicable.
 						 */
-						param: v.exactOptional(v.nullable(v.string())),
+						param: v.optional(v.nullable(v.string())),
 						/**
 						 * The line number of the input file where the error occurred, if applicable.
 						 */
-						line: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+						line: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
 					}),
 				),
 			),
@@ -4999,144 +4999,11 @@ export const exactBatchSchema = v.strictObject({
 	 * The ID of the file containing the outputs of successfully executed
 	 * requests.
 	 */
-	output_file_id: v.exactOptional(v.string()),
+	output_file_id: v.optional(v.string()),
 	/**
 	 * The ID of the file containing the outputs of requests with errors.
 	 */
-	error_file_id: v.exactOptional(v.string()),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch was created.
-	 */
-	created_at: v.pipe(v.number(), v.integer()),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch started processing.
-	 */
-	in_progress_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch will expire.
-	 */
-	expires_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch started finalizing.
-	 */
-	finalizing_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch was completed.
-	 */
-	completed_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch failed.
-	 */
-	failed_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch expired.
-	 */
-	expired_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch started cancelling.
-	 */
-	cancelling_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The Unix timestamp (in seconds) for when the batch was cancelled.
-	 */
-	cancelled_at: v.exactOptional(v.pipe(v.number(), v.integer())),
-	/**
-	 * The request counts for different statuses within the batch.
-	 */
-	request_counts: v.exactOptional(
-		v.strictObject({
-			/**
-			 * Total number of requests in the batch.
-			 */
-			total: v.pipe(v.number(), v.integer()),
-			/**
-			 * Number of requests that have been completed successfully.
-			 */
-			completed: v.pipe(v.number(), v.integer()),
-			/**
-			 * Number of requests that have failed.
-			 */
-			failed: v.pipe(v.number(), v.integer()),
-		}),
-	),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-export const batchSchema = v.strictObject({
-	id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The object type, which is always `batch`.
-	 */
-	object: v.picklist(["batch"]),
-	/**
-	 * The OpenAI API endpoint used by the batch.
-	 */
-	endpoint: v.pipe(v.string(), v.trim()),
-	errors: v.optional(
-		v.strictObject({
-			/**
-			 * The object type, which is always `list`.
-			 */
-			object: v.optional(v.pipe(v.string(), v.trim())),
-			data: v.optional(
-				v.array(
-					v.strictObject({
-						/**
-						 * An error code identifying the error type.
-						 */
-						code: v.optional(v.pipe(v.string(), v.trim())),
-						/**
-						 * A human-readable message providing more details about the error.
-						 */
-						message: v.optional(v.pipe(v.string(), v.trim())),
-						/**
-						 * The name of the parameter that caused the error, if applicable.
-						 */
-						param: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-						/**
-						 * The line number of the input file where the error occurred, if applicable.
-						 */
-						line: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
-					}),
-				),
-			),
-		}),
-	),
-	/**
-	 * The ID of the input file for the batch.
-	 */
-	input_file_id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The time frame within which the batch should be processed.
-	 */
-	completion_window: v.pipe(v.string(), v.trim()),
-	/**
-	 * The current status of the batch.
-	 */
-	status: v.picklist([
-		"validating",
-		"failed",
-		"in_progress",
-		"finalizing",
-		"completed",
-		"expired",
-		"cancelling",
-		"cancelled",
-	]),
-	/**
-	 * The ID of the file containing the outputs of successfully executed
-	 * requests.
-	 */
-	output_file_id: v.optional(v.pipe(v.string(), v.trim())),
-	/**
-	 * The ID of the file containing the outputs of requests with errors.
-	 */
-	error_file_id: v.optional(v.pipe(v.string(), v.trim())),
+	error_file_id: v.optional(v.string()),
 	/**
 	 * The Unix timestamp (in seconds) for when the batch was created.
 	 */
@@ -5200,17 +5067,150 @@ export const batchSchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactListBatchesResponseSchema = v.strictObject({
-	data: v.array(exactBatchSchema),
-	first_id: v.exactOptional(v.string()),
-	last_id: v.exactOptional(v.string()),
+export const batchSchema = v.strictObject({
+	id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The object type, which is always `batch`.
+	 */
+	object: v.picklist(["batch"]),
+	/**
+	 * The OpenAI API endpoint used by the batch.
+	 */
+	endpoint: v.pipe(v.string(), v.trim()),
+	errors: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The object type, which is always `list`.
+			 */
+			object: v.exactOptional(v.pipe(v.string(), v.trim())),
+			data: v.exactOptional(
+				v.array(
+					v.strictObject({
+						/**
+						 * An error code identifying the error type.
+						 */
+						code: v.exactOptional(v.pipe(v.string(), v.trim())),
+						/**
+						 * A human-readable message providing more details about the error.
+						 */
+						message: v.exactOptional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The name of the parameter that caused the error, if applicable.
+						 */
+						param: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+						/**
+						 * The line number of the input file where the error occurred, if applicable.
+						 */
+						line: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The ID of the input file for the batch.
+	 */
+	input_file_id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The time frame within which the batch should be processed.
+	 */
+	completion_window: v.pipe(v.string(), v.trim()),
+	/**
+	 * The current status of the batch.
+	 */
+	status: v.picklist([
+		"validating",
+		"failed",
+		"in_progress",
+		"finalizing",
+		"completed",
+		"expired",
+		"cancelling",
+		"cancelled",
+	]),
+	/**
+	 * The ID of the file containing the outputs of successfully executed
+	 * requests.
+	 */
+	output_file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The ID of the file containing the outputs of requests with errors.
+	 */
+	error_file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch was created.
+	 */
+	created_at: v.pipe(v.number(), v.integer()),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch started processing.
+	 */
+	in_progress_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch will expire.
+	 */
+	expires_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch started finalizing.
+	 */
+	finalizing_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch was completed.
+	 */
+	completed_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch failed.
+	 */
+	failed_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch expired.
+	 */
+	expired_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch started cancelling.
+	 */
+	cancelling_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The Unix timestamp (in seconds) for when the batch was cancelled.
+	 */
+	cancelled_at: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The request counts for different statuses within the batch.
+	 */
+	request_counts: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Total number of requests in the batch.
+			 */
+			total: v.pipe(v.number(), v.integer()),
+			/**
+			 * Number of requests that have been completed successfully.
+			 */
+			completed: v.pipe(v.number(), v.integer()),
+			/**
+			 * Number of requests that have failed.
+			 */
+			failed: v.pipe(v.number(), v.integer()),
+		}),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+});
+export const inputListBatchesResponseSchema = v.strictObject({
+	data: v.array(inputBatchSchema),
+	first_id: v.optional(v.string()),
+	last_id: v.optional(v.string()),
 	has_more: v.boolean(),
 	object: v.picklist(["list"]),
 });
 export const listBatchesResponseSchema = v.strictObject({
 	data: v.array(batchSchema),
-	first_id: v.optional(v.pipe(v.string(), v.trim())),
-	last_id: v.optional(v.pipe(v.string(), v.trim())),
+	first_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	last_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	has_more: v.boolean(),
 	object: v.picklist(["list"]),
 });
@@ -5219,7 +5219,7 @@ export const listBatchesResponseSchema = v.strictObject({
  * streaming.
  * @title Message delta object
  */
-export const exactMessageDeltaObjectSchema = v.strictObject({
+export const inputMessageDeltaObjectSchema = v.strictObject({
 	/**
 	 * The identifier of the message, which can be referenced in API endpoints.
 	 */
@@ -5235,17 +5235,17 @@ export const exactMessageDeltaObjectSchema = v.strictObject({
 		/**
 		 * The entity that produced the message. One of `user` or `assistant`.
 		 */
-		role: v.exactOptional(v.picklist(["user", "assistant"])),
+		role: v.optional(v.picklist(["user", "assistant"])),
 		/**
 		 * The content of the message in array of text and/or images.
 		 */
-		content: v.exactOptional(
+		content: v.optional(
 			v.array(
 				v.union([
-					exactMessageDeltaContentImageFileObjectSchema,
-					exactMessageDeltaContentTextObjectSchema,
-					exactMessageDeltaContentRefusalObjectSchema,
-					exactMessageDeltaContentImageUrlObjectSchema,
+					inputMessageDeltaContentImageFileObjectSchema,
+					inputMessageDeltaContentTextObjectSchema,
+					inputMessageDeltaContentRefusalObjectSchema,
+					inputMessageDeltaContentImageUrlObjectSchema,
 				]),
 			),
 		),
@@ -5267,11 +5267,11 @@ export const messageDeltaObjectSchema = v.strictObject({
 		/**
 		 * The entity that produced the message. One of `user` or `assistant`.
 		 */
-		role: v.optional(v.picklist(["user", "assistant"])),
+		role: v.exactOptional(v.picklist(["user", "assistant"])),
 		/**
 		 * The content of the message in array of text and/or images.
 		 */
-		content: v.optional(
+		content: v.exactOptional(
 			v.array(
 				v.union([
 					messageDeltaContentImageFileObjectSchema,
@@ -5284,12 +5284,12 @@ export const messageDeltaObjectSchema = v.strictObject({
 	}),
 });
 /** Occurs when a stream ends. */
-export const exactDoneEventSchema = v.strictObject({
+export const inputDoneEventSchema = v.strictObject({
 	event: v.picklist(["done"]),
 	data: v.picklist(["[DONE]"]),
 });
-export const doneEventSchema = exactDoneEventSchema;
-export const exactErrorSchema = v.strictObject({
+export const doneEventSchema = inputDoneEventSchema;
+export const inputErrorSchema = v.strictObject({
 	code: v.nullable(v.string()),
 	message: v.string(),
 	param: v.nullable(v.string()),
@@ -5305,16 +5305,16 @@ export const errorSchema = v.strictObject({
  * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
  * can happen due to an internal server error or a timeout.
  */
-export const exactErrorEventSchema = v.strictObject({
+export const inputErrorEventSchema = v.strictObject({
 	event: v.picklist(["error"]),
-	data: exactErrorSchema,
+	data: inputErrorSchema,
 });
-export const errorEventSchema = exactErrorEventSchema;
+export const errorEventSchema = inputErrorEventSchema;
 /**
  * Represents a message within a [thread](/docs/api-reference/threads).
  * @title The message object
  */
-export const exactMessageObjectSchema = v.strictObject({
+export const inputMessageObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -5371,10 +5371,10 @@ export const exactMessageObjectSchema = v.strictObject({
 	 */
 	content: v.array(
 		v.union([
-			exactMessageContentImageFileObjectSchema,
-			exactMessageContentImageUrlObjectSchema,
-			exactMessageContentTextObjectSchema,
-			exactMessageContentRefusalObjectSchema,
+			inputMessageContentImageFileObjectSchema,
+			inputMessageContentImageUrlObjectSchema,
+			inputMessageContentTextObjectSchema,
+			inputMessageContentRefusalObjectSchema,
 		]),
 	),
 	/**
@@ -5397,15 +5397,15 @@ export const exactMessageObjectSchema = v.strictObject({
 				/**
 				 * The ID of the file to attach to the message.
 				 */
-				file_id: v.exactOptional(v.string()),
+				file_id: v.optional(v.string()),
 				/**
 				 * The tools to add this file to.
 				 */
-				tools: v.exactOptional(
+				tools: v.optional(
 					v.array(
 						v.union([
-							exactAssistantToolsCodeSchema,
-							exactAssistantToolsFileSearchTypeOnlySchema,
+							inputAssistantToolsCodeSchema,
+							inputAssistantToolsFileSearchTypeOnlySchema,
 						]),
 					),
 				),
@@ -5503,11 +5503,11 @@ export const messageObjectSchema = v.strictObject({
 				/**
 				 * The ID of the file to attach to the message.
 				 */
-				file_id: v.optional(v.pipe(v.string(), v.trim())),
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 				/**
 				 * The tools to add this file to.
 				 */
-				tools: v.optional(
+				tools: v.exactOptional(
 					v.array(
 						v.union([
 							assistantToolsCodeSchema,
@@ -5526,34 +5526,34 @@ export const messageObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const exactMessageStreamEventSchema = v.union([
+export const inputMessageStreamEventSchema = v.union([
 	v.strictObject({
 		event: v.picklist(["thread.message.created"]),
-		data: exactMessageObjectSchema,
+		data: inputMessageObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.message.in_progress"]),
-		data: exactMessageObjectSchema,
+		data: inputMessageObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.message.delta"]),
-		data: exactMessageDeltaObjectSchema,
+		data: inputMessageDeltaObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.message.completed"]),
-		data: exactMessageObjectSchema,
+		data: inputMessageObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.message.incomplete"]),
-		data: exactMessageObjectSchema,
+		data: inputMessageObjectSchema,
 	}),
 ]);
-export const messageStreamEventSchema = exactMessageStreamEventSchema;
+export const messageStreamEventSchema = inputMessageStreamEventSchema;
 /**
  * Details of the tool call.
  * @title Tool calls
  */
-export const exactRunStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject(
+export const inputRunStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject(
 	{
 		/**
 		 * Always `tool_calls`.
@@ -5564,12 +5564,12 @@ export const exactRunStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject(
 		 * associated with one of three types of tools: `code_interpreter`,
 		 * `file_search`, or `function`.
 		 */
-		tool_calls: v.exactOptional(
+		tool_calls: v.optional(
 			v.array(
 				v.union([
-					exactRunStepDeltaStepDetailsToolCallsCodeObjectSchema,
-					exactRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema,
-					exactRunStepDeltaStepDetailsToolCallsFunctionObjectSchema,
+					inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema,
+					inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema,
+					inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema,
 				]),
 			),
 		),
@@ -5585,7 +5585,7 @@ export const runStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject({
 	 * associated with one of three types of tools: `code_interpreter`,
 	 * `file_search`, or `function`.
 	 */
-	tool_calls: v.optional(
+	tool_calls: v.exactOptional(
 		v.array(
 			v.union([
 				runStepDeltaStepDetailsToolCallsCodeObjectSchema,
@@ -5599,22 +5599,7 @@ export const runStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject({
  * Details of the message creation by the run step.
  * @title Message creation
  */
-export const exactRunStepDeltaStepDetailsMessageCreationObjectSchema =
-	v.strictObject({
-		/**
-		 * Always `message_creation`.
-		 */
-		type: v.picklist(["message_creation"]),
-		message_creation: v.exactOptional(
-			v.strictObject({
-				/**
-				 * The ID of the message that was created by this run step.
-				 */
-				message_id: v.exactOptional(v.string()),
-			}),
-		),
-	});
-export const runStepDeltaStepDetailsMessageCreationObjectSchema =
+export const inputRunStepDeltaStepDetailsMessageCreationObjectSchema =
 	v.strictObject({
 		/**
 		 * Always `message_creation`.
@@ -5625,7 +5610,22 @@ export const runStepDeltaStepDetailsMessageCreationObjectSchema =
 				/**
 				 * The ID of the message that was created by this run step.
 				 */
-				message_id: v.optional(v.pipe(v.string(), v.trim())),
+				message_id: v.optional(v.string()),
+			}),
+		),
+	});
+export const runStepDeltaStepDetailsMessageCreationObjectSchema =
+	v.strictObject({
+		/**
+		 * Always `message_creation`.
+		 */
+		type: v.picklist(["message_creation"]),
+		message_creation: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The ID of the message that was created by this run step.
+				 */
+				message_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
 		),
 	});
@@ -5634,7 +5634,7 @@ export const runStepDeltaStepDetailsMessageCreationObjectSchema =
  * streaming.
  * @title Run step delta object
  */
-export const exactRunStepDeltaObjectSchema = v.strictObject({
+export const inputRunStepDeltaObjectSchema = v.strictObject({
 	/**
 	 * The identifier of the run step, which can be referenced in API endpoints.
 	 */
@@ -5650,10 +5650,10 @@ export const exactRunStepDeltaObjectSchema = v.strictObject({
 		/**
 		 * The details of the run step.
 		 */
-		step_details: v.exactOptional(
+		step_details: v.optional(
 			v.union([
-				exactRunStepDeltaStepDetailsMessageCreationObjectSchema,
-				exactRunStepDeltaStepDetailsToolCallsObjectSchema,
+				inputRunStepDeltaStepDetailsMessageCreationObjectSchema,
+				inputRunStepDeltaStepDetailsToolCallsObjectSchema,
 			]),
 		),
 	}),
@@ -5674,7 +5674,7 @@ export const runStepDeltaObjectSchema = v.strictObject({
 		/**
 		 * The details of the run step.
 		 */
-		step_details: v.optional(
+		step_details: v.exactOptional(
 			v.union([
 				runStepDeltaStepDetailsMessageCreationObjectSchema,
 				runStepDeltaStepDetailsToolCallsObjectSchema,
@@ -5686,7 +5686,7 @@ export const runStepDeltaObjectSchema = v.strictObject({
  * Usage statistics related to the run step. This value will be `null` while
  * the run step's status is `in_progress`.
  */
-export const exactRunStepCompletionUsageSchema = v.nullable(
+export const inputRunStepCompletionUsageSchema = v.nullable(
 	v.strictObject({
 		/**
 		 * Number of completion tokens used over the course of the run step.
@@ -5702,12 +5702,12 @@ export const exactRunStepCompletionUsageSchema = v.nullable(
 		total_tokens: v.pipe(v.number(), v.integer()),
 	}),
 );
-export const runStepCompletionUsageSchema = exactRunStepCompletionUsageSchema;
+export const runStepCompletionUsageSchema = inputRunStepCompletionUsageSchema;
 /**
  * Details of the tool call.
  * @title Tool calls
  */
-export const exactRunStepDetailsToolCallsObjectSchema = v.strictObject({
+export const inputRunStepDetailsToolCallsObjectSchema = v.strictObject({
 	/**
 	 * Always `tool_calls`.
 	 */
@@ -5719,19 +5719,19 @@ export const exactRunStepDetailsToolCallsObjectSchema = v.strictObject({
 	 */
 	tool_calls: v.array(
 		v.union([
-			exactRunStepDetailsToolCallsCodeObjectSchema,
+			inputRunStepDetailsToolCallsCodeObjectSchema,
 			v.unknown(),
-			exactRunStepDetailsToolCallsFunctionObjectSchema,
+			inputRunStepDetailsToolCallsFunctionObjectSchema,
 		]),
 	),
 });
 export const runStepDetailsToolCallsObjectSchema =
-	exactRunStepDetailsToolCallsObjectSchema;
+	inputRunStepDetailsToolCallsObjectSchema;
 /**
  * Details of the message creation by the run step.
  * @title Message creation
  */
-export const exactRunStepDetailsMessageCreationObjectSchema = v.strictObject({
+export const inputRunStepDetailsMessageCreationObjectSchema = v.strictObject({
 	/**
 	 * Always `message_creation`.
 	 */
@@ -5759,7 +5759,7 @@ export const runStepDetailsMessageCreationObjectSchema = v.strictObject({
  * Represents a step in execution of a run.
  * @title Run steps
  */
-export const exactRunStepObjectSchema = v.strictObject({
+export const inputRunStepObjectSchema = v.strictObject({
 	/**
 	 * The identifier of the run step, which can be referenced in API endpoints.
 	 */
@@ -5806,8 +5806,8 @@ export const exactRunStepObjectSchema = v.strictObject({
 	 * The details of the run step.
 	 */
 	step_details: v.union([
-		exactRunStepDetailsMessageCreationObjectSchema,
-		exactRunStepDetailsToolCallsObjectSchema,
+		inputRunStepDetailsMessageCreationObjectSchema,
+		inputRunStepDetailsToolCallsObjectSchema,
 	]),
 	/**
 	 * The last error associated with this run step. Will be `null` if there are
@@ -5849,7 +5849,7 @@ export const exactRunStepObjectSchema = v.strictObject({
 	 * maximum of 512 characters long.
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
-	usage: exactRunStepCompletionUsageSchema,
+	usage: inputRunStepCompletionUsageSchema,
 });
 export const runStepObjectSchema = v.strictObject({
 	/**
@@ -5943,45 +5943,45 @@ export const runStepObjectSchema = v.strictObject({
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 	usage: runStepCompletionUsageSchema,
 });
-export const exactRunStepStreamEventSchema = v.union([
+export const inputRunStepStreamEventSchema = v.union([
 	v.strictObject({
 		event: v.picklist(["thread.run.step.created"]),
-		data: exactRunStepObjectSchema,
+		data: inputRunStepObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.step.in_progress"]),
-		data: exactRunStepObjectSchema,
+		data: inputRunStepObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.step.delta"]),
-		data: exactRunStepDeltaObjectSchema,
+		data: inputRunStepDeltaObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.step.completed"]),
-		data: exactRunStepObjectSchema,
+		data: inputRunStepObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.step.failed"]),
-		data: exactRunStepObjectSchema,
+		data: inputRunStepObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.step.cancelled"]),
-		data: exactRunStepObjectSchema,
+		data: inputRunStepObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.step.expired"]),
-		data: exactRunStepObjectSchema,
+		data: inputRunStepObjectSchema,
 	}),
 ]);
-export const runStepStreamEventSchema = exactRunStepStreamEventSchema;
+export const runStepStreamEventSchema = inputRunStepStreamEventSchema;
 /** The schema for the response format, described as a JSON Schema object. */
-export const exactResponseFormatJsonSchemaSchemaSchema = v.record(
+export const inputResponseFormatJsonSchemaSchemaSchema = v.record(
 	v.string(),
 	v.unknown(),
 );
 export const responseFormatJsonSchemaSchemaSchema =
-	exactResponseFormatJsonSchemaSchemaSchema;
-export const exactResponseFormatJsonSchemaSchema = v.strictObject({
+	inputResponseFormatJsonSchemaSchemaSchema;
+export const inputResponseFormatJsonSchemaSchema = v.strictObject({
 	/**
 	 * The type of response format being defined: `json_schema`
 	 */
@@ -5991,13 +5991,13 @@ export const exactResponseFormatJsonSchemaSchema = v.strictObject({
 		 * A description of what the response format is for, used by the model to
 		 * determine how to respond in the format.
 		 */
-		description: v.exactOptional(v.string()),
+		description: v.optional(v.string()),
 		/**
 		 * The name of the response format. Must be a-z, A-Z, 0-9, or contain
 		 * underscores and dashes, with a maximum length of 64.
 		 */
 		name: v.string(),
-		schema: v.exactOptional(exactResponseFormatJsonSchemaSchemaSchema),
+		schema: v.optional(inputResponseFormatJsonSchemaSchemaSchema),
 		/**
 		 * Whether to enable strict schema adherence when generating the output. If
 		 * set to true, the model will always follow the exact schema defined in the
@@ -6005,7 +6005,7 @@ export const exactResponseFormatJsonSchemaSchema = v.strictObject({
 		 * `true`. To learn more, read the [Structured Outputs
 		 * guide](/docs/guides/structured-outputs).
 		 */
-		strict: v.exactOptional(v.nullable(v.boolean())),
+		strict: v.optional(v.nullable(v.boolean())),
 	}),
 });
 export const responseFormatJsonSchemaSchema = v.strictObject({
@@ -6018,13 +6018,13 @@ export const responseFormatJsonSchemaSchema = v.strictObject({
 		 * A description of what the response format is for, used by the model to
 		 * determine how to respond in the format.
 		 */
-		description: v.optional(v.pipe(v.string(), v.trim())),
+		description: v.exactOptional(v.pipe(v.string(), v.trim())),
 		/**
 		 * The name of the response format. Must be a-z, A-Z, 0-9, or contain
 		 * underscores and dashes, with a maximum length of 64.
 		 */
 		name: v.pipe(v.string(), v.trim()),
-		schema: v.optional(responseFormatJsonSchemaSchemaSchema),
+		schema: v.exactOptional(responseFormatJsonSchemaSchemaSchema),
 		/**
 		 * Whether to enable strict schema adherence when generating the output. If
 		 * set to true, the model will always follow the exact schema defined in the
@@ -6032,24 +6032,24 @@ export const responseFormatJsonSchemaSchema = v.strictObject({
 		 * `true`. To learn more, read the [Structured Outputs
 		 * guide](/docs/guides/structured-outputs).
 		 */
-		strict: v.optional(v.nullable(v.boolean())),
+		strict: v.exactOptional(v.nullable(v.boolean())),
 	}),
 });
-export const exactResponseFormatJsonObjectSchema = v.strictObject({
+export const inputResponseFormatJsonObjectSchema = v.strictObject({
 	/**
 	 * The type of response format being defined: `json_object`
 	 */
 	type: v.picklist(["json_object"]),
 });
 export const responseFormatJsonObjectSchema =
-	exactResponseFormatJsonObjectSchema;
-export const exactResponseFormatTextSchema = v.strictObject({
+	inputResponseFormatJsonObjectSchema;
+export const inputResponseFormatTextSchema = v.strictObject({
 	/**
 	 * The type of response format being defined: `text`
 	 */
 	type: v.picklist(["text"]),
 });
-export const responseFormatTextSchema = exactResponseFormatTextSchema;
+export const responseFormatTextSchema = inputResponseFormatTextSchema;
 /**
  * Specifies the format that the model must output. Compatible with
  * [GPT-4o](/docs/models/gpt-4o), [GPT-4
@@ -6072,31 +6072,31 @@ export const responseFormatTextSchema = exactResponseFormatTextSchema;
  * `finish_reason="length"`, which indicates the generation exceeded
  * `max_tokens` or the conversation exceeded the max context length.
  */
-export const exactAssistantsApiResponseFormatOptionSchema = v.union([
+export const inputAssistantsApiResponseFormatOptionSchema = v.union([
 	v.picklist(["auto"]),
-	exactResponseFormatTextSchema,
-	exactResponseFormatJsonObjectSchema,
-	exactResponseFormatJsonSchemaSchema,
+	inputResponseFormatTextSchema,
+	inputResponseFormatJsonObjectSchema,
+	inputResponseFormatJsonSchemaSchema,
 ]);
 export const assistantsApiResponseFormatOptionSchema =
-	exactAssistantsApiResponseFormatOptionSchema;
+	inputAssistantsApiResponseFormatOptionSchema;
 /**
  * Whether to enable [parallel function
  * calling](/docs/guides/function-calling/parallel-function-calling) during
  * tool use.
  */
-export const exactParallelToolCallsSchema = v.boolean();
-export const parallelToolCallsSchema = exactParallelToolCallsSchema;
+export const inputParallelToolCallsSchema = v.boolean();
+export const parallelToolCallsSchema = inputParallelToolCallsSchema;
 /**
  * Specifies a tool the model should use. Use to force the model to call a
  * specific tool.
  */
-export const exactAssistantsNamedToolChoiceSchema = v.strictObject({
+export const inputAssistantsNamedToolChoiceSchema = v.strictObject({
 	/**
 	 * The type of the tool. If type is `function`, the function name must be set
 	 */
 	type: v.picklist(["function", "code_interpreter", "file_search"]),
-	function: v.exactOptional(
+	function: v.optional(
 		v.strictObject({
 			/**
 			 * The name of the function to call.
@@ -6110,7 +6110,7 @@ export const assistantsNamedToolChoiceSchema = v.strictObject({
 	 * The type of the tool. If type is `function`, the function name must be set
 	 */
 	type: v.picklist(["function", "code_interpreter", "file_search"]),
-	function: v.optional(
+	function: v.exactOptional(
 		v.strictObject({
 			/**
 			 * The name of the function to call.
@@ -6131,35 +6131,18 @@ export const assistantsNamedToolChoiceSchema = v.strictObject({
  * "function", "function": {"name": "my_function"}}` forces the model to call
  * that tool.
  */
-export const exactAssistantsApiToolChoiceOptionSchema = v.union([
+export const inputAssistantsApiToolChoiceOptionSchema = v.union([
 	v.picklist(["none", "auto", "required"]),
-	exactAssistantsNamedToolChoiceSchema,
+	inputAssistantsNamedToolChoiceSchema,
 ]);
 export const assistantsApiToolChoiceOptionSchema =
-	exactAssistantsApiToolChoiceOptionSchema;
+	inputAssistantsApiToolChoiceOptionSchema;
 /**
  * Controls for how a thread will be truncated prior to the run. Use this to
  * control the intial context window of the run.
  * @title Thread Truncation Controls
  */
-export const exactTruncationObjectSchema = v.strictObject({
-	/**
-	 * The truncation strategy to use for the thread. The default is `auto`. If
-	 * set to `last_messages`, the thread will be truncated to the n most recent
-	 * messages in the thread. When set to `auto`, messages in the middle of the
-	 * thread will be dropped to fit the context length of the model,
-	 * `max_prompt_tokens`.
-	 */
-	type: v.picklist(["auto", "last_messages"]),
-	/**
-	 * The number of most recent messages from the thread when constructing the
-	 * context for the run.
-	 */
-	last_messages: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1))),
-	),
-});
-export const truncationObjectSchema = v.strictObject({
+export const inputTruncationObjectSchema = v.strictObject({
 	/**
 	 * The truncation strategy to use for the thread. The default is `auto`. If
 	 * set to `last_messages`, the thread will be truncated to the n most recent
@@ -6176,11 +6159,28 @@ export const truncationObjectSchema = v.strictObject({
 		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1))),
 	),
 });
+export const truncationObjectSchema = v.strictObject({
+	/**
+	 * The truncation strategy to use for the thread. The default is `auto`. If
+	 * set to `last_messages`, the thread will be truncated to the n most recent
+	 * messages in the thread. When set to `auto`, messages in the middle of the
+	 * thread will be dropped to fit the context length of the model,
+	 * `max_prompt_tokens`.
+	 */
+	type: v.picklist(["auto", "last_messages"]),
+	/**
+	 * The number of most recent messages from the thread when constructing the
+	 * context for the run.
+	 */
+	last_messages: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1))),
+	),
+});
 /**
  * Usage statistics related to the run. This value will be `null` if the run
  * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
  */
-export const exactRunCompletionUsageSchema = v.nullable(
+export const inputRunCompletionUsageSchema = v.nullable(
 	v.strictObject({
 		/**
 		 * Number of completion tokens used over the course of the run.
@@ -6196,9 +6196,9 @@ export const exactRunCompletionUsageSchema = v.nullable(
 		total_tokens: v.pipe(v.number(), v.integer()),
 	}),
 );
-export const runCompletionUsageSchema = exactRunCompletionUsageSchema;
+export const runCompletionUsageSchema = inputRunCompletionUsageSchema;
 /** Tool call objects */
-export const exactRunToolCallObjectSchema = v.strictObject({
+export const inputRunToolCallObjectSchema = v.strictObject({
 	/**
 	 * The ID of the tool call. This ID must be referenced when you submit the
 	 * tool outputs in using the [Submit tool outputs to
@@ -6254,7 +6254,7 @@ export const runToolCallObjectSchema = v.strictObject({
  * Represents an execution run on a [thread](/docs/api-reference/threads).
  * @title A run on a thread
  */
-export const exactRunObjectSchema = v.strictObject({
+export const inputRunObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6310,7 +6310,7 @@ export const exactRunObjectSchema = v.strictObject({
 				/**
 				 * A list of the relevant tool calls.
 				 */
-				tool_calls: v.array(exactRunToolCallObjectSchema),
+				tool_calls: v.array(inputRunToolCallObjectSchema),
 			}),
 		}),
 	),
@@ -6364,7 +6364,7 @@ export const exactRunObjectSchema = v.strictObject({
 			 * The reason why the run is incomplete. This will point to which specific
 			 * token limit was reached over the course of the run.
 			 */
-			reason: v.exactOptional(
+			reason: v.optional(
 				v.picklist(["max_completion_tokens", "max_prompt_tokens"]),
 			),
 		}),
@@ -6384,7 +6384,7 @@ export const exactRunObjectSchema = v.strictObject({
 	 * for this run.
 	 */
 	tools: v.pipe(
-		v.array(v.union([exactAssistantToolsCodeSchema, v.unknown(), v.unknown()])),
+		v.array(v.union([inputAssistantToolsCodeSchema, v.unknown(), v.unknown()])),
 		v.maxLength(20),
 	),
 	/**
@@ -6394,15 +6394,15 @@ export const exactRunObjectSchema = v.strictObject({
 	 * maximum of 512 characters long.
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
-	usage: exactRunCompletionUsageSchema,
+	usage: inputRunCompletionUsageSchema,
 	/**
 	 * The sampling temperature used for this run. If not set, defaults to 1.
 	 */
-	temperature: v.exactOptional(v.nullable(v.number())),
+	temperature: v.optional(v.nullable(v.number())),
 	/**
 	 * The nucleus sampling value used for this run. If not set, defaults to 1.
 	 */
-	top_p: v.exactOptional(v.nullable(v.number())),
+	top_p: v.optional(v.nullable(v.number())),
 	/**
 	 * The maximum number of prompt tokens specified to have been used over the
 	 * course of the run.
@@ -6417,10 +6417,10 @@ export const exactRunObjectSchema = v.strictObject({
 	max_completion_tokens: v.nullable(
 		v.pipe(v.number(), v.integer(), v.minValue(256)),
 	),
-	truncation_strategy: exactTruncationObjectSchema,
-	tool_choice: exactAssistantsApiToolChoiceOptionSchema,
-	parallel_tool_calls: exactParallelToolCallsSchema,
-	response_format: exactAssistantsApiResponseFormatOptionSchema,
+	truncation_strategy: inputTruncationObjectSchema,
+	tool_choice: inputAssistantsApiToolChoiceOptionSchema,
+	parallel_tool_calls: inputParallelToolCallsSchema,
+	response_format: inputAssistantsApiResponseFormatOptionSchema,
 });
 export const runObjectSchema = v.strictObject({
 	/**
@@ -6532,7 +6532,7 @@ export const runObjectSchema = v.strictObject({
 			 * The reason why the run is incomplete. This will point to which specific
 			 * token limit was reached over the course of the run.
 			 */
-			reason: v.optional(
+			reason: v.exactOptional(
 				v.picklist(["max_completion_tokens", "max_prompt_tokens"]),
 			),
 		}),
@@ -6566,11 +6566,11 @@ export const runObjectSchema = v.strictObject({
 	/**
 	 * The sampling temperature used for this run. If not set, defaults to 1.
 	 */
-	temperature: v.optional(v.nullable(v.number())),
+	temperature: v.exactOptional(v.nullable(v.number())),
 	/**
 	 * The nucleus sampling value used for this run. If not set, defaults to 1.
 	 */
-	top_p: v.optional(v.nullable(v.number())),
+	top_p: v.exactOptional(v.nullable(v.number())),
 	/**
 	 * The maximum number of prompt tokens specified to have been used over the
 	 * course of the run.
@@ -6590,54 +6590,54 @@ export const runObjectSchema = v.strictObject({
 	parallel_tool_calls: parallelToolCallsSchema,
 	response_format: assistantsApiResponseFormatOptionSchema,
 });
-export const exactRunStreamEventSchema = v.union([
+export const inputRunStreamEventSchema = v.union([
 	v.strictObject({
 		event: v.picklist(["thread.run.created"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.queued"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.in_progress"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.requires_action"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.completed"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.incomplete"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.failed"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.cancelling"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.cancelled"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 	v.strictObject({
 		event: v.picklist(["thread.run.expired"]),
-		data: exactRunObjectSchema,
+		data: inputRunObjectSchema,
 	}),
 ]);
-export const runStreamEventSchema = exactRunStreamEventSchema;
+export const runStreamEventSchema = inputRunStreamEventSchema;
 /**
  * Represents a thread that contains [messages](/docs/api-reference/messages).
  * @title Thread
  */
-export const exactThreadObjectSchema = v.strictObject({
+export const inputThreadObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6658,26 +6658,24 @@ export const exactThreadObjectSchema = v.strictObject({
 	 */
 	tool_resources: v.nullable(
 		v.strictObject({
-			code_interpreter: v.exactOptional(
+			code_interpreter: v.optional(
 				v.strictObject({
 					/**
 					 * A list of [file](/docs/api-reference/files) IDs made available to the
 					 * `code_interpreter` tool. There can be a maximum of 20 files associated with
 					 * the tool.
 					 */
-					file_ids: v.exactOptional(
-						v.pipe(v.array(v.string()), v.maxLength(20)),
-					),
+					file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
 				}),
 			),
-			file_search: v.exactOptional(
+			file_search: v.optional(
 				v.strictObject({
 					/**
 					 * The [vector store](/docs/api-reference/vector-stores/object) attached to
 					 * this thread. There can be a maximum of 1 vector store attached to the
 					 * thread.
 					 */
-					vector_store_ids: v.exactOptional(
+					vector_store_ids: v.optional(
 						v.pipe(v.array(v.string()), v.maxLength(1)),
 					),
 				}),
@@ -6713,26 +6711,26 @@ export const threadObjectSchema = v.strictObject({
 	 */
 	tool_resources: v.nullable(
 		v.strictObject({
-			code_interpreter: v.optional(
+			code_interpreter: v.exactOptional(
 				v.strictObject({
 					/**
 					 * A list of [file](/docs/api-reference/files) IDs made available to the
 					 * `code_interpreter` tool. There can be a maximum of 20 files associated with
 					 * the tool.
 					 */
-					file_ids: v.optional(
+					file_ids: v.exactOptional(
 						v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
 					),
 				}),
 			),
-			file_search: v.optional(
+			file_search: v.exactOptional(
 				v.strictObject({
 					/**
 					 * The [vector store](/docs/api-reference/vector-stores/object) attached to
 					 * this thread. There can be a maximum of 1 vector store attached to the
 					 * thread.
 					 */
-					vector_store_ids: v.optional(
+					vector_store_ids: v.exactOptional(
 						v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
 					),
 				}),
@@ -6747,13 +6745,13 @@ export const threadObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const exactThreadStreamEventSchema = v.union([
+export const inputThreadStreamEventSchema = v.union([
 	v.strictObject({
 		event: v.picklist(["thread.created"]),
-		data: exactThreadObjectSchema,
+		data: inputThreadObjectSchema,
 	}),
 ]);
-export const threadStreamEventSchema = exactThreadStreamEventSchema;
+export const threadStreamEventSchema = inputThreadStreamEventSchema;
 /**
  * Represents an event emitted when streaming a Run.
  *
@@ -6783,16 +6781,16 @@ export const threadStreamEventSchema = exactThreadStreamEventSchema;
  * quickstart](/docs/assistants/overview) to learn how to
  * integrate the Assistants API with streaming.
  */
-export const exactAssistantStreamEventSchema = v.union([
-	exactThreadStreamEventSchema,
-	exactRunStreamEventSchema,
-	exactRunStepStreamEventSchema,
-	exactMessageStreamEventSchema,
-	exactErrorEventSchema,
-	exactDoneEventSchema,
+export const inputAssistantStreamEventSchema = v.union([
+	inputThreadStreamEventSchema,
+	inputRunStreamEventSchema,
+	inputRunStepStreamEventSchema,
+	inputMessageStreamEventSchema,
+	inputErrorEventSchema,
+	inputDoneEventSchema,
 ]);
-export const assistantStreamEventSchema = exactAssistantStreamEventSchema;
-export const exactStaticChunkingStrategySchema = v.strictObject({
+export const assistantStreamEventSchema = inputAssistantStreamEventSchema;
+export const inputStaticChunkingStrategySchema = v.strictObject({
 	/**
 	 * The maximum number of tokens in each chunk. The default value is `800`. The
 	 * minimum value is `100` and the maximum value is `4096`.
@@ -6811,46 +6809,46 @@ export const exactStaticChunkingStrategySchema = v.strictObject({
 	 */
 	chunk_overlap_tokens: v.pipe(v.number(), v.integer()),
 });
-export const staticChunkingStrategySchema = exactStaticChunkingStrategySchema;
-export const exactStaticChunkingStrategyRequestParamSchema = v.strictObject({
+export const staticChunkingStrategySchema = inputStaticChunkingStrategySchema;
+export const inputStaticChunkingStrategyRequestParamSchema = v.strictObject({
 	/**
 	 * Always `static`.
 	 */
 	type: v.picklist(["static"]),
-	static: exactStaticChunkingStrategySchema,
+	static: inputStaticChunkingStrategySchema,
 });
 export const staticChunkingStrategyRequestParamSchema =
-	exactStaticChunkingStrategyRequestParamSchema;
+	inputStaticChunkingStrategyRequestParamSchema;
 /**
  * The default strategy. This strategy currently uses a
  * `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
  * @title Auto Chunking Strategy
  */
-export const exactAutoChunkingStrategyRequestParamSchema = v.strictObject({
+export const inputAutoChunkingStrategyRequestParamSchema = v.strictObject({
 	/**
 	 * Always `auto`.
 	 */
 	type: v.picklist(["auto"]),
 });
 export const autoChunkingStrategyRequestParamSchema =
-	exactAutoChunkingStrategyRequestParamSchema;
+	inputAutoChunkingStrategyRequestParamSchema;
 /**
  * The chunking strategy used to chunk the file(s). If not set, will use the
  * `auto` strategy.
  */
-export const exactChunkingStrategyRequestParamSchema = v.union([
-	exactAutoChunkingStrategyRequestParamSchema,
-	exactStaticChunkingStrategyRequestParamSchema,
+export const inputChunkingStrategyRequestParamSchema = v.union([
+	inputAutoChunkingStrategyRequestParamSchema,
+	inputStaticChunkingStrategyRequestParamSchema,
 ]);
 export const chunkingStrategyRequestParamSchema =
-	exactChunkingStrategyRequestParamSchema;
-export const exactCreateVectorStoreFileBatchRequestSchema = v.strictObject({
+	inputChunkingStrategyRequestParamSchema;
+export const inputCreateVectorStoreFileBatchRequestSchema = v.strictObject({
 	/**
 	 * A list of [File](/docs/api-reference/files) IDs that the vector store
 	 * should use. Useful for tools like `file_search` that can access files.
 	 */
 	file_ids: v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(500)),
-	chunking_strategy: v.exactOptional(exactChunkingStrategyRequestParamSchema),
+	chunking_strategy: v.optional(inputChunkingStrategyRequestParamSchema),
 });
 export const createVectorStoreFileBatchRequestSchema = v.strictObject({
 	/**
@@ -6862,7 +6860,7 @@ export const createVectorStoreFileBatchRequestSchema = v.strictObject({
 		v.minLength(1),
 		v.maxLength(500),
 	),
-	chunking_strategy: v.optional(chunkingStrategyRequestParamSchema),
+	chunking_strategy: v.exactOptional(chunkingStrategyRequestParamSchema),
 });
 /**
  * This is returned when the chunking strategy is unknown. Typically, this is
@@ -6870,28 +6868,28 @@ export const createVectorStoreFileBatchRequestSchema = v.strictObject({
  * introduced in the API.
  * @title Other Chunking Strategy
  */
-export const exactOtherChunkingStrategyResponseParamSchema = v.strictObject({
+export const inputOtherChunkingStrategyResponseParamSchema = v.strictObject({
 	/**
 	 * Always `other`.
 	 */
 	type: v.picklist(["other"]),
 });
 export const otherChunkingStrategyResponseParamSchema =
-	exactOtherChunkingStrategyResponseParamSchema;
-export const exactStaticChunkingStrategyResponseParamSchema = v.strictObject({
+	inputOtherChunkingStrategyResponseParamSchema;
+export const inputStaticChunkingStrategyResponseParamSchema = v.strictObject({
 	/**
 	 * Always `static`.
 	 */
 	type: v.picklist(["static"]),
-	static: exactStaticChunkingStrategySchema,
+	static: inputStaticChunkingStrategySchema,
 });
 export const staticChunkingStrategyResponseParamSchema =
-	exactStaticChunkingStrategyResponseParamSchema;
+	inputStaticChunkingStrategyResponseParamSchema;
 /**
  * A list of files attached to a vector store.
  * @title Vector store files
  */
-export const exactVectorStoreFileObjectSchema = v.strictObject({
+export const inputVectorStoreFileObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6939,10 +6937,10 @@ export const exactVectorStoreFileObjectSchema = v.strictObject({
 	/**
 	 * The strategy used to chunk the file.
 	 */
-	chunking_strategy: v.exactOptional(
+	chunking_strategy: v.optional(
 		v.union([
-			exactStaticChunkingStrategyResponseParamSchema,
-			exactOtherChunkingStrategyResponseParamSchema,
+			inputStaticChunkingStrategyResponseParamSchema,
+			inputOtherChunkingStrategyResponseParamSchema,
 		]),
 	),
 });
@@ -6994,16 +6992,16 @@ export const vectorStoreFileObjectSchema = v.strictObject({
 	/**
 	 * The strategy used to chunk the file.
 	 */
-	chunking_strategy: v.optional(
+	chunking_strategy: v.exactOptional(
 		v.union([
 			staticChunkingStrategyResponseParamSchema,
 			otherChunkingStrategyResponseParamSchema,
 		]),
 	),
 });
-export const exactListVectorStoreFilesResponseSchema = v.strictObject({
+export const inputListVectorStoreFilesResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactVectorStoreFileObjectSchema),
+	data: v.array(inputVectorStoreFileObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -7015,13 +7013,13 @@ export const listVectorStoreFilesResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactCreateVectorStoreFileRequestSchema = v.strictObject({
+export const inputCreateVectorStoreFileRequestSchema = v.strictObject({
 	/**
 	 * A [File](/docs/api-reference/files) ID that the vector store should use.
 	 * Useful for tools like `file_search` that can access files.
 	 */
 	file_id: v.string(),
-	chunking_strategy: v.exactOptional(exactChunkingStrategyRequestParamSchema),
+	chunking_strategy: v.optional(inputChunkingStrategyRequestParamSchema),
 });
 export const createVectorStoreFileRequestSchema = v.strictObject({
 	/**
@@ -7029,13 +7027,13 @@ export const createVectorStoreFileRequestSchema = v.strictObject({
 	 * Useful for tools like `file_search` that can access files.
 	 */
 	file_id: v.pipe(v.string(), v.trim()),
-	chunking_strategy: v.optional(chunkingStrategyRequestParamSchema),
+	chunking_strategy: v.exactOptional(chunkingStrategyRequestParamSchema),
 });
 /**
  * The expiration policy for a vector store.
  * @title Vector store expiration policy
  */
-export const exactVectorStoreExpirationAfterSchema = v.strictObject({
+export const inputVectorStoreExpirationAfterSchema = v.strictObject({
 	/**
 	 * Anchor timestamp after which the expiration policy applies. Supported
 	 * anchors: `last_active_at`.
@@ -7047,13 +7045,13 @@ export const exactVectorStoreExpirationAfterSchema = v.strictObject({
 	days: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(365)),
 });
 export const vectorStoreExpirationAfterSchema =
-	exactVectorStoreExpirationAfterSchema;
+	inputVectorStoreExpirationAfterSchema;
 /**
  * A vector store is a collection of processed files can be used by the
  * `file_search` tool.
  * @title Vector store
  */
-export const exactVectorStoreObjectSchema = v.strictObject({
+export const inputVectorStoreObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -7102,11 +7100,11 @@ export const exactVectorStoreObjectSchema = v.strictObject({
 	 * vector store is ready for use.
 	 */
 	status: v.picklist(["expired", "in_progress", "completed"]),
-	expires_after: v.exactOptional(exactVectorStoreExpirationAfterSchema),
+	expires_after: v.optional(inputVectorStoreExpirationAfterSchema),
 	/**
 	 * The Unix timestamp (in seconds) for when the vector store will expire.
 	 */
-	expires_at: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+	expires_at: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
 	/**
 	 * The Unix timestamp (in seconds) for when the vector store was last active.
 	 */
@@ -7168,11 +7166,11 @@ export const vectorStoreObjectSchema = v.strictObject({
 	 * vector store is ready for use.
 	 */
 	status: v.picklist(["expired", "in_progress", "completed"]),
-	expires_after: v.optional(vectorStoreExpirationAfterSchema),
+	expires_after: v.exactOptional(vectorStoreExpirationAfterSchema),
 	/**
 	 * The Unix timestamp (in seconds) for when the vector store will expire.
 	 */
-	expires_at: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+	expires_at: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
 	/**
 	 * The Unix timestamp (in seconds) for when the vector store was last active.
 	 */
@@ -7185,9 +7183,9 @@ export const vectorStoreObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const exactListVectorStoresResponseSchema = v.strictObject({
+export const inputListVectorStoresResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactVectorStoreObjectSchema),
+	data: v.array(inputVectorStoreObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -7199,26 +7197,12 @@ export const listVectorStoresResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactUpdateVectorStoreRequestSchema = v.strictObject({
+export const inputUpdateVectorStoreRequestSchema = v.strictObject({
 	/**
 	 * The name of the vector store.
 	 */
-	name: v.exactOptional(v.nullable(v.string())),
-	expires_after: v.exactOptional(exactVectorStoreExpirationAfterSchema),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-export const updateVectorStoreRequestSchema = v.strictObject({
-	/**
-	 * The name of the vector store.
-	 */
-	name: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-	expires_after: v.optional(vectorStoreExpirationAfterSchema),
+	name: v.optional(v.nullable(v.string())),
+	expires_after: v.optional(inputVectorStoreExpirationAfterSchema),
 	/**
 	 * Set of 16 key-value pairs that can be attached to an object. This can be
 	 * useful for storing additional information about the object in a structured
@@ -7227,27 +7211,12 @@ export const updateVectorStoreRequestSchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactCreateVectorStoreRequestSchema = v.strictObject({
-	/**
-	 * A list of [File](/docs/api-reference/files) IDs that the vector store
-	 * should use. Useful for tools like `file_search` that can access files.
-	 */
-	file_ids: v.exactOptional(v.pipe(v.array(v.string()), v.maxLength(500))),
+export const updateVectorStoreRequestSchema = v.strictObject({
 	/**
 	 * The name of the vector store.
 	 */
-	name: v.exactOptional(v.string()),
-	expires_after: v.exactOptional(exactVectorStoreExpirationAfterSchema),
-	/**
-	 * The chunking strategy used to chunk the file(s). If not set, will use the
-	 * `auto` strategy. Only applicable if `file_ids` is non-empty.
-	 */
-	chunking_strategy: v.exactOptional(
-		v.union([
-			exactAutoChunkingStrategyRequestParamSchema,
-			exactStaticChunkingStrategyRequestParamSchema,
-		]),
-	),
+	name: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	expires_after: v.exactOptional(vectorStoreExpirationAfterSchema),
 	/**
 	 * Set of 16 key-value pairs that can be attached to an object. This can be
 	 * useful for storing additional information about the object in a structured
@@ -7256,24 +7225,53 @@ export const exactCreateVectorStoreRequestSchema = v.strictObject({
 	 */
 	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const createVectorStoreRequestSchema = v.strictObject({
+export const inputCreateVectorStoreRequestSchema = v.strictObject({
 	/**
 	 * A list of [File](/docs/api-reference/files) IDs that the vector store
 	 * should use. Useful for tools like `file_search` that can access files.
 	 */
-	file_ids: v.optional(
-		v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(500)),
-	),
+	file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(500))),
 	/**
 	 * The name of the vector store.
 	 */
-	name: v.optional(v.pipe(v.string(), v.trim())),
-	expires_after: v.optional(vectorStoreExpirationAfterSchema),
+	name: v.optional(v.string()),
+	expires_after: v.optional(inputVectorStoreExpirationAfterSchema),
 	/**
 	 * The chunking strategy used to chunk the file(s). If not set, will use the
 	 * `auto` strategy. Only applicable if `file_ids` is non-empty.
 	 */
 	chunking_strategy: v.optional(
+		v.union([
+			inputAutoChunkingStrategyRequestParamSchema,
+			inputStaticChunkingStrategyRequestParamSchema,
+		]),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+});
+export const createVectorStoreRequestSchema = v.strictObject({
+	/**
+	 * A list of [File](/docs/api-reference/files) IDs that the vector store
+	 * should use. Useful for tools like `file_search` that can access files.
+	 */
+	file_ids: v.exactOptional(
+		v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(500)),
+	),
+	/**
+	 * The name of the vector store.
+	 */
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
+	expires_after: v.exactOptional(vectorStoreExpirationAfterSchema),
+	/**
+	 * The chunking strategy used to chunk the file(s). If not set, will use the
+	 * `auto` strategy. Only applicable if `file_ids` is non-empty.
+	 */
+	chunking_strategy: v.exactOptional(
 		v.union([
 			autoChunkingStrategyRequestParamSchema,
 			staticChunkingStrategyRequestParamSchema,
@@ -7285,13 +7283,13 @@ export const createVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
 /**
  * A result instance of the file search.
  * @title File search tool call result
  */
-export const exactRunStepDetailsToolCallsFileSearchResultObjectSchema =
+export const inputRunStepDetailsToolCallsFileSearchResultObjectSchema =
 	v.strictObject({
 		/**
 		 * The ID of the file that result was found in.
@@ -7310,17 +7308,17 @@ export const exactRunStepDetailsToolCallsFileSearchResultObjectSchema =
 		 * The content of the result that was found. The content is only included if
 		 * requested via the include query parameter.
 		 */
-		content: v.exactOptional(
+		content: v.optional(
 			v.array(
 				v.strictObject({
 					/**
 					 * The type of the content.
 					 */
-					type: v.exactOptional(v.picklist(["text"])),
+					type: v.optional(v.picklist(["text"])),
 					/**
 					 * The text content of the file.
 					 */
-					text: v.exactOptional(v.string()),
+					text: v.optional(v.string()),
 				}),
 			),
 		),
@@ -7344,17 +7342,17 @@ export const runStepDetailsToolCallsFileSearchResultObjectSchema =
 		 * The content of the result that was found. The content is only included if
 		 * requested via the include query parameter.
 		 */
-		content: v.optional(
+		content: v.exactOptional(
 			v.array(
 				v.strictObject({
 					/**
 					 * The type of the content.
 					 */
-					type: v.optional(v.picklist(["text"])),
+					type: v.exactOptional(v.picklist(["text"])),
 					/**
 					 * The text content of the file.
 					 */
-					text: v.optional(v.pipe(v.string(), v.trim())),
+					text: v.exactOptional(v.pipe(v.string(), v.trim())),
 				}),
 			),
 		),
@@ -7363,7 +7361,7 @@ export const runStepDetailsToolCallsFileSearchResultObjectSchema =
  * The ranking options for the file search.
  * @title File search tool call ranking options
  */
-export const exactRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
+export const inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
 	v.strictObject({
 		/**
 		 * The ranker used for the file search.
@@ -7376,8 +7374,8 @@ export const exactRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
 		score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
 	});
 export const runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
-	exactRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema;
-export const exactRunStepDetailsToolCallsFileSearchObjectSchema =
+	inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema;
+export const inputRunStepDetailsToolCallsFileSearchObjectSchema =
 	v.strictObject({
 		/**
 		 * The ID of the tool call object.
@@ -7392,14 +7390,14 @@ export const exactRunStepDetailsToolCallsFileSearchObjectSchema =
 		 * For now, this is always going to be an empty object.
 		 */
 		file_search: v.strictObject({
-			ranking_options: v.exactOptional(
-				exactRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
+			ranking_options: v.optional(
+				inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
 			),
 			/**
 			 * The results of the file search.
 			 */
-			results: v.exactOptional(
-				v.array(exactRunStepDetailsToolCallsFileSearchResultObjectSchema),
+			results: v.optional(
+				v.array(inputRunStepDetailsToolCallsFileSearchResultObjectSchema),
 			),
 		}),
 	});
@@ -7417,20 +7415,20 @@ export const runStepDetailsToolCallsFileSearchObjectSchema = v.strictObject({
 	 * For now, this is always going to be an empty object.
 	 */
 	file_search: v.strictObject({
-		ranking_options: v.optional(
+		ranking_options: v.exactOptional(
 			runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
 		),
 		/**
 		 * The results of the file search.
 		 */
-		results: v.optional(
+		results: v.exactOptional(
 			v.array(runStepDetailsToolCallsFileSearchResultObjectSchema),
 		),
 	}),
 });
-export const exactListRunStepsResponseSchema = v.strictObject({
+export const inputListRunStepsResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactRunStepObjectSchema),
+	data: v.array(inputRunStepObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -7442,9 +7440,9 @@ export const listRunStepsResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactListMessagesResponseSchema = v.strictObject({
+export const inputListMessagesResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactMessageObjectSchema),
+	data: v.array(inputMessageObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -7456,9 +7454,9 @@ export const listMessagesResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactListThreadsResponseSchema = v.strictObject({
+export const inputListThreadsResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactThreadObjectSchema),
+	data: v.array(inputThreadObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -7470,7 +7468,7 @@ export const listThreadsResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactCreateMessageRequestSchema = v.strictObject({
+export const inputCreateMessageRequestSchema = v.strictObject({
 	/**
 	 * The role of the entity that is creating the message. Allowed values
 	 * include:
@@ -7485,9 +7483,9 @@ export const exactCreateMessageRequestSchema = v.strictObject({
 		v.pipe(
 			v.array(
 				v.union([
-					exactMessageContentImageFileObjectSchema,
-					exactMessageContentImageUrlObjectSchema,
-					exactMessageRequestContentTextObjectSchema,
+					inputMessageContentImageFileObjectSchema,
+					inputMessageContentImageUrlObjectSchema,
+					inputMessageRequestContentTextObjectSchema,
 				]),
 			),
 			v.minLength(1),
@@ -7497,22 +7495,22 @@ export const exactCreateMessageRequestSchema = v.strictObject({
 	 * A list of files attached to the message, and the tools they should be added
 	 * to.
 	 */
-	attachments: v.exactOptional(
+	attachments: v.optional(
 		v.nullable(
 			v.array(
 				v.strictObject({
 					/**
 					 * The ID of the file to attach to the message.
 					 */
-					file_id: v.exactOptional(v.string()),
+					file_id: v.optional(v.string()),
 					/**
 					 * The tools to add this file to.
 					 */
-					tools: v.exactOptional(
+					tools: v.optional(
 						v.array(
 							v.union([
-								exactAssistantToolsCodeSchema,
-								exactAssistantToolsFileSearchTypeOnlySchema,
+								inputAssistantToolsCodeSchema,
+								inputAssistantToolsFileSearchTypeOnlySchema,
 							]),
 						),
 					),
@@ -7526,7 +7524,7 @@ export const exactCreateMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
 export const createMessageRequestSchema = v.strictObject({
 	/**
@@ -7555,18 +7553,18 @@ export const createMessageRequestSchema = v.strictObject({
 	 * A list of files attached to the message, and the tools they should be added
 	 * to.
 	 */
-	attachments: v.optional(
+	attachments: v.exactOptional(
 		v.nullable(
 			v.array(
 				v.strictObject({
 					/**
 					 * The ID of the file to attach to the message.
 					 */
-					file_id: v.optional(v.pipe(v.string(), v.trim())),
+					file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 					/**
 					 * The tools to add this file to.
 					 */
-					tools: v.optional(
+					tools: v.exactOptional(
 						v.array(
 							v.union([
 								assistantToolsCodeSchema,
@@ -7584,14 +7582,56 @@ export const createMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactCreateThreadRequestSchema = v.strictObject({
+export const inputCreateThreadRequestSchema = v.strictObject({
 	/**
 	 * A list of [messages](/docs/api-reference/messages) to start the thread
 	 * with.
 	 */
-	messages: v.exactOptional(v.array(exactCreateMessageRequestSchema)),
+	messages: v.optional(v.array(inputCreateMessageRequestSchema)),
+	/**
+	 * A set of resources that are made available to the assistant's tools in this
+	 * thread. The resources are specific to the type of tool. For example, the
+	 * `code_interpreter` tool requires a list of file IDs, while the
+	 * `file_search` tool requires a list of vector store IDs.
+	 */
+	tool_resources: v.optional(
+		v.nullable(
+			v.strictObject({
+				code_interpreter: v.optional(
+					v.strictObject({
+						/**
+						 * A list of [file](/docs/api-reference/files) IDs made available to the
+						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+						 * the tool.
+						 */
+						file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
+					}),
+				),
+				file_search: v.optional(
+					v.union([
+						v.record(v.string(), v.unknown()),
+						v.record(v.string(), v.unknown()),
+					]),
+				),
+			}),
+		),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+});
+export const createThreadRequestSchema = v.strictObject({
+	/**
+	 * A list of [messages](/docs/api-reference/messages) to start the thread
+	 * with.
+	 */
+	messages: v.exactOptional(v.array(createMessageRequestSchema)),
 	/**
 	 * A set of resources that are made available to the assistant's tools in this
 	 * thread. The resources are specific to the type of tool. For example, the
@@ -7609,7 +7649,7 @@ export const exactCreateThreadRequestSchema = v.strictObject({
 						 * the tool.
 						 */
 						file_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(20)),
+							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
 						),
 					}),
 				),
@@ -7630,64 +7670,20 @@ export const exactCreateThreadRequestSchema = v.strictObject({
 	 */
 	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const createThreadRequestSchema = v.strictObject({
-	/**
-	 * A list of [messages](/docs/api-reference/messages) to start the thread
-	 * with.
-	 */
-	messages: v.optional(v.array(createMessageRequestSchema)),
-	/**
-	 * A set of resources that are made available to the assistant's tools in this
-	 * thread. The resources are specific to the type of tool. For example, the
-	 * `code_interpreter` tool requires a list of file IDs, while the
-	 * `file_search` tool requires a list of vector store IDs.
-	 */
-	tool_resources: v.optional(
-		v.nullable(
-			v.strictObject({
-				code_interpreter: v.optional(
-					v.strictObject({
-						/**
-						 * A list of [file](/docs/api-reference/files) IDs made available to the
-						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
-						 * the tool.
-						 */
-						file_ids: v.optional(
-							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
-						),
-					}),
-				),
-				file_search: v.optional(
-					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
-					]),
-				),
-			}),
-		),
-	),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-export const exactCreateThreadAndRunRequestSchema = v.strictObject({
+export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 	/**
 	 * The ID of the [assistant](/docs/api-reference/assistants) to use to execute
 	 * this run.
 	 */
 	assistant_id: v.string(),
-	thread: v.exactOptional(exactCreateThreadRequestSchema),
+	thread: v.optional(inputCreateThreadRequestSchema),
 	/**
 	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
 	 * this run. If a value is provided here, it will override the model
 	 * associated with the assistant. If not, the model associated with the
 	 * assistant will be used.
 	 */
-	model: v.exactOptional(
+	model: v.optional(
 		v.nullable(
 			v.union([
 				v.string(),
@@ -7724,16 +7720,16 @@ export const exactCreateThreadAndRunRequestSchema = v.strictObject({
 	 * Override the default system message of the assistant. This is useful for
 	 * modifying the behavior on a per-run basis.
 	 */
-	instructions: v.exactOptional(v.nullable(v.string())),
+	instructions: v.optional(v.nullable(v.string())),
 	/**
 	 * Override the tools the assistant can use for this run. This is useful for
 	 * modifying the behavior on a per-run basis.
 	 */
-	tools: v.exactOptional(
+	tools: v.optional(
 		v.nullable(
 			v.pipe(
 				v.array(
-					v.union([exactAssistantToolsCodeSchema, v.unknown(), v.unknown()]),
+					v.union([inputAssistantToolsCodeSchema, v.unknown(), v.unknown()]),
 				),
 				v.maxLength(20),
 			),
@@ -7745,29 +7741,27 @@ export const exactCreateThreadAndRunRequestSchema = v.strictObject({
 	 * requires a list of file IDs, while the `file_search` tool requires a list
 	 * of vector store IDs.
 	 */
-	tool_resources: v.exactOptional(
+	tool_resources: v.optional(
 		v.nullable(
 			v.strictObject({
-				code_interpreter: v.exactOptional(
+				code_interpreter: v.optional(
 					v.strictObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
 						 * the tool.
 						 */
-						file_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(20)),
-						),
+						file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
 					}),
 				),
-				file_search: v.exactOptional(
+				file_search: v.optional(
 					v.strictObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
 						 * attached to the assistant.
 						 */
-						vector_store_ids: v.exactOptional(
+						vector_store_ids: v.optional(
 							v.pipe(v.array(v.string()), v.maxLength(1)),
 						),
 					}),
@@ -7781,164 +7775,6 @@ export const exactCreateThreadAndRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-	/**
-	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-	 * will make the output more random, while lower values like 0.2 will make it
-	 * more focused and deterministic.
-	 */
-	temperature: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
-	),
-	/**
-	 * An alternative to sampling with temperature, called nucleus sampling, where
-	 * the model considers the results of the tokens with top_p probability mass.
-	 * So 0.1 means only the tokens comprising the top 10% probability mass are
-	 * considered.
-	 *
-	 * We generally recommend altering this or temperature but not both.
-	 */
-	top_p: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
-	),
-	/**
-	 * If `true`, returns a stream of events that happen during the Run as
-	 * server-sent events, terminating when the Run enters a terminal state with a
-	 * `data: [DONE]` message.
-	 */
-	stream: v.exactOptional(v.nullable(v.boolean())),
-	/**
-	 * The maximum number of prompt tokens that may be used over the course of the
-	 * run. The run will make a best effort to use only the number of prompt
-	 * tokens specified, across multiple turns of the run. If the run exceeds the
-	 * number of prompt tokens specified, the run will end with status
-	 * `incomplete`. See `incomplete_details` for more info.
-	 */
-	max_prompt_tokens: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
-	),
-	/**
-	 * The maximum number of completion tokens that may be used over the course of
-	 * the run. The run will make a best effort to use only the number of
-	 * completion tokens specified, across multiple turns of the run. If the run
-	 * exceeds the number of completion tokens specified, the run will end with
-	 * status `incomplete`. See `incomplete_details` for more info.
-	 */
-	max_completion_tokens: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
-	),
-	truncation_strategy: v.exactOptional(exactTruncationObjectSchema),
-	tool_choice: v.exactOptional(exactAssistantsApiToolChoiceOptionSchema),
-	parallel_tool_calls: v.exactOptional(exactParallelToolCallsSchema),
-	response_format: v.exactOptional(
-		exactAssistantsApiResponseFormatOptionSchema,
-	),
-});
-export const createThreadAndRunRequestSchema = v.strictObject({
-	/**
-	 * The ID of the [assistant](/docs/api-reference/assistants) to use to execute
-	 * this run.
-	 */
-	assistant_id: v.pipe(v.string(), v.trim()),
-	thread: v.optional(createThreadRequestSchema),
-	/**
-	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
-	 * this run. If a value is provided here, it will override the model
-	 * associated with the assistant. If not, the model associated with the
-	 * assistant will be used.
-	 */
-	model: v.optional(
-		v.nullable(
-			v.union([
-				v.pipe(v.string(), v.trim()),
-				v.picklist([
-					"gpt-4o",
-					"gpt-4o-2024-08-06",
-					"gpt-4o-2024-05-13",
-					"gpt-4o-2024-08-06",
-					"gpt-4o-mini",
-					"gpt-4o-mini-2024-07-18",
-					"gpt-4-turbo",
-					"gpt-4-turbo-2024-04-09",
-					"gpt-4-0125-preview",
-					"gpt-4-turbo-preview",
-					"gpt-4-1106-preview",
-					"gpt-4-vision-preview",
-					"gpt-4",
-					"gpt-4-0314",
-					"gpt-4-0613",
-					"gpt-4-32k",
-					"gpt-4-32k-0314",
-					"gpt-4-32k-0613",
-					"gpt-3.5-turbo",
-					"gpt-3.5-turbo-16k",
-					"gpt-3.5-turbo-0613",
-					"gpt-3.5-turbo-1106",
-					"gpt-3.5-turbo-0125",
-					"gpt-3.5-turbo-16k-0613",
-				]),
-			]),
-		),
-	),
-	/**
-	 * Override the default system message of the assistant. This is useful for
-	 * modifying the behavior on a per-run basis.
-	 */
-	instructions: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-	/**
-	 * Override the tools the assistant can use for this run. This is useful for
-	 * modifying the behavior on a per-run basis.
-	 */
-	tools: v.optional(
-		v.nullable(
-			v.pipe(
-				v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
-				v.maxLength(20),
-			),
-		),
-	),
-	/**
-	 * A set of resources that are used by the assistant's tools. The resources
-	 * are specific to the type of tool. For example, the `code_interpreter` tool
-	 * requires a list of file IDs, while the `file_search` tool requires a list
-	 * of vector store IDs.
-	 */
-	tool_resources: v.optional(
-		v.nullable(
-			v.strictObject({
-				code_interpreter: v.optional(
-					v.strictObject({
-						/**
-						 * A list of [file](/docs/api-reference/files) IDs made available to the
-						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
-						 * the tool.
-						 */
-						file_ids: v.optional(
-							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
-						),
-					}),
-				),
-				file_search: v.optional(
-					v.strictObject({
-						/**
-						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
-						 * attached to this assistant. There can be a maximum of 1 vector store
-						 * attached to the assistant.
-						 */
-						vector_store_ids: v.optional(
-							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
-						),
-					}),
-				),
-			}),
-		),
-	),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
@@ -7985,14 +7821,170 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 	max_completion_tokens: v.optional(
 		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
 	),
-	truncation_strategy: v.optional(truncationObjectSchema),
-	tool_choice: v.optional(assistantsApiToolChoiceOptionSchema),
-	parallel_tool_calls: v.optional(parallelToolCallsSchema),
-	response_format: v.optional(assistantsApiResponseFormatOptionSchema),
+	truncation_strategy: v.optional(inputTruncationObjectSchema),
+	tool_choice: v.optional(inputAssistantsApiToolChoiceOptionSchema),
+	parallel_tool_calls: v.optional(inputParallelToolCallsSchema),
+	response_format: v.optional(inputAssistantsApiResponseFormatOptionSchema),
 });
-export const exactListRunsResponseSchema = v.strictObject({
+export const createThreadAndRunRequestSchema = v.strictObject({
+	/**
+	 * The ID of the [assistant](/docs/api-reference/assistants) to use to execute
+	 * this run.
+	 */
+	assistant_id: v.pipe(v.string(), v.trim()),
+	thread: v.exactOptional(createThreadRequestSchema),
+	/**
+	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
+	 * this run. If a value is provided here, it will override the model
+	 * associated with the assistant. If not, the model associated with the
+	 * assistant will be used.
+	 */
+	model: v.exactOptional(
+		v.nullable(
+			v.union([
+				v.pipe(v.string(), v.trim()),
+				v.picklist([
+					"gpt-4o",
+					"gpt-4o-2024-08-06",
+					"gpt-4o-2024-05-13",
+					"gpt-4o-2024-08-06",
+					"gpt-4o-mini",
+					"gpt-4o-mini-2024-07-18",
+					"gpt-4-turbo",
+					"gpt-4-turbo-2024-04-09",
+					"gpt-4-0125-preview",
+					"gpt-4-turbo-preview",
+					"gpt-4-1106-preview",
+					"gpt-4-vision-preview",
+					"gpt-4",
+					"gpt-4-0314",
+					"gpt-4-0613",
+					"gpt-4-32k",
+					"gpt-4-32k-0314",
+					"gpt-4-32k-0613",
+					"gpt-3.5-turbo",
+					"gpt-3.5-turbo-16k",
+					"gpt-3.5-turbo-0613",
+					"gpt-3.5-turbo-1106",
+					"gpt-3.5-turbo-0125",
+					"gpt-3.5-turbo-16k-0613",
+				]),
+			]),
+		),
+	),
+	/**
+	 * Override the default system message of the assistant. This is useful for
+	 * modifying the behavior on a per-run basis.
+	 */
+	instructions: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Override the tools the assistant can use for this run. This is useful for
+	 * modifying the behavior on a per-run basis.
+	 */
+	tools: v.exactOptional(
+		v.nullable(
+			v.pipe(
+				v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
+				v.maxLength(20),
+			),
+		),
+	),
+	/**
+	 * A set of resources that are used by the assistant's tools. The resources
+	 * are specific to the type of tool. For example, the `code_interpreter` tool
+	 * requires a list of file IDs, while the `file_search` tool requires a list
+	 * of vector store IDs.
+	 */
+	tool_resources: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				code_interpreter: v.exactOptional(
+					v.strictObject({
+						/**
+						 * A list of [file](/docs/api-reference/files) IDs made available to the
+						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
+						 * the tool.
+						 */
+						file_ids: v.exactOptional(
+							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
+						),
+					}),
+				),
+				file_search: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
+						 * attached to this assistant. There can be a maximum of 1 vector store
+						 * attached to the assistant.
+						 */
+						vector_store_ids: v.exactOptional(
+							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
+						),
+					}),
+				),
+			}),
+		),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 */
+	temperature: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
+	),
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 */
+	top_p: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	),
+	/**
+	 * If `true`, returns a stream of events that happen during the Run as
+	 * server-sent events, terminating when the Run enters a terminal state with a
+	 * `data: [DONE]` message.
+	 */
+	stream: v.exactOptional(v.nullable(v.boolean())),
+	/**
+	 * The maximum number of prompt tokens that may be used over the course of the
+	 * run. The run will make a best effort to use only the number of prompt
+	 * tokens specified, across multiple turns of the run. If the run exceeds the
+	 * number of prompt tokens specified, the run will end with status
+	 * `incomplete`. See `incomplete_details` for more info.
+	 */
+	max_prompt_tokens: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
+	),
+	/**
+	 * The maximum number of completion tokens that may be used over the course of
+	 * the run. The run will make a best effort to use only the number of
+	 * completion tokens specified, across multiple turns of the run. If the run
+	 * exceeds the number of completion tokens specified, the run will end with
+	 * status `incomplete`. See `incomplete_details` for more info.
+	 */
+	max_completion_tokens: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
+	),
+	truncation_strategy: v.exactOptional(truncationObjectSchema),
+	tool_choice: v.exactOptional(assistantsApiToolChoiceOptionSchema),
+	parallel_tool_calls: v.exactOptional(parallelToolCallsSchema),
+	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
+});
+export const inputListRunsResponseSchema = v.strictObject({
 	object: v.string(),
-	data: v.array(exactRunObjectSchema),
+	data: v.array(inputRunObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
@@ -8004,7 +7996,7 @@ export const listRunsResponseSchema = v.strictObject({
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const exactCreateRunRequestSchema = v.strictObject({
+export const inputCreateRunRequestSchema = v.strictObject({
 	/**
 	 * The ID of the [assistant](/docs/api-reference/assistants) to use to execute
 	 * this run.
@@ -8016,7 +8008,7 @@ export const exactCreateRunRequestSchema = v.strictObject({
 	 * associated with the assistant. If not, the model associated with the
 	 * assistant will be used.
 	 */
-	model: v.exactOptional(
+	model: v.optional(
 		v.nullable(
 			v.union([
 				v.string(),
@@ -8054,154 +8046,18 @@ export const exactCreateRunRequestSchema = v.strictObject({
 	 * [instructions](/docs/api-reference/assistants/createAssistant) of the
 	 * assistant. This is useful for modifying the behavior on a per-run basis.
 	 */
-	instructions: v.exactOptional(v.nullable(v.string())),
+	instructions: v.optional(v.nullable(v.string())),
 	/**
 	 * Appends additional instructions at the end of the instructions for the run.
 	 * This is useful for modifying the behavior on a per-run basis without
 	 * overriding other instructions.
 	 */
-	additional_instructions: v.exactOptional(v.nullable(v.string())),
-	/**
-	 * Adds additional messages to the thread before creating the run.
-	 */
-	additional_messages: v.exactOptional(
-		v.nullable(v.array(exactCreateMessageRequestSchema)),
-	),
-	/**
-	 * Override the tools the assistant can use for this run. This is useful for
-	 * modifying the behavior on a per-run basis.
-	 */
-	tools: v.exactOptional(
-		v.nullable(
-			v.pipe(
-				v.array(
-					v.union([exactAssistantToolsCodeSchema, v.unknown(), v.unknown()]),
-				),
-				v.maxLength(20),
-			),
-		),
-	),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-	/**
-	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-	 * will make the output more random, while lower values like 0.2 will make it
-	 * more focused and deterministic.
-	 */
-	temperature: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
-	),
-	/**
-	 * An alternative to sampling with temperature, called nucleus sampling, where
-	 * the model considers the results of the tokens with top_p probability mass.
-	 * So 0.1 means only the tokens comprising the top 10% probability mass are
-	 * considered.
-	 *
-	 * We generally recommend altering this or temperature but not both.
-	 */
-	top_p: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
-	),
-	/**
-	 * If `true`, returns a stream of events that happen during the Run as
-	 * server-sent events, terminating when the Run enters a terminal state with a
-	 * `data: [DONE]` message.
-	 */
-	stream: v.exactOptional(v.nullable(v.boolean())),
-	/**
-	 * The maximum number of prompt tokens that may be used over the course of the
-	 * run. The run will make a best effort to use only the number of prompt
-	 * tokens specified, across multiple turns of the run. If the run exceeds the
-	 * number of prompt tokens specified, the run will end with status
-	 * `incomplete`. See `incomplete_details` for more info.
-	 */
-	max_prompt_tokens: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
-	),
-	/**
-	 * The maximum number of completion tokens that may be used over the course of
-	 * the run. The run will make a best effort to use only the number of
-	 * completion tokens specified, across multiple turns of the run. If the run
-	 * exceeds the number of completion tokens specified, the run will end with
-	 * status `incomplete`. See `incomplete_details` for more info.
-	 */
-	max_completion_tokens: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
-	),
-	truncation_strategy: v.exactOptional(exactTruncationObjectSchema),
-	tool_choice: v.exactOptional(exactAssistantsApiToolChoiceOptionSchema),
-	parallel_tool_calls: v.exactOptional(exactParallelToolCallsSchema),
-	response_format: v.exactOptional(
-		exactAssistantsApiResponseFormatOptionSchema,
-	),
-});
-export const createRunRequestSchema = v.strictObject({
-	/**
-	 * The ID of the [assistant](/docs/api-reference/assistants) to use to execute
-	 * this run.
-	 */
-	assistant_id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
-	 * this run. If a value is provided here, it will override the model
-	 * associated with the assistant. If not, the model associated with the
-	 * assistant will be used.
-	 */
-	model: v.optional(
-		v.nullable(
-			v.union([
-				v.pipe(v.string(), v.trim()),
-				v.picklist([
-					"gpt-4o",
-					"gpt-4o-2024-08-06",
-					"gpt-4o-2024-05-13",
-					"gpt-4o-2024-08-06",
-					"gpt-4o-mini",
-					"gpt-4o-mini-2024-07-18",
-					"gpt-4-turbo",
-					"gpt-4-turbo-2024-04-09",
-					"gpt-4-0125-preview",
-					"gpt-4-turbo-preview",
-					"gpt-4-1106-preview",
-					"gpt-4-vision-preview",
-					"gpt-4",
-					"gpt-4-0314",
-					"gpt-4-0613",
-					"gpt-4-32k",
-					"gpt-4-32k-0314",
-					"gpt-4-32k-0613",
-					"gpt-3.5-turbo",
-					"gpt-3.5-turbo-16k",
-					"gpt-3.5-turbo-0613",
-					"gpt-3.5-turbo-1106",
-					"gpt-3.5-turbo-0125",
-					"gpt-3.5-turbo-16k-0613",
-				]),
-			]),
-		),
-	),
-	/**
-	 * Overrides the
-	 * [instructions](/docs/api-reference/assistants/createAssistant) of the
-	 * assistant. This is useful for modifying the behavior on a per-run basis.
-	 */
-	instructions: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-	/**
-	 * Appends additional instructions at the end of the instructions for the run.
-	 * This is useful for modifying the behavior on a per-run basis without
-	 * overriding other instructions.
-	 */
-	additional_instructions: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	additional_instructions: v.optional(v.nullable(v.string())),
 	/**
 	 * Adds additional messages to the thread before creating the run.
 	 */
 	additional_messages: v.optional(
-		v.nullable(v.array(createMessageRequestSchema)),
+		v.nullable(v.array(inputCreateMessageRequestSchema)),
 	),
 	/**
 	 * Override the tools the assistant can use for this run. This is useful for
@@ -8210,7 +8066,9 @@ export const createRunRequestSchema = v.strictObject({
 	tools: v.optional(
 		v.nullable(
 			v.pipe(
-				v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
+				v.array(
+					v.union([inputAssistantToolsCodeSchema, v.unknown(), v.unknown()]),
+				),
 				v.maxLength(20),
 			),
 		),
@@ -8267,10 +8125,144 @@ export const createRunRequestSchema = v.strictObject({
 	max_completion_tokens: v.optional(
 		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
 	),
-	truncation_strategy: v.optional(truncationObjectSchema),
-	tool_choice: v.optional(assistantsApiToolChoiceOptionSchema),
-	parallel_tool_calls: v.optional(parallelToolCallsSchema),
-	response_format: v.optional(assistantsApiResponseFormatOptionSchema),
+	truncation_strategy: v.optional(inputTruncationObjectSchema),
+	tool_choice: v.optional(inputAssistantsApiToolChoiceOptionSchema),
+	parallel_tool_calls: v.optional(inputParallelToolCallsSchema),
+	response_format: v.optional(inputAssistantsApiResponseFormatOptionSchema),
+});
+export const createRunRequestSchema = v.strictObject({
+	/**
+	 * The ID of the [assistant](/docs/api-reference/assistants) to use to execute
+	 * this run.
+	 */
+	assistant_id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The ID of the [Model](/docs/api-reference/models) to be used to execute
+	 * this run. If a value is provided here, it will override the model
+	 * associated with the assistant. If not, the model associated with the
+	 * assistant will be used.
+	 */
+	model: v.exactOptional(
+		v.nullable(
+			v.union([
+				v.pipe(v.string(), v.trim()),
+				v.picklist([
+					"gpt-4o",
+					"gpt-4o-2024-08-06",
+					"gpt-4o-2024-05-13",
+					"gpt-4o-2024-08-06",
+					"gpt-4o-mini",
+					"gpt-4o-mini-2024-07-18",
+					"gpt-4-turbo",
+					"gpt-4-turbo-2024-04-09",
+					"gpt-4-0125-preview",
+					"gpt-4-turbo-preview",
+					"gpt-4-1106-preview",
+					"gpt-4-vision-preview",
+					"gpt-4",
+					"gpt-4-0314",
+					"gpt-4-0613",
+					"gpt-4-32k",
+					"gpt-4-32k-0314",
+					"gpt-4-32k-0613",
+					"gpt-3.5-turbo",
+					"gpt-3.5-turbo-16k",
+					"gpt-3.5-turbo-0613",
+					"gpt-3.5-turbo-1106",
+					"gpt-3.5-turbo-0125",
+					"gpt-3.5-turbo-16k-0613",
+				]),
+			]),
+		),
+	),
+	/**
+	 * Overrides the
+	 * [instructions](/docs/api-reference/assistants/createAssistant) of the
+	 * assistant. This is useful for modifying the behavior on a per-run basis.
+	 */
+	instructions: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Appends additional instructions at the end of the instructions for the run.
+	 * This is useful for modifying the behavior on a per-run basis without
+	 * overriding other instructions.
+	 */
+	additional_instructions: v.exactOptional(
+		v.nullable(v.pipe(v.string(), v.trim())),
+	),
+	/**
+	 * Adds additional messages to the thread before creating the run.
+	 */
+	additional_messages: v.exactOptional(
+		v.nullable(v.array(createMessageRequestSchema)),
+	),
+	/**
+	 * Override the tools the assistant can use for this run. This is useful for
+	 * modifying the behavior on a per-run basis.
+	 */
+	tools: v.exactOptional(
+		v.nullable(
+			v.pipe(
+				v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
+				v.maxLength(20),
+			),
+		),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 */
+	temperature: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
+	),
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 */
+	top_p: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	),
+	/**
+	 * If `true`, returns a stream of events that happen during the Run as
+	 * server-sent events, terminating when the Run enters a terminal state with a
+	 * `data: [DONE]` message.
+	 */
+	stream: v.exactOptional(v.nullable(v.boolean())),
+	/**
+	 * The maximum number of prompt tokens that may be used over the course of the
+	 * run. The run will make a best effort to use only the number of prompt
+	 * tokens specified, across multiple turns of the run. If the run exceeds the
+	 * number of prompt tokens specified, the run will end with status
+	 * `incomplete`. See `incomplete_details` for more info.
+	 */
+	max_prompt_tokens: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
+	),
+	/**
+	 * The maximum number of completion tokens that may be used over the course of
+	 * the run. The run will make a best effort to use only the number of
+	 * completion tokens specified, across multiple turns of the run. If the run
+	 * exceeds the number of completion tokens specified, the run will end with
+	 * status `incomplete`. See `incomplete_details` for more info.
+	 */
+	max_completion_tokens: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(256))),
+	),
+	truncation_strategy: v.exactOptional(truncationObjectSchema),
+	tool_choice: v.exactOptional(assistantsApiToolChoiceOptionSchema),
+	parallel_tool_calls: v.exactOptional(parallelToolCallsSchema),
+	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
 });
 /**
  * The parameters the functions accepts, described as a JSON Schema object.
@@ -8280,41 +8272,20 @@ export const createRunRequestSchema = v.strictObject({
  *
  * Omitting `parameters` defines a function with an empty parameter list.
  */
-export const exactFunctionParametersSchema = v.record(v.string(), v.unknown());
-export const functionParametersSchema = exactFunctionParametersSchema;
-export const exactFunctionObjectSchema = v.strictObject({
+export const inputFunctionParametersSchema = v.record(v.string(), v.unknown());
+export const functionParametersSchema = inputFunctionParametersSchema;
+export const inputFunctionObjectSchema = v.strictObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
 	 */
-	description: v.exactOptional(v.string()),
+	description: v.optional(v.string()),
 	/**
 	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
 	 * underscores and dashes, with a maximum length of 64.
 	 */
 	name: v.string(),
-	parameters: v.exactOptional(exactFunctionParametersSchema),
-	/**
-	 * Whether to enable strict schema adherence when generating the function
-	 * call. If set to true, the model will follow the exact schema defined in the
-	 * `parameters` field. Only a subset of JSON Schema is supported when `strict`
-	 * is `true`. Learn more about Structured Outputs in the [function calling
-	 * guide](docs/guides/function-calling).
-	 */
-	strict: v.exactOptional(v.nullable(v.boolean())),
-});
-export const functionObjectSchema = v.strictObject({
-	/**
-	 * A description of what the function does, used by the model to choose when
-	 * and how to call the function.
-	 */
-	description: v.optional(v.pipe(v.string(), v.trim())),
-	/**
-	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
-	 * underscores and dashes, with a maximum length of 64.
-	 */
-	name: v.pipe(v.string(), v.trim()),
-	parameters: v.optional(functionParametersSchema),
+	parameters: v.optional(inputFunctionParametersSchema),
 	/**
 	 * Whether to enable strict schema adherence when generating the function
 	 * call. If set to true, the model will follow the exact schema defined in the
@@ -8324,14 +8295,35 @@ export const functionObjectSchema = v.strictObject({
 	 */
 	strict: v.optional(v.nullable(v.boolean())),
 });
-export const exactAssistantToolsFunctionSchema = v.strictObject({
+export const functionObjectSchema = v.strictObject({
+	/**
+	 * A description of what the function does, used by the model to choose when
+	 * and how to call the function.
+	 */
+	description: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
+	 * underscores and dashes, with a maximum length of 64.
+	 */
+	name: v.pipe(v.string(), v.trim()),
+	parameters: v.exactOptional(functionParametersSchema),
+	/**
+	 * Whether to enable strict schema adherence when generating the function
+	 * call. If set to true, the model will follow the exact schema defined in the
+	 * `parameters` field. Only a subset of JSON Schema is supported when `strict`
+	 * is `true`. Learn more about Structured Outputs in the [function calling
+	 * guide](docs/guides/function-calling).
+	 */
+	strict: v.exactOptional(v.nullable(v.boolean())),
+});
+export const inputAssistantToolsFunctionSchema = v.strictObject({
 	/**
 	 * The type of tool being defined: `function`
 	 */
 	type: v.picklist(["function"]),
-	function: exactFunctionObjectSchema,
+	function: inputFunctionObjectSchema,
 });
-export const assistantToolsFunctionSchema = exactAssistantToolsFunctionSchema;
+export const assistantToolsFunctionSchema = inputAssistantToolsFunctionSchema;
 /**
  * The ranking options for the file search. If not specified, the file search
  * tool will use the `auto` ranker and a score_threshold of 0.
@@ -8341,19 +8333,7 @@ export const assistantToolsFunctionSchema = exactAssistantToolsFunctionSchema;
  * for more information.
  * @title File search tool call ranking options
  */
-export const exactFileSearchRankingOptionsSchema = v.strictObject({
-	/**
-	 * The ranker to use for the file search. If not specified will use the `auto`
-	 * ranker.
-	 */
-	ranker: v.exactOptional(v.picklist(["auto", "default_2024_08_21"])),
-	/**
-	 * The score threshold for the file search. All values must be a floating
-	 * point number between 0 and 1.
-	 */
-	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-});
-export const fileSearchRankingOptionsSchema = v.strictObject({
+export const inputFileSearchRankingOptionsSchema = v.strictObject({
 	/**
 	 * The ranker to use for the file search. If not specified will use the `auto`
 	 * ranker.
@@ -8365,34 +8345,19 @@ export const fileSearchRankingOptionsSchema = v.strictObject({
 	 */
 	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
 });
-export const exactAssistantToolsFileSearchSchema = v.strictObject({
+export const fileSearchRankingOptionsSchema = v.strictObject({
 	/**
-	 * The type of tool being defined: `file_search`
+	 * The ranker to use for the file search. If not specified will use the `auto`
+	 * ranker.
 	 */
-	type: v.picklist(["file_search"]),
+	ranker: v.exactOptional(v.picklist(["auto", "default_2024_08_21"])),
 	/**
-	 * Overrides for the file search tool.
+	 * The score threshold for the file search. All values must be a floating
+	 * point number between 0 and 1.
 	 */
-	file_search: v.exactOptional(
-		v.strictObject({
-			/**
-			 * The maximum number of results the file search tool should output. The
-			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
-			 * should be between 1 and 50 inclusive.
-			 *
-			 * Note that the file search tool may output fewer than `max_num_results`
-			 * results. See the [file search tool
-			 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-			 * for more information.
-			 */
-			max_num_results: v.exactOptional(
-				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
-			),
-			ranking_options: v.exactOptional(exactFileSearchRankingOptionsSchema),
-		}),
-	),
+	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
 });
-export const assistantToolsFileSearchSchema = v.strictObject({
+export const inputAssistantToolsFileSearchSchema = v.strictObject({
 	/**
 	 * The type of tool being defined: `file_search`
 	 */
@@ -8415,7 +8380,34 @@ export const assistantToolsFileSearchSchema = v.strictObject({
 			max_num_results: v.optional(
 				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
 			),
-			ranking_options: v.optional(fileSearchRankingOptionsSchema),
+			ranking_options: v.optional(inputFileSearchRankingOptionsSchema),
+		}),
+	),
+});
+export const assistantToolsFileSearchSchema = v.strictObject({
+	/**
+	 * The type of tool being defined: `file_search`
+	 */
+	type: v.picklist(["file_search"]),
+	/**
+	 * Overrides for the file search tool.
+	 */
+	file_search: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The maximum number of results the file search tool should output. The
+			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
+			 * should be between 1 and 50 inclusive.
+			 *
+			 * Note that the file search tool may output fewer than `max_num_results`
+			 * results. See the [file search tool
+			 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+			 * for more information.
+			 */
+			max_num_results: v.exactOptional(
+				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
+			),
+			ranking_options: v.exactOptional(fileSearchRankingOptionsSchema),
 		}),
 	),
 });
@@ -8423,7 +8415,7 @@ export const assistantToolsFileSearchSchema = v.strictObject({
  * Represents an `assistant` that can call the model and use tools.
  * @title Assistant
  */
-export const exactAssistantObjectSchema = v.strictObject({
+export const inputAssistantObjectSchema = v.strictObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -8464,9 +8456,9 @@ export const exactAssistantObjectSchema = v.strictObject({
 	tools: v.pipe(
 		v.array(
 			v.union([
-				exactAssistantToolsCodeSchema,
-				exactAssistantToolsFileSearchSchema,
-				exactAssistantToolsFunctionSchema,
+				inputAssistantToolsCodeSchema,
+				inputAssistantToolsFileSearchSchema,
+				inputAssistantToolsFunctionSchema,
 			]),
 		),
 		v.maxLength(128),
@@ -8477,29 +8469,27 @@ export const exactAssistantObjectSchema = v.strictObject({
 	 * requires a list of file IDs, while the `file_search` tool requires a list
 	 * of vector store IDs.
 	 */
-	tool_resources: v.exactOptional(
+	tool_resources: v.optional(
 		v.nullable(
 			v.strictObject({
-				code_interpreter: v.exactOptional(
+				code_interpreter: v.optional(
 					v.strictObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter`` tool. There can be a maximum of 20 files associated
 						 * with the tool.
 						 */
-						file_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(20)),
-						),
+						file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
 					}),
 				),
-				file_search: v.exactOptional(
+				file_search: v.optional(
 					v.strictObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
 						 * attached to the assistant.
 						 */
-						vector_store_ids: v.exactOptional(
+						vector_store_ids: v.optional(
 							v.pipe(v.array(v.string()), v.maxLength(1)),
 						),
 					}),
@@ -8519,7 +8509,7 @@ export const exactAssistantObjectSchema = v.strictObject({
 	 * will make the output more random, while lower values like 0.2 will make it
 	 * more focused and deterministic.
 	 */
-	temperature: v.exactOptional(
+	temperature: v.optional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
 	),
 	/**
@@ -8530,12 +8520,10 @@ export const exactAssistantObjectSchema = v.strictObject({
 	 *
 	 * We generally recommend altering this or temperature but not both.
 	 */
-	top_p: v.exactOptional(
+	top_p: v.optional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
 	),
-	response_format: v.exactOptional(
-		exactAssistantsApiResponseFormatOptionSchema,
-	),
+	response_format: v.optional(inputAssistantsApiResponseFormatOptionSchema),
 });
 export const assistantObjectSchema = v.strictObject({
 	/**
@@ -8591,29 +8579,29 @@ export const assistantObjectSchema = v.strictObject({
 	 * requires a list of file IDs, while the `file_search` tool requires a list
 	 * of vector store IDs.
 	 */
-	tool_resources: v.optional(
+	tool_resources: v.exactOptional(
 		v.nullable(
 			v.strictObject({
-				code_interpreter: v.optional(
+				code_interpreter: v.exactOptional(
 					v.strictObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter`` tool. There can be a maximum of 20 files associated
 						 * with the tool.
 						 */
-						file_ids: v.optional(
+						file_ids: v.exactOptional(
 							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
 						),
 					}),
 				),
-				file_search: v.optional(
+				file_search: v.exactOptional(
 					v.strictObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
 						 * attached to the assistant.
 						 */
-						vector_store_ids: v.optional(
+						vector_store_ids: v.exactOptional(
 							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
 						),
 					}),
@@ -8633,126 +8621,6 @@ export const assistantObjectSchema = v.strictObject({
 	 * will make the output more random, while lower values like 0.2 will make it
 	 * more focused and deterministic.
 	 */
-	temperature: v.optional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
-	),
-	/**
-	 * An alternative to sampling with temperature, called nucleus sampling, where
-	 * the model considers the results of the tokens with top_p probability mass.
-	 * So 0.1 means only the tokens comprising the top 10% probability mass are
-	 * considered.
-	 *
-	 * We generally recommend altering this or temperature but not both.
-	 */
-	top_p: v.optional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
-	),
-	response_format: v.optional(assistantsApiResponseFormatOptionSchema),
-});
-export const exactListAssistantsResponseSchema = v.strictObject({
-	object: v.string(),
-	data: v.array(exactAssistantObjectSchema),
-	first_id: v.string(),
-	last_id: v.string(),
-	has_more: v.boolean(),
-});
-export const listAssistantsResponseSchema = v.strictObject({
-	object: v.pipe(v.string(), v.trim()),
-	data: v.array(assistantObjectSchema),
-	first_id: v.pipe(v.string(), v.trim()),
-	last_id: v.pipe(v.string(), v.trim()),
-	has_more: v.boolean(),
-});
-export const exactModifyAssistantRequestSchema = v.strictObject({
-	/**
-	 * ID of the model to use. You can use the [List
-	 * models](/docs/api-reference/models/list) API to see all of your available
-	 * models, or see our [Model overview](/docs/models/overview) for descriptions
-	 * of them.
-	 */
-	model: v.exactOptional(v.union([v.string()])),
-	/**
-	 * The name of the assistant. The maximum length is 256 characters.
-	 */
-	name: v.exactOptional(v.nullable(v.pipe(v.string(), v.maxLength(256)))),
-	/**
-	 * The description of the assistant. The maximum length is 512 characters.
-	 */
-	description: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.maxLength(512))),
-	),
-	/**
-	 * The system instructions that the assistant uses. The maximum length is
-	 * 256,000 characters.
-	 */
-	instructions: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.maxLength(256000))),
-	),
-	/**
-	 * A list of tool enabled on the assistant. There can be a maximum of 128
-	 * tools per assistant. Tools can be of types `code_interpreter`,
-	 * `file_search`, or `function`.
-	 */
-	tools: v.exactOptional(
-		v.pipe(
-			v.array(
-				v.union([
-					exactAssistantToolsCodeSchema,
-					exactAssistantToolsFileSearchSchema,
-					exactAssistantToolsFunctionSchema,
-				]),
-			),
-			v.maxLength(128),
-		),
-	),
-	/**
-	 * A set of resources that are used by the assistant's tools. The resources
-	 * are specific to the type of tool. For example, the `code_interpreter` tool
-	 * requires a list of file IDs, while the `file_search` tool requires a list
-	 * of vector store IDs.
-	 */
-	tool_resources: v.exactOptional(
-		v.nullable(
-			v.strictObject({
-				code_interpreter: v.exactOptional(
-					v.strictObject({
-						/**
-						 * Overrides the list of [file](/docs/api-reference/files) IDs made available
-						 * to the `code_interpreter` tool. There can be a maximum of 20 files
-						 * associated with the tool.
-						 */
-						file_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(20)),
-						),
-					}),
-				),
-				file_search: v.exactOptional(
-					v.strictObject({
-						/**
-						 * Overrides the [vector store](/docs/api-reference/vector-stores/object)
-						 * attached to this assistant. There can be a maximum of 1 vector store
-						 * attached to the assistant.
-						 */
-						vector_store_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(1)),
-						),
-					}),
-				),
-			}),
-		),
-	),
-	/**
-	 * Set of 16 key-value pairs that can be attached to an object. This can be
-	 * useful for storing additional information about the object in a structured
-	 * format. Keys can be a maximum of 64 characters long and values can be a
-	 * maximum of 512 characters long.
-	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-	/**
-	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-	 * will make the output more random, while lower values like 0.2 will make it
-	 * more focused and deterministic.
-	 */
 	temperature: v.exactOptional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
 	),
@@ -8767,35 +8635,43 @@ export const exactModifyAssistantRequestSchema = v.strictObject({
 	top_p: v.exactOptional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
 	),
-	response_format: v.exactOptional(
-		exactAssistantsApiResponseFormatOptionSchema,
-	),
+	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
 });
-export const modifyAssistantRequestSchema = v.strictObject({
+export const inputListAssistantsResponseSchema = v.strictObject({
+	object: v.string(),
+	data: v.array(inputAssistantObjectSchema),
+	first_id: v.string(),
+	last_id: v.string(),
+	has_more: v.boolean(),
+});
+export const listAssistantsResponseSchema = v.strictObject({
+	object: v.pipe(v.string(), v.trim()),
+	data: v.array(assistantObjectSchema),
+	first_id: v.pipe(v.string(), v.trim()),
+	last_id: v.pipe(v.string(), v.trim()),
+	has_more: v.boolean(),
+});
+export const inputModifyAssistantRequestSchema = v.strictObject({
 	/**
 	 * ID of the model to use. You can use the [List
 	 * models](/docs/api-reference/models/list) API to see all of your available
 	 * models, or see our [Model overview](/docs/models/overview) for descriptions
 	 * of them.
 	 */
-	model: v.optional(v.union([v.pipe(v.string(), v.trim())])),
+	model: v.optional(v.union([v.string()])),
 	/**
 	 * The name of the assistant. The maximum length is 256 characters.
 	 */
-	name: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256)))),
+	name: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(256)))),
 	/**
 	 * The description of the assistant. The maximum length is 512 characters.
 	 */
-	description: v.optional(
-		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(512))),
-	),
+	description: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(512)))),
 	/**
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.optional(
-		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256000))),
-	),
+	instructions: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(256000)))),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -8805,9 +8681,9 @@ export const modifyAssistantRequestSchema = v.strictObject({
 		v.pipe(
 			v.array(
 				v.union([
-					assistantToolsCodeSchema,
-					assistantToolsFileSearchSchema,
-					assistantToolsFunctionSchema,
+					inputAssistantToolsCodeSchema,
+					inputAssistantToolsFileSearchSchema,
+					inputAssistantToolsFunctionSchema,
 				]),
 			),
 			v.maxLength(128),
@@ -8829,9 +8705,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 						 * to the `code_interpreter` tool. There can be a maximum of 20 files
 						 * associated with the tool.
 						 */
-						file_ids: v.optional(
-							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
-						),
+						file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
 					}),
 				),
 				file_search: v.optional(
@@ -8842,7 +8716,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 						 * attached to the assistant.
 						 */
 						vector_store_ids: v.optional(
-							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
+							v.pipe(v.array(v.string()), v.maxLength(1)),
 						),
 					}),
 				),
@@ -8875,9 +8749,117 @@ export const modifyAssistantRequestSchema = v.strictObject({
 	top_p: v.optional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
 	),
-	response_format: v.optional(assistantsApiResponseFormatOptionSchema),
+	response_format: v.optional(inputAssistantsApiResponseFormatOptionSchema),
 });
-export const exactCreateAssistantRequestSchema = v.strictObject({
+export const modifyAssistantRequestSchema = v.strictObject({
+	/**
+	 * ID of the model to use. You can use the [List
+	 * models](/docs/api-reference/models/list) API to see all of your available
+	 * models, or see our [Model overview](/docs/models/overview) for descriptions
+	 * of them.
+	 */
+	model: v.exactOptional(v.union([v.pipe(v.string(), v.trim())])),
+	/**
+	 * The name of the assistant. The maximum length is 256 characters.
+	 */
+	name: v.exactOptional(
+		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256))),
+	),
+	/**
+	 * The description of the assistant. The maximum length is 512 characters.
+	 */
+	description: v.exactOptional(
+		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(512))),
+	),
+	/**
+	 * The system instructions that the assistant uses. The maximum length is
+	 * 256,000 characters.
+	 */
+	instructions: v.exactOptional(
+		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256000))),
+	),
+	/**
+	 * A list of tool enabled on the assistant. There can be a maximum of 128
+	 * tools per assistant. Tools can be of types `code_interpreter`,
+	 * `file_search`, or `function`.
+	 */
+	tools: v.exactOptional(
+		v.pipe(
+			v.array(
+				v.union([
+					assistantToolsCodeSchema,
+					assistantToolsFileSearchSchema,
+					assistantToolsFunctionSchema,
+				]),
+			),
+			v.maxLength(128),
+		),
+	),
+	/**
+	 * A set of resources that are used by the assistant's tools. The resources
+	 * are specific to the type of tool. For example, the `code_interpreter` tool
+	 * requires a list of file IDs, while the `file_search` tool requires a list
+	 * of vector store IDs.
+	 */
+	tool_resources: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				code_interpreter: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Overrides the list of [file](/docs/api-reference/files) IDs made available
+						 * to the `code_interpreter` tool. There can be a maximum of 20 files
+						 * associated with the tool.
+						 */
+						file_ids: v.exactOptional(
+							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
+						),
+					}),
+				),
+				file_search: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Overrides the [vector store](/docs/api-reference/vector-stores/object)
+						 * attached to this assistant. There can be a maximum of 1 vector store
+						 * attached to the assistant.
+						 */
+						vector_store_ids: v.exactOptional(
+							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(1)),
+						),
+					}),
+				),
+			}),
+		),
+	),
+	/**
+	 * Set of 16 key-value pairs that can be attached to an object. This can be
+	 * useful for storing additional information about the object in a structured
+	 * format. Keys can be a maximum of 64 characters long and values can be a
+	 * maximum of 512 characters long.
+	 */
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 */
+	temperature: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
+	),
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or temperature but not both.
+	 */
+	top_p: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	),
+	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
+});
+export const inputCreateAssistantRequestSchema = v.strictObject({
 	/**
 	 * ID of the model to use. You can use the [List
 	 * models](/docs/api-reference/models/list) API to see all of your available
@@ -8916,32 +8898,28 @@ export const exactCreateAssistantRequestSchema = v.strictObject({
 	/**
 	 * The name of the assistant. The maximum length is 256 characters.
 	 */
-	name: v.exactOptional(v.nullable(v.pipe(v.string(), v.maxLength(256)))),
+	name: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(256)))),
 	/**
 	 * The description of the assistant. The maximum length is 512 characters.
 	 */
-	description: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.maxLength(512))),
-	),
+	description: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(512)))),
 	/**
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.maxLength(256000))),
-	),
+	instructions: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(256000)))),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
 	 * `file_search`, or `function`.
 	 */
-	tools: v.exactOptional(
+	tools: v.optional(
 		v.pipe(
 			v.array(
 				v.union([
-					exactAssistantToolsCodeSchema,
-					exactAssistantToolsFileSearchSchema,
-					exactAssistantToolsFunctionSchema,
+					inputAssistantToolsCodeSchema,
+					inputAssistantToolsFileSearchSchema,
+					inputAssistantToolsFunctionSchema,
 				]),
 			),
 			v.maxLength(128),
@@ -8953,22 +8931,20 @@ export const exactCreateAssistantRequestSchema = v.strictObject({
 	 * requires a list of file IDs, while the `file_search` tool requires a list
 	 * of vector store IDs.
 	 */
-	tool_resources: v.exactOptional(
+	tool_resources: v.optional(
 		v.nullable(
 			v.strictObject({
-				code_interpreter: v.exactOptional(
+				code_interpreter: v.optional(
 					v.strictObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
 						 * the tool.
 						 */
-						file_ids: v.exactOptional(
-							v.pipe(v.array(v.string()), v.maxLength(20)),
-						),
+						file_ids: v.optional(v.pipe(v.array(v.string()), v.maxLength(20))),
 					}),
 				),
-				file_search: v.exactOptional(
+				file_search: v.optional(
 					v.union([
 						v.record(v.string(), v.unknown()),
 						v.record(v.string(), v.unknown()),
@@ -8983,13 +8959,13 @@ export const exactCreateAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
 	 * more focused and deterministic.
 	 */
-	temperature: v.exactOptional(
+	temperature: v.optional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
 	),
 	/**
@@ -9000,12 +8976,10 @@ export const exactCreateAssistantRequestSchema = v.strictObject({
 	 *
 	 * We generally recommend altering this or temperature but not both.
 	 */
-	top_p: v.exactOptional(
+	top_p: v.optional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
 	),
-	response_format: v.exactOptional(
-		exactAssistantsApiResponseFormatOptionSchema,
-	),
+	response_format: v.optional(inputAssistantsApiResponseFormatOptionSchema),
 });
 export const createAssistantRequestSchema = v.strictObject({
 	/**
@@ -9046,18 +9020,20 @@ export const createAssistantRequestSchema = v.strictObject({
 	/**
 	 * The name of the assistant. The maximum length is 256 characters.
 	 */
-	name: v.optional(v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256)))),
+	name: v.exactOptional(
+		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256))),
+	),
 	/**
 	 * The description of the assistant. The maximum length is 512 characters.
 	 */
-	description: v.optional(
+	description: v.exactOptional(
 		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(512))),
 	),
 	/**
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.optional(
+	instructions: v.exactOptional(
 		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256000))),
 	),
 	/**
@@ -9065,7 +9041,7 @@ export const createAssistantRequestSchema = v.strictObject({
 	 * tools per assistant. Tools can be of types `code_interpreter`,
 	 * `file_search`, or `function`.
 	 */
-	tools: v.optional(
+	tools: v.exactOptional(
 		v.pipe(
 			v.array(
 				v.union([
@@ -9083,22 +9059,22 @@ export const createAssistantRequestSchema = v.strictObject({
 	 * requires a list of file IDs, while the `file_search` tool requires a list
 	 * of vector store IDs.
 	 */
-	tool_resources: v.optional(
+	tool_resources: v.exactOptional(
 		v.nullable(
 			v.strictObject({
-				code_interpreter: v.optional(
+				code_interpreter: v.exactOptional(
 					v.strictObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
 						 * the tool.
 						 */
-						file_ids: v.optional(
+						file_ids: v.exactOptional(
 							v.pipe(v.array(v.pipe(v.string(), v.trim())), v.maxLength(20)),
 						),
 					}),
 				),
-				file_search: v.optional(
+				file_search: v.exactOptional(
 					v.union([
 						v.record(v.string(), v.unknown()),
 						v.record(v.string(), v.unknown()),
@@ -9113,13 +9089,13 @@ export const createAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
 	 * more focused and deterministic.
 	 */
-	temperature: v.optional(
+	temperature: v.exactOptional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
 	),
 	/**
@@ -9130,78 +9106,47 @@ export const createAssistantRequestSchema = v.strictObject({
 	 *
 	 * We generally recommend altering this or temperature but not both.
 	 */
-	top_p: v.optional(
+	top_p: v.exactOptional(
 		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
 	),
-	response_format: v.optional(assistantsApiResponseFormatOptionSchema),
+	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
 });
-export const exactChatCompletionFunctionsSchema = v.strictObject({
+export const inputChatCompletionFunctionsSchema = v.strictObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
 	 */
-	description: v.exactOptional(v.string()),
+	description: v.optional(v.string()),
 	/**
 	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
 	 * underscores and dashes, with a maximum length of 64.
 	 */
 	name: v.string(),
-	parameters: v.exactOptional(exactFunctionParametersSchema),
+	parameters: v.optional(inputFunctionParametersSchema),
 });
 export const chatCompletionFunctionsSchema = v.strictObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
 	 */
-	description: v.optional(v.pipe(v.string(), v.trim())),
+	description: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
 	 * underscores and dashes, with a maximum length of 64.
 	 */
 	name: v.pipe(v.string(), v.trim()),
-	parameters: v.optional(functionParametersSchema),
+	parameters: v.exactOptional(functionParametersSchema),
 });
-export const exactChatCompletionToolSchema = v.strictObject({
+export const inputChatCompletionToolSchema = v.strictObject({
 	/**
 	 * The type of the tool. Currently, only `function` is supported.
 	 */
 	type: v.picklist(["function"]),
-	function: exactFunctionObjectSchema,
+	function: inputFunctionObjectSchema,
 });
-export const chatCompletionToolSchema = exactChatCompletionToolSchema;
+export const chatCompletionToolSchema = inputChatCompletionToolSchema;
 /** The per-line training example of a fine-tuning input file for chat models */
-export const exactFinetuneChatRequestInputSchema = v.strictObject({
-	messages: v.exactOptional(
-		v.pipe(
-			v.array(
-				v.union([
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-				]),
-			),
-			v.minLength(1),
-		),
-	),
-	/**
-	 * A list of tools the model may generate JSON inputs for.
-	 */
-	tools: v.exactOptional(v.array(exactChatCompletionToolSchema)),
-	parallel_tool_calls: v.exactOptional(exactParallelToolCallsSchema),
-	/**
-	 * A list of functions the model may generate JSON inputs for.
-	 */
-	functions: v.exactOptional(
-		v.pipe(
-			v.array(exactChatCompletionFunctionsSchema),
-			v.minLength(1),
-			v.maxLength(128),
-		),
-	),
-});
-export const finetuneChatRequestInputSchema = v.strictObject({
+export const inputFinetuneChatRequestInputSchema = v.strictObject({
 	messages: v.optional(
 		v.pipe(
 			v.array(
@@ -9219,12 +9164,43 @@ export const finetuneChatRequestInputSchema = v.strictObject({
 	/**
 	 * A list of tools the model may generate JSON inputs for.
 	 */
-	tools: v.optional(v.array(chatCompletionToolSchema)),
-	parallel_tool_calls: v.optional(parallelToolCallsSchema),
+	tools: v.optional(v.array(inputChatCompletionToolSchema)),
+	parallel_tool_calls: v.optional(inputParallelToolCallsSchema),
 	/**
 	 * A list of functions the model may generate JSON inputs for.
 	 */
 	functions: v.optional(
+		v.pipe(
+			v.array(inputChatCompletionFunctionsSchema),
+			v.minLength(1),
+			v.maxLength(128),
+		),
+	),
+});
+export const finetuneChatRequestInputSchema = v.strictObject({
+	messages: v.exactOptional(
+		v.pipe(
+			v.array(
+				v.union([
+					v.unknown(),
+					v.unknown(),
+					v.unknown(),
+					v.unknown(),
+					v.unknown(),
+				]),
+			),
+			v.minLength(1),
+		),
+	),
+	/**
+	 * A list of tools the model may generate JSON inputs for.
+	 */
+	tools: v.exactOptional(v.array(chatCompletionToolSchema)),
+	parallel_tool_calls: v.exactOptional(parallelToolCallsSchema),
+	/**
+	 * A list of functions the model may generate JSON inputs for.
+	 */
+	functions: v.exactOptional(
 		v.pipe(
 			v.array(chatCompletionFunctionsSchema),
 			v.minLength(1),
@@ -9236,7 +9212,7 @@ export const finetuneChatRequestInputSchema = v.strictObject({
  * The `File` object represents a document that has been uploaded to OpenAI.
  * @title OpenAIFile
  */
-export const exactOpenAiFileSchema = v.strictObject({
+export const inputOpenAiFileSchema = v.strictObject({
 	/**
 	 * The file identifier, which can be referenced in the API endpoints.
 	 */
@@ -9280,7 +9256,7 @@ export const exactOpenAiFileSchema = v.strictObject({
 	 * Deprecated. For details on why a fine-tuning training file failed
 	 * validation, see the `error` field on `fine_tuning.job`.
 	 */
-	status_details: v.exactOptional(v.string()),
+	status_details: v.optional(v.string()),
 });
 export const openAiFileSchema = v.strictObject({
 	/**
@@ -9326,13 +9302,13 @@ export const openAiFileSchema = v.strictObject({
 	 * Deprecated. For details on why a fine-tuning training file failed
 	 * validation, see the `error` field on `fine_tuning.job`.
 	 */
-	status_details: v.optional(v.pipe(v.string(), v.trim())),
+	status_details: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /**
  * The Upload object can accept byte chunks in the form of Parts.
  * @title Upload
  */
-export const exactUploadSchema = v.strictObject({
+export const inputUploadSchema = v.strictObject({
 	/**
 	 * The Upload unique identifier, which can be referenced in API endpoints.
 	 */
@@ -9366,8 +9342,8 @@ export const exactUploadSchema = v.strictObject({
 	/**
 	 * The object type, which is always "upload".
 	 */
-	object: v.exactOptional(v.picklist(["upload"])),
-	file: v.exactOptional(exactOpenAiFileSchema),
+	object: v.optional(v.picklist(["upload"])),
+	file: v.optional(inputOpenAiFileSchema),
 });
 export const uploadSchema = v.strictObject({
 	/**
@@ -9403,10 +9379,10 @@ export const uploadSchema = v.strictObject({
 	/**
 	 * The object type, which is always "upload".
 	 */
-	object: v.optional(v.picklist(["upload"])),
-	file: v.optional(openAiFileSchema),
+	object: v.exactOptional(v.picklist(["upload"])),
+	file: v.exactOptional(openAiFileSchema),
 });
-export const exactTranscriptionSegmentSchema = v.strictObject({
+export const inputTranscriptionSegmentSchema = v.strictObject({
 	/**
 	 * Unique identifier of the segment.
 	 */
@@ -9496,7 +9472,7 @@ export const transcriptionSegmentSchema = v.strictObject({
 	 */
 	no_speech_prob: v.number(),
 });
-export const exactCreateTranslationResponseVerboseJsonSchema = v.strictObject({
+export const inputCreateTranslationResponseVerboseJsonSchema = v.strictObject({
 	/**
 	 * The language of the output translation (always `english`).
 	 */
@@ -9512,7 +9488,7 @@ export const exactCreateTranslationResponseVerboseJsonSchema = v.strictObject({
 	/**
 	 * Segments of the translated text and their corresponding details.
 	 */
-	segments: v.exactOptional(v.array(exactTranscriptionSegmentSchema)),
+	segments: v.optional(v.array(inputTranscriptionSegmentSchema)),
 });
 export const createTranslationResponseVerboseJsonSchema = v.strictObject({
 	/**
@@ -9530,21 +9506,21 @@ export const createTranslationResponseVerboseJsonSchema = v.strictObject({
 	/**
 	 * Segments of the translated text and their corresponding details.
 	 */
-	segments: v.optional(v.array(transcriptionSegmentSchema)),
+	segments: v.exactOptional(v.array(transcriptionSegmentSchema)),
 });
 /**
  * The format of the output, in one of these options: `json`, `text`, `srt`,
  * `verbose_json`, or `vtt`.
  */
-export const exactAudioResponseFormatSchema = v.picklist([
+export const inputAudioResponseFormatSchema = v.picklist([
 	"json",
 	"text",
 	"srt",
 	"verbose_json",
 	"vtt",
 ]);
-export const audioResponseFormatSchema = exactAudioResponseFormatSchema;
-export const exactCreateTranslationRequestSchema = v.strictObject({
+export const audioResponseFormatSchema = inputAudioResponseFormatSchema;
+export const inputCreateTranslationRequestSchema = v.strictObject({
 	/**
 	 * The audio file object (not file name) translate, in one of these formats:
 	 * flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
@@ -9560,8 +9536,8 @@ export const exactCreateTranslationRequestSchema = v.strictObject({
 	 * segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in
 	 * English.
 	 */
-	prompt: v.exactOptional(v.string()),
-	response_format: v.exactOptional(exactAudioResponseFormatSchema),
+	prompt: v.optional(v.string()),
+	response_format: v.optional(inputAudioResponseFormatSchema),
 	/**
 	 * The sampling temperature, between 0 and 1. Higher values like 0.8 will make
 	 * the output more random, while lower values like 0.2 will make it more
@@ -9569,7 +9545,7 @@ export const exactCreateTranslationRequestSchema = v.strictObject({
 	 * probability](https://en.wikipedia.org/wiki/Log_probability) to
 	 * automatically increase the temperature until certain thresholds are hit.
 	 */
-	temperature: v.exactOptional(v.number()),
+	temperature: v.optional(v.number()),
 });
 export const createTranslationRequestSchema = v.strictObject({
 	/**
@@ -9587,8 +9563,8 @@ export const createTranslationRequestSchema = v.strictObject({
 	 * segment. The [prompt](/docs/guides/speech-to-text/prompting) should be in
 	 * English.
 	 */
-	prompt: v.optional(v.pipe(v.string(), v.trim())),
-	response_format: v.optional(audioResponseFormatSchema),
+	prompt: v.exactOptional(v.pipe(v.string(), v.trim())),
+	response_format: v.exactOptional(audioResponseFormatSchema),
 	/**
 	 * The sampling temperature, between 0 and 1. Higher values like 0.8 will make
 	 * the output more random, while lower values like 0.2 will make it more
@@ -9596,9 +9572,9 @@ export const createTranslationRequestSchema = v.strictObject({
 	 * probability](https://en.wikipedia.org/wiki/Log_probability) to
 	 * automatically increase the temperature until certain thresholds are hit.
 	 */
-	temperature: v.optional(v.number()),
+	temperature: v.exactOptional(v.number()),
 });
-export const exactTranscriptionWordSchema = v.strictObject({
+export const inputTranscriptionWordSchema = v.strictObject({
 	/**
 	 * The text content of the word.
 	 */
@@ -9630,7 +9606,7 @@ export const transcriptionWordSchema = v.strictObject({
  * Represents a verbose json transcription response returned by model, based
  * on the provided input.
  */
-export const exactCreateTranscriptionResponseVerboseJsonSchema = v.strictObject(
+export const inputCreateTranscriptionResponseVerboseJsonSchema = v.strictObject(
 	{
 		/**
 		 * The language of the input audio.
@@ -9647,11 +9623,11 @@ export const exactCreateTranscriptionResponseVerboseJsonSchema = v.strictObject(
 		/**
 		 * Extracted words and their corresponding timestamps.
 		 */
-		words: v.exactOptional(v.array(exactTranscriptionWordSchema)),
+		words: v.optional(v.array(inputTranscriptionWordSchema)),
 		/**
 		 * Segments of the transcribed text and their corresponding details.
 		 */
-		segments: v.exactOptional(v.array(exactTranscriptionSegmentSchema)),
+		segments: v.optional(v.array(inputTranscriptionSegmentSchema)),
 	},
 );
 export const createTranscriptionResponseVerboseJsonSchema = v.strictObject({
@@ -9670,13 +9646,13 @@ export const createTranscriptionResponseVerboseJsonSchema = v.strictObject({
 	/**
 	 * Extracted words and their corresponding timestamps.
 	 */
-	words: v.optional(v.array(transcriptionWordSchema)),
+	words: v.exactOptional(v.array(transcriptionWordSchema)),
 	/**
 	 * Segments of the transcribed text and their corresponding details.
 	 */
-	segments: v.optional(v.array(transcriptionSegmentSchema)),
+	segments: v.exactOptional(v.array(transcriptionSegmentSchema)),
 });
-export const exactCreateTranscriptionRequestSchema = v.strictObject({
+export const inputCreateTranscriptionRequestSchema = v.strictObject({
 	/**
 	 * The audio file object (not file name) to transcribe, in one of these
 	 * formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
@@ -9692,57 +9668,14 @@ export const exactCreateTranscriptionRequestSchema = v.strictObject({
 	 * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format
 	 * will improve accuracy and latency.
 	 */
-	language: v.exactOptional(v.string()),
+	language: v.optional(v.string()),
 	/**
 	 * An optional text to guide the model's style or continue a previous audio
 	 * segment. The [prompt](/docs/guides/speech-to-text/prompting) should match
 	 * the audio language.
 	 */
-	prompt: v.exactOptional(v.string()),
-	response_format: v.exactOptional(exactAudioResponseFormatSchema),
-	/**
-	 * The sampling temperature, between 0 and 1. Higher values like 0.8 will make
-	 * the output more random, while lower values like 0.2 will make it more
-	 * focused and deterministic. If set to 0, the model will use [log
-	 * probability](https://en.wikipedia.org/wiki/Log_probability) to
-	 * automatically increase the temperature until certain thresholds are hit.
-	 */
-	temperature: v.exactOptional(v.number()),
-	/**
-	 * The timestamp granularities to populate for this transcription.
-	 * `response_format` must be set `verbose_json` to use timestamp
-	 * granularities. Either or both of these options are supported: `word`, or
-	 * `segment`. Note: There is no additional latency for segment timestamps, but
-	 * generating word timestamps incurs additional latency.
-	 */
-	"timestamp_granularities[]": v.exactOptional(
-		v.array(v.picklist(["word", "segment"])),
-	),
-});
-export const createTranscriptionRequestSchema = v.strictObject({
-	/**
-	 * The audio file object (not file name) to transcribe, in one of these
-	 * formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
-	 */
-	file: v.string(),
-	/**
-	 * ID of the model to use. Only `whisper-1` (which is powered by our open
-	 * source Whisper V2 model) is currently available.
-	 */
-	model: v.union([v.pipe(v.string(), v.trim()), v.picklist(["whisper-1"])]),
-	/**
-	 * The language of the input audio. Supplying the input language in
-	 * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format
-	 * will improve accuracy and latency.
-	 */
-	language: v.optional(v.pipe(v.string(), v.trim())),
-	/**
-	 * An optional text to guide the model's style or continue a previous audio
-	 * segment. The [prompt](/docs/guides/speech-to-text/prompting) should match
-	 * the audio language.
-	 */
-	prompt: v.optional(v.pipe(v.string(), v.trim())),
-	response_format: v.optional(audioResponseFormatSchema),
+	prompt: v.optional(v.string()),
+	response_format: v.optional(inputAudioResponseFormatSchema),
 	/**
 	 * The sampling temperature, between 0 and 1. Higher values like 0.8 will make
 	 * the output more random, while lower values like 0.2 will make it more
@@ -9762,8 +9695,51 @@ export const createTranscriptionRequestSchema = v.strictObject({
 		v.array(v.picklist(["word", "segment"])),
 	),
 });
+export const createTranscriptionRequestSchema = v.strictObject({
+	/**
+	 * The audio file object (not file name) to transcribe, in one of these
+	 * formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
+	 */
+	file: v.string(),
+	/**
+	 * ID of the model to use. Only `whisper-1` (which is powered by our open
+	 * source Whisper V2 model) is currently available.
+	 */
+	model: v.union([v.pipe(v.string(), v.trim()), v.picklist(["whisper-1"])]),
+	/**
+	 * The language of the input audio. Supplying the input language in
+	 * [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format
+	 * will improve accuracy and latency.
+	 */
+	language: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * An optional text to guide the model's style or continue a previous audio
+	 * segment. The [prompt](/docs/guides/speech-to-text/prompting) should match
+	 * the audio language.
+	 */
+	prompt: v.exactOptional(v.pipe(v.string(), v.trim())),
+	response_format: v.exactOptional(audioResponseFormatSchema),
+	/**
+	 * The sampling temperature, between 0 and 1. Higher values like 0.8 will make
+	 * the output more random, while lower values like 0.2 will make it more
+	 * focused and deterministic. If set to 0, the model will use [log
+	 * probability](https://en.wikipedia.org/wiki/Log_probability) to
+	 * automatically increase the temperature until certain thresholds are hit.
+	 */
+	temperature: v.exactOptional(v.number()),
+	/**
+	 * The timestamp granularities to populate for this transcription.
+	 * `response_format` must be set `verbose_json` to use timestamp
+	 * granularities. Either or both of these options are supported: `word`, or
+	 * `segment`. Note: There is no additional latency for segment timestamps, but
+	 * generating word timestamps incurs additional latency.
+	 */
+	"timestamp_granularities[]": v.exactOptional(
+		v.array(v.picklist(["word", "segment"])),
+	),
+});
 /** Represents an embedding vector returned by embedding endpoint. */
-export const exactEmbeddingSchema = v.strictObject({
+export const inputEmbeddingSchema = v.strictObject({
 	/**
 	 * The index of the embedding in the list of embeddings.
 	 */
@@ -9779,12 +9755,12 @@ export const exactEmbeddingSchema = v.strictObject({
 	 */
 	object: v.picklist(["embedding"]),
 });
-export const embeddingSchema = exactEmbeddingSchema;
-export const exactCreateEmbeddingResponseSchema = v.strictObject({
+export const embeddingSchema = inputEmbeddingSchema;
+export const inputCreateEmbeddingResponseSchema = v.strictObject({
 	/**
 	 * The list of embeddings generated by the model.
 	 */
-	data: v.array(exactEmbeddingSchema),
+	data: v.array(inputEmbeddingSchema),
 	/**
 	 * The name of the model used to generate the embedding.
 	 */
@@ -9839,7 +9815,7 @@ export const createEmbeddingResponseSchema = v.strictObject({
  * fine-tuning job that is ready to use.
  * @title FineTuningJobCheckpoint
  */
-export const exactFineTuningJobCheckpointSchema = v.strictObject({
+export const inputFineTuningJobCheckpointSchema = v.strictObject({
 	/**
 	 * The checkpoint identifier, which can be referenced in the API endpoints.
 	 */
@@ -9860,13 +9836,13 @@ export const exactFineTuningJobCheckpointSchema = v.strictObject({
 	 * Metrics at the step number during the fine-tuning job.
 	 */
 	metrics: v.strictObject({
-		step: v.exactOptional(v.number()),
-		train_loss: v.exactOptional(v.number()),
-		train_mean_token_accuracy: v.exactOptional(v.number()),
-		valid_loss: v.exactOptional(v.number()),
-		valid_mean_token_accuracy: v.exactOptional(v.number()),
-		full_valid_loss: v.exactOptional(v.number()),
-		full_valid_mean_token_accuracy: v.exactOptional(v.number()),
+		step: v.optional(v.number()),
+		train_loss: v.optional(v.number()),
+		train_mean_token_accuracy: v.optional(v.number()),
+		valid_loss: v.optional(v.number()),
+		valid_mean_token_accuracy: v.optional(v.number()),
+		full_valid_loss: v.optional(v.number()),
+		full_valid_mean_token_accuracy: v.optional(v.number()),
 	}),
 	/**
 	 * The name of the fine-tuning job that this checkpoint was created from.
@@ -9898,13 +9874,13 @@ export const fineTuningJobCheckpointSchema = v.strictObject({
 	 * Metrics at the step number during the fine-tuning job.
 	 */
 	metrics: v.strictObject({
-		step: v.optional(v.number()),
-		train_loss: v.optional(v.number()),
-		train_mean_token_accuracy: v.optional(v.number()),
-		valid_loss: v.optional(v.number()),
-		valid_mean_token_accuracy: v.optional(v.number()),
-		full_valid_loss: v.optional(v.number()),
-		full_valid_mean_token_accuracy: v.optional(v.number()),
+		step: v.exactOptional(v.number()),
+		train_loss: v.exactOptional(v.number()),
+		train_mean_token_accuracy: v.exactOptional(v.number()),
+		valid_loss: v.exactOptional(v.number()),
+		valid_mean_token_accuracy: v.exactOptional(v.number()),
+		full_valid_loss: v.exactOptional(v.number()),
+		full_valid_mean_token_accuracy: v.exactOptional(v.number()),
 	}),
 	/**
 	 * The name of the fine-tuning job that this checkpoint was created from.
@@ -9915,22 +9891,22 @@ export const fineTuningJobCheckpointSchema = v.strictObject({
 	 */
 	object: v.picklist(["fine_tuning.job.checkpoint"]),
 });
-export const exactListFineTuningJobCheckpointsResponseSchema = v.strictObject({
-	data: v.array(exactFineTuningJobCheckpointSchema),
+export const inputListFineTuningJobCheckpointsResponseSchema = v.strictObject({
+	data: v.array(inputFineTuningJobCheckpointSchema),
 	object: v.picklist(["list"]),
-	first_id: v.exactOptional(v.nullable(v.string())),
-	last_id: v.exactOptional(v.nullable(v.string())),
+	first_id: v.optional(v.nullable(v.string())),
+	last_id: v.optional(v.nullable(v.string())),
 	has_more: v.boolean(),
 });
 export const listFineTuningJobCheckpointsResponseSchema = v.strictObject({
 	data: v.array(fineTuningJobCheckpointSchema),
 	object: v.picklist(["list"]),
-	first_id: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
-	last_id: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	first_id: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	last_id: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 	has_more: v.boolean(),
 });
 /** Fine-tuning job event object */
-export const exactFineTuningJobEventSchema = v.strictObject({
+export const inputFineTuningJobEventSchema = v.strictObject({
 	id: v.string(),
 	created_at: v.pipe(v.number(), v.integer()),
 	level: v.picklist(["info", "warn", "error"]),
@@ -9944,61 +9920,61 @@ export const fineTuningJobEventSchema = v.strictObject({
 	message: v.pipe(v.string(), v.trim()),
 	object: v.picklist(["fine_tuning.job.event"]),
 });
-export const exactListFineTuningJobEventsResponseSchema = v.strictObject({
-	data: v.array(exactFineTuningJobEventSchema),
+export const inputListFineTuningJobEventsResponseSchema = v.strictObject({
+	data: v.array(inputFineTuningJobEventSchema),
 	object: v.picklist(["list"]),
 });
 export const listFineTuningJobEventsResponseSchema =
-	exactListFineTuningJobEventsResponseSchema;
-export const exactListFilesResponseSchema = v.strictObject({
-	data: v.array(exactOpenAiFileSchema),
+	inputListFineTuningJobEventsResponseSchema;
+export const inputListFilesResponseSchema = v.strictObject({
+	data: v.array(inputOpenAiFileSchema),
 	object: v.picklist(["list"]),
 });
-export const listFilesResponseSchema = exactListFilesResponseSchema;
+export const listFilesResponseSchema = inputListFilesResponseSchema;
 /** Represents the url or the content of an image generated by the OpenAI API. */
-export const exactImageSchema = v.strictObject({
+export const inputImageSchema = v.strictObject({
 	/**
 	 * The base64-encoded JSON of the generated image, if `response_format` is
 	 * `b64_json`.
 	 */
-	b64_json: v.exactOptional(v.string()),
+	b64_json: v.optional(v.string()),
 	/**
 	 * The URL of the generated image, if `response_format` is `url` (default).
 	 */
-	url: v.exactOptional(v.string()),
+	url: v.optional(v.string()),
 	/**
 	 * The prompt that was used to generate the image, if there was any revision
 	 * to the prompt.
 	 */
-	revised_prompt: v.exactOptional(v.string()),
+	revised_prompt: v.optional(v.string()),
 });
 export const imageSchema = v.strictObject({
 	/**
 	 * The base64-encoded JSON of the generated image, if `response_format` is
 	 * `b64_json`.
 	 */
-	b64_json: v.optional(v.pipe(v.string(), v.trim())),
+	b64_json: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The URL of the generated image, if `response_format` is `url` (default).
 	 */
-	url: v.optional(v.pipe(v.string(), v.trim())),
+	url: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The prompt that was used to generate the image, if there was any revision
 	 * to the prompt.
 	 */
-	revised_prompt: v.optional(v.pipe(v.string(), v.trim())),
+	revised_prompt: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactImagesResponseSchema = v.strictObject({
+export const inputImagesResponseSchema = v.strictObject({
 	created: v.pipe(v.number(), v.integer()),
-	data: v.array(exactImageSchema),
+	data: v.array(inputImageSchema),
 });
-export const imagesResponseSchema = exactImagesResponseSchema;
+export const imagesResponseSchema = inputImagesResponseSchema;
 /**
  * The `fine_tuning.job` object represents a fine-tuning job that has been
  * created through the API.
  * @title FineTuningJob
  */
-export const exactFineTuningJobSchema = v.strictObject({
+export const inputFineTuningJobSchema = v.strictObject({
 	/**
 	 * The object identifier, which can be referenced in the API endpoints.
 	 */
@@ -10105,10 +10081,10 @@ export const exactFineTuningJobSchema = v.strictObject({
 	/**
 	 * A list of integrations to enable for this fine-tuning job.
 	 */
-	integrations: v.exactOptional(
+	integrations: v.optional(
 		v.nullable(
 			v.pipe(
-				v.array(v.union([exactFineTuningIntegrationSchema])),
+				v.array(v.union([inputFineTuningIntegrationSchema])),
 				v.maxLength(5),
 			),
 		),
@@ -10121,9 +10097,7 @@ export const exactFineTuningJobSchema = v.strictObject({
 	 * The Unix timestamp (in seconds) for when the fine-tuning job is estimated
 	 * to finish. The value will be null if the fine-tuning job is not running.
 	 */
-	estimated_finish: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer())),
-	),
+	estimated_finish: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
 });
 export const fineTuningJobSchema = v.strictObject({
 	/**
@@ -10232,7 +10206,7 @@ export const fineTuningJobSchema = v.strictObject({
 	/**
 	 * A list of integrations to enable for this fine-tuning job.
 	 */
-	integrations: v.optional(
+	integrations: v.exactOptional(
 		v.nullable(
 			v.pipe(v.array(v.union([fineTuningIntegrationSchema])), v.maxLength(5)),
 		),
@@ -10245,42 +10219,19 @@ export const fineTuningJobSchema = v.strictObject({
 	 * The Unix timestamp (in seconds) for when the fine-tuning job is estimated
 	 * to finish. The value will be null if the fine-tuning job is not running.
 	 */
-	estimated_finish: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+	estimated_finish: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer())),
+	),
 });
-export const exactListPaginatedFineTuningJobsResponseSchema = v.strictObject({
-	data: v.array(exactFineTuningJobSchema),
+export const inputListPaginatedFineTuningJobsResponseSchema = v.strictObject({
+	data: v.array(inputFineTuningJobSchema),
 	has_more: v.boolean(),
 	object: v.picklist(["list"]),
 });
 export const listPaginatedFineTuningJobsResponseSchema =
-	exactListPaginatedFineTuningJobsResponseSchema;
+	inputListPaginatedFineTuningJobsResponseSchema;
 /** Usage statistics for the completion request. */
-export const exactCompletionUsageSchema = v.strictObject({
-	/**
-	 * Number of tokens in the generated completion.
-	 */
-	completion_tokens: v.pipe(v.number(), v.integer()),
-	/**
-	 * Number of tokens in the prompt.
-	 */
-	prompt_tokens: v.pipe(v.number(), v.integer()),
-	/**
-	 * Total number of tokens used in the request (prompt + completion).
-	 */
-	total_tokens: v.pipe(v.number(), v.integer()),
-	/**
-	 * Breakdown of tokens used in a completion.
-	 */
-	completion_tokens_details: v.exactOptional(
-		v.strictObject({
-			/**
-			 * Tokens generated by the model for reasoning.
-			 */
-			reasoning_tokens: v.exactOptional(v.pipe(v.number(), v.integer())),
-		}),
-	),
-});
-export const completionUsageSchema = v.strictObject({
+export const inputCompletionUsageSchema = v.strictObject({
 	/**
 	 * Number of tokens in the generated completion.
 	 */
@@ -10305,11 +10256,36 @@ export const completionUsageSchema = v.strictObject({
 		}),
 	),
 });
+export const completionUsageSchema = v.strictObject({
+	/**
+	 * Number of tokens in the generated completion.
+	 */
+	completion_tokens: v.pipe(v.number(), v.integer()),
+	/**
+	 * Number of tokens in the prompt.
+	 */
+	prompt_tokens: v.pipe(v.number(), v.integer()),
+	/**
+	 * Total number of tokens used in the request (prompt + completion).
+	 */
+	total_tokens: v.pipe(v.number(), v.integer()),
+	/**
+	 * Breakdown of tokens used in a completion.
+	 */
+	completion_tokens_details: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Tokens generated by the model for reasoning.
+			 */
+			reasoning_tokens: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+});
 /**
  * Represents a chat completion response returned by model, based on the
  * provided input.
  */
-export const exactCreateChatCompletionFunctionResponseSchema = v.strictObject({
+export const inputCreateChatCompletionFunctionResponseSchema = v.strictObject({
 	/**
 	 * A unique identifier for the chat completion.
 	 */
@@ -10355,12 +10331,12 @@ export const exactCreateChatCompletionFunctionResponseSchema = v.strictObject({
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.exactOptional(v.string()),
+	system_fingerprint: v.optional(v.string()),
 	/**
 	 * The object type, which is always `chat.completion`.
 	 */
 	object: v.picklist(["chat.completion"]),
-	usage: v.exactOptional(exactCompletionUsageSchema),
+	usage: v.optional(inputCompletionUsageSchema),
 });
 export const createChatCompletionFunctionResponseSchema = v.strictObject({
 	/**
@@ -10408,18 +10384,18 @@ export const createChatCompletionFunctionResponseSchema = v.strictObject({
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.optional(v.pipe(v.string(), v.trim())),
+	system_fingerprint: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The object type, which is always `chat.completion`.
 	 */
 	object: v.picklist(["chat.completion"]),
-	usage: v.optional(completionUsageSchema),
+	usage: v.exactOptional(completionUsageSchema),
 });
 /**
  * Represents a chat completion response returned by model, based on the
  * provided input.
  */
-export const exactCreateChatCompletionResponseSchema = v.strictObject({
+export const inputCreateChatCompletionResponseSchema = v.strictObject({
 	/**
 	 * A unique identifier for the chat completion.
 	 */
@@ -10460,11 +10436,11 @@ export const exactCreateChatCompletionResponseSchema = v.strictObject({
 					/**
 					 * A list of message content tokens with log probability information.
 					 */
-					content: v.nullable(v.array(exactChatCompletionTokenLogprobSchema)),
+					content: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
 					/**
 					 * A list of message refusal tokens with log probability information.
 					 */
-					refusal: v.nullable(v.array(exactChatCompletionTokenLogprobSchema)),
+					refusal: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
 				}),
 			),
 		}),
@@ -10481,7 +10457,7 @@ export const exactCreateChatCompletionResponseSchema = v.strictObject({
 	 * The service tier used for processing the request. This field is only
 	 * included if the `service_tier` parameter is specified in the request.
 	 */
-	service_tier: v.exactOptional(v.nullable(v.picklist(["scale", "default"]))),
+	service_tier: v.optional(v.nullable(v.picklist(["scale", "default"]))),
 	/**
 	 * This fingerprint represents the backend configuration that the model runs
 	 * with.
@@ -10489,12 +10465,12 @@ export const exactCreateChatCompletionResponseSchema = v.strictObject({
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.exactOptional(v.string()),
+	system_fingerprint: v.optional(v.string()),
 	/**
 	 * The object type, which is always `chat.completion`.
 	 */
 	object: v.picklist(["chat.completion"]),
-	usage: v.exactOptional(exactCompletionUsageSchema),
+	usage: v.optional(inputCompletionUsageSchema),
 });
 export const createChatCompletionResponseSchema = v.strictObject({
 	/**
@@ -10558,7 +10534,7 @@ export const createChatCompletionResponseSchema = v.strictObject({
 	 * The service tier used for processing the request. This field is only
 	 * included if the `service_tier` parameter is specified in the request.
 	 */
-	service_tier: v.optional(v.nullable(v.picklist(["scale", "default"]))),
+	service_tier: v.exactOptional(v.nullable(v.picklist(["scale", "default"]))),
 	/**
 	 * This fingerprint represents the backend configuration that the model runs
 	 * with.
@@ -10566,18 +10542,18 @@ export const createChatCompletionResponseSchema = v.strictObject({
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.optional(v.pipe(v.string(), v.trim())),
+	system_fingerprint: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The object type, which is always `chat.completion`.
 	 */
 	object: v.picklist(["chat.completion"]),
-	usage: v.optional(completionUsageSchema),
+	usage: v.exactOptional(completionUsageSchema),
 });
 /**
  * Specifying a particular function via `{"name": "my_function"}` forces the
  * model to call that function.
  */
-export const exactChatCompletionFunctionCallOptionSchema = v.strictObject({
+export const inputChatCompletionFunctionCallOptionSchema = v.strictObject({
 	/**
 	 * The name of the function to call.
 	 */
@@ -10593,7 +10569,7 @@ export const chatCompletionFunctionCallOptionSchema = v.strictObject({
  * Specifies a tool the model should use. Use to force the model to call a
  * specific function.
  */
-export const exactChatCompletionNamedToolChoiceSchema = v.strictObject({
+export const inputChatCompletionNamedToolChoiceSchema = v.strictObject({
 	/**
 	 * The type of the tool. Currently, only `function` is supported.
 	 */
@@ -10630,26 +10606,14 @@ export const chatCompletionNamedToolChoiceSchema = v.strictObject({
  * `none` is the default when no tools are present. `auto` is the default if
  * tools are present.
  */
-export const exactChatCompletionToolChoiceOptionSchema = v.union([
+export const inputChatCompletionToolChoiceOptionSchema = v.union([
 	v.picklist(["none", "auto", "required"]),
-	exactChatCompletionNamedToolChoiceSchema,
+	inputChatCompletionNamedToolChoiceSchema,
 ]);
 export const chatCompletionToolChoiceOptionSchema =
-	exactChatCompletionToolChoiceOptionSchema;
+	inputChatCompletionToolChoiceOptionSchema;
 /** Options for streaming response. Only set this when you set `stream: true`. */
-export const exactChatCompletionStreamOptionsSchema = v.nullable(
-	v.strictObject({
-		/**
-		 * If set, an additional chunk will be streamed before the `data: [DONE]`
-		 * message. The `usage` field on this chunk shows the token usage statistics
-		 * for the entire request, and the `choices` field will always be an empty
-		 * array. All other chunks will also include a `usage` field, but with a null
-		 * value.
-		 */
-		include_usage: v.exactOptional(v.boolean()),
-	}),
-);
-export const chatCompletionStreamOptionsSchema = v.nullable(
+export const inputChatCompletionStreamOptionsSchema = v.nullable(
 	v.strictObject({
 		/**
 		 * If set, an additional chunk will be streamed before the `data: [DONE]`
@@ -10661,7 +10625,19 @@ export const chatCompletionStreamOptionsSchema = v.nullable(
 		include_usage: v.optional(v.boolean()),
 	}),
 );
-export const exactChatCompletionRequestFunctionMessageSchema = v.strictObject({
+export const chatCompletionStreamOptionsSchema = v.nullable(
+	v.strictObject({
+		/**
+		 * If set, an additional chunk will be streamed before the `data: [DONE]`
+		 * message. The `usage` field on this chunk shows the token usage statistics
+		 * for the entire request, and the `choices` field will always be an empty
+		 * array. All other chunks will also include a `usage` field, but with a null
+		 * value.
+		 */
+		include_usage: v.exactOptional(v.boolean()),
+	}),
+);
+export const inputChatCompletionRequestFunctionMessageSchema = v.strictObject({
 	/**
 	 * The role of the messages author, in this case `function`.
 	 */
@@ -10689,7 +10665,7 @@ export const chatCompletionRequestFunctionMessageSchema = v.strictObject({
 	 */
 	name: v.pipe(v.string(), v.trim()),
 });
-export const exactChatCompletionRequestMessageContentPartTextSchema =
+export const inputChatCompletionRequestMessageContentPartTextSchema =
 	v.strictObject({
 		/**
 		 * The type of the content part.
@@ -10712,12 +10688,12 @@ export const chatCompletionRequestMessageContentPartTextSchema = v.strictObject(
 		text: v.pipe(v.string(), v.trim()),
 	},
 );
-export const exactChatCompletionRequestToolMessageContentPartSchema = v.union([
-	exactChatCompletionRequestMessageContentPartTextSchema,
+export const inputChatCompletionRequestToolMessageContentPartSchema = v.union([
+	inputChatCompletionRequestMessageContentPartTextSchema,
 ]);
 export const chatCompletionRequestToolMessageContentPartSchema =
-	exactChatCompletionRequestToolMessageContentPartSchema;
-export const exactChatCompletionRequestToolMessageSchema = v.strictObject({
+	inputChatCompletionRequestToolMessageContentPartSchema;
+export const inputChatCompletionRequestToolMessageSchema = v.strictObject({
 	/**
 	 * The role of the messages author, in this case `tool`.
 	 */
@@ -10728,7 +10704,7 @@ export const exactChatCompletionRequestToolMessageSchema = v.strictObject({
 	content: v.union([
 		v.string(),
 		v.pipe(
-			v.array(exactChatCompletionRequestToolMessageContentPartSchema),
+			v.array(inputChatCompletionRequestToolMessageContentPartSchema),
 			v.minLength(1),
 		),
 	]),
@@ -10757,7 +10733,7 @@ export const chatCompletionRequestToolMessageSchema = v.strictObject({
 	 */
 	tool_call_id: v.pipe(v.string(), v.trim()),
 });
-export const exactChatCompletionMessageToolCallSchema = v.strictObject({
+export const inputChatCompletionMessageToolCallSchema = v.strictObject({
 	/**
 	 * The ID of the tool call.
 	 */
@@ -10810,12 +10786,12 @@ export const chatCompletionMessageToolCallSchema = v.strictObject({
 	}),
 });
 /** The tool calls generated by the model, such as function calls. */
-export const exactChatCompletionMessageToolCallsSchema = v.array(
-	exactChatCompletionMessageToolCallSchema,
+export const inputChatCompletionMessageToolCallsSchema = v.array(
+	inputChatCompletionMessageToolCallSchema,
 );
 export const chatCompletionMessageToolCallsSchema =
-	exactChatCompletionMessageToolCallsSchema;
-export const exactChatCompletionRequestMessageContentPartRefusalSchema =
+	inputChatCompletionMessageToolCallsSchema;
+export const inputChatCompletionRequestMessageContentPartRefusalSchema =
 	v.strictObject({
 		/**
 		 * The type of the content part.
@@ -10837,24 +10813,24 @@ export const chatCompletionRequestMessageContentPartRefusalSchema =
 		 */
 		refusal: v.pipe(v.string(), v.trim()),
 	});
-export const exactChatCompletionRequestAssistantMessageContentPartSchema =
+export const inputChatCompletionRequestAssistantMessageContentPartSchema =
 	v.union([
-		exactChatCompletionRequestMessageContentPartTextSchema,
-		exactChatCompletionRequestMessageContentPartRefusalSchema,
+		inputChatCompletionRequestMessageContentPartTextSchema,
+		inputChatCompletionRequestMessageContentPartRefusalSchema,
 	]);
 export const chatCompletionRequestAssistantMessageContentPartSchema =
-	exactChatCompletionRequestAssistantMessageContentPartSchema;
-export const exactChatCompletionRequestAssistantMessageSchema = v.strictObject({
+	inputChatCompletionRequestAssistantMessageContentPartSchema;
+export const inputChatCompletionRequestAssistantMessageSchema = v.strictObject({
 	/**
 	 * The contents of the assistant message. Required unless `tool_calls` or
 	 * `function_call` is specified.
 	 */
-	content: v.exactOptional(
+	content: v.optional(
 		v.nullable(
 			v.union([
 				v.string(),
 				v.pipe(
-					v.array(exactChatCompletionRequestAssistantMessageContentPartSchema),
+					v.array(inputChatCompletionRequestAssistantMessageContentPartSchema),
 					v.minLength(1),
 				),
 			]),
@@ -10863,7 +10839,7 @@ export const exactChatCompletionRequestAssistantMessageSchema = v.strictObject({
 	/**
 	 * The refusal message by the assistant.
 	 */
-	refusal: v.exactOptional(v.nullable(v.string())),
+	refusal: v.optional(v.nullable(v.string())),
 	/**
 	 * The role of the messages author, in this case `assistant`.
 	 */
@@ -10872,13 +10848,13 @@ export const exactChatCompletionRequestAssistantMessageSchema = v.strictObject({
 	 * An optional name for the participant. Provides the model information to
 	 * differentiate between participants of the same role.
 	 */
-	name: v.exactOptional(v.string()),
-	tool_calls: v.exactOptional(exactChatCompletionMessageToolCallsSchema),
+	name: v.optional(v.string()),
+	tool_calls: v.optional(inputChatCompletionMessageToolCallsSchema),
 	/**
 	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
 	 * function that should be called, as generated by the model.
 	 */
-	function_call: v.exactOptional(
+	function_call: v.optional(
 		v.nullable(
 			v.strictObject({
 				/**
@@ -10901,7 +10877,7 @@ export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
 	 * The contents of the assistant message. Required unless `tool_calls` or
 	 * `function_call` is specified.
 	 */
-	content: v.optional(
+	content: v.exactOptional(
 		v.nullable(
 			v.union([
 				v.pipe(v.string(), v.trim()),
@@ -10915,7 +10891,7 @@ export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
 	/**
 	 * The refusal message by the assistant.
 	 */
-	refusal: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 	/**
 	 * The role of the messages author, in this case `assistant`.
 	 */
@@ -10924,13 +10900,13 @@ export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
 	 * An optional name for the participant. Provides the model information to
 	 * differentiate between participants of the same role.
 	 */
-	name: v.optional(v.pipe(v.string(), v.trim())),
-	tool_calls: v.optional(chatCompletionMessageToolCallsSchema),
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
+	tool_calls: v.exactOptional(chatCompletionMessageToolCallsSchema),
 	/**
 	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
 	 * function that should be called, as generated by the model.
 	 */
-	function_call: v.optional(
+	function_call: v.exactOptional(
 		v.nullable(
 			v.strictObject({
 				/**
@@ -10948,7 +10924,7 @@ export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
 		),
 	),
 });
-export const exactChatCompletionRequestMessageContentPartImageSchema =
+export const inputChatCompletionRequestMessageContentPartImageSchema =
 	v.strictObject({
 		/**
 		 * The type of the content part.
@@ -10963,7 +10939,7 @@ export const exactChatCompletionRequestMessageContentPartImageSchema =
 			 * Specifies the detail level of the image. Learn more in the [Vision
 			 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
 			 */
-			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+			detail: v.optional(v.picklist(["auto", "low", "high"])),
 		}),
 	});
 export const chatCompletionRequestMessageContentPartImageSchema =
@@ -10981,23 +10957,23 @@ export const chatCompletionRequestMessageContentPartImageSchema =
 			 * Specifies the detail level of the image. Learn more in the [Vision
 			 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
 			 */
-			detail: v.optional(v.picklist(["auto", "low", "high"])),
+			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
 		}),
 	});
-export const exactChatCompletionRequestUserMessageContentPartSchema = v.union([
-	exactChatCompletionRequestMessageContentPartTextSchema,
-	exactChatCompletionRequestMessageContentPartImageSchema,
+export const inputChatCompletionRequestUserMessageContentPartSchema = v.union([
+	inputChatCompletionRequestMessageContentPartTextSchema,
+	inputChatCompletionRequestMessageContentPartImageSchema,
 ]);
 export const chatCompletionRequestUserMessageContentPartSchema =
-	exactChatCompletionRequestUserMessageContentPartSchema;
-export const exactChatCompletionRequestUserMessageSchema = v.strictObject({
+	inputChatCompletionRequestUserMessageContentPartSchema;
+export const inputChatCompletionRequestUserMessageSchema = v.strictObject({
 	/**
 	 * The contents of the user message.
 	 */
 	content: v.union([
 		v.string(),
 		v.pipe(
-			v.array(exactChatCompletionRequestUserMessageContentPartSchema),
+			v.array(inputChatCompletionRequestUserMessageContentPartSchema),
 			v.minLength(1),
 		),
 	]),
@@ -11009,7 +10985,7 @@ export const exactChatCompletionRequestUserMessageSchema = v.strictObject({
 	 * An optional name for the participant. Provides the model information to
 	 * differentiate between participants of the same role.
 	 */
-	name: v.exactOptional(v.string()),
+	name: v.optional(v.string()),
 });
 export const chatCompletionRequestUserMessageSchema = v.strictObject({
 	/**
@@ -11030,21 +11006,21 @@ export const chatCompletionRequestUserMessageSchema = v.strictObject({
 	 * An optional name for the participant. Provides the model information to
 	 * differentiate between participants of the same role.
 	 */
-	name: v.optional(v.pipe(v.string(), v.trim())),
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactChatCompletionRequestSystemMessageContentPartSchema = v.union(
-	[exactChatCompletionRequestMessageContentPartTextSchema],
+export const inputChatCompletionRequestSystemMessageContentPartSchema = v.union(
+	[inputChatCompletionRequestMessageContentPartTextSchema],
 );
 export const chatCompletionRequestSystemMessageContentPartSchema =
-	exactChatCompletionRequestSystemMessageContentPartSchema;
-export const exactChatCompletionRequestSystemMessageSchema = v.strictObject({
+	inputChatCompletionRequestSystemMessageContentPartSchema;
+export const inputChatCompletionRequestSystemMessageSchema = v.strictObject({
 	/**
 	 * The contents of the system message.
 	 */
 	content: v.union([
 		v.string(),
 		v.pipe(
-			v.array(exactChatCompletionRequestSystemMessageContentPartSchema),
+			v.array(inputChatCompletionRequestSystemMessageContentPartSchema),
 			v.minLength(1),
 		),
 	]),
@@ -11056,7 +11032,7 @@ export const exactChatCompletionRequestSystemMessageSchema = v.strictObject({
 	 * An optional name for the participant. Provides the model information to
 	 * differentiate between participants of the same role.
 	 */
-	name: v.exactOptional(v.string()),
+	name: v.optional(v.string()),
 });
 export const chatCompletionRequestSystemMessageSchema = v.strictObject({
 	/**
@@ -11077,24 +11053,24 @@ export const chatCompletionRequestSystemMessageSchema = v.strictObject({
 	 * An optional name for the participant. Provides the model information to
 	 * differentiate between participants of the same role.
 	 */
-	name: v.optional(v.pipe(v.string(), v.trim())),
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactChatCompletionRequestMessageSchema = v.union([
-	exactChatCompletionRequestSystemMessageSchema,
-	exactChatCompletionRequestUserMessageSchema,
-	exactChatCompletionRequestAssistantMessageSchema,
-	exactChatCompletionRequestToolMessageSchema,
-	exactChatCompletionRequestFunctionMessageSchema,
+export const inputChatCompletionRequestMessageSchema = v.union([
+	inputChatCompletionRequestSystemMessageSchema,
+	inputChatCompletionRequestUserMessageSchema,
+	inputChatCompletionRequestAssistantMessageSchema,
+	inputChatCompletionRequestToolMessageSchema,
+	inputChatCompletionRequestFunctionMessageSchema,
 ]);
 export const chatCompletionRequestMessageSchema =
-	exactChatCompletionRequestMessageSchema;
-export const exactCreateChatCompletionRequestSchema = v.strictObject({
+	inputChatCompletionRequestMessageSchema;
+export const inputCreateChatCompletionRequestSchema = v.strictObject({
 	/**
 	 * A list of messages comprising the conversation so far. [Example Python
 	 * code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
 	 */
 	messages: v.pipe(
-		v.array(exactChatCompletionRequestMessageSchema),
+		v.array(inputChatCompletionRequestMessageSchema),
 		v.minLength(1),
 	),
 	/**
@@ -11104,279 +11080,6 @@ export const exactCreateChatCompletionRequestSchema = v.strictObject({
 	 */
 	model: v.union([
 		v.string(),
-		v.picklist([
-			"o1-preview",
-			"o1-preview-2024-09-12",
-			"o1-mini",
-			"o1-mini-2024-09-12",
-			"gpt-4o",
-			"gpt-4o-2024-08-06",
-			"gpt-4o-2024-05-13",
-			"gpt-4o-2024-08-06",
-			"chatgpt-4o-latest",
-			"gpt-4o-mini",
-			"gpt-4o-mini-2024-07-18",
-			"gpt-4-turbo",
-			"gpt-4-turbo-2024-04-09",
-			"gpt-4-0125-preview",
-			"gpt-4-turbo-preview",
-			"gpt-4-1106-preview",
-			"gpt-4-vision-preview",
-			"gpt-4",
-			"gpt-4-0314",
-			"gpt-4-0613",
-			"gpt-4-32k",
-			"gpt-4-32k-0314",
-			"gpt-4-32k-0613",
-			"gpt-3.5-turbo",
-			"gpt-3.5-turbo-16k",
-			"gpt-3.5-turbo-0301",
-			"gpt-3.5-turbo-0613",
-			"gpt-3.5-turbo-1106",
-			"gpt-3.5-turbo-0125",
-			"gpt-3.5-turbo-16k-0613",
-		]),
-	]),
-	/**
-	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
-	 * their existing frequency in the text so far, decreasing the model's
-	 * likelihood to repeat the same line verbatim.
-	 *
-	 * [See more information about frequency and presence
-	 * penalties.](/docs/guides/text-generation/parameter-details)
-	 */
-	frequency_penalty: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
-	),
-	/**
-	 * Modify the likelihood of specified tokens appearing in the completion.
-	 *
-	 * Accepts a JSON object that maps tokens (specified by their token ID in the
-	 * tokenizer) to an associated bias value from -100 to 100. Mathematically,
-	 * the bias is added to the logits generated by the model prior to sampling.
-	 * The exact effect will vary per model, but values between -1 and 1 should
-	 * decrease or increase likelihood of selection; values like -100 or 100
-	 * should result in a ban or exclusive selection of the relevant token.
-	 */
-	logit_bias: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-	/**
-	 * Whether to return log probabilities of the output tokens or not. If true,
-	 * returns the log probabilities of each output token returned in the
-	 * `content` of `message`.
-	 */
-	logprobs: v.exactOptional(v.nullable(v.boolean())),
-	/**
-	 * An integer between 0 and 20 specifying the number of most likely tokens to
-	 * return at each token position, each with an associated log probability.
-	 * `logprobs` must be set to `true` if this parameter is used.
-	 */
-	top_logprobs: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(20))),
-	),
-	/**
-	 * The maximum number of [tokens](/tokenizer) that can be generated in the
-	 * chat completion. This value can be used to control
-	 * [costs](https://openai.com/api/pricing/) for text generated via API.
-	 *
-	 * This value is now deprecated in favor of `max_completion_tokens`, and is
-	 * not compatible with [o1 series models](/docs/guides/reasoning).
-	 */
-	max_tokens: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
-	/**
-	 * An upper bound for the number of tokens that can be generated for a
-	 * completion, including visible output tokens and [reasoning
-	 * tokens](/docs/guides/reasoning).
-	 */
-	max_completion_tokens: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer())),
-	),
-	/**
-	 * How many chat completion choices to generate for each input message. Note
-	 * that you will be charged based on the number of generated tokens across all
-	 * of the choices. Keep `n` as `1` to minimize costs.
-	 */
-	n: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(128))),
-	),
-	/**
-	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
-	 * whether they appear in the text so far, increasing the model's likelihood
-	 * to talk about new topics.
-	 *
-	 * [See more information about frequency and presence
-	 * penalties.](/docs/guides/text-generation/parameter-details)
-	 */
-	presence_penalty: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
-	),
-	/**
-	 * An object specifying the format that the model must output. Compatible with
-	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini),
-	 * [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo
-	 * models newer than `gpt-3.5-turbo-1106`.
-	 *
-	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
-	 * Structured Outputs which ensures the model will match your supplied JSON
-	 * schema. Learn more in the [Structured Outputs
-	 * guide](/docs/guides/structured-outputs).
-	 *
-	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
-	 * message the model generates is valid JSON.
-	 *
-	 * **Important:** when using JSON mode, you **must** also instruct the model
-	 * to produce JSON yourself via a system or user message. Without this, the
-	 * model may generate an unending stream of whitespace until the generation
-	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
-	 * request. Also note that the message content may be partially cut off if
-	 * `finish_reason="length"`, which indicates the generation exceeded
-	 * `max_tokens` or the conversation exceeded the max context length.
-	 */
-	response_format: v.exactOptional(
-		v.union([
-			exactResponseFormatTextSchema,
-			exactResponseFormatJsonObjectSchema,
-			exactResponseFormatJsonSchemaSchema,
-		]),
-	),
-	/**
-	 * This feature is in Beta.
-	 * If specified, our system will make a best effort to sample
-	 * deterministically, such that repeated requests with the same `seed` and
-	 * parameters should return the same result.
-	 * Determinism is not guaranteed, and you should refer to the
-	 * `system_fingerprint` response parameter to monitor changes in the backend.
-	 */
-	seed: v.exactOptional(
-		v.nullable(
-			v.pipe(
-				v.number(),
-				v.integer(),
-				v.minValue(-9223372036854776000),
-				v.maxValue(9223372036854776000),
-			),
-		),
-	),
-	/**
-	 * Specifies the latency tier to use for processing the request. This
-	 * parameter is relevant for customers subscribed to the scale tier service:
-	 *
-	 * - If set to 'auto', and the Project is Scale tier enabled, the system will
-	 * utilize scale tier credits until they are exhausted.
-	 *
-	 * - If set to 'auto', and the Project is not Scale tier enabled, the request
-	 * will be processed using the default service tier with a lower uptime SLA
-	 * and no latency guarentee.
-	 *
-	 * - If set to 'default', the request will be processed using the default
-	 * service tier with a lower uptime SLA and no latency guarentee.
-	 *
-	 * - When not set, the default behavior is 'auto'.
-	 *
-	 *
-	 * When this parameter is set, the response body will include the
-	 * `service_tier` utilized.
-	 */
-	service_tier: v.exactOptional(v.nullable(v.picklist(["auto", "default"]))),
-	/**
-	 * Up to 4 sequences where the API will stop generating further tokens.
-	 */
-	stop: v.exactOptional(
-		v.union([
-			v.nullable(v.string()),
-			v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(4)),
-		]),
-	),
-	/**
-	 * If set, partial message deltas will be sent, like in ChatGPT. Tokens will
-	 * be sent as data-only [server-sent
-	 * events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-	 * as they become available, with the stream terminated by a `data: [DONE]`
-	 * message. [Example Python
-	 * code](https://cookbook.openai.com/examples/how_to_stream_completions).
-	 */
-	stream: v.exactOptional(v.nullable(v.boolean())),
-	stream_options: v.exactOptional(exactChatCompletionStreamOptionsSchema),
-	/**
-	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-	 * will make the output more random, while lower values like 0.2 will make it
-	 * more focused and deterministic.
-	 *
-	 * We generally recommend altering this or `top_p` but not both.
-	 */
-	temperature: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
-	),
-	/**
-	 * An alternative to sampling with temperature, called nucleus sampling, where
-	 * the model considers the results of the tokens with top_p probability mass.
-	 * So 0.1 means only the tokens comprising the top 10% probability mass are
-	 * considered.
-	 *
-	 * We generally recommend altering this or `temperature` but not both.
-	 */
-	top_p: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
-	),
-	/**
-	 * A list of tools the model may call. Currently, only functions are supported
-	 * as a tool. Use this to provide a list of functions the model may generate
-	 * JSON inputs for. A max of 128 functions are supported.
-	 */
-	tools: v.exactOptional(v.array(exactChatCompletionToolSchema)),
-	tool_choice: v.exactOptional(exactChatCompletionToolChoiceOptionSchema),
-	parallel_tool_calls: v.exactOptional(exactParallelToolCallsSchema),
-	/**
-	 * A unique identifier representing your end-user, which can help OpenAI to
-	 * monitor and detect abuse. [Learn
-	 * more](/docs/guides/safety-best-practices/end-user-ids).
-	 */
-	user: v.exactOptional(v.string()),
-	/**
-	 * Deprecated in favor of `tool_choice`.
-	 *
-	 * Controls which (if any) function is called by the model.
-	 * `none` means the model will not call a function and instead generates a
-	 * message.
-	 * `auto` means the model can pick between generating a message or calling a
-	 * function.
-	 * Specifying a particular function via `{"name": "my_function"}` forces the
-	 * model to call that function.
-	 *
-	 * `none` is the default when no functions are present. `auto` is the default
-	 * if functions are present.
-	 */
-	function_call: v.exactOptional(
-		v.union([
-			v.picklist(["none", "auto"]),
-			exactChatCompletionFunctionCallOptionSchema,
-		]),
-	),
-	/**
-	 * Deprecated in favor of `tools`.
-	 *
-	 * A list of functions the model may generate JSON inputs for.
-	 */
-	functions: v.exactOptional(
-		v.pipe(
-			v.array(exactChatCompletionFunctionsSchema),
-			v.minLength(1),
-			v.maxLength(128),
-		),
-	),
-});
-export const createChatCompletionRequestSchema = v.strictObject({
-	/**
-	 * A list of messages comprising the conversation so far. [Example Python
-	 * code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
-	 */
-	messages: v.pipe(v.array(chatCompletionRequestMessageSchema), v.minLength(1)),
-	/**
-	 * ID of the model to use. See the [model endpoint
-	 * compatibility](/docs/models/model-endpoint-compatibility) table for details
-	 * on which models work with the Chat API.
-	 */
-	model: v.union([
-		v.pipe(v.string(), v.trim()),
 		v.picklist([
 			"o1-preview",
 			"o1-preview-2024-09-12",
@@ -11506,9 +11209,9 @@ export const createChatCompletionRequestSchema = v.strictObject({
 	 */
 	response_format: v.optional(
 		v.union([
-			responseFormatTextSchema,
-			responseFormatJsonObjectSchema,
-			responseFormatJsonSchemaSchema,
+			inputResponseFormatTextSchema,
+			inputResponseFormatJsonObjectSchema,
+			inputResponseFormatJsonSchemaSchema,
 		]),
 	),
 	/**
@@ -11555,12 +11258,8 @@ export const createChatCompletionRequestSchema = v.strictObject({
 	 */
 	stop: v.optional(
 		v.union([
-			v.nullable(v.pipe(v.string(), v.trim())),
-			v.pipe(
-				v.array(v.pipe(v.string(), v.trim())),
-				v.minLength(1),
-				v.maxLength(4),
-			),
+			v.nullable(v.string()),
+			v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(4)),
 		]),
 	),
 	/**
@@ -11572,7 +11271,7 @@ export const createChatCompletionRequestSchema = v.strictObject({
 	 * code](https://cookbook.openai.com/examples/how_to_stream_completions).
 	 */
 	stream: v.optional(v.nullable(v.boolean())),
-	stream_options: v.optional(chatCompletionStreamOptionsSchema),
+	stream_options: v.optional(inputChatCompletionStreamOptionsSchema),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -11599,15 +11298,15 @@ export const createChatCompletionRequestSchema = v.strictObject({
 	 * as a tool. Use this to provide a list of functions the model may generate
 	 * JSON inputs for. A max of 128 functions are supported.
 	 */
-	tools: v.optional(v.array(chatCompletionToolSchema)),
-	tool_choice: v.optional(chatCompletionToolChoiceOptionSchema),
-	parallel_tool_calls: v.optional(parallelToolCallsSchema),
+	tools: v.optional(v.array(inputChatCompletionToolSchema)),
+	tool_choice: v.optional(inputChatCompletionToolChoiceOptionSchema),
+	parallel_tool_calls: v.optional(inputParallelToolCallsSchema),
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.optional(v.pipe(v.string(), v.trim())),
+	user: v.optional(v.string()),
 	/**
 	 * Deprecated in favor of `tool_choice`.
 	 *
@@ -11625,7 +11324,7 @@ export const createChatCompletionRequestSchema = v.strictObject({
 	function_call: v.optional(
 		v.union([
 			v.picklist(["none", "auto"]),
-			chatCompletionFunctionCallOptionSchema,
+			inputChatCompletionFunctionCallOptionSchema,
 		]),
 	),
 	/**
@@ -11635,44 +11334,295 @@ export const createChatCompletionRequestSchema = v.strictObject({
 	 */
 	functions: v.optional(
 		v.pipe(
+			v.array(inputChatCompletionFunctionsSchema),
+			v.minLength(1),
+			v.maxLength(128),
+		),
+	),
+});
+export const createChatCompletionRequestSchema = v.strictObject({
+	/**
+	 * A list of messages comprising the conversation so far. [Example Python
+	 * code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
+	 */
+	messages: v.pipe(v.array(chatCompletionRequestMessageSchema), v.minLength(1)),
+	/**
+	 * ID of the model to use. See the [model endpoint
+	 * compatibility](/docs/models/model-endpoint-compatibility) table for details
+	 * on which models work with the Chat API.
+	 */
+	model: v.union([
+		v.pipe(v.string(), v.trim()),
+		v.picklist([
+			"o1-preview",
+			"o1-preview-2024-09-12",
+			"o1-mini",
+			"o1-mini-2024-09-12",
+			"gpt-4o",
+			"gpt-4o-2024-08-06",
+			"gpt-4o-2024-05-13",
+			"gpt-4o-2024-08-06",
+			"chatgpt-4o-latest",
+			"gpt-4o-mini",
+			"gpt-4o-mini-2024-07-18",
+			"gpt-4-turbo",
+			"gpt-4-turbo-2024-04-09",
+			"gpt-4-0125-preview",
+			"gpt-4-turbo-preview",
+			"gpt-4-1106-preview",
+			"gpt-4-vision-preview",
+			"gpt-4",
+			"gpt-4-0314",
+			"gpt-4-0613",
+			"gpt-4-32k",
+			"gpt-4-32k-0314",
+			"gpt-4-32k-0613",
+			"gpt-3.5-turbo",
+			"gpt-3.5-turbo-16k",
+			"gpt-3.5-turbo-0301",
+			"gpt-3.5-turbo-0613",
+			"gpt-3.5-turbo-1106",
+			"gpt-3.5-turbo-0125",
+			"gpt-3.5-turbo-16k-0613",
+		]),
+	]),
+	/**
+	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+	 * their existing frequency in the text so far, decreasing the model's
+	 * likelihood to repeat the same line verbatim.
+	 *
+	 * [See more information about frequency and presence
+	 * penalties.](/docs/guides/text-generation/parameter-details)
+	 */
+	frequency_penalty: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
+	),
+	/**
+	 * Modify the likelihood of specified tokens appearing in the completion.
+	 *
+	 * Accepts a JSON object that maps tokens (specified by their token ID in the
+	 * tokenizer) to an associated bias value from -100 to 100. Mathematically,
+	 * the bias is added to the logits generated by the model prior to sampling.
+	 * The exact effect will vary per model, but values between -1 and 1 should
+	 * decrease or increase likelihood of selection; values like -100 or 100
+	 * should result in a ban or exclusive selection of the relevant token.
+	 */
+	logit_bias: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	/**
+	 * Whether to return log probabilities of the output tokens or not. If true,
+	 * returns the log probabilities of each output token returned in the
+	 * `content` of `message`.
+	 */
+	logprobs: v.exactOptional(v.nullable(v.boolean())),
+	/**
+	 * An integer between 0 and 20 specifying the number of most likely tokens to
+	 * return at each token position, each with an associated log probability.
+	 * `logprobs` must be set to `true` if this parameter is used.
+	 */
+	top_logprobs: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(20))),
+	),
+	/**
+	 * The maximum number of [tokens](/tokenizer) that can be generated in the
+	 * chat completion. This value can be used to control
+	 * [costs](https://openai.com/api/pricing/) for text generated via API.
+	 *
+	 * This value is now deprecated in favor of `max_completion_tokens`, and is
+	 * not compatible with [o1 series models](/docs/guides/reasoning).
+	 */
+	max_tokens: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+	/**
+	 * An upper bound for the number of tokens that can be generated for a
+	 * completion, including visible output tokens and [reasoning
+	 * tokens](/docs/guides/reasoning).
+	 */
+	max_completion_tokens: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer())),
+	),
+	/**
+	 * How many chat completion choices to generate for each input message. Note
+	 * that you will be charged based on the number of generated tokens across all
+	 * of the choices. Keep `n` as `1` to minimize costs.
+	 */
+	n: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(128))),
+	),
+	/**
+	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+	 * whether they appear in the text so far, increasing the model's likelihood
+	 * to talk about new topics.
+	 *
+	 * [See more information about frequency and presence
+	 * penalties.](/docs/guides/text-generation/parameter-details)
+	 */
+	presence_penalty: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
+	),
+	/**
+	 * An object specifying the format that the model must output. Compatible with
+	 * [GPT-4o](/docs/models/gpt-4o), [GPT-4o mini](/docs/models/gpt-4o-mini),
+	 * [GPT-4 Turbo](/docs/models/gpt-4-and-gpt-4-turbo) and all GPT-3.5 Turbo
+	 * models newer than `gpt-3.5-turbo-1106`.
+	 *
+	 * Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+	 * Structured Outputs which ensures the model will match your supplied JSON
+	 * schema. Learn more in the [Structured Outputs
+	 * guide](/docs/guides/structured-outputs).
+	 *
+	 * Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the
+	 * message the model generates is valid JSON.
+	 *
+	 * **Important:** when using JSON mode, you **must** also instruct the model
+	 * to produce JSON yourself via a system or user message. Without this, the
+	 * model may generate an unending stream of whitespace until the generation
+	 * reaches the token limit, resulting in a long-running and seemingly "stuck"
+	 * request. Also note that the message content may be partially cut off if
+	 * `finish_reason="length"`, which indicates the generation exceeded
+	 * `max_tokens` or the conversation exceeded the max context length.
+	 */
+	response_format: v.exactOptional(
+		v.union([
+			responseFormatTextSchema,
+			responseFormatJsonObjectSchema,
+			responseFormatJsonSchemaSchema,
+		]),
+	),
+	/**
+	 * This feature is in Beta.
+	 * If specified, our system will make a best effort to sample
+	 * deterministically, such that repeated requests with the same `seed` and
+	 * parameters should return the same result.
+	 * Determinism is not guaranteed, and you should refer to the
+	 * `system_fingerprint` response parameter to monitor changes in the backend.
+	 */
+	seed: v.exactOptional(
+		v.nullable(
+			v.pipe(
+				v.number(),
+				v.integer(),
+				v.minValue(-9223372036854776000),
+				v.maxValue(9223372036854776000),
+			),
+		),
+	),
+	/**
+	 * Specifies the latency tier to use for processing the request. This
+	 * parameter is relevant for customers subscribed to the scale tier service:
+	 *
+	 * - If set to 'auto', and the Project is Scale tier enabled, the system will
+	 * utilize scale tier credits until they are exhausted.
+	 *
+	 * - If set to 'auto', and the Project is not Scale tier enabled, the request
+	 * will be processed using the default service tier with a lower uptime SLA
+	 * and no latency guarentee.
+	 *
+	 * - If set to 'default', the request will be processed using the default
+	 * service tier with a lower uptime SLA and no latency guarentee.
+	 *
+	 * - When not set, the default behavior is 'auto'.
+	 *
+	 *
+	 * When this parameter is set, the response body will include the
+	 * `service_tier` utilized.
+	 */
+	service_tier: v.exactOptional(v.nullable(v.picklist(["auto", "default"]))),
+	/**
+	 * Up to 4 sequences where the API will stop generating further tokens.
+	 */
+	stop: v.exactOptional(
+		v.union([
+			v.nullable(v.pipe(v.string(), v.trim())),
+			v.pipe(
+				v.array(v.pipe(v.string(), v.trim())),
+				v.minLength(1),
+				v.maxLength(4),
+			),
+		]),
+	),
+	/**
+	 * If set, partial message deltas will be sent, like in ChatGPT. Tokens will
+	 * be sent as data-only [server-sent
+	 * events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
+	 * as they become available, with the stream terminated by a `data: [DONE]`
+	 * message. [Example Python
+	 * code](https://cookbook.openai.com/examples/how_to_stream_completions).
+	 */
+	stream: v.exactOptional(v.nullable(v.boolean())),
+	stream_options: v.exactOptional(chatCompletionStreamOptionsSchema),
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 *
+	 * We generally recommend altering this or `top_p` but not both.
+	 */
+	temperature: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
+	),
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or `temperature` but not both.
+	 */
+	top_p: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	),
+	/**
+	 * A list of tools the model may call. Currently, only functions are supported
+	 * as a tool. Use this to provide a list of functions the model may generate
+	 * JSON inputs for. A max of 128 functions are supported.
+	 */
+	tools: v.exactOptional(v.array(chatCompletionToolSchema)),
+	tool_choice: v.exactOptional(chatCompletionToolChoiceOptionSchema),
+	parallel_tool_calls: v.exactOptional(parallelToolCallsSchema),
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 */
+	user: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Deprecated in favor of `tool_choice`.
+	 *
+	 * Controls which (if any) function is called by the model.
+	 * `none` means the model will not call a function and instead generates a
+	 * message.
+	 * `auto` means the model can pick between generating a message or calling a
+	 * function.
+	 * Specifying a particular function via `{"name": "my_function"}` forces the
+	 * model to call that function.
+	 *
+	 * `none` is the default when no functions are present. `auto` is the default
+	 * if functions are present.
+	 */
+	function_call: v.exactOptional(
+		v.union([
+			v.picklist(["none", "auto"]),
+			chatCompletionFunctionCallOptionSchema,
+		]),
+	),
+	/**
+	 * Deprecated in favor of `tools`.
+	 *
+	 * A list of functions the model may generate JSON inputs for.
+	 */
+	functions: v.exactOptional(
+		v.pipe(
 			v.array(chatCompletionFunctionsSchema),
 			v.minLength(1),
 			v.maxLength(128),
 		),
 	),
 });
-export const exactChatCompletionMessageToolCallChunkSchema = v.strictObject({
+export const inputChatCompletionMessageToolCallChunkSchema = v.strictObject({
 	index: v.pipe(v.number(), v.integer()),
 	/**
 	 * The ID of the tool call.
 	 */
-	id: v.exactOptional(v.string()),
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 */
-	type: v.exactOptional(v.picklist(["function"])),
-	function: v.exactOptional(
-		v.strictObject({
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.exactOptional(v.string()),
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.exactOptional(v.string()),
-		}),
-	),
-});
-export const chatCompletionMessageToolCallChunkSchema = v.strictObject({
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.optional(v.pipe(v.string(), v.trim())),
+	id: v.optional(v.string()),
 	/**
 	 * The type of the tool. Currently, only `function` is supported.
 	 */
@@ -11682,59 +11632,49 @@ export const chatCompletionMessageToolCallChunkSchema = v.strictObject({
 			/**
 			 * The name of the function to call.
 			 */
-			name: v.optional(v.pipe(v.string(), v.trim())),
+			name: v.optional(v.string()),
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
 			 * format. Note that the model does not always generate valid JSON, and may
 			 * hallucinate parameters not defined by your function schema. Validate the
 			 * arguments in your code before calling your function.
 			 */
-			arguments: v.optional(v.pipe(v.string(), v.trim())),
+			arguments: v.optional(v.string()),
+		}),
+	),
+});
+export const chatCompletionMessageToolCallChunkSchema = v.strictObject({
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 */
+	type: v.exactOptional(v.picklist(["function"])),
+	function: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 });
 /** A chat completion delta generated by streamed model responses. */
-export const exactChatCompletionStreamResponseDeltaSchema = v.strictObject({
+export const inputChatCompletionStreamResponseDeltaSchema = v.strictObject({
 	/**
 	 * The contents of the chunk message.
 	 */
-	content: v.exactOptional(v.nullable(v.string())),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.exactOptional(
-		v.strictObject({
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.exactOptional(v.string()),
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.exactOptional(v.string()),
-		}),
-	),
-	tool_calls: v.exactOptional(
-		v.array(exactChatCompletionMessageToolCallChunkSchema),
-	),
-	/**
-	 * The role of the author of this message.
-	 */
-	role: v.exactOptional(v.picklist(["system", "user", "assistant", "tool"])),
-	/**
-	 * The refusal message generated by the model.
-	 */
-	refusal: v.exactOptional(v.nullable(v.string())),
-});
-export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
-	/**
-	 * The contents of the chunk message.
-	 */
-	content: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	content: v.optional(v.nullable(v.string())),
 	/**
 	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
 	 * function that should be called, as generated by the model.
@@ -11747,14 +11687,16 @@ export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
 			 * hallucinate parameters not defined by your function schema. Validate the
 			 * arguments in your code before calling your function.
 			 */
-			arguments: v.optional(v.pipe(v.string(), v.trim())),
+			arguments: v.optional(v.string()),
 			/**
 			 * The name of the function to call.
 			 */
-			name: v.optional(v.pipe(v.string(), v.trim())),
+			name: v.optional(v.string()),
 		}),
 	),
-	tool_calls: v.optional(v.array(chatCompletionMessageToolCallChunkSchema)),
+	tool_calls: v.optional(
+		v.array(inputChatCompletionMessageToolCallChunkSchema),
+	),
 	/**
 	 * The role of the author of this message.
 	 */
@@ -11762,10 +11704,46 @@ export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
 	/**
 	 * The refusal message generated by the model.
 	 */
-	refusal: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	refusal: v.optional(v.nullable(v.string())),
+});
+export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
+	/**
+	 * The contents of the chunk message.
+	 */
+	content: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.exactOptional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	tool_calls: v.exactOptional(
+		v.array(chatCompletionMessageToolCallChunkSchema),
+	),
+	/**
+	 * The role of the author of this message.
+	 */
+	role: v.exactOptional(v.picklist(["system", "user", "assistant", "tool"])),
+	/**
+	 * The refusal message generated by the model.
+	 */
+	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 });
 /** A chat completion message generated by the model. */
-export const exactChatCompletionResponseMessageSchema = v.strictObject({
+export const inputChatCompletionResponseMessageSchema = v.strictObject({
 	/**
 	 * The contents of the message.
 	 */
@@ -11774,7 +11752,7 @@ export const exactChatCompletionResponseMessageSchema = v.strictObject({
 	 * The refusal message generated by the model.
 	 */
 	refusal: v.nullable(v.string()),
-	tool_calls: v.exactOptional(exactChatCompletionMessageToolCallsSchema),
+	tool_calls: v.optional(inputChatCompletionMessageToolCallsSchema),
 	/**
 	 * The role of the author of this message.
 	 */
@@ -11783,7 +11761,7 @@ export const exactChatCompletionResponseMessageSchema = v.strictObject({
 	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
 	 * function that should be called, as generated by the model.
 	 */
-	function_call: v.exactOptional(
+	function_call: v.optional(
 		v.strictObject({
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
@@ -11808,7 +11786,7 @@ export const chatCompletionResponseMessageSchema = v.strictObject({
 	 * The refusal message generated by the model.
 	 */
 	refusal: v.nullable(v.pipe(v.string(), v.trim())),
-	tool_calls: v.optional(chatCompletionMessageToolCallsSchema),
+	tool_calls: v.exactOptional(chatCompletionMessageToolCallsSchema),
 	/**
 	 * The role of the author of this message.
 	 */
@@ -11817,7 +11795,7 @@ export const chatCompletionResponseMessageSchema = v.strictObject({
 	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
 	 * function that should be called, as generated by the model.
 	 */
-	function_call: v.optional(
+	function_call: v.exactOptional(
 		v.strictObject({
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
@@ -11833,22 +11811,22 @@ export const chatCompletionResponseMessageSchema = v.strictObject({
 		}),
 	),
 });
-export const exactFineTuneChatCompletionRequestAssistantMessageSchema =
+export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
 	v.intersect([
 		v.strictObject({
 			/**
 			 * Controls whether the assistant message is trained against (0 or 1)
 			 */
-			weight: v.exactOptional(v.pipe(v.number(), v.integer())),
+			weight: v.optional(v.pipe(v.number(), v.integer())),
 		}),
-		exactChatCompletionRequestAssistantMessageSchema,
+		inputChatCompletionRequestAssistantMessageSchema,
 	]);
 export const fineTuneChatCompletionRequestAssistantMessageSchema = v.intersect([
 	v.strictObject({
 		/**
 		 * Controls whether the assistant message is trained against (0 or 1)
 		 */
-		weight: v.optional(v.pipe(v.number(), v.integer())),
+		weight: v.exactOptional(v.pipe(v.number(), v.integer())),
 	}),
 	chatCompletionRequestAssistantMessageSchema,
 ]);
@@ -11857,7 +11835,7 @@ export const fineTuneChatCompletionRequestAssistantMessageSchema = v.intersect([
  * non-streamed response objects share the same shape (unlike the chat
  * endpoint).
  */
-export const exactCreateCompletionResponseSchema = v.strictObject({
+export const inputCreateCompletionResponseSchema = v.strictObject({
 	/**
 	 * A unique identifier for the completion.
 	 */
@@ -11879,14 +11857,10 @@ export const exactCreateCompletionResponseSchema = v.strictObject({
 			index: v.pipe(v.number(), v.integer()),
 			logprobs: v.nullable(
 				v.strictObject({
-					text_offset: v.exactOptional(
-						v.array(v.pipe(v.number(), v.integer())),
-					),
-					token_logprobs: v.exactOptional(v.array(v.number())),
-					tokens: v.exactOptional(v.array(v.string())),
-					top_logprobs: v.exactOptional(
-						v.array(v.record(v.string(), v.unknown())),
-					),
+					text_offset: v.optional(v.array(v.pipe(v.number(), v.integer()))),
+					token_logprobs: v.optional(v.array(v.number())),
+					tokens: v.optional(v.array(v.string())),
+					top_logprobs: v.optional(v.array(v.record(v.string(), v.unknown()))),
 				}),
 			),
 			text: v.string(),
@@ -11907,12 +11881,12 @@ export const exactCreateCompletionResponseSchema = v.strictObject({
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.exactOptional(v.string()),
+	system_fingerprint: v.optional(v.string()),
 	/**
 	 * The object type, which is always "text_completion"
 	 */
 	object: v.picklist(["text_completion"]),
-	usage: v.exactOptional(exactCompletionUsageSchema),
+	usage: v.optional(inputCompletionUsageSchema),
 });
 export const createCompletionResponseSchema = v.strictObject({
 	/**
@@ -11936,10 +11910,14 @@ export const createCompletionResponseSchema = v.strictObject({
 			index: v.pipe(v.number(), v.integer()),
 			logprobs: v.nullable(
 				v.strictObject({
-					text_offset: v.optional(v.array(v.pipe(v.number(), v.integer()))),
-					token_logprobs: v.optional(v.array(v.number())),
-					tokens: v.optional(v.array(v.pipe(v.string(), v.trim()))),
-					top_logprobs: v.optional(v.array(v.record(v.string(), v.unknown()))),
+					text_offset: v.exactOptional(
+						v.array(v.pipe(v.number(), v.integer())),
+					),
+					token_logprobs: v.exactOptional(v.array(v.number())),
+					tokens: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
+					top_logprobs: v.exactOptional(
+						v.array(v.record(v.string(), v.unknown())),
+					),
 				}),
 			),
 			text: v.pipe(v.string(), v.trim()),
@@ -11960,14 +11938,14 @@ export const createCompletionResponseSchema = v.strictObject({
 	 * Can be used in conjunction with the `seed` request parameter to understand
 	 * when backend changes have been made that might impact determinism.
 	 */
-	system_fingerprint: v.optional(v.pipe(v.string(), v.trim())),
+	system_fingerprint: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The object type, which is always "text_completion"
 	 */
 	object: v.picklist(["text_completion"]),
-	usage: v.optional(completionUsageSchema),
+	usage: v.exactOptional(completionUsageSchema),
 });
-export const exactCreateCompletionRequestSchema = v.strictObject({
+export const inputCreateCompletionRequestSchema = v.strictObject({
 	/**
 	 * ID of the model to use. You can use the [List
 	 * models](/docs/api-reference/models/list) API to see all of your available
@@ -11990,202 +11968,6 @@ export const exactCreateCompletionRequestSchema = v.strictObject({
 		v.union([
 			v.string(),
 			v.array(v.string()),
-			v.pipe(v.array(v.pipe(v.number(), v.integer())), v.minLength(1)),
-			v.pipe(
-				v.array(
-					v.pipe(v.array(v.pipe(v.number(), v.integer())), v.minLength(1)),
-				),
-				v.minLength(1),
-			),
-		]),
-	),
-	/**
-	 * Generates `best_of` completions server-side and returns the "best" (the one
-	 * with the highest log probability per token). Results cannot be streamed.
-	 *
-	 * When used with `n`, `best_of` controls the number of candidate completions
-	 * and `n` specifies how many to return – `best_of` must be greater than `n`.
-	 *
-	 * **Note:** Because this parameter generates many completions, it can quickly
-	 * consume your token quota. Use carefully and ensure that you have reasonable
-	 * settings for `max_tokens` and `stop`.
-	 */
-	best_of: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(20))),
-	),
-	/**
-	 * Echo back the prompt in addition to the completion
-	 */
-	echo: v.exactOptional(v.nullable(v.boolean())),
-	/**
-	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
-	 * their existing frequency in the text so far, decreasing the model's
-	 * likelihood to repeat the same line verbatim.
-	 *
-	 * [See more information about frequency and presence
-	 * penalties.](/docs/guides/text-generation/parameter-details)
-	 */
-	frequency_penalty: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
-	),
-	/**
-	 * Modify the likelihood of specified tokens appearing in the completion.
-	 *
-	 * Accepts a JSON object that maps tokens (specified by their token ID in the
-	 * GPT tokenizer) to an associated bias value from -100 to 100. You can use
-	 * this [tokenizer tool](/tokenizer?view=bpe) to convert text to token IDs.
-	 * Mathematically, the bias is added to the logits generated by the model
-	 * prior to sampling. The exact effect will vary per model, but values between
-	 * -1 and 1 should decrease or increase likelihood of selection; values like
-	 * -100 or 100 should result in a ban or exclusive selection of the relevant
-	 * token.
-	 *
-	 * As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|>
-	 * token from being generated.
-	 */
-	logit_bias: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-	/**
-	 * Include the log probabilities on the `logprobs` most likely output tokens,
-	 * as well the chosen tokens. For example, if `logprobs` is 5, the API will
-	 * return a list of the 5 most likely tokens. The API will always return the
-	 * `logprob` of the sampled token, so there may be up to `logprobs+1` elements
-	 * in the response.
-	 *
-	 * The maximum value for `logprobs` is 5.
-	 */
-	logprobs: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(5))),
-	),
-	/**
-	 * The maximum number of [tokens](/tokenizer) that can be generated in the
-	 * completion.
-	 *
-	 * The token count of your prompt plus `max_tokens` cannot exceed the model's
-	 * context length. [Example Python
-	 * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
-	 * for counting tokens.
-	 */
-	max_tokens: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0))),
-	),
-	/**
-	 * How many completions to generate for each prompt.
-	 *
-	 * **Note:** Because this parameter generates many completions, it can quickly
-	 * consume your token quota. Use carefully and ensure that you have reasonable
-	 * settings for `max_tokens` and `stop`.
-	 */
-	n: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(128))),
-	),
-	/**
-	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
-	 * whether they appear in the text so far, increasing the model's likelihood
-	 * to talk about new topics.
-	 *
-	 * [See more information about frequency and presence
-	 * penalties.](/docs/guides/text-generation/parameter-details)
-	 */
-	presence_penalty: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
-	),
-	/**
-	 * If specified, our system will make a best effort to sample
-	 * deterministically, such that repeated requests with the same `seed` and
-	 * parameters should return the same result.
-	 *
-	 * Determinism is not guaranteed, and you should refer to the
-	 * `system_fingerprint` response parameter to monitor changes in the backend.
-	 */
-	seed: v.exactOptional(
-		v.nullable(
-			v.pipe(
-				v.number(),
-				v.integer(),
-				v.minValue(-9223372036854776000),
-				v.maxValue(9223372036854776000),
-			),
-		),
-	),
-	/**
-	 * Up to 4 sequences where the API will stop generating further tokens. The
-	 * returned text will not contain the stop sequence.
-	 */
-	stop: v.exactOptional(
-		v.nullable(
-			v.union([
-				v.nullable(v.string()),
-				v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(4)),
-			]),
-		),
-	),
-	/**
-	 * Whether to stream back partial progress. If set, tokens will be sent as
-	 * data-only [server-sent
-	 * events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
-	 * as they become available, with the stream terminated by a `data: [DONE]`
-	 * message. [Example Python
-	 * code](https://cookbook.openai.com/examples/how_to_stream_completions).
-	 */
-	stream: v.exactOptional(v.nullable(v.boolean())),
-	stream_options: v.exactOptional(exactChatCompletionStreamOptionsSchema),
-	/**
-	 * The suffix that comes after a completion of inserted text.
-	 *
-	 * This parameter is only supported for `gpt-3.5-turbo-instruct`.
-	 */
-	suffix: v.exactOptional(v.nullable(v.string())),
-	/**
-	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
-	 * will make the output more random, while lower values like 0.2 will make it
-	 * more focused and deterministic.
-	 *
-	 * We generally recommend altering this or `top_p` but not both.
-	 */
-	temperature: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
-	),
-	/**
-	 * An alternative to sampling with temperature, called nucleus sampling, where
-	 * the model considers the results of the tokens with top_p probability mass.
-	 * So 0.1 means only the tokens comprising the top 10% probability mass are
-	 * considered.
-	 *
-	 * We generally recommend altering this or `temperature` but not both.
-	 */
-	top_p: v.exactOptional(
-		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
-	),
-	/**
-	 * A unique identifier representing your end-user, which can help OpenAI to
-	 * monitor and detect abuse. [Learn
-	 * more](/docs/guides/safety-best-practices/end-user-ids).
-	 */
-	user: v.exactOptional(v.string()),
-});
-export const createCompletionRequestSchema = v.strictObject({
-	/**
-	 * ID of the model to use. You can use the [List
-	 * models](/docs/api-reference/models/list) API to see all of your available
-	 * models, or see our [Model overview](/docs/models/overview) for descriptions
-	 * of them.
-	 */
-	model: v.union([
-		v.pipe(v.string(), v.trim()),
-		v.picklist(["gpt-3.5-turbo-instruct", "davinci-002", "babbage-002"]),
-	]),
-	/**
-	 * The prompt(s) to generate completions for, encoded as a string, array of
-	 * strings, array of tokens, or array of token arrays.
-	 *
-	 * Note that <|endoftext|> is the document separator that the model sees
-	 * during training, so if a prompt is not specified the model will generate as
-	 * if from the beginning of a new document.
-	 */
-	prompt: v.nullable(
-		v.union([
-			v.pipe(v.string(), v.trim()),
-			v.array(v.pipe(v.string(), v.trim())),
 			v.pipe(v.array(v.pipe(v.number(), v.integer())), v.minLength(1)),
 			v.pipe(
 				v.array(
@@ -12310,12 +12092,8 @@ export const createCompletionRequestSchema = v.strictObject({
 	stop: v.optional(
 		v.nullable(
 			v.union([
-				v.nullable(v.pipe(v.string(), v.trim())),
-				v.pipe(
-					v.array(v.pipe(v.string(), v.trim())),
-					v.minLength(1),
-					v.maxLength(4),
-				),
+				v.nullable(v.string()),
+				v.pipe(v.array(v.string()), v.minLength(1), v.maxLength(4)),
 			]),
 		),
 	),
@@ -12328,13 +12106,13 @@ export const createCompletionRequestSchema = v.strictObject({
 	 * code](https://cookbook.openai.com/examples/how_to_stream_completions).
 	 */
 	stream: v.optional(v.nullable(v.boolean())),
-	stream_options: v.optional(chatCompletionStreamOptionsSchema),
+	stream_options: v.optional(inputChatCompletionStreamOptionsSchema),
 	/**
 	 * The suffix that comes after a completion of inserted text.
 	 *
 	 * This parameter is only supported for `gpt-3.5-turbo-instruct`.
 	 */
-	suffix: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	suffix: v.optional(v.nullable(v.string())),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -12361,13 +12139,213 @@ export const createCompletionRequestSchema = v.strictObject({
 	 * monitor and detect abuse. [Learn
 	 * more](/docs/guides/safety-best-practices/end-user-ids).
 	 */
-	user: v.optional(v.pipe(v.string(), v.trim())),
+	user: v.optional(v.string()),
+});
+export const createCompletionRequestSchema = v.strictObject({
+	/**
+	 * ID of the model to use. You can use the [List
+	 * models](/docs/api-reference/models/list) API to see all of your available
+	 * models, or see our [Model overview](/docs/models/overview) for descriptions
+	 * of them.
+	 */
+	model: v.union([
+		v.pipe(v.string(), v.trim()),
+		v.picklist(["gpt-3.5-turbo-instruct", "davinci-002", "babbage-002"]),
+	]),
+	/**
+	 * The prompt(s) to generate completions for, encoded as a string, array of
+	 * strings, array of tokens, or array of token arrays.
+	 *
+	 * Note that <|endoftext|> is the document separator that the model sees
+	 * during training, so if a prompt is not specified the model will generate as
+	 * if from the beginning of a new document.
+	 */
+	prompt: v.nullable(
+		v.union([
+			v.pipe(v.string(), v.trim()),
+			v.array(v.pipe(v.string(), v.trim())),
+			v.pipe(v.array(v.pipe(v.number(), v.integer())), v.minLength(1)),
+			v.pipe(
+				v.array(
+					v.pipe(v.array(v.pipe(v.number(), v.integer())), v.minLength(1)),
+				),
+				v.minLength(1),
+			),
+		]),
+	),
+	/**
+	 * Generates `best_of` completions server-side and returns the "best" (the one
+	 * with the highest log probability per token). Results cannot be streamed.
+	 *
+	 * When used with `n`, `best_of` controls the number of candidate completions
+	 * and `n` specifies how many to return – `best_of` must be greater than `n`.
+	 *
+	 * **Note:** Because this parameter generates many completions, it can quickly
+	 * consume your token quota. Use carefully and ensure that you have reasonable
+	 * settings for `max_tokens` and `stop`.
+	 */
+	best_of: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(20))),
+	),
+	/**
+	 * Echo back the prompt in addition to the completion
+	 */
+	echo: v.exactOptional(v.nullable(v.boolean())),
+	/**
+	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+	 * their existing frequency in the text so far, decreasing the model's
+	 * likelihood to repeat the same line verbatim.
+	 *
+	 * [See more information about frequency and presence
+	 * penalties.](/docs/guides/text-generation/parameter-details)
+	 */
+	frequency_penalty: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
+	),
+	/**
+	 * Modify the likelihood of specified tokens appearing in the completion.
+	 *
+	 * Accepts a JSON object that maps tokens (specified by their token ID in the
+	 * GPT tokenizer) to an associated bias value from -100 to 100. You can use
+	 * this [tokenizer tool](/tokenizer?view=bpe) to convert text to token IDs.
+	 * Mathematically, the bias is added to the logits generated by the model
+	 * prior to sampling. The exact effect will vary per model, but values between
+	 * -1 and 1 should decrease or increase likelihood of selection; values like
+	 * -100 or 100 should result in a ban or exclusive selection of the relevant
+	 * token.
+	 *
+	 * As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|>
+	 * token from being generated.
+	 */
+	logit_bias: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	/**
+	 * Include the log probabilities on the `logprobs` most likely output tokens,
+	 * as well the chosen tokens. For example, if `logprobs` is 5, the API will
+	 * return a list of the 5 most likely tokens. The API will always return the
+	 * `logprob` of the sampled token, so there may be up to `logprobs+1` elements
+	 * in the response.
+	 *
+	 * The maximum value for `logprobs` is 5.
+	 */
+	logprobs: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(5))),
+	),
+	/**
+	 * The maximum number of [tokens](/tokenizer) that can be generated in the
+	 * completion.
+	 *
+	 * The token count of your prompt plus `max_tokens` cannot exceed the model's
+	 * context length. [Example Python
+	 * code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken)
+	 * for counting tokens.
+	 */
+	max_tokens: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(0))),
+	),
+	/**
+	 * How many completions to generate for each prompt.
+	 *
+	 * **Note:** Because this parameter generates many completions, it can quickly
+	 * consume your token quota. Use carefully and ensure that you have reasonable
+	 * settings for `max_tokens` and `stop`.
+	 */
+	n: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(128))),
+	),
+	/**
+	 * Number between -2.0 and 2.0. Positive values penalize new tokens based on
+	 * whether they appear in the text so far, increasing the model's likelihood
+	 * to talk about new topics.
+	 *
+	 * [See more information about frequency and presence
+	 * penalties.](/docs/guides/text-generation/parameter-details)
+	 */
+	presence_penalty: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(-2), v.maxValue(2))),
+	),
+	/**
+	 * If specified, our system will make a best effort to sample
+	 * deterministically, such that repeated requests with the same `seed` and
+	 * parameters should return the same result.
+	 *
+	 * Determinism is not guaranteed, and you should refer to the
+	 * `system_fingerprint` response parameter to monitor changes in the backend.
+	 */
+	seed: v.exactOptional(
+		v.nullable(
+			v.pipe(
+				v.number(),
+				v.integer(),
+				v.minValue(-9223372036854776000),
+				v.maxValue(9223372036854776000),
+			),
+		),
+	),
+	/**
+	 * Up to 4 sequences where the API will stop generating further tokens. The
+	 * returned text will not contain the stop sequence.
+	 */
+	stop: v.exactOptional(
+		v.nullable(
+			v.union([
+				v.nullable(v.pipe(v.string(), v.trim())),
+				v.pipe(
+					v.array(v.pipe(v.string(), v.trim())),
+					v.minLength(1),
+					v.maxLength(4),
+				),
+			]),
+		),
+	),
+	/**
+	 * Whether to stream back partial progress. If set, tokens will be sent as
+	 * data-only [server-sent
+	 * events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Event_stream_format)
+	 * as they become available, with the stream terminated by a `data: [DONE]`
+	 * message. [Example Python
+	 * code](https://cookbook.openai.com/examples/how_to_stream_completions).
+	 */
+	stream: v.exactOptional(v.nullable(v.boolean())),
+	stream_options: v.exactOptional(chatCompletionStreamOptionsSchema),
+	/**
+	 * The suffix that comes after a completion of inserted text.
+	 *
+	 * This parameter is only supported for `gpt-3.5-turbo-instruct`.
+	 */
+	suffix: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
+	 * will make the output more random, while lower values like 0.2 will make it
+	 * more focused and deterministic.
+	 *
+	 * We generally recommend altering this or `top_p` but not both.
+	 */
+	temperature: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(2))),
+	),
+	/**
+	 * An alternative to sampling with temperature, called nucleus sampling, where
+	 * the model considers the results of the tokens with top_p probability mass.
+	 * So 0.1 means only the tokens comprising the top 10% probability mass are
+	 * considered.
+	 *
+	 * We generally recommend altering this or `temperature` but not both.
+	 */
+	top_p: v.exactOptional(
+		v.nullable(v.pipe(v.number(), v.minValue(0), v.maxValue(1))),
+	),
+	/**
+	 * A unique identifier representing your end-user, which can help OpenAI to
+	 * monitor and detect abuse. [Learn
+	 * more](/docs/guides/safety-best-practices/end-user-ids).
+	 */
+	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /**
  * Describes an OpenAI model offering that can be used with the API.
  * @title Model
  */
-export const exactModelSchema = v.strictObject({
+export const inputModelSchema = v.strictObject({
 	/**
 	 * The model identifier, which can be referenced in the API endpoints.
 	 */
@@ -12403,152 +12381,152 @@ export const modelSchema = v.strictObject({
 	 */
 	owned_by: v.pipe(v.string(), v.trim()),
 });
-export const exactListModelsResponseSchema = v.strictObject({
+export const inputListModelsResponseSchema = v.strictObject({
 	object: v.picklist(["list"]),
-	data: v.array(exactModelSchema),
+	data: v.array(inputModelSchema),
 });
-export const listModelsResponseSchema = exactListModelsResponseSchema;
-export const exactErrorResponseSchema = v.strictObject({
-	error: exactErrorSchema,
+export const listModelsResponseSchema = inputListModelsResponseSchema;
+export const inputErrorResponseSchema = v.strictObject({
+	error: inputErrorSchema,
 });
-export const errorResponseSchema = exactErrorResponseSchema;
-export const exactCreateChatCompletionCommandBodySchema =
-	exactCreateChatCompletionRequestSchema;
+export const errorResponseSchema = inputErrorResponseSchema;
+export const inputCreateChatCompletionCommandBodySchema =
+	inputCreateChatCompletionRequestSchema;
 export const createChatCompletionCommandBodySchema =
 	createChatCompletionRequestSchema;
-export const exactCreateChatCompletionCommandResponseSchema =
-	exactCreateChatCompletionResponseSchema;
+export const inputCreateChatCompletionCommandResponseSchema =
+	inputCreateChatCompletionResponseSchema;
 export const createChatCompletionCommandResponseSchema =
 	createChatCompletionResponseSchema;
-export const exactCreateCompletionCommandBodySchema =
-	exactCreateCompletionRequestSchema;
+export const inputCreateCompletionCommandBodySchema =
+	inputCreateCompletionRequestSchema;
 export const createCompletionCommandBodySchema = createCompletionRequestSchema;
-export const exactCreateCompletionCommandResponseSchema =
-	exactCreateCompletionResponseSchema;
+export const inputCreateCompletionCommandResponseSchema =
+	inputCreateCompletionResponseSchema;
 export const createCompletionCommandResponseSchema =
 	createCompletionResponseSchema;
-export const exactCreateImageCommandBodySchema = exactCreateImageRequestSchema;
+export const inputCreateImageCommandBodySchema = inputCreateImageRequestSchema;
 export const createImageCommandBodySchema = createImageRequestSchema;
-export const exactCreateImageCommandResponseSchema = exactImagesResponseSchema;
+export const inputCreateImageCommandResponseSchema = inputImagesResponseSchema;
 export const createImageCommandResponseSchema = imagesResponseSchema;
-export const exactCreateImageEditCommandResponseSchema =
-	exactImagesResponseSchema;
+export const inputCreateImageEditCommandResponseSchema =
+	inputImagesResponseSchema;
 export const createImageEditCommandResponseSchema = imagesResponseSchema;
-export const exactCreateImageVariationCommandResponseSchema =
-	exactImagesResponseSchema;
+export const inputCreateImageVariationCommandResponseSchema =
+	inputImagesResponseSchema;
 export const createImageVariationCommandResponseSchema = imagesResponseSchema;
-export const exactCreateEmbeddingCommandBodySchema =
-	exactCreateEmbeddingRequestSchema;
+export const inputCreateEmbeddingCommandBodySchema =
+	inputCreateEmbeddingRequestSchema;
 export const createEmbeddingCommandBodySchema = createEmbeddingRequestSchema;
-export const exactCreateEmbeddingCommandResponseSchema =
-	exactCreateEmbeddingResponseSchema;
+export const inputCreateEmbeddingCommandResponseSchema =
+	inputCreateEmbeddingResponseSchema;
 export const createEmbeddingCommandResponseSchema =
 	createEmbeddingResponseSchema;
-export const exactCreateSpeechCommandBodySchema =
-	exactCreateSpeechRequestSchema;
+export const inputCreateSpeechCommandBodySchema =
+	inputCreateSpeechRequestSchema;
 export const createSpeechCommandBodySchema = createSpeechRequestSchema;
-export const exactCreateTranscriptionCommandResponseSchema = v.union([
-	exactCreateTranscriptionResponseJsonSchema,
-	exactCreateTranscriptionResponseVerboseJsonSchema,
+export const inputCreateTranscriptionCommandResponseSchema = v.union([
+	inputCreateTranscriptionResponseJsonSchema,
+	inputCreateTranscriptionResponseVerboseJsonSchema,
 ]);
 export const createTranscriptionCommandResponseSchema = v.union([
 	createTranscriptionResponseJsonSchema,
 	createTranscriptionResponseVerboseJsonSchema,
 ]);
-export const exactCreateTranslationCommandResponseSchema = v.union([
-	exactCreateTranslationResponseJsonSchema,
-	exactCreateTranslationResponseVerboseJsonSchema,
+export const inputCreateTranslationCommandResponseSchema = v.union([
+	inputCreateTranslationResponseJsonSchema,
+	inputCreateTranslationResponseVerboseJsonSchema,
 ]);
 export const createTranslationCommandResponseSchema = v.union([
 	createTranslationResponseJsonSchema,
 	createTranslationResponseVerboseJsonSchema,
 ]);
-export const exactListFilesCommandResponseSchema = exactListFilesResponseSchema;
+export const inputListFilesCommandResponseSchema = inputListFilesResponseSchema;
 export const listFilesCommandResponseSchema = listFilesResponseSchema;
-export const exactListFilesCommandQuerySchema = v.strictObject({
-	purpose: v.exactOptional(v.string()),
+export const inputListFilesCommandQuerySchema = v.strictObject({
+	purpose: v.optional(v.string()),
 });
 export const listFilesCommandQuerySchema = v.strictObject({
-	purpose: v.optional(v.pipe(v.string(), v.trim())),
+	purpose: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateFileCommandResponseSchema = exactOpenAiFileSchema;
+export const inputCreateFileCommandResponseSchema = inputOpenAiFileSchema;
 export const createFileCommandResponseSchema = openAiFileSchema;
-export const exactDeleteFileCommandResponseSchema =
-	exactDeleteFileResponseSchema;
+export const inputDeleteFileCommandResponseSchema =
+	inputDeleteFileResponseSchema;
 export const deleteFileCommandResponseSchema = deleteFileResponseSchema;
-export const exactDeleteFileCommandParamsSchema = v.strictObject({
+export const inputDeleteFileCommandParamsSchema = v.strictObject({
 	file_id: v.string(),
 });
 export const deleteFileCommandParamsSchema = v.strictObject({
 	file_id: v.pipe(v.string(), v.trim()),
 });
-export const exactRetrieveFileCommandResponseSchema = exactOpenAiFileSchema;
+export const inputRetrieveFileCommandResponseSchema = inputOpenAiFileSchema;
 export const retrieveFileCommandResponseSchema = openAiFileSchema;
-export const exactRetrieveFileCommandParamsSchema = v.strictObject({
+export const inputRetrieveFileCommandParamsSchema = v.strictObject({
 	file_id: v.string(),
 });
 export const retrieveFileCommandParamsSchema = v.strictObject({
 	file_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDownloadFileCommandResponseSchema = v.string();
+export const inputDownloadFileCommandResponseSchema = v.string();
 export const downloadFileCommandResponseSchema = v.pipe(v.string(), v.trim());
-export const exactDownloadFileCommandParamsSchema = v.strictObject({
+export const inputDownloadFileCommandParamsSchema = v.strictObject({
 	file_id: v.string(),
 });
 export const downloadFileCommandParamsSchema = v.strictObject({
 	file_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateUploadCommandBodySchema =
-	exactCreateUploadRequestSchema;
+export const inputCreateUploadCommandBodySchema =
+	inputCreateUploadRequestSchema;
 export const createUploadCommandBodySchema = createUploadRequestSchema;
-export const exactCreateUploadCommandResponseSchema = exactUploadSchema;
+export const inputCreateUploadCommandResponseSchema = inputUploadSchema;
 export const createUploadCommandResponseSchema = uploadSchema;
-export const exactAddUploadPartCommandResponseSchema = exactUploadPartSchema;
+export const inputAddUploadPartCommandResponseSchema = inputUploadPartSchema;
 export const addUploadPartCommandResponseSchema = uploadPartSchema;
-export const exactAddUploadPartCommandParamsSchema = v.strictObject({
+export const inputAddUploadPartCommandParamsSchema = v.strictObject({
 	upload_id: v.string(),
 });
 export const addUploadPartCommandParamsSchema = v.strictObject({
 	upload_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCompleteUploadCommandBodySchema =
-	exactCompleteUploadRequestSchema;
+export const inputCompleteUploadCommandBodySchema =
+	inputCompleteUploadRequestSchema;
 export const completeUploadCommandBodySchema = completeUploadRequestSchema;
-export const exactCompleteUploadCommandResponseSchema = exactUploadSchema;
+export const inputCompleteUploadCommandResponseSchema = inputUploadSchema;
 export const completeUploadCommandResponseSchema = uploadSchema;
-export const exactCompleteUploadCommandParamsSchema = v.strictObject({
+export const inputCompleteUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.string(),
 });
 export const completeUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCancelUploadCommandResponseSchema = exactUploadSchema;
+export const inputCancelUploadCommandResponseSchema = inputUploadSchema;
 export const cancelUploadCommandResponseSchema = uploadSchema;
-export const exactCancelUploadCommandParamsSchema = v.strictObject({
+export const inputCancelUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.string(),
 });
 export const cancelUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateFineTuningJobCommandBodySchema =
-	exactCreateFineTuningJobRequestSchema;
+export const inputCreateFineTuningJobCommandBodySchema =
+	inputCreateFineTuningJobRequestSchema;
 export const createFineTuningJobCommandBodySchema =
 	createFineTuningJobRequestSchema;
-export const exactCreateFineTuningJobCommandResponseSchema =
-	exactFineTuningJobSchema;
+export const inputCreateFineTuningJobCommandResponseSchema =
+	inputFineTuningJobSchema;
 export const createFineTuningJobCommandResponseSchema = fineTuningJobSchema;
-export const exactListPaginatedFineTuningJobsCommandResponseSchema =
-	exactListPaginatedFineTuningJobsResponseSchema;
+export const inputListPaginatedFineTuningJobsCommandResponseSchema =
+	inputListPaginatedFineTuningJobsResponseSchema;
 export const listPaginatedFineTuningJobsCommandResponseSchema =
 	listPaginatedFineTuningJobsResponseSchema;
-export const exactListPaginatedFineTuningJobsCommandQuerySchema =
+export const inputListPaginatedFineTuningJobsCommandQuerySchema =
 	v.strictObject({
-		after: v.exactOptional(v.string()),
-		limit: v.exactOptional(v.pipe(v.number(), v.integer())),
+		after: v.optional(v.string()),
+		limit: v.optional(v.pipe(v.number(), v.integer())),
 	});
 export const listPaginatedFineTuningJobsCommandQuerySchema = v.strictObject({
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	limit: v.optional(
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12560,32 +12538,32 @@ export const listPaginatedFineTuningJobsCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
-export const exactRetrieveFineTuningJobCommandResponseSchema =
-	exactFineTuningJobSchema;
+export const inputRetrieveFineTuningJobCommandResponseSchema =
+	inputFineTuningJobSchema;
 export const retrieveFineTuningJobCommandResponseSchema = fineTuningJobSchema;
-export const exactRetrieveFineTuningJobCommandParamsSchema = v.strictObject({
+export const inputRetrieveFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.string(),
 });
 export const retrieveFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListFineTuningEventsCommandResponseSchema =
-	exactListFineTuningJobEventsResponseSchema;
+export const inputListFineTuningEventsCommandResponseSchema =
+	inputListFineTuningJobEventsResponseSchema;
 export const listFineTuningEventsCommandResponseSchema =
 	listFineTuningJobEventsResponseSchema;
-export const exactListFineTuningEventsCommandParamsSchema = v.strictObject({
+export const inputListFineTuningEventsCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.string(),
 });
 export const listFineTuningEventsCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListFineTuningEventsCommandQuerySchema = v.strictObject({
-	after: v.exactOptional(v.string()),
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
+export const inputListFineTuningEventsCommandQuerySchema = v.strictObject({
+	after: v.optional(v.string()),
+	limit: v.optional(v.pipe(v.number(), v.integer())),
 });
 export const listFineTuningEventsCommandQuerySchema = v.strictObject({
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	limit: v.optional(
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12597,34 +12575,34 @@ export const listFineTuningEventsCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
-export const exactCancelFineTuningJobCommandResponseSchema =
-	exactFineTuningJobSchema;
+export const inputCancelFineTuningJobCommandResponseSchema =
+	inputFineTuningJobSchema;
 export const cancelFineTuningJobCommandResponseSchema = fineTuningJobSchema;
-export const exactCancelFineTuningJobCommandParamsSchema = v.strictObject({
+export const inputCancelFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.string(),
 });
 export const cancelFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListFineTuningJobCheckpointsCommandResponseSchema =
-	exactListFineTuningJobCheckpointsResponseSchema;
+export const inputListFineTuningJobCheckpointsCommandResponseSchema =
+	inputListFineTuningJobCheckpointsResponseSchema;
 export const listFineTuningJobCheckpointsCommandResponseSchema =
 	listFineTuningJobCheckpointsResponseSchema;
-export const exactListFineTuningJobCheckpointsCommandParamsSchema =
+export const inputListFineTuningJobCheckpointsCommandParamsSchema =
 	v.strictObject({
 		fine_tuning_job_id: v.string(),
 	});
 export const listFineTuningJobCheckpointsCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListFineTuningJobCheckpointsCommandQuerySchema =
+export const inputListFineTuningJobCheckpointsCommandQuerySchema =
 	v.strictObject({
-		after: v.exactOptional(v.string()),
-		limit: v.exactOptional(v.pipe(v.number(), v.integer())),
+		after: v.optional(v.string()),
+		limit: v.optional(v.pipe(v.number(), v.integer())),
 	});
 export const listFineTuningJobCheckpointsCommandQuerySchema = v.strictObject({
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	limit: v.optional(
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12636,44 +12614,44 @@ export const listFineTuningJobCheckpointsCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
-export const exactListModelsCommandResponseSchema =
-	exactListModelsResponseSchema;
+export const inputListModelsCommandResponseSchema =
+	inputListModelsResponseSchema;
 export const listModelsCommandResponseSchema = listModelsResponseSchema;
-export const exactRetrieveModelCommandResponseSchema = exactModelSchema;
+export const inputRetrieveModelCommandResponseSchema = inputModelSchema;
 export const retrieveModelCommandResponseSchema = modelSchema;
-export const exactRetrieveModelCommandParamsSchema = v.strictObject({
+export const inputRetrieveModelCommandParamsSchema = v.strictObject({
 	model: v.string(),
 });
 export const retrieveModelCommandParamsSchema = v.strictObject({
 	model: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteModelCommandResponseSchema =
-	exactDeleteModelResponseSchema;
+export const inputDeleteModelCommandResponseSchema =
+	inputDeleteModelResponseSchema;
 export const deleteModelCommandResponseSchema = deleteModelResponseSchema;
-export const exactDeleteModelCommandParamsSchema = v.strictObject({
+export const inputDeleteModelCommandParamsSchema = v.strictObject({
 	model: v.string(),
 });
 export const deleteModelCommandParamsSchema = v.strictObject({
 	model: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateModerationCommandBodySchema =
-	exactCreateModerationRequestSchema;
+export const inputCreateModerationCommandBodySchema =
+	inputCreateModerationRequestSchema;
 export const createModerationCommandBodySchema = createModerationRequestSchema;
-export const exactCreateModerationCommandResponseSchema =
-	exactCreateModerationResponseSchema;
+export const inputCreateModerationCommandResponseSchema =
+	inputCreateModerationResponseSchema;
 export const createModerationCommandResponseSchema =
 	createModerationResponseSchema;
-export const exactListAssistantsCommandResponseSchema =
-	exactListAssistantsResponseSchema;
+export const inputListAssistantsCommandResponseSchema =
+	inputListAssistantsResponseSchema;
 export const listAssistantsCommandResponseSchema = listAssistantsResponseSchema;
-export const exactListAssistantsCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	order: v.exactOptional(v.picklist(["asc", "desc"])),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
+export const inputListAssistantsCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	order: v.optional(v.picklist(["asc", "desc"])),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
 });
 export const listAssistantsCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12684,98 +12662,98 @@ export const listAssistantsCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateAssistantCommandBodySchema =
-	exactCreateAssistantRequestSchema;
+export const inputCreateAssistantCommandBodySchema =
+	inputCreateAssistantRequestSchema;
 export const createAssistantCommandBodySchema = createAssistantRequestSchema;
-export const exactCreateAssistantCommandResponseSchema =
-	exactAssistantObjectSchema;
+export const inputCreateAssistantCommandResponseSchema =
+	inputAssistantObjectSchema;
 export const createAssistantCommandResponseSchema = assistantObjectSchema;
-export const exactGetAssistantCommandResponseSchema =
-	exactAssistantObjectSchema;
+export const inputGetAssistantCommandResponseSchema =
+	inputAssistantObjectSchema;
 export const getAssistantCommandResponseSchema = assistantObjectSchema;
-export const exactGetAssistantCommandParamsSchema = v.strictObject({
+export const inputGetAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.string(),
 });
 export const getAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyAssistantCommandBodySchema =
-	exactModifyAssistantRequestSchema;
+export const inputModifyAssistantCommandBodySchema =
+	inputModifyAssistantRequestSchema;
 export const modifyAssistantCommandBodySchema = modifyAssistantRequestSchema;
-export const exactModifyAssistantCommandResponseSchema =
-	exactAssistantObjectSchema;
+export const inputModifyAssistantCommandResponseSchema =
+	inputAssistantObjectSchema;
 export const modifyAssistantCommandResponseSchema = assistantObjectSchema;
-export const exactModifyAssistantCommandParamsSchema = v.strictObject({
+export const inputModifyAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.string(),
 });
 export const modifyAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteAssistantCommandResponseSchema =
-	exactDeleteAssistantResponseSchema;
+export const inputDeleteAssistantCommandResponseSchema =
+	inputDeleteAssistantResponseSchema;
 export const deleteAssistantCommandResponseSchema =
 	deleteAssistantResponseSchema;
-export const exactDeleteAssistantCommandParamsSchema = v.strictObject({
+export const inputDeleteAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.string(),
 });
 export const deleteAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateThreadCommandBodySchema =
-	exactCreateThreadRequestSchema;
+export const inputCreateThreadCommandBodySchema =
+	inputCreateThreadRequestSchema;
 export const createThreadCommandBodySchema = createThreadRequestSchema;
-export const exactCreateThreadCommandResponseSchema = exactThreadObjectSchema;
+export const inputCreateThreadCommandResponseSchema = inputThreadObjectSchema;
 export const createThreadCommandResponseSchema = threadObjectSchema;
-export const exactGetThreadCommandResponseSchema = exactThreadObjectSchema;
+export const inputGetThreadCommandResponseSchema = inputThreadObjectSchema;
 export const getThreadCommandResponseSchema = threadObjectSchema;
-export const exactGetThreadCommandParamsSchema = v.strictObject({
+export const inputGetThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const getThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyThreadCommandBodySchema =
-	exactModifyThreadRequestSchema;
+export const inputModifyThreadCommandBodySchema =
+	inputModifyThreadRequestSchema;
 export const modifyThreadCommandBodySchema = modifyThreadRequestSchema;
-export const exactModifyThreadCommandResponseSchema = exactThreadObjectSchema;
+export const inputModifyThreadCommandResponseSchema = inputThreadObjectSchema;
 export const modifyThreadCommandResponseSchema = threadObjectSchema;
-export const exactModifyThreadCommandParamsSchema = v.strictObject({
+export const inputModifyThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const modifyThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteThreadCommandResponseSchema =
-	exactDeleteThreadResponseSchema;
+export const inputDeleteThreadCommandResponseSchema =
+	inputDeleteThreadResponseSchema;
 export const deleteThreadCommandResponseSchema = deleteThreadResponseSchema;
-export const exactDeleteThreadCommandParamsSchema = v.strictObject({
+export const inputDeleteThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const deleteThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListMessagesCommandResponseSchema =
-	exactListMessagesResponseSchema;
+export const inputListMessagesCommandResponseSchema =
+	inputListMessagesResponseSchema;
 export const listMessagesCommandResponseSchema = listMessagesResponseSchema;
-export const exactListMessagesCommandParamsSchema = v.strictObject({
+export const inputListMessagesCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const listMessagesCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListMessagesCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	order: v.exactOptional(v.picklist(["asc", "desc"])),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
-	run_id: v.exactOptional(v.string()),
+export const inputListMessagesCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	order: v.optional(v.picklist(["asc", "desc"])),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
+	run_id: v.optional(v.string()),
 });
 export const listMessagesCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12786,25 +12764,25 @@ export const listMessagesCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
-	run_id: v.optional(v.pipe(v.string(), v.trim())),
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
+	run_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateMessageCommandBodySchema =
-	exactCreateMessageRequestSchema;
+export const inputCreateMessageCommandBodySchema =
+	inputCreateMessageRequestSchema;
 export const createMessageCommandBodySchema = createMessageRequestSchema;
-export const exactCreateMessageCommandResponseSchema = exactMessageObjectSchema;
+export const inputCreateMessageCommandResponseSchema = inputMessageObjectSchema;
 export const createMessageCommandResponseSchema = messageObjectSchema;
-export const exactCreateMessageCommandParamsSchema = v.strictObject({
+export const inputCreateMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const createMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactGetMessageCommandResponseSchema = exactMessageObjectSchema;
+export const inputGetMessageCommandResponseSchema = inputMessageObjectSchema;
 export const getMessageCommandResponseSchema = messageObjectSchema;
-export const exactGetMessageCommandParamsSchema = v.strictObject({
+export const inputGetMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	message_id: v.string(),
 });
@@ -12812,12 +12790,12 @@ export const getMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	message_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyMessageCommandBodySchema =
-	exactModifyMessageRequestSchema;
+export const inputModifyMessageCommandBodySchema =
+	inputModifyMessageRequestSchema;
 export const modifyMessageCommandBodySchema = modifyMessageRequestSchema;
-export const exactModifyMessageCommandResponseSchema = exactMessageObjectSchema;
+export const inputModifyMessageCommandResponseSchema = inputMessageObjectSchema;
 export const modifyMessageCommandResponseSchema = messageObjectSchema;
-export const exactModifyMessageCommandParamsSchema = v.strictObject({
+export const inputModifyMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	message_id: v.string(),
 });
@@ -12825,10 +12803,10 @@ export const modifyMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	message_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteMessageCommandResponseSchema =
-	exactDeleteMessageResponseSchema;
+export const inputDeleteMessageCommandResponseSchema =
+	inputDeleteMessageResponseSchema;
 export const deleteMessageCommandResponseSchema = deleteMessageResponseSchema;
-export const exactDeleteMessageCommandParamsSchema = v.strictObject({
+export const inputDeleteMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	message_id: v.string(),
 });
@@ -12836,29 +12814,29 @@ export const deleteMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	message_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateThreadAndRunCommandBodySchema =
-	exactCreateThreadAndRunRequestSchema;
+export const inputCreateThreadAndRunCommandBodySchema =
+	inputCreateThreadAndRunRequestSchema;
 export const createThreadAndRunCommandBodySchema =
 	createThreadAndRunRequestSchema;
-export const exactCreateThreadAndRunCommandResponseSchema =
-	exactRunObjectSchema;
+export const inputCreateThreadAndRunCommandResponseSchema =
+	inputRunObjectSchema;
 export const createThreadAndRunCommandResponseSchema = runObjectSchema;
-export const exactListRunsCommandResponseSchema = exactListRunsResponseSchema;
+export const inputListRunsCommandResponseSchema = inputListRunsResponseSchema;
 export const listRunsCommandResponseSchema = listRunsResponseSchema;
-export const exactListRunsCommandParamsSchema = v.strictObject({
+export const inputListRunsCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const listRunsCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListRunsCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	order: v.exactOptional(v.picklist(["asc", "desc"])),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
+export const inputListRunsCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	order: v.optional(v.picklist(["asc", "desc"])),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
 });
 export const listRunsCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12869,37 +12847,37 @@ export const listRunsCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateRunCommandBodySchema = exactCreateRunRequestSchema;
+export const inputCreateRunCommandBodySchema = inputCreateRunRequestSchema;
 export const createRunCommandBodySchema = createRunRequestSchema;
-export const exactCreateRunCommandResponseSchema = exactRunObjectSchema;
+export const inputCreateRunCommandResponseSchema = inputRunObjectSchema;
 export const createRunCommandResponseSchema = runObjectSchema;
-export const exactCreateRunCommandParamsSchema = v.strictObject({
+export const inputCreateRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const createRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateRunCommandQuerySchema = v.strictObject({
-	"include[]": v.exactOptional(
-		v.array(
-			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
-		),
-	),
-});
-export const createRunCommandQuerySchema = v.strictObject({
+export const inputCreateRunCommandQuerySchema = v.strictObject({
 	"include[]": v.optional(
 		v.array(
 			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
 		),
 	),
 });
-export const exactGetRunCommandResponseSchema = exactRunObjectSchema;
+export const createRunCommandQuerySchema = v.strictObject({
+	"include[]": v.exactOptional(
+		v.array(
+			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
+		),
+	),
+});
+export const inputGetRunCommandResponseSchema = inputRunObjectSchema;
 export const getRunCommandResponseSchema = runObjectSchema;
-export const exactGetRunCommandParamsSchema = v.strictObject({
+export const inputGetRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
 });
@@ -12907,11 +12885,11 @@ export const getRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyRunCommandBodySchema = exactModifyRunRequestSchema;
+export const inputModifyRunCommandBodySchema = inputModifyRunRequestSchema;
 export const modifyRunCommandBodySchema = modifyRunRequestSchema;
-export const exactModifyRunCommandResponseSchema = exactRunObjectSchema;
+export const inputModifyRunCommandResponseSchema = inputRunObjectSchema;
 export const modifyRunCommandResponseSchema = runObjectSchema;
-export const exactModifyRunCommandParamsSchema = v.strictObject({
+export const inputModifyRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
 });
@@ -12919,14 +12897,14 @@ export const modifyRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
-export const exactSubmitToolOuputsToRunCommandBodySchema =
-	exactSubmitToolOutputsRunRequestSchema;
+export const inputSubmitToolOuputsToRunCommandBodySchema =
+	inputSubmitToolOutputsRunRequestSchema;
 export const submitToolOuputsToRunCommandBodySchema =
 	submitToolOutputsRunRequestSchema;
-export const exactSubmitToolOuputsToRunCommandResponseSchema =
-	exactRunObjectSchema;
+export const inputSubmitToolOuputsToRunCommandResponseSchema =
+	inputRunObjectSchema;
 export const submitToolOuputsToRunCommandResponseSchema = runObjectSchema;
-export const exactSubmitToolOuputsToRunCommandParamsSchema = v.strictObject({
+export const inputSubmitToolOuputsToRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
 });
@@ -12934,9 +12912,9 @@ export const submitToolOuputsToRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCancelRunCommandResponseSchema = exactRunObjectSchema;
+export const inputCancelRunCommandResponseSchema = inputRunObjectSchema;
 export const cancelRunCommandResponseSchema = runObjectSchema;
-export const exactCancelRunCommandParamsSchema = v.strictObject({
+export const inputCancelRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
 });
@@ -12944,10 +12922,10 @@ export const cancelRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListRunStepsCommandResponseSchema =
-	exactListRunStepsResponseSchema;
+export const inputListRunStepsCommandResponseSchema =
+	inputListRunStepsResponseSchema;
 export const listRunStepsCommandResponseSchema = listRunStepsResponseSchema;
-export const exactListRunStepsCommandParamsSchema = v.strictObject({
+export const inputListRunStepsCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
 });
@@ -12955,19 +12933,19 @@ export const listRunStepsCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListRunStepsCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	order: v.exactOptional(v.picklist(["asc", "desc"])),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
-	"include[]": v.exactOptional(
+export const inputListRunStepsCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	order: v.optional(v.picklist(["asc", "desc"])),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
+	"include[]": v.optional(
 		v.array(
 			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
 		),
 	),
 });
 export const listRunStepsCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -12978,18 +12956,18 @@ export const listRunStepsCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
-	"include[]": v.optional(
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
+	"include[]": v.exactOptional(
 		v.array(
 			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
 		),
 	),
 });
-export const exactGetRunStepCommandResponseSchema = exactRunStepObjectSchema;
+export const inputGetRunStepCommandResponseSchema = inputRunStepObjectSchema;
 export const getRunStepCommandResponseSchema = runStepObjectSchema;
-export const exactGetRunStepCommandParamsSchema = v.strictObject({
+export const inputGetRunStepCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
 	step_id: v.string(),
@@ -12999,32 +12977,32 @@ export const getRunStepCommandParamsSchema = v.strictObject({
 	run_id: v.pipe(v.string(), v.trim()),
 	step_id: v.pipe(v.string(), v.trim()),
 });
-export const exactGetRunStepCommandQuerySchema = v.strictObject({
-	"include[]": v.exactOptional(
-		v.array(
-			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
-		),
-	),
-});
-export const getRunStepCommandQuerySchema = v.strictObject({
+export const inputGetRunStepCommandQuerySchema = v.strictObject({
 	"include[]": v.optional(
 		v.array(
 			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
 		),
 	),
 });
-export const exactListVectorStoresCommandResponseSchema =
-	exactListVectorStoresResponseSchema;
+export const getRunStepCommandQuerySchema = v.strictObject({
+	"include[]": v.exactOptional(
+		v.array(
+			v.picklist(["step_details.tool_calls[*].file_search.results[*].content"]),
+		),
+	),
+});
+export const inputListVectorStoresCommandResponseSchema =
+	inputListVectorStoresResponseSchema;
 export const listVectorStoresCommandResponseSchema =
 	listVectorStoresResponseSchema;
-export const exactListVectorStoresCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	order: v.exactOptional(v.picklist(["asc", "desc"])),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
+export const inputListVectorStoresCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	order: v.optional(v.picklist(["asc", "desc"])),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
 });
 export const listVectorStoresCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13035,70 +13013,70 @@ export const listVectorStoresCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateVectorStoreCommandBodySchema =
-	exactCreateVectorStoreRequestSchema;
+export const inputCreateVectorStoreCommandBodySchema =
+	inputCreateVectorStoreRequestSchema;
 export const createVectorStoreCommandBodySchema =
 	createVectorStoreRequestSchema;
-export const exactCreateVectorStoreCommandResponseSchema =
-	exactVectorStoreObjectSchema;
+export const inputCreateVectorStoreCommandResponseSchema =
+	inputVectorStoreObjectSchema;
 export const createVectorStoreCommandResponseSchema = vectorStoreObjectSchema;
-export const exactGetVectorStoreCommandResponseSchema =
-	exactVectorStoreObjectSchema;
+export const inputGetVectorStoreCommandResponseSchema =
+	inputVectorStoreObjectSchema;
 export const getVectorStoreCommandResponseSchema = vectorStoreObjectSchema;
-export const exactGetVectorStoreCommandParamsSchema = v.strictObject({
+export const inputGetVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const getVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyVectorStoreCommandBodySchema =
-	exactUpdateVectorStoreRequestSchema;
+export const inputModifyVectorStoreCommandBodySchema =
+	inputUpdateVectorStoreRequestSchema;
 export const modifyVectorStoreCommandBodySchema =
 	updateVectorStoreRequestSchema;
-export const exactModifyVectorStoreCommandResponseSchema =
-	exactVectorStoreObjectSchema;
+export const inputModifyVectorStoreCommandResponseSchema =
+	inputVectorStoreObjectSchema;
 export const modifyVectorStoreCommandResponseSchema = vectorStoreObjectSchema;
-export const exactModifyVectorStoreCommandParamsSchema = v.strictObject({
+export const inputModifyVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const modifyVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteVectorStoreCommandResponseSchema =
-	exactDeleteVectorStoreResponseSchema;
+export const inputDeleteVectorStoreCommandResponseSchema =
+	inputDeleteVectorStoreResponseSchema;
 export const deleteVectorStoreCommandResponseSchema =
 	deleteVectorStoreResponseSchema;
-export const exactDeleteVectorStoreCommandParamsSchema = v.strictObject({
+export const inputDeleteVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const deleteVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListVectorStoreFilesCommandResponseSchema =
-	exactListVectorStoreFilesResponseSchema;
+export const inputListVectorStoreFilesCommandResponseSchema =
+	inputListVectorStoreFilesResponseSchema;
 export const listVectorStoreFilesCommandResponseSchema =
 	listVectorStoreFilesResponseSchema;
-export const exactListVectorStoreFilesCommandParamsSchema = v.strictObject({
+export const inputListVectorStoreFilesCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const listVectorStoreFilesCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListVectorStoreFilesCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	order: v.exactOptional(v.picklist(["asc", "desc"])),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
-	filter: v.exactOptional(
+export const inputListVectorStoreFilesCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	order: v.optional(v.picklist(["asc", "desc"])),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
+	filter: v.optional(
 		v.picklist(["in_progress", "completed", "failed", "cancelled"]),
 	),
 });
 export const listVectorStoreFilesCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13109,32 +13087,32 @@ export const listVectorStoreFilesCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
-	filter: v.optional(
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
+	filter: v.exactOptional(
 		v.picklist(["in_progress", "completed", "failed", "cancelled"]),
 	),
 });
-export const exactCreateVectorStoreFileCommandBodySchema =
-	exactCreateVectorStoreFileRequestSchema;
+export const inputCreateVectorStoreFileCommandBodySchema =
+	inputCreateVectorStoreFileRequestSchema;
 export const createVectorStoreFileCommandBodySchema =
 	createVectorStoreFileRequestSchema;
-export const exactCreateVectorStoreFileCommandResponseSchema =
-	exactVectorStoreFileObjectSchema;
+export const inputCreateVectorStoreFileCommandResponseSchema =
+	inputVectorStoreFileObjectSchema;
 export const createVectorStoreFileCommandResponseSchema =
 	vectorStoreFileObjectSchema;
-export const exactCreateVectorStoreFileCommandParamsSchema = v.strictObject({
+export const inputCreateVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const createVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
-export const exactGetVectorStoreFileCommandResponseSchema =
-	exactVectorStoreFileObjectSchema;
+export const inputGetVectorStoreFileCommandResponseSchema =
+	inputVectorStoreFileObjectSchema;
 export const getVectorStoreFileCommandResponseSchema =
 	vectorStoreFileObjectSchema;
-export const exactGetVectorStoreFileCommandParamsSchema = v.strictObject({
+export const inputGetVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 	file_id: v.string(),
 });
@@ -13142,11 +13120,11 @@ export const getVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	file_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteVectorStoreFileCommandResponseSchema =
-	exactDeleteVectorStoreFileResponseSchema;
+export const inputDeleteVectorStoreFileCommandResponseSchema =
+	inputDeleteVectorStoreFileResponseSchema;
 export const deleteVectorStoreFileCommandResponseSchema =
 	deleteVectorStoreFileResponseSchema;
-export const exactDeleteVectorStoreFileCommandParamsSchema = v.strictObject({
+export const inputDeleteVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 	file_id: v.string(),
 });
@@ -13154,26 +13132,26 @@ export const deleteVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	file_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCreateVectorStoreFileBatchCommandBodySchema =
-	exactCreateVectorStoreFileBatchRequestSchema;
+export const inputCreateVectorStoreFileBatchCommandBodySchema =
+	inputCreateVectorStoreFileBatchRequestSchema;
 export const createVectorStoreFileBatchCommandBodySchema =
 	createVectorStoreFileBatchRequestSchema;
-export const exactCreateVectorStoreFileBatchCommandResponseSchema =
-	exactVectorStoreFileBatchObjectSchema;
+export const inputCreateVectorStoreFileBatchCommandResponseSchema =
+	inputVectorStoreFileBatchObjectSchema;
 export const createVectorStoreFileBatchCommandResponseSchema =
 	vectorStoreFileBatchObjectSchema;
-export const exactCreateVectorStoreFileBatchCommandParamsSchema =
+export const inputCreateVectorStoreFileBatchCommandParamsSchema =
 	v.strictObject({
 		vector_store_id: v.string(),
 	});
 export const createVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
-export const exactGetVectorStoreFileBatchCommandResponseSchema =
-	exactVectorStoreFileBatchObjectSchema;
+export const inputGetVectorStoreFileBatchCommandResponseSchema =
+	inputVectorStoreFileBatchObjectSchema;
 export const getVectorStoreFileBatchCommandResponseSchema =
 	vectorStoreFileBatchObjectSchema;
-export const exactGetVectorStoreFileBatchCommandParamsSchema = v.strictObject({
+export const inputGetVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 	batch_id: v.string(),
 });
@@ -13181,11 +13159,11 @@ export const getVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	batch_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCancelVectorStoreFileBatchCommandResponseSchema =
-	exactVectorStoreFileBatchObjectSchema;
+export const inputCancelVectorStoreFileBatchCommandResponseSchema =
+	inputVectorStoreFileBatchObjectSchema;
 export const cancelVectorStoreFileBatchCommandResponseSchema =
 	vectorStoreFileBatchObjectSchema;
-export const exactCancelVectorStoreFileBatchCommandParamsSchema =
+export const inputCancelVectorStoreFileBatchCommandParamsSchema =
 	v.strictObject({
 		vector_store_id: v.string(),
 		batch_id: v.string(),
@@ -13194,11 +13172,11 @@ export const cancelVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	batch_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListFilesInVectorStoreBatchCommandResponseSchema =
-	exactListVectorStoreFilesResponseSchema;
+export const inputListFilesInVectorStoreBatchCommandResponseSchema =
+	inputListVectorStoreFilesResponseSchema;
 export const listFilesInVectorStoreBatchCommandResponseSchema =
 	listVectorStoreFilesResponseSchema;
-export const exactListFilesInVectorStoreBatchCommandParamsSchema =
+export const inputListFilesInVectorStoreBatchCommandParamsSchema =
 	v.strictObject({
 		vector_store_id: v.string(),
 		batch_id: v.string(),
@@ -13207,18 +13185,18 @@ export const listFilesInVectorStoreBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	batch_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListFilesInVectorStoreBatchCommandQuerySchema =
+export const inputListFilesInVectorStoreBatchCommandQuerySchema =
 	v.strictObject({
-		limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-		order: v.exactOptional(v.picklist(["asc", "desc"])),
-		after: v.exactOptional(v.string()),
-		before: v.exactOptional(v.string()),
-		filter: v.exactOptional(
+		limit: v.optional(v.pipe(v.number(), v.integer())),
+		order: v.optional(v.picklist(["asc", "desc"])),
+		after: v.optional(v.string()),
+		before: v.optional(v.string()),
+		filter: v.optional(
 			v.picklist(["in_progress", "completed", "failed", "cancelled"]),
 		),
 	});
 export const listFilesInVectorStoreBatchCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13229,14 +13207,14 @@ export const listFilesInVectorStoreBatchCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	order: v.optional(v.picklist(["asc", "desc"])),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
-	filter: v.optional(
+	order: v.exactOptional(v.picklist(["asc", "desc"])),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
+	filter: v.exactOptional(
 		v.picklist(["in_progress", "completed", "failed", "cancelled"]),
 	),
 });
-export const exactCreateBatchCommandBodySchema = v.strictObject({
+export const inputCreateBatchCommandBodySchema = v.strictObject({
 	/**
 	 * The ID of an uploaded file that contains requests for the new batch.
 	 *
@@ -13268,7 +13246,7 @@ export const exactCreateBatchCommandBodySchema = v.strictObject({
 	/**
 	 * Optional custom metadata for the batch.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
 export const createBatchCommandBodySchema = v.strictObject({
 	/**
@@ -13302,20 +13280,20 @@ export const createBatchCommandBodySchema = v.strictObject({
 	/**
 	 * Optional custom metadata for the batch.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const exactCreateBatchCommandResponseSchema = exactBatchSchema;
+export const inputCreateBatchCommandResponseSchema = inputBatchSchema;
 export const createBatchCommandResponseSchema = batchSchema;
-export const exactListBatchesCommandResponseSchema =
-	exactListBatchesResponseSchema;
+export const inputListBatchesCommandResponseSchema =
+	inputListBatchesResponseSchema;
 export const listBatchesCommandResponseSchema = listBatchesResponseSchema;
-export const exactListBatchesCommandQuerySchema = v.strictObject({
-	after: v.exactOptional(v.string()),
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
+export const inputListBatchesCommandQuerySchema = v.strictObject({
+	after: v.optional(v.string()),
+	limit: v.optional(v.pipe(v.number(), v.integer())),
 });
 export const listBatchesCommandQuerySchema = v.strictObject({
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	limit: v.optional(
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13327,60 +13305,26 @@ export const listBatchesCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
-export const exactRetrieveBatchCommandResponseSchema = exactBatchSchema;
+export const inputRetrieveBatchCommandResponseSchema = inputBatchSchema;
 export const retrieveBatchCommandResponseSchema = batchSchema;
-export const exactRetrieveBatchCommandParamsSchema = v.strictObject({
+export const inputRetrieveBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.string(),
 });
 export const retrieveBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.pipe(v.string(), v.trim()),
 });
-export const exactCancelBatchCommandResponseSchema = exactBatchSchema;
+export const inputCancelBatchCommandResponseSchema = inputBatchSchema;
 export const cancelBatchCommandResponseSchema = batchSchema;
-export const exactCancelBatchCommandParamsSchema = v.strictObject({
+export const inputCancelBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.string(),
 });
 export const cancelBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListAuditLogsCommandResponseSchema =
-	exactListAuditLogsResponseSchema;
+export const inputListAuditLogsCommandResponseSchema =
+	inputListAuditLogsResponseSchema;
 export const listAuditLogsCommandResponseSchema = listAuditLogsResponseSchema;
-export const exactListAuditLogsCommandQuerySchema = v.strictObject({
-	effective_at: v.exactOptional(
-		v.strictObject({
-			/**
-			 * Return only events whose `effective_at` (Unix seconds) is greater than this
-			 * value.
-			 */
-			gt: v.exactOptional(v.pipe(v.number(), v.integer())),
-			/**
-			 * Return only events whose `effective_at` (Unix seconds) is greater than or
-			 * equal to this value.
-			 */
-			gte: v.exactOptional(v.pipe(v.number(), v.integer())),
-			/**
-			 * Return only events whose `effective_at` (Unix seconds) is less than this
-			 * value.
-			 */
-			lt: v.exactOptional(v.pipe(v.number(), v.integer())),
-			/**
-			 * Return only events whose `effective_at` (Unix seconds) is less than or
-			 * equal to this value.
-			 */
-			lte: v.exactOptional(v.pipe(v.number(), v.integer())),
-		}),
-	),
-	"project_ids[]": v.exactOptional(v.array(v.string())),
-	"event_types[]": v.exactOptional(v.array(exactAuditLogEventTypeSchema)),
-	"actor_ids[]": v.exactOptional(v.array(v.string())),
-	"actor_emails[]": v.exactOptional(v.array(v.string())),
-	"resource_ids[]": v.exactOptional(v.array(v.string())),
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	after: v.exactOptional(v.string()),
-	before: v.exactOptional(v.string()),
-});
-export const listAuditLogsCommandQuerySchema = v.strictObject({
+export const inputListAuditLogsCommandQuerySchema = v.strictObject({
 	effective_at: v.optional(
 		v.strictObject({
 			/**
@@ -13405,12 +13349,46 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 			lte: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
-	"project_ids[]": v.optional(v.array(v.pipe(v.string(), v.trim()))),
-	"event_types[]": v.optional(v.array(auditLogEventTypeSchema)),
-	"actor_ids[]": v.optional(v.array(v.pipe(v.string(), v.trim()))),
-	"actor_emails[]": v.optional(v.array(v.pipe(v.string(), v.trim()))),
-	"resource_ids[]": v.optional(v.array(v.pipe(v.string(), v.trim()))),
-	limit: v.optional(
+	"project_ids[]": v.optional(v.array(v.string())),
+	"event_types[]": v.optional(v.array(inputAuditLogEventTypeSchema)),
+	"actor_ids[]": v.optional(v.array(v.string())),
+	"actor_emails[]": v.optional(v.array(v.string())),
+	"resource_ids[]": v.optional(v.array(v.string())),
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	after: v.optional(v.string()),
+	before: v.optional(v.string()),
+});
+export const listAuditLogsCommandQuerySchema = v.strictObject({
+	effective_at: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Return only events whose `effective_at` (Unix seconds) is greater than this
+			 * value.
+			 */
+			gt: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Return only events whose `effective_at` (Unix seconds) is greater than or
+			 * equal to this value.
+			 */
+			gte: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Return only events whose `effective_at` (Unix seconds) is less than this
+			 * value.
+			 */
+			lt: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Return only events whose `effective_at` (Unix seconds) is less than or
+			 * equal to this value.
+			 */
+			lte: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	"project_ids[]": v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
+	"event_types[]": v.exactOptional(v.array(auditLogEventTypeSchema)),
+	"actor_ids[]": v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
+	"actor_emails[]": v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
+	"resource_ids[]": v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13421,18 +13399,18 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	before: v.optional(v.pipe(v.string(), v.trim())),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	before: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactListInvitesCommandResponseSchema =
-	exactInviteListResponseSchema;
+export const inputListInvitesCommandResponseSchema =
+	inputInviteListResponseSchema;
 export const listInvitesCommandResponseSchema = inviteListResponseSchema;
-export const exactListInvitesCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	after: v.exactOptional(v.string()),
+export const inputListInvitesCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	after: v.optional(v.string()),
 });
 export const listInvitesCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13443,37 +13421,37 @@ export const listInvitesCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactInviteUserCommandBodySchema = exactInviteRequestSchema;
+export const inputInviteUserCommandBodySchema = inputInviteRequestSchema;
 export const inviteUserCommandBodySchema = inviteRequestSchema;
-export const exactInviteUserCommandResponseSchema = exactInviteSchema;
+export const inputInviteUserCommandResponseSchema = inputInviteSchema;
 export const inviteUserCommandResponseSchema = inviteSchema;
-export const exactRetrieveInviteCommandResponseSchema = exactInviteSchema;
+export const inputRetrieveInviteCommandResponseSchema = inputInviteSchema;
 export const retrieveInviteCommandResponseSchema = inviteSchema;
-export const exactRetrieveInviteCommandParamsSchema = v.strictObject({
+export const inputRetrieveInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.string(),
 });
 export const retrieveInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteInviteCommandResponseSchema =
-	exactInviteDeleteResponseSchema;
+export const inputDeleteInviteCommandResponseSchema =
+	inputInviteDeleteResponseSchema;
 export const deleteInviteCommandResponseSchema = inviteDeleteResponseSchema;
-export const exactDeleteInviteCommandParamsSchema = v.strictObject({
+export const inputDeleteInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.string(),
 });
 export const deleteInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListUsersCommandResponseSchema = exactUserListResponseSchema;
+export const inputListUsersCommandResponseSchema = inputUserListResponseSchema;
 export const listUsersCommandResponseSchema = userListResponseSchema;
-export const exactListUsersCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	after: v.exactOptional(v.string()),
+export const inputListUsersCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	after: v.optional(v.string()),
 });
 export const listUsersCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13484,46 +13462,46 @@ export const listUsersCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactRetrieveUserCommandResponseSchema = exactUserSchema;
+export const inputRetrieveUserCommandResponseSchema = inputUserSchema;
 export const retrieveUserCommandResponseSchema = userSchema;
-export const exactRetrieveUserCommandParamsSchema = v.strictObject({
+export const inputRetrieveUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
 export const retrieveUserCommandParamsSchema = v.strictObject({
 	user_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyUserCommandBodySchema =
-	exactUserRoleUpdateRequestSchema;
+export const inputModifyUserCommandBodySchema =
+	inputUserRoleUpdateRequestSchema;
 export const modifyUserCommandBodySchema = userRoleUpdateRequestSchema;
-export const exactModifyUserCommandResponseSchema = exactUserSchema;
+export const inputModifyUserCommandResponseSchema = inputUserSchema;
 export const modifyUserCommandResponseSchema = userSchema;
-export const exactModifyUserCommandParamsSchema = v.strictObject({
+export const inputModifyUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
 export const modifyUserCommandParamsSchema = v.strictObject({
 	user_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteUserCommandResponseSchema =
-	exactUserDeleteResponseSchema;
+export const inputDeleteUserCommandResponseSchema =
+	inputUserDeleteResponseSchema;
 export const deleteUserCommandResponseSchema = userDeleteResponseSchema;
-export const exactDeleteUserCommandParamsSchema = v.strictObject({
+export const inputDeleteUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
 export const deleteUserCommandParamsSchema = v.strictObject({
 	user_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectsCommandResponseSchema =
-	exactProjectListResponseSchema;
+export const inputListProjectsCommandResponseSchema =
+	inputProjectListResponseSchema;
 export const listProjectsCommandResponseSchema = projectListResponseSchema;
-export const exactListProjectsCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	after: v.exactOptional(v.string()),
-	include_archived: v.exactOptional(v.boolean()),
+export const inputListProjectsCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	after: v.optional(v.string()),
+	include_archived: v.optional(v.boolean()),
 });
 export const listProjectsCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13534,57 +13512,57 @@ export const listProjectsCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
-	include_archived: v.optional(v.boolean()),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
+	include_archived: v.exactOptional(v.boolean()),
 });
-export const exactCreateProjectCommandBodySchema =
-	exactProjectCreateRequestSchema;
+export const inputCreateProjectCommandBodySchema =
+	inputProjectCreateRequestSchema;
 export const createProjectCommandBodySchema = projectCreateRequestSchema;
-export const exactCreateProjectCommandResponseSchema = exactProjectSchema;
+export const inputCreateProjectCommandResponseSchema = inputProjectSchema;
 export const createProjectCommandResponseSchema = projectSchema;
-export const exactRetrieveProjectCommandResponseSchema = exactProjectSchema;
+export const inputRetrieveProjectCommandResponseSchema = inputProjectSchema;
 export const retrieveProjectCommandResponseSchema = projectSchema;
-export const exactRetrieveProjectCommandParamsSchema = v.strictObject({
+export const inputRetrieveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const retrieveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyProjectCommandBodySchema =
-	exactProjectUpdateRequestSchema;
+export const inputModifyProjectCommandBodySchema =
+	inputProjectUpdateRequestSchema;
 export const modifyProjectCommandBodySchema = projectUpdateRequestSchema;
-export const exactModifyProjectCommandResponseSchema = exactProjectSchema;
+export const inputModifyProjectCommandResponseSchema = inputProjectSchema;
 export const modifyProjectCommandResponseSchema = projectSchema;
-export const exactModifyProjectCommandParamsSchema = v.strictObject({
+export const inputModifyProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const modifyProjectCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactArchiveProjectCommandResponseSchema = exactProjectSchema;
+export const inputArchiveProjectCommandResponseSchema = inputProjectSchema;
 export const archiveProjectCommandResponseSchema = projectSchema;
-export const exactArchiveProjectCommandParamsSchema = v.strictObject({
+export const inputArchiveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const archiveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectUsersCommandResponseSchema =
-	exactProjectUserListResponseSchema;
+export const inputListProjectUsersCommandResponseSchema =
+	inputProjectUserListResponseSchema;
 export const listProjectUsersCommandResponseSchema =
 	projectUserListResponseSchema;
-export const exactListProjectUsersCommandParamsSchema = v.strictObject({
+export const inputListProjectUsersCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const listProjectUsersCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectUsersCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	after: v.exactOptional(v.string()),
+export const inputListProjectUsersCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	after: v.optional(v.string()),
 });
 export const listProjectUsersCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13595,25 +13573,25 @@ export const listProjectUsersCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateProjectUserCommandBodySchema =
-	exactProjectUserCreateRequestSchema;
+export const inputCreateProjectUserCommandBodySchema =
+	inputProjectUserCreateRequestSchema;
 export const createProjectUserCommandBodySchema =
 	projectUserCreateRequestSchema;
-export const exactCreateProjectUserCommandResponseSchema =
-	exactProjectUserSchema;
+export const inputCreateProjectUserCommandResponseSchema =
+	inputProjectUserSchema;
 export const createProjectUserCommandResponseSchema = projectUserSchema;
-export const exactCreateProjectUserCommandParamsSchema = v.strictObject({
+export const inputCreateProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const createProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactRetrieveProjectUserCommandResponseSchema =
-	exactProjectUserSchema;
+export const inputRetrieveProjectUserCommandResponseSchema =
+	inputProjectUserSchema;
 export const retrieveProjectUserCommandResponseSchema = projectUserSchema;
-export const exactRetrieveProjectUserCommandParamsSchema = v.strictObject({
+export const inputRetrieveProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),
 });
@@ -13621,14 +13599,14 @@ export const retrieveProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	user_id: v.pipe(v.string(), v.trim()),
 });
-export const exactModifyProjectUserCommandBodySchema =
-	exactProjectUserUpdateRequestSchema;
+export const inputModifyProjectUserCommandBodySchema =
+	inputProjectUserUpdateRequestSchema;
 export const modifyProjectUserCommandBodySchema =
 	projectUserUpdateRequestSchema;
-export const exactModifyProjectUserCommandResponseSchema =
-	exactProjectUserSchema;
+export const inputModifyProjectUserCommandResponseSchema =
+	inputProjectUserSchema;
 export const modifyProjectUserCommandResponseSchema = projectUserSchema;
-export const exactModifyProjectUserCommandParamsSchema = v.strictObject({
+export const inputModifyProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),
 });
@@ -13636,11 +13614,11 @@ export const modifyProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	user_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteProjectUserCommandResponseSchema =
-	exactProjectUserDeleteResponseSchema;
+export const inputDeleteProjectUserCommandResponseSchema =
+	inputProjectUserDeleteResponseSchema;
 export const deleteProjectUserCommandResponseSchema =
 	projectUserDeleteResponseSchema;
-export const exactDeleteProjectUserCommandParamsSchema = v.strictObject({
+export const inputDeleteProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),
 });
@@ -13648,25 +13626,25 @@ export const deleteProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	user_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectServiceAccountsCommandResponseSchema =
-	exactProjectServiceAccountListResponseSchema;
+export const inputListProjectServiceAccountsCommandResponseSchema =
+	inputProjectServiceAccountListResponseSchema;
 export const listProjectServiceAccountsCommandResponseSchema =
 	projectServiceAccountListResponseSchema;
-export const exactListProjectServiceAccountsCommandParamsSchema =
+export const inputListProjectServiceAccountsCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
 	});
 export const listProjectServiceAccountsCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectServiceAccountsCommandQuerySchema = v.strictObject(
+export const inputListProjectServiceAccountsCommandQuerySchema = v.strictObject(
 	{
-		limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-		after: v.exactOptional(v.string()),
+		limit: v.optional(v.pipe(v.number(), v.integer())),
+		after: v.optional(v.string()),
 	},
 );
 export const listProjectServiceAccountsCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13677,28 +13655,28 @@ export const listProjectServiceAccountsCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactCreateProjectServiceAccountCommandBodySchema =
-	exactProjectServiceAccountCreateRequestSchema;
+export const inputCreateProjectServiceAccountCommandBodySchema =
+	inputProjectServiceAccountCreateRequestSchema;
 export const createProjectServiceAccountCommandBodySchema =
 	projectServiceAccountCreateRequestSchema;
-export const exactCreateProjectServiceAccountCommandResponseSchema =
-	exactProjectServiceAccountCreateResponseSchema;
+export const inputCreateProjectServiceAccountCommandResponseSchema =
+	inputProjectServiceAccountCreateResponseSchema;
 export const createProjectServiceAccountCommandResponseSchema =
 	projectServiceAccountCreateResponseSchema;
-export const exactCreateProjectServiceAccountCommandParamsSchema =
+export const inputCreateProjectServiceAccountCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
 	});
 export const createProjectServiceAccountCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactRetrieveProjectServiceAccountCommandResponseSchema =
-	exactProjectServiceAccountSchema;
+export const inputRetrieveProjectServiceAccountCommandResponseSchema =
+	inputProjectServiceAccountSchema;
 export const retrieveProjectServiceAccountCommandResponseSchema =
 	projectServiceAccountSchema;
-export const exactRetrieveProjectServiceAccountCommandParamsSchema =
+export const inputRetrieveProjectServiceAccountCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
 		service_account_id: v.string(),
@@ -13707,11 +13685,11 @@ export const retrieveProjectServiceAccountCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	service_account_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteProjectServiceAccountCommandResponseSchema =
-	exactProjectServiceAccountDeleteResponseSchema;
+export const inputDeleteProjectServiceAccountCommandResponseSchema =
+	inputProjectServiceAccountDeleteResponseSchema;
 export const deleteProjectServiceAccountCommandResponseSchema =
 	projectServiceAccountDeleteResponseSchema;
-export const exactDeleteProjectServiceAccountCommandParamsSchema =
+export const inputDeleteProjectServiceAccountCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
 		service_account_id: v.string(),
@@ -13720,22 +13698,22 @@ export const deleteProjectServiceAccountCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	service_account_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectApiKeysCommandResponseSchema =
-	exactProjectApiKeyListResponseSchema;
+export const inputListProjectApiKeysCommandResponseSchema =
+	inputProjectApiKeyListResponseSchema;
 export const listProjectApiKeysCommandResponseSchema =
 	projectApiKeyListResponseSchema;
-export const exactListProjectApiKeysCommandParamsSchema = v.strictObject({
+export const inputListProjectApiKeysCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const listProjectApiKeysCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
-export const exactListProjectApiKeysCommandQuerySchema = v.strictObject({
-	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
-	after: v.exactOptional(v.string()),
+export const inputListProjectApiKeysCommandQuerySchema = v.strictObject({
+	limit: v.optional(v.pipe(v.number(), v.integer())),
+	after: v.optional(v.string()),
 });
 export const listProjectApiKeysCommandQuerySchema = v.strictObject({
-	limit: v.optional(
+	limit: v.exactOptional(
 		v.union([
 			v.pipe(
 				v.string(),
@@ -13746,12 +13724,12 @@ export const listProjectApiKeysCommandQuerySchema = v.strictObject({
 			v.pipe(v.number(), v.integer()),
 		]),
 	),
-	after: v.optional(v.pipe(v.string(), v.trim())),
+	after: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const exactRetrieveProjectApiKeyCommandResponseSchema =
-	exactProjectApiKeySchema;
+export const inputRetrieveProjectApiKeyCommandResponseSchema =
+	inputProjectApiKeySchema;
 export const retrieveProjectApiKeyCommandResponseSchema = projectApiKeySchema;
-export const exactRetrieveProjectApiKeyCommandParamsSchema = v.strictObject({
+export const inputRetrieveProjectApiKeyCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	key_id: v.string(),
 });
@@ -13759,11 +13737,11 @@ export const retrieveProjectApiKeyCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	key_id: v.pipe(v.string(), v.trim()),
 });
-export const exactDeleteProjectApiKeyCommandResponseSchema =
-	exactProjectApiKeyDeleteResponseSchema;
+export const inputDeleteProjectApiKeyCommandResponseSchema =
+	inputProjectApiKeyDeleteResponseSchema;
 export const deleteProjectApiKeyCommandResponseSchema =
 	projectApiKeyDeleteResponseSchema;
-export const exactDeleteProjectApiKeyCommandParamsSchema = v.strictObject({
+export const inputDeleteProjectApiKeyCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	key_id: v.string(),
 });

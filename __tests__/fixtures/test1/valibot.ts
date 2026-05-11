@@ -3,43 +3,43 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T04:55:05.645Z
+ * Generated on 2026-05-11T06:12:41.762Z
  *
  */
 import * as v from "valibot";
 
-export const exactPromoCodeSchema = v.pipe(
+export const inputPromoCodeSchema = v.pipe(
 	v.string(),
 	v.minLength(1),
 	v.maxLength(256),
 	v.regex(new RegExp("/^[A-Z0-9]$/")),
 );
-export const promoCodeSchema = exactPromoCodeSchema;
+export const promoCodeSchema = inputPromoCodeSchema;
 /** The API version */
-export const exactApiVersionSchema = v.literal("2024-01-01");
-export const apiVersionSchema = exactApiVersionSchema;
-export const exactMaxRetriesSchema = v.literal(3);
-export const maxRetriesSchema = exactMaxRetriesSchema;
-export const exactDefaultEnabledSchema = v.literal(true);
-export const defaultEnabledSchema = exactDefaultEnabledSchema;
+export const inputApiVersionSchema = v.literal("2024-01-01");
+export const apiVersionSchema = inputApiVersionSchema;
+export const inputMaxRetriesSchema = v.literal(3);
+export const maxRetriesSchema = inputMaxRetriesSchema;
+export const inputDefaultEnabledSchema = v.literal(true);
+export const defaultEnabledSchema = inputDefaultEnabledSchema;
 /** Optional notes field */
-export const exactNullableNotesSchema = v.nullable(v.string());
-export const nullableNotesSchema = exactNullableNotesSchema;
-export const exactNullableDiscountSchema = v.nullable(v.number());
-export const nullableDiscountSchema = exactNullableDiscountSchema;
-export const exactNullableStatusSchema = v.nullable(
+export const inputNullableNotesSchema = v.nullable(v.string());
+export const nullableNotesSchema = inputNullableNotesSchema;
+export const inputNullableDiscountSchema = v.nullable(v.number());
+export const nullableDiscountSchema = inputNullableDiscountSchema;
+export const inputNullableStatusSchema = v.nullable(
 	v.picklist(["active", "paused", "cancelled"]),
 );
-export const nullableStatusSchema = exactNullableStatusSchema;
-export const exactAccountTierSchema = v.picklist(["free", "pro", "enterprise"]);
-export const accountTierSchema = exactAccountTierSchema;
-export const exactEmbedUrlSchema = v.pipe(
+export const nullableStatusSchema = inputNullableStatusSchema;
+export const inputAccountTierSchema = v.picklist(["free", "pro", "enterprise"]);
+export const accountTierSchema = inputAccountTierSchema;
+export const inputEmbedUrlSchema = v.pipe(
 	v.string(),
 	v.regex(new RegExp("^https://embed\\.example\\.com/.+$")),
 	v.custom<`https://embed.example.com/${string}`>(() => true),
 );
-export const embedUrlSchema = exactEmbedUrlSchema;
-export const exactEventSourceSchema = v.union([
+export const embedUrlSchema = inputEmbedUrlSchema;
+export const inputEventSourceSchema = v.union([
 	v.picklist(["native"]),
 	v.pipe(
 		v.string(),
@@ -52,91 +52,91 @@ export const exactEventSourceSchema = v.union([
 		v.custom<`https://syndicated.example.com/${string}`>(() => true),
 	),
 ]);
-export const eventSourceSchema = exactEventSourceSchema;
-export const exactStripeIdSchema = v.pipe(
+export const eventSourceSchema = inputEventSourceSchema;
+export const inputStripeIdSchema = v.pipe(
 	v.string(),
 	v.minLength(11),
 	v.maxLength(255),
 	v.regex(new RegExp("^(pm|cus|sub)_\\w{8,}$")),
 );
-export const stripeIdSchema = exactStripeIdSchema;
-export const exactDateTimeSchema = v.string();
+export const stripeIdSchema = inputStripeIdSchema;
+export const inputDateTimeSchema = v.string();
 export const dateTimeSchema = v.pipe(v.string(), v.trim());
-export const exactBillingSubscriptionStatusSchema = v.picklist([
+export const inputBillingSubscriptionStatusSchema = v.picklist([
 	"active",
 	"inactive",
 ]);
 export const billingSubscriptionStatusSchema =
-	exactBillingSubscriptionStatusSchema;
-export const exactBillingSubscriptionIntervalSchema = v.picklist([
+	inputBillingSubscriptionStatusSchema;
+export const inputBillingSubscriptionIntervalSchema = v.picklist([
 	"monthly",
 	"yearly",
 ]);
 export const billingSubscriptionIntervalSchema =
-	exactBillingSubscriptionIntervalSchema;
-export const exactPlanSkuSchema = v.picklist([
+	inputBillingSubscriptionIntervalSchema;
+export const inputPlanSkuSchema = v.picklist([
 	"donotuse",
 	"plasku1",
 	"plasku2",
 	"plasku3",
 	"plasku4",
 ]);
-export const planSkuSchema = exactPlanSkuSchema;
-export const exactIdSchema = v.pipe(
+export const planSkuSchema = inputPlanSkuSchema;
+export const inputIdSchema = v.pipe(
 	v.string(),
 	v.minLength(1),
 	v.maxLength(16),
 	v.regex(new RegExp("^[a-zA-Z0-9]+$")),
 );
-export const idSchema = exactIdSchema;
-export const exactBillingSubscriptionIdentifiersSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
-	subscriptionId: exactIdSchema,
+export const idSchema = inputIdSchema;
+export const inputBillingSubscriptionIdentifiersSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
+	subscriptionId: inputIdSchema,
 });
 export const billingSubscriptionIdentifiersSchema =
-	exactBillingSubscriptionIdentifiersSchema;
-export const exactBillingSubscriptionSchema = v.intersect([
-	exactBillingSubscriptionIdentifiersSchema,
+	inputBillingSubscriptionIdentifiersSchema;
+export const inputBillingSubscriptionSchema = v.intersect([
+	inputBillingSubscriptionIdentifiersSchema,
 	v.strictObject({
-		accountId: v.exactOptional(exactIdSchema),
-		planSku: exactPlanSkuSchema,
-		interval: exactBillingSubscriptionIntervalSchema,
-		status: exactBillingSubscriptionStatusSchema,
-		cycleTime: exactDateTimeSchema,
-		trialEndTime: v.exactOptional(exactDateTimeSchema),
-		createdTime: exactDateTimeSchema,
-		updatedTime: v.exactOptional(exactDateTimeSchema),
+		accountId: v.optional(inputIdSchema),
+		planSku: inputPlanSkuSchema,
+		interval: inputBillingSubscriptionIntervalSchema,
+		status: inputBillingSubscriptionStatusSchema,
+		cycleTime: inputDateTimeSchema,
+		trialEndTime: v.optional(inputDateTimeSchema),
+		createdTime: inputDateTimeSchema,
+		updatedTime: v.optional(inputDateTimeSchema),
 	}),
 ]);
 export const billingSubscriptionSchema = v.intersect([
 	billingSubscriptionIdentifiersSchema,
 	v.strictObject({
-		accountId: v.optional(idSchema),
+		accountId: v.exactOptional(idSchema),
 		planSku: planSkuSchema,
 		interval: billingSubscriptionIntervalSchema,
 		status: billingSubscriptionStatusSchema,
 		cycleTime: dateTimeSchema,
-		trialEndTime: v.optional(dateTimeSchema),
+		trialEndTime: v.exactOptional(dateTimeSchema),
 		createdTime: dateTimeSchema,
-		updatedTime: v.optional(dateTimeSchema),
+		updatedTime: v.exactOptional(dateTimeSchema),
 	}),
 ]);
-export const exactBillingSubscriptionsSchema = v.array(
-	exactBillingSubscriptionSchema,
+export const inputBillingSubscriptionsSchema = v.array(
+	inputBillingSubscriptionSchema,
 );
-export const billingSubscriptionsSchema = exactBillingSubscriptionsSchema;
-export const exactUuidSchema = v.pipe(v.string(), v.uuid());
-export const uuidSchema = exactUuidSchema;
-export const exactLongRunningOperationFailSchema = v.strictObject({
-	operationId: exactUuidSchema,
+export const billingSubscriptionsSchema = inputBillingSubscriptionsSchema;
+export const inputUuidSchema = v.pipe(v.string(), v.uuid());
+export const uuidSchema = inputUuidSchema;
+export const inputLongRunningOperationFailSchema = v.strictObject({
+	operationId: inputUuidSchema,
 	done: v.boolean(),
 	result: v.strictObject({
 		error: v.number(),
 	}),
 });
 export const longRunningOperationFailSchema =
-	exactLongRunningOperationFailSchema;
-export const exactStringU8Schema = v.pipe(
+	inputLongRunningOperationFailSchema;
+export const inputStringU8Schema = v.pipe(
 	v.string(),
 	v.minLength(1),
 	v.maxLength(256),
@@ -147,41 +147,41 @@ export const stringU8Schema = v.pipe(
 	v.minLength(1),
 	v.maxLength(256),
 );
-export const exactBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema =
+export const inputBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema =
 	v.strictObject({
-		operationId: exactUuidSchema,
+		operationId: inputUuidSchema,
 		done: v.boolean(),
 		result: v.strictObject({
 			response: v.strictObject({
-				promoCode: exactStringU8Schema,
+				promoCode: inputStringU8Schema,
 			}),
 		}),
 	});
 export const billingSubscriptionPromoCodeLongRunningOperationSuccessSchema =
-	exactBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema;
-export const exactLongRunningOperationIndeterminateSchema = v.strictObject({
-	operationId: exactUuidSchema,
+	inputBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema;
+export const inputLongRunningOperationIndeterminateSchema = v.strictObject({
+	operationId: inputUuidSchema,
 	done: v.boolean(),
 });
 export const longRunningOperationIndeterminateSchema =
-	exactLongRunningOperationIndeterminateSchema;
-export const exactBillingSubscriptionLroSchema = v.union([
-	exactLongRunningOperationIndeterminateSchema,
-	exactBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema,
-	exactLongRunningOperationFailSchema,
+	inputLongRunningOperationIndeterminateSchema;
+export const inputBillingSubscriptionLroSchema = v.union([
+	inputLongRunningOperationIndeterminateSchema,
+	inputBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema,
+	inputLongRunningOperationFailSchema,
 ]);
-export const billingSubscriptionLroSchema = exactBillingSubscriptionLroSchema;
-export const exactUpdateBillingSubscriptionPromoCodeRequestSchema =
+export const billingSubscriptionLroSchema = inputBillingSubscriptionLroSchema;
+export const inputUpdateBillingSubscriptionPromoCodeRequestSchema =
 	v.strictObject({
 		promoCode: v.union([
-			exactStringU8Schema,
+			inputStringU8Schema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	});
 export const updateBillingSubscriptionPromoCodeRequestSchema =
-	exactUpdateBillingSubscriptionPromoCodeRequestSchema;
+	inputUpdateBillingSubscriptionPromoCodeRequestSchema;
 /** Reasonable string to be used as a name of a person, or an object */
-export const exactNameSchema = v.pipe(
+export const inputNameSchema = v.pipe(
 	v.string(),
 	v.minLength(2),
 	v.maxLength(512),
@@ -192,27 +192,27 @@ export const nameSchema = v.pipe(
 	v.minLength(2),
 	v.maxLength(512),
 );
-export const exactUpdateBillingSubscriptionRequestSchema = v.strictObject({
-	label: v.exactOptional(exactNameSchema),
-	trialEndTime: v.exactOptional(exactDateTimeSchema),
+export const inputUpdateBillingSubscriptionRequestSchema = v.strictObject({
+	label: v.optional(inputNameSchema),
+	trialEndTime: v.optional(inputDateTimeSchema),
 });
 export const updateBillingSubscriptionRequestSchema = v.strictObject({
-	label: v.optional(nameSchema),
-	trialEndTime: v.optional(dateTimeSchema),
+	label: v.exactOptional(nameSchema),
+	trialEndTime: v.exactOptional(dateTimeSchema),
 });
-export const exactCreateBillingSubscriptionRequestSchema = v.strictObject({
-	accountId: exactIdSchema,
-	planSku: exactPlanSkuSchema,
-	interval: exactBillingSubscriptionIntervalSchema,
-	promoCode: v.exactOptional(exactStringU8Schema),
+export const inputCreateBillingSubscriptionRequestSchema = v.strictObject({
+	accountId: inputIdSchema,
+	planSku: inputPlanSkuSchema,
+	interval: inputBillingSubscriptionIntervalSchema,
+	promoCode: v.optional(inputStringU8Schema),
 });
 export const createBillingSubscriptionRequestSchema = v.strictObject({
 	accountId: idSchema,
 	planSku: planSkuSchema,
 	interval: billingSubscriptionIntervalSchema,
-	promoCode: v.optional(stringU8Schema),
+	promoCode: v.exactOptional(stringU8Schema),
 });
-export const exactPaymentMethodBrandSchema = v.picklist([
+export const inputPaymentMethodBrandSchema = v.picklist([
 	"amex",
 	"diners",
 	"discover",
@@ -222,20 +222,20 @@ export const exactPaymentMethodBrandSchema = v.picklist([
 	"visa",
 	"unknown",
 ]);
-export const paymentMethodBrandSchema = exactPaymentMethodBrandSchema;
-export const exactPaymentMethodIdentifiersSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
-	paymentMethodId: exactIdSchema,
+export const paymentMethodBrandSchema = inputPaymentMethodBrandSchema;
+export const inputPaymentMethodIdentifiersSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
+	paymentMethodId: inputIdSchema,
 });
 export const paymentMethodIdentifiersSchema =
-	exactPaymentMethodIdentifiersSchema;
-export const exactPaymentMethodSchema = v.intersect([
-	exactPaymentMethodIdentifiersSchema,
+	inputPaymentMethodIdentifiersSchema;
+export const inputPaymentMethodSchema = v.intersect([
+	inputPaymentMethodIdentifiersSchema,
 	v.strictObject({
-		label: exactNameSchema,
-		expireTime: exactDateTimeSchema,
-		humanId: exactStringU8Schema,
-		brand: v.exactOptional(exactPaymentMethodBrandSchema),
+		label: inputNameSchema,
+		expireTime: inputDateTimeSchema,
+		humanId: inputStringU8Schema,
+		brand: v.optional(inputPaymentMethodBrandSchema),
 	}),
 ]);
 export const paymentMethodSchema = v.intersect([
@@ -244,14 +244,14 @@ export const paymentMethodSchema = v.intersect([
 		label: nameSchema,
 		expireTime: dateTimeSchema,
 		humanId: stringU8Schema,
-		brand: v.optional(paymentMethodBrandSchema),
+		brand: v.exactOptional(paymentMethodBrandSchema),
 	}),
 ]);
-export const exactPaymentMethodsSchema = v.array(exactPaymentMethodSchema);
-export const paymentMethodsSchema = exactPaymentMethodsSchema;
-export const exactPaymentMethodDeletedLongRunningOperationSuccessSchema =
+export const inputPaymentMethodsSchema = v.array(inputPaymentMethodSchema);
+export const paymentMethodsSchema = inputPaymentMethodsSchema;
+export const inputPaymentMethodDeletedLongRunningOperationSuccessSchema =
 	v.strictObject({
-		operationId: exactUuidSchema,
+		operationId: inputUuidSchema,
 		done: v.boolean(),
 		result: v.strictObject({
 			response: v.strictObject({
@@ -260,16 +260,16 @@ export const exactPaymentMethodDeletedLongRunningOperationSuccessSchema =
 		}),
 	});
 export const paymentMethodDeletedLongRunningOperationSuccessSchema =
-	exactPaymentMethodDeletedLongRunningOperationSuccessSchema;
-export const exactPaymentMethodDeletedLroSchema = v.union([
-	exactLongRunningOperationIndeterminateSchema,
-	exactPaymentMethodDeletedLongRunningOperationSuccessSchema,
-	exactLongRunningOperationFailSchema,
+	inputPaymentMethodDeletedLongRunningOperationSuccessSchema;
+export const inputPaymentMethodDeletedLroSchema = v.union([
+	inputLongRunningOperationIndeterminateSchema,
+	inputPaymentMethodDeletedLongRunningOperationSuccessSchema,
+	inputLongRunningOperationFailSchema,
 ]);
-export const paymentMethodDeletedLroSchema = exactPaymentMethodDeletedLroSchema;
-export const exactPaymentMethodLongRunningOperationSuccessSchema =
+export const paymentMethodDeletedLroSchema = inputPaymentMethodDeletedLroSchema;
+export const inputPaymentMethodLongRunningOperationSuccessSchema =
 	v.strictObject({
-		operationId: exactUuidSchema,
+		operationId: inputUuidSchema,
 		done: v.boolean(),
 		result: v.strictObject({
 			response: v.strictObject({
@@ -286,86 +286,86 @@ export const paymentMethodLongRunningOperationSuccessSchema = v.strictObject({
 		}),
 	}),
 });
-export const exactPaymentMethodIntendedLroSchema = v.union([
-	exactLongRunningOperationIndeterminateSchema,
-	exactPaymentMethodLongRunningOperationSuccessSchema,
-	exactLongRunningOperationFailSchema,
+export const inputPaymentMethodIntendedLroSchema = v.union([
+	inputLongRunningOperationIndeterminateSchema,
+	inputPaymentMethodLongRunningOperationSuccessSchema,
+	inputLongRunningOperationFailSchema,
 ]);
 export const paymentMethodIntendedLroSchema =
-	exactPaymentMethodIntendedLroSchema;
-export const exactUpdatePaymentMethodRequestSchema = v.strictObject({
-	label: v.exactOptional(exactNameSchema),
-	isDefault: v.exactOptional(v.boolean()),
-});
-export const updatePaymentMethodRequestSchema = v.strictObject({
-	label: v.optional(nameSchema),
+	inputPaymentMethodIntendedLroSchema;
+export const inputUpdatePaymentMethodRequestSchema = v.strictObject({
+	label: v.optional(inputNameSchema),
 	isDefault: v.optional(v.boolean()),
 });
-export const exactLinkBillingAccountRequestSchema = v.strictObject({
-	accountId: exactIdSchema,
+export const updatePaymentMethodRequestSchema = v.strictObject({
+	label: v.exactOptional(nameSchema),
+	isDefault: v.exactOptional(v.boolean()),
+});
+export const inputLinkBillingAccountRequestSchema = v.strictObject({
+	accountId: inputIdSchema,
 });
 export const linkBillingAccountRequestSchema =
-	exactLinkBillingAccountRequestSchema;
-export const exactUrlSchema = v.pipe(
+	inputLinkBillingAccountRequestSchema;
+export const inputUrlSchema = v.pipe(
 	v.string(),
 	v.minLength(1),
 	v.maxLength(2048),
 	v.regex(new RegExp("^https://.*")),
 );
-export const urlSchema = exactUrlSchema;
-export const exactBillingAccountPortalSchema = v.strictObject({
-	url: exactUrlSchema,
+export const urlSchema = inputUrlSchema;
+export const inputBillingAccountPortalSchema = v.strictObject({
+	url: inputUrlSchema,
 });
-export const billingAccountPortalSchema = exactBillingAccountPortalSchema;
-export const exactOriginSchema = v.pipe(
+export const billingAccountPortalSchema = inputBillingAccountPortalSchema;
+export const inputOriginSchema = v.pipe(
 	v.string(),
 	v.minLength(1),
 	v.maxLength(263),
 	v.regex(new RegExp("^https://.*$")),
 );
-export const originSchema = exactOriginSchema;
-export const exactBillingAccountPortalRequestSchema = v.strictObject({
-	origin: exactOriginSchema,
-	accountId: exactIdSchema,
+export const originSchema = inputOriginSchema;
+export const inputBillingAccountPortalRequestSchema = v.strictObject({
+	origin: inputOriginSchema,
+	accountId: inputIdSchema,
 });
 export const billingAccountPortalRequestSchema =
-	exactBillingAccountPortalRequestSchema;
-export const exactTimeZoneSchema = v.pipe(
+	inputBillingAccountPortalRequestSchema;
+export const inputTimeZoneSchema = v.pipe(
 	v.string(),
 	v.regex(new RegExp("^\\w{1,32}/\\w{1,32}$")),
 );
-export const timeZoneSchema = exactTimeZoneSchema;
-export const exactBillingLocaleSchema = v.picklist(["en"]);
-export const billingLocaleSchema = exactBillingLocaleSchema;
-export const exactBillingAccountTypeSchema = v.picklist([
+export const timeZoneSchema = inputTimeZoneSchema;
+export const inputBillingLocaleSchema = v.picklist(["en"]);
+export const billingLocaleSchema = inputBillingLocaleSchema;
+export const inputBillingAccountTypeSchema = v.picklist([
 	"standard",
 	"agency",
 	"reseller",
 ]);
-export const billingAccountTypeSchema = exactBillingAccountTypeSchema;
-export const exactCurrencySchema = v.picklist([
+export const billingAccountTypeSchema = inputBillingAccountTypeSchema;
+export const inputCurrencySchema = v.picklist([
 	"usd",
 	"aud",
 	"sgd",
 	"myr",
 	"gbp",
 ]);
-export const currencySchema = exactCurrencySchema;
-export const exactBillingAccountStatusSchema = v.picklist([
+export const currencySchema = inputCurrencySchema;
+export const inputBillingAccountStatusSchema = v.picklist([
 	"nominal",
 	"delinquent",
 ]);
-export const billingAccountStatusSchema = exactBillingAccountStatusSchema;
-export const exactBillingCountrySchema = v.picklist([
+export const billingAccountStatusSchema = inputBillingAccountStatusSchema;
+export const inputBillingCountrySchema = v.picklist([
 	"us",
 	"au",
 	"sg",
 	"my",
 	"gb",
 ]);
-export const billingCountrySchema = exactBillingCountrySchema;
+export const billingCountrySchema = inputBillingCountrySchema;
 /** Valid email address with fully qualified public top-level domain */
-export const exactEmailSchema = v.pipe(
+export const inputEmailSchema = v.pipe(
 	v.string(),
 	v.email(),
 	v.minLength(6),
@@ -378,27 +378,27 @@ export const emailSchema = v.pipe(
 	v.minLength(6),
 	v.maxLength(512),
 );
-export const exactBillingAccountIdentifiersSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputBillingAccountIdentifiersSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const billingAccountIdentifiersSchema =
-	exactBillingAccountIdentifiersSchema;
-export const exactBillingAccountSchema = v.intersect([
-	exactBillingAccountIdentifiersSchema,
+	inputBillingAccountIdentifiersSchema;
+export const inputBillingAccountSchema = v.intersect([
+	inputBillingAccountIdentifiersSchema,
 	v.strictObject({
-		name: exactNameSchema,
-		email: exactEmailSchema,
-		country: exactBillingCountrySchema,
-		status: exactBillingAccountStatusSchema,
-		currency: exactCurrencySchema,
-		type: exactBillingAccountTypeSchema,
-		createdTime: exactDateTimeSchema,
-		updatedTime: v.exactOptional(exactDateTimeSchema),
-		locale: v.exactOptional(exactBillingLocaleSchema),
-		purchaseOrder: v.exactOptional(exactStringU8Schema),
-		taxId: v.exactOptional(exactStringU8Schema),
-		timeZone: v.exactOptional(exactTimeZoneSchema),
-		defaultPaymentMethodId: v.exactOptional(exactIdSchema),
+		name: inputNameSchema,
+		email: inputEmailSchema,
+		country: inputBillingCountrySchema,
+		status: inputBillingAccountStatusSchema,
+		currency: inputCurrencySchema,
+		type: inputBillingAccountTypeSchema,
+		createdTime: inputDateTimeSchema,
+		updatedTime: v.optional(inputDateTimeSchema),
+		locale: v.optional(inputBillingLocaleSchema),
+		purchaseOrder: v.optional(inputStringU8Schema),
+		taxId: v.optional(inputStringU8Schema),
+		timeZone: v.optional(inputTimeZoneSchema),
+		defaultPaymentMethodId: v.optional(inputIdSchema),
 	}),
 ]);
 export const billingAccountSchema = v.intersect([
@@ -411,81 +411,81 @@ export const billingAccountSchema = v.intersect([
 		currency: currencySchema,
 		type: billingAccountTypeSchema,
 		createdTime: dateTimeSchema,
-		updatedTime: v.optional(dateTimeSchema),
-		locale: v.optional(billingLocaleSchema),
-		purchaseOrder: v.optional(stringU8Schema),
-		taxId: v.optional(stringU8Schema),
-		timeZone: v.optional(timeZoneSchema),
-		defaultPaymentMethodId: v.optional(idSchema),
+		updatedTime: v.exactOptional(dateTimeSchema),
+		locale: v.exactOptional(billingLocaleSchema),
+		purchaseOrder: v.exactOptional(stringU8Schema),
+		taxId: v.exactOptional(stringU8Schema),
+		timeZone: v.exactOptional(timeZoneSchema),
+		defaultPaymentMethodId: v.exactOptional(idSchema),
 	}),
 ]);
-export const exactBillingAccountListSchema = v.array(exactBillingAccountSchema);
-export const billingAccountListSchema = exactBillingAccountListSchema;
-export const exactBillingAccountUpdateRequestSchema = v.strictObject({
-	name: v.exactOptional(exactNameSchema),
-	email: v.exactOptional(exactEmailSchema),
-	country: v.exactOptional(exactBillingCountrySchema),
-	timeZone: v.exactOptional(exactTimeZoneSchema),
-	currency: v.exactOptional(exactCurrencySchema),
-	locale: v.exactOptional(
+export const inputBillingAccountListSchema = v.array(inputBillingAccountSchema);
+export const billingAccountListSchema = inputBillingAccountListSchema;
+export const inputBillingAccountUpdateRequestSchema = v.strictObject({
+	name: v.optional(inputNameSchema),
+	email: v.optional(inputEmailSchema),
+	country: v.optional(inputBillingCountrySchema),
+	timeZone: v.optional(inputTimeZoneSchema),
+	currency: v.optional(inputCurrencySchema),
+	locale: v.optional(
 		v.union([
-			exactBillingLocaleSchema,
+			inputBillingLocaleSchema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
-	purchaseOrder: v.exactOptional(
+	purchaseOrder: v.optional(
 		v.union([
-			exactStringU8Schema,
+			inputStringU8Schema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
-	taxId: v.exactOptional(
+	taxId: v.optional(
 		v.union([
-			exactStringU8Schema,
+			inputStringU8Schema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
 });
 export const billingAccountUpdateRequestSchema = v.strictObject({
-	name: v.optional(nameSchema),
-	email: v.optional(emailSchema),
-	country: v.optional(billingCountrySchema),
-	timeZone: v.optional(timeZoneSchema),
-	currency: v.optional(currencySchema),
-	locale: v.optional(
+	name: v.exactOptional(nameSchema),
+	email: v.exactOptional(emailSchema),
+	country: v.exactOptional(billingCountrySchema),
+	timeZone: v.exactOptional(timeZoneSchema),
+	currency: v.exactOptional(currencySchema),
+	locale: v.exactOptional(
 		v.union([
 			billingLocaleSchema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
-	purchaseOrder: v.optional(
+	purchaseOrder: v.exactOptional(
 		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
 	),
-	taxId: v.optional(
+	taxId: v.exactOptional(
 		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
 	),
 });
-export const exactBillingAccountCreateRequestSchema = v.strictObject({
-	name: exactNameSchema,
-	email: exactEmailSchema,
-	country: exactBillingCountrySchema,
-	timeZone: exactTimeZoneSchema,
-	currency: exactCurrencySchema,
-	locale: v.exactOptional(
+export const inputBillingAccountCreateRequestSchema = v.strictObject({
+	name: inputNameSchema,
+	email: inputEmailSchema,
+	country: inputBillingCountrySchema,
+	timeZone: inputTimeZoneSchema,
+	currency: inputCurrencySchema,
+	locale: v.optional(
 		v.union([
-			exactBillingLocaleSchema,
+			inputBillingLocaleSchema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
-	purchaseOrder: v.exactOptional(
+	purchaseOrder: v.optional(
 		v.union([
-			exactStringU8Schema,
+			inputStringU8Schema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
-	taxId: v.exactOptional(
+	taxId: v.optional(
 		v.union([
-			exactStringU8Schema,
+			inputStringU8Schema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
@@ -496,52 +496,52 @@ export const billingAccountCreateRequestSchema = v.strictObject({
 	country: billingCountrySchema,
 	timeZone: timeZoneSchema,
 	currency: currencySchema,
-	locale: v.optional(
+	locale: v.exactOptional(
 		v.union([
 			billingLocaleSchema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
 	),
-	purchaseOrder: v.optional(
+	purchaseOrder: v.exactOptional(
 		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
 	),
-	taxId: v.optional(
+	taxId: v.exactOptional(
 		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
 	),
 });
-export const exactLongRunningOperationSuccessSchema = v.strictObject({
-	operationId: exactUuidSchema,
+export const inputLongRunningOperationSuccessSchema = v.strictObject({
+	operationId: inputUuidSchema,
 	done: v.boolean(),
 	result: v.strictObject({
 		response: v.record(v.string(), v.unknown()),
 	}),
 });
 export const longRunningOperationSuccessSchema =
-	exactLongRunningOperationSuccessSchema;
-export const exactLongRunningOperationSchema = v.union([
-	exactLongRunningOperationIndeterminateSchema,
-	exactLongRunningOperationFailSchema,
-	exactLongRunningOperationSuccessSchema,
+	inputLongRunningOperationSuccessSchema;
+export const inputLongRunningOperationSchema = v.union([
+	inputLongRunningOperationIndeterminateSchema,
+	inputLongRunningOperationFailSchema,
+	inputLongRunningOperationSuccessSchema,
 ]);
-export const longRunningOperationSchema = exactLongRunningOperationSchema;
-export const exactImportBillingDataCommandResponseSchema =
-	exactLongRunningOperationSchema;
+export const longRunningOperationSchema = inputLongRunningOperationSchema;
+export const inputImportBillingDataCommandResponseSchema =
+	inputLongRunningOperationSchema;
 export const importBillingDataCommandResponseSchema =
 	longRunningOperationSchema;
-export const exactImportBillingDataCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputImportBillingDataCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const importBillingDataCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactImportBillingDataCommandHeaderSchema = v.object({
+export const inputImportBillingDataCommandHeaderSchema = v.object({
 	"content-type": v.picklist([
 		"application/json",
 		"text/csv",
 		"application/xml",
 	]),
 	"content-length": v.bigint(),
-	"x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid())),
+	"x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid())),
 });
 export const importBillingDataCommandHeaderSchema = v.object({
 	"content-type": v.picklist([
@@ -554,201 +554,201 @@ export const importBillingDataCommandHeaderSchema = v.object({
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
-	"x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid())),
+	"x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid())),
 });
-export const exactGetOperationCommandResponseSchema =
-	exactLongRunningOperationSchema;
+export const inputGetOperationCommandResponseSchema =
+	inputLongRunningOperationSchema;
 export const getOperationCommandResponseSchema = longRunningOperationSchema;
-export const exactGetOperationCommandParamsSchema = v.strictObject({
-	operationId: exactUuidSchema,
+export const inputGetOperationCommandParamsSchema = v.strictObject({
+	operationId: inputUuidSchema,
 });
 export const getOperationCommandParamsSchema = v.strictObject({
 	operationId: uuidSchema,
 });
-export const exactListBillingAccountsCommandResponseSchema =
-	exactBillingAccountListSchema;
+export const inputListBillingAccountsCommandResponseSchema =
+	inputBillingAccountListSchema;
 export const listBillingAccountsCommandResponseSchema =
 	billingAccountListSchema;
-export const exactCreateBillingAccountCommandBodySchema =
-	exactBillingAccountCreateRequestSchema;
+export const inputCreateBillingAccountCommandBodySchema =
+	inputBillingAccountCreateRequestSchema;
 export const createBillingAccountCommandBodySchema =
 	billingAccountCreateRequestSchema;
-export const exactCreateBillingAccountCommandResponseSchema =
-	exactBillingAccountSchema;
+export const inputCreateBillingAccountCommandResponseSchema =
+	inputBillingAccountSchema;
 export const createBillingAccountCommandResponseSchema = billingAccountSchema;
-export const exactGetBillingAccountCommandResponseSchema =
-	exactBillingAccountSchema;
+export const inputGetBillingAccountCommandResponseSchema =
+	inputBillingAccountSchema;
 export const getBillingAccountCommandResponseSchema = billingAccountSchema;
-export const exactGetBillingAccountCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputGetBillingAccountCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const getBillingAccountCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactUpdateBillingAccountCommandBodySchema =
-	exactBillingAccountUpdateRequestSchema;
+export const inputUpdateBillingAccountCommandBodySchema =
+	inputBillingAccountUpdateRequestSchema;
 export const updateBillingAccountCommandBodySchema =
 	billingAccountUpdateRequestSchema;
-export const exactUpdateBillingAccountCommandResponseSchema =
-	exactBillingAccountSchema;
+export const inputUpdateBillingAccountCommandResponseSchema =
+	inputBillingAccountSchema;
 export const updateBillingAccountCommandResponseSchema = billingAccountSchema;
-export const exactUpdateBillingAccountCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputUpdateBillingAccountCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const updateBillingAccountCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactGetBillingAccountPortalCommandBodySchema =
-	exactBillingAccountPortalRequestSchema;
+export const inputGetBillingAccountPortalCommandBodySchema =
+	inputBillingAccountPortalRequestSchema;
 export const getBillingAccountPortalCommandBodySchema =
 	billingAccountPortalRequestSchema;
-export const exactGetBillingAccountPortalCommandResponseSchema =
-	exactBillingAccountPortalSchema;
+export const inputGetBillingAccountPortalCommandResponseSchema =
+	inputBillingAccountPortalSchema;
 export const getBillingAccountPortalCommandResponseSchema =
 	billingAccountPortalSchema;
-export const exactGetBillingAccountPortalCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputGetBillingAccountPortalCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const getBillingAccountPortalCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactLinkBillingAccountCommandBodySchema =
-	exactLinkBillingAccountRequestSchema;
+export const inputLinkBillingAccountCommandBodySchema =
+	inputLinkBillingAccountRequestSchema;
 export const linkBillingAccountCommandBodySchema =
 	linkBillingAccountRequestSchema;
-export const exactLinkBillingAccountCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputLinkBillingAccountCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const linkBillingAccountCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactListPaymentMethodsCommandResponseSchema =
-	exactPaymentMethodsSchema;
+export const inputListPaymentMethodsCommandResponseSchema =
+	inputPaymentMethodsSchema;
 export const listPaymentMethodsCommandResponseSchema = paymentMethodsSchema;
-export const exactListPaymentMethodsCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputListPaymentMethodsCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const listPaymentMethodsCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactCreatePaymentMethodCommandResponseSchema =
-	exactPaymentMethodIntendedLroSchema;
+export const inputCreatePaymentMethodCommandResponseSchema =
+	inputPaymentMethodIntendedLroSchema;
 export const createPaymentMethodCommandResponseSchema =
 	paymentMethodIntendedLroSchema;
-export const exactCreatePaymentMethodCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputCreatePaymentMethodCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const createPaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactGetPaymentMethodFromStripeCommandResponseSchema =
-	exactPaymentMethodSchema;
+export const inputGetPaymentMethodFromStripeCommandResponseSchema =
+	inputPaymentMethodSchema;
 export const getPaymentMethodFromStripeCommandResponseSchema =
 	paymentMethodSchema;
-export const exactGetPaymentMethodFromStripeCommandParamsSchema =
+export const inputGetPaymentMethodFromStripeCommandParamsSchema =
 	v.strictObject({
-		billingAccountId: exactIdSchema,
-		stripePaymentMethodId: exactStripeIdSchema,
+		billingAccountId: inputIdSchema,
+		stripePaymentMethodId: inputStripeIdSchema,
 	});
 export const getPaymentMethodFromStripeCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	stripePaymentMethodId: stripeIdSchema,
 });
-export const exactGetPaymentMethodCommandResponseSchema =
-	exactPaymentMethodSchema;
+export const inputGetPaymentMethodCommandResponseSchema =
+	inputPaymentMethodSchema;
 export const getPaymentMethodCommandResponseSchema = paymentMethodSchema;
-export const exactGetPaymentMethodCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
-	paymentMethodId: exactIdSchema,
+export const inputGetPaymentMethodCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
+	paymentMethodId: inputIdSchema,
 });
 export const getPaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	paymentMethodId: idSchema,
 });
-export const exactUpdatePaymentMethodCommandBodySchema =
-	exactUpdatePaymentMethodRequestSchema;
+export const inputUpdatePaymentMethodCommandBodySchema =
+	inputUpdatePaymentMethodRequestSchema;
 export const updatePaymentMethodCommandBodySchema =
 	updatePaymentMethodRequestSchema;
-export const exactUpdatePaymentMethodCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
-	paymentMethodId: exactIdSchema,
+export const inputUpdatePaymentMethodCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
+	paymentMethodId: inputIdSchema,
 });
 export const updatePaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	paymentMethodId: idSchema,
 });
-export const exactDeletePaymentMethodCommandResponseSchema =
-	exactPaymentMethodDeletedLroSchema;
+export const inputDeletePaymentMethodCommandResponseSchema =
+	inputPaymentMethodDeletedLroSchema;
 export const deletePaymentMethodCommandResponseSchema =
 	paymentMethodDeletedLroSchema;
-export const exactDeletePaymentMethodCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
-	paymentMethodId: exactIdSchema,
+export const inputDeletePaymentMethodCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
+	paymentMethodId: inputIdSchema,
 });
 export const deletePaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	paymentMethodId: idSchema,
 });
-export const exactListBillingSubscriptionsCommandResponseSchema =
-	exactBillingSubscriptionsSchema;
+export const inputListBillingSubscriptionsCommandResponseSchema =
+	inputBillingSubscriptionsSchema;
 export const listBillingSubscriptionsCommandResponseSchema =
 	billingSubscriptionsSchema;
-export const exactListBillingSubscriptionsCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
+export const inputListBillingSubscriptionsCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
 });
 export const listBillingSubscriptionsCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactCreateBillingSubscriptionCommandBodySchema =
-	exactCreateBillingSubscriptionRequestSchema;
+export const inputCreateBillingSubscriptionCommandBodySchema =
+	inputCreateBillingSubscriptionRequestSchema;
 export const createBillingSubscriptionCommandBodySchema =
 	createBillingSubscriptionRequestSchema;
-export const exactCreateBillingSubscriptionCommandResponseSchema =
-	exactBillingSubscriptionLroSchema;
+export const inputCreateBillingSubscriptionCommandResponseSchema =
+	inputBillingSubscriptionLroSchema;
 export const createBillingSubscriptionCommandResponseSchema =
 	billingSubscriptionLroSchema;
-export const exactCreateBillingSubscriptionCommandParamsSchema = v.strictObject(
+export const inputCreateBillingSubscriptionCommandParamsSchema = v.strictObject(
 	{
-		billingAccountId: exactIdSchema,
+		billingAccountId: inputIdSchema,
 	},
 );
 export const createBillingSubscriptionCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
-export const exactUpdateBillingSubscriptionCommandBodySchema =
-	exactUpdateBillingSubscriptionRequestSchema;
+export const inputUpdateBillingSubscriptionCommandBodySchema =
+	inputUpdateBillingSubscriptionRequestSchema;
 export const updateBillingSubscriptionCommandBodySchema =
 	updateBillingSubscriptionRequestSchema;
-export const exactUpdateBillingSubscriptionCommandParamsSchema = v.strictObject(
+export const inputUpdateBillingSubscriptionCommandParamsSchema = v.strictObject(
 	{
-		billingAccountId: exactIdSchema,
-		subscriptionId: exactIdSchema,
+		billingAccountId: inputIdSchema,
+		subscriptionId: inputIdSchema,
 	},
 );
 export const updateBillingSubscriptionCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	subscriptionId: idSchema,
 });
-export const exactCancelSubscriptionCommandParamsSchema = v.strictObject({
-	billingAccountId: exactIdSchema,
-	subscriptionId: exactIdSchema,
+export const inputCancelSubscriptionCommandParamsSchema = v.strictObject({
+	billingAccountId: inputIdSchema,
+	subscriptionId: inputIdSchema,
 });
 export const cancelSubscriptionCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	subscriptionId: idSchema,
 });
-export const exactUpdateBillingSubscriptionPromoCodeCommandBodySchema =
-	exactUpdateBillingSubscriptionPromoCodeRequestSchema;
+export const inputUpdateBillingSubscriptionPromoCodeCommandBodySchema =
+	inputUpdateBillingSubscriptionPromoCodeRequestSchema;
 export const updateBillingSubscriptionPromoCodeCommandBodySchema =
 	updateBillingSubscriptionPromoCodeRequestSchema;
-export const exactUpdateBillingSubscriptionPromoCodeCommandResponseSchema =
-	exactBillingSubscriptionLroSchema;
+export const inputUpdateBillingSubscriptionPromoCodeCommandResponseSchema =
+	inputBillingSubscriptionLroSchema;
 export const updateBillingSubscriptionPromoCodeCommandResponseSchema =
 	billingSubscriptionLroSchema;
-export const exactUpdateBillingSubscriptionPromoCodeCommandParamsSchema =
+export const inputUpdateBillingSubscriptionPromoCodeCommandParamsSchema =
 	v.strictObject({
-		billingAccountId: exactIdSchema,
-		subscriptionId: exactIdSchema,
+		billingAccountId: inputIdSchema,
+		subscriptionId: inputIdSchema,
 	});
 export const updateBillingSubscriptionPromoCodeCommandParamsSchema =
 	v.strictObject({
