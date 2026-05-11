@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:59.952Z
+ * Generated on 2026-05-11T04:55:51.722Z
  *
  */
 import * as v from "valibot";
@@ -24540,6 +24540,308 @@ export const clusterVolumeSpecSchema = v.strictObject({
  */
 export const exactTopologySchema = v.record(v.string(), v.unknown());
 export const topologySchema = exactTopologySchema;
+export const exactContainerListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * The ID of this container
+		 */
+		Id: v.exactOptional(v.string()),
+		/**
+		 * The names that this container has been given
+		 */
+		Names: v.exactOptional(v.array(v.string())),
+		/**
+		 * The name of the image used when creating this container
+		 */
+		Image: v.exactOptional(v.string()),
+		/**
+		 * The ID of the image that this container was created from
+		 */
+		ImageID: v.exactOptional(v.string()),
+		/**
+		 * Command to run when starting the container
+		 */
+		Command: v.exactOptional(v.string()),
+		/**
+		 * When the container was created
+		 */
+		Created: v.exactOptional(v.bigint()),
+		/**
+		 * The ports exposed by this container
+		 */
+		Ports: v.exactOptional(
+			v.array(
+				v.strictObject({
+					/**
+					 * Host IP address that the container's port is mapped to
+					 */
+					IP: v.exactOptional(v.string()),
+					/**
+					 * Port on the container
+					 */
+					PrivatePort: v.pipe(v.number(), v.integer()),
+					/**
+					 * Port exposed on the host
+					 */
+					PublicPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+					Type: v.picklist(["tcp", "udp", "sctp"]),
+				}),
+			),
+		),
+		/**
+		 * The size of files that have been created or changed by this container
+		 */
+		SizeRw: v.exactOptional(v.bigint()),
+		/**
+		 * The total size of all the files in this container
+		 */
+		SizeRootFs: v.exactOptional(v.bigint()),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+		/**
+		 * The state of this container (e.g. `Exited`)
+		 */
+		State: v.exactOptional(v.string()),
+		/**
+		 * Additional human-readable status of this container (e.g. `Exit 0`)
+		 */
+		Status: v.exactOptional(v.string()),
+		HostConfig: v.exactOptional(
+			v.strictObject({
+				NetworkMode: v.exactOptional(v.string()),
+			}),
+		),
+		/**
+		 * A summary of the container's network settings
+		 */
+		NetworkSettings: v.exactOptional(
+			v.strictObject({
+				Networks: v.exactOptional(v.record(v.string(), v.unknown())),
+			}),
+		),
+		Mounts: v.exactOptional(
+			v.array(
+				v.strictObject({
+					/**
+					 * The mount type:
+					 *
+					 * - `bind` a mount of a file or directory from the host into the container.
+					 * - `volume` a docker volume with the given `Name`.
+					 * - `tmpfs` a `tmpfs`.
+					 * - `npipe` a named pipe from the host into the container.
+					 * - `cluster` a Swarm cluster volume
+					 */
+					Type: v.exactOptional(
+						v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+					),
+					/**
+					 * Name is the name reference to the underlying data defined by `Source`
+					 * e.g., the volume name.
+					 */
+					Name: v.exactOptional(v.string()),
+					/**
+					 * Source location of the mount.
+					 *
+					 * For volumes, this contains the storage location of the volume (within
+					 * `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains
+					 * the source (host) part of the bind-mount. For `tmpfs` mount points, this
+					 * field is empty.
+					 */
+					Source: v.exactOptional(v.string()),
+					/**
+					 * Destination is the path relative to the container root (`/`) where
+					 * the `Source` is mounted inside the container.
+					 */
+					Destination: v.exactOptional(v.string()),
+					/**
+					 * Driver is the volume driver used to create the volume (if it is a volume).
+					 */
+					Driver: v.exactOptional(v.string()),
+					/**
+					 * Mode is a comma separated list of options supplied by the user when
+					 * creating the bind/volume mount.
+					 *
+					 * The default is platform-specific (`"z"` on Linux, empty on Windows).
+					 */
+					Mode: v.exactOptional(v.string()),
+					/**
+					 * Whether the mount is mounted writable (read-write).
+					 */
+					RW: v.exactOptional(v.boolean()),
+					/**
+					 * Propagation describes how mounts are propagated from the host into the
+					 * mount point, and vice-versa. Refer to the [Linux kernel
+					 * documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
+					 * for details. This field is not used on Windows.
+					 */
+					Propagation: v.exactOptional(v.string()),
+				}),
+			),
+		),
+	}),
+);
+export const containerListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * The ID of this container
+		 */
+		Id: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The names that this container has been given
+		 */
+		Names: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+		/**
+		 * The name of the image used when creating this container
+		 */
+		Image: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The ID of the image that this container was created from
+		 */
+		ImageID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * Command to run when starting the container
+		 */
+		Command: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * When the container was created
+		 */
+		Created: v.optional(
+			v.union([
+				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+				v.bigint(),
+			]),
+		),
+		/**
+		 * The ports exposed by this container
+		 */
+		Ports: v.optional(
+			v.array(
+				v.strictObject({
+					/**
+					 * Host IP address that the container's port is mapped to
+					 */
+					IP: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Port on the container
+					 */
+					PrivatePort: v.pipe(v.number(), v.integer()),
+					/**
+					 * Port exposed on the host
+					 */
+					PublicPort: v.optional(v.pipe(v.number(), v.integer())),
+					Type: v.picklist(["tcp", "udp", "sctp"]),
+				}),
+			),
+		),
+		/**
+		 * The size of files that have been created or changed by this container
+		 */
+		SizeRw: v.optional(
+			v.union([
+				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+				v.bigint(),
+			]),
+		),
+		/**
+		 * The total size of all the files in this container
+		 */
+		SizeRootFs: v.optional(
+			v.union([
+				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+				v.bigint(),
+			]),
+		),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.optional(v.record(v.string(), v.unknown())),
+		/**
+		 * The state of this container (e.g. `Exited`)
+		 */
+		State: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * Additional human-readable status of this container (e.g. `Exit 0`)
+		 */
+		Status: v.optional(v.pipe(v.string(), v.trim())),
+		HostConfig: v.optional(
+			v.strictObject({
+				NetworkMode: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		/**
+		 * A summary of the container's network settings
+		 */
+		NetworkSettings: v.optional(
+			v.strictObject({
+				Networks: v.optional(v.record(v.string(), v.unknown())),
+			}),
+		),
+		Mounts: v.optional(
+			v.array(
+				v.strictObject({
+					/**
+					 * The mount type:
+					 *
+					 * - `bind` a mount of a file or directory from the host into the container.
+					 * - `volume` a docker volume with the given `Name`.
+					 * - `tmpfs` a `tmpfs`.
+					 * - `npipe` a named pipe from the host into the container.
+					 * - `cluster` a Swarm cluster volume
+					 */
+					Type: v.optional(
+						v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+					),
+					/**
+					 * Name is the name reference to the underlying data defined by `Source`
+					 * e.g., the volume name.
+					 */
+					Name: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Source location of the mount.
+					 *
+					 * For volumes, this contains the storage location of the volume (within
+					 * `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains
+					 * the source (host) part of the bind-mount. For `tmpfs` mount points, this
+					 * field is empty.
+					 */
+					Source: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Destination is the path relative to the container root (`/`) where
+					 * the `Source` is mounted inside the container.
+					 */
+					Destination: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Driver is the volume driver used to create the volume (if it is a volume).
+					 */
+					Driver: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Mode is a comma separated list of options supplied by the user when
+					 * creating the bind/volume mount.
+					 *
+					 * The default is platform-specific (`"z"` on Linux, empty on Windows).
+					 */
+					Mode: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Whether the mount is mounted writable (read-write).
+					 */
+					RW: v.optional(v.boolean()),
+					/**
+					 * Propagation describes how mounts are propagated from the host into the
+					 * mount point, and vice-versa. Refer to the [Linux kernel
+					 * documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
+					 * for details. This field is not used on Windows.
+					 */
+					Propagation: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+		),
+	}),
+);
 export const exactContainerListCommandQuerySchema = v.strictObject({
 	all: v.exactOptional(v.boolean()),
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
@@ -26608,6 +26910,26 @@ export const containerCreateCommandBodySchema = v.intersect([
 		),
 	}),
 ]);
+export const exactContainerCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the created container
+	 */
+	Id: v.string(),
+	/**
+	 * Warnings encountered when creating the container
+	 */
+	Warnings: v.array(v.string()),
+});
+export const containerCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the created container
+	 */
+	Id: v.pipe(v.string(), v.trim()),
+	/**
+	 * Warnings encountered when creating the container
+	 */
+	Warnings: v.array(v.pipe(v.string(), v.trim())),
+});
 export const exactContainerCreateCommandQuerySchema = v.strictObject({
 	name: v.exactOptional(
 		v.pipe(v.string(), v.regex(new RegExp("^/?[a-zA-Z0-9][a-zA-Z0-9_.-]+$"))),
@@ -26620,6 +26942,2872 @@ export const containerCreateCommandQuerySchema = v.strictObject({
 	),
 	platform: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactContainerInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the container
+	 */
+	Id: v.exactOptional(v.string()),
+	/**
+	 * The time the container was created
+	 */
+	Created: v.exactOptional(v.string()),
+	/**
+	 * The path to the command being run
+	 */
+	Path: v.exactOptional(v.string()),
+	/**
+	 * The arguments to the command being run
+	 */
+	Args: v.exactOptional(v.array(v.string())),
+	/**
+	 * ContainerState stores container's running state. It's part of
+	 * ContainerJSONBase
+	 * and will be returned by the "inspect" command.
+	 */
+	State: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * String representation of the container state. Can be one of "created",
+				 * "running", "paused", "restarting", "removing", "exited", or "dead".
+				 */
+				Status: v.exactOptional(
+					v.picklist([
+						"created",
+						"running",
+						"paused",
+						"restarting",
+						"removing",
+						"exited",
+						"dead",
+					]),
+				),
+				/**
+				 * Whether this container is running.
+				 *
+				 * Note that a running container can be _paused_. The `Running` and `Paused`
+				 * booleans are not mutually exclusive:
+				 *
+				 * When pausing a container (on Linux), the freezer cgroup is used to suspend
+				 * all processes in the container. Freezing the process requires the process
+				 * to
+				 * be running. As a result, paused containers are both `Running` _and_
+				 * `Paused`.
+				 *
+				 * Use the `Status` field instead to determine if a container's state is
+				 * "running".
+				 */
+				Running: v.exactOptional(v.boolean()),
+				/**
+				 * Whether this container is paused.
+				 */
+				Paused: v.exactOptional(v.boolean()),
+				/**
+				 * Whether this container is restarting.
+				 */
+				Restarting: v.exactOptional(v.boolean()),
+				/**
+				 * Whether a process within this container has been killed because it ran
+				 * out of memory since the container was last started.
+				 */
+				OOMKilled: v.exactOptional(v.boolean()),
+				Dead: v.exactOptional(v.boolean()),
+				/**
+				 * The process ID of this container
+				 */
+				Pid: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * The last exit code of this container
+				 */
+				ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
+				Error: v.exactOptional(v.string()),
+				/**
+				 * The time when this container was last started.
+				 */
+				StartedAt: v.exactOptional(v.string()),
+				/**
+				 * The time when this container last exited.
+				 */
+				FinishedAt: v.exactOptional(v.string()),
+				/**
+				 * Health stores information about the container's healthcheck results.
+				 */
+				Health: v.exactOptional(
+					v.nullable(
+						v.strictObject({
+							/**
+							 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
+							 *
+							 * - "none"      Indicates there is no healthcheck
+							 * - "starting"  Starting indicates that the container is not yet ready
+							 * - "healthy"   Healthy indicates that the container is running correctly
+							 * - "unhealthy" Unhealthy indicates that the container has a problem
+							 */
+							Status: v.exactOptional(
+								v.picklist(["none", "starting", "healthy", "unhealthy"]),
+							),
+							/**
+							 * FailingStreak is the number of consecutive failures
+							 */
+							FailingStreak: v.exactOptional(v.pipe(v.number(), v.integer())),
+							/**
+							 * Log contains the last few results (oldest first)
+							 */
+							Log: v.exactOptional(
+								v.array(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * Date and time at which this check started in
+											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+											 */
+											Start: v.exactOptional(v.string()),
+											/**
+											 * Date and time at which this check ended in
+											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+											 */
+											End: v.exactOptional(v.string()),
+											/**
+											 * ExitCode meanings:
+											 *
+											 * - `0` healthy
+											 * - `1` unhealthy
+											 * - `2` reserved (considered unhealthy)
+											 * - other values: error running probe
+											 */
+											ExitCode: v.exactOptional(
+												v.pipe(v.number(), v.integer()),
+											),
+											/**
+											 * Output from last check
+											 */
+											Output: v.exactOptional(v.string()),
+										}),
+									),
+								),
+							),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	/**
+	 * The container's image ID
+	 */
+	Image: v.exactOptional(v.string()),
+	ResolvConfPath: v.exactOptional(v.string()),
+	HostnamePath: v.exactOptional(v.string()),
+	HostsPath: v.exactOptional(v.string()),
+	LogPath: v.exactOptional(v.string()),
+	Name: v.exactOptional(v.string()),
+	RestartCount: v.exactOptional(v.pipe(v.number(), v.integer())),
+	Driver: v.exactOptional(v.string()),
+	Platform: v.exactOptional(v.string()),
+	MountLabel: v.exactOptional(v.string()),
+	ProcessLabel: v.exactOptional(v.string()),
+	AppArmorProfile: v.exactOptional(v.string()),
+	/**
+	 * IDs of exec instances that are running in the container.
+	 */
+	ExecIDs: v.exactOptional(v.nullable(v.array(v.string()))),
+	/**
+	 * Container configuration that depends on the host we are running on
+	 */
+	HostConfig: v.exactOptional(
+		v.intersect([
+			v.strictObject({
+				/**
+				 * An integer value representing this container's relative CPU weight
+				 * versus other containers.
+				 */
+				CpuShares: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Memory limit in bytes.
+				 */
+				Memory: v.exactOptional(v.bigint()),
+				/**
+				 * Path to `cgroups` under which the container's `cgroup` is created. If
+				 * the path is not absolute, the path is considered to be relative to the
+				 * `cgroups` path of the init process. Cgroups are created if they do not
+				 * already exist.
+				 */
+				CgroupParent: v.exactOptional(v.string()),
+				/**
+				 * Block IO weight (relative weight).
+				 */
+				BlkioWeight: v.exactOptional(
+					v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(1000)),
+				),
+				/**
+				 * Block IO weight (relative device weight) in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Weight": weight}]
+				 * ```
+				 */
+				BlkioWeightDevice: v.exactOptional(
+					v.array(
+						v.strictObject({
+							Path: v.exactOptional(v.string()),
+							Weight: v.exactOptional(
+								v.pipe(v.number(), v.integer(), v.minValue(0)),
+							),
+						}),
+					),
+				),
+				/**
+				 * Limit read rate (bytes per second) from a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceReadBps: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.exactOptional(v.string()),
+							/**
+							 * Rate
+							 */
+							Rate: v.exactOptional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						}),
+					),
+				),
+				/**
+				 * Limit write rate (bytes per second) to a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceWriteBps: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.exactOptional(v.string()),
+							/**
+							 * Rate
+							 */
+							Rate: v.exactOptional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						}),
+					),
+				),
+				/**
+				 * Limit read rate (IO per second) from a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceReadIOps: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.exactOptional(v.string()),
+							/**
+							 * Rate
+							 */
+							Rate: v.exactOptional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						}),
+					),
+				),
+				/**
+				 * Limit write rate (IO per second) to a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceWriteIOps: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.exactOptional(v.string()),
+							/**
+							 * Rate
+							 */
+							Rate: v.exactOptional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						}),
+					),
+				),
+				/**
+				 * The length of a CPU period in microseconds.
+				 */
+				CpuPeriod: v.exactOptional(v.bigint()),
+				/**
+				 * Microseconds of CPU time that the container can get in a CPU period.
+				 */
+				CpuQuota: v.exactOptional(v.bigint()),
+				/**
+				 * The length of a CPU real-time period in microseconds. Set to 0 to
+				 * allocate no time allocated to real-time tasks.
+				 */
+				CpuRealtimePeriod: v.exactOptional(v.bigint()),
+				/**
+				 * The length of a CPU real-time runtime in microseconds. Set to 0 to
+				 * allocate no time allocated to real-time tasks.
+				 */
+				CpuRealtimeRuntime: v.exactOptional(v.bigint()),
+				/**
+				 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
+				 */
+				CpusetCpus: v.exactOptional(v.string()),
+				/**
+				 * Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only
+				 * effective on NUMA systems.
+				 */
+				CpusetMems: v.exactOptional(v.string()),
+				/**
+				 * A list of devices to add to the container.
+				 */
+				Devices: v.exactOptional(
+					v.array(
+						v.strictObject({
+							PathOnHost: v.exactOptional(v.string()),
+							PathInContainer: v.exactOptional(v.string()),
+							CgroupPermissions: v.exactOptional(v.string()),
+						}),
+					),
+				),
+				/**
+				 * a list of cgroup rules to apply to the container
+				 */
+				DeviceCgroupRules: v.exactOptional(v.array(v.string())),
+				/**
+				 * A list of requests for devices to be sent to device drivers.
+				 */
+				DeviceRequests: v.exactOptional(
+					v.array(
+						v.strictObject({
+							Driver: v.exactOptional(v.string()),
+							Count: v.exactOptional(v.pipe(v.number(), v.integer())),
+							DeviceIDs: v.exactOptional(v.array(v.string())),
+							/**
+							 * A list of capabilities; an OR list of AND lists of capabilities.
+							 */
+							Capabilities: v.exactOptional(v.array(v.array(v.string()))),
+							/**
+							 * Driver-specific options, specified as a key/value pairs. These options
+							 * are passed directly to the driver.
+							 */
+							Options: v.exactOptional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Hard limit for kernel TCP buffer memory (in bytes). Depending on the
+				 * OCI runtime in use, this option may be ignored. It is no longer supported
+				 * by the default (runc) runtime.
+				 *
+				 * This field is omitted when empty.
+				 */
+				KernelMemoryTCP: v.exactOptional(v.bigint()),
+				/**
+				 * Memory soft limit in bytes.
+				 */
+				MemoryReservation: v.exactOptional(v.bigint()),
+				/**
+				 * Total memory limit (memory + swap). Set as `-1` to enable unlimited
+				 * swap.
+				 */
+				MemorySwap: v.exactOptional(v.bigint()),
+				/**
+				 * Tune a container's memory swappiness behavior. Accepts an integer
+				 * between 0 and 100.
+				 */
+				MemorySwappiness: v.exactOptional(
+					v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				),
+				/**
+				 * CPU quota in units of 10<sup>-9</sup> CPUs.
+				 */
+				NanoCpus: v.exactOptional(v.bigint()),
+				/**
+				 * Disable OOM Killer for the container.
+				 */
+				OomKillDisable: v.exactOptional(v.boolean()),
+				/**
+				 * Run an init inside the container that forwards signals and reaps
+				 * processes. This field is omitted if empty, and the default (as
+				 * configured on the daemon) is used.
+				 */
+				Init: v.exactOptional(v.nullable(v.boolean())),
+				/**
+				 * Tune a container's PIDs limit. Set `0` or `-1` for unlimited, or `null`
+				 * to not change.
+				 */
+				PidsLimit: v.exactOptional(v.nullable(v.bigint())),
+				/**
+				 * A list of resource limits to set in the container. For example:
+				 *
+				 * ```
+				 * {"Name": "nofile", "Soft": 1024, "Hard": 2048}
+				 * ```
+				 */
+				Ulimits: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Name of ulimit
+							 */
+							Name: v.exactOptional(v.string()),
+							/**
+							 * Soft limit
+							 */
+							Soft: v.exactOptional(v.pipe(v.number(), v.integer())),
+							/**
+							 * Hard limit
+							 */
+							Hard: v.exactOptional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+				),
+				/**
+				 * The number of usable CPUs (Windows only).
+				 *
+				 * On Windows Server containers, the processor resource controls are
+				 * mutually exclusive. The order of precedence is `CPUCount` first, then
+				 * `CPUShares`, and `CPUPercent` last.
+				 */
+				CpuCount: v.exactOptional(v.bigint()),
+				/**
+				 * The usable percentage of the available CPUs (Windows only).
+				 *
+				 * On Windows Server containers, the processor resource controls are
+				 * mutually exclusive. The order of precedence is `CPUCount` first, then
+				 * `CPUShares`, and `CPUPercent` last.
+				 */
+				CpuPercent: v.exactOptional(v.bigint()),
+				/**
+				 * Maximum IOps for the container system drive (Windows only)
+				 */
+				IOMaximumIOps: v.exactOptional(v.bigint()),
+				/**
+				 * Maximum IO in bytes per second for the container system drive
+				 * (Windows only).
+				 */
+				IOMaximumBandwidth: v.exactOptional(v.bigint()),
+			}),
+			v.strictObject({
+				/**
+				 * A list of volume bindings for this container. Each volume binding
+				 * is a string in one of these forms:
+				 *
+				 * - `host-src:container-dest[:options]` to bind-mount a host path
+				 *
+				 * into the container. Both `host-src`, and `container-dest` must
+				 *
+				 * be an _absolute_ path.
+				 * - `volume-name:container-dest[:options]` to bind-mount a volume
+				 *
+				 * managed by a volume driver into the container. `container-dest`
+				 *
+				 * must be an _absolute_ path.
+				 *
+				 * `options` is an optional, comma-delimited list of:
+				 *
+				 * - `nocopy` disables automatic copying of data from the container
+				 *
+				 * path to the volume. The `nocopy` flag only applies to named volumes.
+				 * - `[ro|rw]` mounts a volume read-only or read-write, respectively.
+				 *
+				 * If omitted or set to `rw`, volumes are mounted read-write.
+				 * - `[z|Z]` applies SELinux labels to allow or deny multiple containers
+				 *
+				 * to read and write to the same volume.
+				 *
+				 * - `z`: a _shared_ content label is applied to the content. This
+				 *
+				 * label indicates that multiple containers can share the volume
+				 *
+				 * content, for both reading and writing.
+				 *
+				 * - `Z`: a _private unshared_ label is applied to the content.
+				 *
+				 * This label indicates that only the current container can use
+				 *
+				 * a private volume. Labeling systems such as SELinux require
+				 *
+				 * proper labels to be placed on volume content that is mounted
+				 *
+				 * into a container. Without a label, the security system can
+				 *
+				 * prevent a container's processes from using the content. By
+				 *
+				 * default, the labels set by the host operating system are not
+				 *
+				 * modified.
+				 * - `[[r]shared|[r]slave|[r]private]` specifies mount
+				 *
+				 * [propagation
+				 * behavior](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt).
+				 *
+				 * This only applies to bind-mounted volumes, not internal volumes
+				 *
+				 * or named volumes. Mount propagation requires the source mount
+				 *
+				 * point (the location where the source directory is mounted in the
+				 *
+				 * host operating system) to have the correct propagation properties.
+				 *
+				 * For shared volumes, the source mount point must be set to `shared`.
+				 *
+				 * For slave volumes, the mount must be set to either `shared` or
+				 *
+				 * `slave`.
+				 */
+				Binds: v.exactOptional(v.array(v.string())),
+				/**
+				 * Path to a file where the container ID is written
+				 */
+				ContainerIDFile: v.exactOptional(v.string()),
+				/**
+				 * The logging configuration for this container
+				 */
+				LogConfig: v.exactOptional(
+					v.strictObject({
+						Type: v.exactOptional(
+							v.picklist([
+								"json-file",
+								"syslog",
+								"journald",
+								"gelf",
+								"fluentd",
+								"awslogs",
+								"splunk",
+								"etwlogs",
+								"none",
+							]),
+						),
+						Config: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				/**
+				 * Network mode to use for this container. Supported standard values
+				 * are: `bridge`, `host`, `none`, and `container:<name|id>`. Any
+				 * other value is taken as a custom network's name to which this
+				 * container should connect to.
+				 */
+				NetworkMode: v.exactOptional(v.string()),
+				/**
+				 * PortMap describes the mapping of container ports to host ports, using the
+				 * container's port-number and protocol as key in the format
+				 * `<port>/<protocol>`,
+				 * for example, `80/udp`.
+				 *
+				 * If a container's port is mapped for multiple protocols, separate entries
+				 * are added to the mapping table.
+				 */
+				PortBindings: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * The behavior to apply when the container exits. The default is not to
+				 * restart.
+				 *
+				 * An ever increasing delay (double the previous delay, starting at 100ms) is
+				 * added before each restart to prevent flooding the server.
+				 */
+				RestartPolicy: v.exactOptional(
+					v.strictObject({
+						/**
+						 * - Empty string means not to restart
+						 * - `no` Do not automatically restart
+						 * - `always` Always restart
+						 * - `unless-stopped` Restart always except when the user has manually stopped
+						 * the container
+						 * - `on-failure` Restart only when the container exit code is non-zero
+						 */
+						Name: v.exactOptional(
+							v.picklist(["", "no", "always", "unless-stopped", "on-failure"]),
+						),
+						/**
+						 * If `on-failure` is used, the number of times to retry before giving up.
+						 */
+						MaximumRetryCount: v.exactOptional(v.pipe(v.number(), v.integer())),
+					}),
+				),
+				/**
+				 * Automatically remove the container when the container's process
+				 * exits. This has no effect if `RestartPolicy` is set.
+				 */
+				AutoRemove: v.exactOptional(v.boolean()),
+				/**
+				 * Driver that this container uses to mount volumes.
+				 */
+				VolumeDriver: v.exactOptional(v.string()),
+				/**
+				 * A list of volumes to inherit from another container, specified in
+				 * the form `<container name>[:<ro|rw>]`.
+				 */
+				VolumesFrom: v.exactOptional(v.array(v.string())),
+				/**
+				 * Specification for mounts to be added to the container.
+				 */
+				Mounts: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Container path.
+							 */
+							Target: v.exactOptional(v.string()),
+							/**
+							 * Mount source (e.g. a volume name, a host path).
+							 */
+							Source: v.exactOptional(v.string()),
+							/**
+							 * The mount type. Available types:
+							 *
+							 * - `bind` Mounts a file or directory from the host into the container. Must
+							 * exist prior to creating the container.
+							 * - `volume` Creates a volume with the given name and options (or uses a
+							 * pre-existing volume with the same name and options). These are **not**
+							 * removed when the container is removed.
+							 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+							 * specified for tmpfs.
+							 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+							 * prior to creating the container.
+							 * - `cluster` a Swarm cluster volume
+							 */
+							Type: v.exactOptional(
+								v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+							),
+							/**
+							 * Whether the mount should be read-only.
+							 */
+							ReadOnly: v.exactOptional(v.boolean()),
+							/**
+							 * The consistency requirement for the mount: `default`, `consistent`,
+							 * `cached`, or `delegated`.
+							 */
+							Consistency: v.exactOptional(v.string()),
+							/**
+							 * Optional configuration for the `bind` type.
+							 */
+							BindOptions: v.exactOptional(
+								v.strictObject({
+									/**
+									 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+									 */
+									Propagation: v.exactOptional(
+										v.picklist([
+											"private",
+											"rprivate",
+											"shared",
+											"rshared",
+											"slave",
+											"rslave",
+										]),
+									),
+									/**
+									 * Disable recursive bind mount.
+									 */
+									NonRecursive: v.exactOptional(v.boolean()),
+									/**
+									 * Create mount point on host if missing
+									 */
+									CreateMountpoint: v.exactOptional(v.boolean()),
+								}),
+							),
+							/**
+							 * Optional configuration for the `volume` type.
+							 */
+							VolumeOptions: v.exactOptional(
+								v.strictObject({
+									/**
+									 * Populate volume with data from the target.
+									 */
+									NoCopy: v.exactOptional(v.boolean()),
+									/**
+									 * User-defined key/value metadata.
+									 */
+									Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+									/**
+									 * Map of driver specific options
+									 */
+									DriverConfig: v.exactOptional(
+										v.strictObject({
+											/**
+											 * Name of the driver to use to create the volume.
+											 */
+											Name: v.exactOptional(v.string()),
+											/**
+											 * key/value map of driver specific options.
+											 */
+											Options: v.exactOptional(
+												v.record(v.string(), v.unknown()),
+											),
+										}),
+									),
+								}),
+							),
+							/**
+							 * Optional configuration for the `tmpfs` type.
+							 */
+							TmpfsOptions: v.exactOptional(
+								v.strictObject({
+									/**
+									 * The size for the tmpfs mount in bytes.
+									 */
+									SizeBytes: v.exactOptional(v.bigint()),
+									/**
+									 * The permission mode for the tmpfs mount in an integer.
+									 */
+									Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+								}),
+							),
+						}),
+					),
+				),
+				/**
+				 * Initial console size, as an `[height, width]` array.
+				 */
+				ConsoleSize: v.exactOptional(
+					v.nullable(
+						v.pipe(
+							v.array(v.pipe(v.number(), v.integer(), v.minValue(0))),
+							v.minLength(2),
+							v.maxLength(2),
+						),
+					),
+				),
+				/**
+				 * Arbitrary non-identifying metadata attached to container and
+				 * provided to the runtime when the container is started.
+				 */
+				Annotations: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * A list of kernel capabilities to add to the container. Conflicts
+				 * with option 'Capabilities'.
+				 */
+				CapAdd: v.exactOptional(v.array(v.string())),
+				/**
+				 * A list of kernel capabilities to drop from the container. Conflicts
+				 * with option 'Capabilities'.
+				 */
+				CapDrop: v.exactOptional(v.array(v.string())),
+				/**
+				 * cgroup namespace mode for the container. Possible values are:
+				 *
+				 * - `"private"`: the container runs in its own private cgroup namespace
+				 * - `"host"`: use the host system's cgroup namespace
+				 *
+				 * If not specified, the daemon default is used, which can either be
+				 * `"private"`
+				 * or `"host"`, depending on daemon version, kernel support and configuration.
+				 */
+				CgroupnsMode: v.exactOptional(v.picklist(["private", "host"])),
+				/**
+				 * A list of DNS servers for the container to use.
+				 */
+				Dns: v.exactOptional(v.array(v.string())),
+				/**
+				 * A list of DNS options.
+				 */
+				DnsOptions: v.exactOptional(v.array(v.string())),
+				/**
+				 * A list of DNS search domains.
+				 */
+				DnsSearch: v.exactOptional(v.array(v.string())),
+				/**
+				 * A list of hostnames/IP mappings to add to the container's `/etc/hosts`
+				 * file. Specified in the form `["hostname:IP"]`.
+				 */
+				ExtraHosts: v.exactOptional(v.array(v.string())),
+				/**
+				 * A list of additional groups that the container process will run as.
+				 */
+				GroupAdd: v.exactOptional(v.array(v.string())),
+				/**
+				 * IPC sharing mode for the container. Possible values are:
+				 *
+				 * - `"none"`: own private IPC namespace, with /dev/shm not mounted
+				 * - `"private"`: own private IPC namespace
+				 * - `"shareable"`: own private IPC namespace, with a possibility to share it
+				 * with other containers
+				 * - `"container:<name|id>"`: join another (shareable) container's IPC
+				 * namespace
+				 * - `"host"`: use the host system's IPC namespace
+				 *
+				 * If not specified, daemon default is used, which can either be `"private"`
+				 * or `"shareable"`, depending on daemon version and configuration.
+				 */
+				IpcMode: v.exactOptional(v.string()),
+				/**
+				 * Cgroup to use for the container.
+				 */
+				Cgroup: v.exactOptional(v.string()),
+				/**
+				 * A list of links for the container in the form `container_name:alias`.
+				 */
+				Links: v.exactOptional(v.array(v.string())),
+				/**
+				 * An integer value containing the score given to the container in
+				 * order to tune OOM killer preferences.
+				 */
+				OomScoreAdj: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Set the PID (Process) Namespace mode for the container. It can be
+				 * either:
+				 *
+				 * - `"container:<name|id>"`: joins another container's PID namespace
+				 * - `"host"`: use the host's PID namespace inside the container
+				 */
+				PidMode: v.exactOptional(v.string()),
+				/**
+				 * Gives the container full access to the host.
+				 */
+				Privileged: v.exactOptional(v.boolean()),
+				/**
+				 * Allocates an ephemeral host port for all of a container's
+				 * exposed ports.
+				 *
+				 * Ports are de-allocated when the container stops and allocated when
+				 * the container starts. The allocated port might be changed when
+				 * restarting the container.
+				 *
+				 * The port is selected from the ephemeral port range that depends on
+				 * the kernel. For example, on Linux the range is defined by
+				 * `/proc/sys/net/ipv4/ip_local_port_range`.
+				 */
+				PublishAllPorts: v.exactOptional(v.boolean()),
+				/**
+				 * Mount the container's root filesystem as read only.
+				 */
+				ReadonlyRootfs: v.exactOptional(v.boolean()),
+				/**
+				 * A list of string values to customize labels for MLS systems, such
+				 * as SELinux.
+				 */
+				SecurityOpt: v.exactOptional(v.array(v.string())),
+				/**
+				 * Storage driver options for this container, in the form `{"size": "120G"}`.
+				 */
+				StorageOpt: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * A map of container directories which should be replaced by tmpfs
+				 * mounts, and their corresponding mount options. For example:
+				 *
+				 * ```
+				 * { "/run": "rw,noexec,nosuid,size=65536k" }
+				 * ```
+				 */
+				Tmpfs: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * UTS namespace to use for the container.
+				 */
+				UTSMode: v.exactOptional(v.string()),
+				/**
+				 * Sets the usernamespace mode for the container when usernamespace
+				 * remapping option is enabled.
+				 */
+				UsernsMode: v.exactOptional(v.string()),
+				/**
+				 * Size of `/dev/shm` in bytes. If omitted, the system uses 64MB.
+				 */
+				ShmSize: v.exactOptional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				/**
+				 * A list of kernel parameters (sysctls) to set in the container.
+				 * For example:
+				 *
+				 * ```
+				 * {"net.ipv4.ip_forward": "1"}
+				 * ```
+				 */
+				Sysctls: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * Runtime to use with this container.
+				 */
+				Runtime: v.exactOptional(v.string()),
+				/**
+				 * Isolation technology of the container. (Windows only)
+				 */
+				Isolation: v.exactOptional(
+					v.picklist(["default", "process", "hyperv", ""]),
+				),
+				/**
+				 * The list of paths to be masked inside the container (this overrides
+				 * the default set of paths).
+				 */
+				MaskedPaths: v.exactOptional(v.array(v.string())),
+				/**
+				 * The list of paths to be set as read-only inside the container
+				 * (this overrides the default set of paths).
+				 */
+				ReadonlyPaths: v.exactOptional(v.array(v.string())),
+			}),
+		]),
+	),
+	/**
+	 * Information about the storage driver used to store the container's and
+	 * image's filesystem.
+	 */
+	GraphDriver: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Name of the storage driver.
+			 */
+			Name: v.string(),
+			/**
+			 * Low-level storage metadata, provided as key/value pairs.
+			 *
+			 * This information is driver-specific, and depends on the storage-driver
+			 * in use, and should be used for informational purposes only.
+			 */
+			Data: v.record(v.string(), v.unknown()),
+		}),
+	),
+	/**
+	 * The size of files that have been created or changed by this
+	 * container.
+	 */
+	SizeRw: v.exactOptional(v.bigint()),
+	/**
+	 * The total size of all the files in this container.
+	 */
+	SizeRootFs: v.exactOptional(v.bigint()),
+	Mounts: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The mount type:
+				 *
+				 * - `bind` a mount of a file or directory from the host into the container.
+				 * - `volume` a docker volume with the given `Name`.
+				 * - `tmpfs` a `tmpfs`.
+				 * - `npipe` a named pipe from the host into the container.
+				 * - `cluster` a Swarm cluster volume
+				 */
+				Type: v.exactOptional(
+					v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+				),
+				/**
+				 * Name is the name reference to the underlying data defined by `Source`
+				 * e.g., the volume name.
+				 */
+				Name: v.exactOptional(v.string()),
+				/**
+				 * Source location of the mount.
+				 *
+				 * For volumes, this contains the storage location of the volume (within
+				 * `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains
+				 * the source (host) part of the bind-mount. For `tmpfs` mount points, this
+				 * field is empty.
+				 */
+				Source: v.exactOptional(v.string()),
+				/**
+				 * Destination is the path relative to the container root (`/`) where
+				 * the `Source` is mounted inside the container.
+				 */
+				Destination: v.exactOptional(v.string()),
+				/**
+				 * Driver is the volume driver used to create the volume (if it is a volume).
+				 */
+				Driver: v.exactOptional(v.string()),
+				/**
+				 * Mode is a comma separated list of options supplied by the user when
+				 * creating the bind/volume mount.
+				 *
+				 * The default is platform-specific (`"z"` on Linux, empty on Windows).
+				 */
+				Mode: v.exactOptional(v.string()),
+				/**
+				 * Whether the mount is mounted writable (read-write).
+				 */
+				RW: v.exactOptional(v.boolean()),
+				/**
+				 * Propagation describes how mounts are propagated from the host into the
+				 * mount point, and vice-versa. Refer to the [Linux kernel
+				 * documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
+				 * for details. This field is not used on Windows.
+				 */
+				Propagation: v.exactOptional(v.string()),
+			}),
+		),
+	),
+	/**
+	 * Configuration for a container that is portable between hosts.
+	 *
+	 * When used as `ContainerConfig` field in an image, `ContainerConfig` is an
+	 * optional field containing the configuration of the container that was last
+	 * committed when creating the image.
+	 *
+	 * Previous versions of Docker builder used this field to store build cache,
+	 * and it is not in active use anymore.
+	 */
+	Config: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The hostname to use for the container, as a valid RFC 1123 hostname.
+			 */
+			Hostname: v.exactOptional(v.string()),
+			/**
+			 * The domain name to use for the container.
+			 */
+			Domainname: v.exactOptional(v.string()),
+			/**
+			 * The user that commands are run as inside the container.
+			 */
+			User: v.exactOptional(v.string()),
+			/**
+			 * Whether to attach to `stdin`.
+			 */
+			AttachStdin: v.exactOptional(v.boolean()),
+			/**
+			 * Whether to attach to `stdout`.
+			 */
+			AttachStdout: v.exactOptional(v.boolean()),
+			/**
+			 * Whether to attach to `stderr`.
+			 */
+			AttachStderr: v.exactOptional(v.boolean()),
+			/**
+			 * An object mapping ports to an empty object in the form:
+			 *
+			 * `{"<port>/<tcp|udp|sctp>": {}}`
+			 */
+			ExposedPorts: v.exactOptional(
+				v.nullable(v.record(v.string(), v.unknown())),
+			),
+			/**
+			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
+			 */
+			Tty: v.exactOptional(v.boolean()),
+			/**
+			 * Open `stdin`
+			 */
+			OpenStdin: v.exactOptional(v.boolean()),
+			/**
+			 * Close `stdin` after one attached client disconnects
+			 */
+			StdinOnce: v.exactOptional(v.boolean()),
+			/**
+			 * A list of environment variables to set inside the container in the
+			 * form `["VAR=value", ...]`. A variable without `=` is removed from the
+			 * environment, rather than to have an empty value.
+			 */
+			Env: v.exactOptional(v.array(v.string())),
+			/**
+			 * Command to run specified as a string or an array of strings.
+			 */
+			Cmd: v.exactOptional(v.array(v.string())),
+			/**
+			 * A test to perform to check that the container is healthy.
+			 */
+			Healthcheck: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The test to perform. Possible values are:
+					 *
+					 * - `[]` inherit healthcheck from image or parent image
+					 * - `["NONE"]` disable healthcheck
+					 * - `["CMD", args...]` exec arguments directly
+					 * - `["CMD-SHELL", command]` run command with system's default shell
+					 */
+					Test: v.exactOptional(v.array(v.string())),
+					/**
+					 * The time to wait between checks in nanoseconds. It should be 0 or at
+					 * least 1000000 (1 ms). 0 means inherit.
+					 */
+					Interval: v.exactOptional(v.bigint()),
+					/**
+					 * The time to wait before considering the check to have hung. It should
+					 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+					 */
+					Timeout: v.exactOptional(v.bigint()),
+					/**
+					 * The number of consecutive failures needed to consider a container as
+					 * unhealthy. 0 means inherit.
+					 */
+					Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Start period for the container to initialize before starting
+					 * health-retries countdown in nanoseconds. It should be 0 or at least
+					 * 1000000 (1 ms). 0 means inherit.
+					 */
+					StartPeriod: v.exactOptional(v.bigint()),
+				}),
+			),
+			/**
+			 * Command is already escaped (Windows only)
+			 */
+			ArgsEscaped: v.exactOptional(v.nullable(v.boolean())),
+			/**
+			 * The name (or reference) of the image to use when creating the container,
+			 * or which was used when the container was created.
+			 */
+			Image: v.exactOptional(v.string()),
+			/**
+			 * An object mapping mount point paths inside the container to empty
+			 * objects.
+			 */
+			Volumes: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * The working directory for commands to run in.
+			 */
+			WorkingDir: v.exactOptional(v.string()),
+			/**
+			 * The entry point for the container as a string or an array of strings.
+			 *
+			 * If the array consists of exactly one empty string (`[""]`) then the
+			 * entry point is reset to system default (i.e., the entry point used by
+			 * docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`).
+			 */
+			Entrypoint: v.exactOptional(v.array(v.string())),
+			/**
+			 * Disable networking for the container.
+			 */
+			NetworkDisabled: v.exactOptional(v.nullable(v.boolean())),
+			/**
+			 * MAC address of the container.
+			 */
+			MacAddress: v.exactOptional(v.nullable(v.string())),
+			/**
+			 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
+			 */
+			OnBuild: v.exactOptional(v.nullable(v.array(v.string()))),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * Signal to stop a container as a string or unsigned integer.
+			 */
+			StopSignal: v.exactOptional(v.nullable(v.string())),
+			/**
+			 * Timeout to stop a container in seconds.
+			 */
+			StopTimeout: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
+			 */
+			Shell: v.exactOptional(v.nullable(v.array(v.string()))),
+		}),
+	),
+	/**
+	 * NetworkSettings exposes the network settings in the API
+	 */
+	NetworkSettings: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Name of the network's bridge (for example, `docker0`).
+			 */
+			Bridge: v.exactOptional(v.string()),
+			/**
+			 * SandboxID uniquely represents a container's network stack.
+			 */
+			SandboxID: v.exactOptional(v.string()),
+			/**
+			 * Indicates if hairpin NAT should be enabled on the virtual interface.
+			 */
+			HairpinMode: v.exactOptional(v.boolean()),
+			/**
+			 * IPv6 unicast address using the link-local prefix.
+			 */
+			LinkLocalIPv6Address: v.exactOptional(v.string()),
+			/**
+			 * Prefix length of the IPv6 unicast address.
+			 */
+			LinkLocalIPv6PrefixLen: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * PortMap describes the mapping of container ports to host ports, using the
+			 * container's port-number and protocol as key in the format
+			 * `<port>/<protocol>`,
+			 * for example, `80/udp`.
+			 *
+			 * If a container's port is mapped for multiple protocols, separate entries
+			 * are added to the mapping table.
+			 */
+			Ports: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * SandboxKey identifies the sandbox
+			 */
+			SandboxKey: v.exactOptional(v.string()),
+			SecondaryIPAddresses: v.exactOptional(
+				v.nullable(
+					v.array(
+						v.strictObject({
+							/**
+							 * IP address.
+							 */
+							Addr: v.exactOptional(v.string()),
+							/**
+							 * Mask length of the IP address.
+							 */
+							PrefixLen: v.exactOptional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+				),
+			),
+			SecondaryIPv6Addresses: v.exactOptional(
+				v.nullable(
+					v.array(
+						v.strictObject({
+							/**
+							 * IP address.
+							 */
+							Addr: v.exactOptional(v.string()),
+							/**
+							 * Mask length of the IP address.
+							 */
+							PrefixLen: v.exactOptional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+				),
+			),
+			/**
+			 * EndpointID uniquely represents a service endpoint in a Sandbox.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			EndpointID: v.exactOptional(v.string()),
+			/**
+			 * Gateway address for the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			Gateway: v.exactOptional(v.string()),
+			/**
+			 * Global IPv6 address for the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			GlobalIPv6Address: v.exactOptional(v.string()),
+			/**
+			 * Mask length of the global IPv6 address.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			GlobalIPv6PrefixLen: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * IPv4 address for the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			IPAddress: v.exactOptional(v.string()),
+			/**
+			 * Mask length of the IPv4 address.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			IPPrefixLen: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * IPv6 gateway address for this network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			IPv6Gateway: v.exactOptional(v.string()),
+			/**
+			 * MAC address for the container on the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			MacAddress: v.exactOptional(v.string()),
+			/**
+			 * Information about all networks that the container is connected to.
+			 */
+			Networks: v.exactOptional(v.record(v.string(), v.unknown())),
+		}),
+	),
+});
+export const containerInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the container
+	 */
+	Id: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The time the container was created
+	 */
+	Created: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The path to the command being run
+	 */
+	Path: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The arguments to the command being run
+	 */
+	Args: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * ContainerState stores container's running state. It's part of
+	 * ContainerJSONBase
+	 * and will be returned by the "inspect" command.
+	 */
+	State: v.optional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * String representation of the container state. Can be one of "created",
+				 * "running", "paused", "restarting", "removing", "exited", or "dead".
+				 */
+				Status: v.optional(
+					v.picklist([
+						"created",
+						"running",
+						"paused",
+						"restarting",
+						"removing",
+						"exited",
+						"dead",
+					]),
+				),
+				/**
+				 * Whether this container is running.
+				 *
+				 * Note that a running container can be _paused_. The `Running` and `Paused`
+				 * booleans are not mutually exclusive:
+				 *
+				 * When pausing a container (on Linux), the freezer cgroup is used to suspend
+				 * all processes in the container. Freezing the process requires the process
+				 * to
+				 * be running. As a result, paused containers are both `Running` _and_
+				 * `Paused`.
+				 *
+				 * Use the `Status` field instead to determine if a container's state is
+				 * "running".
+				 */
+				Running: v.optional(v.boolean()),
+				/**
+				 * Whether this container is paused.
+				 */
+				Paused: v.optional(v.boolean()),
+				/**
+				 * Whether this container is restarting.
+				 */
+				Restarting: v.optional(v.boolean()),
+				/**
+				 * Whether a process within this container has been killed because it ran
+				 * out of memory since the container was last started.
+				 */
+				OOMKilled: v.optional(v.boolean()),
+				Dead: v.optional(v.boolean()),
+				/**
+				 * The process ID of this container
+				 */
+				Pid: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * The last exit code of this container
+				 */
+				ExitCode: v.optional(v.pipe(v.number(), v.integer())),
+				Error: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The time when this container was last started.
+				 */
+				StartedAt: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The time when this container last exited.
+				 */
+				FinishedAt: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Health stores information about the container's healthcheck results.
+				 */
+				Health: v.optional(
+					v.nullable(
+						v.strictObject({
+							/**
+							 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
+							 *
+							 * - "none"      Indicates there is no healthcheck
+							 * - "starting"  Starting indicates that the container is not yet ready
+							 * - "healthy"   Healthy indicates that the container is running correctly
+							 * - "unhealthy" Unhealthy indicates that the container has a problem
+							 */
+							Status: v.optional(
+								v.picklist(["none", "starting", "healthy", "unhealthy"]),
+							),
+							/**
+							 * FailingStreak is the number of consecutive failures
+							 */
+							FailingStreak: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * Log contains the last few results (oldest first)
+							 */
+							Log: v.optional(
+								v.array(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * Date and time at which this check started in
+											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+											 */
+											Start: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Date and time at which this check ended in
+											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+											 */
+											End: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * ExitCode meanings:
+											 *
+											 * - `0` healthy
+											 * - `1` unhealthy
+											 * - `2` reserved (considered unhealthy)
+											 * - other values: error running probe
+											 */
+											ExitCode: v.optional(v.pipe(v.number(), v.integer())),
+											/**
+											 * Output from last check
+											 */
+											Output: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+								),
+							),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	/**
+	 * The container's image ID
+	 */
+	Image: v.optional(v.pipe(v.string(), v.trim())),
+	ResolvConfPath: v.optional(v.pipe(v.string(), v.trim())),
+	HostnamePath: v.optional(v.pipe(v.string(), v.trim())),
+	HostsPath: v.optional(v.pipe(v.string(), v.trim())),
+	LogPath: v.optional(v.pipe(v.string(), v.trim())),
+	Name: v.optional(v.pipe(v.string(), v.trim())),
+	RestartCount: v.optional(v.pipe(v.number(), v.integer())),
+	Driver: v.optional(v.pipe(v.string(), v.trim())),
+	Platform: v.optional(v.pipe(v.string(), v.trim())),
+	MountLabel: v.optional(v.pipe(v.string(), v.trim())),
+	ProcessLabel: v.optional(v.pipe(v.string(), v.trim())),
+	AppArmorProfile: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * IDs of exec instances that are running in the container.
+	 */
+	ExecIDs: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+	/**
+	 * Container configuration that depends on the host we are running on
+	 */
+	HostConfig: v.optional(
+		v.intersect([
+			v.strictObject({
+				/**
+				 * An integer value representing this container's relative CPU weight
+				 * versus other containers.
+				 */
+				CpuShares: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Memory limit in bytes.
+				 */
+				Memory: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Path to `cgroups` under which the container's `cgroup` is created. If
+				 * the path is not absolute, the path is considered to be relative to the
+				 * `cgroups` path of the init process. Cgroups are created if they do not
+				 * already exist.
+				 */
+				CgroupParent: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Block IO weight (relative weight).
+				 */
+				BlkioWeight: v.optional(
+					v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(1000)),
+				),
+				/**
+				 * Block IO weight (relative device weight) in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Weight": weight}]
+				 * ```
+				 */
+				BlkioWeightDevice: v.optional(
+					v.array(
+						v.strictObject({
+							Path: v.optional(v.pipe(v.string(), v.trim())),
+							Weight: v.optional(
+								v.pipe(v.number(), v.integer(), v.minValue(0)),
+							),
+						}),
+					),
+				),
+				/**
+				 * Limit read rate (bytes per second) from a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceReadBps: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Rate
+							 */
+							Rate: v.optional(
+								v.union([
+									v.pipe(
+										v.string(),
+										v.decimal(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(
+										v.number(),
+										v.integer(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								]),
+							),
+						}),
+					),
+				),
+				/**
+				 * Limit write rate (bytes per second) to a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceWriteBps: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Rate
+							 */
+							Rate: v.optional(
+								v.union([
+									v.pipe(
+										v.string(),
+										v.decimal(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(
+										v.number(),
+										v.integer(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								]),
+							),
+						}),
+					),
+				),
+				/**
+				 * Limit read rate (IO per second) from a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceReadIOps: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Rate
+							 */
+							Rate: v.optional(
+								v.union([
+									v.pipe(
+										v.string(),
+										v.decimal(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(
+										v.number(),
+										v.integer(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								]),
+							),
+						}),
+					),
+				),
+				/**
+				 * Limit write rate (IO per second) to a device, in the form:
+				 *
+				 * ```
+				 * [{"Path": "device_path", "Rate": rate}]
+				 * ```
+				 */
+				BlkioDeviceWriteIOps: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Device path
+							 */
+							Path: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Rate
+							 */
+							Rate: v.optional(
+								v.union([
+									v.pipe(
+										v.string(),
+										v.decimal(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(
+										v.number(),
+										v.integer(),
+										v.toBigint(),
+										v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									),
+									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								]),
+							),
+						}),
+					),
+				),
+				/**
+				 * The length of a CPU period in microseconds.
+				 */
+				CpuPeriod: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Microseconds of CPU time that the container can get in a CPU period.
+				 */
+				CpuQuota: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * The length of a CPU real-time period in microseconds. Set to 0 to
+				 * allocate no time allocated to real-time tasks.
+				 */
+				CpuRealtimePeriod: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * The length of a CPU real-time runtime in microseconds. Set to 0 to
+				 * allocate no time allocated to real-time tasks.
+				 */
+				CpuRealtimeRuntime: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
+				 */
+				CpusetCpus: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Memory nodes (MEMs) in which to allow execution (0-3, 0,1). Only
+				 * effective on NUMA systems.
+				 */
+				CpusetMems: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * A list of devices to add to the container.
+				 */
+				Devices: v.optional(
+					v.array(
+						v.strictObject({
+							PathOnHost: v.optional(v.pipe(v.string(), v.trim())),
+							PathInContainer: v.optional(v.pipe(v.string(), v.trim())),
+							CgroupPermissions: v.optional(v.pipe(v.string(), v.trim())),
+						}),
+					),
+				),
+				/**
+				 * a list of cgroup rules to apply to the container
+				 */
+				DeviceCgroupRules: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * A list of requests for devices to be sent to device drivers.
+				 */
+				DeviceRequests: v.optional(
+					v.array(
+						v.strictObject({
+							Driver: v.optional(v.pipe(v.string(), v.trim())),
+							Count: v.optional(v.pipe(v.number(), v.integer())),
+							DeviceIDs: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * A list of capabilities; an OR list of AND lists of capabilities.
+							 */
+							Capabilities: v.optional(
+								v.array(v.array(v.pipe(v.string(), v.trim()))),
+							),
+							/**
+							 * Driver-specific options, specified as a key/value pairs. These options
+							 * are passed directly to the driver.
+							 */
+							Options: v.optional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Hard limit for kernel TCP buffer memory (in bytes). Depending on the
+				 * OCI runtime in use, this option may be ignored. It is no longer supported
+				 * by the default (runc) runtime.
+				 *
+				 * This field is omitted when empty.
+				 */
+				KernelMemoryTCP: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Memory soft limit in bytes.
+				 */
+				MemoryReservation: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Total memory limit (memory + swap). Set as `-1` to enable unlimited
+				 * swap.
+				 */
+				MemorySwap: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Tune a container's memory swappiness behavior. Accepts an integer
+				 * between 0 and 100.
+				 */
+				MemorySwappiness: v.optional(
+					v.union([
+						v.pipe(
+							v.string(),
+							v.decimal(),
+							v.toBigint(),
+							v.pipe(
+								v.bigint(),
+								v.minValue(BigInt(0)),
+								v.maxValue(BigInt(100)),
+							),
+						),
+						v.pipe(
+							v.number(),
+							v.integer(),
+							v.toBigint(),
+							v.pipe(
+								v.bigint(),
+								v.minValue(BigInt(0)),
+								v.maxValue(BigInt(100)),
+							),
+						),
+						v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+					]),
+				),
+				/**
+				 * CPU quota in units of 10<sup>-9</sup> CPUs.
+				 */
+				NanoCpus: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Disable OOM Killer for the container.
+				 */
+				OomKillDisable: v.optional(v.boolean()),
+				/**
+				 * Run an init inside the container that forwards signals and reaps
+				 * processes. This field is omitted if empty, and the default (as
+				 * configured on the daemon) is used.
+				 */
+				Init: v.optional(v.nullable(v.boolean())),
+				/**
+				 * Tune a container's PIDs limit. Set `0` or `-1` for unlimited, or `null`
+				 * to not change.
+				 */
+				PidsLimit: v.optional(
+					v.nullable(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+				),
+				/**
+				 * A list of resource limits to set in the container. For example:
+				 *
+				 * ```
+				 * {"Name": "nofile", "Soft": 1024, "Hard": 2048}
+				 * ```
+				 */
+				Ulimits: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Name of ulimit
+							 */
+							Name: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Soft limit
+							 */
+							Soft: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * Hard limit
+							 */
+							Hard: v.optional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+				),
+				/**
+				 * The number of usable CPUs (Windows only).
+				 *
+				 * On Windows Server containers, the processor resource controls are
+				 * mutually exclusive. The order of precedence is `CPUCount` first, then
+				 * `CPUShares`, and `CPUPercent` last.
+				 */
+				CpuCount: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * The usable percentage of the available CPUs (Windows only).
+				 *
+				 * On Windows Server containers, the processor resource controls are
+				 * mutually exclusive. The order of precedence is `CPUCount` first, then
+				 * `CPUShares`, and `CPUPercent` last.
+				 */
+				CpuPercent: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Maximum IOps for the container system drive (Windows only)
+				 */
+				IOMaximumIOps: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * Maximum IO in bytes per second for the container system drive
+				 * (Windows only).
+				 */
+				IOMaximumBandwidth: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+			}),
+			v.strictObject({
+				/**
+				 * A list of volume bindings for this container. Each volume binding
+				 * is a string in one of these forms:
+				 *
+				 * - `host-src:container-dest[:options]` to bind-mount a host path
+				 *
+				 * into the container. Both `host-src`, and `container-dest` must
+				 *
+				 * be an _absolute_ path.
+				 * - `volume-name:container-dest[:options]` to bind-mount a volume
+				 *
+				 * managed by a volume driver into the container. `container-dest`
+				 *
+				 * must be an _absolute_ path.
+				 *
+				 * `options` is an optional, comma-delimited list of:
+				 *
+				 * - `nocopy` disables automatic copying of data from the container
+				 *
+				 * path to the volume. The `nocopy` flag only applies to named volumes.
+				 * - `[ro|rw]` mounts a volume read-only or read-write, respectively.
+				 *
+				 * If omitted or set to `rw`, volumes are mounted read-write.
+				 * - `[z|Z]` applies SELinux labels to allow or deny multiple containers
+				 *
+				 * to read and write to the same volume.
+				 *
+				 * - `z`: a _shared_ content label is applied to the content. This
+				 *
+				 * label indicates that multiple containers can share the volume
+				 *
+				 * content, for both reading and writing.
+				 *
+				 * - `Z`: a _private unshared_ label is applied to the content.
+				 *
+				 * This label indicates that only the current container can use
+				 *
+				 * a private volume. Labeling systems such as SELinux require
+				 *
+				 * proper labels to be placed on volume content that is mounted
+				 *
+				 * into a container. Without a label, the security system can
+				 *
+				 * prevent a container's processes from using the content. By
+				 *
+				 * default, the labels set by the host operating system are not
+				 *
+				 * modified.
+				 * - `[[r]shared|[r]slave|[r]private]` specifies mount
+				 *
+				 * [propagation
+				 * behavior](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt).
+				 *
+				 * This only applies to bind-mounted volumes, not internal volumes
+				 *
+				 * or named volumes. Mount propagation requires the source mount
+				 *
+				 * point (the location where the source directory is mounted in the
+				 *
+				 * host operating system) to have the correct propagation properties.
+				 *
+				 * For shared volumes, the source mount point must be set to `shared`.
+				 *
+				 * For slave volumes, the mount must be set to either `shared` or
+				 *
+				 * `slave`.
+				 */
+				Binds: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * Path to a file where the container ID is written
+				 */
+				ContainerIDFile: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The logging configuration for this container
+				 */
+				LogConfig: v.optional(
+					v.strictObject({
+						Type: v.optional(
+							v.picklist([
+								"json-file",
+								"syslog",
+								"journald",
+								"gelf",
+								"fluentd",
+								"awslogs",
+								"splunk",
+								"etwlogs",
+								"none",
+							]),
+						),
+						Config: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				/**
+				 * Network mode to use for this container. Supported standard values
+				 * are: `bridge`, `host`, `none`, and `container:<name|id>`. Any
+				 * other value is taken as a custom network's name to which this
+				 * container should connect to.
+				 */
+				NetworkMode: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * PortMap describes the mapping of container ports to host ports, using the
+				 * container's port-number and protocol as key in the format
+				 * `<port>/<protocol>`,
+				 * for example, `80/udp`.
+				 *
+				 * If a container's port is mapped for multiple protocols, separate entries
+				 * are added to the mapping table.
+				 */
+				PortBindings: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * The behavior to apply when the container exits. The default is not to
+				 * restart.
+				 *
+				 * An ever increasing delay (double the previous delay, starting at 100ms) is
+				 * added before each restart to prevent flooding the server.
+				 */
+				RestartPolicy: v.optional(
+					v.strictObject({
+						/**
+						 * - Empty string means not to restart
+						 * - `no` Do not automatically restart
+						 * - `always` Always restart
+						 * - `unless-stopped` Restart always except when the user has manually stopped
+						 * the container
+						 * - `on-failure` Restart only when the container exit code is non-zero
+						 */
+						Name: v.optional(
+							v.picklist(["", "no", "always", "unless-stopped", "on-failure"]),
+						),
+						/**
+						 * If `on-failure` is used, the number of times to retry before giving up.
+						 */
+						MaximumRetryCount: v.optional(v.pipe(v.number(), v.integer())),
+					}),
+				),
+				/**
+				 * Automatically remove the container when the container's process
+				 * exits. This has no effect if `RestartPolicy` is set.
+				 */
+				AutoRemove: v.optional(v.boolean()),
+				/**
+				 * Driver that this container uses to mount volumes.
+				 */
+				VolumeDriver: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * A list of volumes to inherit from another container, specified in
+				 * the form `<container name>[:<ro|rw>]`.
+				 */
+				VolumesFrom: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * Specification for mounts to be added to the container.
+				 */
+				Mounts: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Container path.
+							 */
+							Target: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Mount source (e.g. a volume name, a host path).
+							 */
+							Source: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * The mount type. Available types:
+							 *
+							 * - `bind` Mounts a file or directory from the host into the container. Must
+							 * exist prior to creating the container.
+							 * - `volume` Creates a volume with the given name and options (or uses a
+							 * pre-existing volume with the same name and options). These are **not**
+							 * removed when the container is removed.
+							 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+							 * specified for tmpfs.
+							 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+							 * prior to creating the container.
+							 * - `cluster` a Swarm cluster volume
+							 */
+							Type: v.optional(
+								v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+							),
+							/**
+							 * Whether the mount should be read-only.
+							 */
+							ReadOnly: v.optional(v.boolean()),
+							/**
+							 * The consistency requirement for the mount: `default`, `consistent`,
+							 * `cached`, or `delegated`.
+							 */
+							Consistency: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Optional configuration for the `bind` type.
+							 */
+							BindOptions: v.optional(
+								v.strictObject({
+									/**
+									 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+									 */
+									Propagation: v.optional(
+										v.picklist([
+											"private",
+											"rprivate",
+											"shared",
+											"rshared",
+											"slave",
+											"rslave",
+										]),
+									),
+									/**
+									 * Disable recursive bind mount.
+									 */
+									NonRecursive: v.optional(v.boolean()),
+									/**
+									 * Create mount point on host if missing
+									 */
+									CreateMountpoint: v.optional(v.boolean()),
+								}),
+							),
+							/**
+							 * Optional configuration for the `volume` type.
+							 */
+							VolumeOptions: v.optional(
+								v.strictObject({
+									/**
+									 * Populate volume with data from the target.
+									 */
+									NoCopy: v.optional(v.boolean()),
+									/**
+									 * User-defined key/value metadata.
+									 */
+									Labels: v.optional(v.record(v.string(), v.unknown())),
+									/**
+									 * Map of driver specific options
+									 */
+									DriverConfig: v.optional(
+										v.strictObject({
+											/**
+											 * Name of the driver to use to create the volume.
+											 */
+											Name: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * key/value map of driver specific options.
+											 */
+											Options: v.optional(v.record(v.string(), v.unknown())),
+										}),
+									),
+								}),
+							),
+							/**
+							 * Optional configuration for the `tmpfs` type.
+							 */
+							TmpfsOptions: v.optional(
+								v.strictObject({
+									/**
+									 * The size for the tmpfs mount in bytes.
+									 */
+									SizeBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * The permission mode for the tmpfs mount in an integer.
+									 */
+									Mode: v.optional(v.pipe(v.number(), v.integer())),
+								}),
+							),
+						}),
+					),
+				),
+				/**
+				 * Initial console size, as an `[height, width]` array.
+				 */
+				ConsoleSize: v.optional(
+					v.nullable(
+						v.pipe(
+							v.array(v.pipe(v.number(), v.integer(), v.minValue(0))),
+							v.minLength(2),
+							v.maxLength(2),
+						),
+					),
+				),
+				/**
+				 * Arbitrary non-identifying metadata attached to container and
+				 * provided to the runtime when the container is started.
+				 */
+				Annotations: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * A list of kernel capabilities to add to the container. Conflicts
+				 * with option 'Capabilities'.
+				 */
+				CapAdd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * A list of kernel capabilities to drop from the container. Conflicts
+				 * with option 'Capabilities'.
+				 */
+				CapDrop: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * cgroup namespace mode for the container. Possible values are:
+				 *
+				 * - `"private"`: the container runs in its own private cgroup namespace
+				 * - `"host"`: use the host system's cgroup namespace
+				 *
+				 * If not specified, the daemon default is used, which can either be
+				 * `"private"`
+				 * or `"host"`, depending on daemon version, kernel support and configuration.
+				 */
+				CgroupnsMode: v.optional(v.picklist(["private", "host"])),
+				/**
+				 * A list of DNS servers for the container to use.
+				 */
+				Dns: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * A list of DNS options.
+				 */
+				DnsOptions: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * A list of DNS search domains.
+				 */
+				DnsSearch: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * A list of hostnames/IP mappings to add to the container's `/etc/hosts`
+				 * file. Specified in the form `["hostname:IP"]`.
+				 */
+				ExtraHosts: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * A list of additional groups that the container process will run as.
+				 */
+				GroupAdd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * IPC sharing mode for the container. Possible values are:
+				 *
+				 * - `"none"`: own private IPC namespace, with /dev/shm not mounted
+				 * - `"private"`: own private IPC namespace
+				 * - `"shareable"`: own private IPC namespace, with a possibility to share it
+				 * with other containers
+				 * - `"container:<name|id>"`: join another (shareable) container's IPC
+				 * namespace
+				 * - `"host"`: use the host system's IPC namespace
+				 *
+				 * If not specified, daemon default is used, which can either be `"private"`
+				 * or `"shareable"`, depending on daemon version and configuration.
+				 */
+				IpcMode: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Cgroup to use for the container.
+				 */
+				Cgroup: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * A list of links for the container in the form `container_name:alias`.
+				 */
+				Links: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * An integer value containing the score given to the container in
+				 * order to tune OOM killer preferences.
+				 */
+				OomScoreAdj: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Set the PID (Process) Namespace mode for the container. It can be
+				 * either:
+				 *
+				 * - `"container:<name|id>"`: joins another container's PID namespace
+				 * - `"host"`: use the host's PID namespace inside the container
+				 */
+				PidMode: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Gives the container full access to the host.
+				 */
+				Privileged: v.optional(v.boolean()),
+				/**
+				 * Allocates an ephemeral host port for all of a container's
+				 * exposed ports.
+				 *
+				 * Ports are de-allocated when the container stops and allocated when
+				 * the container starts. The allocated port might be changed when
+				 * restarting the container.
+				 *
+				 * The port is selected from the ephemeral port range that depends on
+				 * the kernel. For example, on Linux the range is defined by
+				 * `/proc/sys/net/ipv4/ip_local_port_range`.
+				 */
+				PublishAllPorts: v.optional(v.boolean()),
+				/**
+				 * Mount the container's root filesystem as read only.
+				 */
+				ReadonlyRootfs: v.optional(v.boolean()),
+				/**
+				 * A list of string values to customize labels for MLS systems, such
+				 * as SELinux.
+				 */
+				SecurityOpt: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * Storage driver options for this container, in the form `{"size": "120G"}`.
+				 */
+				StorageOpt: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * A map of container directories which should be replaced by tmpfs
+				 * mounts, and their corresponding mount options. For example:
+				 *
+				 * ```
+				 * { "/run": "rw,noexec,nosuid,size=65536k" }
+				 * ```
+				 */
+				Tmpfs: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * UTS namespace to use for the container.
+				 */
+				UTSMode: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Sets the usernamespace mode for the container when usernamespace
+				 * remapping option is enabled.
+				 */
+				UsernsMode: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Size of `/dev/shm` in bytes. If omitted, the system uses 64MB.
+				 */
+				ShmSize: v.optional(
+					v.union([
+						v.pipe(
+							v.string(),
+							v.decimal(),
+							v.toBigint(),
+							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						),
+						v.pipe(
+							v.number(),
+							v.integer(),
+							v.toBigint(),
+							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						),
+						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+					]),
+				),
+				/**
+				 * A list of kernel parameters (sysctls) to set in the container.
+				 * For example:
+				 *
+				 * ```
+				 * {"net.ipv4.ip_forward": "1"}
+				 * ```
+				 */
+				Sysctls: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * Runtime to use with this container.
+				 */
+				Runtime: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Isolation technology of the container. (Windows only)
+				 */
+				Isolation: v.optional(v.picklist(["default", "process", "hyperv", ""])),
+				/**
+				 * The list of paths to be masked inside the container (this overrides
+				 * the default set of paths).
+				 */
+				MaskedPaths: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * The list of paths to be set as read-only inside the container
+				 * (this overrides the default set of paths).
+				 */
+				ReadonlyPaths: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			}),
+		]),
+	),
+	/**
+	 * Information about the storage driver used to store the container's and
+	 * image's filesystem.
+	 */
+	GraphDriver: v.optional(
+		v.strictObject({
+			/**
+			 * Name of the storage driver.
+			 */
+			Name: v.pipe(v.string(), v.trim()),
+			/**
+			 * Low-level storage metadata, provided as key/value pairs.
+			 *
+			 * This information is driver-specific, and depends on the storage-driver
+			 * in use, and should be used for informational purposes only.
+			 */
+			Data: v.record(v.string(), v.unknown()),
+		}),
+	),
+	/**
+	 * The size of files that have been created or changed by this
+	 * container.
+	 */
+	SizeRw: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	/**
+	 * The total size of all the files in this container.
+	 */
+	SizeRootFs: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	Mounts: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The mount type:
+				 *
+				 * - `bind` a mount of a file or directory from the host into the container.
+				 * - `volume` a docker volume with the given `Name`.
+				 * - `tmpfs` a `tmpfs`.
+				 * - `npipe` a named pipe from the host into the container.
+				 * - `cluster` a Swarm cluster volume
+				 */
+				Type: v.optional(
+					v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+				),
+				/**
+				 * Name is the name reference to the underlying data defined by `Source`
+				 * e.g., the volume name.
+				 */
+				Name: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Source location of the mount.
+				 *
+				 * For volumes, this contains the storage location of the volume (within
+				 * `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains
+				 * the source (host) part of the bind-mount. For `tmpfs` mount points, this
+				 * field is empty.
+				 */
+				Source: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Destination is the path relative to the container root (`/`) where
+				 * the `Source` is mounted inside the container.
+				 */
+				Destination: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Driver is the volume driver used to create the volume (if it is a volume).
+				 */
+				Driver: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Mode is a comma separated list of options supplied by the user when
+				 * creating the bind/volume mount.
+				 *
+				 * The default is platform-specific (`"z"` on Linux, empty on Windows).
+				 */
+				Mode: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Whether the mount is mounted writable (read-write).
+				 */
+				RW: v.optional(v.boolean()),
+				/**
+				 * Propagation describes how mounts are propagated from the host into the
+				 * mount point, and vice-versa. Refer to the [Linux kernel
+				 * documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
+				 * for details. This field is not used on Windows.
+				 */
+				Propagation: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	),
+	/**
+	 * Configuration for a container that is portable between hosts.
+	 *
+	 * When used as `ContainerConfig` field in an image, `ContainerConfig` is an
+	 * optional field containing the configuration of the container that was last
+	 * committed when creating the image.
+	 *
+	 * Previous versions of Docker builder used this field to store build cache,
+	 * and it is not in active use anymore.
+	 */
+	Config: v.optional(
+		v.strictObject({
+			/**
+			 * The hostname to use for the container, as a valid RFC 1123 hostname.
+			 */
+			Hostname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The domain name to use for the container.
+			 */
+			Domainname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The user that commands are run as inside the container.
+			 */
+			User: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Whether to attach to `stdin`.
+			 */
+			AttachStdin: v.optional(v.boolean()),
+			/**
+			 * Whether to attach to `stdout`.
+			 */
+			AttachStdout: v.optional(v.boolean()),
+			/**
+			 * Whether to attach to `stderr`.
+			 */
+			AttachStderr: v.optional(v.boolean()),
+			/**
+			 * An object mapping ports to an empty object in the form:
+			 *
+			 * `{"<port>/<tcp|udp|sctp>": {}}`
+			 */
+			ExposedPorts: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+			/**
+			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
+			 */
+			Tty: v.optional(v.boolean()),
+			/**
+			 * Open `stdin`
+			 */
+			OpenStdin: v.optional(v.boolean()),
+			/**
+			 * Close `stdin` after one attached client disconnects
+			 */
+			StdinOnce: v.optional(v.boolean()),
+			/**
+			 * A list of environment variables to set inside the container in the
+			 * form `["VAR=value", ...]`. A variable without `=` is removed from the
+			 * environment, rather than to have an empty value.
+			 */
+			Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Command to run specified as a string or an array of strings.
+			 */
+			Cmd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * A test to perform to check that the container is healthy.
+			 */
+			Healthcheck: v.optional(
+				v.strictObject({
+					/**
+					 * The test to perform. Possible values are:
+					 *
+					 * - `[]` inherit healthcheck from image or parent image
+					 * - `["NONE"]` disable healthcheck
+					 * - `["CMD", args...]` exec arguments directly
+					 * - `["CMD-SHELL", command]` run command with system's default shell
+					 */
+					Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * The time to wait between checks in nanoseconds. It should be 0 or at
+					 * least 1000000 (1 ms). 0 means inherit.
+					 */
+					Interval: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The time to wait before considering the check to have hung. It should
+					 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+					 */
+					Timeout: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The number of consecutive failures needed to consider a container as
+					 * unhealthy. 0 means inherit.
+					 */
+					Retries: v.optional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Start period for the container to initialize before starting
+					 * health-retries countdown in nanoseconds. It should be 0 or at least
+					 * 1000000 (1 ms). 0 means inherit.
+					 */
+					StartPeriod: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+				}),
+			),
+			/**
+			 * Command is already escaped (Windows only)
+			 */
+			ArgsEscaped: v.optional(v.nullable(v.boolean())),
+			/**
+			 * The name (or reference) of the image to use when creating the container,
+			 * or which was used when the container was created.
+			 */
+			Image: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * An object mapping mount point paths inside the container to empty
+			 * objects.
+			 */
+			Volumes: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * The working directory for commands to run in.
+			 */
+			WorkingDir: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The entry point for the container as a string or an array of strings.
+			 *
+			 * If the array consists of exactly one empty string (`[""]`) then the
+			 * entry point is reset to system default (i.e., the entry point used by
+			 * docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`).
+			 */
+			Entrypoint: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Disable networking for the container.
+			 */
+			NetworkDisabled: v.optional(v.nullable(v.boolean())),
+			/**
+			 * MAC address of the container.
+			 */
+			MacAddress: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+			/**
+			 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
+			 */
+			OnBuild: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * Signal to stop a container as a string or unsigned integer.
+			 */
+			StopSignal: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Timeout to stop a container in seconds.
+			 */
+			StopTimeout: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
+			 */
+			Shell: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+		}),
+	),
+	/**
+	 * NetworkSettings exposes the network settings in the API
+	 */
+	NetworkSettings: v.optional(
+		v.strictObject({
+			/**
+			 * Name of the network's bridge (for example, `docker0`).
+			 */
+			Bridge: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * SandboxID uniquely represents a container's network stack.
+			 */
+			SandboxID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Indicates if hairpin NAT should be enabled on the virtual interface.
+			 */
+			HairpinMode: v.optional(v.boolean()),
+			/**
+			 * IPv6 unicast address using the link-local prefix.
+			 */
+			LinkLocalIPv6Address: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Prefix length of the IPv6 unicast address.
+			 */
+			LinkLocalIPv6PrefixLen: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * PortMap describes the mapping of container ports to host ports, using the
+			 * container's port-number and protocol as key in the format
+			 * `<port>/<protocol>`,
+			 * for example, `80/udp`.
+			 *
+			 * If a container's port is mapped for multiple protocols, separate entries
+			 * are added to the mapping table.
+			 */
+			Ports: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * SandboxKey identifies the sandbox
+			 */
+			SandboxKey: v.optional(v.pipe(v.string(), v.trim())),
+			SecondaryIPAddresses: v.optional(
+				v.nullable(
+					v.array(
+						v.strictObject({
+							/**
+							 * IP address.
+							 */
+							Addr: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Mask length of the IP address.
+							 */
+							PrefixLen: v.optional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+				),
+			),
+			SecondaryIPv6Addresses: v.optional(
+				v.nullable(
+					v.array(
+						v.strictObject({
+							/**
+							 * IP address.
+							 */
+							Addr: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Mask length of the IP address.
+							 */
+							PrefixLen: v.optional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+				),
+			),
+			/**
+			 * EndpointID uniquely represents a service endpoint in a Sandbox.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			EndpointID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Gateway address for the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			Gateway: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Global IPv6 address for the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			GlobalIPv6Address: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Mask length of the global IPv6 address.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			GlobalIPv6PrefixLen: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * IPv4 address for the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			IPAddress: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Mask length of the IPv4 address.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			IPPrefixLen: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * IPv6 gateway address for this network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			IPv6Gateway: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * MAC address for the container on the default "bridge" network.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Deprecated**: This field is only propagated when attached to the
+			 * > default "bridge" network. Use the information from the "bridge"
+			 * > network inside the `Networks` map instead, which contains the same
+			 * > information. This field was deprecated in Docker 1.9 and is scheduled
+			 * > to be removed in Docker 17.12.0
+			 */
+			MacAddress: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Information about all networks that the container is connected to.
+			 */
+			Networks: v.optional(v.record(v.string(), v.unknown())),
+		}),
+	),
+});
 export const exactContainerInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -26631,6 +29819,28 @@ export const exactContainerInspectCommandQuerySchema = v.strictObject({
 });
 export const containerInspectCommandQuerySchema = v.strictObject({
 	size: v.optional(v.boolean()),
+});
+export const exactContainerTopCommandResponseSchema = v.strictObject({
+	/**
+	 * The ps column titles
+	 */
+	Titles: v.exactOptional(v.array(v.string())),
+	/**
+	 * Each process running in the container, where each is process
+	 * is an array of values corresponding to the titles.
+	 */
+	Processes: v.exactOptional(v.array(v.array(v.string()))),
+});
+export const containerTopCommandResponseSchema = v.strictObject({
+	/**
+	 * The ps column titles
+	 */
+	Titles: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Each process running in the container, where each is process
+	 * is an array of values corresponding to the titles.
+	 */
+	Processes: v.optional(v.array(v.array(v.pipe(v.string(), v.trim())))),
 });
 export const exactContainerTopCommandParamsSchema = v.strictObject({
 	id: v.string(),
@@ -26688,6 +29898,42 @@ export const containerLogsCommandQuerySchema = v.strictObject({
 	timestamps: v.optional(v.boolean()),
 	tail: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactContainerChangesCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * Path to file or directory that has changed.
+		 */
+		Path: v.string(),
+		/**
+		 * Kind of change
+		 *
+		 * Can be one of:
+		 *
+		 * - `0`: Modified ("C")
+		 * - `1`: Added ("A")
+		 * - `2`: Deleted ("D")
+		 */
+		Kind: v.pipe(v.number(), v.integer()),
+	}),
+);
+export const containerChangesCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * Path to file or directory that has changed.
+		 */
+		Path: v.pipe(v.string(), v.trim()),
+		/**
+		 * Kind of change
+		 *
+		 * Can be one of:
+		 *
+		 * - `0`: Modified ("C")
+		 * - `1`: Added ("A")
+		 * - `2`: Deleted ("D")
+		 */
+		Kind: v.pipe(v.number(), v.integer()),
+	}),
+);
 export const exactContainerChangesCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -26700,6 +29946,14 @@ export const exactContainerExportCommandParamsSchema = v.strictObject({
 export const containerExportCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
+export const exactContainerStatsCommandResponseSchema = v.record(
+	v.string(),
+	v.unknown(),
+);
+export const containerStatsCommandResponseSchema = v.record(
+	v.string(),
+	v.unknown(),
+);
 export const exactContainerStatsCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -27604,6 +30858,12 @@ export const containerUpdateCommandBodySchema = v.intersect([
 		),
 	}),
 ]);
+export const exactContainerUpdateCommandResponseSchema = v.strictObject({
+	Warnings: v.exactOptional(v.array(v.string())),
+});
+export const containerUpdateCommandResponseSchema = v.strictObject({
+	Warnings: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+});
 export const exactContainerUpdateCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -27678,6 +30938,44 @@ export const containerAttachWebsocketCommandQuerySchema = v.strictObject({
 	stdout: v.optional(v.boolean()),
 	stderr: v.optional(v.boolean()),
 });
+export const exactContainerWaitCommandResponseSchema = v.strictObject({
+	/**
+	 * Exit code of the container
+	 */
+	StatusCode: v.bigint(),
+	/**
+	 * container waiting error, if any
+	 */
+	Error: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Details of an error
+			 */
+			Message: v.exactOptional(v.string()),
+		}),
+	),
+});
+export const containerWaitCommandResponseSchema = v.strictObject({
+	/**
+	 * Exit code of the container
+	 */
+	StatusCode: v.union([
+		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+		v.bigint(),
+	]),
+	/**
+	 * container waiting error, if any
+	 */
+	Error: v.optional(
+		v.strictObject({
+			/**
+			 * Details of an error
+			 */
+			Message: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+});
 export const exactContainerWaitCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -27748,12 +31046,218 @@ export const exactContainerArchiveInfoCommandQuerySchema = v.strictObject({
 export const containerArchiveInfoCommandQuerySchema = v.strictObject({
 	path: v.pipe(v.string(), v.trim()),
 });
+export const exactContainerPruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Container IDs that were deleted
+	 */
+	ContainersDeleted: v.exactOptional(v.array(v.string())),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.exactOptional(v.bigint()),
+});
+export const containerPruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Container IDs that were deleted
+	 */
+	ContainersDeleted: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+});
 export const exactContainerPruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const containerPruneCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactImageListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * ID is the content-addressable ID of an image.
+		 *
+		 * This identifier is a content-addressable digest calculated from the
+		 * image's configuration (which includes the digests of layers used by
+		 * the image).
+		 *
+		 * Note that this digest differs from the `RepoDigests` below, which
+		 * holds digests of image manifests that reference the image.
+		 */
+		Id: v.string(),
+		/**
+		 * ID of the parent image.
+		 *
+		 * Depending on how the image was created, this field may be empty and
+		 * is only set for images that were built/created locally. This field
+		 * is empty if the image was pulled from an image registry.
+		 */
+		ParentId: v.string(),
+		/**
+		 * List of image names/tags in the local image cache that reference this
+		 * image.
+		 *
+		 * Multiple image tags can refer to the same image, and this list may be
+		 * empty if no tags reference the image, in which case the image is
+		 * "untagged", in which case it can still be referenced by its ID.
+		 */
+		RepoTags: v.array(v.string()),
+		/**
+		 * List of content-addressable digests of locally available image manifests
+		 * that the image is referenced from. Multiple manifests can refer to the
+		 * same image.
+		 *
+		 * These digests are usually only available if the image was either pulled
+		 * from a registry, or if the image was pushed to a registry, which is when
+		 * the manifest is generated and its digest calculated.
+		 */
+		RepoDigests: v.array(v.string()),
+		/**
+		 * Date and time at which the image was created as a Unix timestamp
+		 * (number of seconds since EPOCH).
+		 */
+		Created: v.pipe(v.number(), v.integer()),
+		/**
+		 * Total size of the image including all layers it is composed of.
+		 */
+		Size: v.bigint(),
+		/**
+		 * Total size of image layers that are shared between this image and other
+		 * images.
+		 *
+		 * This size is not calculated by default. `-1` indicates that the value
+		 * has not been set / calculated.
+		 */
+		SharedSize: v.bigint(),
+		/**
+		 * Total size of the image including all layers it is composed of.
+		 *
+		 * In versions of Docker before v1.10, this field was calculated from
+		 * the image itself and all of its parent images. Images are now stored
+		 * self-contained, and no longer use a parent-chain, making this field
+		 * an equivalent of the Size field.
+		 *
+		 * Deprecated: this field is kept for backward compatibility, and will be
+		 * removed in API v1.44.
+		 */
+		VirtualSize: v.exactOptional(v.bigint()),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.record(v.string(), v.unknown()),
+		/**
+		 * Number of containers using this image. Includes both stopped and running
+		 * containers.
+		 *
+		 * This size is not calculated by default, and depends on which API endpoint
+		 * is used. `-1` indicates that the value has not been set / calculated.
+		 */
+		Containers: v.pipe(v.number(), v.integer()),
+	}),
+);
+export const imageListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * ID is the content-addressable ID of an image.
+		 *
+		 * This identifier is a content-addressable digest calculated from the
+		 * image's configuration (which includes the digests of layers used by
+		 * the image).
+		 *
+		 * Note that this digest differs from the `RepoDigests` below, which
+		 * holds digests of image manifests that reference the image.
+		 */
+		Id: v.pipe(v.string(), v.trim()),
+		/**
+		 * ID of the parent image.
+		 *
+		 * Depending on how the image was created, this field may be empty and
+		 * is only set for images that were built/created locally. This field
+		 * is empty if the image was pulled from an image registry.
+		 */
+		ParentId: v.pipe(v.string(), v.trim()),
+		/**
+		 * List of image names/tags in the local image cache that reference this
+		 * image.
+		 *
+		 * Multiple image tags can refer to the same image, and this list may be
+		 * empty if no tags reference the image, in which case the image is
+		 * "untagged", in which case it can still be referenced by its ID.
+		 */
+		RepoTags: v.array(v.pipe(v.string(), v.trim())),
+		/**
+		 * List of content-addressable digests of locally available image manifests
+		 * that the image is referenced from. Multiple manifests can refer to the
+		 * same image.
+		 *
+		 * These digests are usually only available if the image was either pulled
+		 * from a registry, or if the image was pushed to a registry, which is when
+		 * the manifest is generated and its digest calculated.
+		 */
+		RepoDigests: v.array(v.pipe(v.string(), v.trim())),
+		/**
+		 * Date and time at which the image was created as a Unix timestamp
+		 * (number of seconds since EPOCH).
+		 */
+		Created: v.pipe(v.number(), v.integer()),
+		/**
+		 * Total size of the image including all layers it is composed of.
+		 */
+		Size: v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+		/**
+		 * Total size of image layers that are shared between this image and other
+		 * images.
+		 *
+		 * This size is not calculated by default. `-1` indicates that the value
+		 * has not been set / calculated.
+		 */
+		SharedSize: v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+		/**
+		 * Total size of the image including all layers it is composed of.
+		 *
+		 * In versions of Docker before v1.10, this field was calculated from
+		 * the image itself and all of its parent images. Images are now stored
+		 * self-contained, and no longer use a parent-chain, making this field
+		 * an equivalent of the Size field.
+		 *
+		 * Deprecated: this field is kept for backward compatibility, and will be
+		 * removed in API v1.44.
+		 */
+		VirtualSize: v.optional(
+			v.union([
+				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+				v.bigint(),
+			]),
+		),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.record(v.string(), v.unknown()),
+		/**
+		 * Number of containers using this image. Includes both stopped and running
+		 * containers.
+		 *
+		 * This size is not calculated by default, and depends on which API endpoint
+		 * is used. `-1` indicates that the value has not been set / calculated.
+		 */
+		Containers: v.pipe(v.number(), v.integer()),
+	}),
+);
 export const exactImageListCommandQuerySchema = v.strictObject({
 	all: v.exactOptional(v.boolean()),
 	filters: v.exactOptional(v.string()),
@@ -27888,6 +31392,26 @@ export const imageBuildCommandHeaderSchema = v.object({
 	"content-type": v.optional(v.picklist(["application/x-tar"])),
 	"x-registry-config": v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactBuildPruneCommandResponseSchema = v.strictObject({
+	CachesDeleted: v.exactOptional(v.array(v.string())),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.exactOptional(v.bigint()),
+});
+export const buildPruneCommandResponseSchema = v.strictObject({
+	CachesDeleted: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+});
 export const exactBuildPruneCommandQuerySchema = v.strictObject({
 	"keep-storage": v.exactOptional(v.bigint()),
 	all: v.exactOptional(v.boolean()),
@@ -27928,12 +31452,1090 @@ export const exactImageCreateCommandHeaderSchema = v.object({
 export const imageCreateCommandHeaderSchema = v.object({
 	"x-registry-auth": v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactImageInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * ID is the content-addressable ID of an image.
+	 *
+	 * This identifier is a content-addressable digest calculated from the
+	 * image's configuration (which includes the digests of layers used by
+	 * the image).
+	 *
+	 * Note that this digest differs from the `RepoDigests` below, which
+	 * holds digests of image manifests that reference the image.
+	 */
+	Id: v.exactOptional(v.string()),
+	/**
+	 * List of image names/tags in the local image cache that reference this
+	 * image.
+	 *
+	 * Multiple image tags can refer to the same image, and this list may be
+	 * empty if no tags reference the image, in which case the image is
+	 * "untagged", in which case it can still be referenced by its ID.
+	 */
+	RepoTags: v.exactOptional(v.array(v.string())),
+	/**
+	 * List of content-addressable digests of locally available image manifests
+	 * that the image is referenced from. Multiple manifests can refer to the
+	 * same image.
+	 *
+	 * These digests are usually only available if the image was either pulled
+	 * from a registry, or if the image was pushed to a registry, which is when
+	 * the manifest is generated and its digest calculated.
+	 */
+	RepoDigests: v.exactOptional(v.array(v.string())),
+	/**
+	 * ID of the parent image.
+	 *
+	 * Depending on how the image was created, this field may be empty and
+	 * is only set for images that were built/created locally. This field
+	 * is empty if the image was pulled from an image registry.
+	 */
+	Parent: v.exactOptional(v.string()),
+	/**
+	 * Optional message that was set when committing or importing the image.
+	 */
+	Comment: v.exactOptional(v.string()),
+	/**
+	 * Date and time at which the image was created, formatted in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	Created: v.exactOptional(v.string()),
+	/**
+	 * The ID of the container that was used to create the image.
+	 *
+	 * Depending on how the image was created, this field may be empty.
+	 */
+	Container: v.exactOptional(v.string()),
+	/**
+	 * Configuration for a container that is portable between hosts.
+	 *
+	 * When used as `ContainerConfig` field in an image, `ContainerConfig` is an
+	 * optional field containing the configuration of the container that was last
+	 * committed when creating the image.
+	 *
+	 * Previous versions of Docker builder used this field to store build cache,
+	 * and it is not in active use anymore.
+	 */
+	ContainerConfig: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The hostname to use for the container, as a valid RFC 1123 hostname.
+			 */
+			Hostname: v.exactOptional(v.string()),
+			/**
+			 * The domain name to use for the container.
+			 */
+			Domainname: v.exactOptional(v.string()),
+			/**
+			 * The user that commands are run as inside the container.
+			 */
+			User: v.exactOptional(v.string()),
+			/**
+			 * Whether to attach to `stdin`.
+			 */
+			AttachStdin: v.exactOptional(v.boolean()),
+			/**
+			 * Whether to attach to `stdout`.
+			 */
+			AttachStdout: v.exactOptional(v.boolean()),
+			/**
+			 * Whether to attach to `stderr`.
+			 */
+			AttachStderr: v.exactOptional(v.boolean()),
+			/**
+			 * An object mapping ports to an empty object in the form:
+			 *
+			 * `{"<port>/<tcp|udp|sctp>": {}}`
+			 */
+			ExposedPorts: v.exactOptional(
+				v.nullable(v.record(v.string(), v.unknown())),
+			),
+			/**
+			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
+			 */
+			Tty: v.exactOptional(v.boolean()),
+			/**
+			 * Open `stdin`
+			 */
+			OpenStdin: v.exactOptional(v.boolean()),
+			/**
+			 * Close `stdin` after one attached client disconnects
+			 */
+			StdinOnce: v.exactOptional(v.boolean()),
+			/**
+			 * A list of environment variables to set inside the container in the
+			 * form `["VAR=value", ...]`. A variable without `=` is removed from the
+			 * environment, rather than to have an empty value.
+			 */
+			Env: v.exactOptional(v.array(v.string())),
+			/**
+			 * Command to run specified as a string or an array of strings.
+			 */
+			Cmd: v.exactOptional(v.array(v.string())),
+			/**
+			 * A test to perform to check that the container is healthy.
+			 */
+			Healthcheck: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The test to perform. Possible values are:
+					 *
+					 * - `[]` inherit healthcheck from image or parent image
+					 * - `["NONE"]` disable healthcheck
+					 * - `["CMD", args...]` exec arguments directly
+					 * - `["CMD-SHELL", command]` run command with system's default shell
+					 */
+					Test: v.exactOptional(v.array(v.string())),
+					/**
+					 * The time to wait between checks in nanoseconds. It should be 0 or at
+					 * least 1000000 (1 ms). 0 means inherit.
+					 */
+					Interval: v.exactOptional(v.bigint()),
+					/**
+					 * The time to wait before considering the check to have hung. It should
+					 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+					 */
+					Timeout: v.exactOptional(v.bigint()),
+					/**
+					 * The number of consecutive failures needed to consider a container as
+					 * unhealthy. 0 means inherit.
+					 */
+					Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Start period for the container to initialize before starting
+					 * health-retries countdown in nanoseconds. It should be 0 or at least
+					 * 1000000 (1 ms). 0 means inherit.
+					 */
+					StartPeriod: v.exactOptional(v.bigint()),
+				}),
+			),
+			/**
+			 * Command is already escaped (Windows only)
+			 */
+			ArgsEscaped: v.exactOptional(v.nullable(v.boolean())),
+			/**
+			 * The name (or reference) of the image to use when creating the container,
+			 * or which was used when the container was created.
+			 */
+			Image: v.exactOptional(v.string()),
+			/**
+			 * An object mapping mount point paths inside the container to empty
+			 * objects.
+			 */
+			Volumes: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * The working directory for commands to run in.
+			 */
+			WorkingDir: v.exactOptional(v.string()),
+			/**
+			 * The entry point for the container as a string or an array of strings.
+			 *
+			 * If the array consists of exactly one empty string (`[""]`) then the
+			 * entry point is reset to system default (i.e., the entry point used by
+			 * docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`).
+			 */
+			Entrypoint: v.exactOptional(v.array(v.string())),
+			/**
+			 * Disable networking for the container.
+			 */
+			NetworkDisabled: v.exactOptional(v.nullable(v.boolean())),
+			/**
+			 * MAC address of the container.
+			 */
+			MacAddress: v.exactOptional(v.nullable(v.string())),
+			/**
+			 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
+			 */
+			OnBuild: v.exactOptional(v.nullable(v.array(v.string()))),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * Signal to stop a container as a string or unsigned integer.
+			 */
+			StopSignal: v.exactOptional(v.nullable(v.string())),
+			/**
+			 * Timeout to stop a container in seconds.
+			 */
+			StopTimeout: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
+			 */
+			Shell: v.exactOptional(v.nullable(v.array(v.string()))),
+		}),
+	),
+	/**
+	 * The version of Docker that was used to build the image.
+	 *
+	 * Depending on how the image was created, this field may be empty.
+	 */
+	DockerVersion: v.exactOptional(v.string()),
+	/**
+	 * Name of the author that was specified when committing the image, or as
+	 * specified through MAINTAINER (deprecated) in the Dockerfile.
+	 */
+	Author: v.exactOptional(v.string()),
+	/**
+	 * Configuration of the image. These fields are used as defaults
+	 * when starting a container from the image.
+	 */
+	Config: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The hostname to use for the container, as a valid RFC 1123 hostname.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always empty and must not be used.
+			 */
+			Hostname: v.exactOptional(v.string()),
+			/**
+			 * The domain name to use for the container.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always empty and must not be used.
+			 */
+			Domainname: v.exactOptional(v.string()),
+			/**
+			 * The user that commands are run as inside the container.
+			 */
+			User: v.exactOptional(v.string()),
+			/**
+			 * Whether to attach to `stdin`.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			AttachStdin: v.exactOptional(v.boolean()),
+			/**
+			 * Whether to attach to `stdout`.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			AttachStdout: v.exactOptional(v.boolean()),
+			/**
+			 * Whether to attach to `stderr`.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			AttachStderr: v.exactOptional(v.boolean()),
+			/**
+			 * An object mapping ports to an empty object in the form:
+			 *
+			 * `{"<port>/<tcp|udp|sctp>": {}}`
+			 */
+			ExposedPorts: v.exactOptional(
+				v.nullable(v.record(v.string(), v.unknown())),
+			),
+			/**
+			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			Tty: v.exactOptional(v.boolean()),
+			/**
+			 * Open `stdin`
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			OpenStdin: v.exactOptional(v.boolean()),
+			/**
+			 * Close `stdin` after one attached client disconnects.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			StdinOnce: v.exactOptional(v.boolean()),
+			/**
+			 * A list of environment variables to set inside the container in the
+			 * form `["VAR=value", ...]`. A variable without `=` is removed from the
+			 * environment, rather than to have an empty value.
+			 */
+			Env: v.exactOptional(v.array(v.string())),
+			/**
+			 * Command to run specified as a string or an array of strings.
+			 */
+			Cmd: v.exactOptional(v.array(v.string())),
+			/**
+			 * A test to perform to check that the container is healthy.
+			 */
+			Healthcheck: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The test to perform. Possible values are:
+					 *
+					 * - `[]` inherit healthcheck from image or parent image
+					 * - `["NONE"]` disable healthcheck
+					 * - `["CMD", args...]` exec arguments directly
+					 * - `["CMD-SHELL", command]` run command with system's default shell
+					 */
+					Test: v.exactOptional(v.array(v.string())),
+					/**
+					 * The time to wait between checks in nanoseconds. It should be 0 or at
+					 * least 1000000 (1 ms). 0 means inherit.
+					 */
+					Interval: v.exactOptional(v.bigint()),
+					/**
+					 * The time to wait before considering the check to have hung. It should
+					 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+					 */
+					Timeout: v.exactOptional(v.bigint()),
+					/**
+					 * The number of consecutive failures needed to consider a container as
+					 * unhealthy. 0 means inherit.
+					 */
+					Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Start period for the container to initialize before starting
+					 * health-retries countdown in nanoseconds. It should be 0 or at least
+					 * 1000000 (1 ms). 0 means inherit.
+					 */
+					StartPeriod: v.exactOptional(v.bigint()),
+				}),
+			),
+			/**
+			 * Command is already escaped (Windows only)
+			 */
+			ArgsEscaped: v.exactOptional(v.nullable(v.boolean())),
+			/**
+			 * The name (or reference) of the image to use when creating the container,
+			 * or which was used when the container was created.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always empty and must not be used.
+			 */
+			Image: v.exactOptional(v.string()),
+			/**
+			 * An object mapping mount point paths inside the container to empty
+			 * objects.
+			 */
+			Volumes: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * The working directory for commands to run in.
+			 */
+			WorkingDir: v.exactOptional(v.string()),
+			/**
+			 * The entry point for the container as a string or an array of strings.
+			 *
+			 * If the array consists of exactly one empty string (`[""]`) then the
+			 * entry point is reset to system default (i.e., the entry point used by
+			 * docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`).
+			 */
+			Entrypoint: v.exactOptional(v.array(v.string())),
+			/**
+			 * Disable networking for the container.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always omitted and must not be used.
+			 */
+			NetworkDisabled: v.exactOptional(v.nullable(v.boolean())),
+			/**
+			 * MAC address of the container.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always omitted and must not be used.
+			 */
+			MacAddress: v.exactOptional(v.nullable(v.string())),
+			/**
+			 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
+			 */
+			OnBuild: v.exactOptional(v.nullable(v.array(v.string()))),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * Signal to stop a container as a string or unsigned integer.
+			 */
+			StopSignal: v.exactOptional(v.nullable(v.string())),
+			/**
+			 * Timeout to stop a container in seconds.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always omitted and must not be used.
+			 */
+			StopTimeout: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
+			 */
+			Shell: v.exactOptional(v.nullable(v.array(v.string()))),
+		}),
+	),
+	/**
+	 * Hardware CPU architecture that the image runs on.
+	 */
+	Architecture: v.exactOptional(v.string()),
+	/**
+	 * CPU architecture variant (presently ARM-only).
+	 */
+	Variant: v.exactOptional(v.nullable(v.string())),
+	/**
+	 * Operating System the image is built to run on.
+	 */
+	Os: v.exactOptional(v.string()),
+	/**
+	 * Operating System version the image is built to run on (especially
+	 * for Windows).
+	 */
+	OsVersion: v.exactOptional(v.nullable(v.string())),
+	/**
+	 * Total size of the image including all layers it is composed of.
+	 */
+	Size: v.exactOptional(v.bigint()),
+	/**
+	 * Total size of the image including all layers it is composed of.
+	 *
+	 * In versions of Docker before v1.10, this field was calculated from
+	 * the image itself and all of its parent images. Images are now stored
+	 * self-contained, and no longer use a parent-chain, making this field
+	 * an equivalent of the Size field.
+	 *
+	 * > **Deprecated**: this field is kept for backward compatibility, but
+	 * > will be removed in API v1.44.
+	 */
+	VirtualSize: v.exactOptional(v.bigint()),
+	/**
+	 * Information about the storage driver used to store the container's and
+	 * image's filesystem.
+	 */
+	GraphDriver: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Name of the storage driver.
+			 */
+			Name: v.string(),
+			/**
+			 * Low-level storage metadata, provided as key/value pairs.
+			 *
+			 * This information is driver-specific, and depends on the storage-driver
+			 * in use, and should be used for informational purposes only.
+			 */
+			Data: v.record(v.string(), v.unknown()),
+		}),
+	),
+	/**
+	 * Information about the image's RootFS, including the layer IDs.
+	 */
+	RootFS: v.exactOptional(
+		v.strictObject({
+			Type: v.string(),
+			Layers: v.exactOptional(v.array(v.string())),
+		}),
+	),
+	/**
+	 * Additional metadata of the image in the local cache. This information
+	 * is local to the daemon, and not part of the image itself.
+	 */
+	Metadata: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Date and time at which the image was last tagged in
+			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+			 *
+			 * This information is only available if the image was tagged locally,
+			 * and omitted otherwise.
+			 */
+			LastTagTime: v.exactOptional(v.nullable(v.string())),
+		}),
+	),
+});
+export const imageInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * ID is the content-addressable ID of an image.
+	 *
+	 * This identifier is a content-addressable digest calculated from the
+	 * image's configuration (which includes the digests of layers used by
+	 * the image).
+	 *
+	 * Note that this digest differs from the `RepoDigests` below, which
+	 * holds digests of image manifests that reference the image.
+	 */
+	Id: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * List of image names/tags in the local image cache that reference this
+	 * image.
+	 *
+	 * Multiple image tags can refer to the same image, and this list may be
+	 * empty if no tags reference the image, in which case the image is
+	 * "untagged", in which case it can still be referenced by its ID.
+	 */
+	RepoTags: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * List of content-addressable digests of locally available image manifests
+	 * that the image is referenced from. Multiple manifests can refer to the
+	 * same image.
+	 *
+	 * These digests are usually only available if the image was either pulled
+	 * from a registry, or if the image was pushed to a registry, which is when
+	 * the manifest is generated and its digest calculated.
+	 */
+	RepoDigests: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * ID of the parent image.
+	 *
+	 * Depending on how the image was created, this field may be empty and
+	 * is only set for images that were built/created locally. This field
+	 * is empty if the image was pulled from an image registry.
+	 */
+	Parent: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Optional message that was set when committing or importing the image.
+	 */
+	Comment: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Date and time at which the image was created, formatted in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	Created: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The ID of the container that was used to create the image.
+	 *
+	 * Depending on how the image was created, this field may be empty.
+	 */
+	Container: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Configuration for a container that is portable between hosts.
+	 *
+	 * When used as `ContainerConfig` field in an image, `ContainerConfig` is an
+	 * optional field containing the configuration of the container that was last
+	 * committed when creating the image.
+	 *
+	 * Previous versions of Docker builder used this field to store build cache,
+	 * and it is not in active use anymore.
+	 */
+	ContainerConfig: v.optional(
+		v.strictObject({
+			/**
+			 * The hostname to use for the container, as a valid RFC 1123 hostname.
+			 */
+			Hostname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The domain name to use for the container.
+			 */
+			Domainname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The user that commands are run as inside the container.
+			 */
+			User: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Whether to attach to `stdin`.
+			 */
+			AttachStdin: v.optional(v.boolean()),
+			/**
+			 * Whether to attach to `stdout`.
+			 */
+			AttachStdout: v.optional(v.boolean()),
+			/**
+			 * Whether to attach to `stderr`.
+			 */
+			AttachStderr: v.optional(v.boolean()),
+			/**
+			 * An object mapping ports to an empty object in the form:
+			 *
+			 * `{"<port>/<tcp|udp|sctp>": {}}`
+			 */
+			ExposedPorts: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+			/**
+			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
+			 */
+			Tty: v.optional(v.boolean()),
+			/**
+			 * Open `stdin`
+			 */
+			OpenStdin: v.optional(v.boolean()),
+			/**
+			 * Close `stdin` after one attached client disconnects
+			 */
+			StdinOnce: v.optional(v.boolean()),
+			/**
+			 * A list of environment variables to set inside the container in the
+			 * form `["VAR=value", ...]`. A variable without `=` is removed from the
+			 * environment, rather than to have an empty value.
+			 */
+			Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Command to run specified as a string or an array of strings.
+			 */
+			Cmd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * A test to perform to check that the container is healthy.
+			 */
+			Healthcheck: v.optional(
+				v.strictObject({
+					/**
+					 * The test to perform. Possible values are:
+					 *
+					 * - `[]` inherit healthcheck from image or parent image
+					 * - `["NONE"]` disable healthcheck
+					 * - `["CMD", args...]` exec arguments directly
+					 * - `["CMD-SHELL", command]` run command with system's default shell
+					 */
+					Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * The time to wait between checks in nanoseconds. It should be 0 or at
+					 * least 1000000 (1 ms). 0 means inherit.
+					 */
+					Interval: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The time to wait before considering the check to have hung. It should
+					 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+					 */
+					Timeout: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The number of consecutive failures needed to consider a container as
+					 * unhealthy. 0 means inherit.
+					 */
+					Retries: v.optional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Start period for the container to initialize before starting
+					 * health-retries countdown in nanoseconds. It should be 0 or at least
+					 * 1000000 (1 ms). 0 means inherit.
+					 */
+					StartPeriod: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+				}),
+			),
+			/**
+			 * Command is already escaped (Windows only)
+			 */
+			ArgsEscaped: v.optional(v.nullable(v.boolean())),
+			/**
+			 * The name (or reference) of the image to use when creating the container,
+			 * or which was used when the container was created.
+			 */
+			Image: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * An object mapping mount point paths inside the container to empty
+			 * objects.
+			 */
+			Volumes: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * The working directory for commands to run in.
+			 */
+			WorkingDir: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The entry point for the container as a string or an array of strings.
+			 *
+			 * If the array consists of exactly one empty string (`[""]`) then the
+			 * entry point is reset to system default (i.e., the entry point used by
+			 * docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`).
+			 */
+			Entrypoint: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Disable networking for the container.
+			 */
+			NetworkDisabled: v.optional(v.nullable(v.boolean())),
+			/**
+			 * MAC address of the container.
+			 */
+			MacAddress: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+			/**
+			 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
+			 */
+			OnBuild: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * Signal to stop a container as a string or unsigned integer.
+			 */
+			StopSignal: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Timeout to stop a container in seconds.
+			 */
+			StopTimeout: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
+			 */
+			Shell: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+		}),
+	),
+	/**
+	 * The version of Docker that was used to build the image.
+	 *
+	 * Depending on how the image was created, this field may be empty.
+	 */
+	DockerVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Name of the author that was specified when committing the image, or as
+	 * specified through MAINTAINER (deprecated) in the Dockerfile.
+	 */
+	Author: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Configuration of the image. These fields are used as defaults
+	 * when starting a container from the image.
+	 */
+	Config: v.optional(
+		v.strictObject({
+			/**
+			 * The hostname to use for the container, as a valid RFC 1123 hostname.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always empty and must not be used.
+			 */
+			Hostname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The domain name to use for the container.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always empty and must not be used.
+			 */
+			Domainname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The user that commands are run as inside the container.
+			 */
+			User: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Whether to attach to `stdin`.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			AttachStdin: v.optional(v.boolean()),
+			/**
+			 * Whether to attach to `stdout`.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			AttachStdout: v.optional(v.boolean()),
+			/**
+			 * Whether to attach to `stderr`.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			AttachStderr: v.optional(v.boolean()),
+			/**
+			 * An object mapping ports to an empty object in the form:
+			 *
+			 * `{"<port>/<tcp|udp|sctp>": {}}`
+			 */
+			ExposedPorts: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+			/**
+			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			Tty: v.optional(v.boolean()),
+			/**
+			 * Open `stdin`
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			OpenStdin: v.optional(v.boolean()),
+			/**
+			 * Close `stdin` after one attached client disconnects.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always false and must not be used.
+			 */
+			StdinOnce: v.optional(v.boolean()),
+			/**
+			 * A list of environment variables to set inside the container in the
+			 * form `["VAR=value", ...]`. A variable without `=` is removed from the
+			 * environment, rather than to have an empty value.
+			 */
+			Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Command to run specified as a string or an array of strings.
+			 */
+			Cmd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * A test to perform to check that the container is healthy.
+			 */
+			Healthcheck: v.optional(
+				v.strictObject({
+					/**
+					 * The test to perform. Possible values are:
+					 *
+					 * - `[]` inherit healthcheck from image or parent image
+					 * - `["NONE"]` disable healthcheck
+					 * - `["CMD", args...]` exec arguments directly
+					 * - `["CMD-SHELL", command]` run command with system's default shell
+					 */
+					Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * The time to wait between checks in nanoseconds. It should be 0 or at
+					 * least 1000000 (1 ms). 0 means inherit.
+					 */
+					Interval: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The time to wait before considering the check to have hung. It should
+					 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+					 */
+					Timeout: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The number of consecutive failures needed to consider a container as
+					 * unhealthy. 0 means inherit.
+					 */
+					Retries: v.optional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Start period for the container to initialize before starting
+					 * health-retries countdown in nanoseconds. It should be 0 or at least
+					 * 1000000 (1 ms). 0 means inherit.
+					 */
+					StartPeriod: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+				}),
+			),
+			/**
+			 * Command is already escaped (Windows only)
+			 */
+			ArgsEscaped: v.optional(v.nullable(v.boolean())),
+			/**
+			 * The name (or reference) of the image to use when creating the container,
+			 * or which was used when the container was created.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always empty and must not be used.
+			 */
+			Image: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * An object mapping mount point paths inside the container to empty
+			 * objects.
+			 */
+			Volumes: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * The working directory for commands to run in.
+			 */
+			WorkingDir: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The entry point for the container as a string or an array of strings.
+			 *
+			 * If the array consists of exactly one empty string (`[""]`) then the
+			 * entry point is reset to system default (i.e., the entry point used by
+			 * docker when there is no `ENTRYPOINT` instruction in the `Dockerfile`).
+			 */
+			Entrypoint: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Disable networking for the container.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always omitted and must not be used.
+			 */
+			NetworkDisabled: v.optional(v.nullable(v.boolean())),
+			/**
+			 * MAC address of the container.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always omitted and must not be used.
+			 */
+			MacAddress: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+			/**
+			 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
+			 */
+			OnBuild: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * Signal to stop a container as a string or unsigned integer.
+			 */
+			StopSignal: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Timeout to stop a container in seconds.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: this field is always omitted and must not be used.
+			 */
+			StopTimeout: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
+			 */
+			Shell: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+		}),
+	),
+	/**
+	 * Hardware CPU architecture that the image runs on.
+	 */
+	Architecture: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * CPU architecture variant (presently ARM-only).
+	 */
+	Variant: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Operating System the image is built to run on.
+	 */
+	Os: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Operating System version the image is built to run on (especially
+	 * for Windows).
+	 */
+	OsVersion: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Total size of the image including all layers it is composed of.
+	 */
+	Size: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	/**
+	 * Total size of the image including all layers it is composed of.
+	 *
+	 * In versions of Docker before v1.10, this field was calculated from
+	 * the image itself and all of its parent images. Images are now stored
+	 * self-contained, and no longer use a parent-chain, making this field
+	 * an equivalent of the Size field.
+	 *
+	 * > **Deprecated**: this field is kept for backward compatibility, but
+	 * > will be removed in API v1.44.
+	 */
+	VirtualSize: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	/**
+	 * Information about the storage driver used to store the container's and
+	 * image's filesystem.
+	 */
+	GraphDriver: v.optional(
+		v.strictObject({
+			/**
+			 * Name of the storage driver.
+			 */
+			Name: v.pipe(v.string(), v.trim()),
+			/**
+			 * Low-level storage metadata, provided as key/value pairs.
+			 *
+			 * This information is driver-specific, and depends on the storage-driver
+			 * in use, and should be used for informational purposes only.
+			 */
+			Data: v.record(v.string(), v.unknown()),
+		}),
+	),
+	/**
+	 * Information about the image's RootFS, including the layer IDs.
+	 */
+	RootFS: v.optional(
+		v.strictObject({
+			Type: v.pipe(v.string(), v.trim()),
+			Layers: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+		}),
+	),
+	/**
+	 * Additional metadata of the image in the local cache. This information
+	 * is local to the daemon, and not part of the image itself.
+	 */
+	Metadata: v.optional(
+		v.strictObject({
+			/**
+			 * Date and time at which the image was last tagged in
+			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+			 *
+			 * This information is only available if the image was tagged locally,
+			 * and omitted otherwise.
+			 */
+			LastTagTime: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+		}),
+	),
+});
 export const exactImageInspectCommandParamsSchema = v.strictObject({
 	name: v.string(),
 });
 export const imageInspectCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
+export const exactImageHistoryCommandResponseSchema = v.array(
+	v.strictObject({
+		Id: v.string(),
+		Created: v.bigint(),
+		CreatedBy: v.string(),
+		Tags: v.array(v.string()),
+		Size: v.bigint(),
+		Comment: v.string(),
+	}),
+);
+export const imageHistoryCommandResponseSchema = v.array(
+	v.strictObject({
+		Id: v.pipe(v.string(), v.trim()),
+		Created: v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+		CreatedBy: v.pipe(v.string(), v.trim()),
+		Tags: v.array(v.pipe(v.string(), v.trim())),
+		Size: v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+		Comment: v.pipe(v.string(), v.trim()),
+	}),
+);
 export const exactImageHistoryCommandParamsSchema = v.strictObject({
 	name: v.string(),
 });
@@ -27972,6 +32574,30 @@ export const imageTagCommandQuerySchema = v.strictObject({
 	repo: v.optional(v.pipe(v.string(), v.trim())),
 	tag: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactImageDeleteCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * The image ID of an image that was untagged
+		 */
+		Untagged: v.exactOptional(v.string()),
+		/**
+		 * The image ID of an image that was deleted
+		 */
+		Deleted: v.exactOptional(v.string()),
+	}),
+);
+export const imageDeleteCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * The image ID of an image that was untagged
+		 */
+		Untagged: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The image ID of an image that was deleted
+		 */
+		Deleted: v.optional(v.pipe(v.string(), v.trim())),
+	}),
+);
 export const exactImageDeleteCommandParamsSchema = v.strictObject({
 	name: v.string(),
 });
@@ -27986,6 +32612,24 @@ export const imageDeleteCommandQuerySchema = v.strictObject({
 	force: v.optional(v.boolean()),
 	noprune: v.optional(v.boolean()),
 });
+export const exactImageSearchCommandResponseSchema = v.array(
+	v.strictObject({
+		description: v.exactOptional(v.string()),
+		is_official: v.exactOptional(v.boolean()),
+		is_automated: v.exactOptional(v.boolean()),
+		name: v.exactOptional(v.string()),
+		star_count: v.exactOptional(v.pipe(v.number(), v.integer())),
+	}),
+);
+export const imageSearchCommandResponseSchema = v.array(
+	v.strictObject({
+		description: v.optional(v.pipe(v.string(), v.trim())),
+		is_official: v.optional(v.boolean()),
+		is_automated: v.optional(v.boolean()),
+		name: v.optional(v.pipe(v.string(), v.trim())),
+		star_count: v.optional(v.pipe(v.number(), v.integer())),
+	}),
+);
 export const exactImageSearchCommandQuerySchema = v.strictObject({
 	term: v.string(),
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
@@ -28006,6 +32650,58 @@ export const imageSearchCommandQuerySchema = v.strictObject({
 	),
 	filters: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactImagePruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Images that were deleted
+	 */
+	ImagesDeleted: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The image ID of an image that was untagged
+				 */
+				Untagged: v.exactOptional(v.string()),
+				/**
+				 * The image ID of an image that was deleted
+				 */
+				Deleted: v.exactOptional(v.string()),
+			}),
+		),
+	),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.exactOptional(v.bigint()),
+});
+export const imagePruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Images that were deleted
+	 */
+	ImagesDeleted: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The image ID of an image that was untagged
+				 */
+				Untagged: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The image ID of an image that was deleted
+				 */
+				Deleted: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+});
 export const exactImagePruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
@@ -28023,6 +32719,1998 @@ export const systemAuthCommandBodySchema = v.strictObject({
 	password: v.optional(v.pipe(v.string(), v.trim())),
 	email: v.optional(v.pipe(v.string(), v.trim())),
 	serveraddress: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactSystemAuthCommandResponseSchema = v.strictObject({
+	/**
+	 * The status of the authentication
+	 */
+	Status: v.string(),
+	/**
+	 * An opaque token used to authenticate a user after a successful login
+	 */
+	IdentityToken: v.exactOptional(v.string()),
+});
+export const systemAuthCommandResponseSchema = v.strictObject({
+	/**
+	 * The status of the authentication
+	 */
+	Status: v.pipe(v.string(), v.trim()),
+	/**
+	 * An opaque token used to authenticate a user after a successful login
+	 */
+	IdentityToken: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactSystemInfoCommandResponseSchema = v.strictObject({
+	/**
+	 * Unique identifier of the daemon.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: The format of the ID itself is not part of the API, and
+	 * > should not be considered stable.
+	 */
+	ID: v.exactOptional(v.string()),
+	/**
+	 * Total number of containers on the host.
+	 */
+	Containers: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Number of containers with status `"running"`.
+	 */
+	ContainersRunning: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Number of containers with status `"paused"`.
+	 */
+	ContainersPaused: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Number of containers with status `"stopped"`.
+	 */
+	ContainersStopped: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Total number of images on the host.
+	 *
+	 * Both _tagged_ and _untagged_ (dangling) images are counted.
+	 */
+	Images: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Name of the storage driver in use.
+	 */
+	Driver: v.exactOptional(v.string()),
+	/**
+	 * Information specific to the storage driver, provided as
+	 * "label" / "value" pairs.
+	 *
+	 * This information is provided by the storage driver, and formatted
+	 * in a way consistent with the output of `docker info` on the command
+	 * line.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: The information returned in this field, including the
+	 * > formatting of values and labels, should not be considered stable,
+	 * > and may change without notice.
+	 */
+	DriverStatus: v.exactOptional(v.array(v.array(v.string()))),
+	/**
+	 * Root directory of persistent Docker state.
+	 *
+	 * Defaults to `/var/lib/docker` on Linux, and `C:\ProgramData\docker`
+	 * on Windows.
+	 */
+	DockerRootDir: v.exactOptional(v.string()),
+	/**
+	 * Available plugins per type.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: Only unmanaged (V1) plugins are included in this list.
+	 * > V1 plugins are "lazily" loaded, and are not returned in this list
+	 * > if there is no resource using the plugin.
+	 */
+	Plugins: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Names of available volume-drivers, and network-driver plugins.
+			 */
+			Volume: v.exactOptional(v.array(v.string())),
+			/**
+			 * Names of available network-drivers, and network-driver plugins.
+			 */
+			Network: v.exactOptional(v.array(v.string())),
+			/**
+			 * Names of available authorization plugins.
+			 */
+			Authorization: v.exactOptional(v.array(v.string())),
+			/**
+			 * Names of available logging-drivers, and logging-driver plugins.
+			 */
+			Log: v.exactOptional(v.array(v.string())),
+		}),
+	),
+	/**
+	 * Indicates if the host has memory limit support enabled.
+	 */
+	MemoryLimit: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if the host has memory swap limit support enabled.
+	 */
+	SwapLimit: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if the host has kernel memory TCP limit support enabled. This
+	 * field is omitted if not supported.
+	 *
+	 * Kernel memory TCP limits are not supported when using cgroups v2, which
+	 * does not support the corresponding `memory.kmem.tcp.limit_in_bytes` cgroup.
+	 */
+	KernelMemoryTCP: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if CPU CFS(Completely Fair Scheduler) period is supported by
+	 * the host.
+	 */
+	CpuCfsPeriod: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if CPU CFS(Completely Fair Scheduler) quota is supported by
+	 * the host.
+	 */
+	CpuCfsQuota: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if CPU Shares limiting is supported by the host.
+	 */
+	CPUShares: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if CPUsets (cpuset.cpus, cpuset.mems) are supported by the host.
+	 *
+	 * See
+	 * [cpuset(7)](https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.txt)
+	 */
+	CPUSet: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if the host kernel has PID limit support enabled.
+	 */
+	PidsLimit: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if OOM killer disable is supported on the host.
+	 */
+	OomKillDisable: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates IPv4 forwarding is enabled.
+	 */
+	IPv4Forwarding: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if `bridge-nf-call-iptables` is available on the host.
+	 */
+	BridgeNfIptables: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if `bridge-nf-call-ip6tables` is available on the host.
+	 */
+	BridgeNfIp6tables: v.exactOptional(v.boolean()),
+	/**
+	 * Indicates if the daemon is running in debug-mode / with debug-level
+	 * logging enabled.
+	 */
+	Debug: v.exactOptional(v.boolean()),
+	/**
+	 * The total number of file Descriptors in use by the daemon process.
+	 *
+	 * This information is only returned if debug-mode is enabled.
+	 */
+	NFd: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The  number of goroutines that currently exist.
+	 *
+	 * This information is only returned if debug-mode is enabled.
+	 */
+	NGoroutines: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Current system-time in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
+	 * format with nano-seconds.
+	 */
+	SystemTime: v.exactOptional(v.string()),
+	/**
+	 * The logging driver to use as a default for new containers.
+	 */
+	LoggingDriver: v.exactOptional(v.string()),
+	/**
+	 * The driver to use for managing cgroups.
+	 */
+	CgroupDriver: v.exactOptional(v.picklist(["cgroupfs", "systemd", "none"])),
+	/**
+	 * The version of the cgroup.
+	 */
+	CgroupVersion: v.exactOptional(v.picklist(["1", "2"])),
+	/**
+	 * Number of event listeners subscribed.
+	 */
+	NEventsListener: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Kernel version of the host.
+	 *
+	 * On Linux, this information obtained from `uname`. On Windows this
+	 * information is queried from the
+	 * <kbd>HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows
+	 * NT\\CurrentVersion\\</kbd>
+	 * registry value, for example _"10.0 14393
+	 * (14393.1198.amd64fre.rs1_release_sec.170427-1353)"_.
+	 */
+	KernelVersion: v.exactOptional(v.string()),
+	/**
+	 * Name of the host's operating system, for example: "Ubuntu 16.04.2 LTS"
+	 * or "Windows Server 2016 Datacenter"
+	 */
+	OperatingSystem: v.exactOptional(v.string()),
+	/**
+	 * Version of the host's operating system
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: The information returned in this field, including its
+	 * > very existence, and the formatting of values, should not be considered
+	 * > stable, and may change without notice.
+	 */
+	OSVersion: v.exactOptional(v.string()),
+	/**
+	 * Generic type of the operating system of the host, as returned by the
+	 * Go runtime (`GOOS`).
+	 *
+	 * Currently returned values are "linux" and "windows". A full list of
+	 * possible values can be found in the [Go
+	 * documentation](https://go.dev/doc/install/source#environment).
+	 */
+	OSType: v.exactOptional(v.string()),
+	/**
+	 * Hardware architecture of the host, as returned by the Go runtime
+	 * (`GOARCH`).
+	 *
+	 * A full list of possible values can be found in the [Go
+	 * documentation](https://go.dev/doc/install/source#environment).
+	 */
+	Architecture: v.exactOptional(v.string()),
+	/**
+	 * The number of logical CPUs usable by the daemon.
+	 *
+	 * The number of available CPUs is checked by querying the operating
+	 * system when the daemon starts. Changes to operating system CPU
+	 * allocation after the daemon is started are not reflected.
+	 */
+	NCPU: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Total amount of physical memory available on the host, in bytes.
+	 */
+	MemTotal: v.exactOptional(v.bigint()),
+	/**
+	 * Address / URL of the index server that is used for image search,
+	 * and as a default for user authentication for Docker Hub and Docker Cloud.
+	 */
+	IndexServerAddress: v.exactOptional(v.string()),
+	/**
+	 * RegistryServiceConfig stores daemon registry services configuration.
+	 */
+	RegistryConfig: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * List of IP ranges to which nondistributable artifacts can be pushed,
+				 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
+				 *
+				 * Some images (for example, Windows base images) contain artifacts
+				 * whose distribution is restricted by license. When these images are
+				 * pushed to a registry, restricted artifacts are not included.
+				 *
+				 * This configuration override this behavior, and enables the daemon to
+				 * push nondistributable artifacts to all registries whose resolved IP
+				 * address is within the subnet described by the CIDR syntax.
+				 *
+				 * This option is useful when pushing images containing
+				 * nondistributable artifacts to a registry on an air-gapped network so
+				 * hosts on that network can pull the images without connecting to
+				 * another server.
+				 *
+				 * > **Warning**: Nondistributable artifacts typically have restrictions
+				 * > on how and where they can be distributed and shared. Only use this
+				 * > feature to push artifacts to private registries and ensure that you
+				 * > are in compliance with any terms that cover redistributing
+				 * > nondistributable artifacts.
+				 */
+				AllowNondistributableArtifactsCIDRs: v.exactOptional(
+					v.array(v.string()),
+				),
+				/**
+				 * List of registry hostnames to which nondistributable artifacts can be
+				 * pushed, using the format `<hostname>[:<port>]` or `<IP address>[:<port>]`.
+				 *
+				 * Some images (for example, Windows base images) contain artifacts
+				 * whose distribution is restricted by license. When these images are
+				 * pushed to a registry, restricted artifacts are not included.
+				 *
+				 * This configuration override this behavior for the specified
+				 * registries.
+				 *
+				 * This option is useful when pushing images containing
+				 * nondistributable artifacts to a registry on an air-gapped network so
+				 * hosts on that network can pull the images without connecting to
+				 * another server.
+				 *
+				 * > **Warning**: Nondistributable artifacts typically have restrictions
+				 * > on how and where they can be distributed and shared. Only use this
+				 * > feature to push artifacts to private registries and ensure that you
+				 * > are in compliance with any terms that cover redistributing
+				 * > nondistributable artifacts.
+				 */
+				AllowNondistributableArtifactsHostnames: v.exactOptional(
+					v.array(v.string()),
+				),
+				/**
+				 * List of IP ranges of insecure registries, using the CIDR syntax
+				 * ([RFC 4632](https://tools.ietf.org/html/4632)). Insecure registries
+				 * accept un-encrypted (HTTP) and/or untrusted (HTTPS with certificates
+				 * from unknown CAs) communication.
+				 *
+				 * By default, local registries (`127.0.0.0/8`) are configured as
+				 * insecure. All other registries are secure. Communicating with an
+				 * insecure registry is not possible if the daemon assumes that registry
+				 * is secure.
+				 *
+				 * This configuration override this behavior, insecure communication with
+				 * registries whose resolved IP address is within the subnet described by
+				 * the CIDR syntax.
+				 *
+				 * Registries can also be marked insecure by hostname. Those registries
+				 * are listed under `IndexConfigs` and have their `Secure` field set to
+				 * `false`.
+				 *
+				 * > **Warning**: Using this option can be useful when running a local
+				 * > registry, but introduces security vulnerabilities. This option
+				 * > should therefore ONLY be used for testing purposes. For increased
+				 * > security, users should add their CA to their system's list of trusted
+				 * > CAs instead of enabling this option.
+				 */
+				InsecureRegistryCIDRs: v.exactOptional(v.array(v.string())),
+				IndexConfigs: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * List of registry URLs that act as a mirror for the official
+				 * (`docker.io`) registry.
+				 */
+				Mirrors: v.exactOptional(v.array(v.string())),
+			}),
+		),
+	),
+	/**
+	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+	 * String resources (e.g, `GPU=UUID1`).
+	 */
+	GenericResources: v.exactOptional(
+		v.array(
+			v.strictObject({
+				NamedResourceSpec: v.exactOptional(
+					v.strictObject({
+						Kind: v.exactOptional(v.string()),
+						Value: v.exactOptional(v.string()),
+					}),
+				),
+				DiscreteResourceSpec: v.exactOptional(
+					v.strictObject({
+						Kind: v.exactOptional(v.string()),
+						Value: v.exactOptional(v.bigint()),
+					}),
+				),
+			}),
+		),
+	),
+	/**
+	 * HTTP-proxy configured for the daemon. This value is obtained from the
+	 * [`HTTP_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html)
+	 * environment variable.
+	 * Credentials ([user info
+	 * component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy
+	 * URL
+	 * are masked in the API response.
+	 *
+	 * Containers do not automatically inherit this configuration.
+	 */
+	HttpProxy: v.exactOptional(v.string()),
+	/**
+	 * HTTPS-proxy configured for the daemon. This value is obtained from the
+	 * [`HTTPS_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html)
+	 * environment variable.
+	 * Credentials ([user info
+	 * component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy
+	 * URL
+	 * are masked in the API response.
+	 *
+	 * Containers do not automatically inherit this configuration.
+	 */
+	HttpsProxy: v.exactOptional(v.string()),
+	/**
+	 * Comma-separated list of domain extensions for which no proxy should be
+	 * used. This value is obtained from the
+	 * [`NO_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html)
+	 * environment variable.
+	 *
+	 * Containers do not automatically inherit this configuration.
+	 */
+	NoProxy: v.exactOptional(v.string()),
+	/**
+	 * Hostname of the host.
+	 */
+	Name: v.exactOptional(v.string()),
+	/**
+	 * User-defined labels (key/value metadata) as set on the daemon.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: When part of a Swarm, nodes can both have _daemon_ labels,
+	 * > set through the daemon configuration, and _node_ labels, set from a
+	 * > manager node in the Swarm. Node labels are not included in this
+	 * > field. Node labels can be retrieved using the `/nodes/(id)` endpoint
+	 * > on a manager node in the Swarm.
+	 */
+	Labels: v.exactOptional(v.array(v.string())),
+	/**
+	 * Indicates if experimental features are enabled on the daemon.
+	 */
+	ExperimentalBuild: v.exactOptional(v.boolean()),
+	/**
+	 * Version string of the daemon.
+	 */
+	ServerVersion: v.exactOptional(v.string()),
+	/**
+	 * List of [OCI compliant](https://github.com/opencontainers/runtime-spec)
+	 * runtimes configured on the daemon. Keys hold the "name" used to
+	 * reference the runtime.
+	 *
+	 * The Docker daemon relies on an OCI compliant runtime (invoked via the
+	 * `containerd` daemon) as its interface to the Linux kernel namespaces,
+	 * cgroups, and SELinux.
+	 *
+	 * The default runtime is `runc`, and automatically configured. Additional
+	 * runtimes can be configured by the user and will be listed here.
+	 */
+	Runtimes: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * Name of the default OCI runtime that is used when starting containers.
+	 *
+	 * The default can be overridden per-container at create time.
+	 */
+	DefaultRuntime: v.exactOptional(v.string()),
+	/**
+	 * Represents generic information about swarm.
+	 */
+	Swarm: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Unique identifier of for this node in the swarm.
+			 */
+			NodeID: v.exactOptional(v.string()),
+			/**
+			 * IP address at which this node can be reached by other nodes in the
+			 * swarm.
+			 */
+			NodeAddr: v.exactOptional(v.string()),
+			/**
+			 * Current local status of this node.
+			 */
+			LocalNodeState: v.exactOptional(
+				v.picklist(["", "inactive", "pending", "active", "error", "locked"]),
+			),
+			ControlAvailable: v.exactOptional(v.boolean()),
+			Error: v.exactOptional(v.string()),
+			/**
+			 * List of ID's and addresses of other managers in the swarm.
+			 */
+			RemoteManagers: v.exactOptional(
+				v.nullable(
+					v.array(
+						v.strictObject({
+							/**
+							 * Unique identifier of for this node in the swarm.
+							 */
+							NodeID: v.exactOptional(v.string()),
+							/**
+							 * IP address and ports at which this node can be reached.
+							 */
+							Addr: v.exactOptional(v.string()),
+						}),
+					),
+				),
+			),
+			/**
+			 * Total number of nodes in the swarm.
+			 */
+			Nodes: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Total number of managers in the swarm.
+			 */
+			Managers: v.exactOptional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * ClusterInfo represents information about the swarm as is returned by the
+			 * "/info" endpoint. Join-tokens are not included.
+			 */
+			Cluster: v.exactOptional(
+				v.nullable(
+					v.strictObject({
+						/**
+						 * The ID of the swarm.
+						 */
+						ID: v.exactOptional(v.string()),
+						/**
+						 * The version number of the object such as node, service, etc. This is needed
+						 * to avoid conflicting writes. The client must send the version number along
+						 * with the modified specification when updating these objects.
+						 *
+						 * This approach ensures safe concurrency and determinism in that the change
+						 * on the object may not be applied if the version number has changed from the
+						 * last read. In other words, if two update requests specify the same base
+						 * version, only one of the requests can succeed. As a result, two separate
+						 * update requests that happen at the same time will not unintentionally
+						 * overwrite each other.
+						 */
+						Version: v.exactOptional(
+							v.strictObject({
+								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+						/**
+						 * Date and time at which the swarm was initialised in
+						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+						 */
+						CreatedAt: v.exactOptional(v.string()),
+						/**
+						 * Date and time at which the swarm was last updated in
+						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+						 */
+						UpdatedAt: v.exactOptional(v.string()),
+						/**
+						 * User modifiable swarm configuration.
+						 */
+						Spec: v.exactOptional(
+							v.strictObject({
+								/**
+								 * Name of the swarm.
+								 */
+								Name: v.exactOptional(v.string()),
+								/**
+								 * User-defined key/value metadata.
+								 */
+								Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+								/**
+								 * Orchestration configuration.
+								 */
+								Orchestration: v.exactOptional(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * The number of historic tasks to keep per instance or node. If
+											 * negative, never remove completed or failed tasks.
+											 */
+											TaskHistoryRetentionLimit: v.exactOptional(v.bigint()),
+										}),
+									),
+								),
+								/**
+								 * Raft configuration.
+								 */
+								Raft: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The number of log entries between snapshots.
+										 */
+										SnapshotInterval: v.exactOptional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of snapshots to keep beyond the current snapshot.
+										 */
+										KeepOldSnapshots: v.exactOptional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of log entries to keep around to sync up slow followers
+										 * after a snapshot is created.
+										 */
+										LogEntriesForSlowFollowers: v.exactOptional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of ticks that a follower will wait for a message from
+										 * the leader before becoming a candidate and starting an election.
+										 * `ElectionTick` must be greater than `HeartbeatTick`.
+										 *
+										 * A tick currently defaults to one second, so these translate
+										 * directly to seconds currently, but this is NOT guaranteed.
+										 */
+										ElectionTick: v.exactOptional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of ticks between heartbeats. Every HeartbeatTick ticks,
+										 * the leader will send a heartbeat to the followers.
+										 *
+										 * A tick currently defaults to one second, so these translate
+										 * directly to seconds currently, but this is NOT guaranteed.
+										 */
+										HeartbeatTick: v.exactOptional(
+											v.pipe(v.number(), v.integer()),
+										),
+									}),
+								),
+								/**
+								 * Dispatcher configuration.
+								 */
+								Dispatcher: v.exactOptional(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * The delay for an agent to send a heartbeat to the dispatcher.
+											 */
+											HeartbeatPeriod: v.exactOptional(v.bigint()),
+										}),
+									),
+								),
+								/**
+								 * CA configuration.
+								 */
+								CAConfig: v.exactOptional(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * The duration node certificates are issued for.
+											 */
+											NodeCertExpiry: v.exactOptional(v.bigint()),
+											/**
+											 * Configuration for forwarding signing requests to an external
+											 * certificate authority.
+											 */
+											ExternalCAs: v.exactOptional(
+												v.array(
+													v.strictObject({
+														/**
+														 * Protocol for communication with the external CA (currently
+														 * only `cfssl` is supported).
+														 */
+														Protocol: v.exactOptional(v.picklist(["cfssl"])),
+														/**
+														 * URL where certificate signing requests should be sent.
+														 */
+														URL: v.exactOptional(v.string()),
+														/**
+														 * An object with key/value pairs that are interpreted as
+														 * protocol-specific options for the external CA driver.
+														 */
+														Options: v.exactOptional(
+															v.record(v.string(), v.unknown()),
+														),
+														/**
+														 * The root CA certificate (in PEM format) this external CA uses
+														 * to issue TLS certificates (assumed to be to the current swarm
+														 * root CA certificate if not provided).
+														 */
+														CACert: v.exactOptional(v.string()),
+													}),
+												),
+											),
+											/**
+											 * The desired signing CA certificate for all swarm node TLS leaf
+											 * certificates, in PEM format.
+											 */
+											SigningCACert: v.exactOptional(v.string()),
+											/**
+											 * The desired signing CA key for all swarm node TLS leaf certificates,
+											 * in PEM format.
+											 */
+											SigningCAKey: v.exactOptional(v.string()),
+											/**
+											 * An integer whose purpose is to force swarm to generate a new
+											 * signing CA certificate and key, if none have been specified in
+											 * `SigningCACert` and `SigningCAKey`
+											 */
+											ForceRotate: v.exactOptional(
+												v.pipe(v.number(), v.integer()),
+											),
+										}),
+									),
+								),
+								/**
+								 * Parameters related to encryption-at-rest.
+								 */
+								EncryptionConfig: v.exactOptional(
+									v.strictObject({
+										/**
+										 * If set, generate a key and use it to lock data stored on the
+										 * managers.
+										 */
+										AutoLockManagers: v.exactOptional(v.boolean()),
+									}),
+								),
+								/**
+								 * Defaults for creating tasks in this cluster.
+								 */
+								TaskDefaults: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The log driver to use for tasks created in the orchestrator if
+										 * unspecified by a service.
+										 *
+										 * Updating this value only affects new tasks. Existing tasks continue
+										 * to use their previously configured log driver until recreated.
+										 */
+										LogDriver: v.exactOptional(
+											v.strictObject({
+												/**
+												 * The log driver to use as a default for new tasks.
+												 */
+												Name: v.exactOptional(v.string()),
+												/**
+												 * Driver-specific options for the selected log driver, specified
+												 * as key/value pairs.
+												 */
+												Options: v.exactOptional(
+													v.record(v.string(), v.unknown()),
+												),
+											}),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Information about the issuer of leaf TLS certificates and the trusted root
+						 * CA certificate.
+						 */
+						TLSInfo: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The root CA certificate(s) that are used to validate leaf TLS
+								 * certificates.
+								 */
+								TrustRoot: v.exactOptional(v.string()),
+								/**
+								 * The base64-url-safe-encoded raw subject bytes of the issuer.
+								 */
+								CertIssuerSubject: v.exactOptional(v.string()),
+								/**
+								 * The base64-url-safe-encoded raw public key bytes of the issuer.
+								 */
+								CertIssuerPublicKey: v.exactOptional(v.string()),
+							}),
+						),
+						/**
+						 * Whether there is currently a root CA rotation in progress for the swarm
+						 */
+						RootRotationInProgress: v.exactOptional(v.boolean()),
+						/**
+						 * DataPathPort specifies the data path port number for data traffic.
+						 * Acceptable port range is 1024 to 49151.
+						 * If no port is set or is set to 0, the default port (4789) is used.
+						 */
+						DataPathPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+						/**
+						 * Default Address Pool specifies default subnet pools for global scope
+						 * networks.
+						 */
+						DefaultAddrPool: v.exactOptional(v.array(v.string())),
+						/**
+						 * SubnetSize specifies the subnet size of the networks created from the
+						 * default subnet pool.
+						 */
+						SubnetSize: v.exactOptional(
+							v.pipe(v.number(), v.integer(), v.maxValue(29)),
+						),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * Indicates if live restore is enabled.
+	 *
+	 * If enabled, containers are kept running when the daemon is shutdown
+	 * or upon daemon start if running containers are detected.
+	 */
+	LiveRestoreEnabled: v.exactOptional(v.boolean()),
+	/**
+	 * Represents the isolation technology to use as a default for containers.
+	 * The supported values are platform-specific.
+	 *
+	 * If no isolation value is specified on daemon start, on Windows client,
+	 * the default is `hyperv`, and on Windows server, the default is `process`.
+	 *
+	 * This option is currently not used on other platforms.
+	 */
+	Isolation: v.exactOptional(v.picklist(["default", "hyperv", "process", ""])),
+	/**
+	 * Name and, optional, path of the `docker-init` binary.
+	 *
+	 * If the path is omitted, the daemon searches the host's `$PATH` for the
+	 * binary and uses the first result.
+	 */
+	InitBinary: v.exactOptional(v.string()),
+	/**
+	 * Commit holds the Git-commit (SHA1) that a binary was built from, as
+	 * reported in the version-string of external tools, such as `containerd`,
+	 * or `runC`.
+	 */
+	ContainerdCommit: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Actual commit ID of external tool.
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * Commit ID of external tool expected by dockerd as set at build time.
+			 */
+			Expected: v.exactOptional(v.string()),
+		}),
+	),
+	/**
+	 * Commit holds the Git-commit (SHA1) that a binary was built from, as
+	 * reported in the version-string of external tools, such as `containerd`,
+	 * or `runC`.
+	 */
+	RuncCommit: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Actual commit ID of external tool.
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * Commit ID of external tool expected by dockerd as set at build time.
+			 */
+			Expected: v.exactOptional(v.string()),
+		}),
+	),
+	/**
+	 * Commit holds the Git-commit (SHA1) that a binary was built from, as
+	 * reported in the version-string of external tools, such as `containerd`,
+	 * or `runC`.
+	 */
+	InitCommit: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Actual commit ID of external tool.
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * Commit ID of external tool expected by dockerd as set at build time.
+			 */
+			Expected: v.exactOptional(v.string()),
+		}),
+	),
+	/**
+	 * List of security features that are enabled on the daemon, such as
+	 * apparmor, seccomp, SELinux, user-namespaces (userns), rootless and
+	 * no-new-privileges.
+	 *
+	 * Additional configuration options for each security feature may
+	 * be present, and are included as a comma-separated list of key/value
+	 * pairs.
+	 */
+	SecurityOptions: v.exactOptional(v.array(v.string())),
+	/**
+	 * Reports a summary of the product license on the daemon.
+	 *
+	 * If a commercial license has been applied to the daemon, information
+	 * such as number of nodes, and expiration are included.
+	 */
+	ProductLicense: v.exactOptional(v.string()),
+	/**
+	 * List of custom default address pools for local networks, which can be
+	 * specified in the daemon.json file or dockerd option.
+	 *
+	 * Example: a Base "10.10.0.0/16" with Size 24 will define the set of 256
+	 * 10.10.[0-255].0/24 address pools.
+	 */
+	DefaultAddressPools: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The network address in CIDR format
+				 */
+				Base: v.exactOptional(v.string()),
+				/**
+				 * The network pool size
+				 */
+				Size: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+	),
+	/**
+	 * List of warnings / informational messages about missing features, or
+	 * issues related to the daemon configuration.
+	 *
+	 * These messages can be printed by the client as information to the user.
+	 */
+	Warnings: v.exactOptional(v.array(v.string())),
+});
+export const systemInfoCommandResponseSchema = v.strictObject({
+	/**
+	 * Unique identifier of the daemon.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: The format of the ID itself is not part of the API, and
+	 * > should not be considered stable.
+	 */
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Total number of containers on the host.
+	 */
+	Containers: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Number of containers with status `"running"`.
+	 */
+	ContainersRunning: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Number of containers with status `"paused"`.
+	 */
+	ContainersPaused: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Number of containers with status `"stopped"`.
+	 */
+	ContainersStopped: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Total number of images on the host.
+	 *
+	 * Both _tagged_ and _untagged_ (dangling) images are counted.
+	 */
+	Images: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Name of the storage driver in use.
+	 */
+	Driver: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Information specific to the storage driver, provided as
+	 * "label" / "value" pairs.
+	 *
+	 * This information is provided by the storage driver, and formatted
+	 * in a way consistent with the output of `docker info` on the command
+	 * line.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: The information returned in this field, including the
+	 * > formatting of values and labels, should not be considered stable,
+	 * > and may change without notice.
+	 */
+	DriverStatus: v.optional(v.array(v.array(v.pipe(v.string(), v.trim())))),
+	/**
+	 * Root directory of persistent Docker state.
+	 *
+	 * Defaults to `/var/lib/docker` on Linux, and `C:\ProgramData\docker`
+	 * on Windows.
+	 */
+	DockerRootDir: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Available plugins per type.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: Only unmanaged (V1) plugins are included in this list.
+	 * > V1 plugins are "lazily" loaded, and are not returned in this list
+	 * > if there is no resource using the plugin.
+	 */
+	Plugins: v.optional(
+		v.strictObject({
+			/**
+			 * Names of available volume-drivers, and network-driver plugins.
+			 */
+			Volume: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Names of available network-drivers, and network-driver plugins.
+			 */
+			Network: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Names of available authorization plugins.
+			 */
+			Authorization: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Names of available logging-drivers, and logging-driver plugins.
+			 */
+			Log: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+		}),
+	),
+	/**
+	 * Indicates if the host has memory limit support enabled.
+	 */
+	MemoryLimit: v.optional(v.boolean()),
+	/**
+	 * Indicates if the host has memory swap limit support enabled.
+	 */
+	SwapLimit: v.optional(v.boolean()),
+	/**
+	 * Indicates if the host has kernel memory TCP limit support enabled. This
+	 * field is omitted if not supported.
+	 *
+	 * Kernel memory TCP limits are not supported when using cgroups v2, which
+	 * does not support the corresponding `memory.kmem.tcp.limit_in_bytes` cgroup.
+	 */
+	KernelMemoryTCP: v.optional(v.boolean()),
+	/**
+	 * Indicates if CPU CFS(Completely Fair Scheduler) period is supported by
+	 * the host.
+	 */
+	CpuCfsPeriod: v.optional(v.boolean()),
+	/**
+	 * Indicates if CPU CFS(Completely Fair Scheduler) quota is supported by
+	 * the host.
+	 */
+	CpuCfsQuota: v.optional(v.boolean()),
+	/**
+	 * Indicates if CPU Shares limiting is supported by the host.
+	 */
+	CPUShares: v.optional(v.boolean()),
+	/**
+	 * Indicates if CPUsets (cpuset.cpus, cpuset.mems) are supported by the host.
+	 *
+	 * See
+	 * [cpuset(7)](https://www.kernel.org/doc/Documentation/cgroup-v1/cpusets.txt)
+	 */
+	CPUSet: v.optional(v.boolean()),
+	/**
+	 * Indicates if the host kernel has PID limit support enabled.
+	 */
+	PidsLimit: v.optional(v.boolean()),
+	/**
+	 * Indicates if OOM killer disable is supported on the host.
+	 */
+	OomKillDisable: v.optional(v.boolean()),
+	/**
+	 * Indicates IPv4 forwarding is enabled.
+	 */
+	IPv4Forwarding: v.optional(v.boolean()),
+	/**
+	 * Indicates if `bridge-nf-call-iptables` is available on the host.
+	 */
+	BridgeNfIptables: v.optional(v.boolean()),
+	/**
+	 * Indicates if `bridge-nf-call-ip6tables` is available on the host.
+	 */
+	BridgeNfIp6tables: v.optional(v.boolean()),
+	/**
+	 * Indicates if the daemon is running in debug-mode / with debug-level
+	 * logging enabled.
+	 */
+	Debug: v.optional(v.boolean()),
+	/**
+	 * The total number of file Descriptors in use by the daemon process.
+	 *
+	 * This information is only returned if debug-mode is enabled.
+	 */
+	NFd: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The  number of goroutines that currently exist.
+	 *
+	 * This information is only returned if debug-mode is enabled.
+	 */
+	NGoroutines: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Current system-time in [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt)
+	 * format with nano-seconds.
+	 */
+	SystemTime: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The logging driver to use as a default for new containers.
+	 */
+	LoggingDriver: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The driver to use for managing cgroups.
+	 */
+	CgroupDriver: v.optional(v.picklist(["cgroupfs", "systemd", "none"])),
+	/**
+	 * The version of the cgroup.
+	 */
+	CgroupVersion: v.optional(v.picklist(["1", "2"])),
+	/**
+	 * Number of event listeners subscribed.
+	 */
+	NEventsListener: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Kernel version of the host.
+	 *
+	 * On Linux, this information obtained from `uname`. On Windows this
+	 * information is queried from the
+	 * <kbd>HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows
+	 * NT\\CurrentVersion\\</kbd>
+	 * registry value, for example _"10.0 14393
+	 * (14393.1198.amd64fre.rs1_release_sec.170427-1353)"_.
+	 */
+	KernelVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Name of the host's operating system, for example: "Ubuntu 16.04.2 LTS"
+	 * or "Windows Server 2016 Datacenter"
+	 */
+	OperatingSystem: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Version of the host's operating system
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: The information returned in this field, including its
+	 * > very existence, and the formatting of values, should not be considered
+	 * > stable, and may change without notice.
+	 */
+	OSVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Generic type of the operating system of the host, as returned by the
+	 * Go runtime (`GOOS`).
+	 *
+	 * Currently returned values are "linux" and "windows". A full list of
+	 * possible values can be found in the [Go
+	 * documentation](https://go.dev/doc/install/source#environment).
+	 */
+	OSType: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Hardware architecture of the host, as returned by the Go runtime
+	 * (`GOARCH`).
+	 *
+	 * A full list of possible values can be found in the [Go
+	 * documentation](https://go.dev/doc/install/source#environment).
+	 */
+	Architecture: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The number of logical CPUs usable by the daemon.
+	 *
+	 * The number of available CPUs is checked by querying the operating
+	 * system when the daemon starts. Changes to operating system CPU
+	 * allocation after the daemon is started are not reflected.
+	 */
+	NCPU: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * Total amount of physical memory available on the host, in bytes.
+	 */
+	MemTotal: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	/**
+	 * Address / URL of the index server that is used for image search,
+	 * and as a default for user authentication for Docker Hub and Docker Cloud.
+	 */
+	IndexServerAddress: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * RegistryServiceConfig stores daemon registry services configuration.
+	 */
+	RegistryConfig: v.optional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * List of IP ranges to which nondistributable artifacts can be pushed,
+				 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
+				 *
+				 * Some images (for example, Windows base images) contain artifacts
+				 * whose distribution is restricted by license. When these images are
+				 * pushed to a registry, restricted artifacts are not included.
+				 *
+				 * This configuration override this behavior, and enables the daemon to
+				 * push nondistributable artifacts to all registries whose resolved IP
+				 * address is within the subnet described by the CIDR syntax.
+				 *
+				 * This option is useful when pushing images containing
+				 * nondistributable artifacts to a registry on an air-gapped network so
+				 * hosts on that network can pull the images without connecting to
+				 * another server.
+				 *
+				 * > **Warning**: Nondistributable artifacts typically have restrictions
+				 * > on how and where they can be distributed and shared. Only use this
+				 * > feature to push artifacts to private registries and ensure that you
+				 * > are in compliance with any terms that cover redistributing
+				 * > nondistributable artifacts.
+				 */
+				AllowNondistributableArtifactsCIDRs: v.optional(
+					v.array(v.pipe(v.string(), v.trim())),
+				),
+				/**
+				 * List of registry hostnames to which nondistributable artifacts can be
+				 * pushed, using the format `<hostname>[:<port>]` or `<IP address>[:<port>]`.
+				 *
+				 * Some images (for example, Windows base images) contain artifacts
+				 * whose distribution is restricted by license. When these images are
+				 * pushed to a registry, restricted artifacts are not included.
+				 *
+				 * This configuration override this behavior for the specified
+				 * registries.
+				 *
+				 * This option is useful when pushing images containing
+				 * nondistributable artifacts to a registry on an air-gapped network so
+				 * hosts on that network can pull the images without connecting to
+				 * another server.
+				 *
+				 * > **Warning**: Nondistributable artifacts typically have restrictions
+				 * > on how and where they can be distributed and shared. Only use this
+				 * > feature to push artifacts to private registries and ensure that you
+				 * > are in compliance with any terms that cover redistributing
+				 * > nondistributable artifacts.
+				 */
+				AllowNondistributableArtifactsHostnames: v.optional(
+					v.array(v.pipe(v.string(), v.trim())),
+				),
+				/**
+				 * List of IP ranges of insecure registries, using the CIDR syntax
+				 * ([RFC 4632](https://tools.ietf.org/html/4632)). Insecure registries
+				 * accept un-encrypted (HTTP) and/or untrusted (HTTPS with certificates
+				 * from unknown CAs) communication.
+				 *
+				 * By default, local registries (`127.0.0.0/8`) are configured as
+				 * insecure. All other registries are secure. Communicating with an
+				 * insecure registry is not possible if the daemon assumes that registry
+				 * is secure.
+				 *
+				 * This configuration override this behavior, insecure communication with
+				 * registries whose resolved IP address is within the subnet described by
+				 * the CIDR syntax.
+				 *
+				 * Registries can also be marked insecure by hostname. Those registries
+				 * are listed under `IndexConfigs` and have their `Secure` field set to
+				 * `false`.
+				 *
+				 * > **Warning**: Using this option can be useful when running a local
+				 * > registry, but introduces security vulnerabilities. This option
+				 * > should therefore ONLY be used for testing purposes. For increased
+				 * > security, users should add their CA to their system's list of trusted
+				 * > CAs instead of enabling this option.
+				 */
+				InsecureRegistryCIDRs: v.optional(
+					v.array(v.pipe(v.string(), v.trim())),
+				),
+				IndexConfigs: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * List of registry URLs that act as a mirror for the official
+				 * (`docker.io`) registry.
+				 */
+				Mirrors: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			}),
+		),
+	),
+	/**
+	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+	 * String resources (e.g, `GPU=UUID1`).
+	 */
+	GenericResources: v.optional(
+		v.array(
+			v.strictObject({
+				NamedResourceSpec: v.optional(
+					v.strictObject({
+						Kind: v.optional(v.pipe(v.string(), v.trim())),
+						Value: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+				DiscreteResourceSpec: v.optional(
+					v.strictObject({
+						Kind: v.optional(v.pipe(v.string(), v.trim())),
+						Value: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+					}),
+				),
+			}),
+		),
+	),
+	/**
+	 * HTTP-proxy configured for the daemon. This value is obtained from the
+	 * [`HTTP_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html)
+	 * environment variable.
+	 * Credentials ([user info
+	 * component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy
+	 * URL
+	 * are masked in the API response.
+	 *
+	 * Containers do not automatically inherit this configuration.
+	 */
+	HttpProxy: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * HTTPS-proxy configured for the daemon. This value is obtained from the
+	 * [`HTTPS_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html)
+	 * environment variable.
+	 * Credentials ([user info
+	 * component](https://tools.ietf.org/html/rfc3986#section-3.2.1)) in the proxy
+	 * URL
+	 * are masked in the API response.
+	 *
+	 * Containers do not automatically inherit this configuration.
+	 */
+	HttpsProxy: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Comma-separated list of domain extensions for which no proxy should be
+	 * used. This value is obtained from the
+	 * [`NO_PROXY`](https://www.gnu.org/software/wget/manual/html_node/Proxies.html)
+	 * environment variable.
+	 *
+	 * Containers do not automatically inherit this configuration.
+	 */
+	NoProxy: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Hostname of the host.
+	 */
+	Name: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * User-defined labels (key/value metadata) as set on the daemon.
+	 *
+	 * <p><br /></p>
+	 *
+	 * > **Note**: When part of a Swarm, nodes can both have _daemon_ labels,
+	 * > set through the daemon configuration, and _node_ labels, set from a
+	 * > manager node in the Swarm. Node labels are not included in this
+	 * > field. Node labels can be retrieved using the `/nodes/(id)` endpoint
+	 * > on a manager node in the Swarm.
+	 */
+	Labels: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Indicates if experimental features are enabled on the daemon.
+	 */
+	ExperimentalBuild: v.optional(v.boolean()),
+	/**
+	 * Version string of the daemon.
+	 */
+	ServerVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * List of [OCI compliant](https://github.com/opencontainers/runtime-spec)
+	 * runtimes configured on the daemon. Keys hold the "name" used to
+	 * reference the runtime.
+	 *
+	 * The Docker daemon relies on an OCI compliant runtime (invoked via the
+	 * `containerd` daemon) as its interface to the Linux kernel namespaces,
+	 * cgroups, and SELinux.
+	 *
+	 * The default runtime is `runc`, and automatically configured. Additional
+	 * runtimes can be configured by the user and will be listed here.
+	 */
+	Runtimes: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * Name of the default OCI runtime that is used when starting containers.
+	 *
+	 * The default can be overridden per-container at create time.
+	 */
+	DefaultRuntime: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Represents generic information about swarm.
+	 */
+	Swarm: v.optional(
+		v.strictObject({
+			/**
+			 * Unique identifier of for this node in the swarm.
+			 */
+			NodeID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * IP address at which this node can be reached by other nodes in the
+			 * swarm.
+			 */
+			NodeAddr: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Current local status of this node.
+			 */
+			LocalNodeState: v.optional(
+				v.picklist(["", "inactive", "pending", "active", "error", "locked"]),
+			),
+			ControlAvailable: v.optional(v.boolean()),
+			Error: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * List of ID's and addresses of other managers in the swarm.
+			 */
+			RemoteManagers: v.optional(
+				v.nullable(
+					v.array(
+						v.strictObject({
+							/**
+							 * Unique identifier of for this node in the swarm.
+							 */
+							NodeID: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * IP address and ports at which this node can be reached.
+							 */
+							Addr: v.optional(v.pipe(v.string(), v.trim())),
+						}),
+					),
+				),
+			),
+			/**
+			 * Total number of nodes in the swarm.
+			 */
+			Nodes: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * Total number of managers in the swarm.
+			 */
+			Managers: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
+			/**
+			 * ClusterInfo represents information about the swarm as is returned by the
+			 * "/info" endpoint. Join-tokens are not included.
+			 */
+			Cluster: v.optional(
+				v.nullable(
+					v.strictObject({
+						/**
+						 * The ID of the swarm.
+						 */
+						ID: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The version number of the object such as node, service, etc. This is needed
+						 * to avoid conflicting writes. The client must send the version number along
+						 * with the modified specification when updating these objects.
+						 *
+						 * This approach ensures safe concurrency and determinism in that the change
+						 * on the object may not be applied if the version number has changed from the
+						 * last read. In other words, if two update requests specify the same base
+						 * version, only one of the requests can succeed. As a result, two separate
+						 * update requests that happen at the same time will not unintentionally
+						 * overwrite each other.
+						 */
+						Version: v.optional(
+							v.strictObject({
+								Index: v.optional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+						/**
+						 * Date and time at which the swarm was initialised in
+						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+						 */
+						CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Date and time at which the swarm was last updated in
+						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+						 */
+						UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * User modifiable swarm configuration.
+						 */
+						Spec: v.optional(
+							v.strictObject({
+								/**
+								 * Name of the swarm.
+								 */
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * User-defined key/value metadata.
+								 */
+								Labels: v.optional(v.record(v.string(), v.unknown())),
+								/**
+								 * Orchestration configuration.
+								 */
+								Orchestration: v.optional(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * The number of historic tasks to keep per instance or node. If
+											 * negative, never remove completed or failed tasks.
+											 */
+											TaskHistoryRetentionLimit: v.optional(
+												v.union([
+													v.pipe(
+														v.string(),
+														v.decimal(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.pipe(
+														v.number(),
+														v.integer(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.bigint(),
+												]),
+											),
+										}),
+									),
+								),
+								/**
+								 * Raft configuration.
+								 */
+								Raft: v.optional(
+									v.strictObject({
+										/**
+										 * The number of log entries between snapshots.
+										 */
+										SnapshotInterval: v.optional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of snapshots to keep beyond the current snapshot.
+										 */
+										KeepOldSnapshots: v.optional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of log entries to keep around to sync up slow followers
+										 * after a snapshot is created.
+										 */
+										LogEntriesForSlowFollowers: v.optional(
+											v.pipe(v.number(), v.integer()),
+										),
+										/**
+										 * The number of ticks that a follower will wait for a message from
+										 * the leader before becoming a candidate and starting an election.
+										 * `ElectionTick` must be greater than `HeartbeatTick`.
+										 *
+										 * A tick currently defaults to one second, so these translate
+										 * directly to seconds currently, but this is NOT guaranteed.
+										 */
+										ElectionTick: v.optional(v.pipe(v.number(), v.integer())),
+										/**
+										 * The number of ticks between heartbeats. Every HeartbeatTick ticks,
+										 * the leader will send a heartbeat to the followers.
+										 *
+										 * A tick currently defaults to one second, so these translate
+										 * directly to seconds currently, but this is NOT guaranteed.
+										 */
+										HeartbeatTick: v.optional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+								/**
+								 * Dispatcher configuration.
+								 */
+								Dispatcher: v.optional(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * The delay for an agent to send a heartbeat to the dispatcher.
+											 */
+											HeartbeatPeriod: v.optional(
+												v.union([
+													v.pipe(
+														v.string(),
+														v.decimal(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.pipe(
+														v.number(),
+														v.integer(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.bigint(),
+												]),
+											),
+										}),
+									),
+								),
+								/**
+								 * CA configuration.
+								 */
+								CAConfig: v.optional(
+									v.nullable(
+										v.strictObject({
+											/**
+											 * The duration node certificates are issued for.
+											 */
+											NodeCertExpiry: v.optional(
+												v.union([
+													v.pipe(
+														v.string(),
+														v.decimal(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.pipe(
+														v.number(),
+														v.integer(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.bigint(),
+												]),
+											),
+											/**
+											 * Configuration for forwarding signing requests to an external
+											 * certificate authority.
+											 */
+											ExternalCAs: v.optional(
+												v.array(
+													v.strictObject({
+														/**
+														 * Protocol for communication with the external CA (currently
+														 * only `cfssl` is supported).
+														 */
+														Protocol: v.optional(v.picklist(["cfssl"])),
+														/**
+														 * URL where certificate signing requests should be sent.
+														 */
+														URL: v.optional(v.pipe(v.string(), v.trim())),
+														/**
+														 * An object with key/value pairs that are interpreted as
+														 * protocol-specific options for the external CA driver.
+														 */
+														Options: v.optional(
+															v.record(v.string(), v.unknown()),
+														),
+														/**
+														 * The root CA certificate (in PEM format) this external CA uses
+														 * to issue TLS certificates (assumed to be to the current swarm
+														 * root CA certificate if not provided).
+														 */
+														CACert: v.optional(v.pipe(v.string(), v.trim())),
+													}),
+												),
+											),
+											/**
+											 * The desired signing CA certificate for all swarm node TLS leaf
+											 * certificates, in PEM format.
+											 */
+											SigningCACert: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * The desired signing CA key for all swarm node TLS leaf certificates,
+											 * in PEM format.
+											 */
+											SigningCAKey: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * An integer whose purpose is to force swarm to generate a new
+											 * signing CA certificate and key, if none have been specified in
+											 * `SigningCACert` and `SigningCAKey`
+											 */
+											ForceRotate: v.optional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+								),
+								/**
+								 * Parameters related to encryption-at-rest.
+								 */
+								EncryptionConfig: v.optional(
+									v.strictObject({
+										/**
+										 * If set, generate a key and use it to lock data stored on the
+										 * managers.
+										 */
+										AutoLockManagers: v.optional(v.boolean()),
+									}),
+								),
+								/**
+								 * Defaults for creating tasks in this cluster.
+								 */
+								TaskDefaults: v.optional(
+									v.strictObject({
+										/**
+										 * The log driver to use for tasks created in the orchestrator if
+										 * unspecified by a service.
+										 *
+										 * Updating this value only affects new tasks. Existing tasks continue
+										 * to use their previously configured log driver until recreated.
+										 */
+										LogDriver: v.optional(
+											v.strictObject({
+												/**
+												 * The log driver to use as a default for new tasks.
+												 */
+												Name: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * Driver-specific options for the selected log driver, specified
+												 * as key/value pairs.
+												 */
+												Options: v.optional(v.record(v.string(), v.unknown())),
+											}),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Information about the issuer of leaf TLS certificates and the trusted root
+						 * CA certificate.
+						 */
+						TLSInfo: v.optional(
+							v.strictObject({
+								/**
+								 * The root CA certificate(s) that are used to validate leaf TLS
+								 * certificates.
+								 */
+								TrustRoot: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The base64-url-safe-encoded raw subject bytes of the issuer.
+								 */
+								CertIssuerSubject: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The base64-url-safe-encoded raw public key bytes of the issuer.
+								 */
+								CertIssuerPublicKey: v.optional(v.pipe(v.string(), v.trim())),
+							}),
+						),
+						/**
+						 * Whether there is currently a root CA rotation in progress for the swarm
+						 */
+						RootRotationInProgress: v.optional(v.boolean()),
+						/**
+						 * DataPathPort specifies the data path port number for data traffic.
+						 * Acceptable port range is 1024 to 49151.
+						 * If no port is set or is set to 0, the default port (4789) is used.
+						 */
+						DataPathPort: v.optional(v.pipe(v.number(), v.integer())),
+						/**
+						 * Default Address Pool specifies default subnet pools for global scope
+						 * networks.
+						 */
+						DefaultAddrPool: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * SubnetSize specifies the subnet size of the networks created from the
+						 * default subnet pool.
+						 */
+						SubnetSize: v.optional(
+							v.pipe(v.number(), v.integer(), v.maxValue(29)),
+						),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * Indicates if live restore is enabled.
+	 *
+	 * If enabled, containers are kept running when the daemon is shutdown
+	 * or upon daemon start if running containers are detected.
+	 */
+	LiveRestoreEnabled: v.optional(v.boolean()),
+	/**
+	 * Represents the isolation technology to use as a default for containers.
+	 * The supported values are platform-specific.
+	 *
+	 * If no isolation value is specified on daemon start, on Windows client,
+	 * the default is `hyperv`, and on Windows server, the default is `process`.
+	 *
+	 * This option is currently not used on other platforms.
+	 */
+	Isolation: v.optional(v.picklist(["default", "hyperv", "process", ""])),
+	/**
+	 * Name and, optional, path of the `docker-init` binary.
+	 *
+	 * If the path is omitted, the daemon searches the host's `$PATH` for the
+	 * binary and uses the first result.
+	 */
+	InitBinary: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Commit holds the Git-commit (SHA1) that a binary was built from, as
+	 * reported in the version-string of external tools, such as `containerd`,
+	 * or `runC`.
+	 */
+	ContainerdCommit: v.optional(
+		v.strictObject({
+			/**
+			 * Actual commit ID of external tool.
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Commit ID of external tool expected by dockerd as set at build time.
+			 */
+			Expected: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	/**
+	 * Commit holds the Git-commit (SHA1) that a binary was built from, as
+	 * reported in the version-string of external tools, such as `containerd`,
+	 * or `runC`.
+	 */
+	RuncCommit: v.optional(
+		v.strictObject({
+			/**
+			 * Actual commit ID of external tool.
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Commit ID of external tool expected by dockerd as set at build time.
+			 */
+			Expected: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	/**
+	 * Commit holds the Git-commit (SHA1) that a binary was built from, as
+	 * reported in the version-string of external tools, such as `containerd`,
+	 * or `runC`.
+	 */
+	InitCommit: v.optional(
+		v.strictObject({
+			/**
+			 * Actual commit ID of external tool.
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Commit ID of external tool expected by dockerd as set at build time.
+			 */
+			Expected: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	/**
+	 * List of security features that are enabled on the daemon, such as
+	 * apparmor, seccomp, SELinux, user-namespaces (userns), rootless and
+	 * no-new-privileges.
+	 *
+	 * Additional configuration options for each security feature may
+	 * be present, and are included as a comma-separated list of key/value
+	 * pairs.
+	 */
+	SecurityOptions: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Reports a summary of the product license on the daemon.
+	 *
+	 * If a commercial license has been applied to the daemon, information
+	 * such as number of nodes, and expiration are included.
+	 */
+	ProductLicense: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * List of custom default address pools for local networks, which can be
+	 * specified in the daemon.json file or dockerd option.
+	 *
+	 * Example: a Base "10.10.0.0/16" with Size 24 will define the set of 256
+	 * 10.10.[0-255].0/24 address pools.
+	 */
+	DefaultAddressPools: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The network address in CIDR format
+				 */
+				Base: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The network pool size
+				 */
+				Size: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+	),
+	/**
+	 * List of warnings / informational messages about missing features, or
+	 * issues related to the daemon configuration.
+	 *
+	 * These messages can be printed by the client as information to the user.
+	 */
+	Warnings: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+});
+export const exactSystemVersionCommandResponseSchema = v.strictObject({
+	Platform: v.exactOptional(
+		v.strictObject({
+			Name: v.string(),
+		}),
+	),
+	/**
+	 * Information about system components
+	 */
+	Components: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Name of the component
+				 */
+				Name: v.string(),
+				/**
+				 * Version of the component
+				 */
+				Version: v.string(),
+				/**
+				 * Key/value pairs of strings with additional information about the
+				 * component. These values are intended for informational purposes
+				 * only, and their content is not defined, and not part of the API
+				 * specification.
+				 *
+				 * These messages can be printed by the client as information to the user.
+				 */
+				Details: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+			}),
+		),
+	),
+	/**
+	 * The version of the daemon
+	 */
+	Version: v.exactOptional(v.string()),
+	/**
+	 * The default (and highest) API version that is supported by the daemon
+	 */
+	ApiVersion: v.exactOptional(v.string()),
+	/**
+	 * The minimum API version that is supported by the daemon
+	 */
+	MinAPIVersion: v.exactOptional(v.string()),
+	/**
+	 * The Git commit of the source code that was used to build the daemon
+	 */
+	GitCommit: v.exactOptional(v.string()),
+	/**
+	 * The version Go used to compile the daemon, and the version of the Go
+	 * runtime in use.
+	 */
+	GoVersion: v.exactOptional(v.string()),
+	/**
+	 * The operating system that the daemon is running on ("linux" or "windows")
+	 */
+	Os: v.exactOptional(v.string()),
+	/**
+	 * The architecture that the daemon is running on
+	 */
+	Arch: v.exactOptional(v.string()),
+	/**
+	 * The kernel version (`uname -r`) that the daemon is running on.
+	 *
+	 * This field is omitted when empty.
+	 */
+	KernelVersion: v.exactOptional(v.string()),
+	/**
+	 * Indicates if the daemon is started with experimental features enabled.
+	 *
+	 * This field is omitted when empty / false.
+	 */
+	Experimental: v.exactOptional(v.boolean()),
+	/**
+	 * The date and time that the daemon was compiled.
+	 */
+	BuildTime: v.exactOptional(v.string()),
+});
+export const systemVersionCommandResponseSchema = v.strictObject({
+	Platform: v.optional(
+		v.strictObject({
+			Name: v.pipe(v.string(), v.trim()),
+		}),
+	),
+	/**
+	 * Information about system components
+	 */
+	Components: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Name of the component
+				 */
+				Name: v.pipe(v.string(), v.trim()),
+				/**
+				 * Version of the component
+				 */
+				Version: v.pipe(v.string(), v.trim()),
+				/**
+				 * Key/value pairs of strings with additional information about the
+				 * component. These values are intended for informational purposes
+				 * only, and their content is not defined, and not part of the API
+				 * specification.
+				 *
+				 * These messages can be printed by the client as information to the user.
+				 */
+				Details: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+			}),
+		),
+	),
+	/**
+	 * The version of the daemon
+	 */
+	Version: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The default (and highest) API version that is supported by the daemon
+	 */
+	ApiVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The minimum API version that is supported by the daemon
+	 */
+	MinAPIVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The Git commit of the source code that was used to build the daemon
+	 */
+	GitCommit: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The version Go used to compile the daemon, and the version of the Go
+	 * runtime in use.
+	 */
+	GoVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The operating system that the daemon is running on ("linux" or "windows")
+	 */
+	Os: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The architecture that the daemon is running on
+	 */
+	Arch: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The kernel version (`uname -r`) that the daemon is running on.
+	 *
+	 * This field is omitted when empty.
+	 */
+	KernelVersion: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Indicates if the daemon is started with experimental features enabled.
+	 *
+	 * This field is omitted when empty / false.
+	 */
+	Experimental: v.optional(v.boolean()),
+	/**
+	 * The date and time that the daemon was compiled.
+	 */
+	BuildTime: v.optional(v.pipe(v.string(), v.trim())),
 });
 export const exactImageCommitCommandBodySchema = v.strictObject({
 	/**
@@ -28332,6 +35020,18 @@ export const imageCommitCommandBodySchema = v.strictObject({
 	 */
 	Shell: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
 });
+export const exactImageCommitCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.string(),
+});
+export const imageCommitCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.pipe(v.string(), v.trim()),
+});
 export const exactImageCommitCommandQuerySchema = v.strictObject({
 	container: v.exactOptional(v.string()),
 	repo: v.exactOptional(v.string()),
@@ -28350,6 +35050,124 @@ export const imageCommitCommandQuerySchema = v.strictObject({
 	pause: v.optional(v.boolean()),
 	changes: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactSystemEventsCommandResponseSchema = v.strictObject({
+	/**
+	 * The type of object emitting the event
+	 */
+	Type: v.exactOptional(
+		v.picklist([
+			"builder",
+			"config",
+			"container",
+			"daemon",
+			"image",
+			"network",
+			"node",
+			"plugin",
+			"secret",
+			"service",
+			"volume",
+		]),
+	),
+	/**
+	 * The type of event
+	 */
+	Action: v.exactOptional(v.string()),
+	/**
+	 * Actor describes something that generates events, like a container, network,
+	 * or a volume.
+	 */
+	Actor: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The ID of the object emitting the event
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * Various key/value attributes of the object, depending on its type.
+			 */
+			Attributes: v.exactOptional(v.record(v.string(), v.unknown())),
+		}),
+	),
+	/**
+	 * Scope of the event. Engine events are `local` scope. Cluster (Swarm)
+	 * events are `swarm` scope.
+	 */
+	scope: v.exactOptional(v.picklist(["local", "swarm"])),
+	/**
+	 * Timestamp of event
+	 */
+	time: v.exactOptional(v.bigint()),
+	/**
+	 * Timestamp of event, with nanosecond accuracy
+	 */
+	timeNano: v.exactOptional(v.bigint()),
+});
+export const systemEventsCommandResponseSchema = v.strictObject({
+	/**
+	 * The type of object emitting the event
+	 */
+	Type: v.optional(
+		v.picklist([
+			"builder",
+			"config",
+			"container",
+			"daemon",
+			"image",
+			"network",
+			"node",
+			"plugin",
+			"secret",
+			"service",
+			"volume",
+		]),
+	),
+	/**
+	 * The type of event
+	 */
+	Action: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Actor describes something that generates events, like a container, network,
+	 * or a volume.
+	 */
+	Actor: v.optional(
+		v.strictObject({
+			/**
+			 * The ID of the object emitting the event
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Various key/value attributes of the object, depending on its type.
+			 */
+			Attributes: v.optional(v.record(v.string(), v.unknown())),
+		}),
+	),
+	/**
+	 * Scope of the event. Engine events are `local` scope. Cluster (Swarm)
+	 * events are `swarm` scope.
+	 */
+	scope: v.optional(v.picklist(["local", "swarm"])),
+	/**
+	 * Timestamp of event
+	 */
+	time: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	/**
+	 * Timestamp of event, with nanosecond accuracy
+	 */
+	timeNano: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+});
 export const exactSystemEventsCommandQuerySchema = v.strictObject({
 	since: v.exactOptional(v.string()),
 	until: v.exactOptional(v.string()),
@@ -28359,6 +35177,1338 @@ export const systemEventsCommandQuerySchema = v.strictObject({
 	since: v.optional(v.pipe(v.string(), v.trim())),
 	until: v.optional(v.pipe(v.string(), v.trim())),
 	filters: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactSystemDataUsageCommandResponseSchema = v.strictObject({
+	LayersSize: v.exactOptional(v.bigint()),
+	Images: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * ID is the content-addressable ID of an image.
+				 *
+				 * This identifier is a content-addressable digest calculated from the
+				 * image's configuration (which includes the digests of layers used by
+				 * the image).
+				 *
+				 * Note that this digest differs from the `RepoDigests` below, which
+				 * holds digests of image manifests that reference the image.
+				 */
+				Id: v.string(),
+				/**
+				 * ID of the parent image.
+				 *
+				 * Depending on how the image was created, this field may be empty and
+				 * is only set for images that were built/created locally. This field
+				 * is empty if the image was pulled from an image registry.
+				 */
+				ParentId: v.string(),
+				/**
+				 * List of image names/tags in the local image cache that reference this
+				 * image.
+				 *
+				 * Multiple image tags can refer to the same image, and this list may be
+				 * empty if no tags reference the image, in which case the image is
+				 * "untagged", in which case it can still be referenced by its ID.
+				 */
+				RepoTags: v.array(v.string()),
+				/**
+				 * List of content-addressable digests of locally available image manifests
+				 * that the image is referenced from. Multiple manifests can refer to the
+				 * same image.
+				 *
+				 * These digests are usually only available if the image was either pulled
+				 * from a registry, or if the image was pushed to a registry, which is when
+				 * the manifest is generated and its digest calculated.
+				 */
+				RepoDigests: v.array(v.string()),
+				/**
+				 * Date and time at which the image was created as a Unix timestamp
+				 * (number of seconds since EPOCH).
+				 */
+				Created: v.pipe(v.number(), v.integer()),
+				/**
+				 * Total size of the image including all layers it is composed of.
+				 */
+				Size: v.bigint(),
+				/**
+				 * Total size of image layers that are shared between this image and other
+				 * images.
+				 *
+				 * This size is not calculated by default. `-1` indicates that the value
+				 * has not been set / calculated.
+				 */
+				SharedSize: v.bigint(),
+				/**
+				 * Total size of the image including all layers it is composed of.
+				 *
+				 * In versions of Docker before v1.10, this field was calculated from
+				 * the image itself and all of its parent images. Images are now stored
+				 * self-contained, and no longer use a parent-chain, making this field
+				 * an equivalent of the Size field.
+				 *
+				 * Deprecated: this field is kept for backward compatibility, and will be
+				 * removed in API v1.44.
+				 */
+				VirtualSize: v.exactOptional(v.bigint()),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.record(v.string(), v.unknown()),
+				/**
+				 * Number of containers using this image. Includes both stopped and running
+				 * containers.
+				 *
+				 * This size is not calculated by default, and depends on which API endpoint
+				 * is used. `-1` indicates that the value has not been set / calculated.
+				 */
+				Containers: v.pipe(v.number(), v.integer()),
+			}),
+		),
+	),
+	Containers: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The ID of this container
+				 */
+				Id: v.exactOptional(v.string()),
+				/**
+				 * The names that this container has been given
+				 */
+				Names: v.exactOptional(v.array(v.string())),
+				/**
+				 * The name of the image used when creating this container
+				 */
+				Image: v.exactOptional(v.string()),
+				/**
+				 * The ID of the image that this container was created from
+				 */
+				ImageID: v.exactOptional(v.string()),
+				/**
+				 * Command to run when starting the container
+				 */
+				Command: v.exactOptional(v.string()),
+				/**
+				 * When the container was created
+				 */
+				Created: v.exactOptional(v.bigint()),
+				/**
+				 * The ports exposed by this container
+				 */
+				Ports: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Host IP address that the container's port is mapped to
+							 */
+							IP: v.exactOptional(v.string()),
+							/**
+							 * Port on the container
+							 */
+							PrivatePort: v.pipe(v.number(), v.integer()),
+							/**
+							 * Port exposed on the host
+							 */
+							PublicPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+							Type: v.picklist(["tcp", "udp", "sctp"]),
+						}),
+					),
+				),
+				/**
+				 * The size of files that have been created or changed by this container
+				 */
+				SizeRw: v.exactOptional(v.bigint()),
+				/**
+				 * The total size of all the files in this container
+				 */
+				SizeRootFs: v.exactOptional(v.bigint()),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * The state of this container (e.g. `Exited`)
+				 */
+				State: v.exactOptional(v.string()),
+				/**
+				 * Additional human-readable status of this container (e.g. `Exit 0`)
+				 */
+				Status: v.exactOptional(v.string()),
+				HostConfig: v.exactOptional(
+					v.strictObject({
+						NetworkMode: v.exactOptional(v.string()),
+					}),
+				),
+				/**
+				 * A summary of the container's network settings
+				 */
+				NetworkSettings: v.exactOptional(
+					v.strictObject({
+						Networks: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				Mounts: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * The mount type:
+							 *
+							 * - `bind` a mount of a file or directory from the host into the container.
+							 * - `volume` a docker volume with the given `Name`.
+							 * - `tmpfs` a `tmpfs`.
+							 * - `npipe` a named pipe from the host into the container.
+							 * - `cluster` a Swarm cluster volume
+							 */
+							Type: v.exactOptional(
+								v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+							),
+							/**
+							 * Name is the name reference to the underlying data defined by `Source`
+							 * e.g., the volume name.
+							 */
+							Name: v.exactOptional(v.string()),
+							/**
+							 * Source location of the mount.
+							 *
+							 * For volumes, this contains the storage location of the volume (within
+							 * `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains
+							 * the source (host) part of the bind-mount. For `tmpfs` mount points, this
+							 * field is empty.
+							 */
+							Source: v.exactOptional(v.string()),
+							/**
+							 * Destination is the path relative to the container root (`/`) where
+							 * the `Source` is mounted inside the container.
+							 */
+							Destination: v.exactOptional(v.string()),
+							/**
+							 * Driver is the volume driver used to create the volume (if it is a volume).
+							 */
+							Driver: v.exactOptional(v.string()),
+							/**
+							 * Mode is a comma separated list of options supplied by the user when
+							 * creating the bind/volume mount.
+							 *
+							 * The default is platform-specific (`"z"` on Linux, empty on Windows).
+							 */
+							Mode: v.exactOptional(v.string()),
+							/**
+							 * Whether the mount is mounted writable (read-write).
+							 */
+							RW: v.exactOptional(v.boolean()),
+							/**
+							 * Propagation describes how mounts are propagated from the host into the
+							 * mount point, and vice-versa. Refer to the [Linux kernel
+							 * documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
+							 * for details. This field is not used on Windows.
+							 */
+							Propagation: v.exactOptional(v.string()),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	Volumes: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Name of the volume.
+				 */
+				Name: v.string(),
+				/**
+				 * Name of the volume driver used by the volume.
+				 */
+				Driver: v.string(),
+				/**
+				 * Mount path of the volume on the host.
+				 */
+				Mountpoint: v.string(),
+				/**
+				 * Date/Time the volume was created.
+				 */
+				CreatedAt: v.exactOptional(v.string()),
+				/**
+				 * Low-level details about the volume, provided by the volume driver.
+				 * Details are returned as a map with key/value pairs:
+				 * `{"key":"value","key2":"value2"}`.
+				 *
+				 * The `Status` field is optional, and is omitted if the volume driver
+				 * does not support this feature.
+				 */
+				Status: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.record(v.string(), v.unknown()),
+				/**
+				 * The level at which the volume exists. Either `global` for cluster-wide,
+				 * or `local` for machine level.
+				 */
+				Scope: v.picklist(["local", "global"]),
+				/**
+				 * Options and information specific to, and only present on, Swarm CSI
+				 * cluster volumes.
+				 */
+				ClusterVolume: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The Swarm ID of this volume. Because cluster volumes are Swarm
+						 * objects, they have an ID, unlike non-cluster volumes. This ID can
+						 * be used to refer to the Volume instead of the name.
+						 */
+						ID: v.exactOptional(v.string()),
+						/**
+						 * The version number of the object such as node, service, etc. This is needed
+						 * to avoid conflicting writes. The client must send the version number along
+						 * with the modified specification when updating these objects.
+						 *
+						 * This approach ensures safe concurrency and determinism in that the change
+						 * on the object may not be applied if the version number has changed from the
+						 * last read. In other words, if two update requests specify the same base
+						 * version, only one of the requests can succeed. As a result, two separate
+						 * update requests that happen at the same time will not unintentionally
+						 * overwrite each other.
+						 */
+						Version: v.exactOptional(
+							v.strictObject({
+								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+						CreatedAt: v.exactOptional(v.string()),
+						UpdatedAt: v.exactOptional(v.string()),
+						/**
+						 * Cluster-specific options used to create the volume.
+						 */
+						Spec: v.exactOptional(
+							v.strictObject({
+								/**
+								 * Group defines the volume group of this volume. Volumes belonging to
+								 * the same group can be referred to by group name when creating
+								 * Services.  Referring to a volume by group instructs Swarm to treat
+								 * volumes in that group interchangeably for the purpose of scheduling.
+								 * Volumes with an empty string for a group technically all belong to
+								 * the same, emptystring group.
+								 */
+								Group: v.exactOptional(v.string()),
+								/**
+								 * Defines how the volume is used by tasks.
+								 */
+								AccessMode: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The set of nodes this volume can be used on at one time.
+										 * - `single` The volume may only be scheduled to one node at a time.
+										 * - `multi` the volume may be scheduled to any supported number of nodes at a
+										 * time.
+										 */
+										Scope: v.exactOptional(v.picklist(["single", "multi"])),
+										/**
+										 * The number and way that different tasks can use this volume
+										 * at one time.
+										 * - `none` The volume may only be used by one task at a time.
+										 * - `readonly` The volume may be used by any number of tasks, but they all
+										 * must mount the volume as readonly
+										 * - `onewriter` The volume may be used by any number of tasks, but only one
+										 * may mount it as read/write.
+										 * - `all` The volume may have any number of readers and writers.
+										 */
+										Sharing: v.exactOptional(
+											v.picklist(["none", "readonly", "onewriter", "all"]),
+										),
+										/**
+										 * Options for using this volume as a Mount-type volume.
+										 *
+										 *
+										 * Either MountVolume or BlockVolume, but not both, must be
+										 *
+										 * present.
+										 *
+										 * properties:
+										 *
+										 * FsType:
+										 *
+										 * type: "string"
+										 *
+										 * description: |
+										 *
+										 * Specifies the filesystem type for the mount volume.
+										 *
+										 * Optional.
+										 *
+										 * MountFlags:
+										 *
+										 * type: "array"
+										 *
+										 * description: |
+										 *
+										 * Flags to pass when mounting the volume. Optional.
+										 *
+										 * items:
+										 *
+										 * type: "string"
+										 * BlockVolume:
+										 *
+										 * type: "object"
+										 *
+										 * description: |
+										 *
+										 * Options for using this volume as a Block-type volume.
+										 *
+										 * Intentionally empty.
+										 */
+										MountVolume: v.exactOptional(
+											v.record(v.string(), v.unknown()),
+										),
+										/**
+										 * Swarm Secrets that are passed to the CSI storage plugin when
+										 * operating on this volume.
+										 */
+										Secrets: v.exactOptional(
+											v.array(
+												v.strictObject({
+													/**
+													 * Key is the name of the key of the key-value pair passed to
+													 * the plugin.
+													 */
+													Key: v.exactOptional(v.string()),
+													/**
+													 * Secret is the swarm Secret object from which to read data.
+													 * This can be a Secret name or ID. The Secret data is
+													 * retrieved by swarm and used as the value of the key-value
+													 * pair passed to the plugin.
+													 */
+													Secret: v.exactOptional(v.string()),
+												}),
+											),
+										),
+										/**
+										 * Requirements for the accessible topology of the volume. These
+										 * fields are optional. For an in-depth description of what these
+										 * fields mean, see the CSI specification.
+										 */
+										AccessibilityRequirements: v.exactOptional(
+											v.strictObject({
+												/**
+												 * A list of required topologies, at least one of which the
+												 * volume must be accessible from.
+												 */
+												Requisite: v.exactOptional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+												/**
+												 * A list of topologies that the volume should attempt to be
+												 * provisioned in.
+												 */
+												Preferred: v.exactOptional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+											}),
+										),
+										/**
+										 * The desired capacity that the volume should be created with. If
+										 * empty, the plugin will decide the capacity.
+										 */
+										CapacityRange: v.exactOptional(
+											v.strictObject({
+												/**
+												 * The volume must be at least this big. The value of 0
+												 * indicates an unspecified minimum
+												 */
+												RequiredBytes: v.exactOptional(v.bigint()),
+												/**
+												 * The volume must not be bigger than this. The value of 0
+												 * indicates an unspecified maximum.
+												 */
+												LimitBytes: v.exactOptional(v.bigint()),
+											}),
+										),
+										/**
+										 * The availability of the volume for use in tasks.
+										 * - `active` The volume is fully available for scheduling on the cluster
+										 * - `pause` No new workloads should use the volume, but existing workloads
+										 * are not stopped.
+										 * - `drain` All workloads using this volume should be stopped and
+										 * rescheduled, and no new ones should be started.
+										 */
+										Availability: v.exactOptional(
+											v.picklist(["active", "pause", "drain"]),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Information about the global status of the volume.
+						 */
+						Info: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The capacity of the volume in bytes. A value of 0 indicates that
+								 * the capacity is unknown.
+								 */
+								CapacityBytes: v.exactOptional(v.bigint()),
+								/**
+								 * A map of strings to strings returned from the storage plugin when
+								 * the volume is created.
+								 */
+								VolumeContext: v.exactOptional(
+									v.record(v.string(), v.unknown()),
+								),
+								/**
+								 * The ID of the volume as returned by the CSI storage plugin. This
+								 * is distinct from the volume's ID as provided by Docker. This ID
+								 * is never used by the user when communicating with Docker to refer
+								 * to this volume. If the ID is blank, then the Volume has not been
+								 * successfully created in the plugin yet.
+								 */
+								VolumeID: v.exactOptional(v.string()),
+								/**
+								 * The topology this volume is actually accessible from.
+								 */
+								AccessibleTopology: v.exactOptional(
+									v.array(v.record(v.string(), v.unknown())),
+								),
+							}),
+						),
+						/**
+						 * The status of the volume as it pertains to its publishing and use on
+						 * specific nodes
+						 */
+						PublishStatus: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * The ID of the Swarm node the volume is published on.
+									 */
+									NodeID: v.exactOptional(v.string()),
+									/**
+									 * The published state of the volume.
+									 * * `pending-publish` The volume should be published to this node, but the
+									 * call to the controller plugin to do so has not yet been successfully
+									 * completed.
+									 * * `published` The volume is published successfully to the node.
+									 * * `pending-node-unpublish` The volume should be unpublished from the node,
+									 * and the manager is awaiting confirmation from the worker that it has done
+									 * so.
+									 * * `pending-controller-unpublish` The volume is successfully unpublished
+									 * from the node, but has not yet been successfully unpublished on the
+									 * controller.
+									 */
+									State: v.exactOptional(
+										v.picklist([
+											"pending-publish",
+											"published",
+											"pending-node-unpublish",
+											"pending-controller-unpublish",
+										]),
+									),
+									/**
+									 * A map of strings to strings returned by the CSI controller
+									 * plugin when a volume is published.
+									 */
+									PublishContext: v.exactOptional(
+										v.record(v.string(), v.unknown()),
+									),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * The driver specific options used when creating the volume.
+				 */
+				Options: v.record(v.string(), v.unknown()),
+				/**
+				 * Usage details about the volume. This information is used by the
+				 * `GET /system/df` endpoint, and omitted in other endpoints.
+				 */
+				UsageData: v.exactOptional(
+					v.nullable(
+						v.strictObject({
+							/**
+							 * Amount of disk space used by the volume (in bytes). This information
+							 * is only available for volumes created with the `"local"` volume
+							 * driver. For volumes created with other volume drivers, this field
+							 * is set to `-1` ("not available")
+							 */
+							Size: v.bigint(),
+							/**
+							 * The number of containers referencing this volume. This field
+							 * is set to `-1` if the reference-count is not available.
+							 */
+							RefCount: v.bigint(),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	BuildCache: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Unique ID of the build cache record.
+				 */
+				ID: v.exactOptional(v.string()),
+				/**
+				 * ID of the parent build cache record.
+				 *
+				 * > **Deprecated**: This field is deprecated, and omitted if empty.
+				 */
+				Parent: v.exactOptional(v.nullable(v.string())),
+				/**
+				 * List of parent build cache record IDs.
+				 */
+				Parents: v.exactOptional(v.nullable(v.array(v.string()))),
+				/**
+				 * Cache record type.
+				 */
+				Type: v.exactOptional(
+					v.picklist([
+						"internal",
+						"frontend",
+						"source.local",
+						"source.git.checkout",
+						"exec.cachemount",
+						"regular",
+					]),
+				),
+				/**
+				 * Description of the build-step that produced the build cache.
+				 */
+				Description: v.exactOptional(v.string()),
+				/**
+				 * Indicates if the build cache is in use.
+				 */
+				InUse: v.exactOptional(v.boolean()),
+				/**
+				 * Indicates if the build cache is shared.
+				 */
+				Shared: v.exactOptional(v.boolean()),
+				/**
+				 * Amount of disk space used by the build cache (in bytes).
+				 */
+				Size: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Date and time at which the build cache was created in
+				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+				 */
+				CreatedAt: v.exactOptional(v.string()),
+				/**
+				 * Date and time at which the build cache was last used in
+				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+				 */
+				LastUsedAt: v.exactOptional(v.nullable(v.string())),
+				UsageCount: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+	),
+});
+export const systemDataUsageCommandResponseSchema = v.strictObject({
+	LayersSize: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+	Images: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * ID is the content-addressable ID of an image.
+				 *
+				 * This identifier is a content-addressable digest calculated from the
+				 * image's configuration (which includes the digests of layers used by
+				 * the image).
+				 *
+				 * Note that this digest differs from the `RepoDigests` below, which
+				 * holds digests of image manifests that reference the image.
+				 */
+				Id: v.pipe(v.string(), v.trim()),
+				/**
+				 * ID of the parent image.
+				 *
+				 * Depending on how the image was created, this field may be empty and
+				 * is only set for images that were built/created locally. This field
+				 * is empty if the image was pulled from an image registry.
+				 */
+				ParentId: v.pipe(v.string(), v.trim()),
+				/**
+				 * List of image names/tags in the local image cache that reference this
+				 * image.
+				 *
+				 * Multiple image tags can refer to the same image, and this list may be
+				 * empty if no tags reference the image, in which case the image is
+				 * "untagged", in which case it can still be referenced by its ID.
+				 */
+				RepoTags: v.array(v.pipe(v.string(), v.trim())),
+				/**
+				 * List of content-addressable digests of locally available image manifests
+				 * that the image is referenced from. Multiple manifests can refer to the
+				 * same image.
+				 *
+				 * These digests are usually only available if the image was either pulled
+				 * from a registry, or if the image was pushed to a registry, which is when
+				 * the manifest is generated and its digest calculated.
+				 */
+				RepoDigests: v.array(v.pipe(v.string(), v.trim())),
+				/**
+				 * Date and time at which the image was created as a Unix timestamp
+				 * (number of seconds since EPOCH).
+				 */
+				Created: v.pipe(v.number(), v.integer()),
+				/**
+				 * Total size of the image including all layers it is composed of.
+				 */
+				Size: v.union([
+					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+					v.bigint(),
+				]),
+				/**
+				 * Total size of image layers that are shared between this image and other
+				 * images.
+				 *
+				 * This size is not calculated by default. `-1` indicates that the value
+				 * has not been set / calculated.
+				 */
+				SharedSize: v.union([
+					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+					v.bigint(),
+				]),
+				/**
+				 * Total size of the image including all layers it is composed of.
+				 *
+				 * In versions of Docker before v1.10, this field was calculated from
+				 * the image itself and all of its parent images. Images are now stored
+				 * self-contained, and no longer use a parent-chain, making this field
+				 * an equivalent of the Size field.
+				 *
+				 * Deprecated: this field is kept for backward compatibility, and will be
+				 * removed in API v1.44.
+				 */
+				VirtualSize: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.record(v.string(), v.unknown()),
+				/**
+				 * Number of containers using this image. Includes both stopped and running
+				 * containers.
+				 *
+				 * This size is not calculated by default, and depends on which API endpoint
+				 * is used. `-1` indicates that the value has not been set / calculated.
+				 */
+				Containers: v.pipe(v.number(), v.integer()),
+			}),
+		),
+	),
+	Containers: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * The ID of this container
+				 */
+				Id: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The names that this container has been given
+				 */
+				Names: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				/**
+				 * The name of the image used when creating this container
+				 */
+				Image: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The ID of the image that this container was created from
+				 */
+				ImageID: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Command to run when starting the container
+				 */
+				Command: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * When the container was created
+				 */
+				Created: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * The ports exposed by this container
+				 */
+				Ports: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * Host IP address that the container's port is mapped to
+							 */
+							IP: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Port on the container
+							 */
+							PrivatePort: v.pipe(v.number(), v.integer()),
+							/**
+							 * Port exposed on the host
+							 */
+							PublicPort: v.optional(v.pipe(v.number(), v.integer())),
+							Type: v.picklist(["tcp", "udp", "sctp"]),
+						}),
+					),
+				),
+				/**
+				 * The size of files that have been created or changed by this container
+				 */
+				SizeRw: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * The total size of all the files in this container
+				 */
+				SizeRootFs: v.optional(
+					v.union([
+						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+						v.bigint(),
+					]),
+				),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * The state of this container (e.g. `Exited`)
+				 */
+				State: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Additional human-readable status of this container (e.g. `Exit 0`)
+				 */
+				Status: v.optional(v.pipe(v.string(), v.trim())),
+				HostConfig: v.optional(
+					v.strictObject({
+						NetworkMode: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+				/**
+				 * A summary of the container's network settings
+				 */
+				NetworkSettings: v.optional(
+					v.strictObject({
+						Networks: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				Mounts: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * The mount type:
+							 *
+							 * - `bind` a mount of a file or directory from the host into the container.
+							 * - `volume` a docker volume with the given `Name`.
+							 * - `tmpfs` a `tmpfs`.
+							 * - `npipe` a named pipe from the host into the container.
+							 * - `cluster` a Swarm cluster volume
+							 */
+							Type: v.optional(
+								v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+							),
+							/**
+							 * Name is the name reference to the underlying data defined by `Source`
+							 * e.g., the volume name.
+							 */
+							Name: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Source location of the mount.
+							 *
+							 * For volumes, this contains the storage location of the volume (within
+							 * `/var/lib/docker/volumes/`). For bind-mounts, and `npipe`, this contains
+							 * the source (host) part of the bind-mount. For `tmpfs` mount points, this
+							 * field is empty.
+							 */
+							Source: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Destination is the path relative to the container root (`/`) where
+							 * the `Source` is mounted inside the container.
+							 */
+							Destination: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Driver is the volume driver used to create the volume (if it is a volume).
+							 */
+							Driver: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Mode is a comma separated list of options supplied by the user when
+							 * creating the bind/volume mount.
+							 *
+							 * The default is platform-specific (`"z"` on Linux, empty on Windows).
+							 */
+							Mode: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Whether the mount is mounted writable (read-write).
+							 */
+							RW: v.optional(v.boolean()),
+							/**
+							 * Propagation describes how mounts are propagated from the host into the
+							 * mount point, and vice-versa. Refer to the [Linux kernel
+							 * documentation](https://www.kernel.org/doc/Documentation/filesystems/sharedsubtree.txt)
+							 * for details. This field is not used on Windows.
+							 */
+							Propagation: v.optional(v.pipe(v.string(), v.trim())),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	Volumes: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Name of the volume.
+				 */
+				Name: v.pipe(v.string(), v.trim()),
+				/**
+				 * Name of the volume driver used by the volume.
+				 */
+				Driver: v.pipe(v.string(), v.trim()),
+				/**
+				 * Mount path of the volume on the host.
+				 */
+				Mountpoint: v.pipe(v.string(), v.trim()),
+				/**
+				 * Date/Time the volume was created.
+				 */
+				CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Low-level details about the volume, provided by the volume driver.
+				 * Details are returned as a map with key/value pairs:
+				 * `{"key":"value","key2":"value2"}`.
+				 *
+				 * The `Status` field is optional, and is omitted if the volume driver
+				 * does not support this feature.
+				 */
+				Status: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.record(v.string(), v.unknown()),
+				/**
+				 * The level at which the volume exists. Either `global` for cluster-wide,
+				 * or `local` for machine level.
+				 */
+				Scope: v.picklist(["local", "global"]),
+				/**
+				 * Options and information specific to, and only present on, Swarm CSI
+				 * cluster volumes.
+				 */
+				ClusterVolume: v.optional(
+					v.strictObject({
+						/**
+						 * The Swarm ID of this volume. Because cluster volumes are Swarm
+						 * objects, they have an ID, unlike non-cluster volumes. This ID can
+						 * be used to refer to the Volume instead of the name.
+						 */
+						ID: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The version number of the object such as node, service, etc. This is needed
+						 * to avoid conflicting writes. The client must send the version number along
+						 * with the modified specification when updating these objects.
+						 *
+						 * This approach ensures safe concurrency and determinism in that the change
+						 * on the object may not be applied if the version number has changed from the
+						 * last read. In other words, if two update requests specify the same base
+						 * version, only one of the requests can succeed. As a result, two separate
+						 * update requests that happen at the same time will not unintentionally
+						 * overwrite each other.
+						 */
+						Version: v.optional(
+							v.strictObject({
+								Index: v.optional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+						CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+						UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Cluster-specific options used to create the volume.
+						 */
+						Spec: v.optional(
+							v.strictObject({
+								/**
+								 * Group defines the volume group of this volume. Volumes belonging to
+								 * the same group can be referred to by group name when creating
+								 * Services.  Referring to a volume by group instructs Swarm to treat
+								 * volumes in that group interchangeably for the purpose of scheduling.
+								 * Volumes with an empty string for a group technically all belong to
+								 * the same, emptystring group.
+								 */
+								Group: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Defines how the volume is used by tasks.
+								 */
+								AccessMode: v.optional(
+									v.strictObject({
+										/**
+										 * The set of nodes this volume can be used on at one time.
+										 * - `single` The volume may only be scheduled to one node at a time.
+										 * - `multi` the volume may be scheduled to any supported number of nodes at a
+										 * time.
+										 */
+										Scope: v.optional(v.picklist(["single", "multi"])),
+										/**
+										 * The number and way that different tasks can use this volume
+										 * at one time.
+										 * - `none` The volume may only be used by one task at a time.
+										 * - `readonly` The volume may be used by any number of tasks, but they all
+										 * must mount the volume as readonly
+										 * - `onewriter` The volume may be used by any number of tasks, but only one
+										 * may mount it as read/write.
+										 * - `all` The volume may have any number of readers and writers.
+										 */
+										Sharing: v.optional(
+											v.picklist(["none", "readonly", "onewriter", "all"]),
+										),
+										/**
+										 * Options for using this volume as a Mount-type volume.
+										 *
+										 *
+										 * Either MountVolume or BlockVolume, but not both, must be
+										 *
+										 * present.
+										 *
+										 * properties:
+										 *
+										 * FsType:
+										 *
+										 * type: "string"
+										 *
+										 * description: |
+										 *
+										 * Specifies the filesystem type for the mount volume.
+										 *
+										 * Optional.
+										 *
+										 * MountFlags:
+										 *
+										 * type: "array"
+										 *
+										 * description: |
+										 *
+										 * Flags to pass when mounting the volume. Optional.
+										 *
+										 * items:
+										 *
+										 * type: "string"
+										 * BlockVolume:
+										 *
+										 * type: "object"
+										 *
+										 * description: |
+										 *
+										 * Options for using this volume as a Block-type volume.
+										 *
+										 * Intentionally empty.
+										 */
+										MountVolume: v.optional(v.record(v.string(), v.unknown())),
+										/**
+										 * Swarm Secrets that are passed to the CSI storage plugin when
+										 * operating on this volume.
+										 */
+										Secrets: v.optional(
+											v.array(
+												v.strictObject({
+													/**
+													 * Key is the name of the key of the key-value pair passed to
+													 * the plugin.
+													 */
+													Key: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * Secret is the swarm Secret object from which to read data.
+													 * This can be a Secret name or ID. The Secret data is
+													 * retrieved by swarm and used as the value of the key-value
+													 * pair passed to the plugin.
+													 */
+													Secret: v.optional(v.pipe(v.string(), v.trim())),
+												}),
+											),
+										),
+										/**
+										 * Requirements for the accessible topology of the volume. These
+										 * fields are optional. For an in-depth description of what these
+										 * fields mean, see the CSI specification.
+										 */
+										AccessibilityRequirements: v.optional(
+											v.strictObject({
+												/**
+												 * A list of required topologies, at least one of which the
+												 * volume must be accessible from.
+												 */
+												Requisite: v.optional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+												/**
+												 * A list of topologies that the volume should attempt to be
+												 * provisioned in.
+												 */
+												Preferred: v.optional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+											}),
+										),
+										/**
+										 * The desired capacity that the volume should be created with. If
+										 * empty, the plugin will decide the capacity.
+										 */
+										CapacityRange: v.optional(
+											v.strictObject({
+												/**
+												 * The volume must be at least this big. The value of 0
+												 * indicates an unspecified minimum
+												 */
+												RequiredBytes: v.optional(
+													v.union([
+														v.pipe(
+															v.string(),
+															v.decimal(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.pipe(
+															v.number(),
+															v.integer(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.bigint(),
+													]),
+												),
+												/**
+												 * The volume must not be bigger than this. The value of 0
+												 * indicates an unspecified maximum.
+												 */
+												LimitBytes: v.optional(
+													v.union([
+														v.pipe(
+															v.string(),
+															v.decimal(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.pipe(
+															v.number(),
+															v.integer(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.bigint(),
+													]),
+												),
+											}),
+										),
+										/**
+										 * The availability of the volume for use in tasks.
+										 * - `active` The volume is fully available for scheduling on the cluster
+										 * - `pause` No new workloads should use the volume, but existing workloads
+										 * are not stopped.
+										 * - `drain` All workloads using this volume should be stopped and
+										 * rescheduled, and no new ones should be started.
+										 */
+										Availability: v.optional(
+											v.picklist(["active", "pause", "drain"]),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Information about the global status of the volume.
+						 */
+						Info: v.optional(
+							v.strictObject({
+								/**
+								 * The capacity of the volume in bytes. A value of 0 indicates that
+								 * the capacity is unknown.
+								 */
+								CapacityBytes: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * A map of strings to strings returned from the storage plugin when
+								 * the volume is created.
+								 */
+								VolumeContext: v.optional(v.record(v.string(), v.unknown())),
+								/**
+								 * The ID of the volume as returned by the CSI storage plugin. This
+								 * is distinct from the volume's ID as provided by Docker. This ID
+								 * is never used by the user when communicating with Docker to refer
+								 * to this volume. If the ID is blank, then the Volume has not been
+								 * successfully created in the plugin yet.
+								 */
+								VolumeID: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The topology this volume is actually accessible from.
+								 */
+								AccessibleTopology: v.optional(
+									v.array(v.record(v.string(), v.unknown())),
+								),
+							}),
+						),
+						/**
+						 * The status of the volume as it pertains to its publishing and use on
+						 * specific nodes
+						 */
+						PublishStatus: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * The ID of the Swarm node the volume is published on.
+									 */
+									NodeID: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * The published state of the volume.
+									 * * `pending-publish` The volume should be published to this node, but the
+									 * call to the controller plugin to do so has not yet been successfully
+									 * completed.
+									 * * `published` The volume is published successfully to the node.
+									 * * `pending-node-unpublish` The volume should be unpublished from the node,
+									 * and the manager is awaiting confirmation from the worker that it has done
+									 * so.
+									 * * `pending-controller-unpublish` The volume is successfully unpublished
+									 * from the node, but has not yet been successfully unpublished on the
+									 * controller.
+									 */
+									State: v.optional(
+										v.picklist([
+											"pending-publish",
+											"published",
+											"pending-node-unpublish",
+											"pending-controller-unpublish",
+										]),
+									),
+									/**
+									 * A map of strings to strings returned by the CSI controller
+									 * plugin when a volume is published.
+									 */
+									PublishContext: v.optional(v.record(v.string(), v.unknown())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * The driver specific options used when creating the volume.
+				 */
+				Options: v.record(v.string(), v.unknown()),
+				/**
+				 * Usage details about the volume. This information is used by the
+				 * `GET /system/df` endpoint, and omitted in other endpoints.
+				 */
+				UsageData: v.optional(
+					v.nullable(
+						v.strictObject({
+							/**
+							 * Amount of disk space used by the volume (in bytes). This information
+							 * is only available for volumes created with the `"local"` volume
+							 * driver. For volumes created with other volume drivers, this field
+							 * is set to `-1` ("not available")
+							 */
+							Size: v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+							/**
+							 * The number of containers referencing this volume. This field
+							 * is set to `-1` if the reference-count is not available.
+							 */
+							RefCount: v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	BuildCache: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Unique ID of the build cache record.
+				 */
+				ID: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * ID of the parent build cache record.
+				 *
+				 * > **Deprecated**: This field is deprecated, and omitted if empty.
+				 */
+				Parent: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+				/**
+				 * List of parent build cache record IDs.
+				 */
+				Parents: v.optional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
+				/**
+				 * Cache record type.
+				 */
+				Type: v.optional(
+					v.picklist([
+						"internal",
+						"frontend",
+						"source.local",
+						"source.git.checkout",
+						"exec.cachemount",
+						"regular",
+					]),
+				),
+				/**
+				 * Description of the build-step that produced the build cache.
+				 */
+				Description: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Indicates if the build cache is in use.
+				 */
+				InUse: v.optional(v.boolean()),
+				/**
+				 * Indicates if the build cache is shared.
+				 */
+				Shared: v.optional(v.boolean()),
+				/**
+				 * Amount of disk space used by the build cache (in bytes).
+				 */
+				Size: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Date and time at which the build cache was created in
+				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+				 */
+				CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Date and time at which the build cache was last used in
+				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+				 */
+				LastUsedAt: v.optional(v.nullable(v.pipe(v.string(), v.trim()))),
+				UsageCount: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+	),
 });
 export const exactSystemDataUsageCommandQuerySchema = v.strictObject({
 	type: v.exactOptional(
@@ -28504,6 +36654,18 @@ export const containerExecCommandBodySchema = v.strictObject({
 	 */
 	WorkingDir: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactContainerExecCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.string(),
+});
+export const containerExecCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.pipe(v.string(), v.trim()),
+});
 export const exactContainerExecCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -28590,11 +36752,787 @@ export const execResizeCommandQuerySchema = v.strictObject({
 		v.pipe(v.number(), v.integer()),
 	]),
 });
+export const exactExecInspectCommandResponseSchema = v.strictObject({
+	CanRemove: v.exactOptional(v.boolean()),
+	DetachKeys: v.exactOptional(v.string()),
+	ID: v.exactOptional(v.string()),
+	Running: v.exactOptional(v.boolean()),
+	ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
+	ProcessConfig: v.exactOptional(
+		v.strictObject({
+			privileged: v.exactOptional(v.boolean()),
+			user: v.exactOptional(v.string()),
+			tty: v.exactOptional(v.boolean()),
+			entrypoint: v.exactOptional(v.string()),
+			arguments: v.exactOptional(v.array(v.string())),
+		}),
+	),
+	OpenStdin: v.exactOptional(v.boolean()),
+	OpenStderr: v.exactOptional(v.boolean()),
+	OpenStdout: v.exactOptional(v.boolean()),
+	ContainerID: v.exactOptional(v.string()),
+	/**
+	 * The system process ID for the exec process.
+	 */
+	Pid: v.exactOptional(v.pipe(v.number(), v.integer())),
+});
+export const execInspectCommandResponseSchema = v.strictObject({
+	CanRemove: v.optional(v.boolean()),
+	DetachKeys: v.optional(v.pipe(v.string(), v.trim())),
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	Running: v.optional(v.boolean()),
+	ExitCode: v.optional(v.pipe(v.number(), v.integer())),
+	ProcessConfig: v.optional(
+		v.strictObject({
+			privileged: v.optional(v.boolean()),
+			user: v.optional(v.pipe(v.string(), v.trim())),
+			tty: v.optional(v.boolean()),
+			entrypoint: v.optional(v.pipe(v.string(), v.trim())),
+			arguments: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+		}),
+	),
+	OpenStdin: v.optional(v.boolean()),
+	OpenStderr: v.optional(v.boolean()),
+	OpenStdout: v.optional(v.boolean()),
+	ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The system process ID for the exec process.
+	 */
+	Pid: v.optional(v.pipe(v.number(), v.integer())),
+});
 export const exactExecInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
 export const execInspectCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
+});
+export const exactVolumeListCommandResponseSchema = v.strictObject({
+	/**
+	 * List of volumes
+	 */
+	Volumes: v.exactOptional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Name of the volume.
+				 */
+				Name: v.string(),
+				/**
+				 * Name of the volume driver used by the volume.
+				 */
+				Driver: v.string(),
+				/**
+				 * Mount path of the volume on the host.
+				 */
+				Mountpoint: v.string(),
+				/**
+				 * Date/Time the volume was created.
+				 */
+				CreatedAt: v.exactOptional(v.string()),
+				/**
+				 * Low-level details about the volume, provided by the volume driver.
+				 * Details are returned as a map with key/value pairs:
+				 * `{"key":"value","key2":"value2"}`.
+				 *
+				 * The `Status` field is optional, and is omitted if the volume driver
+				 * does not support this feature.
+				 */
+				Status: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.record(v.string(), v.unknown()),
+				/**
+				 * The level at which the volume exists. Either `global` for cluster-wide,
+				 * or `local` for machine level.
+				 */
+				Scope: v.picklist(["local", "global"]),
+				/**
+				 * Options and information specific to, and only present on, Swarm CSI
+				 * cluster volumes.
+				 */
+				ClusterVolume: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The Swarm ID of this volume. Because cluster volumes are Swarm
+						 * objects, they have an ID, unlike non-cluster volumes. This ID can
+						 * be used to refer to the Volume instead of the name.
+						 */
+						ID: v.exactOptional(v.string()),
+						/**
+						 * The version number of the object such as node, service, etc. This is needed
+						 * to avoid conflicting writes. The client must send the version number along
+						 * with the modified specification when updating these objects.
+						 *
+						 * This approach ensures safe concurrency and determinism in that the change
+						 * on the object may not be applied if the version number has changed from the
+						 * last read. In other words, if two update requests specify the same base
+						 * version, only one of the requests can succeed. As a result, two separate
+						 * update requests that happen at the same time will not unintentionally
+						 * overwrite each other.
+						 */
+						Version: v.exactOptional(
+							v.strictObject({
+								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+						CreatedAt: v.exactOptional(v.string()),
+						UpdatedAt: v.exactOptional(v.string()),
+						/**
+						 * Cluster-specific options used to create the volume.
+						 */
+						Spec: v.exactOptional(
+							v.strictObject({
+								/**
+								 * Group defines the volume group of this volume. Volumes belonging to
+								 * the same group can be referred to by group name when creating
+								 * Services.  Referring to a volume by group instructs Swarm to treat
+								 * volumes in that group interchangeably for the purpose of scheduling.
+								 * Volumes with an empty string for a group technically all belong to
+								 * the same, emptystring group.
+								 */
+								Group: v.exactOptional(v.string()),
+								/**
+								 * Defines how the volume is used by tasks.
+								 */
+								AccessMode: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The set of nodes this volume can be used on at one time.
+										 * - `single` The volume may only be scheduled to one node at a time.
+										 * - `multi` the volume may be scheduled to any supported number of nodes at a
+										 * time.
+										 */
+										Scope: v.exactOptional(v.picklist(["single", "multi"])),
+										/**
+										 * The number and way that different tasks can use this volume
+										 * at one time.
+										 * - `none` The volume may only be used by one task at a time.
+										 * - `readonly` The volume may be used by any number of tasks, but they all
+										 * must mount the volume as readonly
+										 * - `onewriter` The volume may be used by any number of tasks, but only one
+										 * may mount it as read/write.
+										 * - `all` The volume may have any number of readers and writers.
+										 */
+										Sharing: v.exactOptional(
+											v.picklist(["none", "readonly", "onewriter", "all"]),
+										),
+										/**
+										 * Options for using this volume as a Mount-type volume.
+										 *
+										 *
+										 * Either MountVolume or BlockVolume, but not both, must be
+										 *
+										 * present.
+										 *
+										 * properties:
+										 *
+										 * FsType:
+										 *
+										 * type: "string"
+										 *
+										 * description: |
+										 *
+										 * Specifies the filesystem type for the mount volume.
+										 *
+										 * Optional.
+										 *
+										 * MountFlags:
+										 *
+										 * type: "array"
+										 *
+										 * description: |
+										 *
+										 * Flags to pass when mounting the volume. Optional.
+										 *
+										 * items:
+										 *
+										 * type: "string"
+										 * BlockVolume:
+										 *
+										 * type: "object"
+										 *
+										 * description: |
+										 *
+										 * Options for using this volume as a Block-type volume.
+										 *
+										 * Intentionally empty.
+										 */
+										MountVolume: v.exactOptional(
+											v.record(v.string(), v.unknown()),
+										),
+										/**
+										 * Swarm Secrets that are passed to the CSI storage plugin when
+										 * operating on this volume.
+										 */
+										Secrets: v.exactOptional(
+											v.array(
+												v.strictObject({
+													/**
+													 * Key is the name of the key of the key-value pair passed to
+													 * the plugin.
+													 */
+													Key: v.exactOptional(v.string()),
+													/**
+													 * Secret is the swarm Secret object from which to read data.
+													 * This can be a Secret name or ID. The Secret data is
+													 * retrieved by swarm and used as the value of the key-value
+													 * pair passed to the plugin.
+													 */
+													Secret: v.exactOptional(v.string()),
+												}),
+											),
+										),
+										/**
+										 * Requirements for the accessible topology of the volume. These
+										 * fields are optional. For an in-depth description of what these
+										 * fields mean, see the CSI specification.
+										 */
+										AccessibilityRequirements: v.exactOptional(
+											v.strictObject({
+												/**
+												 * A list of required topologies, at least one of which the
+												 * volume must be accessible from.
+												 */
+												Requisite: v.exactOptional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+												/**
+												 * A list of topologies that the volume should attempt to be
+												 * provisioned in.
+												 */
+												Preferred: v.exactOptional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+											}),
+										),
+										/**
+										 * The desired capacity that the volume should be created with. If
+										 * empty, the plugin will decide the capacity.
+										 */
+										CapacityRange: v.exactOptional(
+											v.strictObject({
+												/**
+												 * The volume must be at least this big. The value of 0
+												 * indicates an unspecified minimum
+												 */
+												RequiredBytes: v.exactOptional(v.bigint()),
+												/**
+												 * The volume must not be bigger than this. The value of 0
+												 * indicates an unspecified maximum.
+												 */
+												LimitBytes: v.exactOptional(v.bigint()),
+											}),
+										),
+										/**
+										 * The availability of the volume for use in tasks.
+										 * - `active` The volume is fully available for scheduling on the cluster
+										 * - `pause` No new workloads should use the volume, but existing workloads
+										 * are not stopped.
+										 * - `drain` All workloads using this volume should be stopped and
+										 * rescheduled, and no new ones should be started.
+										 */
+										Availability: v.exactOptional(
+											v.picklist(["active", "pause", "drain"]),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Information about the global status of the volume.
+						 */
+						Info: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The capacity of the volume in bytes. A value of 0 indicates that
+								 * the capacity is unknown.
+								 */
+								CapacityBytes: v.exactOptional(v.bigint()),
+								/**
+								 * A map of strings to strings returned from the storage plugin when
+								 * the volume is created.
+								 */
+								VolumeContext: v.exactOptional(
+									v.record(v.string(), v.unknown()),
+								),
+								/**
+								 * The ID of the volume as returned by the CSI storage plugin. This
+								 * is distinct from the volume's ID as provided by Docker. This ID
+								 * is never used by the user when communicating with Docker to refer
+								 * to this volume. If the ID is blank, then the Volume has not been
+								 * successfully created in the plugin yet.
+								 */
+								VolumeID: v.exactOptional(v.string()),
+								/**
+								 * The topology this volume is actually accessible from.
+								 */
+								AccessibleTopology: v.exactOptional(
+									v.array(v.record(v.string(), v.unknown())),
+								),
+							}),
+						),
+						/**
+						 * The status of the volume as it pertains to its publishing and use on
+						 * specific nodes
+						 */
+						PublishStatus: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * The ID of the Swarm node the volume is published on.
+									 */
+									NodeID: v.exactOptional(v.string()),
+									/**
+									 * The published state of the volume.
+									 * * `pending-publish` The volume should be published to this node, but the
+									 * call to the controller plugin to do so has not yet been successfully
+									 * completed.
+									 * * `published` The volume is published successfully to the node.
+									 * * `pending-node-unpublish` The volume should be unpublished from the node,
+									 * and the manager is awaiting confirmation from the worker that it has done
+									 * so.
+									 * * `pending-controller-unpublish` The volume is successfully unpublished
+									 * from the node, but has not yet been successfully unpublished on the
+									 * controller.
+									 */
+									State: v.exactOptional(
+										v.picklist([
+											"pending-publish",
+											"published",
+											"pending-node-unpublish",
+											"pending-controller-unpublish",
+										]),
+									),
+									/**
+									 * A map of strings to strings returned by the CSI controller
+									 * plugin when a volume is published.
+									 */
+									PublishContext: v.exactOptional(
+										v.record(v.string(), v.unknown()),
+									),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * The driver specific options used when creating the volume.
+				 */
+				Options: v.record(v.string(), v.unknown()),
+				/**
+				 * Usage details about the volume. This information is used by the
+				 * `GET /system/df` endpoint, and omitted in other endpoints.
+				 */
+				UsageData: v.exactOptional(
+					v.nullable(
+						v.strictObject({
+							/**
+							 * Amount of disk space used by the volume (in bytes). This information
+							 * is only available for volumes created with the `"local"` volume
+							 * driver. For volumes created with other volume drivers, this field
+							 * is set to `-1` ("not available")
+							 */
+							Size: v.bigint(),
+							/**
+							 * The number of containers referencing this volume. This field
+							 * is set to `-1` if the reference-count is not available.
+							 */
+							RefCount: v.bigint(),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	/**
+	 * Warnings that occurred when fetching the list of volumes.
+	 */
+	Warnings: v.exactOptional(v.array(v.string())),
+});
+export const volumeListCommandResponseSchema = v.strictObject({
+	/**
+	 * List of volumes
+	 */
+	Volumes: v.optional(
+		v.array(
+			v.strictObject({
+				/**
+				 * Name of the volume.
+				 */
+				Name: v.pipe(v.string(), v.trim()),
+				/**
+				 * Name of the volume driver used by the volume.
+				 */
+				Driver: v.pipe(v.string(), v.trim()),
+				/**
+				 * Mount path of the volume on the host.
+				 */
+				Mountpoint: v.pipe(v.string(), v.trim()),
+				/**
+				 * Date/Time the volume was created.
+				 */
+				CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Low-level details about the volume, provided by the volume driver.
+				 * Details are returned as a map with key/value pairs:
+				 * `{"key":"value","key2":"value2"}`.
+				 *
+				 * The `Status` field is optional, and is omitted if the volume driver
+				 * does not support this feature.
+				 */
+				Status: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.record(v.string(), v.unknown()),
+				/**
+				 * The level at which the volume exists. Either `global` for cluster-wide,
+				 * or `local` for machine level.
+				 */
+				Scope: v.picklist(["local", "global"]),
+				/**
+				 * Options and information specific to, and only present on, Swarm CSI
+				 * cluster volumes.
+				 */
+				ClusterVolume: v.optional(
+					v.strictObject({
+						/**
+						 * The Swarm ID of this volume. Because cluster volumes are Swarm
+						 * objects, they have an ID, unlike non-cluster volumes. This ID can
+						 * be used to refer to the Volume instead of the name.
+						 */
+						ID: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The version number of the object such as node, service, etc. This is needed
+						 * to avoid conflicting writes. The client must send the version number along
+						 * with the modified specification when updating these objects.
+						 *
+						 * This approach ensures safe concurrency and determinism in that the change
+						 * on the object may not be applied if the version number has changed from the
+						 * last read. In other words, if two update requests specify the same base
+						 * version, only one of the requests can succeed. As a result, two separate
+						 * update requests that happen at the same time will not unintentionally
+						 * overwrite each other.
+						 */
+						Version: v.optional(
+							v.strictObject({
+								Index: v.optional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+						CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+						UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Cluster-specific options used to create the volume.
+						 */
+						Spec: v.optional(
+							v.strictObject({
+								/**
+								 * Group defines the volume group of this volume. Volumes belonging to
+								 * the same group can be referred to by group name when creating
+								 * Services.  Referring to a volume by group instructs Swarm to treat
+								 * volumes in that group interchangeably for the purpose of scheduling.
+								 * Volumes with an empty string for a group technically all belong to
+								 * the same, emptystring group.
+								 */
+								Group: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Defines how the volume is used by tasks.
+								 */
+								AccessMode: v.optional(
+									v.strictObject({
+										/**
+										 * The set of nodes this volume can be used on at one time.
+										 * - `single` The volume may only be scheduled to one node at a time.
+										 * - `multi` the volume may be scheduled to any supported number of nodes at a
+										 * time.
+										 */
+										Scope: v.optional(v.picklist(["single", "multi"])),
+										/**
+										 * The number and way that different tasks can use this volume
+										 * at one time.
+										 * - `none` The volume may only be used by one task at a time.
+										 * - `readonly` The volume may be used by any number of tasks, but they all
+										 * must mount the volume as readonly
+										 * - `onewriter` The volume may be used by any number of tasks, but only one
+										 * may mount it as read/write.
+										 * - `all` The volume may have any number of readers and writers.
+										 */
+										Sharing: v.optional(
+											v.picklist(["none", "readonly", "onewriter", "all"]),
+										),
+										/**
+										 * Options for using this volume as a Mount-type volume.
+										 *
+										 *
+										 * Either MountVolume or BlockVolume, but not both, must be
+										 *
+										 * present.
+										 *
+										 * properties:
+										 *
+										 * FsType:
+										 *
+										 * type: "string"
+										 *
+										 * description: |
+										 *
+										 * Specifies the filesystem type for the mount volume.
+										 *
+										 * Optional.
+										 *
+										 * MountFlags:
+										 *
+										 * type: "array"
+										 *
+										 * description: |
+										 *
+										 * Flags to pass when mounting the volume. Optional.
+										 *
+										 * items:
+										 *
+										 * type: "string"
+										 * BlockVolume:
+										 *
+										 * type: "object"
+										 *
+										 * description: |
+										 *
+										 * Options for using this volume as a Block-type volume.
+										 *
+										 * Intentionally empty.
+										 */
+										MountVolume: v.optional(v.record(v.string(), v.unknown())),
+										/**
+										 * Swarm Secrets that are passed to the CSI storage plugin when
+										 * operating on this volume.
+										 */
+										Secrets: v.optional(
+											v.array(
+												v.strictObject({
+													/**
+													 * Key is the name of the key of the key-value pair passed to
+													 * the plugin.
+													 */
+													Key: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * Secret is the swarm Secret object from which to read data.
+													 * This can be a Secret name or ID. The Secret data is
+													 * retrieved by swarm and used as the value of the key-value
+													 * pair passed to the plugin.
+													 */
+													Secret: v.optional(v.pipe(v.string(), v.trim())),
+												}),
+											),
+										),
+										/**
+										 * Requirements for the accessible topology of the volume. These
+										 * fields are optional. For an in-depth description of what these
+										 * fields mean, see the CSI specification.
+										 */
+										AccessibilityRequirements: v.optional(
+											v.strictObject({
+												/**
+												 * A list of required topologies, at least one of which the
+												 * volume must be accessible from.
+												 */
+												Requisite: v.optional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+												/**
+												 * A list of topologies that the volume should attempt to be
+												 * provisioned in.
+												 */
+												Preferred: v.optional(
+													v.array(v.record(v.string(), v.unknown())),
+												),
+											}),
+										),
+										/**
+										 * The desired capacity that the volume should be created with. If
+										 * empty, the plugin will decide the capacity.
+										 */
+										CapacityRange: v.optional(
+											v.strictObject({
+												/**
+												 * The volume must be at least this big. The value of 0
+												 * indicates an unspecified minimum
+												 */
+												RequiredBytes: v.optional(
+													v.union([
+														v.pipe(
+															v.string(),
+															v.decimal(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.pipe(
+															v.number(),
+															v.integer(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.bigint(),
+													]),
+												),
+												/**
+												 * The volume must not be bigger than this. The value of 0
+												 * indicates an unspecified maximum.
+												 */
+												LimitBytes: v.optional(
+													v.union([
+														v.pipe(
+															v.string(),
+															v.decimal(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.pipe(
+															v.number(),
+															v.integer(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.bigint(),
+													]),
+												),
+											}),
+										),
+										/**
+										 * The availability of the volume for use in tasks.
+										 * - `active` The volume is fully available for scheduling on the cluster
+										 * - `pause` No new workloads should use the volume, but existing workloads
+										 * are not stopped.
+										 * - `drain` All workloads using this volume should be stopped and
+										 * rescheduled, and no new ones should be started.
+										 */
+										Availability: v.optional(
+											v.picklist(["active", "pause", "drain"]),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Information about the global status of the volume.
+						 */
+						Info: v.optional(
+							v.strictObject({
+								/**
+								 * The capacity of the volume in bytes. A value of 0 indicates that
+								 * the capacity is unknown.
+								 */
+								CapacityBytes: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * A map of strings to strings returned from the storage plugin when
+								 * the volume is created.
+								 */
+								VolumeContext: v.optional(v.record(v.string(), v.unknown())),
+								/**
+								 * The ID of the volume as returned by the CSI storage plugin. This
+								 * is distinct from the volume's ID as provided by Docker. This ID
+								 * is never used by the user when communicating with Docker to refer
+								 * to this volume. If the ID is blank, then the Volume has not been
+								 * successfully created in the plugin yet.
+								 */
+								VolumeID: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The topology this volume is actually accessible from.
+								 */
+								AccessibleTopology: v.optional(
+									v.array(v.record(v.string(), v.unknown())),
+								),
+							}),
+						),
+						/**
+						 * The status of the volume as it pertains to its publishing and use on
+						 * specific nodes
+						 */
+						PublishStatus: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * The ID of the Swarm node the volume is published on.
+									 */
+									NodeID: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * The published state of the volume.
+									 * * `pending-publish` The volume should be published to this node, but the
+									 * call to the controller plugin to do so has not yet been successfully
+									 * completed.
+									 * * `published` The volume is published successfully to the node.
+									 * * `pending-node-unpublish` The volume should be unpublished from the node,
+									 * and the manager is awaiting confirmation from the worker that it has done
+									 * so.
+									 * * `pending-controller-unpublish` The volume is successfully unpublished
+									 * from the node, but has not yet been successfully unpublished on the
+									 * controller.
+									 */
+									State: v.optional(
+										v.picklist([
+											"pending-publish",
+											"published",
+											"pending-node-unpublish",
+											"pending-controller-unpublish",
+										]),
+									),
+									/**
+									 * A map of strings to strings returned by the CSI controller
+									 * plugin when a volume is published.
+									 */
+									PublishContext: v.optional(v.record(v.string(), v.unknown())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * The driver specific options used when creating the volume.
+				 */
+				Options: v.record(v.string(), v.unknown()),
+				/**
+				 * Usage details about the volume. This information is used by the
+				 * `GET /system/df` endpoint, and omitted in other endpoints.
+				 */
+				UsageData: v.optional(
+					v.nullable(
+						v.strictObject({
+							/**
+							 * Amount of disk space used by the volume (in bytes). This information
+							 * is only available for volumes created with the `"local"` volume
+							 * driver. For volumes created with other volume drivers, this field
+							 * is set to `-1` ("not available")
+							 */
+							Size: v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+							/**
+							 * The number of containers referencing this volume. This field
+							 * is set to `-1` if the reference-count is not available.
+							 */
+							RefCount: v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						}),
+					),
+				),
+			}),
+		),
+	),
+	/**
+	 * Warnings that occurred when fetching the list of volumes.
+	 */
+	Warnings: v.optional(v.array(v.pipe(v.string(), v.trim()))),
 });
 export const exactVolumeListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
@@ -28964,6 +37902,1358 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
+export const exactVolumeCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * Name of the volume.
+	 */
+	Name: v.string(),
+	/**
+	 * Name of the volume driver used by the volume.
+	 */
+	Driver: v.string(),
+	/**
+	 * Mount path of the volume on the host.
+	 */
+	Mountpoint: v.string(),
+	/**
+	 * Date/Time the volume was created.
+	 */
+	CreatedAt: v.exactOptional(v.string()),
+	/**
+	 * Low-level details about the volume, provided by the volume driver.
+	 * Details are returned as a map with key/value pairs:
+	 * `{"key":"value","key2":"value2"}`.
+	 *
+	 * The `Status` field is optional, and is omitted if the volume driver
+	 * does not support this feature.
+	 */
+	Status: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.record(v.string(), v.unknown()),
+	/**
+	 * The level at which the volume exists. Either `global` for cluster-wide,
+	 * or `local` for machine level.
+	 */
+	Scope: v.picklist(["local", "global"]),
+	/**
+	 * Options and information specific to, and only present on, Swarm CSI
+	 * cluster volumes.
+	 */
+	ClusterVolume: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The Swarm ID of this volume. Because cluster volumes are Swarm
+			 * objects, they have an ID, unlike non-cluster volumes. This ID can
+			 * be used to refer to the Volume instead of the name.
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			Version: v.exactOptional(
+				v.strictObject({
+					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			CreatedAt: v.exactOptional(v.string()),
+			UpdatedAt: v.exactOptional(v.string()),
+			/**
+			 * Cluster-specific options used to create the volume.
+			 */
+			Spec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Group defines the volume group of this volume. Volumes belonging to
+					 * the same group can be referred to by group name when creating
+					 * Services.  Referring to a volume by group instructs Swarm to treat
+					 * volumes in that group interchangeably for the purpose of scheduling.
+					 * Volumes with an empty string for a group technically all belong to
+					 * the same, emptystring group.
+					 */
+					Group: v.exactOptional(v.string()),
+					/**
+					 * Defines how the volume is used by tasks.
+					 */
+					AccessMode: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The set of nodes this volume can be used on at one time.
+							 * - `single` The volume may only be scheduled to one node at a time.
+							 * - `multi` the volume may be scheduled to any supported number of nodes at a
+							 * time.
+							 */
+							Scope: v.exactOptional(v.picklist(["single", "multi"])),
+							/**
+							 * The number and way that different tasks can use this volume
+							 * at one time.
+							 * - `none` The volume may only be used by one task at a time.
+							 * - `readonly` The volume may be used by any number of tasks, but they all
+							 * must mount the volume as readonly
+							 * - `onewriter` The volume may be used by any number of tasks, but only one
+							 * may mount it as read/write.
+							 * - `all` The volume may have any number of readers and writers.
+							 */
+							Sharing: v.exactOptional(
+								v.picklist(["none", "readonly", "onewriter", "all"]),
+							),
+							/**
+							 * Options for using this volume as a Mount-type volume.
+							 *
+							 *
+							 * Either MountVolume or BlockVolume, but not both, must be
+							 *
+							 * present.
+							 *
+							 * properties:
+							 *
+							 * FsType:
+							 *
+							 * type: "string"
+							 *
+							 * description: |
+							 *
+							 * Specifies the filesystem type for the mount volume.
+							 *
+							 * Optional.
+							 *
+							 * MountFlags:
+							 *
+							 * type: "array"
+							 *
+							 * description: |
+							 *
+							 * Flags to pass when mounting the volume. Optional.
+							 *
+							 * items:
+							 *
+							 * type: "string"
+							 * BlockVolume:
+							 *
+							 * type: "object"
+							 *
+							 * description: |
+							 *
+							 * Options for using this volume as a Block-type volume.
+							 *
+							 * Intentionally empty.
+							 */
+							MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+							/**
+							 * Swarm Secrets that are passed to the CSI storage plugin when
+							 * operating on this volume.
+							 */
+							Secrets: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Key is the name of the key of the key-value pair passed to
+										 * the plugin.
+										 */
+										Key: v.exactOptional(v.string()),
+										/**
+										 * Secret is the swarm Secret object from which to read data.
+										 * This can be a Secret name or ID. The Secret data is
+										 * retrieved by swarm and used as the value of the key-value
+										 * pair passed to the plugin.
+										 */
+										Secret: v.exactOptional(v.string()),
+									}),
+								),
+							),
+							/**
+							 * Requirements for the accessible topology of the volume. These
+							 * fields are optional. For an in-depth description of what these
+							 * fields mean, see the CSI specification.
+							 */
+							AccessibilityRequirements: v.exactOptional(
+								v.strictObject({
+									/**
+									 * A list of required topologies, at least one of which the
+									 * volume must be accessible from.
+									 */
+									Requisite: v.exactOptional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+									/**
+									 * A list of topologies that the volume should attempt to be
+									 * provisioned in.
+									 */
+									Preferred: v.exactOptional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+								}),
+							),
+							/**
+							 * The desired capacity that the volume should be created with. If
+							 * empty, the plugin will decide the capacity.
+							 */
+							CapacityRange: v.exactOptional(
+								v.strictObject({
+									/**
+									 * The volume must be at least this big. The value of 0
+									 * indicates an unspecified minimum
+									 */
+									RequiredBytes: v.exactOptional(v.bigint()),
+									/**
+									 * The volume must not be bigger than this. The value of 0
+									 * indicates an unspecified maximum.
+									 */
+									LimitBytes: v.exactOptional(v.bigint()),
+								}),
+							),
+							/**
+							 * The availability of the volume for use in tasks.
+							 * - `active` The volume is fully available for scheduling on the cluster
+							 * - `pause` No new workloads should use the volume, but existing workloads
+							 * are not stopped.
+							 * - `drain` All workloads using this volume should be stopped and
+							 * rescheduled, and no new ones should be started.
+							 */
+							Availability: v.exactOptional(
+								v.picklist(["active", "pause", "drain"]),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Information about the global status of the volume.
+			 */
+			Info: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The capacity of the volume in bytes. A value of 0 indicates that
+					 * the capacity is unknown.
+					 */
+					CapacityBytes: v.exactOptional(v.bigint()),
+					/**
+					 * A map of strings to strings returned from the storage plugin when
+					 * the volume is created.
+					 */
+					VolumeContext: v.exactOptional(v.record(v.string(), v.unknown())),
+					/**
+					 * The ID of the volume as returned by the CSI storage plugin. This
+					 * is distinct from the volume's ID as provided by Docker. This ID
+					 * is never used by the user when communicating with Docker to refer
+					 * to this volume. If the ID is blank, then the Volume has not been
+					 * successfully created in the plugin yet.
+					 */
+					VolumeID: v.exactOptional(v.string()),
+					/**
+					 * The topology this volume is actually accessible from.
+					 */
+					AccessibleTopology: v.exactOptional(
+						v.array(v.record(v.string(), v.unknown())),
+					),
+				}),
+			),
+			/**
+			 * The status of the volume as it pertains to its publishing and use on
+			 * specific nodes
+			 */
+			PublishStatus: v.exactOptional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The ID of the Swarm node the volume is published on.
+						 */
+						NodeID: v.exactOptional(v.string()),
+						/**
+						 * The published state of the volume.
+						 * * `pending-publish` The volume should be published to this node, but the
+						 * call to the controller plugin to do so has not yet been successfully
+						 * completed.
+						 * * `published` The volume is published successfully to the node.
+						 * * `pending-node-unpublish` The volume should be unpublished from the node,
+						 * and the manager is awaiting confirmation from the worker that it has done
+						 * so.
+						 * * `pending-controller-unpublish` The volume is successfully unpublished
+						 * from the node, but has not yet been successfully unpublished on the
+						 * controller.
+						 */
+						State: v.exactOptional(
+							v.picklist([
+								"pending-publish",
+								"published",
+								"pending-node-unpublish",
+								"pending-controller-unpublish",
+							]),
+						),
+						/**
+						 * A map of strings to strings returned by the CSI controller
+						 * plugin when a volume is published.
+						 */
+						PublishContext: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The driver specific options used when creating the volume.
+	 */
+	Options: v.record(v.string(), v.unknown()),
+	/**
+	 * Usage details about the volume. This information is used by the
+	 * `GET /system/df` endpoint, and omitted in other endpoints.
+	 */
+	UsageData: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * Amount of disk space used by the volume (in bytes). This information
+				 * is only available for volumes created with the `"local"` volume
+				 * driver. For volumes created with other volume drivers, this field
+				 * is set to `-1` ("not available")
+				 */
+				Size: v.bigint(),
+				/**
+				 * The number of containers referencing this volume. This field
+				 * is set to `-1` if the reference-count is not available.
+				 */
+				RefCount: v.bigint(),
+			}),
+		),
+	),
+});
+export const volumeCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * Name of the volume.
+	 */
+	Name: v.pipe(v.string(), v.trim()),
+	/**
+	 * Name of the volume driver used by the volume.
+	 */
+	Driver: v.pipe(v.string(), v.trim()),
+	/**
+	 * Mount path of the volume on the host.
+	 */
+	Mountpoint: v.pipe(v.string(), v.trim()),
+	/**
+	 * Date/Time the volume was created.
+	 */
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Low-level details about the volume, provided by the volume driver.
+	 * Details are returned as a map with key/value pairs:
+	 * `{"key":"value","key2":"value2"}`.
+	 *
+	 * The `Status` field is optional, and is omitted if the volume driver
+	 * does not support this feature.
+	 */
+	Status: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.record(v.string(), v.unknown()),
+	/**
+	 * The level at which the volume exists. Either `global` for cluster-wide,
+	 * or `local` for machine level.
+	 */
+	Scope: v.picklist(["local", "global"]),
+	/**
+	 * Options and information specific to, and only present on, Swarm CSI
+	 * cluster volumes.
+	 */
+	ClusterVolume: v.optional(
+		v.strictObject({
+			/**
+			 * The Swarm ID of this volume. Because cluster volumes are Swarm
+			 * objects, they have an ID, unlike non-cluster volumes. This ID can
+			 * be used to refer to the Volume instead of the name.
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			Version: v.optional(
+				v.strictObject({
+					Index: v.optional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+			UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Cluster-specific options used to create the volume.
+			 */
+			Spec: v.optional(
+				v.strictObject({
+					/**
+					 * Group defines the volume group of this volume. Volumes belonging to
+					 * the same group can be referred to by group name when creating
+					 * Services.  Referring to a volume by group instructs Swarm to treat
+					 * volumes in that group interchangeably for the purpose of scheduling.
+					 * Volumes with an empty string for a group technically all belong to
+					 * the same, emptystring group.
+					 */
+					Group: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Defines how the volume is used by tasks.
+					 */
+					AccessMode: v.optional(
+						v.strictObject({
+							/**
+							 * The set of nodes this volume can be used on at one time.
+							 * - `single` The volume may only be scheduled to one node at a time.
+							 * - `multi` the volume may be scheduled to any supported number of nodes at a
+							 * time.
+							 */
+							Scope: v.optional(v.picklist(["single", "multi"])),
+							/**
+							 * The number and way that different tasks can use this volume
+							 * at one time.
+							 * - `none` The volume may only be used by one task at a time.
+							 * - `readonly` The volume may be used by any number of tasks, but they all
+							 * must mount the volume as readonly
+							 * - `onewriter` The volume may be used by any number of tasks, but only one
+							 * may mount it as read/write.
+							 * - `all` The volume may have any number of readers and writers.
+							 */
+							Sharing: v.optional(
+								v.picklist(["none", "readonly", "onewriter", "all"]),
+							),
+							/**
+							 * Options for using this volume as a Mount-type volume.
+							 *
+							 *
+							 * Either MountVolume or BlockVolume, but not both, must be
+							 *
+							 * present.
+							 *
+							 * properties:
+							 *
+							 * FsType:
+							 *
+							 * type: "string"
+							 *
+							 * description: |
+							 *
+							 * Specifies the filesystem type for the mount volume.
+							 *
+							 * Optional.
+							 *
+							 * MountFlags:
+							 *
+							 * type: "array"
+							 *
+							 * description: |
+							 *
+							 * Flags to pass when mounting the volume. Optional.
+							 *
+							 * items:
+							 *
+							 * type: "string"
+							 * BlockVolume:
+							 *
+							 * type: "object"
+							 *
+							 * description: |
+							 *
+							 * Options for using this volume as a Block-type volume.
+							 *
+							 * Intentionally empty.
+							 */
+							MountVolume: v.optional(v.record(v.string(), v.unknown())),
+							/**
+							 * Swarm Secrets that are passed to the CSI storage plugin when
+							 * operating on this volume.
+							 */
+							Secrets: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Key is the name of the key of the key-value pair passed to
+										 * the plugin.
+										 */
+										Key: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Secret is the swarm Secret object from which to read data.
+										 * This can be a Secret name or ID. The Secret data is
+										 * retrieved by swarm and used as the value of the key-value
+										 * pair passed to the plugin.
+										 */
+										Secret: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							),
+							/**
+							 * Requirements for the accessible topology of the volume. These
+							 * fields are optional. For an in-depth description of what these
+							 * fields mean, see the CSI specification.
+							 */
+							AccessibilityRequirements: v.optional(
+								v.strictObject({
+									/**
+									 * A list of required topologies, at least one of which the
+									 * volume must be accessible from.
+									 */
+									Requisite: v.optional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+									/**
+									 * A list of topologies that the volume should attempt to be
+									 * provisioned in.
+									 */
+									Preferred: v.optional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+								}),
+							),
+							/**
+							 * The desired capacity that the volume should be created with. If
+							 * empty, the plugin will decide the capacity.
+							 */
+							CapacityRange: v.optional(
+								v.strictObject({
+									/**
+									 * The volume must be at least this big. The value of 0
+									 * indicates an unspecified minimum
+									 */
+									RequiredBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * The volume must not be bigger than this. The value of 0
+									 * indicates an unspecified maximum.
+									 */
+									LimitBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+								}),
+							),
+							/**
+							 * The availability of the volume for use in tasks.
+							 * - `active` The volume is fully available for scheduling on the cluster
+							 * - `pause` No new workloads should use the volume, but existing workloads
+							 * are not stopped.
+							 * - `drain` All workloads using this volume should be stopped and
+							 * rescheduled, and no new ones should be started.
+							 */
+							Availability: v.optional(
+								v.picklist(["active", "pause", "drain"]),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Information about the global status of the volume.
+			 */
+			Info: v.optional(
+				v.strictObject({
+					/**
+					 * The capacity of the volume in bytes. A value of 0 indicates that
+					 * the capacity is unknown.
+					 */
+					CapacityBytes: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * A map of strings to strings returned from the storage plugin when
+					 * the volume is created.
+					 */
+					VolumeContext: v.optional(v.record(v.string(), v.unknown())),
+					/**
+					 * The ID of the volume as returned by the CSI storage plugin. This
+					 * is distinct from the volume's ID as provided by Docker. This ID
+					 * is never used by the user when communicating with Docker to refer
+					 * to this volume. If the ID is blank, then the Volume has not been
+					 * successfully created in the plugin yet.
+					 */
+					VolumeID: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The topology this volume is actually accessible from.
+					 */
+					AccessibleTopology: v.optional(
+						v.array(v.record(v.string(), v.unknown())),
+					),
+				}),
+			),
+			/**
+			 * The status of the volume as it pertains to its publishing and use on
+			 * specific nodes
+			 */
+			PublishStatus: v.optional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The ID of the Swarm node the volume is published on.
+						 */
+						NodeID: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The published state of the volume.
+						 * * `pending-publish` The volume should be published to this node, but the
+						 * call to the controller plugin to do so has not yet been successfully
+						 * completed.
+						 * * `published` The volume is published successfully to the node.
+						 * * `pending-node-unpublish` The volume should be unpublished from the node,
+						 * and the manager is awaiting confirmation from the worker that it has done
+						 * so.
+						 * * `pending-controller-unpublish` The volume is successfully unpublished
+						 * from the node, but has not yet been successfully unpublished on the
+						 * controller.
+						 */
+						State: v.optional(
+							v.picklist([
+								"pending-publish",
+								"published",
+								"pending-node-unpublish",
+								"pending-controller-unpublish",
+							]),
+						),
+						/**
+						 * A map of strings to strings returned by the CSI controller
+						 * plugin when a volume is published.
+						 */
+						PublishContext: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The driver specific options used when creating the volume.
+	 */
+	Options: v.record(v.string(), v.unknown()),
+	/**
+	 * Usage details about the volume. This information is used by the
+	 * `GET /system/df` endpoint, and omitted in other endpoints.
+	 */
+	UsageData: v.optional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * Amount of disk space used by the volume (in bytes). This information
+				 * is only available for volumes created with the `"local"` volume
+				 * driver. For volumes created with other volume drivers, this field
+				 * is set to `-1` ("not available")
+				 */
+				Size: v.union([
+					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+					v.bigint(),
+				]),
+				/**
+				 * The number of containers referencing this volume. This field
+				 * is set to `-1` if the reference-count is not available.
+				 */
+				RefCount: v.union([
+					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+					v.bigint(),
+				]),
+			}),
+		),
+	),
+});
+export const exactVolumeInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * Name of the volume.
+	 */
+	Name: v.string(),
+	/**
+	 * Name of the volume driver used by the volume.
+	 */
+	Driver: v.string(),
+	/**
+	 * Mount path of the volume on the host.
+	 */
+	Mountpoint: v.string(),
+	/**
+	 * Date/Time the volume was created.
+	 */
+	CreatedAt: v.exactOptional(v.string()),
+	/**
+	 * Low-level details about the volume, provided by the volume driver.
+	 * Details are returned as a map with key/value pairs:
+	 * `{"key":"value","key2":"value2"}`.
+	 *
+	 * The `Status` field is optional, and is omitted if the volume driver
+	 * does not support this feature.
+	 */
+	Status: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.record(v.string(), v.unknown()),
+	/**
+	 * The level at which the volume exists. Either `global` for cluster-wide,
+	 * or `local` for machine level.
+	 */
+	Scope: v.picklist(["local", "global"]),
+	/**
+	 * Options and information specific to, and only present on, Swarm CSI
+	 * cluster volumes.
+	 */
+	ClusterVolume: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The Swarm ID of this volume. Because cluster volumes are Swarm
+			 * objects, they have an ID, unlike non-cluster volumes. This ID can
+			 * be used to refer to the Volume instead of the name.
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			Version: v.exactOptional(
+				v.strictObject({
+					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			CreatedAt: v.exactOptional(v.string()),
+			UpdatedAt: v.exactOptional(v.string()),
+			/**
+			 * Cluster-specific options used to create the volume.
+			 */
+			Spec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Group defines the volume group of this volume. Volumes belonging to
+					 * the same group can be referred to by group name when creating
+					 * Services.  Referring to a volume by group instructs Swarm to treat
+					 * volumes in that group interchangeably for the purpose of scheduling.
+					 * Volumes with an empty string for a group technically all belong to
+					 * the same, emptystring group.
+					 */
+					Group: v.exactOptional(v.string()),
+					/**
+					 * Defines how the volume is used by tasks.
+					 */
+					AccessMode: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The set of nodes this volume can be used on at one time.
+							 * - `single` The volume may only be scheduled to one node at a time.
+							 * - `multi` the volume may be scheduled to any supported number of nodes at a
+							 * time.
+							 */
+							Scope: v.exactOptional(v.picklist(["single", "multi"])),
+							/**
+							 * The number and way that different tasks can use this volume
+							 * at one time.
+							 * - `none` The volume may only be used by one task at a time.
+							 * - `readonly` The volume may be used by any number of tasks, but they all
+							 * must mount the volume as readonly
+							 * - `onewriter` The volume may be used by any number of tasks, but only one
+							 * may mount it as read/write.
+							 * - `all` The volume may have any number of readers and writers.
+							 */
+							Sharing: v.exactOptional(
+								v.picklist(["none", "readonly", "onewriter", "all"]),
+							),
+							/**
+							 * Options for using this volume as a Mount-type volume.
+							 *
+							 *
+							 * Either MountVolume or BlockVolume, but not both, must be
+							 *
+							 * present.
+							 *
+							 * properties:
+							 *
+							 * FsType:
+							 *
+							 * type: "string"
+							 *
+							 * description: |
+							 *
+							 * Specifies the filesystem type for the mount volume.
+							 *
+							 * Optional.
+							 *
+							 * MountFlags:
+							 *
+							 * type: "array"
+							 *
+							 * description: |
+							 *
+							 * Flags to pass when mounting the volume. Optional.
+							 *
+							 * items:
+							 *
+							 * type: "string"
+							 * BlockVolume:
+							 *
+							 * type: "object"
+							 *
+							 * description: |
+							 *
+							 * Options for using this volume as a Block-type volume.
+							 *
+							 * Intentionally empty.
+							 */
+							MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+							/**
+							 * Swarm Secrets that are passed to the CSI storage plugin when
+							 * operating on this volume.
+							 */
+							Secrets: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Key is the name of the key of the key-value pair passed to
+										 * the plugin.
+										 */
+										Key: v.exactOptional(v.string()),
+										/**
+										 * Secret is the swarm Secret object from which to read data.
+										 * This can be a Secret name or ID. The Secret data is
+										 * retrieved by swarm and used as the value of the key-value
+										 * pair passed to the plugin.
+										 */
+										Secret: v.exactOptional(v.string()),
+									}),
+								),
+							),
+							/**
+							 * Requirements for the accessible topology of the volume. These
+							 * fields are optional. For an in-depth description of what these
+							 * fields mean, see the CSI specification.
+							 */
+							AccessibilityRequirements: v.exactOptional(
+								v.strictObject({
+									/**
+									 * A list of required topologies, at least one of which the
+									 * volume must be accessible from.
+									 */
+									Requisite: v.exactOptional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+									/**
+									 * A list of topologies that the volume should attempt to be
+									 * provisioned in.
+									 */
+									Preferred: v.exactOptional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+								}),
+							),
+							/**
+							 * The desired capacity that the volume should be created with. If
+							 * empty, the plugin will decide the capacity.
+							 */
+							CapacityRange: v.exactOptional(
+								v.strictObject({
+									/**
+									 * The volume must be at least this big. The value of 0
+									 * indicates an unspecified minimum
+									 */
+									RequiredBytes: v.exactOptional(v.bigint()),
+									/**
+									 * The volume must not be bigger than this. The value of 0
+									 * indicates an unspecified maximum.
+									 */
+									LimitBytes: v.exactOptional(v.bigint()),
+								}),
+							),
+							/**
+							 * The availability of the volume for use in tasks.
+							 * - `active` The volume is fully available for scheduling on the cluster
+							 * - `pause` No new workloads should use the volume, but existing workloads
+							 * are not stopped.
+							 * - `drain` All workloads using this volume should be stopped and
+							 * rescheduled, and no new ones should be started.
+							 */
+							Availability: v.exactOptional(
+								v.picklist(["active", "pause", "drain"]),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Information about the global status of the volume.
+			 */
+			Info: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The capacity of the volume in bytes. A value of 0 indicates that
+					 * the capacity is unknown.
+					 */
+					CapacityBytes: v.exactOptional(v.bigint()),
+					/**
+					 * A map of strings to strings returned from the storage plugin when
+					 * the volume is created.
+					 */
+					VolumeContext: v.exactOptional(v.record(v.string(), v.unknown())),
+					/**
+					 * The ID of the volume as returned by the CSI storage plugin. This
+					 * is distinct from the volume's ID as provided by Docker. This ID
+					 * is never used by the user when communicating with Docker to refer
+					 * to this volume. If the ID is blank, then the Volume has not been
+					 * successfully created in the plugin yet.
+					 */
+					VolumeID: v.exactOptional(v.string()),
+					/**
+					 * The topology this volume is actually accessible from.
+					 */
+					AccessibleTopology: v.exactOptional(
+						v.array(v.record(v.string(), v.unknown())),
+					),
+				}),
+			),
+			/**
+			 * The status of the volume as it pertains to its publishing and use on
+			 * specific nodes
+			 */
+			PublishStatus: v.exactOptional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The ID of the Swarm node the volume is published on.
+						 */
+						NodeID: v.exactOptional(v.string()),
+						/**
+						 * The published state of the volume.
+						 * * `pending-publish` The volume should be published to this node, but the
+						 * call to the controller plugin to do so has not yet been successfully
+						 * completed.
+						 * * `published` The volume is published successfully to the node.
+						 * * `pending-node-unpublish` The volume should be unpublished from the node,
+						 * and the manager is awaiting confirmation from the worker that it has done
+						 * so.
+						 * * `pending-controller-unpublish` The volume is successfully unpublished
+						 * from the node, but has not yet been successfully unpublished on the
+						 * controller.
+						 */
+						State: v.exactOptional(
+							v.picklist([
+								"pending-publish",
+								"published",
+								"pending-node-unpublish",
+								"pending-controller-unpublish",
+							]),
+						),
+						/**
+						 * A map of strings to strings returned by the CSI controller
+						 * plugin when a volume is published.
+						 */
+						PublishContext: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The driver specific options used when creating the volume.
+	 */
+	Options: v.record(v.string(), v.unknown()),
+	/**
+	 * Usage details about the volume. This information is used by the
+	 * `GET /system/df` endpoint, and omitted in other endpoints.
+	 */
+	UsageData: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * Amount of disk space used by the volume (in bytes). This information
+				 * is only available for volumes created with the `"local"` volume
+				 * driver. For volumes created with other volume drivers, this field
+				 * is set to `-1` ("not available")
+				 */
+				Size: v.bigint(),
+				/**
+				 * The number of containers referencing this volume. This field
+				 * is set to `-1` if the reference-count is not available.
+				 */
+				RefCount: v.bigint(),
+			}),
+		),
+	),
+});
+export const volumeInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * Name of the volume.
+	 */
+	Name: v.pipe(v.string(), v.trim()),
+	/**
+	 * Name of the volume driver used by the volume.
+	 */
+	Driver: v.pipe(v.string(), v.trim()),
+	/**
+	 * Mount path of the volume on the host.
+	 */
+	Mountpoint: v.pipe(v.string(), v.trim()),
+	/**
+	 * Date/Time the volume was created.
+	 */
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Low-level details about the volume, provided by the volume driver.
+	 * Details are returned as a map with key/value pairs:
+	 * `{"key":"value","key2":"value2"}`.
+	 *
+	 * The `Status` field is optional, and is omitted if the volume driver
+	 * does not support this feature.
+	 */
+	Status: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.record(v.string(), v.unknown()),
+	/**
+	 * The level at which the volume exists. Either `global` for cluster-wide,
+	 * or `local` for machine level.
+	 */
+	Scope: v.picklist(["local", "global"]),
+	/**
+	 * Options and information specific to, and only present on, Swarm CSI
+	 * cluster volumes.
+	 */
+	ClusterVolume: v.optional(
+		v.strictObject({
+			/**
+			 * The Swarm ID of this volume. Because cluster volumes are Swarm
+			 * objects, they have an ID, unlike non-cluster volumes. This ID can
+			 * be used to refer to the Volume instead of the name.
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			Version: v.optional(
+				v.strictObject({
+					Index: v.optional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+			UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Cluster-specific options used to create the volume.
+			 */
+			Spec: v.optional(
+				v.strictObject({
+					/**
+					 * Group defines the volume group of this volume. Volumes belonging to
+					 * the same group can be referred to by group name when creating
+					 * Services.  Referring to a volume by group instructs Swarm to treat
+					 * volumes in that group interchangeably for the purpose of scheduling.
+					 * Volumes with an empty string for a group technically all belong to
+					 * the same, emptystring group.
+					 */
+					Group: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Defines how the volume is used by tasks.
+					 */
+					AccessMode: v.optional(
+						v.strictObject({
+							/**
+							 * The set of nodes this volume can be used on at one time.
+							 * - `single` The volume may only be scheduled to one node at a time.
+							 * - `multi` the volume may be scheduled to any supported number of nodes at a
+							 * time.
+							 */
+							Scope: v.optional(v.picklist(["single", "multi"])),
+							/**
+							 * The number and way that different tasks can use this volume
+							 * at one time.
+							 * - `none` The volume may only be used by one task at a time.
+							 * - `readonly` The volume may be used by any number of tasks, but they all
+							 * must mount the volume as readonly
+							 * - `onewriter` The volume may be used by any number of tasks, but only one
+							 * may mount it as read/write.
+							 * - `all` The volume may have any number of readers and writers.
+							 */
+							Sharing: v.optional(
+								v.picklist(["none", "readonly", "onewriter", "all"]),
+							),
+							/**
+							 * Options for using this volume as a Mount-type volume.
+							 *
+							 *
+							 * Either MountVolume or BlockVolume, but not both, must be
+							 *
+							 * present.
+							 *
+							 * properties:
+							 *
+							 * FsType:
+							 *
+							 * type: "string"
+							 *
+							 * description: |
+							 *
+							 * Specifies the filesystem type for the mount volume.
+							 *
+							 * Optional.
+							 *
+							 * MountFlags:
+							 *
+							 * type: "array"
+							 *
+							 * description: |
+							 *
+							 * Flags to pass when mounting the volume. Optional.
+							 *
+							 * items:
+							 *
+							 * type: "string"
+							 * BlockVolume:
+							 *
+							 * type: "object"
+							 *
+							 * description: |
+							 *
+							 * Options for using this volume as a Block-type volume.
+							 *
+							 * Intentionally empty.
+							 */
+							MountVolume: v.optional(v.record(v.string(), v.unknown())),
+							/**
+							 * Swarm Secrets that are passed to the CSI storage plugin when
+							 * operating on this volume.
+							 */
+							Secrets: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Key is the name of the key of the key-value pair passed to
+										 * the plugin.
+										 */
+										Key: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Secret is the swarm Secret object from which to read data.
+										 * This can be a Secret name or ID. The Secret data is
+										 * retrieved by swarm and used as the value of the key-value
+										 * pair passed to the plugin.
+										 */
+										Secret: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							),
+							/**
+							 * Requirements for the accessible topology of the volume. These
+							 * fields are optional. For an in-depth description of what these
+							 * fields mean, see the CSI specification.
+							 */
+							AccessibilityRequirements: v.optional(
+								v.strictObject({
+									/**
+									 * A list of required topologies, at least one of which the
+									 * volume must be accessible from.
+									 */
+									Requisite: v.optional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+									/**
+									 * A list of topologies that the volume should attempt to be
+									 * provisioned in.
+									 */
+									Preferred: v.optional(
+										v.array(v.record(v.string(), v.unknown())),
+									),
+								}),
+							),
+							/**
+							 * The desired capacity that the volume should be created with. If
+							 * empty, the plugin will decide the capacity.
+							 */
+							CapacityRange: v.optional(
+								v.strictObject({
+									/**
+									 * The volume must be at least this big. The value of 0
+									 * indicates an unspecified minimum
+									 */
+									RequiredBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * The volume must not be bigger than this. The value of 0
+									 * indicates an unspecified maximum.
+									 */
+									LimitBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+								}),
+							),
+							/**
+							 * The availability of the volume for use in tasks.
+							 * - `active` The volume is fully available for scheduling on the cluster
+							 * - `pause` No new workloads should use the volume, but existing workloads
+							 * are not stopped.
+							 * - `drain` All workloads using this volume should be stopped and
+							 * rescheduled, and no new ones should be started.
+							 */
+							Availability: v.optional(
+								v.picklist(["active", "pause", "drain"]),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Information about the global status of the volume.
+			 */
+			Info: v.optional(
+				v.strictObject({
+					/**
+					 * The capacity of the volume in bytes. A value of 0 indicates that
+					 * the capacity is unknown.
+					 */
+					CapacityBytes: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * A map of strings to strings returned from the storage plugin when
+					 * the volume is created.
+					 */
+					VolumeContext: v.optional(v.record(v.string(), v.unknown())),
+					/**
+					 * The ID of the volume as returned by the CSI storage plugin. This
+					 * is distinct from the volume's ID as provided by Docker. This ID
+					 * is never used by the user when communicating with Docker to refer
+					 * to this volume. If the ID is blank, then the Volume has not been
+					 * successfully created in the plugin yet.
+					 */
+					VolumeID: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The topology this volume is actually accessible from.
+					 */
+					AccessibleTopology: v.optional(
+						v.array(v.record(v.string(), v.unknown())),
+					),
+				}),
+			),
+			/**
+			 * The status of the volume as it pertains to its publishing and use on
+			 * specific nodes
+			 */
+			PublishStatus: v.optional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The ID of the Swarm node the volume is published on.
+						 */
+						NodeID: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The published state of the volume.
+						 * * `pending-publish` The volume should be published to this node, but the
+						 * call to the controller plugin to do so has not yet been successfully
+						 * completed.
+						 * * `published` The volume is published successfully to the node.
+						 * * `pending-node-unpublish` The volume should be unpublished from the node,
+						 * and the manager is awaiting confirmation from the worker that it has done
+						 * so.
+						 * * `pending-controller-unpublish` The volume is successfully unpublished
+						 * from the node, but has not yet been successfully unpublished on the
+						 * controller.
+						 */
+						State: v.optional(
+							v.picklist([
+								"pending-publish",
+								"published",
+								"pending-node-unpublish",
+								"pending-controller-unpublish",
+							]),
+						),
+						/**
+						 * A map of strings to strings returned by the CSI controller
+						 * plugin when a volume is published.
+						 */
+						PublishContext: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The driver specific options used when creating the volume.
+	 */
+	Options: v.record(v.string(), v.unknown()),
+	/**
+	 * Usage details about the volume. This information is used by the
+	 * `GET /system/df` endpoint, and omitted in other endpoints.
+	 */
+	UsageData: v.optional(
+		v.nullable(
+			v.strictObject({
+				/**
+				 * Amount of disk space used by the volume (in bytes). This information
+				 * is only available for volumes created with the `"local"` volume
+				 * driver. For volumes created with other volume drivers, this field
+				 * is set to `-1` ("not available")
+				 */
+				Size: v.union([
+					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+					v.bigint(),
+				]),
+				/**
+				 * The number of containers referencing this volume. This field
+				 * is set to `-1` if the reference-count is not available.
+				 */
+				RefCount: v.union([
+					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+					v.bigint(),
+				]),
+			}),
+		),
+	),
+});
 export const exactVolumeInspectCommandParamsSchema = v.strictObject({
 	name: v.string(),
 });
@@ -29326,17 +39616,555 @@ export const exactVolumeDeleteCommandQuerySchema = v.strictObject({
 export const volumeDeleteCommandQuerySchema = v.strictObject({
 	force: v.optional(v.boolean()),
 });
+export const exactVolumePruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Volumes that were deleted
+	 */
+	VolumesDeleted: v.exactOptional(v.array(v.string())),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.exactOptional(v.bigint()),
+});
+export const volumePruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Volumes that were deleted
+	 */
+	VolumesDeleted: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Disk space reclaimed in bytes
+	 */
+	SpaceReclaimed: v.optional(
+		v.union([
+			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+			v.bigint(),
+		]),
+	),
+});
 export const exactVolumePruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const volumePruneCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactNetworkListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * Name of the network.
+		 */
+		Name: v.exactOptional(v.string()),
+		/**
+		 * ID that uniquely identifies a network on a single machine.
+		 */
+		Id: v.exactOptional(v.string()),
+		/**
+		 * Date and time at which the network was created in
+		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+		 */
+		Created: v.exactOptional(v.string()),
+		/**
+		 * The level at which the network exists (e.g. `swarm` for cluster-wide
+		 * or `local` for machine level)
+		 */
+		Scope: v.exactOptional(v.string()),
+		/**
+		 * The name of the driver used to create the network (e.g. `bridge`,
+		 * `overlay`).
+		 */
+		Driver: v.exactOptional(v.string()),
+		/**
+		 * Whether the network was created with IPv6 enabled.
+		 */
+		EnableIPv6: v.exactOptional(v.boolean()),
+		IPAM: v.exactOptional(
+			v.strictObject({
+				/**
+				 * Name of the IPAM driver to use.
+				 */
+				Driver: v.exactOptional(v.string()),
+				/**
+				 * List of IPAM configuration options, specified as a map:
+				 *
+				 * ```
+				 * {"Subnet": <CIDR>, "IPRange": <CIDR>, "Gateway": <IP address>,
+				 * "AuxAddress": <device_name:IP address>}
+				 * ```
+				 */
+				Config: v.exactOptional(
+					v.array(
+						v.strictObject({
+							Subnet: v.exactOptional(v.string()),
+							IPRange: v.exactOptional(v.string()),
+							Gateway: v.exactOptional(v.string()),
+							AuxiliaryAddresses: v.exactOptional(
+								v.record(v.string(), v.unknown()),
+							),
+						}),
+					),
+				),
+				/**
+				 * Driver-specific options, specified as a map.
+				 */
+				Options: v.exactOptional(v.record(v.string(), v.unknown())),
+			}),
+		),
+		/**
+		 * Whether the network is created to only allow internal networking
+		 * connectivity.
+		 */
+		Internal: v.exactOptional(v.boolean()),
+		/**
+		 * Whether a global / swarm scope network is manually attachable by regular
+		 * containers from workers in swarm mode.
+		 */
+		Attachable: v.exactOptional(v.boolean()),
+		/**
+		 * Whether the network is providing the routing-mesh for the swarm cluster.
+		 */
+		Ingress: v.exactOptional(v.boolean()),
+		/**
+		 * The config-only network source to provide the configuration for
+		 * this network.
+		 */
+		ConfigFrom: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The name of the config-only network that provides the network's
+				 * configuration. The specified network must be an existing config-only
+				 * network. Only network names are allowed, not network IDs.
+				 */
+				Network: v.exactOptional(v.string()),
+			}),
+		),
+		/**
+		 * Whether the network is a config-only network. Config-only networks are
+		 * placeholder networks for network configurations to be used by other
+		 * networks. Config-only networks cannot be used directly to run containers
+		 * or services.
+		 */
+		ConfigOnly: v.exactOptional(v.boolean()),
+		/**
+		 * Contains endpoints attached to the network.
+		 */
+		Containers: v.exactOptional(v.record(v.string(), v.unknown())),
+		/**
+		 * Network-specific options uses when creating the network.
+		 */
+		Options: v.exactOptional(v.record(v.string(), v.unknown())),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+		/**
+		 * List of peer nodes for an overlay network. This field is only present
+		 * for overlay networks, and omitted for other network types.
+		 */
+		Peers: v.exactOptional(
+			v.nullable(
+				v.array(
+					v.strictObject({
+						/**
+						 * ID of the peer-node in the Swarm cluster.
+						 */
+						Name: v.exactOptional(v.string()),
+						/**
+						 * IP-address of the peer-node in the Swarm cluster.
+						 */
+						IP: v.exactOptional(v.string()),
+					}),
+				),
+			),
+		),
+	}),
+);
+export const networkListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * Name of the network.
+		 */
+		Name: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * ID that uniquely identifies a network on a single machine.
+		 */
+		Id: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * Date and time at which the network was created in
+		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+		 */
+		Created: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The level at which the network exists (e.g. `swarm` for cluster-wide
+		 * or `local` for machine level)
+		 */
+		Scope: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The name of the driver used to create the network (e.g. `bridge`,
+		 * `overlay`).
+		 */
+		Driver: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * Whether the network was created with IPv6 enabled.
+		 */
+		EnableIPv6: v.optional(v.boolean()),
+		IPAM: v.optional(
+			v.strictObject({
+				/**
+				 * Name of the IPAM driver to use.
+				 */
+				Driver: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * List of IPAM configuration options, specified as a map:
+				 *
+				 * ```
+				 * {"Subnet": <CIDR>, "IPRange": <CIDR>, "Gateway": <IP address>,
+				 * "AuxAddress": <device_name:IP address>}
+				 * ```
+				 */
+				Config: v.optional(
+					v.array(
+						v.strictObject({
+							Subnet: v.optional(v.pipe(v.string(), v.trim())),
+							IPRange: v.optional(v.pipe(v.string(), v.trim())),
+							Gateway: v.optional(v.pipe(v.string(), v.trim())),
+							AuxiliaryAddresses: v.optional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Driver-specific options, specified as a map.
+				 */
+				Options: v.optional(v.record(v.string(), v.unknown())),
+			}),
+		),
+		/**
+		 * Whether the network is created to only allow internal networking
+		 * connectivity.
+		 */
+		Internal: v.optional(v.boolean()),
+		/**
+		 * Whether a global / swarm scope network is manually attachable by regular
+		 * containers from workers in swarm mode.
+		 */
+		Attachable: v.optional(v.boolean()),
+		/**
+		 * Whether the network is providing the routing-mesh for the swarm cluster.
+		 */
+		Ingress: v.optional(v.boolean()),
+		/**
+		 * The config-only network source to provide the configuration for
+		 * this network.
+		 */
+		ConfigFrom: v.optional(
+			v.strictObject({
+				/**
+				 * The name of the config-only network that provides the network's
+				 * configuration. The specified network must be an existing config-only
+				 * network. Only network names are allowed, not network IDs.
+				 */
+				Network: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		/**
+		 * Whether the network is a config-only network. Config-only networks are
+		 * placeholder networks for network configurations to be used by other
+		 * networks. Config-only networks cannot be used directly to run containers
+		 * or services.
+		 */
+		ConfigOnly: v.optional(v.boolean()),
+		/**
+		 * Contains endpoints attached to the network.
+		 */
+		Containers: v.optional(v.record(v.string(), v.unknown())),
+		/**
+		 * Network-specific options uses when creating the network.
+		 */
+		Options: v.optional(v.record(v.string(), v.unknown())),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.optional(v.record(v.string(), v.unknown())),
+		/**
+		 * List of peer nodes for an overlay network. This field is only present
+		 * for overlay networks, and omitted for other network types.
+		 */
+		Peers: v.optional(
+			v.nullable(
+				v.array(
+					v.strictObject({
+						/**
+						 * ID of the peer-node in the Swarm cluster.
+						 */
+						Name: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * IP-address of the peer-node in the Swarm cluster.
+						 */
+						IP: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+			),
+		),
+	}),
+);
 export const exactNetworkListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const networkListCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactNetworkInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * Name of the network.
+	 */
+	Name: v.exactOptional(v.string()),
+	/**
+	 * ID that uniquely identifies a network on a single machine.
+	 */
+	Id: v.exactOptional(v.string()),
+	/**
+	 * Date and time at which the network was created in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	Created: v.exactOptional(v.string()),
+	/**
+	 * The level at which the network exists (e.g. `swarm` for cluster-wide
+	 * or `local` for machine level)
+	 */
+	Scope: v.exactOptional(v.string()),
+	/**
+	 * The name of the driver used to create the network (e.g. `bridge`,
+	 * `overlay`).
+	 */
+	Driver: v.exactOptional(v.string()),
+	/**
+	 * Whether the network was created with IPv6 enabled.
+	 */
+	EnableIPv6: v.exactOptional(v.boolean()),
+	IPAM: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Name of the IPAM driver to use.
+			 */
+			Driver: v.exactOptional(v.string()),
+			/**
+			 * List of IPAM configuration options, specified as a map:
+			 *
+			 * ```
+			 * {"Subnet": <CIDR>, "IPRange": <CIDR>, "Gateway": <IP address>,
+			 * "AuxAddress": <device_name:IP address>}
+			 * ```
+			 */
+			Config: v.exactOptional(
+				v.array(
+					v.strictObject({
+						Subnet: v.exactOptional(v.string()),
+						IPRange: v.exactOptional(v.string()),
+						Gateway: v.exactOptional(v.string()),
+						AuxiliaryAddresses: v.exactOptional(
+							v.record(v.string(), v.unknown()),
+						),
+					}),
+				),
+			),
+			/**
+			 * Driver-specific options, specified as a map.
+			 */
+			Options: v.exactOptional(v.record(v.string(), v.unknown())),
+		}),
+	),
+	/**
+	 * Whether the network is created to only allow internal networking
+	 * connectivity.
+	 */
+	Internal: v.exactOptional(v.boolean()),
+	/**
+	 * Whether a global / swarm scope network is manually attachable by regular
+	 * containers from workers in swarm mode.
+	 */
+	Attachable: v.exactOptional(v.boolean()),
+	/**
+	 * Whether the network is providing the routing-mesh for the swarm cluster.
+	 */
+	Ingress: v.exactOptional(v.boolean()),
+	/**
+	 * The config-only network source to provide the configuration for
+	 * this network.
+	 */
+	ConfigFrom: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The name of the config-only network that provides the network's
+			 * configuration. The specified network must be an existing config-only
+			 * network. Only network names are allowed, not network IDs.
+			 */
+			Network: v.exactOptional(v.string()),
+		}),
+	),
+	/**
+	 * Whether the network is a config-only network. Config-only networks are
+	 * placeholder networks for network configurations to be used by other
+	 * networks. Config-only networks cannot be used directly to run containers
+	 * or services.
+	 */
+	ConfigOnly: v.exactOptional(v.boolean()),
+	/**
+	 * Contains endpoints attached to the network.
+	 */
+	Containers: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * Network-specific options uses when creating the network.
+	 */
+	Options: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * List of peer nodes for an overlay network. This field is only present
+	 * for overlay networks, and omitted for other network types.
+	 */
+	Peers: v.exactOptional(
+		v.nullable(
+			v.array(
+				v.strictObject({
+					/**
+					 * ID of the peer-node in the Swarm cluster.
+					 */
+					Name: v.exactOptional(v.string()),
+					/**
+					 * IP-address of the peer-node in the Swarm cluster.
+					 */
+					IP: v.exactOptional(v.string()),
+				}),
+			),
+		),
+	),
+});
+export const networkInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * Name of the network.
+	 */
+	Name: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * ID that uniquely identifies a network on a single machine.
+	 */
+	Id: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Date and time at which the network was created in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	Created: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The level at which the network exists (e.g. `swarm` for cluster-wide
+	 * or `local` for machine level)
+	 */
+	Scope: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The name of the driver used to create the network (e.g. `bridge`,
+	 * `overlay`).
+	 */
+	Driver: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Whether the network was created with IPv6 enabled.
+	 */
+	EnableIPv6: v.optional(v.boolean()),
+	IPAM: v.optional(
+		v.strictObject({
+			/**
+			 * Name of the IPAM driver to use.
+			 */
+			Driver: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * List of IPAM configuration options, specified as a map:
+			 *
+			 * ```
+			 * {"Subnet": <CIDR>, "IPRange": <CIDR>, "Gateway": <IP address>,
+			 * "AuxAddress": <device_name:IP address>}
+			 * ```
+			 */
+			Config: v.optional(
+				v.array(
+					v.strictObject({
+						Subnet: v.optional(v.pipe(v.string(), v.trim())),
+						IPRange: v.optional(v.pipe(v.string(), v.trim())),
+						Gateway: v.optional(v.pipe(v.string(), v.trim())),
+						AuxiliaryAddresses: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+			/**
+			 * Driver-specific options, specified as a map.
+			 */
+			Options: v.optional(v.record(v.string(), v.unknown())),
+		}),
+	),
+	/**
+	 * Whether the network is created to only allow internal networking
+	 * connectivity.
+	 */
+	Internal: v.optional(v.boolean()),
+	/**
+	 * Whether a global / swarm scope network is manually attachable by regular
+	 * containers from workers in swarm mode.
+	 */
+	Attachable: v.optional(v.boolean()),
+	/**
+	 * Whether the network is providing the routing-mesh for the swarm cluster.
+	 */
+	Ingress: v.optional(v.boolean()),
+	/**
+	 * The config-only network source to provide the configuration for
+	 * this network.
+	 */
+	ConfigFrom: v.optional(
+		v.strictObject({
+			/**
+			 * The name of the config-only network that provides the network's
+			 * configuration. The specified network must be an existing config-only
+			 * network. Only network names are allowed, not network IDs.
+			 */
+			Network: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	/**
+	 * Whether the network is a config-only network. Config-only networks are
+	 * placeholder networks for network configurations to be used by other
+	 * networks. Config-only networks cannot be used directly to run containers
+	 * or services.
+	 */
+	ConfigOnly: v.optional(v.boolean()),
+	/**
+	 * Contains endpoints attached to the network.
+	 */
+	Containers: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * Network-specific options uses when creating the network.
+	 */
+	Options: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * List of peer nodes for an overlay network. This field is only present
+	 * for overlay networks, and omitted for other network types.
+	 */
+	Peers: v.optional(
+		v.nullable(
+			v.array(
+				v.strictObject({
+					/**
+					 * ID of the peer-node in the Swarm cluster.
+					 */
+					Name: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * IP-address of the peer-node in the Swarm cluster.
+					 */
+					IP: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+		),
+	),
 });
 export const exactNetworkInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
@@ -29564,6 +40392,20 @@ export const networkCreateCommandBodySchema = v.strictObject({
 	 */
 	Labels: v.optional(v.record(v.string(), v.unknown())),
 });
+export const exactNetworkCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the created network.
+	 */
+	Id: v.exactOptional(v.string()),
+	Warning: v.exactOptional(v.string()),
+});
+export const networkCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the created network.
+	 */
+	Id: v.optional(v.pipe(v.string(), v.trim())),
+	Warning: v.optional(v.pipe(v.string(), v.trim())),
+});
 export const exactNetworkConnectCommandBodySchema = v.strictObject({
 	/**
 	 * The ID or name of the container to connect to the network.
@@ -29740,18 +40582,298 @@ export const exactNetworkDisconnectCommandParamsSchema = v.strictObject({
 export const networkDisconnectCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
+export const exactNetworkPruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Networks that were deleted
+	 */
+	NetworksDeleted: v.exactOptional(v.array(v.string())),
+});
+export const networkPruneCommandResponseSchema = v.strictObject({
+	/**
+	 * Networks that were deleted
+	 */
+	NetworksDeleted: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+});
 export const exactNetworkPruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const networkPruneCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactPluginListCommandResponseSchema = v.array(
+	v.strictObject({
+		Id: v.exactOptional(v.string()),
+		Name: v.string(),
+		/**
+		 * True if the plugin is running. False if the plugin is not running, only
+		 * installed.
+		 */
+		Enabled: v.boolean(),
+		/**
+		 * Settings that can be modified by users.
+		 */
+		Settings: v.strictObject({
+			Mounts: v.array(
+				v.strictObject({
+					Name: v.string(),
+					Description: v.string(),
+					Settable: v.array(v.string()),
+					Source: v.string(),
+					Destination: v.string(),
+					Type: v.string(),
+					Options: v.array(v.string()),
+				}),
+			),
+			Env: v.array(v.string()),
+			Args: v.array(v.string()),
+			Devices: v.array(
+				v.strictObject({
+					Name: v.string(),
+					Description: v.string(),
+					Settable: v.array(v.string()),
+					Path: v.string(),
+				}),
+			),
+		}),
+		/**
+		 * plugin remote reference used to push/pull the plugin
+		 */
+		PluginReference: v.exactOptional(v.string()),
+		/**
+		 * The config of a plugin.
+		 */
+		Config: v.strictObject({
+			/**
+			 * Docker Version used to create the plugin
+			 */
+			DockerVersion: v.exactOptional(v.string()),
+			Description: v.string(),
+			Documentation: v.string(),
+			/**
+			 * The interface between Docker and the plugin
+			 */
+			Interface: v.strictObject({
+				Types: v.array(
+					v.strictObject({
+						Prefix: v.string(),
+						Capability: v.string(),
+						Version: v.string(),
+					}),
+				),
+				Socket: v.string(),
+				/**
+				 * Protocol to use for clients connecting to the plugin.
+				 */
+				ProtocolScheme: v.exactOptional(
+					v.picklist(["", "moby.plugins.http/v1"]),
+				),
+			}),
+			Entrypoint: v.array(v.string()),
+			WorkDir: v.string(),
+			User: v.exactOptional(
+				v.strictObject({
+					UID: v.exactOptional(v.pipe(v.number(), v.integer())),
+					GID: v.exactOptional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			Network: v.strictObject({
+				Type: v.string(),
+			}),
+			Linux: v.strictObject({
+				Capabilities: v.array(v.string()),
+				AllowAllDevices: v.boolean(),
+				Devices: v.array(
+					v.strictObject({
+						Name: v.string(),
+						Description: v.string(),
+						Settable: v.array(v.string()),
+						Path: v.string(),
+					}),
+				),
+			}),
+			PropagatedMount: v.string(),
+			IpcHost: v.boolean(),
+			PidHost: v.boolean(),
+			Mounts: v.array(
+				v.strictObject({
+					Name: v.string(),
+					Description: v.string(),
+					Settable: v.array(v.string()),
+					Source: v.string(),
+					Destination: v.string(),
+					Type: v.string(),
+					Options: v.array(v.string()),
+				}),
+			),
+			Env: v.array(
+				v.strictObject({
+					Name: v.string(),
+					Description: v.string(),
+					Settable: v.array(v.string()),
+					Value: v.string(),
+				}),
+			),
+			Args: v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Value: v.array(v.string()),
+			}),
+			rootfs: v.exactOptional(
+				v.strictObject({
+					type: v.exactOptional(v.string()),
+					diff_ids: v.exactOptional(v.array(v.string())),
+				}),
+			),
+		}),
+	}),
+);
+export const pluginListCommandResponseSchema = v.array(
+	v.strictObject({
+		Id: v.optional(v.pipe(v.string(), v.trim())),
+		Name: v.pipe(v.string(), v.trim()),
+		/**
+		 * True if the plugin is running. False if the plugin is not running, only
+		 * installed.
+		 */
+		Enabled: v.boolean(),
+		/**
+		 * Settings that can be modified by users.
+		 */
+		Settings: v.strictObject({
+			Mounts: v.array(
+				v.strictObject({
+					Name: v.pipe(v.string(), v.trim()),
+					Description: v.pipe(v.string(), v.trim()),
+					Settable: v.array(v.pipe(v.string(), v.trim())),
+					Source: v.pipe(v.string(), v.trim()),
+					Destination: v.pipe(v.string(), v.trim()),
+					Type: v.pipe(v.string(), v.trim()),
+					Options: v.array(v.pipe(v.string(), v.trim())),
+				}),
+			),
+			Env: v.array(v.pipe(v.string(), v.trim())),
+			Args: v.array(v.pipe(v.string(), v.trim())),
+			Devices: v.array(
+				v.strictObject({
+					Name: v.pipe(v.string(), v.trim()),
+					Description: v.pipe(v.string(), v.trim()),
+					Settable: v.array(v.pipe(v.string(), v.trim())),
+					Path: v.pipe(v.string(), v.trim()),
+				}),
+			),
+		}),
+		/**
+		 * plugin remote reference used to push/pull the plugin
+		 */
+		PluginReference: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The config of a plugin.
+		 */
+		Config: v.strictObject({
+			/**
+			 * Docker Version used to create the plugin
+			 */
+			DockerVersion: v.optional(v.pipe(v.string(), v.trim())),
+			Description: v.pipe(v.string(), v.trim()),
+			Documentation: v.pipe(v.string(), v.trim()),
+			/**
+			 * The interface between Docker and the plugin
+			 */
+			Interface: v.strictObject({
+				Types: v.array(
+					v.strictObject({
+						Prefix: v.pipe(v.string(), v.trim()),
+						Capability: v.pipe(v.string(), v.trim()),
+						Version: v.pipe(v.string(), v.trim()),
+					}),
+				),
+				Socket: v.pipe(v.string(), v.trim()),
+				/**
+				 * Protocol to use for clients connecting to the plugin.
+				 */
+				ProtocolScheme: v.optional(v.picklist(["", "moby.plugins.http/v1"])),
+			}),
+			Entrypoint: v.array(v.pipe(v.string(), v.trim())),
+			WorkDir: v.pipe(v.string(), v.trim()),
+			User: v.optional(
+				v.strictObject({
+					UID: v.optional(v.pipe(v.number(), v.integer())),
+					GID: v.optional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			Network: v.strictObject({
+				Type: v.pipe(v.string(), v.trim()),
+			}),
+			Linux: v.strictObject({
+				Capabilities: v.array(v.pipe(v.string(), v.trim())),
+				AllowAllDevices: v.boolean(),
+				Devices: v.array(
+					v.strictObject({
+						Name: v.pipe(v.string(), v.trim()),
+						Description: v.pipe(v.string(), v.trim()),
+						Settable: v.array(v.pipe(v.string(), v.trim())),
+						Path: v.pipe(v.string(), v.trim()),
+					}),
+				),
+			}),
+			PropagatedMount: v.pipe(v.string(), v.trim()),
+			IpcHost: v.boolean(),
+			PidHost: v.boolean(),
+			Mounts: v.array(
+				v.strictObject({
+					Name: v.pipe(v.string(), v.trim()),
+					Description: v.pipe(v.string(), v.trim()),
+					Settable: v.array(v.pipe(v.string(), v.trim())),
+					Source: v.pipe(v.string(), v.trim()),
+					Destination: v.pipe(v.string(), v.trim()),
+					Type: v.pipe(v.string(), v.trim()),
+					Options: v.array(v.pipe(v.string(), v.trim())),
+				}),
+			),
+			Env: v.array(
+				v.strictObject({
+					Name: v.pipe(v.string(), v.trim()),
+					Description: v.pipe(v.string(), v.trim()),
+					Settable: v.array(v.pipe(v.string(), v.trim())),
+					Value: v.pipe(v.string(), v.trim()),
+				}),
+			),
+			Args: v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Value: v.array(v.pipe(v.string(), v.trim())),
+			}),
+			rootfs: v.optional(
+				v.strictObject({
+					type: v.optional(v.pipe(v.string(), v.trim())),
+					diff_ids: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+				}),
+			),
+		}),
+	}),
+);
 export const exactPluginListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const pluginListCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactGetPluginPrivilegesCommandResponseSchema = v.array(
+	v.strictObject({
+		Name: v.exactOptional(v.string()),
+		Description: v.exactOptional(v.string()),
+		Value: v.exactOptional(v.array(v.string())),
+	}),
+);
+export const getPluginPrivilegesCommandResponseSchema = v.array(
+	v.strictObject({
+		Name: v.optional(v.pipe(v.string(), v.trim())),
+		Description: v.optional(v.pipe(v.string(), v.trim())),
+		Value: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+	}),
+);
 export const exactGetPluginPrivilegesCommandQuerySchema = v.strictObject({
 	remote: v.string(),
 });
@@ -29786,11 +40908,507 @@ export const exactPluginPullCommandHeaderSchema = v.object({
 export const pluginPullCommandHeaderSchema = v.object({
 	"x-registry-auth": v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactPluginInspectCommandResponseSchema = v.strictObject({
+	Id: v.exactOptional(v.string()),
+	Name: v.string(),
+	/**
+	 * True if the plugin is running. False if the plugin is not running, only
+	 * installed.
+	 */
+	Enabled: v.boolean(),
+	/**
+	 * Settings that can be modified by users.
+	 */
+	Settings: v.strictObject({
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Source: v.string(),
+				Destination: v.string(),
+				Type: v.string(),
+				Options: v.array(v.string()),
+			}),
+		),
+		Env: v.array(v.string()),
+		Args: v.array(v.string()),
+		Devices: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Path: v.string(),
+			}),
+		),
+	}),
+	/**
+	 * plugin remote reference used to push/pull the plugin
+	 */
+	PluginReference: v.exactOptional(v.string()),
+	/**
+	 * The config of a plugin.
+	 */
+	Config: v.strictObject({
+		/**
+		 * Docker Version used to create the plugin
+		 */
+		DockerVersion: v.exactOptional(v.string()),
+		Description: v.string(),
+		Documentation: v.string(),
+		/**
+		 * The interface between Docker and the plugin
+		 */
+		Interface: v.strictObject({
+			Types: v.array(
+				v.strictObject({
+					Prefix: v.string(),
+					Capability: v.string(),
+					Version: v.string(),
+				}),
+			),
+			Socket: v.string(),
+			/**
+			 * Protocol to use for clients connecting to the plugin.
+			 */
+			ProtocolScheme: v.exactOptional(v.picklist(["", "moby.plugins.http/v1"])),
+		}),
+		Entrypoint: v.array(v.string()),
+		WorkDir: v.string(),
+		User: v.exactOptional(
+			v.strictObject({
+				UID: v.exactOptional(v.pipe(v.number(), v.integer())),
+				GID: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		Network: v.strictObject({
+			Type: v.string(),
+		}),
+		Linux: v.strictObject({
+			Capabilities: v.array(v.string()),
+			AllowAllDevices: v.boolean(),
+			Devices: v.array(
+				v.strictObject({
+					Name: v.string(),
+					Description: v.string(),
+					Settable: v.array(v.string()),
+					Path: v.string(),
+				}),
+			),
+		}),
+		PropagatedMount: v.string(),
+		IpcHost: v.boolean(),
+		PidHost: v.boolean(),
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Source: v.string(),
+				Destination: v.string(),
+				Type: v.string(),
+				Options: v.array(v.string()),
+			}),
+		),
+		Env: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Value: v.string(),
+			}),
+		),
+		Args: v.strictObject({
+			Name: v.string(),
+			Description: v.string(),
+			Settable: v.array(v.string()),
+			Value: v.array(v.string()),
+		}),
+		rootfs: v.exactOptional(
+			v.strictObject({
+				type: v.exactOptional(v.string()),
+				diff_ids: v.exactOptional(v.array(v.string())),
+			}),
+		),
+	}),
+});
+export const pluginInspectCommandResponseSchema = v.strictObject({
+	Id: v.optional(v.pipe(v.string(), v.trim())),
+	Name: v.pipe(v.string(), v.trim()),
+	/**
+	 * True if the plugin is running. False if the plugin is not running, only
+	 * installed.
+	 */
+	Enabled: v.boolean(),
+	/**
+	 * Settings that can be modified by users.
+	 */
+	Settings: v.strictObject({
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Source: v.pipe(v.string(), v.trim()),
+				Destination: v.pipe(v.string(), v.trim()),
+				Type: v.pipe(v.string(), v.trim()),
+				Options: v.array(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		Env: v.array(v.pipe(v.string(), v.trim())),
+		Args: v.array(v.pipe(v.string(), v.trim())),
+		Devices: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Path: v.pipe(v.string(), v.trim()),
+			}),
+		),
+	}),
+	/**
+	 * plugin remote reference used to push/pull the plugin
+	 */
+	PluginReference: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The config of a plugin.
+	 */
+	Config: v.strictObject({
+		/**
+		 * Docker Version used to create the plugin
+		 */
+		DockerVersion: v.optional(v.pipe(v.string(), v.trim())),
+		Description: v.pipe(v.string(), v.trim()),
+		Documentation: v.pipe(v.string(), v.trim()),
+		/**
+		 * The interface between Docker and the plugin
+		 */
+		Interface: v.strictObject({
+			Types: v.array(
+				v.strictObject({
+					Prefix: v.pipe(v.string(), v.trim()),
+					Capability: v.pipe(v.string(), v.trim()),
+					Version: v.pipe(v.string(), v.trim()),
+				}),
+			),
+			Socket: v.pipe(v.string(), v.trim()),
+			/**
+			 * Protocol to use for clients connecting to the plugin.
+			 */
+			ProtocolScheme: v.optional(v.picklist(["", "moby.plugins.http/v1"])),
+		}),
+		Entrypoint: v.array(v.pipe(v.string(), v.trim())),
+		WorkDir: v.pipe(v.string(), v.trim()),
+		User: v.optional(
+			v.strictObject({
+				UID: v.optional(v.pipe(v.number(), v.integer())),
+				GID: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		Network: v.strictObject({
+			Type: v.pipe(v.string(), v.trim()),
+		}),
+		Linux: v.strictObject({
+			Capabilities: v.array(v.pipe(v.string(), v.trim())),
+			AllowAllDevices: v.boolean(),
+			Devices: v.array(
+				v.strictObject({
+					Name: v.pipe(v.string(), v.trim()),
+					Description: v.pipe(v.string(), v.trim()),
+					Settable: v.array(v.pipe(v.string(), v.trim())),
+					Path: v.pipe(v.string(), v.trim()),
+				}),
+			),
+		}),
+		PropagatedMount: v.pipe(v.string(), v.trim()),
+		IpcHost: v.boolean(),
+		PidHost: v.boolean(),
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Source: v.pipe(v.string(), v.trim()),
+				Destination: v.pipe(v.string(), v.trim()),
+				Type: v.pipe(v.string(), v.trim()),
+				Options: v.array(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		Env: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Value: v.pipe(v.string(), v.trim()),
+			}),
+		),
+		Args: v.strictObject({
+			Name: v.pipe(v.string(), v.trim()),
+			Description: v.pipe(v.string(), v.trim()),
+			Settable: v.array(v.pipe(v.string(), v.trim())),
+			Value: v.array(v.pipe(v.string(), v.trim())),
+		}),
+		rootfs: v.optional(
+			v.strictObject({
+				type: v.optional(v.pipe(v.string(), v.trim())),
+				diff_ids: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			}),
+		),
+	}),
+});
 export const exactPluginInspectCommandParamsSchema = v.strictObject({
 	name: v.string(),
 });
 export const pluginInspectCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
+});
+export const exactPluginDeleteCommandResponseSchema = v.strictObject({
+	Id: v.exactOptional(v.string()),
+	Name: v.string(),
+	/**
+	 * True if the plugin is running. False if the plugin is not running, only
+	 * installed.
+	 */
+	Enabled: v.boolean(),
+	/**
+	 * Settings that can be modified by users.
+	 */
+	Settings: v.strictObject({
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Source: v.string(),
+				Destination: v.string(),
+				Type: v.string(),
+				Options: v.array(v.string()),
+			}),
+		),
+		Env: v.array(v.string()),
+		Args: v.array(v.string()),
+		Devices: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Path: v.string(),
+			}),
+		),
+	}),
+	/**
+	 * plugin remote reference used to push/pull the plugin
+	 */
+	PluginReference: v.exactOptional(v.string()),
+	/**
+	 * The config of a plugin.
+	 */
+	Config: v.strictObject({
+		/**
+		 * Docker Version used to create the plugin
+		 */
+		DockerVersion: v.exactOptional(v.string()),
+		Description: v.string(),
+		Documentation: v.string(),
+		/**
+		 * The interface between Docker and the plugin
+		 */
+		Interface: v.strictObject({
+			Types: v.array(
+				v.strictObject({
+					Prefix: v.string(),
+					Capability: v.string(),
+					Version: v.string(),
+				}),
+			),
+			Socket: v.string(),
+			/**
+			 * Protocol to use for clients connecting to the plugin.
+			 */
+			ProtocolScheme: v.exactOptional(v.picklist(["", "moby.plugins.http/v1"])),
+		}),
+		Entrypoint: v.array(v.string()),
+		WorkDir: v.string(),
+		User: v.exactOptional(
+			v.strictObject({
+				UID: v.exactOptional(v.pipe(v.number(), v.integer())),
+				GID: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		Network: v.strictObject({
+			Type: v.string(),
+		}),
+		Linux: v.strictObject({
+			Capabilities: v.array(v.string()),
+			AllowAllDevices: v.boolean(),
+			Devices: v.array(
+				v.strictObject({
+					Name: v.string(),
+					Description: v.string(),
+					Settable: v.array(v.string()),
+					Path: v.string(),
+				}),
+			),
+		}),
+		PropagatedMount: v.string(),
+		IpcHost: v.boolean(),
+		PidHost: v.boolean(),
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Source: v.string(),
+				Destination: v.string(),
+				Type: v.string(),
+				Options: v.array(v.string()),
+			}),
+		),
+		Env: v.array(
+			v.strictObject({
+				Name: v.string(),
+				Description: v.string(),
+				Settable: v.array(v.string()),
+				Value: v.string(),
+			}),
+		),
+		Args: v.strictObject({
+			Name: v.string(),
+			Description: v.string(),
+			Settable: v.array(v.string()),
+			Value: v.array(v.string()),
+		}),
+		rootfs: v.exactOptional(
+			v.strictObject({
+				type: v.exactOptional(v.string()),
+				diff_ids: v.exactOptional(v.array(v.string())),
+			}),
+		),
+	}),
+});
+export const pluginDeleteCommandResponseSchema = v.strictObject({
+	Id: v.optional(v.pipe(v.string(), v.trim())),
+	Name: v.pipe(v.string(), v.trim()),
+	/**
+	 * True if the plugin is running. False if the plugin is not running, only
+	 * installed.
+	 */
+	Enabled: v.boolean(),
+	/**
+	 * Settings that can be modified by users.
+	 */
+	Settings: v.strictObject({
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Source: v.pipe(v.string(), v.trim()),
+				Destination: v.pipe(v.string(), v.trim()),
+				Type: v.pipe(v.string(), v.trim()),
+				Options: v.array(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		Env: v.array(v.pipe(v.string(), v.trim())),
+		Args: v.array(v.pipe(v.string(), v.trim())),
+		Devices: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Path: v.pipe(v.string(), v.trim()),
+			}),
+		),
+	}),
+	/**
+	 * plugin remote reference used to push/pull the plugin
+	 */
+	PluginReference: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The config of a plugin.
+	 */
+	Config: v.strictObject({
+		/**
+		 * Docker Version used to create the plugin
+		 */
+		DockerVersion: v.optional(v.pipe(v.string(), v.trim())),
+		Description: v.pipe(v.string(), v.trim()),
+		Documentation: v.pipe(v.string(), v.trim()),
+		/**
+		 * The interface between Docker and the plugin
+		 */
+		Interface: v.strictObject({
+			Types: v.array(
+				v.strictObject({
+					Prefix: v.pipe(v.string(), v.trim()),
+					Capability: v.pipe(v.string(), v.trim()),
+					Version: v.pipe(v.string(), v.trim()),
+				}),
+			),
+			Socket: v.pipe(v.string(), v.trim()),
+			/**
+			 * Protocol to use for clients connecting to the plugin.
+			 */
+			ProtocolScheme: v.optional(v.picklist(["", "moby.plugins.http/v1"])),
+		}),
+		Entrypoint: v.array(v.pipe(v.string(), v.trim())),
+		WorkDir: v.pipe(v.string(), v.trim()),
+		User: v.optional(
+			v.strictObject({
+				UID: v.optional(v.pipe(v.number(), v.integer())),
+				GID: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		Network: v.strictObject({
+			Type: v.pipe(v.string(), v.trim()),
+		}),
+		Linux: v.strictObject({
+			Capabilities: v.array(v.pipe(v.string(), v.trim())),
+			AllowAllDevices: v.boolean(),
+			Devices: v.array(
+				v.strictObject({
+					Name: v.pipe(v.string(), v.trim()),
+					Description: v.pipe(v.string(), v.trim()),
+					Settable: v.array(v.pipe(v.string(), v.trim())),
+					Path: v.pipe(v.string(), v.trim()),
+				}),
+			),
+		}),
+		PropagatedMount: v.pipe(v.string(), v.trim()),
+		IpcHost: v.boolean(),
+		PidHost: v.boolean(),
+		Mounts: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Source: v.pipe(v.string(), v.trim()),
+				Destination: v.pipe(v.string(), v.trim()),
+				Type: v.pipe(v.string(), v.trim()),
+				Options: v.array(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		Env: v.array(
+			v.strictObject({
+				Name: v.pipe(v.string(), v.trim()),
+				Description: v.pipe(v.string(), v.trim()),
+				Settable: v.array(v.pipe(v.string(), v.trim())),
+				Value: v.pipe(v.string(), v.trim()),
+			}),
+		),
+		Args: v.strictObject({
+			Name: v.pipe(v.string(), v.trim()),
+			Description: v.pipe(v.string(), v.trim()),
+			Settable: v.array(v.pipe(v.string(), v.trim())),
+			Value: v.array(v.pipe(v.string(), v.trim())),
+		}),
+		rootfs: v.optional(
+			v.strictObject({
+				type: v.optional(v.pipe(v.string(), v.trim())),
+				diff_ids: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			}),
+		),
+	}),
 });
 export const exactPluginDeleteCommandParamsSchema = v.strictObject({
 	name: v.string(),
@@ -29890,11 +41508,823 @@ export const exactPluginSetCommandParamsSchema = v.strictObject({
 export const pluginSetCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
+export const exactNodeListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.exactOptional(v.string()),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.exactOptional(
+			v.strictObject({
+				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		/**
+		 * Date and time at which the node was added to the swarm in
+		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+		 */
+		CreatedAt: v.exactOptional(v.string()),
+		/**
+		 * Date and time at which the node was last updated in
+		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+		 */
+		UpdatedAt: v.exactOptional(v.string()),
+		Spec: v.exactOptional(
+			v.strictObject({
+				/**
+				 * Name for the node.
+				 */
+				Name: v.exactOptional(v.string()),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * Role of the node.
+				 */
+				Role: v.exactOptional(v.picklist(["worker", "manager"])),
+				/**
+				 * Availability of the node.
+				 */
+				Availability: v.exactOptional(v.picklist(["active", "pause", "drain"])),
+			}),
+		),
+		/**
+		 * NodeDescription encapsulates the properties of the Node as reported by the
+		 * agent.
+		 */
+		Description: v.exactOptional(
+			v.strictObject({
+				Hostname: v.exactOptional(v.string()),
+				/**
+				 * Platform represents the platform (Arch/OS).
+				 */
+				Platform: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Architecture represents the hardware architecture (for example,
+						 * `x86_64`).
+						 */
+						Architecture: v.exactOptional(v.string()),
+						/**
+						 * OS represents the Operating System (for example, `linux` or `windows`).
+						 */
+						OS: v.exactOptional(v.string()),
+					}),
+				),
+				/**
+				 * An object describing the resources which can be advertised by a node and
+				 * requested by a task.
+				 */
+				Resources: v.exactOptional(
+					v.strictObject({
+						NanoCPUs: v.exactOptional(v.bigint()),
+						MemoryBytes: v.exactOptional(v.bigint()),
+						/**
+						 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+						 * String resources (e.g, `GPU=UUID1`).
+						 */
+						GenericResources: v.exactOptional(
+							v.array(
+								v.strictObject({
+									NamedResourceSpec: v.exactOptional(
+										v.strictObject({
+											Kind: v.exactOptional(v.string()),
+											Value: v.exactOptional(v.string()),
+										}),
+									),
+									DiscreteResourceSpec: v.exactOptional(
+										v.strictObject({
+											Kind: v.exactOptional(v.string()),
+											Value: v.exactOptional(v.bigint()),
+										}),
+									),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * EngineDescription provides information about an engine.
+				 */
+				Engine: v.exactOptional(
+					v.strictObject({
+						EngineVersion: v.exactOptional(v.string()),
+						Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+						Plugins: v.exactOptional(
+							v.array(
+								v.strictObject({
+									Type: v.exactOptional(v.string()),
+									Name: v.exactOptional(v.string()),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * Information about the issuer of leaf TLS certificates and the trusted root
+				 * CA certificate.
+				 */
+				TLSInfo: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The root CA certificate(s) that are used to validate leaf TLS
+						 * certificates.
+						 */
+						TrustRoot: v.exactOptional(v.string()),
+						/**
+						 * The base64-url-safe-encoded raw subject bytes of the issuer.
+						 */
+						CertIssuerSubject: v.exactOptional(v.string()),
+						/**
+						 * The base64-url-safe-encoded raw public key bytes of the issuer.
+						 */
+						CertIssuerPublicKey: v.exactOptional(v.string()),
+					}),
+				),
+			}),
+		),
+		/**
+		 * NodeStatus represents the status of a node.
+		 *
+		 * It provides the current status of the node, as seen by the manager.
+		 */
+		Status: v.exactOptional(
+			v.strictObject({
+				/**
+				 * NodeState represents the state of a node.
+				 */
+				State: v.exactOptional(
+					v.picklist(["unknown", "down", "ready", "disconnected"]),
+				),
+				Message: v.exactOptional(v.string()),
+				/**
+				 * IP address of the node.
+				 */
+				Addr: v.exactOptional(v.string()),
+			}),
+		),
+		/**
+		 * ManagerStatus represents the status of a manager.
+		 *
+		 * It provides the current status of a node's manager component, if the node
+		 * is a manager.
+		 */
+		ManagerStatus: v.exactOptional(
+			v.nullable(
+				v.strictObject({
+					Leader: v.exactOptional(v.boolean()),
+					/**
+					 * Reachability represents the reachability of a node.
+					 */
+					Reachability: v.exactOptional(
+						v.picklist(["unknown", "unreachable", "reachable"]),
+					),
+					/**
+					 * The IP address and port at which the manager is reachable.
+					 */
+					Addr: v.exactOptional(v.string()),
+				}),
+			),
+		),
+	}),
+);
+export const nodeListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.optional(
+			v.strictObject({
+				Index: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		/**
+		 * Date and time at which the node was added to the swarm in
+		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+		 */
+		CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * Date and time at which the node was last updated in
+		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+		 */
+		UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		Spec: v.optional(
+			v.strictObject({
+				/**
+				 * Name for the node.
+				 */
+				Name: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * Role of the node.
+				 */
+				Role: v.optional(v.picklist(["worker", "manager"])),
+				/**
+				 * Availability of the node.
+				 */
+				Availability: v.optional(v.picklist(["active", "pause", "drain"])),
+			}),
+		),
+		/**
+		 * NodeDescription encapsulates the properties of the Node as reported by the
+		 * agent.
+		 */
+		Description: v.optional(
+			v.strictObject({
+				Hostname: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Platform represents the platform (Arch/OS).
+				 */
+				Platform: v.optional(
+					v.strictObject({
+						/**
+						 * Architecture represents the hardware architecture (for example,
+						 * `x86_64`).
+						 */
+						Architecture: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * OS represents the Operating System (for example, `linux` or `windows`).
+						 */
+						OS: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+				/**
+				 * An object describing the resources which can be advertised by a node and
+				 * requested by a task.
+				 */
+				Resources: v.optional(
+					v.strictObject({
+						NanoCPUs: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						MemoryBytes: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+						 * String resources (e.g, `GPU=UUID1`).
+						 */
+						GenericResources: v.optional(
+							v.array(
+								v.strictObject({
+									NamedResourceSpec: v.optional(
+										v.strictObject({
+											Kind: v.optional(v.pipe(v.string(), v.trim())),
+											Value: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+									DiscreteResourceSpec: v.optional(
+										v.strictObject({
+											Kind: v.optional(v.pipe(v.string(), v.trim())),
+											Value: v.optional(
+												v.union([
+													v.pipe(
+														v.string(),
+														v.decimal(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.pipe(
+														v.number(),
+														v.integer(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.bigint(),
+												]),
+											),
+										}),
+									),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * EngineDescription provides information about an engine.
+				 */
+				Engine: v.optional(
+					v.strictObject({
+						EngineVersion: v.optional(v.pipe(v.string(), v.trim())),
+						Labels: v.optional(v.record(v.string(), v.unknown())),
+						Plugins: v.optional(
+							v.array(
+								v.strictObject({
+									Type: v.optional(v.pipe(v.string(), v.trim())),
+									Name: v.optional(v.pipe(v.string(), v.trim())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * Information about the issuer of leaf TLS certificates and the trusted root
+				 * CA certificate.
+				 */
+				TLSInfo: v.optional(
+					v.strictObject({
+						/**
+						 * The root CA certificate(s) that are used to validate leaf TLS
+						 * certificates.
+						 */
+						TrustRoot: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The base64-url-safe-encoded raw subject bytes of the issuer.
+						 */
+						CertIssuerSubject: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The base64-url-safe-encoded raw public key bytes of the issuer.
+						 */
+						CertIssuerPublicKey: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+			}),
+		),
+		/**
+		 * NodeStatus represents the status of a node.
+		 *
+		 * It provides the current status of the node, as seen by the manager.
+		 */
+		Status: v.optional(
+			v.strictObject({
+				/**
+				 * NodeState represents the state of a node.
+				 */
+				State: v.optional(
+					v.picklist(["unknown", "down", "ready", "disconnected"]),
+				),
+				Message: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * IP address of the node.
+				 */
+				Addr: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		/**
+		 * ManagerStatus represents the status of a manager.
+		 *
+		 * It provides the current status of a node's manager component, if the node
+		 * is a manager.
+		 */
+		ManagerStatus: v.optional(
+			v.nullable(
+				v.strictObject({
+					Leader: v.optional(v.boolean()),
+					/**
+					 * Reachability represents the reachability of a node.
+					 */
+					Reachability: v.optional(
+						v.picklist(["unknown", "unreachable", "reachable"]),
+					),
+					/**
+					 * The IP address and port at which the manager is reachable.
+					 */
+					Addr: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+		),
+	}),
+);
 export const exactNodeListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const nodeListCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactNodeInspectCommandResponseSchema = v.strictObject({
+	ID: v.exactOptional(v.string()),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.exactOptional(
+		v.strictObject({
+			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	/**
+	 * Date and time at which the node was added to the swarm in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	CreatedAt: v.exactOptional(v.string()),
+	/**
+	 * Date and time at which the node was last updated in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	UpdatedAt: v.exactOptional(v.string()),
+	Spec: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Name for the node.
+			 */
+			Name: v.exactOptional(v.string()),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * Role of the node.
+			 */
+			Role: v.exactOptional(v.picklist(["worker", "manager"])),
+			/**
+			 * Availability of the node.
+			 */
+			Availability: v.exactOptional(v.picklist(["active", "pause", "drain"])),
+		}),
+	),
+	/**
+	 * NodeDescription encapsulates the properties of the Node as reported by the
+	 * agent.
+	 */
+	Description: v.exactOptional(
+		v.strictObject({
+			Hostname: v.exactOptional(v.string()),
+			/**
+			 * Platform represents the platform (Arch/OS).
+			 */
+			Platform: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Architecture represents the hardware architecture (for example,
+					 * `x86_64`).
+					 */
+					Architecture: v.exactOptional(v.string()),
+					/**
+					 * OS represents the Operating System (for example, `linux` or `windows`).
+					 */
+					OS: v.exactOptional(v.string()),
+				}),
+			),
+			/**
+			 * An object describing the resources which can be advertised by a node and
+			 * requested by a task.
+			 */
+			Resources: v.exactOptional(
+				v.strictObject({
+					NanoCPUs: v.exactOptional(v.bigint()),
+					MemoryBytes: v.exactOptional(v.bigint()),
+					/**
+					 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+					 * String resources (e.g, `GPU=UUID1`).
+					 */
+					GenericResources: v.exactOptional(
+						v.array(
+							v.strictObject({
+								NamedResourceSpec: v.exactOptional(
+									v.strictObject({
+										Kind: v.exactOptional(v.string()),
+										Value: v.exactOptional(v.string()),
+									}),
+								),
+								DiscreteResourceSpec: v.exactOptional(
+									v.strictObject({
+										Kind: v.exactOptional(v.string()),
+										Value: v.exactOptional(v.bigint()),
+									}),
+								),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * EngineDescription provides information about an engine.
+			 */
+			Engine: v.exactOptional(
+				v.strictObject({
+					EngineVersion: v.exactOptional(v.string()),
+					Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+					Plugins: v.exactOptional(
+						v.array(
+							v.strictObject({
+								Type: v.exactOptional(v.string()),
+								Name: v.exactOptional(v.string()),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * Information about the issuer of leaf TLS certificates and the trusted root
+			 * CA certificate.
+			 */
+			TLSInfo: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The root CA certificate(s) that are used to validate leaf TLS
+					 * certificates.
+					 */
+					TrustRoot: v.exactOptional(v.string()),
+					/**
+					 * The base64-url-safe-encoded raw subject bytes of the issuer.
+					 */
+					CertIssuerSubject: v.exactOptional(v.string()),
+					/**
+					 * The base64-url-safe-encoded raw public key bytes of the issuer.
+					 */
+					CertIssuerPublicKey: v.exactOptional(v.string()),
+				}),
+			),
+		}),
+	),
+	/**
+	 * NodeStatus represents the status of a node.
+	 *
+	 * It provides the current status of the node, as seen by the manager.
+	 */
+	Status: v.exactOptional(
+		v.strictObject({
+			/**
+			 * NodeState represents the state of a node.
+			 */
+			State: v.exactOptional(
+				v.picklist(["unknown", "down", "ready", "disconnected"]),
+			),
+			Message: v.exactOptional(v.string()),
+			/**
+			 * IP address of the node.
+			 */
+			Addr: v.exactOptional(v.string()),
+		}),
+	),
+	/**
+	 * ManagerStatus represents the status of a manager.
+	 *
+	 * It provides the current status of a node's manager component, if the node
+	 * is a manager.
+	 */
+	ManagerStatus: v.exactOptional(
+		v.nullable(
+			v.strictObject({
+				Leader: v.exactOptional(v.boolean()),
+				/**
+				 * Reachability represents the reachability of a node.
+				 */
+				Reachability: v.exactOptional(
+					v.picklist(["unknown", "unreachable", "reachable"]),
+				),
+				/**
+				 * The IP address and port at which the manager is reachable.
+				 */
+				Addr: v.exactOptional(v.string()),
+			}),
+		),
+	),
+});
+export const nodeInspectCommandResponseSchema = v.strictObject({
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.optional(
+		v.strictObject({
+			Index: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	/**
+	 * Date and time at which the node was added to the swarm in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Date and time at which the node was last updated in
+	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+	 */
+	UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	Spec: v.optional(
+		v.strictObject({
+			/**
+			 * Name for the node.
+			 */
+			Name: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * Role of the node.
+			 */
+			Role: v.optional(v.picklist(["worker", "manager"])),
+			/**
+			 * Availability of the node.
+			 */
+			Availability: v.optional(v.picklist(["active", "pause", "drain"])),
+		}),
+	),
+	/**
+	 * NodeDescription encapsulates the properties of the Node as reported by the
+	 * agent.
+	 */
+	Description: v.optional(
+		v.strictObject({
+			Hostname: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Platform represents the platform (Arch/OS).
+			 */
+			Platform: v.optional(
+				v.strictObject({
+					/**
+					 * Architecture represents the hardware architecture (for example,
+					 * `x86_64`).
+					 */
+					Architecture: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * OS represents the Operating System (for example, `linux` or `windows`).
+					 */
+					OS: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+			/**
+			 * An object describing the resources which can be advertised by a node and
+			 * requested by a task.
+			 */
+			Resources: v.optional(
+				v.strictObject({
+					NanoCPUs: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					MemoryBytes: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+					 * String resources (e.g, `GPU=UUID1`).
+					 */
+					GenericResources: v.optional(
+						v.array(
+							v.strictObject({
+								NamedResourceSpec: v.optional(
+									v.strictObject({
+										Kind: v.optional(v.pipe(v.string(), v.trim())),
+										Value: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+								DiscreteResourceSpec: v.optional(
+									v.strictObject({
+										Kind: v.optional(v.pipe(v.string(), v.trim())),
+										Value: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+									}),
+								),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * EngineDescription provides information about an engine.
+			 */
+			Engine: v.optional(
+				v.strictObject({
+					EngineVersion: v.optional(v.pipe(v.string(), v.trim())),
+					Labels: v.optional(v.record(v.string(), v.unknown())),
+					Plugins: v.optional(
+						v.array(
+							v.strictObject({
+								Type: v.optional(v.pipe(v.string(), v.trim())),
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * Information about the issuer of leaf TLS certificates and the trusted root
+			 * CA certificate.
+			 */
+			TLSInfo: v.optional(
+				v.strictObject({
+					/**
+					 * The root CA certificate(s) that are used to validate leaf TLS
+					 * certificates.
+					 */
+					TrustRoot: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The base64-url-safe-encoded raw subject bytes of the issuer.
+					 */
+					CertIssuerSubject: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The base64-url-safe-encoded raw public key bytes of the issuer.
+					 */
+					CertIssuerPublicKey: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+		}),
+	),
+	/**
+	 * NodeStatus represents the status of a node.
+	 *
+	 * It provides the current status of the node, as seen by the manager.
+	 */
+	Status: v.optional(
+		v.strictObject({
+			/**
+			 * NodeState represents the state of a node.
+			 */
+			State: v.optional(
+				v.picklist(["unknown", "down", "ready", "disconnected"]),
+			),
+			Message: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * IP address of the node.
+			 */
+			Addr: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	/**
+	 * ManagerStatus represents the status of a manager.
+	 *
+	 * It provides the current status of a node's manager component, if the node
+	 * is a manager.
+	 */
+	ManagerStatus: v.optional(
+		v.nullable(
+			v.strictObject({
+				Leader: v.optional(v.boolean()),
+				/**
+				 * Reachability represents the reachability of a node.
+				 */
+				Reachability: v.optional(
+					v.picklist(["unknown", "unreachable", "reachable"]),
+				),
+				/**
+				 * The IP address and port at which the manager is reachable.
+				 */
+				Addr: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	),
 });
 export const exactNodeInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
@@ -29966,6 +42396,580 @@ export const nodeUpdateCommandQuerySchema = v.strictObject({
 		v.bigint(),
 	]),
 });
+export const exactSwarmInspectCommandResponseSchema = v.intersect([
+	v.nullable(
+		v.strictObject({
+			/**
+			 * The ID of the swarm.
+			 */
+			ID: v.exactOptional(v.string()),
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			Version: v.exactOptional(
+				v.strictObject({
+					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			/**
+			 * Date and time at which the swarm was initialised in
+			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+			 */
+			CreatedAt: v.exactOptional(v.string()),
+			/**
+			 * Date and time at which the swarm was last updated in
+			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+			 */
+			UpdatedAt: v.exactOptional(v.string()),
+			/**
+			 * User modifiable swarm configuration.
+			 */
+			Spec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Name of the swarm.
+					 */
+					Name: v.exactOptional(v.string()),
+					/**
+					 * User-defined key/value metadata.
+					 */
+					Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+					/**
+					 * Orchestration configuration.
+					 */
+					Orchestration: v.exactOptional(
+						v.nullable(
+							v.strictObject({
+								/**
+								 * The number of historic tasks to keep per instance or node. If
+								 * negative, never remove completed or failed tasks.
+								 */
+								TaskHistoryRetentionLimit: v.exactOptional(v.bigint()),
+							}),
+						),
+					),
+					/**
+					 * Raft configuration.
+					 */
+					Raft: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The number of log entries between snapshots.
+							 */
+							SnapshotInterval: v.exactOptional(
+								v.pipe(v.number(), v.integer()),
+							),
+							/**
+							 * The number of snapshots to keep beyond the current snapshot.
+							 */
+							KeepOldSnapshots: v.exactOptional(
+								v.pipe(v.number(), v.integer()),
+							),
+							/**
+							 * The number of log entries to keep around to sync up slow followers
+							 * after a snapshot is created.
+							 */
+							LogEntriesForSlowFollowers: v.exactOptional(
+								v.pipe(v.number(), v.integer()),
+							),
+							/**
+							 * The number of ticks that a follower will wait for a message from
+							 * the leader before becoming a candidate and starting an election.
+							 * `ElectionTick` must be greater than `HeartbeatTick`.
+							 *
+							 * A tick currently defaults to one second, so these translate
+							 * directly to seconds currently, but this is NOT guaranteed.
+							 */
+							ElectionTick: v.exactOptional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The number of ticks between heartbeats. Every HeartbeatTick ticks,
+							 * the leader will send a heartbeat to the followers.
+							 *
+							 * A tick currently defaults to one second, so these translate
+							 * directly to seconds currently, but this is NOT guaranteed.
+							 */
+							HeartbeatTick: v.exactOptional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+					/**
+					 * Dispatcher configuration.
+					 */
+					Dispatcher: v.exactOptional(
+						v.nullable(
+							v.strictObject({
+								/**
+								 * The delay for an agent to send a heartbeat to the dispatcher.
+								 */
+								HeartbeatPeriod: v.exactOptional(v.bigint()),
+							}),
+						),
+					),
+					/**
+					 * CA configuration.
+					 */
+					CAConfig: v.exactOptional(
+						v.nullable(
+							v.strictObject({
+								/**
+								 * The duration node certificates are issued for.
+								 */
+								NodeCertExpiry: v.exactOptional(v.bigint()),
+								/**
+								 * Configuration for forwarding signing requests to an external
+								 * certificate authority.
+								 */
+								ExternalCAs: v.exactOptional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Protocol for communication with the external CA (currently
+											 * only `cfssl` is supported).
+											 */
+											Protocol: v.exactOptional(v.picklist(["cfssl"])),
+											/**
+											 * URL where certificate signing requests should be sent.
+											 */
+											URL: v.exactOptional(v.string()),
+											/**
+											 * An object with key/value pairs that are interpreted as
+											 * protocol-specific options for the external CA driver.
+											 */
+											Options: v.exactOptional(
+												v.record(v.string(), v.unknown()),
+											),
+											/**
+											 * The root CA certificate (in PEM format) this external CA uses
+											 * to issue TLS certificates (assumed to be to the current swarm
+											 * root CA certificate if not provided).
+											 */
+											CACert: v.exactOptional(v.string()),
+										}),
+									),
+								),
+								/**
+								 * The desired signing CA certificate for all swarm node TLS leaf
+								 * certificates, in PEM format.
+								 */
+								SigningCACert: v.exactOptional(v.string()),
+								/**
+								 * The desired signing CA key for all swarm node TLS leaf certificates,
+								 * in PEM format.
+								 */
+								SigningCAKey: v.exactOptional(v.string()),
+								/**
+								 * An integer whose purpose is to force swarm to generate a new
+								 * signing CA certificate and key, if none have been specified in
+								 * `SigningCACert` and `SigningCAKey`
+								 */
+								ForceRotate: v.exactOptional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+					),
+					/**
+					 * Parameters related to encryption-at-rest.
+					 */
+					EncryptionConfig: v.exactOptional(
+						v.strictObject({
+							/**
+							 * If set, generate a key and use it to lock data stored on the
+							 * managers.
+							 */
+							AutoLockManagers: v.exactOptional(v.boolean()),
+						}),
+					),
+					/**
+					 * Defaults for creating tasks in this cluster.
+					 */
+					TaskDefaults: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The log driver to use for tasks created in the orchestrator if
+							 * unspecified by a service.
+							 *
+							 * Updating this value only affects new tasks. Existing tasks continue
+							 * to use their previously configured log driver until recreated.
+							 */
+							LogDriver: v.exactOptional(
+								v.strictObject({
+									/**
+									 * The log driver to use as a default for new tasks.
+									 */
+									Name: v.exactOptional(v.string()),
+									/**
+									 * Driver-specific options for the selected log driver, specified
+									 * as key/value pairs.
+									 */
+									Options: v.exactOptional(v.record(v.string(), v.unknown())),
+								}),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Information about the issuer of leaf TLS certificates and the trusted root
+			 * CA certificate.
+			 */
+			TLSInfo: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The root CA certificate(s) that are used to validate leaf TLS
+					 * certificates.
+					 */
+					TrustRoot: v.exactOptional(v.string()),
+					/**
+					 * The base64-url-safe-encoded raw subject bytes of the issuer.
+					 */
+					CertIssuerSubject: v.exactOptional(v.string()),
+					/**
+					 * The base64-url-safe-encoded raw public key bytes of the issuer.
+					 */
+					CertIssuerPublicKey: v.exactOptional(v.string()),
+				}),
+			),
+			/**
+			 * Whether there is currently a root CA rotation in progress for the swarm
+			 */
+			RootRotationInProgress: v.exactOptional(v.boolean()),
+			/**
+			 * DataPathPort specifies the data path port number for data traffic.
+			 * Acceptable port range is 1024 to 49151.
+			 * If no port is set or is set to 0, the default port (4789) is used.
+			 */
+			DataPathPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Default Address Pool specifies default subnet pools for global scope
+			 * networks.
+			 */
+			DefaultAddrPool: v.exactOptional(v.array(v.string())),
+			/**
+			 * SubnetSize specifies the subnet size of the networks created from the
+			 * default subnet pool.
+			 */
+			SubnetSize: v.exactOptional(
+				v.pipe(v.number(), v.integer(), v.maxValue(29)),
+			),
+		}),
+	),
+	v.strictObject({
+		/**
+		 * JoinTokens contains the tokens workers and managers need to join the swarm.
+		 */
+		JoinTokens: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The token workers can use to join the swarm.
+				 */
+				Worker: v.exactOptional(v.string()),
+				/**
+				 * The token managers can use to join the swarm.
+				 */
+				Manager: v.exactOptional(v.string()),
+			}),
+		),
+	}),
+]);
+export const swarmInspectCommandResponseSchema = v.intersect([
+	v.nullable(
+		v.strictObject({
+			/**
+			 * The ID of the swarm.
+			 */
+			ID: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			Version: v.optional(
+				v.strictObject({
+					Index: v.optional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			/**
+			 * Date and time at which the swarm was initialised in
+			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+			 */
+			CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Date and time at which the swarm was last updated in
+			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
+			 */
+			UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * User modifiable swarm configuration.
+			 */
+			Spec: v.optional(
+				v.strictObject({
+					/**
+					 * Name of the swarm.
+					 */
+					Name: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * User-defined key/value metadata.
+					 */
+					Labels: v.optional(v.record(v.string(), v.unknown())),
+					/**
+					 * Orchestration configuration.
+					 */
+					Orchestration: v.optional(
+						v.nullable(
+							v.strictObject({
+								/**
+								 * The number of historic tasks to keep per instance or node. If
+								 * negative, never remove completed or failed tasks.
+								 */
+								TaskHistoryRetentionLimit: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+					),
+					/**
+					 * Raft configuration.
+					 */
+					Raft: v.optional(
+						v.strictObject({
+							/**
+							 * The number of log entries between snapshots.
+							 */
+							SnapshotInterval: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The number of snapshots to keep beyond the current snapshot.
+							 */
+							KeepOldSnapshots: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The number of log entries to keep around to sync up slow followers
+							 * after a snapshot is created.
+							 */
+							LogEntriesForSlowFollowers: v.optional(
+								v.pipe(v.number(), v.integer()),
+							),
+							/**
+							 * The number of ticks that a follower will wait for a message from
+							 * the leader before becoming a candidate and starting an election.
+							 * `ElectionTick` must be greater than `HeartbeatTick`.
+							 *
+							 * A tick currently defaults to one second, so these translate
+							 * directly to seconds currently, but this is NOT guaranteed.
+							 */
+							ElectionTick: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The number of ticks between heartbeats. Every HeartbeatTick ticks,
+							 * the leader will send a heartbeat to the followers.
+							 *
+							 * A tick currently defaults to one second, so these translate
+							 * directly to seconds currently, but this is NOT guaranteed.
+							 */
+							HeartbeatTick: v.optional(v.pipe(v.number(), v.integer())),
+						}),
+					),
+					/**
+					 * Dispatcher configuration.
+					 */
+					Dispatcher: v.optional(
+						v.nullable(
+							v.strictObject({
+								/**
+								 * The delay for an agent to send a heartbeat to the dispatcher.
+								 */
+								HeartbeatPeriod: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+					),
+					/**
+					 * CA configuration.
+					 */
+					CAConfig: v.optional(
+						v.nullable(
+							v.strictObject({
+								/**
+								 * The duration node certificates are issued for.
+								 */
+								NodeCertExpiry: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * Configuration for forwarding signing requests to an external
+								 * certificate authority.
+								 */
+								ExternalCAs: v.optional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Protocol for communication with the external CA (currently
+											 * only `cfssl` is supported).
+											 */
+											Protocol: v.optional(v.picklist(["cfssl"])),
+											/**
+											 * URL where certificate signing requests should be sent.
+											 */
+											URL: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * An object with key/value pairs that are interpreted as
+											 * protocol-specific options for the external CA driver.
+											 */
+											Options: v.optional(v.record(v.string(), v.unknown())),
+											/**
+											 * The root CA certificate (in PEM format) this external CA uses
+											 * to issue TLS certificates (assumed to be to the current swarm
+											 * root CA certificate if not provided).
+											 */
+											CACert: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+								),
+								/**
+								 * The desired signing CA certificate for all swarm node TLS leaf
+								 * certificates, in PEM format.
+								 */
+								SigningCACert: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The desired signing CA key for all swarm node TLS leaf certificates,
+								 * in PEM format.
+								 */
+								SigningCAKey: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * An integer whose purpose is to force swarm to generate a new
+								 * signing CA certificate and key, if none have been specified in
+								 * `SigningCACert` and `SigningCAKey`
+								 */
+								ForceRotate: v.optional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+					),
+					/**
+					 * Parameters related to encryption-at-rest.
+					 */
+					EncryptionConfig: v.optional(
+						v.strictObject({
+							/**
+							 * If set, generate a key and use it to lock data stored on the
+							 * managers.
+							 */
+							AutoLockManagers: v.optional(v.boolean()),
+						}),
+					),
+					/**
+					 * Defaults for creating tasks in this cluster.
+					 */
+					TaskDefaults: v.optional(
+						v.strictObject({
+							/**
+							 * The log driver to use for tasks created in the orchestrator if
+							 * unspecified by a service.
+							 *
+							 * Updating this value only affects new tasks. Existing tasks continue
+							 * to use their previously configured log driver until recreated.
+							 */
+							LogDriver: v.optional(
+								v.strictObject({
+									/**
+									 * The log driver to use as a default for new tasks.
+									 */
+									Name: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Driver-specific options for the selected log driver, specified
+									 * as key/value pairs.
+									 */
+									Options: v.optional(v.record(v.string(), v.unknown())),
+								}),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Information about the issuer of leaf TLS certificates and the trusted root
+			 * CA certificate.
+			 */
+			TLSInfo: v.optional(
+				v.strictObject({
+					/**
+					 * The root CA certificate(s) that are used to validate leaf TLS
+					 * certificates.
+					 */
+					TrustRoot: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The base64-url-safe-encoded raw subject bytes of the issuer.
+					 */
+					CertIssuerSubject: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The base64-url-safe-encoded raw public key bytes of the issuer.
+					 */
+					CertIssuerPublicKey: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+			/**
+			 * Whether there is currently a root CA rotation in progress for the swarm
+			 */
+			RootRotationInProgress: v.optional(v.boolean()),
+			/**
+			 * DataPathPort specifies the data path port number for data traffic.
+			 * Acceptable port range is 1024 to 49151.
+			 * If no port is set or is set to 0, the default port (4789) is used.
+			 */
+			DataPathPort: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Default Address Pool specifies default subnet pools for global scope
+			 * networks.
+			 */
+			DefaultAddrPool: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * SubnetSize specifies the subnet size of the networks created from the
+			 * default subnet pool.
+			 */
+			SubnetSize: v.optional(v.pipe(v.number(), v.integer(), v.maxValue(29))),
+		}),
+	),
+	v.strictObject({
+		/**
+		 * JoinTokens contains the tokens workers and managers need to join the swarm.
+		 */
+		JoinTokens: v.optional(
+			v.strictObject({
+				/**
+				 * The token workers can use to join the swarm.
+				 */
+				Worker: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The token managers can use to join the swarm.
+				 */
+				Manager: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	}),
+]);
 export const exactSwarmInitCommandBodySchema = v.strictObject({
 	/**
 	 * Listen address used for inter-manager communication, as well
@@ -30448,6 +43452,8 @@ export const swarmInitCommandBodySchema = v.strictObject({
 		}),
 	),
 });
+export const exactSwarmInitCommandResponseSchema = v.string();
+export const swarmInitCommandResponseSchema = v.pipe(v.string(), v.trim());
 export const exactSwarmJoinCommandBodySchema = v.strictObject({
 	/**
 	 * Listen address used for inter-manager communication if the node
@@ -30910,6 +43916,18 @@ export const swarmUpdateCommandQuerySchema = v.strictObject({
 	rotateManagerToken: v.optional(v.boolean()),
 	rotateManagerUnlockKey: v.optional(v.boolean()),
 });
+export const exactSwarmUnlockkeyCommandResponseSchema = v.strictObject({
+	/**
+	 * The swarm's unlock key.
+	 */
+	UnlockKey: v.exactOptional(v.string()),
+});
+export const swarmUnlockkeyCommandResponseSchema = v.strictObject({
+	/**
+	 * The swarm's unlock key.
+	 */
+	UnlockKey: v.optional(v.pipe(v.string(), v.trim())),
+});
 export const exactSwarmUnlockCommandBodySchema = v.strictObject({
 	/**
 	 * The swarm's unlock key.
@@ -30922,6 +43940,2560 @@ export const swarmUnlockCommandBodySchema = v.strictObject({
 	 */
 	UnlockKey: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactServiceListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.exactOptional(v.string()),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.exactOptional(
+			v.strictObject({
+				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.exactOptional(v.string()),
+		UpdatedAt: v.exactOptional(v.string()),
+		/**
+		 * User modifiable configuration for a service.
+		 */
+		Spec: v.exactOptional(
+			v.strictObject({
+				/**
+				 * Name of the service.
+				 */
+				Name: v.exactOptional(v.string()),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * User modifiable task configuration.
+				 */
+				TaskTemplate: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Plugin spec for the service.  *(Experimental release only.)*
+						 *
+						 * <p><br /></p>
+						 *
+						 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+						 * > mutually exclusive. PluginSpec is only used when the Runtime field
+						 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+						 * > field is set to `attachment`.
+						 */
+						PluginSpec: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The name or 'alias' to use for the plugin.
+								 */
+								Name: v.exactOptional(v.string()),
+								/**
+								 * The plugin image reference to use.
+								 */
+								Remote: v.exactOptional(v.string()),
+								/**
+								 * Disable the plugin once scheduled.
+								 */
+								Disabled: v.exactOptional(v.boolean()),
+								PluginPrivilege: v.exactOptional(
+									v.array(
+										v.strictObject({
+											Name: v.exactOptional(v.string()),
+											Description: v.exactOptional(v.string()),
+											Value: v.exactOptional(v.array(v.string())),
+										}),
+									),
+								),
+							}),
+						),
+						/**
+						 * Container spec for the service.
+						 *
+						 * <p><br /></p>
+						 *
+						 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+						 * > mutually exclusive. PluginSpec is only used when the Runtime field
+						 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+						 * > field is set to `attachment`.
+						 */
+						ContainerSpec: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The image name to use for the container
+								 */
+								Image: v.exactOptional(v.string()),
+								/**
+								 * User-defined key/value data.
+								 */
+								Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+								/**
+								 * The command to be run in the image.
+								 */
+								Command: v.exactOptional(v.array(v.string())),
+								/**
+								 * Arguments to the command.
+								 */
+								Args: v.exactOptional(v.array(v.string())),
+								/**
+								 * The hostname to use for the container, as a valid
+								 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+								 */
+								Hostname: v.exactOptional(v.string()),
+								/**
+								 * A list of environment variables in the form `VAR=value`.
+								 */
+								Env: v.exactOptional(v.array(v.string())),
+								/**
+								 * The working directory for commands to run in.
+								 */
+								Dir: v.exactOptional(v.string()),
+								/**
+								 * The user inside the container.
+								 */
+								User: v.exactOptional(v.string()),
+								/**
+								 * A list of additional groups that the container process will run as.
+								 */
+								Groups: v.exactOptional(v.array(v.string())),
+								/**
+								 * Security options for the container
+								 */
+								Privileges: v.exactOptional(
+									v.strictObject({
+										/**
+										 * CredentialSpec for managed service account (Windows only)
+										 */
+										CredentialSpec: v.exactOptional(
+											v.strictObject({
+												/**
+												 * Load credential spec from a Swarm Config with the given ID.
+												 * The specified config must also be present in the Configs
+												 * field with the Runtime property set.
+												 *
+												 * <p><br /></p>
+												 *
+												 *
+												 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+												 * > and `CredentialSpec.Config` are mutually exclusive.
+												 */
+												Config: v.exactOptional(v.string()),
+												/**
+												 * Load credential spec from this file. The file is read by
+												 * the daemon, and must be present in the `CredentialSpecs`
+												 * subdirectory in the docker data directory, which defaults
+												 * to `C:\ProgramData\Docker\` on Windows.
+												 *
+												 * For example, specifying `spec.json` loads
+												 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+												 *
+												 * <p><br /></p>
+												 *
+												 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+												 * > and `CredentialSpec.Config` are mutually exclusive.
+												 */
+												File: v.exactOptional(v.string()),
+												/**
+												 * Load credential spec from this value in the Windows
+												 * registry. The specified registry value must be located in:
+												 *
+												 * `HKLM\SOFTWARE\Microsoft\Windows
+												 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+												 *
+												 * <p><br /></p>
+												 *
+												 *
+												 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+												 * > and `CredentialSpec.Config` are mutually exclusive.
+												 */
+												Registry: v.exactOptional(v.string()),
+											}),
+										),
+										/**
+										 * SELinux labels of the container
+										 */
+										SELinuxContext: v.exactOptional(
+											v.strictObject({
+												/**
+												 * Disable SELinux
+												 */
+												Disable: v.exactOptional(v.boolean()),
+												/**
+												 * SELinux user label
+												 */
+												User: v.exactOptional(v.string()),
+												/**
+												 * SELinux role label
+												 */
+												Role: v.exactOptional(v.string()),
+												/**
+												 * SELinux type label
+												 */
+												Type: v.exactOptional(v.string()),
+												/**
+												 * SELinux level label
+												 */
+												Level: v.exactOptional(v.string()),
+											}),
+										),
+									}),
+								),
+								/**
+								 * Whether a pseudo-TTY should be allocated.
+								 */
+								TTY: v.exactOptional(v.boolean()),
+								/**
+								 * Open `stdin`
+								 */
+								OpenStdin: v.exactOptional(v.boolean()),
+								/**
+								 * Mount the container's root filesystem as read only.
+								 */
+								ReadOnly: v.exactOptional(v.boolean()),
+								/**
+								 * Specification for mounts to be added to containers created as part
+								 * of the service.
+								 */
+								Mounts: v.exactOptional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Container path.
+											 */
+											Target: v.exactOptional(v.string()),
+											/**
+											 * Mount source (e.g. a volume name, a host path).
+											 */
+											Source: v.exactOptional(v.string()),
+											/**
+											 * The mount type. Available types:
+											 *
+											 * - `bind` Mounts a file or directory from the host into the container. Must
+											 * exist prior to creating the container.
+											 * - `volume` Creates a volume with the given name and options (or uses a
+											 * pre-existing volume with the same name and options). These are **not**
+											 * removed when the container is removed.
+											 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+											 * specified for tmpfs.
+											 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+											 * prior to creating the container.
+											 * - `cluster` a Swarm cluster volume
+											 */
+											Type: v.exactOptional(
+												v.picklist([
+													"bind",
+													"volume",
+													"tmpfs",
+													"npipe",
+													"cluster",
+												]),
+											),
+											/**
+											 * Whether the mount should be read-only.
+											 */
+											ReadOnly: v.exactOptional(v.boolean()),
+											/**
+											 * The consistency requirement for the mount: `default`, `consistent`,
+											 * `cached`, or `delegated`.
+											 */
+											Consistency: v.exactOptional(v.string()),
+											/**
+											 * Optional configuration for the `bind` type.
+											 */
+											BindOptions: v.exactOptional(
+												v.strictObject({
+													/**
+													 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+													 */
+													Propagation: v.exactOptional(
+														v.picklist([
+															"private",
+															"rprivate",
+															"shared",
+															"rshared",
+															"slave",
+															"rslave",
+														]),
+													),
+													/**
+													 * Disable recursive bind mount.
+													 */
+													NonRecursive: v.exactOptional(v.boolean()),
+													/**
+													 * Create mount point on host if missing
+													 */
+													CreateMountpoint: v.exactOptional(v.boolean()),
+												}),
+											),
+											/**
+											 * Optional configuration for the `volume` type.
+											 */
+											VolumeOptions: v.exactOptional(
+												v.strictObject({
+													/**
+													 * Populate volume with data from the target.
+													 */
+													NoCopy: v.exactOptional(v.boolean()),
+													/**
+													 * User-defined key/value metadata.
+													 */
+													Labels: v.exactOptional(
+														v.record(v.string(), v.unknown()),
+													),
+													/**
+													 * Map of driver specific options
+													 */
+													DriverConfig: v.exactOptional(
+														v.strictObject({
+															/**
+															 * Name of the driver to use to create the volume.
+															 */
+															Name: v.exactOptional(v.string()),
+															/**
+															 * key/value map of driver specific options.
+															 */
+															Options: v.exactOptional(
+																v.record(v.string(), v.unknown()),
+															),
+														}),
+													),
+												}),
+											),
+											/**
+											 * Optional configuration for the `tmpfs` type.
+											 */
+											TmpfsOptions: v.exactOptional(
+												v.strictObject({
+													/**
+													 * The size for the tmpfs mount in bytes.
+													 */
+													SizeBytes: v.exactOptional(v.bigint()),
+													/**
+													 * The permission mode for the tmpfs mount in an integer.
+													 */
+													Mode: v.exactOptional(
+														v.pipe(v.number(), v.integer()),
+													),
+												}),
+											),
+										}),
+									),
+								),
+								/**
+								 * Signal to stop the container.
+								 */
+								StopSignal: v.exactOptional(v.string()),
+								/**
+								 * Amount of time to wait for the container to terminate before
+								 * forcefully killing it.
+								 */
+								StopGracePeriod: v.exactOptional(v.bigint()),
+								/**
+								 * A test to perform to check that the container is healthy.
+								 */
+								HealthCheck: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The test to perform. Possible values are:
+										 *
+										 * - `[]` inherit healthcheck from image or parent image
+										 * - `["NONE"]` disable healthcheck
+										 * - `["CMD", args...]` exec arguments directly
+										 * - `["CMD-SHELL", command]` run command with system's default shell
+										 */
+										Test: v.exactOptional(v.array(v.string())),
+										/**
+										 * The time to wait between checks in nanoseconds. It should be 0 or at
+										 * least 1000000 (1 ms). 0 means inherit.
+										 */
+										Interval: v.exactOptional(v.bigint()),
+										/**
+										 * The time to wait before considering the check to have hung. It should
+										 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+										 */
+										Timeout: v.exactOptional(v.bigint()),
+										/**
+										 * The number of consecutive failures needed to consider a container as
+										 * unhealthy. 0 means inherit.
+										 */
+										Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+										/**
+										 * Start period for the container to initialize before starting
+										 * health-retries countdown in nanoseconds. It should be 0 or at least
+										 * 1000000 (1 ms). 0 means inherit.
+										 */
+										StartPeriod: v.exactOptional(v.bigint()),
+									}),
+								),
+								/**
+								 * A list of hostname/IP mappings to add to the container's `hosts`
+								 * file. The format of extra hosts is specified in the
+								 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+								 * man page:
+								 *
+								 *
+								 * IP_address canonical_hostname [aliases...]
+								 */
+								Hosts: v.exactOptional(v.array(v.string())),
+								/**
+								 * Specification for DNS related configurations in resolver configuration
+								 * file (`resolv.conf`).
+								 */
+								DNSConfig: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The IP addresses of the name servers.
+										 */
+										Nameservers: v.exactOptional(v.array(v.string())),
+										/**
+										 * A search list for host-name lookup.
+										 */
+										Search: v.exactOptional(v.array(v.string())),
+										/**
+										 * A list of internal resolver variables to be modified (e.g.,
+										 * `debug`, `ndots:3`, etc.).
+										 */
+										Options: v.exactOptional(v.array(v.string())),
+									}),
+								),
+								/**
+								 * Secrets contains references to zero or more secrets that will be
+								 * exposed to the service.
+								 */
+								Secrets: v.exactOptional(
+									v.array(
+										v.strictObject({
+											/**
+											 * File represents a specific target that is backed by a file.
+											 */
+											File: v.exactOptional(
+												v.strictObject({
+													/**
+													 * Name represents the final filename in the filesystem.
+													 */
+													Name: v.exactOptional(v.string()),
+													/**
+													 * UID represents the file UID.
+													 */
+													UID: v.exactOptional(v.string()),
+													/**
+													 * GID represents the file GID.
+													 */
+													GID: v.exactOptional(v.string()),
+													/**
+													 * Mode represents the FileMode of the file.
+													 */
+													Mode: v.exactOptional(
+														v.pipe(v.number(), v.integer()),
+													),
+												}),
+											),
+											/**
+											 * SecretID represents the ID of the specific secret that we're
+											 * referencing.
+											 */
+											SecretID: v.exactOptional(v.string()),
+											/**
+											 * SecretName is the name of the secret that this references,
+											 * but this is just provided for lookup/display purposes. The
+											 * secret in the reference will be identified by its ID.
+											 */
+											SecretName: v.exactOptional(v.string()),
+										}),
+									),
+								),
+								/**
+								 * Configs contains references to zero or more configs that will be
+								 * exposed to the service.
+								 */
+								Configs: v.exactOptional(
+									v.array(
+										v.strictObject({
+											/**
+											 * File represents a specific target that is backed by a file.
+											 *
+											 * <p><br /><p>
+											 *
+											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+											 */
+											File: v.exactOptional(
+												v.strictObject({
+													/**
+													 * Name represents the final filename in the filesystem.
+													 */
+													Name: v.exactOptional(v.string()),
+													/**
+													 * UID represents the file UID.
+													 */
+													UID: v.exactOptional(v.string()),
+													/**
+													 * GID represents the file GID.
+													 */
+													GID: v.exactOptional(v.string()),
+													/**
+													 * Mode represents the FileMode of the file.
+													 */
+													Mode: v.exactOptional(
+														v.pipe(v.number(), v.integer()),
+													),
+												}),
+											),
+											/**
+											 * Runtime represents a target that is not mounted into the
+											 * container but is used by the task
+											 *
+											 * <p><br /><p>
+											 *
+											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+											 * > exclusive
+											 */
+											Runtime: v.exactOptional(
+												v.record(v.string(), v.unknown()),
+											),
+											/**
+											 * ConfigID represents the ID of the specific config that we're
+											 * referencing.
+											 */
+											ConfigID: v.exactOptional(v.string()),
+											/**
+											 * ConfigName is the name of the config that this references,
+											 * but this is just provided for lookup/display purposes. The
+											 * config in the reference will be identified by its ID.
+											 */
+											ConfigName: v.exactOptional(v.string()),
+										}),
+									),
+								),
+								/**
+								 * Isolation technology of the containers running the service.
+								 * (Windows only)
+								 */
+								Isolation: v.exactOptional(
+									v.picklist(["default", "process", "hyperv", ""]),
+								),
+								/**
+								 * Run an init inside the container that forwards signals and reaps
+								 * processes. This field is omitted if empty, and the default (as
+								 * configured on the daemon) is used.
+								 */
+								Init: v.exactOptional(v.nullable(v.boolean())),
+								/**
+								 * Set kernel namedspaced parameters (sysctls) in the container.
+								 * The Sysctls option on services accepts the same sysctls as the
+								 * are supported on containers. Note that while the same sysctls are
+								 * supported, no guarantees or checks are made about their
+								 * suitability for a clustered environment, and it's up to the user
+								 * to determine whether a given sysctl will work properly in a
+								 * Service.
+								 */
+								Sysctls: v.exactOptional(v.record(v.string(), v.unknown())),
+								/**
+								 * A list of kernel capabilities to add to the default set
+								 * for the container.
+								 */
+								CapabilityAdd: v.exactOptional(v.array(v.string())),
+								/**
+								 * A list of kernel capabilities to drop from the default set
+								 * for the container.
+								 */
+								CapabilityDrop: v.exactOptional(v.array(v.string())),
+								/**
+								 * A list of resource limits to set in the container. For example: `{"Name":
+								 * "nofile", "Soft": 1024, "Hard": 2048}`"
+								 */
+								Ulimits: v.exactOptional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Name of ulimit
+											 */
+											Name: v.exactOptional(v.string()),
+											/**
+											 * Soft limit
+											 */
+											Soft: v.exactOptional(v.pipe(v.number(), v.integer())),
+											/**
+											 * Hard limit
+											 */
+											Hard: v.exactOptional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+								),
+							}),
+						),
+						/**
+						 * Read-only spec type for non-swarm containers attached to swarm overlay
+						 * networks.
+						 *
+						 * <p><br /></p>
+						 *
+						 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+						 * > mutually exclusive. PluginSpec is only used when the Runtime field
+						 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+						 * > field is set to `attachment`.
+						 */
+						NetworkAttachmentSpec: v.exactOptional(
+							v.strictObject({
+								/**
+								 * ID of the container represented by this task
+								 */
+								ContainerID: v.exactOptional(v.string()),
+							}),
+						),
+						/**
+						 * Resource requirements which apply to each individual container created
+						 * as part of the service.
+						 */
+						Resources: v.exactOptional(
+							v.strictObject({
+								/**
+								 * An object describing a limit on resources which can be requested by a task.
+								 */
+								Limits: v.exactOptional(
+									v.strictObject({
+										NanoCPUs: v.exactOptional(v.bigint()),
+										MemoryBytes: v.exactOptional(v.bigint()),
+										/**
+										 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+										 */
+										Pids: v.exactOptional(v.bigint()),
+									}),
+								),
+								/**
+								 * An object describing the resources which can be advertised by a node and
+								 * requested by a task.
+								 */
+								Reservations: v.exactOptional(
+									v.strictObject({
+										NanoCPUs: v.exactOptional(v.bigint()),
+										MemoryBytes: v.exactOptional(v.bigint()),
+										/**
+										 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+										 * String resources (e.g, `GPU=UUID1`).
+										 */
+										GenericResources: v.exactOptional(
+											v.array(
+												v.strictObject({
+													NamedResourceSpec: v.exactOptional(
+														v.strictObject({
+															Kind: v.exactOptional(v.string()),
+															Value: v.exactOptional(v.string()),
+														}),
+													),
+													DiscreteResourceSpec: v.exactOptional(
+														v.strictObject({
+															Kind: v.exactOptional(v.string()),
+															Value: v.exactOptional(v.bigint()),
+														}),
+													),
+												}),
+											),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Specification for the restart policy which applies to containers
+						 * created as part of this service.
+						 */
+						RestartPolicy: v.exactOptional(
+							v.strictObject({
+								/**
+								 * Condition for restart.
+								 */
+								Condition: v.exactOptional(
+									v.picklist(["none", "on-failure", "any"]),
+								),
+								/**
+								 * Delay between restart attempts.
+								 */
+								Delay: v.exactOptional(v.bigint()),
+								/**
+								 * Maximum attempts to restart a given container before giving up
+								 * (default value is 0, which is ignored).
+								 */
+								MaxAttempts: v.exactOptional(v.bigint()),
+								/**
+								 * Windows is the time window used to evaluate the restart policy
+								 * (default value is 0, which is unbounded).
+								 */
+								Window: v.exactOptional(v.bigint()),
+							}),
+						),
+						Placement: v.exactOptional(
+							v.strictObject({
+								/**
+								 * An array of constraint expressions to limit the set of nodes where
+								 * a task can be scheduled. Constraint expressions can either use a
+								 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+								 * nodes that satisfy every expression (AND match). Constraints can
+								 * match node or Docker Engine labels as follows:
+								 *
+								 * node attribute       | matches                        | example
+								 * ---------------------|--------------------------------|-----------------------------------------------
+								 * `node.id`            | Node ID                        |
+								 * `node.id==2ivku8v2gvtg4`
+								 * `node.hostname`      | Node hostname                  |
+								 * `node.hostname!=node-2`
+								 * `node.role`          | Node role (`manager`/`worker`) |
+								 * `node.role==manager`
+								 * `node.platform.os`   | Node operating system          |
+								 * `node.platform.os==windows`
+								 * `node.platform.arch` | Node architecture              |
+								 * `node.platform.arch==x86_64`
+								 * `node.labels`        | User-defined node labels       |
+								 * `node.labels.security==high`
+								 * `engine.labels`      | Docker Engine's labels         |
+								 * `engine.labels.operatingsystem==ubuntu-14.04`
+								 *
+								 * `engine.labels` apply to Docker Engine labels like operating system,
+								 * drivers, etc. Swarm administrators add `node.labels` for operational
+								 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+								 */
+								Constraints: v.exactOptional(v.array(v.string())),
+								/**
+								 * Preferences provide a way to make the scheduler aware of factors
+								 * such as topology. They are provided in order from highest to
+								 * lowest precedence.
+								 */
+								Preferences: v.exactOptional(
+									v.array(
+										v.strictObject({
+											Spread: v.exactOptional(
+												v.strictObject({
+													/**
+													 * label descriptor, such as `engine.labels.az`.
+													 */
+													SpreadDescriptor: v.exactOptional(v.string()),
+												}),
+											),
+										}),
+									),
+								),
+								/**
+								 * Maximum number of replicas for per node (default value is 0, which
+								 * is unlimited)
+								 */
+								MaxReplicas: v.exactOptional(v.bigint()),
+								/**
+								 * Platforms stores all the platforms that the service's image can
+								 * run on. This field is used in the platform filter for scheduling.
+								 * If empty, then the platform filter is off, meaning there are no
+								 * scheduling restrictions.
+								 */
+								Platforms: v.exactOptional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Architecture represents the hardware architecture (for example,
+											 * `x86_64`).
+											 */
+											Architecture: v.exactOptional(v.string()),
+											/**
+											 * OS represents the Operating System (for example, `linux` or `windows`).
+											 */
+											OS: v.exactOptional(v.string()),
+										}),
+									),
+								),
+							}),
+						),
+						/**
+						 * A counter that triggers an update even if no relevant parameters have
+						 * been changed.
+						 */
+						ForceUpdate: v.exactOptional(v.pipe(v.number(), v.integer())),
+						/**
+						 * Runtime is the type of runtime specified for the task executor.
+						 */
+						Runtime: v.exactOptional(v.string()),
+						/**
+						 * Specifies which networks the service should attach to.
+						 */
+						Networks: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * The target network for attachment. Must be a network name or ID.
+									 */
+									Target: v.exactOptional(v.string()),
+									/**
+									 * Discoverable alternate names for the service on this network.
+									 */
+									Aliases: v.exactOptional(v.array(v.string())),
+									/**
+									 * Driver attachment options for the network target.
+									 */
+									DriverOpts: v.exactOptional(
+										v.record(v.string(), v.unknown()),
+									),
+								}),
+							),
+						),
+						/**
+						 * Specifies the log driver to use for tasks created from this spec. If
+						 * not present, the default one for the swarm will be used, finally
+						 * falling back to the engine default if not specified.
+						 */
+						LogDriver: v.exactOptional(
+							v.strictObject({
+								Name: v.exactOptional(v.string()),
+								Options: v.exactOptional(v.record(v.string(), v.unknown())),
+							}),
+						),
+					}),
+				),
+				/**
+				 * Scheduling mode for the service.
+				 */
+				Mode: v.exactOptional(
+					v.strictObject({
+						Replicated: v.exactOptional(
+							v.strictObject({
+								Replicas: v.exactOptional(v.bigint()),
+							}),
+						),
+						Global: v.exactOptional(v.record(v.string(), v.unknown())),
+						/**
+						 * The mode used for services with a finite number of tasks that run
+						 * to a completed state.
+						 */
+						ReplicatedJob: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The maximum number of replicas to run simultaneously.
+								 */
+								MaxConcurrent: v.exactOptional(v.bigint()),
+								/**
+								 * The total number of replicas desired to reach the Completed
+								 * state. If unset, will default to the value of `MaxConcurrent`
+								 */
+								TotalCompletions: v.exactOptional(v.bigint()),
+							}),
+						),
+						/**
+						 * The mode used for services which run a task to the completed state
+						 * on each valid node.
+						 */
+						GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				/**
+				 * Specification for the update strategy of the service.
+				 */
+				UpdateConfig: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Maximum number of tasks to be updated in one iteration (0 means
+						 * unlimited parallelism).
+						 */
+						Parallelism: v.exactOptional(v.bigint()),
+						/**
+						 * Amount of time between updates, in nanoseconds.
+						 */
+						Delay: v.exactOptional(v.bigint()),
+						/**
+						 * Action to take if an updated task fails to run, or stops running
+						 * during the update.
+						 */
+						FailureAction: v.exactOptional(
+							v.picklist(["continue", "pause", "rollback"]),
+						),
+						/**
+						 * Amount of time to monitor each updated task for failures, in
+						 * nanoseconds.
+						 */
+						Monitor: v.exactOptional(v.bigint()),
+						/**
+						 * The fraction of tasks that may fail during an update before the
+						 * failure action is invoked, specified as a floating point number
+						 * between 0 and 1.
+						 */
+						MaxFailureRatio: v.exactOptional(v.number()),
+						/**
+						 * The order of operations when rolling out an updated task. Either
+						 * the old task is shut down before the new task is started, or the
+						 * new task is started before the old task is shut down.
+						 */
+						Order: v.exactOptional(v.picklist(["stop-first", "start-first"])),
+					}),
+				),
+				/**
+				 * Specification for the rollback strategy of the service.
+				 */
+				RollbackConfig: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Maximum number of tasks to be rolled back in one iteration (0 means
+						 * unlimited parallelism).
+						 */
+						Parallelism: v.exactOptional(v.bigint()),
+						/**
+						 * Amount of time between rollback iterations, in nanoseconds.
+						 */
+						Delay: v.exactOptional(v.bigint()),
+						/**
+						 * Action to take if an rolled back task fails to run, or stops
+						 * running during the rollback.
+						 */
+						FailureAction: v.exactOptional(v.picklist(["continue", "pause"])),
+						/**
+						 * Amount of time to monitor each rolled back task for failures, in
+						 * nanoseconds.
+						 */
+						Monitor: v.exactOptional(v.bigint()),
+						/**
+						 * The fraction of tasks that may fail during a rollback before the
+						 * failure action is invoked, specified as a floating point number
+						 * between 0 and 1.
+						 */
+						MaxFailureRatio: v.exactOptional(v.number()),
+						/**
+						 * The order of operations when rolling back a task. Either the old
+						 * task is shut down before the new task is started, or the new task
+						 * is started before the old task is shut down.
+						 */
+						Order: v.exactOptional(v.picklist(["stop-first", "start-first"])),
+					}),
+				),
+				/**
+				 * Specifies which networks the service should attach to.
+				 */
+				Networks: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * The target network for attachment. Must be a network name or ID.
+							 */
+							Target: v.exactOptional(v.string()),
+							/**
+							 * Discoverable alternate names for the service on this network.
+							 */
+							Aliases: v.exactOptional(v.array(v.string())),
+							/**
+							 * Driver attachment options for the network target.
+							 */
+							DriverOpts: v.exactOptional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Properties that can be configured to access and load balance a service.
+				 */
+				EndpointSpec: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The mode of resolution to use for internal load balancing between tasks.
+						 */
+						Mode: v.exactOptional(v.picklist(["vip", "dnsrr"])),
+						/**
+						 * List of exposed ports that this service is accessible on from the
+						 * outside. Ports can only be provided if `vip` resolution mode is used.
+						 */
+						Ports: v.exactOptional(
+							v.array(
+								v.strictObject({
+									Name: v.exactOptional(v.string()),
+									Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
+									/**
+									 * The port inside the container.
+									 */
+									TargetPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+									/**
+									 * The port on the swarm hosts.
+									 */
+									PublishedPort: v.exactOptional(
+										v.pipe(v.number(), v.integer()),
+									),
+									/**
+									 * The mode in which port is published.
+									 *
+									 * <p><br /></p>
+									 *
+									 * - "ingress" makes the target port accessible on every node,
+									 *
+									 * regardless of whether there is a task for the service running on
+									 *
+									 * that node or not.
+									 * - "host" bypasses the routing mesh and publish the port directly on
+									 *
+									 * the swarm node where that service is running.
+									 */
+									PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
+								}),
+							),
+						),
+					}),
+				),
+			}),
+		),
+		Endpoint: v.exactOptional(
+			v.strictObject({
+				/**
+				 * Properties that can be configured to access and load balance a service.
+				 */
+				Spec: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The mode of resolution to use for internal load balancing between tasks.
+						 */
+						Mode: v.exactOptional(v.picklist(["vip", "dnsrr"])),
+						/**
+						 * List of exposed ports that this service is accessible on from the
+						 * outside. Ports can only be provided if `vip` resolution mode is used.
+						 */
+						Ports: v.exactOptional(
+							v.array(
+								v.strictObject({
+									Name: v.exactOptional(v.string()),
+									Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
+									/**
+									 * The port inside the container.
+									 */
+									TargetPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+									/**
+									 * The port on the swarm hosts.
+									 */
+									PublishedPort: v.exactOptional(
+										v.pipe(v.number(), v.integer()),
+									),
+									/**
+									 * The mode in which port is published.
+									 *
+									 * <p><br /></p>
+									 *
+									 * - "ingress" makes the target port accessible on every node,
+									 *
+									 * regardless of whether there is a task for the service running on
+									 *
+									 * that node or not.
+									 * - "host" bypasses the routing mesh and publish the port directly on
+									 *
+									 * the swarm node where that service is running.
+									 */
+									PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
+								}),
+							),
+						),
+					}),
+				),
+				Ports: v.exactOptional(
+					v.array(
+						v.strictObject({
+							Name: v.exactOptional(v.string()),
+							Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
+							/**
+							 * The port inside the container.
+							 */
+							TargetPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The port on the swarm hosts.
+							 */
+							PublishedPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The mode in which port is published.
+							 *
+							 * <p><br /></p>
+							 *
+							 * - "ingress" makes the target port accessible on every node,
+							 *
+							 * regardless of whether there is a task for the service running on
+							 *
+							 * that node or not.
+							 * - "host" bypasses the routing mesh and publish the port directly on
+							 *
+							 * the swarm node where that service is running.
+							 */
+							PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
+						}),
+					),
+				),
+				VirtualIPs: v.exactOptional(
+					v.array(
+						v.strictObject({
+							NetworkID: v.exactOptional(v.string()),
+							Addr: v.exactOptional(v.string()),
+						}),
+					),
+				),
+			}),
+		),
+		/**
+		 * The status of a service update.
+		 */
+		UpdateStatus: v.exactOptional(
+			v.strictObject({
+				State: v.exactOptional(v.picklist(["updating", "paused", "completed"])),
+				StartedAt: v.exactOptional(v.string()),
+				CompletedAt: v.exactOptional(v.string()),
+				Message: v.exactOptional(v.string()),
+			}),
+		),
+		/**
+		 * The status of the service's tasks. Provided only when requested as
+		 * part of a ServiceList operation.
+		 */
+		ServiceStatus: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The number of tasks for the service currently in the Running state.
+				 */
+				RunningTasks: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * The number of tasks for the service desired to be running.
+				 * For replicated services, this is the replica count from the
+				 * service spec. For global services, this is computed by taking
+				 * count of all tasks for the service with a Desired State other
+				 * than Shutdown.
+				 */
+				DesiredTasks: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * The number of tasks for a job that are in the Completed state.
+				 * This field must be cross-referenced with the service type, as the
+				 * value of 0 may mean the service is not in a job mode, or it may
+				 * mean the job-mode service has no tasks yet Completed.
+				 */
+				CompletedTasks: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		/**
+		 * The status of the service when it is in one of ReplicatedJob or
+		 * GlobalJob modes. Absent on Replicated and Global mode services. The
+		 * JobIteration is an ObjectVersion, but unlike the Service's version,
+		 * does not need to be sent with an update request.
+		 */
+		JobStatus: v.exactOptional(
+			v.strictObject({
+				/**
+				 * The version number of the object such as node, service, etc. This is needed
+				 * to avoid conflicting writes. The client must send the version number along
+				 * with the modified specification when updating these objects.
+				 *
+				 * This approach ensures safe concurrency and determinism in that the change
+				 * on the object may not be applied if the version number has changed from the
+				 * last read. In other words, if two update requests specify the same base
+				 * version, only one of the requests can succeed. As a result, two separate
+				 * update requests that happen at the same time will not unintentionally
+				 * overwrite each other.
+				 */
+				JobIteration: v.exactOptional(
+					v.strictObject({
+						Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+					}),
+				),
+				/**
+				 * The last time, as observed by the server, that this job was
+				 * started.
+				 */
+				LastExecution: v.exactOptional(v.string()),
+			}),
+		),
+	}),
+);
+export const serviceListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.optional(
+			v.strictObject({
+				Index: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * User modifiable configuration for a service.
+		 */
+		Spec: v.optional(
+			v.strictObject({
+				/**
+				 * Name of the service.
+				 */
+				Name: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * User modifiable task configuration.
+				 */
+				TaskTemplate: v.optional(
+					v.strictObject({
+						/**
+						 * Plugin spec for the service.  *(Experimental release only.)*
+						 *
+						 * <p><br /></p>
+						 *
+						 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+						 * > mutually exclusive. PluginSpec is only used when the Runtime field
+						 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+						 * > field is set to `attachment`.
+						 */
+						PluginSpec: v.optional(
+							v.strictObject({
+								/**
+								 * The name or 'alias' to use for the plugin.
+								 */
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The plugin image reference to use.
+								 */
+								Remote: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Disable the plugin once scheduled.
+								 */
+								Disabled: v.optional(v.boolean()),
+								PluginPrivilege: v.optional(
+									v.array(
+										v.strictObject({
+											Name: v.optional(v.pipe(v.string(), v.trim())),
+											Description: v.optional(v.pipe(v.string(), v.trim())),
+											Value: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+										}),
+									),
+								),
+							}),
+						),
+						/**
+						 * Container spec for the service.
+						 *
+						 * <p><br /></p>
+						 *
+						 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+						 * > mutually exclusive. PluginSpec is only used when the Runtime field
+						 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+						 * > field is set to `attachment`.
+						 */
+						ContainerSpec: v.optional(
+							v.strictObject({
+								/**
+								 * The image name to use for the container
+								 */
+								Image: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * User-defined key/value data.
+								 */
+								Labels: v.optional(v.record(v.string(), v.unknown())),
+								/**
+								 * The command to be run in the image.
+								 */
+								Command: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * Arguments to the command.
+								 */
+								Args: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * The hostname to use for the container, as a valid
+								 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+								 */
+								Hostname: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * A list of environment variables in the form `VAR=value`.
+								 */
+								Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * The working directory for commands to run in.
+								 */
+								Dir: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The user inside the container.
+								 */
+								User: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * A list of additional groups that the container process will run as.
+								 */
+								Groups: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * Security options for the container
+								 */
+								Privileges: v.optional(
+									v.strictObject({
+										/**
+										 * CredentialSpec for managed service account (Windows only)
+										 */
+										CredentialSpec: v.optional(
+											v.strictObject({
+												/**
+												 * Load credential spec from a Swarm Config with the given ID.
+												 * The specified config must also be present in the Configs
+												 * field with the Runtime property set.
+												 *
+												 * <p><br /></p>
+												 *
+												 *
+												 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+												 * > and `CredentialSpec.Config` are mutually exclusive.
+												 */
+												Config: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * Load credential spec from this file. The file is read by
+												 * the daemon, and must be present in the `CredentialSpecs`
+												 * subdirectory in the docker data directory, which defaults
+												 * to `C:\ProgramData\Docker\` on Windows.
+												 *
+												 * For example, specifying `spec.json` loads
+												 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+												 *
+												 * <p><br /></p>
+												 *
+												 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+												 * > and `CredentialSpec.Config` are mutually exclusive.
+												 */
+												File: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * Load credential spec from this value in the Windows
+												 * registry. The specified registry value must be located in:
+												 *
+												 * `HKLM\SOFTWARE\Microsoft\Windows
+												 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+												 *
+												 * <p><br /></p>
+												 *
+												 *
+												 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+												 * > and `CredentialSpec.Config` are mutually exclusive.
+												 */
+												Registry: v.optional(v.pipe(v.string(), v.trim())),
+											}),
+										),
+										/**
+										 * SELinux labels of the container
+										 */
+										SELinuxContext: v.optional(
+											v.strictObject({
+												/**
+												 * Disable SELinux
+												 */
+												Disable: v.optional(v.boolean()),
+												/**
+												 * SELinux user label
+												 */
+												User: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * SELinux role label
+												 */
+												Role: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * SELinux type label
+												 */
+												Type: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * SELinux level label
+												 */
+												Level: v.optional(v.pipe(v.string(), v.trim())),
+											}),
+										),
+									}),
+								),
+								/**
+								 * Whether a pseudo-TTY should be allocated.
+								 */
+								TTY: v.optional(v.boolean()),
+								/**
+								 * Open `stdin`
+								 */
+								OpenStdin: v.optional(v.boolean()),
+								/**
+								 * Mount the container's root filesystem as read only.
+								 */
+								ReadOnly: v.optional(v.boolean()),
+								/**
+								 * Specification for mounts to be added to containers created as part
+								 * of the service.
+								 */
+								Mounts: v.optional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Container path.
+											 */
+											Target: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Mount source (e.g. a volume name, a host path).
+											 */
+											Source: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * The mount type. Available types:
+											 *
+											 * - `bind` Mounts a file or directory from the host into the container. Must
+											 * exist prior to creating the container.
+											 * - `volume` Creates a volume with the given name and options (or uses a
+											 * pre-existing volume with the same name and options). These are **not**
+											 * removed when the container is removed.
+											 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+											 * specified for tmpfs.
+											 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+											 * prior to creating the container.
+											 * - `cluster` a Swarm cluster volume
+											 */
+											Type: v.optional(
+												v.picklist([
+													"bind",
+													"volume",
+													"tmpfs",
+													"npipe",
+													"cluster",
+												]),
+											),
+											/**
+											 * Whether the mount should be read-only.
+											 */
+											ReadOnly: v.optional(v.boolean()),
+											/**
+											 * The consistency requirement for the mount: `default`, `consistent`,
+											 * `cached`, or `delegated`.
+											 */
+											Consistency: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Optional configuration for the `bind` type.
+											 */
+											BindOptions: v.optional(
+												v.strictObject({
+													/**
+													 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+													 */
+													Propagation: v.optional(
+														v.picklist([
+															"private",
+															"rprivate",
+															"shared",
+															"rshared",
+															"slave",
+															"rslave",
+														]),
+													),
+													/**
+													 * Disable recursive bind mount.
+													 */
+													NonRecursive: v.optional(v.boolean()),
+													/**
+													 * Create mount point on host if missing
+													 */
+													CreateMountpoint: v.optional(v.boolean()),
+												}),
+											),
+											/**
+											 * Optional configuration for the `volume` type.
+											 */
+											VolumeOptions: v.optional(
+												v.strictObject({
+													/**
+													 * Populate volume with data from the target.
+													 */
+													NoCopy: v.optional(v.boolean()),
+													/**
+													 * User-defined key/value metadata.
+													 */
+													Labels: v.optional(v.record(v.string(), v.unknown())),
+													/**
+													 * Map of driver specific options
+													 */
+													DriverConfig: v.optional(
+														v.strictObject({
+															/**
+															 * Name of the driver to use to create the volume.
+															 */
+															Name: v.optional(v.pipe(v.string(), v.trim())),
+															/**
+															 * key/value map of driver specific options.
+															 */
+															Options: v.optional(
+																v.record(v.string(), v.unknown()),
+															),
+														}),
+													),
+												}),
+											),
+											/**
+											 * Optional configuration for the `tmpfs` type.
+											 */
+											TmpfsOptions: v.optional(
+												v.strictObject({
+													/**
+													 * The size for the tmpfs mount in bytes.
+													 */
+													SizeBytes: v.optional(
+														v.union([
+															v.pipe(
+																v.string(),
+																v.decimal(),
+																v.toBigint(),
+																v.bigint(),
+															),
+															v.pipe(
+																v.number(),
+																v.integer(),
+																v.toBigint(),
+																v.bigint(),
+															),
+															v.bigint(),
+														]),
+													),
+													/**
+													 * The permission mode for the tmpfs mount in an integer.
+													 */
+													Mode: v.optional(v.pipe(v.number(), v.integer())),
+												}),
+											),
+										}),
+									),
+								),
+								/**
+								 * Signal to stop the container.
+								 */
+								StopSignal: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Amount of time to wait for the container to terminate before
+								 * forcefully killing it.
+								 */
+								StopGracePeriod: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * A test to perform to check that the container is healthy.
+								 */
+								HealthCheck: v.optional(
+									v.strictObject({
+										/**
+										 * The test to perform. Possible values are:
+										 *
+										 * - `[]` inherit healthcheck from image or parent image
+										 * - `["NONE"]` disable healthcheck
+										 * - `["CMD", args...]` exec arguments directly
+										 * - `["CMD-SHELL", command]` run command with system's default shell
+										 */
+										Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+										/**
+										 * The time to wait between checks in nanoseconds. It should be 0 or at
+										 * least 1000000 (1 ms). 0 means inherit.
+										 */
+										Interval: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										/**
+										 * The time to wait before considering the check to have hung. It should
+										 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+										 */
+										Timeout: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										/**
+										 * The number of consecutive failures needed to consider a container as
+										 * unhealthy. 0 means inherit.
+										 */
+										Retries: v.optional(v.pipe(v.number(), v.integer())),
+										/**
+										 * Start period for the container to initialize before starting
+										 * health-retries countdown in nanoseconds. It should be 0 or at least
+										 * 1000000 (1 ms). 0 means inherit.
+										 */
+										StartPeriod: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+									}),
+								),
+								/**
+								 * A list of hostname/IP mappings to add to the container's `hosts`
+								 * file. The format of extra hosts is specified in the
+								 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+								 * man page:
+								 *
+								 *
+								 * IP_address canonical_hostname [aliases...]
+								 */
+								Hosts: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * Specification for DNS related configurations in resolver configuration
+								 * file (`resolv.conf`).
+								 */
+								DNSConfig: v.optional(
+									v.strictObject({
+										/**
+										 * The IP addresses of the name servers.
+										 */
+										Nameservers: v.optional(
+											v.array(v.pipe(v.string(), v.trim())),
+										),
+										/**
+										 * A search list for host-name lookup.
+										 */
+										Search: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+										/**
+										 * A list of internal resolver variables to be modified (e.g.,
+										 * `debug`, `ndots:3`, etc.).
+										 */
+										Options: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+									}),
+								),
+								/**
+								 * Secrets contains references to zero or more secrets that will be
+								 * exposed to the service.
+								 */
+								Secrets: v.optional(
+									v.array(
+										v.strictObject({
+											/**
+											 * File represents a specific target that is backed by a file.
+											 */
+											File: v.optional(
+												v.strictObject({
+													/**
+													 * Name represents the final filename in the filesystem.
+													 */
+													Name: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * UID represents the file UID.
+													 */
+													UID: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * GID represents the file GID.
+													 */
+													GID: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * Mode represents the FileMode of the file.
+													 */
+													Mode: v.optional(v.pipe(v.number(), v.integer())),
+												}),
+											),
+											/**
+											 * SecretID represents the ID of the specific secret that we're
+											 * referencing.
+											 */
+											SecretID: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * SecretName is the name of the secret that this references,
+											 * but this is just provided for lookup/display purposes. The
+											 * secret in the reference will be identified by its ID.
+											 */
+											SecretName: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+								),
+								/**
+								 * Configs contains references to zero or more configs that will be
+								 * exposed to the service.
+								 */
+								Configs: v.optional(
+									v.array(
+										v.strictObject({
+											/**
+											 * File represents a specific target that is backed by a file.
+											 *
+											 * <p><br /><p>
+											 *
+											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+											 */
+											File: v.optional(
+												v.strictObject({
+													/**
+													 * Name represents the final filename in the filesystem.
+													 */
+													Name: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * UID represents the file UID.
+													 */
+													UID: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * GID represents the file GID.
+													 */
+													GID: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * Mode represents the FileMode of the file.
+													 */
+													Mode: v.optional(v.pipe(v.number(), v.integer())),
+												}),
+											),
+											/**
+											 * Runtime represents a target that is not mounted into the
+											 * container but is used by the task
+											 *
+											 * <p><br /><p>
+											 *
+											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+											 * > exclusive
+											 */
+											Runtime: v.optional(v.record(v.string(), v.unknown())),
+											/**
+											 * ConfigID represents the ID of the specific config that we're
+											 * referencing.
+											 */
+											ConfigID: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * ConfigName is the name of the config that this references,
+											 * but this is just provided for lookup/display purposes. The
+											 * config in the reference will be identified by its ID.
+											 */
+											ConfigName: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+								),
+								/**
+								 * Isolation technology of the containers running the service.
+								 * (Windows only)
+								 */
+								Isolation: v.optional(
+									v.picklist(["default", "process", "hyperv", ""]),
+								),
+								/**
+								 * Run an init inside the container that forwards signals and reaps
+								 * processes. This field is omitted if empty, and the default (as
+								 * configured on the daemon) is used.
+								 */
+								Init: v.optional(v.nullable(v.boolean())),
+								/**
+								 * Set kernel namedspaced parameters (sysctls) in the container.
+								 * The Sysctls option on services accepts the same sysctls as the
+								 * are supported on containers. Note that while the same sysctls are
+								 * supported, no guarantees or checks are made about their
+								 * suitability for a clustered environment, and it's up to the user
+								 * to determine whether a given sysctl will work properly in a
+								 * Service.
+								 */
+								Sysctls: v.optional(v.record(v.string(), v.unknown())),
+								/**
+								 * A list of kernel capabilities to add to the default set
+								 * for the container.
+								 */
+								CapabilityAdd: v.optional(
+									v.array(v.pipe(v.string(), v.trim())),
+								),
+								/**
+								 * A list of kernel capabilities to drop from the default set
+								 * for the container.
+								 */
+								CapabilityDrop: v.optional(
+									v.array(v.pipe(v.string(), v.trim())),
+								),
+								/**
+								 * A list of resource limits to set in the container. For example: `{"Name":
+								 * "nofile", "Soft": 1024, "Hard": 2048}`"
+								 */
+								Ulimits: v.optional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Name of ulimit
+											 */
+											Name: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Soft limit
+											 */
+											Soft: v.optional(v.pipe(v.number(), v.integer())),
+											/**
+											 * Hard limit
+											 */
+											Hard: v.optional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+								),
+							}),
+						),
+						/**
+						 * Read-only spec type for non-swarm containers attached to swarm overlay
+						 * networks.
+						 *
+						 * <p><br /></p>
+						 *
+						 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+						 * > mutually exclusive. PluginSpec is only used when the Runtime field
+						 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+						 * > field is set to `attachment`.
+						 */
+						NetworkAttachmentSpec: v.optional(
+							v.strictObject({
+								/**
+								 * ID of the container represented by this task
+								 */
+								ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+							}),
+						),
+						/**
+						 * Resource requirements which apply to each individual container created
+						 * as part of the service.
+						 */
+						Resources: v.optional(
+							v.strictObject({
+								/**
+								 * An object describing a limit on resources which can be requested by a task.
+								 */
+								Limits: v.optional(
+									v.strictObject({
+										NanoCPUs: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										MemoryBytes: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										/**
+										 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+										 */
+										Pids: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+									}),
+								),
+								/**
+								 * An object describing the resources which can be advertised by a node and
+								 * requested by a task.
+								 */
+								Reservations: v.optional(
+									v.strictObject({
+										NanoCPUs: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										MemoryBytes: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										/**
+										 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+										 * String resources (e.g, `GPU=UUID1`).
+										 */
+										GenericResources: v.optional(
+											v.array(
+												v.strictObject({
+													NamedResourceSpec: v.optional(
+														v.strictObject({
+															Kind: v.optional(v.pipe(v.string(), v.trim())),
+															Value: v.optional(v.pipe(v.string(), v.trim())),
+														}),
+													),
+													DiscreteResourceSpec: v.optional(
+														v.strictObject({
+															Kind: v.optional(v.pipe(v.string(), v.trim())),
+															Value: v.optional(
+																v.union([
+																	v.pipe(
+																		v.string(),
+																		v.decimal(),
+																		v.toBigint(),
+																		v.bigint(),
+																	),
+																	v.pipe(
+																		v.number(),
+																		v.integer(),
+																		v.toBigint(),
+																		v.bigint(),
+																	),
+																	v.bigint(),
+																]),
+															),
+														}),
+													),
+												}),
+											),
+										),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Specification for the restart policy which applies to containers
+						 * created as part of this service.
+						 */
+						RestartPolicy: v.optional(
+							v.strictObject({
+								/**
+								 * Condition for restart.
+								 */
+								Condition: v.optional(
+									v.picklist(["none", "on-failure", "any"]),
+								),
+								/**
+								 * Delay between restart attempts.
+								 */
+								Delay: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * Maximum attempts to restart a given container before giving up
+								 * (default value is 0, which is ignored).
+								 */
+								MaxAttempts: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * Windows is the time window used to evaluate the restart policy
+								 * (default value is 0, which is unbounded).
+								 */
+								Window: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+						Placement: v.optional(
+							v.strictObject({
+								/**
+								 * An array of constraint expressions to limit the set of nodes where
+								 * a task can be scheduled. Constraint expressions can either use a
+								 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+								 * nodes that satisfy every expression (AND match). Constraints can
+								 * match node or Docker Engine labels as follows:
+								 *
+								 * node attribute       | matches                        | example
+								 * ---------------------|--------------------------------|-----------------------------------------------
+								 * `node.id`            | Node ID                        |
+								 * `node.id==2ivku8v2gvtg4`
+								 * `node.hostname`      | Node hostname                  |
+								 * `node.hostname!=node-2`
+								 * `node.role`          | Node role (`manager`/`worker`) |
+								 * `node.role==manager`
+								 * `node.platform.os`   | Node operating system          |
+								 * `node.platform.os==windows`
+								 * `node.platform.arch` | Node architecture              |
+								 * `node.platform.arch==x86_64`
+								 * `node.labels`        | User-defined node labels       |
+								 * `node.labels.security==high`
+								 * `engine.labels`      | Docker Engine's labels         |
+								 * `engine.labels.operatingsystem==ubuntu-14.04`
+								 *
+								 * `engine.labels` apply to Docker Engine labels like operating system,
+								 * drivers, etc. Swarm administrators add `node.labels` for operational
+								 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+								 */
+								Constraints: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * Preferences provide a way to make the scheduler aware of factors
+								 * such as topology. They are provided in order from highest to
+								 * lowest precedence.
+								 */
+								Preferences: v.optional(
+									v.array(
+										v.strictObject({
+											Spread: v.optional(
+												v.strictObject({
+													/**
+													 * label descriptor, such as `engine.labels.az`.
+													 */
+													SpreadDescriptor: v.optional(
+														v.pipe(v.string(), v.trim()),
+													),
+												}),
+											),
+										}),
+									),
+								),
+								/**
+								 * Maximum number of replicas for per node (default value is 0, which
+								 * is unlimited)
+								 */
+								MaxReplicas: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * Platforms stores all the platforms that the service's image can
+								 * run on. This field is used in the platform filter for scheduling.
+								 * If empty, then the platform filter is off, meaning there are no
+								 * scheduling restrictions.
+								 */
+								Platforms: v.optional(
+									v.array(
+										v.strictObject({
+											/**
+											 * Architecture represents the hardware architecture (for example,
+											 * `x86_64`).
+											 */
+											Architecture: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * OS represents the Operating System (for example, `linux` or `windows`).
+											 */
+											OS: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+								),
+							}),
+						),
+						/**
+						 * A counter that triggers an update even if no relevant parameters have
+						 * been changed.
+						 */
+						ForceUpdate: v.optional(v.pipe(v.number(), v.integer())),
+						/**
+						 * Runtime is the type of runtime specified for the task executor.
+						 */
+						Runtime: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Specifies which networks the service should attach to.
+						 */
+						Networks: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * The target network for attachment. Must be a network name or ID.
+									 */
+									Target: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Discoverable alternate names for the service on this network.
+									 */
+									Aliases: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+									/**
+									 * Driver attachment options for the network target.
+									 */
+									DriverOpts: v.optional(v.record(v.string(), v.unknown())),
+								}),
+							),
+						),
+						/**
+						 * Specifies the log driver to use for tasks created from this spec. If
+						 * not present, the default one for the swarm will be used, finally
+						 * falling back to the engine default if not specified.
+						 */
+						LogDriver: v.optional(
+							v.strictObject({
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								Options: v.optional(v.record(v.string(), v.unknown())),
+							}),
+						),
+					}),
+				),
+				/**
+				 * Scheduling mode for the service.
+				 */
+				Mode: v.optional(
+					v.strictObject({
+						Replicated: v.optional(
+							v.strictObject({
+								Replicas: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+						Global: v.optional(v.record(v.string(), v.unknown())),
+						/**
+						 * The mode used for services with a finite number of tasks that run
+						 * to a completed state.
+						 */
+						ReplicatedJob: v.optional(
+							v.strictObject({
+								/**
+								 * The maximum number of replicas to run simultaneously.
+								 */
+								MaxConcurrent: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * The total number of replicas desired to reach the Completed
+								 * state. If unset, will default to the value of `MaxConcurrent`
+								 */
+								TotalCompletions: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+						/**
+						 * The mode used for services which run a task to the completed state
+						 * on each valid node.
+						 */
+						GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				/**
+				 * Specification for the update strategy of the service.
+				 */
+				UpdateConfig: v.optional(
+					v.strictObject({
+						/**
+						 * Maximum number of tasks to be updated in one iteration (0 means
+						 * unlimited parallelism).
+						 */
+						Parallelism: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Amount of time between updates, in nanoseconds.
+						 */
+						Delay: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Action to take if an updated task fails to run, or stops running
+						 * during the update.
+						 */
+						FailureAction: v.optional(
+							v.picklist(["continue", "pause", "rollback"]),
+						),
+						/**
+						 * Amount of time to monitor each updated task for failures, in
+						 * nanoseconds.
+						 */
+						Monitor: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * The fraction of tasks that may fail during an update before the
+						 * failure action is invoked, specified as a floating point number
+						 * between 0 and 1.
+						 */
+						MaxFailureRatio: v.optional(v.number()),
+						/**
+						 * The order of operations when rolling out an updated task. Either
+						 * the old task is shut down before the new task is started, or the
+						 * new task is started before the old task is shut down.
+						 */
+						Order: v.optional(v.picklist(["stop-first", "start-first"])),
+					}),
+				),
+				/**
+				 * Specification for the rollback strategy of the service.
+				 */
+				RollbackConfig: v.optional(
+					v.strictObject({
+						/**
+						 * Maximum number of tasks to be rolled back in one iteration (0 means
+						 * unlimited parallelism).
+						 */
+						Parallelism: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Amount of time between rollback iterations, in nanoseconds.
+						 */
+						Delay: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Action to take if an rolled back task fails to run, or stops
+						 * running during the rollback.
+						 */
+						FailureAction: v.optional(v.picklist(["continue", "pause"])),
+						/**
+						 * Amount of time to monitor each rolled back task for failures, in
+						 * nanoseconds.
+						 */
+						Monitor: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * The fraction of tasks that may fail during a rollback before the
+						 * failure action is invoked, specified as a floating point number
+						 * between 0 and 1.
+						 */
+						MaxFailureRatio: v.optional(v.number()),
+						/**
+						 * The order of operations when rolling back a task. Either the old
+						 * task is shut down before the new task is started, or the new task
+						 * is started before the old task is shut down.
+						 */
+						Order: v.optional(v.picklist(["stop-first", "start-first"])),
+					}),
+				),
+				/**
+				 * Specifies which networks the service should attach to.
+				 */
+				Networks: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * The target network for attachment. Must be a network name or ID.
+							 */
+							Target: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Discoverable alternate names for the service on this network.
+							 */
+							Aliases: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * Driver attachment options for the network target.
+							 */
+							DriverOpts: v.optional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Properties that can be configured to access and load balance a service.
+				 */
+				EndpointSpec: v.optional(
+					v.strictObject({
+						/**
+						 * The mode of resolution to use for internal load balancing between tasks.
+						 */
+						Mode: v.optional(v.picklist(["vip", "dnsrr"])),
+						/**
+						 * List of exposed ports that this service is accessible on from the
+						 * outside. Ports can only be provided if `vip` resolution mode is used.
+						 */
+						Ports: v.optional(
+							v.array(
+								v.strictObject({
+									Name: v.optional(v.pipe(v.string(), v.trim())),
+									Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
+									/**
+									 * The port inside the container.
+									 */
+									TargetPort: v.optional(v.pipe(v.number(), v.integer())),
+									/**
+									 * The port on the swarm hosts.
+									 */
+									PublishedPort: v.optional(v.pipe(v.number(), v.integer())),
+									/**
+									 * The mode in which port is published.
+									 *
+									 * <p><br /></p>
+									 *
+									 * - "ingress" makes the target port accessible on every node,
+									 *
+									 * regardless of whether there is a task for the service running on
+									 *
+									 * that node or not.
+									 * - "host" bypasses the routing mesh and publish the port directly on
+									 *
+									 * the swarm node where that service is running.
+									 */
+									PublishMode: v.optional(v.picklist(["ingress", "host"])),
+								}),
+							),
+						),
+					}),
+				),
+			}),
+		),
+		Endpoint: v.optional(
+			v.strictObject({
+				/**
+				 * Properties that can be configured to access and load balance a service.
+				 */
+				Spec: v.optional(
+					v.strictObject({
+						/**
+						 * The mode of resolution to use for internal load balancing between tasks.
+						 */
+						Mode: v.optional(v.picklist(["vip", "dnsrr"])),
+						/**
+						 * List of exposed ports that this service is accessible on from the
+						 * outside. Ports can only be provided if `vip` resolution mode is used.
+						 */
+						Ports: v.optional(
+							v.array(
+								v.strictObject({
+									Name: v.optional(v.pipe(v.string(), v.trim())),
+									Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
+									/**
+									 * The port inside the container.
+									 */
+									TargetPort: v.optional(v.pipe(v.number(), v.integer())),
+									/**
+									 * The port on the swarm hosts.
+									 */
+									PublishedPort: v.optional(v.pipe(v.number(), v.integer())),
+									/**
+									 * The mode in which port is published.
+									 *
+									 * <p><br /></p>
+									 *
+									 * - "ingress" makes the target port accessible on every node,
+									 *
+									 * regardless of whether there is a task for the service running on
+									 *
+									 * that node or not.
+									 * - "host" bypasses the routing mesh and publish the port directly on
+									 *
+									 * the swarm node where that service is running.
+									 */
+									PublishMode: v.optional(v.picklist(["ingress", "host"])),
+								}),
+							),
+						),
+					}),
+				),
+				Ports: v.optional(
+					v.array(
+						v.strictObject({
+							Name: v.optional(v.pipe(v.string(), v.trim())),
+							Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
+							/**
+							 * The port inside the container.
+							 */
+							TargetPort: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The port on the swarm hosts.
+							 */
+							PublishedPort: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * The mode in which port is published.
+							 *
+							 * <p><br /></p>
+							 *
+							 * - "ingress" makes the target port accessible on every node,
+							 *
+							 * regardless of whether there is a task for the service running on
+							 *
+							 * that node or not.
+							 * - "host" bypasses the routing mesh and publish the port directly on
+							 *
+							 * the swarm node where that service is running.
+							 */
+							PublishMode: v.optional(v.picklist(["ingress", "host"])),
+						}),
+					),
+				),
+				VirtualIPs: v.optional(
+					v.array(
+						v.strictObject({
+							NetworkID: v.optional(v.pipe(v.string(), v.trim())),
+							Addr: v.optional(v.pipe(v.string(), v.trim())),
+						}),
+					),
+				),
+			}),
+		),
+		/**
+		 * The status of a service update.
+		 */
+		UpdateStatus: v.optional(
+			v.strictObject({
+				State: v.optional(v.picklist(["updating", "paused", "completed"])),
+				StartedAt: v.optional(v.pipe(v.string(), v.trim())),
+				CompletedAt: v.optional(v.pipe(v.string(), v.trim())),
+				Message: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		/**
+		 * The status of the service's tasks. Provided only when requested as
+		 * part of a ServiceList operation.
+		 */
+		ServiceStatus: v.optional(
+			v.strictObject({
+				/**
+				 * The number of tasks for the service currently in the Running state.
+				 */
+				RunningTasks: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * The number of tasks for the service desired to be running.
+				 * For replicated services, this is the replica count from the
+				 * service spec. For global services, this is computed by taking
+				 * count of all tasks for the service with a Desired State other
+				 * than Shutdown.
+				 */
+				DesiredTasks: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * The number of tasks for a job that are in the Completed state.
+				 * This field must be cross-referenced with the service type, as the
+				 * value of 0 may mean the service is not in a job mode, or it may
+				 * mean the job-mode service has no tasks yet Completed.
+				 */
+				CompletedTasks: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		/**
+		 * The status of the service when it is in one of ReplicatedJob or
+		 * GlobalJob modes. Absent on Replicated and Global mode services. The
+		 * JobIteration is an ObjectVersion, but unlike the Service's version,
+		 * does not need to be sent with an update request.
+		 */
+		JobStatus: v.optional(
+			v.strictObject({
+				/**
+				 * The version number of the object such as node, service, etc. This is needed
+				 * to avoid conflicting writes. The client must send the version number along
+				 * with the modified specification when updating these objects.
+				 *
+				 * This approach ensures safe concurrency and determinism in that the change
+				 * on the object may not be applied if the version number has changed from the
+				 * last read. In other words, if two update requests specify the same base
+				 * version, only one of the requests can succeed. As a result, two separate
+				 * update requests that happen at the same time will not unintentionally
+				 * overwrite each other.
+				 */
+				JobIteration: v.optional(
+					v.strictObject({
+						Index: v.optional(v.pipe(v.number(), v.integer())),
+					}),
+				),
+				/**
+				 * The last time, as observed by the server, that this job was
+				 * started.
+				 */
+				LastExecution: v.optional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	}),
+);
 export const exactServiceListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 	status: v.exactOptional(v.boolean()),
@@ -33000,11 +48572,2481 @@ export const serviceCreateCommandBodySchema = v.intersect([
 	}),
 	v.record(v.string(), v.unknown()),
 ]);
+export const exactServiceCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the created service.
+	 */
+	ID: v.exactOptional(v.string()),
+	/**
+	 * Optional warning message
+	 */
+	Warning: v.exactOptional(v.string()),
+});
+export const serviceCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the created service.
+	 */
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Optional warning message
+	 */
+	Warning: v.optional(v.pipe(v.string(), v.trim())),
+});
 export const exactServiceCreateCommandHeaderSchema = v.object({
 	"x-registry-auth": v.exactOptional(v.string()),
 });
 export const serviceCreateCommandHeaderSchema = v.object({
 	"x-registry-auth": v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactServiceInspectCommandResponseSchema = v.strictObject({
+	ID: v.exactOptional(v.string()),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.exactOptional(
+		v.strictObject({
+			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.exactOptional(v.string()),
+	UpdatedAt: v.exactOptional(v.string()),
+	/**
+	 * User modifiable configuration for a service.
+	 */
+	Spec: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Name of the service.
+			 */
+			Name: v.exactOptional(v.string()),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * User modifiable task configuration.
+			 */
+			TaskTemplate: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Plugin spec for the service.  *(Experimental release only.)*
+					 *
+					 * <p><br /></p>
+					 *
+					 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+					 * > mutually exclusive. PluginSpec is only used when the Runtime field
+					 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+					 * > field is set to `attachment`.
+					 */
+					PluginSpec: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The name or 'alias' to use for the plugin.
+							 */
+							Name: v.exactOptional(v.string()),
+							/**
+							 * The plugin image reference to use.
+							 */
+							Remote: v.exactOptional(v.string()),
+							/**
+							 * Disable the plugin once scheduled.
+							 */
+							Disabled: v.exactOptional(v.boolean()),
+							PluginPrivilege: v.exactOptional(
+								v.array(
+									v.strictObject({
+										Name: v.exactOptional(v.string()),
+										Description: v.exactOptional(v.string()),
+										Value: v.exactOptional(v.array(v.string())),
+									}),
+								),
+							),
+						}),
+					),
+					/**
+					 * Container spec for the service.
+					 *
+					 * <p><br /></p>
+					 *
+					 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+					 * > mutually exclusive. PluginSpec is only used when the Runtime field
+					 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+					 * > field is set to `attachment`.
+					 */
+					ContainerSpec: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The image name to use for the container
+							 */
+							Image: v.exactOptional(v.string()),
+							/**
+							 * User-defined key/value data.
+							 */
+							Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+							/**
+							 * The command to be run in the image.
+							 */
+							Command: v.exactOptional(v.array(v.string())),
+							/**
+							 * Arguments to the command.
+							 */
+							Args: v.exactOptional(v.array(v.string())),
+							/**
+							 * The hostname to use for the container, as a valid
+							 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+							 */
+							Hostname: v.exactOptional(v.string()),
+							/**
+							 * A list of environment variables in the form `VAR=value`.
+							 */
+							Env: v.exactOptional(v.array(v.string())),
+							/**
+							 * The working directory for commands to run in.
+							 */
+							Dir: v.exactOptional(v.string()),
+							/**
+							 * The user inside the container.
+							 */
+							User: v.exactOptional(v.string()),
+							/**
+							 * A list of additional groups that the container process will run as.
+							 */
+							Groups: v.exactOptional(v.array(v.string())),
+							/**
+							 * Security options for the container
+							 */
+							Privileges: v.exactOptional(
+								v.strictObject({
+									/**
+									 * CredentialSpec for managed service account (Windows only)
+									 */
+									CredentialSpec: v.exactOptional(
+										v.strictObject({
+											/**
+											 * Load credential spec from a Swarm Config with the given ID.
+											 * The specified config must also be present in the Configs
+											 * field with the Runtime property set.
+											 *
+											 * <p><br /></p>
+											 *
+											 *
+											 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+											 * > and `CredentialSpec.Config` are mutually exclusive.
+											 */
+											Config: v.exactOptional(v.string()),
+											/**
+											 * Load credential spec from this file. The file is read by
+											 * the daemon, and must be present in the `CredentialSpecs`
+											 * subdirectory in the docker data directory, which defaults
+											 * to `C:\ProgramData\Docker\` on Windows.
+											 *
+											 * For example, specifying `spec.json` loads
+											 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+											 *
+											 * <p><br /></p>
+											 *
+											 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+											 * > and `CredentialSpec.Config` are mutually exclusive.
+											 */
+											File: v.exactOptional(v.string()),
+											/**
+											 * Load credential spec from this value in the Windows
+											 * registry. The specified registry value must be located in:
+											 *
+											 * `HKLM\SOFTWARE\Microsoft\Windows
+											 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+											 *
+											 * <p><br /></p>
+											 *
+											 *
+											 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+											 * > and `CredentialSpec.Config` are mutually exclusive.
+											 */
+											Registry: v.exactOptional(v.string()),
+										}),
+									),
+									/**
+									 * SELinux labels of the container
+									 */
+									SELinuxContext: v.exactOptional(
+										v.strictObject({
+											/**
+											 * Disable SELinux
+											 */
+											Disable: v.exactOptional(v.boolean()),
+											/**
+											 * SELinux user label
+											 */
+											User: v.exactOptional(v.string()),
+											/**
+											 * SELinux role label
+											 */
+											Role: v.exactOptional(v.string()),
+											/**
+											 * SELinux type label
+											 */
+											Type: v.exactOptional(v.string()),
+											/**
+											 * SELinux level label
+											 */
+											Level: v.exactOptional(v.string()),
+										}),
+									),
+								}),
+							),
+							/**
+							 * Whether a pseudo-TTY should be allocated.
+							 */
+							TTY: v.exactOptional(v.boolean()),
+							/**
+							 * Open `stdin`
+							 */
+							OpenStdin: v.exactOptional(v.boolean()),
+							/**
+							 * Mount the container's root filesystem as read only.
+							 */
+							ReadOnly: v.exactOptional(v.boolean()),
+							/**
+							 * Specification for mounts to be added to containers created as part
+							 * of the service.
+							 */
+							Mounts: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Container path.
+										 */
+										Target: v.exactOptional(v.string()),
+										/**
+										 * Mount source (e.g. a volume name, a host path).
+										 */
+										Source: v.exactOptional(v.string()),
+										/**
+										 * The mount type. Available types:
+										 *
+										 * - `bind` Mounts a file or directory from the host into the container. Must
+										 * exist prior to creating the container.
+										 * - `volume` Creates a volume with the given name and options (or uses a
+										 * pre-existing volume with the same name and options). These are **not**
+										 * removed when the container is removed.
+										 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+										 * specified for tmpfs.
+										 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+										 * prior to creating the container.
+										 * - `cluster` a Swarm cluster volume
+										 */
+										Type: v.exactOptional(
+											v.picklist([
+												"bind",
+												"volume",
+												"tmpfs",
+												"npipe",
+												"cluster",
+											]),
+										),
+										/**
+										 * Whether the mount should be read-only.
+										 */
+										ReadOnly: v.exactOptional(v.boolean()),
+										/**
+										 * The consistency requirement for the mount: `default`, `consistent`,
+										 * `cached`, or `delegated`.
+										 */
+										Consistency: v.exactOptional(v.string()),
+										/**
+										 * Optional configuration for the `bind` type.
+										 */
+										BindOptions: v.exactOptional(
+											v.strictObject({
+												/**
+												 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+												 */
+												Propagation: v.exactOptional(
+													v.picklist([
+														"private",
+														"rprivate",
+														"shared",
+														"rshared",
+														"slave",
+														"rslave",
+													]),
+												),
+												/**
+												 * Disable recursive bind mount.
+												 */
+												NonRecursive: v.exactOptional(v.boolean()),
+												/**
+												 * Create mount point on host if missing
+												 */
+												CreateMountpoint: v.exactOptional(v.boolean()),
+											}),
+										),
+										/**
+										 * Optional configuration for the `volume` type.
+										 */
+										VolumeOptions: v.exactOptional(
+											v.strictObject({
+												/**
+												 * Populate volume with data from the target.
+												 */
+												NoCopy: v.exactOptional(v.boolean()),
+												/**
+												 * User-defined key/value metadata.
+												 */
+												Labels: v.exactOptional(
+													v.record(v.string(), v.unknown()),
+												),
+												/**
+												 * Map of driver specific options
+												 */
+												DriverConfig: v.exactOptional(
+													v.strictObject({
+														/**
+														 * Name of the driver to use to create the volume.
+														 */
+														Name: v.exactOptional(v.string()),
+														/**
+														 * key/value map of driver specific options.
+														 */
+														Options: v.exactOptional(
+															v.record(v.string(), v.unknown()),
+														),
+													}),
+												),
+											}),
+										),
+										/**
+										 * Optional configuration for the `tmpfs` type.
+										 */
+										TmpfsOptions: v.exactOptional(
+											v.strictObject({
+												/**
+												 * The size for the tmpfs mount in bytes.
+												 */
+												SizeBytes: v.exactOptional(v.bigint()),
+												/**
+												 * The permission mode for the tmpfs mount in an integer.
+												 */
+												Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+											}),
+										),
+									}),
+								),
+							),
+							/**
+							 * Signal to stop the container.
+							 */
+							StopSignal: v.exactOptional(v.string()),
+							/**
+							 * Amount of time to wait for the container to terminate before
+							 * forcefully killing it.
+							 */
+							StopGracePeriod: v.exactOptional(v.bigint()),
+							/**
+							 * A test to perform to check that the container is healthy.
+							 */
+							HealthCheck: v.exactOptional(
+								v.strictObject({
+									/**
+									 * The test to perform. Possible values are:
+									 *
+									 * - `[]` inherit healthcheck from image or parent image
+									 * - `["NONE"]` disable healthcheck
+									 * - `["CMD", args...]` exec arguments directly
+									 * - `["CMD-SHELL", command]` run command with system's default shell
+									 */
+									Test: v.exactOptional(v.array(v.string())),
+									/**
+									 * The time to wait between checks in nanoseconds. It should be 0 or at
+									 * least 1000000 (1 ms). 0 means inherit.
+									 */
+									Interval: v.exactOptional(v.bigint()),
+									/**
+									 * The time to wait before considering the check to have hung. It should
+									 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+									 */
+									Timeout: v.exactOptional(v.bigint()),
+									/**
+									 * The number of consecutive failures needed to consider a container as
+									 * unhealthy. 0 means inherit.
+									 */
+									Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+									/**
+									 * Start period for the container to initialize before starting
+									 * health-retries countdown in nanoseconds. It should be 0 or at least
+									 * 1000000 (1 ms). 0 means inherit.
+									 */
+									StartPeriod: v.exactOptional(v.bigint()),
+								}),
+							),
+							/**
+							 * A list of hostname/IP mappings to add to the container's `hosts`
+							 * file. The format of extra hosts is specified in the
+							 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+							 * man page:
+							 *
+							 *
+							 * IP_address canonical_hostname [aliases...]
+							 */
+							Hosts: v.exactOptional(v.array(v.string())),
+							/**
+							 * Specification for DNS related configurations in resolver configuration
+							 * file (`resolv.conf`).
+							 */
+							DNSConfig: v.exactOptional(
+								v.strictObject({
+									/**
+									 * The IP addresses of the name servers.
+									 */
+									Nameservers: v.exactOptional(v.array(v.string())),
+									/**
+									 * A search list for host-name lookup.
+									 */
+									Search: v.exactOptional(v.array(v.string())),
+									/**
+									 * A list of internal resolver variables to be modified (e.g.,
+									 * `debug`, `ndots:3`, etc.).
+									 */
+									Options: v.exactOptional(v.array(v.string())),
+								}),
+							),
+							/**
+							 * Secrets contains references to zero or more secrets that will be
+							 * exposed to the service.
+							 */
+							Secrets: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * File represents a specific target that is backed by a file.
+										 */
+										File: v.exactOptional(
+											v.strictObject({
+												/**
+												 * Name represents the final filename in the filesystem.
+												 */
+												Name: v.exactOptional(v.string()),
+												/**
+												 * UID represents the file UID.
+												 */
+												UID: v.exactOptional(v.string()),
+												/**
+												 * GID represents the file GID.
+												 */
+												GID: v.exactOptional(v.string()),
+												/**
+												 * Mode represents the FileMode of the file.
+												 */
+												Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+											}),
+										),
+										/**
+										 * SecretID represents the ID of the specific secret that we're
+										 * referencing.
+										 */
+										SecretID: v.exactOptional(v.string()),
+										/**
+										 * SecretName is the name of the secret that this references,
+										 * but this is just provided for lookup/display purposes. The
+										 * secret in the reference will be identified by its ID.
+										 */
+										SecretName: v.exactOptional(v.string()),
+									}),
+								),
+							),
+							/**
+							 * Configs contains references to zero or more configs that will be
+							 * exposed to the service.
+							 */
+							Configs: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * File represents a specific target that is backed by a file.
+										 *
+										 * <p><br /><p>
+										 *
+										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+										 */
+										File: v.exactOptional(
+											v.strictObject({
+												/**
+												 * Name represents the final filename in the filesystem.
+												 */
+												Name: v.exactOptional(v.string()),
+												/**
+												 * UID represents the file UID.
+												 */
+												UID: v.exactOptional(v.string()),
+												/**
+												 * GID represents the file GID.
+												 */
+												GID: v.exactOptional(v.string()),
+												/**
+												 * Mode represents the FileMode of the file.
+												 */
+												Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+											}),
+										),
+										/**
+										 * Runtime represents a target that is not mounted into the
+										 * container but is used by the task
+										 *
+										 * <p><br /><p>
+										 *
+										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+										 * > exclusive
+										 */
+										Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+										/**
+										 * ConfigID represents the ID of the specific config that we're
+										 * referencing.
+										 */
+										ConfigID: v.exactOptional(v.string()),
+										/**
+										 * ConfigName is the name of the config that this references,
+										 * but this is just provided for lookup/display purposes. The
+										 * config in the reference will be identified by its ID.
+										 */
+										ConfigName: v.exactOptional(v.string()),
+									}),
+								),
+							),
+							/**
+							 * Isolation technology of the containers running the service.
+							 * (Windows only)
+							 */
+							Isolation: v.exactOptional(
+								v.picklist(["default", "process", "hyperv", ""]),
+							),
+							/**
+							 * Run an init inside the container that forwards signals and reaps
+							 * processes. This field is omitted if empty, and the default (as
+							 * configured on the daemon) is used.
+							 */
+							Init: v.exactOptional(v.nullable(v.boolean())),
+							/**
+							 * Set kernel namedspaced parameters (sysctls) in the container.
+							 * The Sysctls option on services accepts the same sysctls as the
+							 * are supported on containers. Note that while the same sysctls are
+							 * supported, no guarantees or checks are made about their
+							 * suitability for a clustered environment, and it's up to the user
+							 * to determine whether a given sysctl will work properly in a
+							 * Service.
+							 */
+							Sysctls: v.exactOptional(v.record(v.string(), v.unknown())),
+							/**
+							 * A list of kernel capabilities to add to the default set
+							 * for the container.
+							 */
+							CapabilityAdd: v.exactOptional(v.array(v.string())),
+							/**
+							 * A list of kernel capabilities to drop from the default set
+							 * for the container.
+							 */
+							CapabilityDrop: v.exactOptional(v.array(v.string())),
+							/**
+							 * A list of resource limits to set in the container. For example: `{"Name":
+							 * "nofile", "Soft": 1024, "Hard": 2048}`"
+							 */
+							Ulimits: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Name of ulimit
+										 */
+										Name: v.exactOptional(v.string()),
+										/**
+										 * Soft limit
+										 */
+										Soft: v.exactOptional(v.pipe(v.number(), v.integer())),
+										/**
+										 * Hard limit
+										 */
+										Hard: v.exactOptional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+							),
+						}),
+					),
+					/**
+					 * Read-only spec type for non-swarm containers attached to swarm overlay
+					 * networks.
+					 *
+					 * <p><br /></p>
+					 *
+					 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+					 * > mutually exclusive. PluginSpec is only used when the Runtime field
+					 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+					 * > field is set to `attachment`.
+					 */
+					NetworkAttachmentSpec: v.exactOptional(
+						v.strictObject({
+							/**
+							 * ID of the container represented by this task
+							 */
+							ContainerID: v.exactOptional(v.string()),
+						}),
+					),
+					/**
+					 * Resource requirements which apply to each individual container created
+					 * as part of the service.
+					 */
+					Resources: v.exactOptional(
+						v.strictObject({
+							/**
+							 * An object describing a limit on resources which can be requested by a task.
+							 */
+							Limits: v.exactOptional(
+								v.strictObject({
+									NanoCPUs: v.exactOptional(v.bigint()),
+									MemoryBytes: v.exactOptional(v.bigint()),
+									/**
+									 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+									 */
+									Pids: v.exactOptional(v.bigint()),
+								}),
+							),
+							/**
+							 * An object describing the resources which can be advertised by a node and
+							 * requested by a task.
+							 */
+							Reservations: v.exactOptional(
+								v.strictObject({
+									NanoCPUs: v.exactOptional(v.bigint()),
+									MemoryBytes: v.exactOptional(v.bigint()),
+									/**
+									 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+									 * String resources (e.g, `GPU=UUID1`).
+									 */
+									GenericResources: v.exactOptional(
+										v.array(
+											v.strictObject({
+												NamedResourceSpec: v.exactOptional(
+													v.strictObject({
+														Kind: v.exactOptional(v.string()),
+														Value: v.exactOptional(v.string()),
+													}),
+												),
+												DiscreteResourceSpec: v.exactOptional(
+													v.strictObject({
+														Kind: v.exactOptional(v.string()),
+														Value: v.exactOptional(v.bigint()),
+													}),
+												),
+											}),
+										),
+									),
+								}),
+							),
+						}),
+					),
+					/**
+					 * Specification for the restart policy which applies to containers
+					 * created as part of this service.
+					 */
+					RestartPolicy: v.exactOptional(
+						v.strictObject({
+							/**
+							 * Condition for restart.
+							 */
+							Condition: v.exactOptional(
+								v.picklist(["none", "on-failure", "any"]),
+							),
+							/**
+							 * Delay between restart attempts.
+							 */
+							Delay: v.exactOptional(v.bigint()),
+							/**
+							 * Maximum attempts to restart a given container before giving up
+							 * (default value is 0, which is ignored).
+							 */
+							MaxAttempts: v.exactOptional(v.bigint()),
+							/**
+							 * Windows is the time window used to evaluate the restart policy
+							 * (default value is 0, which is unbounded).
+							 */
+							Window: v.exactOptional(v.bigint()),
+						}),
+					),
+					Placement: v.exactOptional(
+						v.strictObject({
+							/**
+							 * An array of constraint expressions to limit the set of nodes where
+							 * a task can be scheduled. Constraint expressions can either use a
+							 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+							 * nodes that satisfy every expression (AND match). Constraints can
+							 * match node or Docker Engine labels as follows:
+							 *
+							 * node attribute       | matches                        | example
+							 * ---------------------|--------------------------------|-----------------------------------------------
+							 * `node.id`            | Node ID                        |
+							 * `node.id==2ivku8v2gvtg4`
+							 * `node.hostname`      | Node hostname                  |
+							 * `node.hostname!=node-2`
+							 * `node.role`          | Node role (`manager`/`worker`) |
+							 * `node.role==manager`
+							 * `node.platform.os`   | Node operating system          |
+							 * `node.platform.os==windows`
+							 * `node.platform.arch` | Node architecture              |
+							 * `node.platform.arch==x86_64`
+							 * `node.labels`        | User-defined node labels       |
+							 * `node.labels.security==high`
+							 * `engine.labels`      | Docker Engine's labels         |
+							 * `engine.labels.operatingsystem==ubuntu-14.04`
+							 *
+							 * `engine.labels` apply to Docker Engine labels like operating system,
+							 * drivers, etc. Swarm administrators add `node.labels` for operational
+							 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+							 */
+							Constraints: v.exactOptional(v.array(v.string())),
+							/**
+							 * Preferences provide a way to make the scheduler aware of factors
+							 * such as topology. They are provided in order from highest to
+							 * lowest precedence.
+							 */
+							Preferences: v.exactOptional(
+								v.array(
+									v.strictObject({
+										Spread: v.exactOptional(
+											v.strictObject({
+												/**
+												 * label descriptor, such as `engine.labels.az`.
+												 */
+												SpreadDescriptor: v.exactOptional(v.string()),
+											}),
+										),
+									}),
+								),
+							),
+							/**
+							 * Maximum number of replicas for per node (default value is 0, which
+							 * is unlimited)
+							 */
+							MaxReplicas: v.exactOptional(v.bigint()),
+							/**
+							 * Platforms stores all the platforms that the service's image can
+							 * run on. This field is used in the platform filter for scheduling.
+							 * If empty, then the platform filter is off, meaning there are no
+							 * scheduling restrictions.
+							 */
+							Platforms: v.exactOptional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Architecture represents the hardware architecture (for example,
+										 * `x86_64`).
+										 */
+										Architecture: v.exactOptional(v.string()),
+										/**
+										 * OS represents the Operating System (for example, `linux` or `windows`).
+										 */
+										OS: v.exactOptional(v.string()),
+									}),
+								),
+							),
+						}),
+					),
+					/**
+					 * A counter that triggers an update even if no relevant parameters have
+					 * been changed.
+					 */
+					ForceUpdate: v.exactOptional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Runtime is the type of runtime specified for the task executor.
+					 */
+					Runtime: v.exactOptional(v.string()),
+					/**
+					 * Specifies which networks the service should attach to.
+					 */
+					Networks: v.exactOptional(
+						v.array(
+							v.strictObject({
+								/**
+								 * The target network for attachment. Must be a network name or ID.
+								 */
+								Target: v.exactOptional(v.string()),
+								/**
+								 * Discoverable alternate names for the service on this network.
+								 */
+								Aliases: v.exactOptional(v.array(v.string())),
+								/**
+								 * Driver attachment options for the network target.
+								 */
+								DriverOpts: v.exactOptional(v.record(v.string(), v.unknown())),
+							}),
+						),
+					),
+					/**
+					 * Specifies the log driver to use for tasks created from this spec. If
+					 * not present, the default one for the swarm will be used, finally
+					 * falling back to the engine default if not specified.
+					 */
+					LogDriver: v.exactOptional(
+						v.strictObject({
+							Name: v.exactOptional(v.string()),
+							Options: v.exactOptional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Scheduling mode for the service.
+			 */
+			Mode: v.exactOptional(
+				v.strictObject({
+					Replicated: v.exactOptional(
+						v.strictObject({
+							Replicas: v.exactOptional(v.bigint()),
+						}),
+					),
+					Global: v.exactOptional(v.record(v.string(), v.unknown())),
+					/**
+					 * The mode used for services with a finite number of tasks that run
+					 * to a completed state.
+					 */
+					ReplicatedJob: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The maximum number of replicas to run simultaneously.
+							 */
+							MaxConcurrent: v.exactOptional(v.bigint()),
+							/**
+							 * The total number of replicas desired to reach the Completed
+							 * state. If unset, will default to the value of `MaxConcurrent`
+							 */
+							TotalCompletions: v.exactOptional(v.bigint()),
+						}),
+					),
+					/**
+					 * The mode used for services which run a task to the completed state
+					 * on each valid node.
+					 */
+					GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+				}),
+			),
+			/**
+			 * Specification for the update strategy of the service.
+			 */
+			UpdateConfig: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Maximum number of tasks to be updated in one iteration (0 means
+					 * unlimited parallelism).
+					 */
+					Parallelism: v.exactOptional(v.bigint()),
+					/**
+					 * Amount of time between updates, in nanoseconds.
+					 */
+					Delay: v.exactOptional(v.bigint()),
+					/**
+					 * Action to take if an updated task fails to run, or stops running
+					 * during the update.
+					 */
+					FailureAction: v.exactOptional(
+						v.picklist(["continue", "pause", "rollback"]),
+					),
+					/**
+					 * Amount of time to monitor each updated task for failures, in
+					 * nanoseconds.
+					 */
+					Monitor: v.exactOptional(v.bigint()),
+					/**
+					 * The fraction of tasks that may fail during an update before the
+					 * failure action is invoked, specified as a floating point number
+					 * between 0 and 1.
+					 */
+					MaxFailureRatio: v.exactOptional(v.number()),
+					/**
+					 * The order of operations when rolling out an updated task. Either
+					 * the old task is shut down before the new task is started, or the
+					 * new task is started before the old task is shut down.
+					 */
+					Order: v.exactOptional(v.picklist(["stop-first", "start-first"])),
+				}),
+			),
+			/**
+			 * Specification for the rollback strategy of the service.
+			 */
+			RollbackConfig: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Maximum number of tasks to be rolled back in one iteration (0 means
+					 * unlimited parallelism).
+					 */
+					Parallelism: v.exactOptional(v.bigint()),
+					/**
+					 * Amount of time between rollback iterations, in nanoseconds.
+					 */
+					Delay: v.exactOptional(v.bigint()),
+					/**
+					 * Action to take if an rolled back task fails to run, or stops
+					 * running during the rollback.
+					 */
+					FailureAction: v.exactOptional(v.picklist(["continue", "pause"])),
+					/**
+					 * Amount of time to monitor each rolled back task for failures, in
+					 * nanoseconds.
+					 */
+					Monitor: v.exactOptional(v.bigint()),
+					/**
+					 * The fraction of tasks that may fail during a rollback before the
+					 * failure action is invoked, specified as a floating point number
+					 * between 0 and 1.
+					 */
+					MaxFailureRatio: v.exactOptional(v.number()),
+					/**
+					 * The order of operations when rolling back a task. Either the old
+					 * task is shut down before the new task is started, or the new task
+					 * is started before the old task is shut down.
+					 */
+					Order: v.exactOptional(v.picklist(["stop-first", "start-first"])),
+				}),
+			),
+			/**
+			 * Specifies which networks the service should attach to.
+			 */
+			Networks: v.exactOptional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The target network for attachment. Must be a network name or ID.
+						 */
+						Target: v.exactOptional(v.string()),
+						/**
+						 * Discoverable alternate names for the service on this network.
+						 */
+						Aliases: v.exactOptional(v.array(v.string())),
+						/**
+						 * Driver attachment options for the network target.
+						 */
+						DriverOpts: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+			/**
+			 * Properties that can be configured to access and load balance a service.
+			 */
+			EndpointSpec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The mode of resolution to use for internal load balancing between tasks.
+					 */
+					Mode: v.exactOptional(v.picklist(["vip", "dnsrr"])),
+					/**
+					 * List of exposed ports that this service is accessible on from the
+					 * outside. Ports can only be provided if `vip` resolution mode is used.
+					 */
+					Ports: v.exactOptional(
+						v.array(
+							v.strictObject({
+								Name: v.exactOptional(v.string()),
+								Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
+								/**
+								 * The port inside the container.
+								 */
+								TargetPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The port on the swarm hosts.
+								 */
+								PublishedPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The mode in which port is published.
+								 *
+								 * <p><br /></p>
+								 *
+								 * - "ingress" makes the target port accessible on every node,
+								 *
+								 * regardless of whether there is a task for the service running on
+								 *
+								 * that node or not.
+								 * - "host" bypasses the routing mesh and publish the port directly on
+								 *
+								 * the swarm node where that service is running.
+								 */
+								PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
+							}),
+						),
+					),
+				}),
+			),
+		}),
+	),
+	Endpoint: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Properties that can be configured to access and load balance a service.
+			 */
+			Spec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The mode of resolution to use for internal load balancing between tasks.
+					 */
+					Mode: v.exactOptional(v.picklist(["vip", "dnsrr"])),
+					/**
+					 * List of exposed ports that this service is accessible on from the
+					 * outside. Ports can only be provided if `vip` resolution mode is used.
+					 */
+					Ports: v.exactOptional(
+						v.array(
+							v.strictObject({
+								Name: v.exactOptional(v.string()),
+								Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
+								/**
+								 * The port inside the container.
+								 */
+								TargetPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The port on the swarm hosts.
+								 */
+								PublishedPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The mode in which port is published.
+								 *
+								 * <p><br /></p>
+								 *
+								 * - "ingress" makes the target port accessible on every node,
+								 *
+								 * regardless of whether there is a task for the service running on
+								 *
+								 * that node or not.
+								 * - "host" bypasses the routing mesh and publish the port directly on
+								 *
+								 * the swarm node where that service is running.
+								 */
+								PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
+							}),
+						),
+					),
+				}),
+			),
+			Ports: v.exactOptional(
+				v.array(
+					v.strictObject({
+						Name: v.exactOptional(v.string()),
+						Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
+						/**
+						 * The port inside the container.
+						 */
+						TargetPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+						/**
+						 * The port on the swarm hosts.
+						 */
+						PublishedPort: v.exactOptional(v.pipe(v.number(), v.integer())),
+						/**
+						 * The mode in which port is published.
+						 *
+						 * <p><br /></p>
+						 *
+						 * - "ingress" makes the target port accessible on every node,
+						 *
+						 * regardless of whether there is a task for the service running on
+						 *
+						 * that node or not.
+						 * - "host" bypasses the routing mesh and publish the port directly on
+						 *
+						 * the swarm node where that service is running.
+						 */
+						PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
+					}),
+				),
+			),
+			VirtualIPs: v.exactOptional(
+				v.array(
+					v.strictObject({
+						NetworkID: v.exactOptional(v.string()),
+						Addr: v.exactOptional(v.string()),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The status of a service update.
+	 */
+	UpdateStatus: v.exactOptional(
+		v.strictObject({
+			State: v.exactOptional(v.picklist(["updating", "paused", "completed"])),
+			StartedAt: v.exactOptional(v.string()),
+			CompletedAt: v.exactOptional(v.string()),
+			Message: v.exactOptional(v.string()),
+		}),
+	),
+	/**
+	 * The status of the service's tasks. Provided only when requested as
+	 * part of a ServiceList operation.
+	 */
+	ServiceStatus: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The number of tasks for the service currently in the Running state.
+			 */
+			RunningTasks: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * The number of tasks for the service desired to be running.
+			 * For replicated services, this is the replica count from the
+			 * service spec. For global services, this is computed by taking
+			 * count of all tasks for the service with a Desired State other
+			 * than Shutdown.
+			 */
+			DesiredTasks: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * The number of tasks for a job that are in the Completed state.
+			 * This field must be cross-referenced with the service type, as the
+			 * value of 0 may mean the service is not in a job mode, or it may
+			 * mean the job-mode service has no tasks yet Completed.
+			 */
+			CompletedTasks: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	/**
+	 * The status of the service when it is in one of ReplicatedJob or
+	 * GlobalJob modes. Absent on Replicated and Global mode services. The
+	 * JobIteration is an ObjectVersion, but unlike the Service's version,
+	 * does not need to be sent with an update request.
+	 */
+	JobStatus: v.exactOptional(
+		v.strictObject({
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			JobIteration: v.exactOptional(
+				v.strictObject({
+					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			/**
+			 * The last time, as observed by the server, that this job was
+			 * started.
+			 */
+			LastExecution: v.exactOptional(v.string()),
+		}),
+	),
+});
+export const serviceInspectCommandResponseSchema = v.strictObject({
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.optional(
+		v.strictObject({
+			Index: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * User modifiable configuration for a service.
+	 */
+	Spec: v.optional(
+		v.strictObject({
+			/**
+			 * Name of the service.
+			 */
+			Name: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * User modifiable task configuration.
+			 */
+			TaskTemplate: v.optional(
+				v.strictObject({
+					/**
+					 * Plugin spec for the service.  *(Experimental release only.)*
+					 *
+					 * <p><br /></p>
+					 *
+					 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+					 * > mutually exclusive. PluginSpec is only used when the Runtime field
+					 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+					 * > field is set to `attachment`.
+					 */
+					PluginSpec: v.optional(
+						v.strictObject({
+							/**
+							 * The name or 'alias' to use for the plugin.
+							 */
+							Name: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * The plugin image reference to use.
+							 */
+							Remote: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Disable the plugin once scheduled.
+							 */
+							Disabled: v.optional(v.boolean()),
+							PluginPrivilege: v.optional(
+								v.array(
+									v.strictObject({
+										Name: v.optional(v.pipe(v.string(), v.trim())),
+										Description: v.optional(v.pipe(v.string(), v.trim())),
+										Value: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+									}),
+								),
+							),
+						}),
+					),
+					/**
+					 * Container spec for the service.
+					 *
+					 * <p><br /></p>
+					 *
+					 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+					 * > mutually exclusive. PluginSpec is only used when the Runtime field
+					 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+					 * > field is set to `attachment`.
+					 */
+					ContainerSpec: v.optional(
+						v.strictObject({
+							/**
+							 * The image name to use for the container
+							 */
+							Image: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * User-defined key/value data.
+							 */
+							Labels: v.optional(v.record(v.string(), v.unknown())),
+							/**
+							 * The command to be run in the image.
+							 */
+							Command: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * Arguments to the command.
+							 */
+							Args: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * The hostname to use for the container, as a valid
+							 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+							 */
+							Hostname: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * A list of environment variables in the form `VAR=value`.
+							 */
+							Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * The working directory for commands to run in.
+							 */
+							Dir: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * The user inside the container.
+							 */
+							User: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * A list of additional groups that the container process will run as.
+							 */
+							Groups: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * Security options for the container
+							 */
+							Privileges: v.optional(
+								v.strictObject({
+									/**
+									 * CredentialSpec for managed service account (Windows only)
+									 */
+									CredentialSpec: v.optional(
+										v.strictObject({
+											/**
+											 * Load credential spec from a Swarm Config with the given ID.
+											 * The specified config must also be present in the Configs
+											 * field with the Runtime property set.
+											 *
+											 * <p><br /></p>
+											 *
+											 *
+											 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+											 * > and `CredentialSpec.Config` are mutually exclusive.
+											 */
+											Config: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Load credential spec from this file. The file is read by
+											 * the daemon, and must be present in the `CredentialSpecs`
+											 * subdirectory in the docker data directory, which defaults
+											 * to `C:\ProgramData\Docker\` on Windows.
+											 *
+											 * For example, specifying `spec.json` loads
+											 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+											 *
+											 * <p><br /></p>
+											 *
+											 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+											 * > and `CredentialSpec.Config` are mutually exclusive.
+											 */
+											File: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Load credential spec from this value in the Windows
+											 * registry. The specified registry value must be located in:
+											 *
+											 * `HKLM\SOFTWARE\Microsoft\Windows
+											 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+											 *
+											 * <p><br /></p>
+											 *
+											 *
+											 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+											 * > and `CredentialSpec.Config` are mutually exclusive.
+											 */
+											Registry: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+									/**
+									 * SELinux labels of the container
+									 */
+									SELinuxContext: v.optional(
+										v.strictObject({
+											/**
+											 * Disable SELinux
+											 */
+											Disable: v.optional(v.boolean()),
+											/**
+											 * SELinux user label
+											 */
+											User: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * SELinux role label
+											 */
+											Role: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * SELinux type label
+											 */
+											Type: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * SELinux level label
+											 */
+											Level: v.optional(v.pipe(v.string(), v.trim())),
+										}),
+									),
+								}),
+							),
+							/**
+							 * Whether a pseudo-TTY should be allocated.
+							 */
+							TTY: v.optional(v.boolean()),
+							/**
+							 * Open `stdin`
+							 */
+							OpenStdin: v.optional(v.boolean()),
+							/**
+							 * Mount the container's root filesystem as read only.
+							 */
+							ReadOnly: v.optional(v.boolean()),
+							/**
+							 * Specification for mounts to be added to containers created as part
+							 * of the service.
+							 */
+							Mounts: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Container path.
+										 */
+										Target: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Mount source (e.g. a volume name, a host path).
+										 */
+										Source: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * The mount type. Available types:
+										 *
+										 * - `bind` Mounts a file or directory from the host into the container. Must
+										 * exist prior to creating the container.
+										 * - `volume` Creates a volume with the given name and options (or uses a
+										 * pre-existing volume with the same name and options). These are **not**
+										 * removed when the container is removed.
+										 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+										 * specified for tmpfs.
+										 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+										 * prior to creating the container.
+										 * - `cluster` a Swarm cluster volume
+										 */
+										Type: v.optional(
+											v.picklist([
+												"bind",
+												"volume",
+												"tmpfs",
+												"npipe",
+												"cluster",
+											]),
+										),
+										/**
+										 * Whether the mount should be read-only.
+										 */
+										ReadOnly: v.optional(v.boolean()),
+										/**
+										 * The consistency requirement for the mount: `default`, `consistent`,
+										 * `cached`, or `delegated`.
+										 */
+										Consistency: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Optional configuration for the `bind` type.
+										 */
+										BindOptions: v.optional(
+											v.strictObject({
+												/**
+												 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+												 */
+												Propagation: v.optional(
+													v.picklist([
+														"private",
+														"rprivate",
+														"shared",
+														"rshared",
+														"slave",
+														"rslave",
+													]),
+												),
+												/**
+												 * Disable recursive bind mount.
+												 */
+												NonRecursive: v.optional(v.boolean()),
+												/**
+												 * Create mount point on host if missing
+												 */
+												CreateMountpoint: v.optional(v.boolean()),
+											}),
+										),
+										/**
+										 * Optional configuration for the `volume` type.
+										 */
+										VolumeOptions: v.optional(
+											v.strictObject({
+												/**
+												 * Populate volume with data from the target.
+												 */
+												NoCopy: v.optional(v.boolean()),
+												/**
+												 * User-defined key/value metadata.
+												 */
+												Labels: v.optional(v.record(v.string(), v.unknown())),
+												/**
+												 * Map of driver specific options
+												 */
+												DriverConfig: v.optional(
+													v.strictObject({
+														/**
+														 * Name of the driver to use to create the volume.
+														 */
+														Name: v.optional(v.pipe(v.string(), v.trim())),
+														/**
+														 * key/value map of driver specific options.
+														 */
+														Options: v.optional(
+															v.record(v.string(), v.unknown()),
+														),
+													}),
+												),
+											}),
+										),
+										/**
+										 * Optional configuration for the `tmpfs` type.
+										 */
+										TmpfsOptions: v.optional(
+											v.strictObject({
+												/**
+												 * The size for the tmpfs mount in bytes.
+												 */
+												SizeBytes: v.optional(
+													v.union([
+														v.pipe(
+															v.string(),
+															v.decimal(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.pipe(
+															v.number(),
+															v.integer(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.bigint(),
+													]),
+												),
+												/**
+												 * The permission mode for the tmpfs mount in an integer.
+												 */
+												Mode: v.optional(v.pipe(v.number(), v.integer())),
+											}),
+										),
+									}),
+								),
+							),
+							/**
+							 * Signal to stop the container.
+							 */
+							StopSignal: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Amount of time to wait for the container to terminate before
+							 * forcefully killing it.
+							 */
+							StopGracePeriod: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * A test to perform to check that the container is healthy.
+							 */
+							HealthCheck: v.optional(
+								v.strictObject({
+									/**
+									 * The test to perform. Possible values are:
+									 *
+									 * - `[]` inherit healthcheck from image or parent image
+									 * - `["NONE"]` disable healthcheck
+									 * - `["CMD", args...]` exec arguments directly
+									 * - `["CMD-SHELL", command]` run command with system's default shell
+									 */
+									Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+									/**
+									 * The time to wait between checks in nanoseconds. It should be 0 or at
+									 * least 1000000 (1 ms). 0 means inherit.
+									 */
+									Interval: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * The time to wait before considering the check to have hung. It should
+									 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+									 */
+									Timeout: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * The number of consecutive failures needed to consider a container as
+									 * unhealthy. 0 means inherit.
+									 */
+									Retries: v.optional(v.pipe(v.number(), v.integer())),
+									/**
+									 * Start period for the container to initialize before starting
+									 * health-retries countdown in nanoseconds. It should be 0 or at least
+									 * 1000000 (1 ms). 0 means inherit.
+									 */
+									StartPeriod: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+								}),
+							),
+							/**
+							 * A list of hostname/IP mappings to add to the container's `hosts`
+							 * file. The format of extra hosts is specified in the
+							 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+							 * man page:
+							 *
+							 *
+							 * IP_address canonical_hostname [aliases...]
+							 */
+							Hosts: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * Specification for DNS related configurations in resolver configuration
+							 * file (`resolv.conf`).
+							 */
+							DNSConfig: v.optional(
+								v.strictObject({
+									/**
+									 * The IP addresses of the name servers.
+									 */
+									Nameservers: v.optional(
+										v.array(v.pipe(v.string(), v.trim())),
+									),
+									/**
+									 * A search list for host-name lookup.
+									 */
+									Search: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+									/**
+									 * A list of internal resolver variables to be modified (e.g.,
+									 * `debug`, `ndots:3`, etc.).
+									 */
+									Options: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								}),
+							),
+							/**
+							 * Secrets contains references to zero or more secrets that will be
+							 * exposed to the service.
+							 */
+							Secrets: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * File represents a specific target that is backed by a file.
+										 */
+										File: v.optional(
+											v.strictObject({
+												/**
+												 * Name represents the final filename in the filesystem.
+												 */
+												Name: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * UID represents the file UID.
+												 */
+												UID: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * GID represents the file GID.
+												 */
+												GID: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * Mode represents the FileMode of the file.
+												 */
+												Mode: v.optional(v.pipe(v.number(), v.integer())),
+											}),
+										),
+										/**
+										 * SecretID represents the ID of the specific secret that we're
+										 * referencing.
+										 */
+										SecretID: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * SecretName is the name of the secret that this references,
+										 * but this is just provided for lookup/display purposes. The
+										 * secret in the reference will be identified by its ID.
+										 */
+										SecretName: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							),
+							/**
+							 * Configs contains references to zero or more configs that will be
+							 * exposed to the service.
+							 */
+							Configs: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * File represents a specific target that is backed by a file.
+										 *
+										 * <p><br /><p>
+										 *
+										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+										 */
+										File: v.optional(
+											v.strictObject({
+												/**
+												 * Name represents the final filename in the filesystem.
+												 */
+												Name: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * UID represents the file UID.
+												 */
+												UID: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * GID represents the file GID.
+												 */
+												GID: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * Mode represents the FileMode of the file.
+												 */
+												Mode: v.optional(v.pipe(v.number(), v.integer())),
+											}),
+										),
+										/**
+										 * Runtime represents a target that is not mounted into the
+										 * container but is used by the task
+										 *
+										 * <p><br /><p>
+										 *
+										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+										 * > exclusive
+										 */
+										Runtime: v.optional(v.record(v.string(), v.unknown())),
+										/**
+										 * ConfigID represents the ID of the specific config that we're
+										 * referencing.
+										 */
+										ConfigID: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * ConfigName is the name of the config that this references,
+										 * but this is just provided for lookup/display purposes. The
+										 * config in the reference will be identified by its ID.
+										 */
+										ConfigName: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							),
+							/**
+							 * Isolation technology of the containers running the service.
+							 * (Windows only)
+							 */
+							Isolation: v.optional(
+								v.picklist(["default", "process", "hyperv", ""]),
+							),
+							/**
+							 * Run an init inside the container that forwards signals and reaps
+							 * processes. This field is omitted if empty, and the default (as
+							 * configured on the daemon) is used.
+							 */
+							Init: v.optional(v.nullable(v.boolean())),
+							/**
+							 * Set kernel namedspaced parameters (sysctls) in the container.
+							 * The Sysctls option on services accepts the same sysctls as the
+							 * are supported on containers. Note that while the same sysctls are
+							 * supported, no guarantees or checks are made about their
+							 * suitability for a clustered environment, and it's up to the user
+							 * to determine whether a given sysctl will work properly in a
+							 * Service.
+							 */
+							Sysctls: v.optional(v.record(v.string(), v.unknown())),
+							/**
+							 * A list of kernel capabilities to add to the default set
+							 * for the container.
+							 */
+							CapabilityAdd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * A list of kernel capabilities to drop from the default set
+							 * for the container.
+							 */
+							CapabilityDrop: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * A list of resource limits to set in the container. For example: `{"Name":
+							 * "nofile", "Soft": 1024, "Hard": 2048}`"
+							 */
+							Ulimits: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Name of ulimit
+										 */
+										Name: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Soft limit
+										 */
+										Soft: v.optional(v.pipe(v.number(), v.integer())),
+										/**
+										 * Hard limit
+										 */
+										Hard: v.optional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+							),
+						}),
+					),
+					/**
+					 * Read-only spec type for non-swarm containers attached to swarm overlay
+					 * networks.
+					 *
+					 * <p><br /></p>
+					 *
+					 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+					 * > mutually exclusive. PluginSpec is only used when the Runtime field
+					 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+					 * > field is set to `attachment`.
+					 */
+					NetworkAttachmentSpec: v.optional(
+						v.strictObject({
+							/**
+							 * ID of the container represented by this task
+							 */
+							ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+						}),
+					),
+					/**
+					 * Resource requirements which apply to each individual container created
+					 * as part of the service.
+					 */
+					Resources: v.optional(
+						v.strictObject({
+							/**
+							 * An object describing a limit on resources which can be requested by a task.
+							 */
+							Limits: v.optional(
+								v.strictObject({
+									NanoCPUs: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									MemoryBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+									 */
+									Pids: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+								}),
+							),
+							/**
+							 * An object describing the resources which can be advertised by a node and
+							 * requested by a task.
+							 */
+							Reservations: v.optional(
+								v.strictObject({
+									NanoCPUs: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									MemoryBytes: v.optional(
+										v.union([
+											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+											v.bigint(),
+										]),
+									),
+									/**
+									 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+									 * String resources (e.g, `GPU=UUID1`).
+									 */
+									GenericResources: v.optional(
+										v.array(
+											v.strictObject({
+												NamedResourceSpec: v.optional(
+													v.strictObject({
+														Kind: v.optional(v.pipe(v.string(), v.trim())),
+														Value: v.optional(v.pipe(v.string(), v.trim())),
+													}),
+												),
+												DiscreteResourceSpec: v.optional(
+													v.strictObject({
+														Kind: v.optional(v.pipe(v.string(), v.trim())),
+														Value: v.optional(
+															v.union([
+																v.pipe(
+																	v.string(),
+																	v.decimal(),
+																	v.toBigint(),
+																	v.bigint(),
+																),
+																v.pipe(
+																	v.number(),
+																	v.integer(),
+																	v.toBigint(),
+																	v.bigint(),
+																),
+																v.bigint(),
+															]),
+														),
+													}),
+												),
+											}),
+										),
+									),
+								}),
+							),
+						}),
+					),
+					/**
+					 * Specification for the restart policy which applies to containers
+					 * created as part of this service.
+					 */
+					RestartPolicy: v.optional(
+						v.strictObject({
+							/**
+							 * Condition for restart.
+							 */
+							Condition: v.optional(v.picklist(["none", "on-failure", "any"])),
+							/**
+							 * Delay between restart attempts.
+							 */
+							Delay: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * Maximum attempts to restart a given container before giving up
+							 * (default value is 0, which is ignored).
+							 */
+							MaxAttempts: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * Windows is the time window used to evaluate the restart policy
+							 * (default value is 0, which is unbounded).
+							 */
+							Window: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+						}),
+					),
+					Placement: v.optional(
+						v.strictObject({
+							/**
+							 * An array of constraint expressions to limit the set of nodes where
+							 * a task can be scheduled. Constraint expressions can either use a
+							 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+							 * nodes that satisfy every expression (AND match). Constraints can
+							 * match node or Docker Engine labels as follows:
+							 *
+							 * node attribute       | matches                        | example
+							 * ---------------------|--------------------------------|-----------------------------------------------
+							 * `node.id`            | Node ID                        |
+							 * `node.id==2ivku8v2gvtg4`
+							 * `node.hostname`      | Node hostname                  |
+							 * `node.hostname!=node-2`
+							 * `node.role`          | Node role (`manager`/`worker`) |
+							 * `node.role==manager`
+							 * `node.platform.os`   | Node operating system          |
+							 * `node.platform.os==windows`
+							 * `node.platform.arch` | Node architecture              |
+							 * `node.platform.arch==x86_64`
+							 * `node.labels`        | User-defined node labels       |
+							 * `node.labels.security==high`
+							 * `engine.labels`      | Docker Engine's labels         |
+							 * `engine.labels.operatingsystem==ubuntu-14.04`
+							 *
+							 * `engine.labels` apply to Docker Engine labels like operating system,
+							 * drivers, etc. Swarm administrators add `node.labels` for operational
+							 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+							 */
+							Constraints: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * Preferences provide a way to make the scheduler aware of factors
+							 * such as topology. They are provided in order from highest to
+							 * lowest precedence.
+							 */
+							Preferences: v.optional(
+								v.array(
+									v.strictObject({
+										Spread: v.optional(
+											v.strictObject({
+												/**
+												 * label descriptor, such as `engine.labels.az`.
+												 */
+												SpreadDescriptor: v.optional(
+													v.pipe(v.string(), v.trim()),
+												),
+											}),
+										),
+									}),
+								),
+							),
+							/**
+							 * Maximum number of replicas for per node (default value is 0, which
+							 * is unlimited)
+							 */
+							MaxReplicas: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * Platforms stores all the platforms that the service's image can
+							 * run on. This field is used in the platform filter for scheduling.
+							 * If empty, then the platform filter is off, meaning there are no
+							 * scheduling restrictions.
+							 */
+							Platforms: v.optional(
+								v.array(
+									v.strictObject({
+										/**
+										 * Architecture represents the hardware architecture (for example,
+										 * `x86_64`).
+										 */
+										Architecture: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * OS represents the Operating System (for example, `linux` or `windows`).
+										 */
+										OS: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							),
+						}),
+					),
+					/**
+					 * A counter that triggers an update even if no relevant parameters have
+					 * been changed.
+					 */
+					ForceUpdate: v.optional(v.pipe(v.number(), v.integer())),
+					/**
+					 * Runtime is the type of runtime specified for the task executor.
+					 */
+					Runtime: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Specifies which networks the service should attach to.
+					 */
+					Networks: v.optional(
+						v.array(
+							v.strictObject({
+								/**
+								 * The target network for attachment. Must be a network name or ID.
+								 */
+								Target: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Discoverable alternate names for the service on this network.
+								 */
+								Aliases: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * Driver attachment options for the network target.
+								 */
+								DriverOpts: v.optional(v.record(v.string(), v.unknown())),
+							}),
+						),
+					),
+					/**
+					 * Specifies the log driver to use for tasks created from this spec. If
+					 * not present, the default one for the swarm will be used, finally
+					 * falling back to the engine default if not specified.
+					 */
+					LogDriver: v.optional(
+						v.strictObject({
+							Name: v.optional(v.pipe(v.string(), v.trim())),
+							Options: v.optional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Scheduling mode for the service.
+			 */
+			Mode: v.optional(
+				v.strictObject({
+					Replicated: v.optional(
+						v.strictObject({
+							Replicas: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+						}),
+					),
+					Global: v.optional(v.record(v.string(), v.unknown())),
+					/**
+					 * The mode used for services with a finite number of tasks that run
+					 * to a completed state.
+					 */
+					ReplicatedJob: v.optional(
+						v.strictObject({
+							/**
+							 * The maximum number of replicas to run simultaneously.
+							 */
+							MaxConcurrent: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * The total number of replicas desired to reach the Completed
+							 * state. If unset, will default to the value of `MaxConcurrent`
+							 */
+							TotalCompletions: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+						}),
+					),
+					/**
+					 * The mode used for services which run a task to the completed state
+					 * on each valid node.
+					 */
+					GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+				}),
+			),
+			/**
+			 * Specification for the update strategy of the service.
+			 */
+			UpdateConfig: v.optional(
+				v.strictObject({
+					/**
+					 * Maximum number of tasks to be updated in one iteration (0 means
+					 * unlimited parallelism).
+					 */
+					Parallelism: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Amount of time between updates, in nanoseconds.
+					 */
+					Delay: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Action to take if an updated task fails to run, or stops running
+					 * during the update.
+					 */
+					FailureAction: v.optional(
+						v.picklist(["continue", "pause", "rollback"]),
+					),
+					/**
+					 * Amount of time to monitor each updated task for failures, in
+					 * nanoseconds.
+					 */
+					Monitor: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The fraction of tasks that may fail during an update before the
+					 * failure action is invoked, specified as a floating point number
+					 * between 0 and 1.
+					 */
+					MaxFailureRatio: v.optional(v.number()),
+					/**
+					 * The order of operations when rolling out an updated task. Either
+					 * the old task is shut down before the new task is started, or the
+					 * new task is started before the old task is shut down.
+					 */
+					Order: v.optional(v.picklist(["stop-first", "start-first"])),
+				}),
+			),
+			/**
+			 * Specification for the rollback strategy of the service.
+			 */
+			RollbackConfig: v.optional(
+				v.strictObject({
+					/**
+					 * Maximum number of tasks to be rolled back in one iteration (0 means
+					 * unlimited parallelism).
+					 */
+					Parallelism: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Amount of time between rollback iterations, in nanoseconds.
+					 */
+					Delay: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Action to take if an rolled back task fails to run, or stops
+					 * running during the rollback.
+					 */
+					FailureAction: v.optional(v.picklist(["continue", "pause"])),
+					/**
+					 * Amount of time to monitor each rolled back task for failures, in
+					 * nanoseconds.
+					 */
+					Monitor: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * The fraction of tasks that may fail during a rollback before the
+					 * failure action is invoked, specified as a floating point number
+					 * between 0 and 1.
+					 */
+					MaxFailureRatio: v.optional(v.number()),
+					/**
+					 * The order of operations when rolling back a task. Either the old
+					 * task is shut down before the new task is started, or the new task
+					 * is started before the old task is shut down.
+					 */
+					Order: v.optional(v.picklist(["stop-first", "start-first"])),
+				}),
+			),
+			/**
+			 * Specifies which networks the service should attach to.
+			 */
+			Networks: v.optional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The target network for attachment. Must be a network name or ID.
+						 */
+						Target: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Discoverable alternate names for the service on this network.
+						 */
+						Aliases: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * Driver attachment options for the network target.
+						 */
+						DriverOpts: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+			/**
+			 * Properties that can be configured to access and load balance a service.
+			 */
+			EndpointSpec: v.optional(
+				v.strictObject({
+					/**
+					 * The mode of resolution to use for internal load balancing between tasks.
+					 */
+					Mode: v.optional(v.picklist(["vip", "dnsrr"])),
+					/**
+					 * List of exposed ports that this service is accessible on from the
+					 * outside. Ports can only be provided if `vip` resolution mode is used.
+					 */
+					Ports: v.optional(
+						v.array(
+							v.strictObject({
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
+								/**
+								 * The port inside the container.
+								 */
+								TargetPort: v.optional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The port on the swarm hosts.
+								 */
+								PublishedPort: v.optional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The mode in which port is published.
+								 *
+								 * <p><br /></p>
+								 *
+								 * - "ingress" makes the target port accessible on every node,
+								 *
+								 * regardless of whether there is a task for the service running on
+								 *
+								 * that node or not.
+								 * - "host" bypasses the routing mesh and publish the port directly on
+								 *
+								 * the swarm node where that service is running.
+								 */
+								PublishMode: v.optional(v.picklist(["ingress", "host"])),
+							}),
+						),
+					),
+				}),
+			),
+		}),
+	),
+	Endpoint: v.optional(
+		v.strictObject({
+			/**
+			 * Properties that can be configured to access and load balance a service.
+			 */
+			Spec: v.optional(
+				v.strictObject({
+					/**
+					 * The mode of resolution to use for internal load balancing between tasks.
+					 */
+					Mode: v.optional(v.picklist(["vip", "dnsrr"])),
+					/**
+					 * List of exposed ports that this service is accessible on from the
+					 * outside. Ports can only be provided if `vip` resolution mode is used.
+					 */
+					Ports: v.optional(
+						v.array(
+							v.strictObject({
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
+								/**
+								 * The port inside the container.
+								 */
+								TargetPort: v.optional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The port on the swarm hosts.
+								 */
+								PublishedPort: v.optional(v.pipe(v.number(), v.integer())),
+								/**
+								 * The mode in which port is published.
+								 *
+								 * <p><br /></p>
+								 *
+								 * - "ingress" makes the target port accessible on every node,
+								 *
+								 * regardless of whether there is a task for the service running on
+								 *
+								 * that node or not.
+								 * - "host" bypasses the routing mesh and publish the port directly on
+								 *
+								 * the swarm node where that service is running.
+								 */
+								PublishMode: v.optional(v.picklist(["ingress", "host"])),
+							}),
+						),
+					),
+				}),
+			),
+			Ports: v.optional(
+				v.array(
+					v.strictObject({
+						Name: v.optional(v.pipe(v.string(), v.trim())),
+						Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
+						/**
+						 * The port inside the container.
+						 */
+						TargetPort: v.optional(v.pipe(v.number(), v.integer())),
+						/**
+						 * The port on the swarm hosts.
+						 */
+						PublishedPort: v.optional(v.pipe(v.number(), v.integer())),
+						/**
+						 * The mode in which port is published.
+						 *
+						 * <p><br /></p>
+						 *
+						 * - "ingress" makes the target port accessible on every node,
+						 *
+						 * regardless of whether there is a task for the service running on
+						 *
+						 * that node or not.
+						 * - "host" bypasses the routing mesh and publish the port directly on
+						 *
+						 * the swarm node where that service is running.
+						 */
+						PublishMode: v.optional(v.picklist(["ingress", "host"])),
+					}),
+				),
+			),
+			VirtualIPs: v.optional(
+				v.array(
+					v.strictObject({
+						NetworkID: v.optional(v.pipe(v.string(), v.trim())),
+						Addr: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+			),
+		}),
+	),
+	/**
+	 * The status of a service update.
+	 */
+	UpdateStatus: v.optional(
+		v.strictObject({
+			State: v.optional(v.picklist(["updating", "paused", "completed"])),
+			StartedAt: v.optional(v.pipe(v.string(), v.trim())),
+			CompletedAt: v.optional(v.pipe(v.string(), v.trim())),
+			Message: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	/**
+	 * The status of the service's tasks. Provided only when requested as
+	 * part of a ServiceList operation.
+	 */
+	ServiceStatus: v.optional(
+		v.strictObject({
+			/**
+			 * The number of tasks for the service currently in the Running state.
+			 */
+			RunningTasks: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * The number of tasks for the service desired to be running.
+			 * For replicated services, this is the replica count from the
+			 * service spec. For global services, this is computed by taking
+			 * count of all tasks for the service with a Desired State other
+			 * than Shutdown.
+			 */
+			DesiredTasks: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * The number of tasks for a job that are in the Completed state.
+			 * This field must be cross-referenced with the service type, as the
+			 * value of 0 may mean the service is not in a job mode, or it may
+			 * mean the job-mode service has no tasks yet Completed.
+			 */
+			CompletedTasks: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	/**
+	 * The status of the service when it is in one of ReplicatedJob or
+	 * GlobalJob modes. Absent on Replicated and Global mode services. The
+	 * JobIteration is an ObjectVersion, but unlike the Service's version,
+	 * does not need to be sent with an update request.
+	 */
+	JobStatus: v.optional(
+		v.strictObject({
+			/**
+			 * The version number of the object such as node, service, etc. This is needed
+			 * to avoid conflicting writes. The client must send the version number along
+			 * with the modified specification when updating these objects.
+			 *
+			 * This approach ensures safe concurrency and determinism in that the change
+			 * on the object may not be applied if the version number has changed from the
+			 * last read. In other words, if two update requests specify the same base
+			 * version, only one of the requests can succeed. As a result, two separate
+			 * update requests that happen at the same time will not unintentionally
+			 * overwrite each other.
+			 */
+			JobIteration: v.optional(
+				v.strictObject({
+					Index: v.optional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+			/**
+			 * The last time, as observed by the server, that this job was
+			 * started.
+			 */
+			LastExecution: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
 });
 export const exactServiceInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
@@ -35094,6 +53136,18 @@ export const serviceUpdateCommandBodySchema = v.intersect([
 	}),
 	v.record(v.string(), v.unknown()),
 ]);
+export const exactServiceUpdateCommandResponseSchema = v.strictObject({
+	/**
+	 * Optional warning messages
+	 */
+	Warnings: v.exactOptional(v.array(v.string())),
+});
+export const serviceUpdateCommandResponseSchema = v.strictObject({
+	/**
+	 * Optional warning messages
+	 */
+	Warnings: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+});
 export const exactServiceUpdateCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -35158,11 +53212,3811 @@ export const serviceLogsCommandQuerySchema = v.strictObject({
 	timestamps: v.optional(v.boolean()),
 	tail: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactTaskListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * The ID of the task.
+		 */
+		ID: v.exactOptional(v.string()),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.exactOptional(
+			v.strictObject({
+				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.exactOptional(v.string()),
+		UpdatedAt: v.exactOptional(v.string()),
+		/**
+		 * Name of the task.
+		 */
+		Name: v.exactOptional(v.string()),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+		/**
+		 * User modifiable task configuration.
+		 */
+		Spec: v.exactOptional(
+			v.strictObject({
+				/**
+				 * Plugin spec for the service.  *(Experimental release only.)*
+				 *
+				 * <p><br /></p>
+				 *
+				 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+				 * > mutually exclusive. PluginSpec is only used when the Runtime field
+				 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+				 * > field is set to `attachment`.
+				 */
+				PluginSpec: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The name or 'alias' to use for the plugin.
+						 */
+						Name: v.exactOptional(v.string()),
+						/**
+						 * The plugin image reference to use.
+						 */
+						Remote: v.exactOptional(v.string()),
+						/**
+						 * Disable the plugin once scheduled.
+						 */
+						Disabled: v.exactOptional(v.boolean()),
+						PluginPrivilege: v.exactOptional(
+							v.array(
+								v.strictObject({
+									Name: v.exactOptional(v.string()),
+									Description: v.exactOptional(v.string()),
+									Value: v.exactOptional(v.array(v.string())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * Container spec for the service.
+				 *
+				 * <p><br /></p>
+				 *
+				 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+				 * > mutually exclusive. PluginSpec is only used when the Runtime field
+				 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+				 * > field is set to `attachment`.
+				 */
+				ContainerSpec: v.exactOptional(
+					v.strictObject({
+						/**
+						 * The image name to use for the container
+						 */
+						Image: v.exactOptional(v.string()),
+						/**
+						 * User-defined key/value data.
+						 */
+						Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+						/**
+						 * The command to be run in the image.
+						 */
+						Command: v.exactOptional(v.array(v.string())),
+						/**
+						 * Arguments to the command.
+						 */
+						Args: v.exactOptional(v.array(v.string())),
+						/**
+						 * The hostname to use for the container, as a valid
+						 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+						 */
+						Hostname: v.exactOptional(v.string()),
+						/**
+						 * A list of environment variables in the form `VAR=value`.
+						 */
+						Env: v.exactOptional(v.array(v.string())),
+						/**
+						 * The working directory for commands to run in.
+						 */
+						Dir: v.exactOptional(v.string()),
+						/**
+						 * The user inside the container.
+						 */
+						User: v.exactOptional(v.string()),
+						/**
+						 * A list of additional groups that the container process will run as.
+						 */
+						Groups: v.exactOptional(v.array(v.string())),
+						/**
+						 * Security options for the container
+						 */
+						Privileges: v.exactOptional(
+							v.strictObject({
+								/**
+								 * CredentialSpec for managed service account (Windows only)
+								 */
+								CredentialSpec: v.exactOptional(
+									v.strictObject({
+										/**
+										 * Load credential spec from a Swarm Config with the given ID.
+										 * The specified config must also be present in the Configs
+										 * field with the Runtime property set.
+										 *
+										 * <p><br /></p>
+										 *
+										 *
+										 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+										 * > and `CredentialSpec.Config` are mutually exclusive.
+										 */
+										Config: v.exactOptional(v.string()),
+										/**
+										 * Load credential spec from this file. The file is read by
+										 * the daemon, and must be present in the `CredentialSpecs`
+										 * subdirectory in the docker data directory, which defaults
+										 * to `C:\ProgramData\Docker\` on Windows.
+										 *
+										 * For example, specifying `spec.json` loads
+										 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+										 *
+										 * <p><br /></p>
+										 *
+										 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+										 * > and `CredentialSpec.Config` are mutually exclusive.
+										 */
+										File: v.exactOptional(v.string()),
+										/**
+										 * Load credential spec from this value in the Windows
+										 * registry. The specified registry value must be located in:
+										 *
+										 * `HKLM\SOFTWARE\Microsoft\Windows
+										 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+										 *
+										 * <p><br /></p>
+										 *
+										 *
+										 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+										 * > and `CredentialSpec.Config` are mutually exclusive.
+										 */
+										Registry: v.exactOptional(v.string()),
+									}),
+								),
+								/**
+								 * SELinux labels of the container
+								 */
+								SELinuxContext: v.exactOptional(
+									v.strictObject({
+										/**
+										 * Disable SELinux
+										 */
+										Disable: v.exactOptional(v.boolean()),
+										/**
+										 * SELinux user label
+										 */
+										User: v.exactOptional(v.string()),
+										/**
+										 * SELinux role label
+										 */
+										Role: v.exactOptional(v.string()),
+										/**
+										 * SELinux type label
+										 */
+										Type: v.exactOptional(v.string()),
+										/**
+										 * SELinux level label
+										 */
+										Level: v.exactOptional(v.string()),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Whether a pseudo-TTY should be allocated.
+						 */
+						TTY: v.exactOptional(v.boolean()),
+						/**
+						 * Open `stdin`
+						 */
+						OpenStdin: v.exactOptional(v.boolean()),
+						/**
+						 * Mount the container's root filesystem as read only.
+						 */
+						ReadOnly: v.exactOptional(v.boolean()),
+						/**
+						 * Specification for mounts to be added to containers created as part
+						 * of the service.
+						 */
+						Mounts: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * Container path.
+									 */
+									Target: v.exactOptional(v.string()),
+									/**
+									 * Mount source (e.g. a volume name, a host path).
+									 */
+									Source: v.exactOptional(v.string()),
+									/**
+									 * The mount type. Available types:
+									 *
+									 * - `bind` Mounts a file or directory from the host into the container. Must
+									 * exist prior to creating the container.
+									 * - `volume` Creates a volume with the given name and options (or uses a
+									 * pre-existing volume with the same name and options). These are **not**
+									 * removed when the container is removed.
+									 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+									 * specified for tmpfs.
+									 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+									 * prior to creating the container.
+									 * - `cluster` a Swarm cluster volume
+									 */
+									Type: v.exactOptional(
+										v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+									),
+									/**
+									 * Whether the mount should be read-only.
+									 */
+									ReadOnly: v.exactOptional(v.boolean()),
+									/**
+									 * The consistency requirement for the mount: `default`, `consistent`,
+									 * `cached`, or `delegated`.
+									 */
+									Consistency: v.exactOptional(v.string()),
+									/**
+									 * Optional configuration for the `bind` type.
+									 */
+									BindOptions: v.exactOptional(
+										v.strictObject({
+											/**
+											 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+											 */
+											Propagation: v.exactOptional(
+												v.picklist([
+													"private",
+													"rprivate",
+													"shared",
+													"rshared",
+													"slave",
+													"rslave",
+												]),
+											),
+											/**
+											 * Disable recursive bind mount.
+											 */
+											NonRecursive: v.exactOptional(v.boolean()),
+											/**
+											 * Create mount point on host if missing
+											 */
+											CreateMountpoint: v.exactOptional(v.boolean()),
+										}),
+									),
+									/**
+									 * Optional configuration for the `volume` type.
+									 */
+									VolumeOptions: v.exactOptional(
+										v.strictObject({
+											/**
+											 * Populate volume with data from the target.
+											 */
+											NoCopy: v.exactOptional(v.boolean()),
+											/**
+											 * User-defined key/value metadata.
+											 */
+											Labels: v.exactOptional(
+												v.record(v.string(), v.unknown()),
+											),
+											/**
+											 * Map of driver specific options
+											 */
+											DriverConfig: v.exactOptional(
+												v.strictObject({
+													/**
+													 * Name of the driver to use to create the volume.
+													 */
+													Name: v.exactOptional(v.string()),
+													/**
+													 * key/value map of driver specific options.
+													 */
+													Options: v.exactOptional(
+														v.record(v.string(), v.unknown()),
+													),
+												}),
+											),
+										}),
+									),
+									/**
+									 * Optional configuration for the `tmpfs` type.
+									 */
+									TmpfsOptions: v.exactOptional(
+										v.strictObject({
+											/**
+											 * The size for the tmpfs mount in bytes.
+											 */
+											SizeBytes: v.exactOptional(v.bigint()),
+											/**
+											 * The permission mode for the tmpfs mount in an integer.
+											 */
+											Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+								}),
+							),
+						),
+						/**
+						 * Signal to stop the container.
+						 */
+						StopSignal: v.exactOptional(v.string()),
+						/**
+						 * Amount of time to wait for the container to terminate before
+						 * forcefully killing it.
+						 */
+						StopGracePeriod: v.exactOptional(v.bigint()),
+						/**
+						 * A test to perform to check that the container is healthy.
+						 */
+						HealthCheck: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The test to perform. Possible values are:
+								 *
+								 * - `[]` inherit healthcheck from image or parent image
+								 * - `["NONE"]` disable healthcheck
+								 * - `["CMD", args...]` exec arguments directly
+								 * - `["CMD-SHELL", command]` run command with system's default shell
+								 */
+								Test: v.exactOptional(v.array(v.string())),
+								/**
+								 * The time to wait between checks in nanoseconds. It should be 0 or at
+								 * least 1000000 (1 ms). 0 means inherit.
+								 */
+								Interval: v.exactOptional(v.bigint()),
+								/**
+								 * The time to wait before considering the check to have hung. It should
+								 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+								 */
+								Timeout: v.exactOptional(v.bigint()),
+								/**
+								 * The number of consecutive failures needed to consider a container as
+								 * unhealthy. 0 means inherit.
+								 */
+								Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+								/**
+								 * Start period for the container to initialize before starting
+								 * health-retries countdown in nanoseconds. It should be 0 or at least
+								 * 1000000 (1 ms). 0 means inherit.
+								 */
+								StartPeriod: v.exactOptional(v.bigint()),
+							}),
+						),
+						/**
+						 * A list of hostname/IP mappings to add to the container's `hosts`
+						 * file. The format of extra hosts is specified in the
+						 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+						 * man page:
+						 *
+						 *
+						 * IP_address canonical_hostname [aliases...]
+						 */
+						Hosts: v.exactOptional(v.array(v.string())),
+						/**
+						 * Specification for DNS related configurations in resolver configuration
+						 * file (`resolv.conf`).
+						 */
+						DNSConfig: v.exactOptional(
+							v.strictObject({
+								/**
+								 * The IP addresses of the name servers.
+								 */
+								Nameservers: v.exactOptional(v.array(v.string())),
+								/**
+								 * A search list for host-name lookup.
+								 */
+								Search: v.exactOptional(v.array(v.string())),
+								/**
+								 * A list of internal resolver variables to be modified (e.g.,
+								 * `debug`, `ndots:3`, etc.).
+								 */
+								Options: v.exactOptional(v.array(v.string())),
+							}),
+						),
+						/**
+						 * Secrets contains references to zero or more secrets that will be
+						 * exposed to the service.
+						 */
+						Secrets: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * File represents a specific target that is backed by a file.
+									 */
+									File: v.exactOptional(
+										v.strictObject({
+											/**
+											 * Name represents the final filename in the filesystem.
+											 */
+											Name: v.exactOptional(v.string()),
+											/**
+											 * UID represents the file UID.
+											 */
+											UID: v.exactOptional(v.string()),
+											/**
+											 * GID represents the file GID.
+											 */
+											GID: v.exactOptional(v.string()),
+											/**
+											 * Mode represents the FileMode of the file.
+											 */
+											Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+									/**
+									 * SecretID represents the ID of the specific secret that we're
+									 * referencing.
+									 */
+									SecretID: v.exactOptional(v.string()),
+									/**
+									 * SecretName is the name of the secret that this references,
+									 * but this is just provided for lookup/display purposes. The
+									 * secret in the reference will be identified by its ID.
+									 */
+									SecretName: v.exactOptional(v.string()),
+								}),
+							),
+						),
+						/**
+						 * Configs contains references to zero or more configs that will be
+						 * exposed to the service.
+						 */
+						Configs: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * File represents a specific target that is backed by a file.
+									 *
+									 * <p><br /><p>
+									 *
+									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+									 */
+									File: v.exactOptional(
+										v.strictObject({
+											/**
+											 * Name represents the final filename in the filesystem.
+											 */
+											Name: v.exactOptional(v.string()),
+											/**
+											 * UID represents the file UID.
+											 */
+											UID: v.exactOptional(v.string()),
+											/**
+											 * GID represents the file GID.
+											 */
+											GID: v.exactOptional(v.string()),
+											/**
+											 * Mode represents the FileMode of the file.
+											 */
+											Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+									/**
+									 * Runtime represents a target that is not mounted into the
+									 * container but is used by the task
+									 *
+									 * <p><br /><p>
+									 *
+									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+									 * > exclusive
+									 */
+									Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+									/**
+									 * ConfigID represents the ID of the specific config that we're
+									 * referencing.
+									 */
+									ConfigID: v.exactOptional(v.string()),
+									/**
+									 * ConfigName is the name of the config that this references,
+									 * but this is just provided for lookup/display purposes. The
+									 * config in the reference will be identified by its ID.
+									 */
+									ConfigName: v.exactOptional(v.string()),
+								}),
+							),
+						),
+						/**
+						 * Isolation technology of the containers running the service.
+						 * (Windows only)
+						 */
+						Isolation: v.exactOptional(
+							v.picklist(["default", "process", "hyperv", ""]),
+						),
+						/**
+						 * Run an init inside the container that forwards signals and reaps
+						 * processes. This field is omitted if empty, and the default (as
+						 * configured on the daemon) is used.
+						 */
+						Init: v.exactOptional(v.nullable(v.boolean())),
+						/**
+						 * Set kernel namedspaced parameters (sysctls) in the container.
+						 * The Sysctls option on services accepts the same sysctls as the
+						 * are supported on containers. Note that while the same sysctls are
+						 * supported, no guarantees or checks are made about their
+						 * suitability for a clustered environment, and it's up to the user
+						 * to determine whether a given sysctl will work properly in a
+						 * Service.
+						 */
+						Sysctls: v.exactOptional(v.record(v.string(), v.unknown())),
+						/**
+						 * A list of kernel capabilities to add to the default set
+						 * for the container.
+						 */
+						CapabilityAdd: v.exactOptional(v.array(v.string())),
+						/**
+						 * A list of kernel capabilities to drop from the default set
+						 * for the container.
+						 */
+						CapabilityDrop: v.exactOptional(v.array(v.string())),
+						/**
+						 * A list of resource limits to set in the container. For example: `{"Name":
+						 * "nofile", "Soft": 1024, "Hard": 2048}`"
+						 */
+						Ulimits: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * Name of ulimit
+									 */
+									Name: v.exactOptional(v.string()),
+									/**
+									 * Soft limit
+									 */
+									Soft: v.exactOptional(v.pipe(v.number(), v.integer())),
+									/**
+									 * Hard limit
+									 */
+									Hard: v.exactOptional(v.pipe(v.number(), v.integer())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * Read-only spec type for non-swarm containers attached to swarm overlay
+				 * networks.
+				 *
+				 * <p><br /></p>
+				 *
+				 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+				 * > mutually exclusive. PluginSpec is only used when the Runtime field
+				 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+				 * > field is set to `attachment`.
+				 */
+				NetworkAttachmentSpec: v.exactOptional(
+					v.strictObject({
+						/**
+						 * ID of the container represented by this task
+						 */
+						ContainerID: v.exactOptional(v.string()),
+					}),
+				),
+				/**
+				 * Resource requirements which apply to each individual container created
+				 * as part of the service.
+				 */
+				Resources: v.exactOptional(
+					v.strictObject({
+						/**
+						 * An object describing a limit on resources which can be requested by a task.
+						 */
+						Limits: v.exactOptional(
+							v.strictObject({
+								NanoCPUs: v.exactOptional(v.bigint()),
+								MemoryBytes: v.exactOptional(v.bigint()),
+								/**
+								 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+								 */
+								Pids: v.exactOptional(v.bigint()),
+							}),
+						),
+						/**
+						 * An object describing the resources which can be advertised by a node and
+						 * requested by a task.
+						 */
+						Reservations: v.exactOptional(
+							v.strictObject({
+								NanoCPUs: v.exactOptional(v.bigint()),
+								MemoryBytes: v.exactOptional(v.bigint()),
+								/**
+								 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+								 * String resources (e.g, `GPU=UUID1`).
+								 */
+								GenericResources: v.exactOptional(
+									v.array(
+										v.strictObject({
+											NamedResourceSpec: v.exactOptional(
+												v.strictObject({
+													Kind: v.exactOptional(v.string()),
+													Value: v.exactOptional(v.string()),
+												}),
+											),
+											DiscreteResourceSpec: v.exactOptional(
+												v.strictObject({
+													Kind: v.exactOptional(v.string()),
+													Value: v.exactOptional(v.bigint()),
+												}),
+											),
+										}),
+									),
+								),
+							}),
+						),
+					}),
+				),
+				/**
+				 * Specification for the restart policy which applies to containers
+				 * created as part of this service.
+				 */
+				RestartPolicy: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Condition for restart.
+						 */
+						Condition: v.exactOptional(
+							v.picklist(["none", "on-failure", "any"]),
+						),
+						/**
+						 * Delay between restart attempts.
+						 */
+						Delay: v.exactOptional(v.bigint()),
+						/**
+						 * Maximum attempts to restart a given container before giving up
+						 * (default value is 0, which is ignored).
+						 */
+						MaxAttempts: v.exactOptional(v.bigint()),
+						/**
+						 * Windows is the time window used to evaluate the restart policy
+						 * (default value is 0, which is unbounded).
+						 */
+						Window: v.exactOptional(v.bigint()),
+					}),
+				),
+				Placement: v.exactOptional(
+					v.strictObject({
+						/**
+						 * An array of constraint expressions to limit the set of nodes where
+						 * a task can be scheduled. Constraint expressions can either use a
+						 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+						 * nodes that satisfy every expression (AND match). Constraints can
+						 * match node or Docker Engine labels as follows:
+						 *
+						 * node attribute       | matches                        | example
+						 * ---------------------|--------------------------------|-----------------------------------------------
+						 * `node.id`            | Node ID                        |
+						 * `node.id==2ivku8v2gvtg4`
+						 * `node.hostname`      | Node hostname                  |
+						 * `node.hostname!=node-2`
+						 * `node.role`          | Node role (`manager`/`worker`) |
+						 * `node.role==manager`
+						 * `node.platform.os`   | Node operating system          |
+						 * `node.platform.os==windows`
+						 * `node.platform.arch` | Node architecture              |
+						 * `node.platform.arch==x86_64`
+						 * `node.labels`        | User-defined node labels       |
+						 * `node.labels.security==high`
+						 * `engine.labels`      | Docker Engine's labels         |
+						 * `engine.labels.operatingsystem==ubuntu-14.04`
+						 *
+						 * `engine.labels` apply to Docker Engine labels like operating system,
+						 * drivers, etc. Swarm administrators add `node.labels` for operational
+						 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+						 */
+						Constraints: v.exactOptional(v.array(v.string())),
+						/**
+						 * Preferences provide a way to make the scheduler aware of factors
+						 * such as topology. They are provided in order from highest to
+						 * lowest precedence.
+						 */
+						Preferences: v.exactOptional(
+							v.array(
+								v.strictObject({
+									Spread: v.exactOptional(
+										v.strictObject({
+											/**
+											 * label descriptor, such as `engine.labels.az`.
+											 */
+											SpreadDescriptor: v.exactOptional(v.string()),
+										}),
+									),
+								}),
+							),
+						),
+						/**
+						 * Maximum number of replicas for per node (default value is 0, which
+						 * is unlimited)
+						 */
+						MaxReplicas: v.exactOptional(v.bigint()),
+						/**
+						 * Platforms stores all the platforms that the service's image can
+						 * run on. This field is used in the platform filter for scheduling.
+						 * If empty, then the platform filter is off, meaning there are no
+						 * scheduling restrictions.
+						 */
+						Platforms: v.exactOptional(
+							v.array(
+								v.strictObject({
+									/**
+									 * Architecture represents the hardware architecture (for example,
+									 * `x86_64`).
+									 */
+									Architecture: v.exactOptional(v.string()),
+									/**
+									 * OS represents the Operating System (for example, `linux` or `windows`).
+									 */
+									OS: v.exactOptional(v.string()),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * A counter that triggers an update even if no relevant parameters have
+				 * been changed.
+				 */
+				ForceUpdate: v.exactOptional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Runtime is the type of runtime specified for the task executor.
+				 */
+				Runtime: v.exactOptional(v.string()),
+				/**
+				 * Specifies which networks the service should attach to.
+				 */
+				Networks: v.exactOptional(
+					v.array(
+						v.strictObject({
+							/**
+							 * The target network for attachment. Must be a network name or ID.
+							 */
+							Target: v.exactOptional(v.string()),
+							/**
+							 * Discoverable alternate names for the service on this network.
+							 */
+							Aliases: v.exactOptional(v.array(v.string())),
+							/**
+							 * Driver attachment options for the network target.
+							 */
+							DriverOpts: v.exactOptional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Specifies the log driver to use for tasks created from this spec. If
+				 * not present, the default one for the swarm will be used, finally
+				 * falling back to the engine default if not specified.
+				 */
+				LogDriver: v.exactOptional(
+					v.strictObject({
+						Name: v.exactOptional(v.string()),
+						Options: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			}),
+		),
+		/**
+		 * The ID of the service this task is part of.
+		 */
+		ServiceID: v.exactOptional(v.string()),
+		Slot: v.exactOptional(v.pipe(v.number(), v.integer())),
+		/**
+		 * The ID of the node that this task is on.
+		 */
+		NodeID: v.exactOptional(v.string()),
+		/**
+		 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+		 * String resources (e.g, `GPU=UUID1`).
+		 */
+		AssignedGenericResources: v.exactOptional(
+			v.array(
+				v.strictObject({
+					NamedResourceSpec: v.exactOptional(
+						v.strictObject({
+							Kind: v.exactOptional(v.string()),
+							Value: v.exactOptional(v.string()),
+						}),
+					),
+					DiscreteResourceSpec: v.exactOptional(
+						v.strictObject({
+							Kind: v.exactOptional(v.string()),
+							Value: v.exactOptional(v.bigint()),
+						}),
+					),
+				}),
+			),
+		),
+		Status: v.exactOptional(
+			v.strictObject({
+				Timestamp: v.exactOptional(v.string()),
+				State: v.exactOptional(
+					v.picklist([
+						"new",
+						"allocated",
+						"pending",
+						"assigned",
+						"accepted",
+						"preparing",
+						"ready",
+						"starting",
+						"running",
+						"complete",
+						"shutdown",
+						"failed",
+						"rejected",
+						"remove",
+						"orphaned",
+					]),
+				),
+				Message: v.exactOptional(v.string()),
+				Err: v.exactOptional(v.string()),
+				ContainerStatus: v.exactOptional(
+					v.strictObject({
+						ContainerID: v.exactOptional(v.string()),
+						PID: v.exactOptional(v.pipe(v.number(), v.integer())),
+						ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
+					}),
+				),
+			}),
+		),
+		DesiredState: v.exactOptional(
+			v.picklist([
+				"new",
+				"allocated",
+				"pending",
+				"assigned",
+				"accepted",
+				"preparing",
+				"ready",
+				"starting",
+				"running",
+				"complete",
+				"shutdown",
+				"failed",
+				"rejected",
+				"remove",
+				"orphaned",
+			]),
+		),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		JobIteration: v.exactOptional(
+			v.strictObject({
+				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+	}),
+);
+export const taskListCommandResponseSchema = v.array(
+	v.strictObject({
+		/**
+		 * The ID of the task.
+		 */
+		ID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.optional(
+			v.strictObject({
+				Index: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * Name of the task.
+		 */
+		Name: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * User-defined key/value metadata.
+		 */
+		Labels: v.optional(v.record(v.string(), v.unknown())),
+		/**
+		 * User modifiable task configuration.
+		 */
+		Spec: v.optional(
+			v.strictObject({
+				/**
+				 * Plugin spec for the service.  *(Experimental release only.)*
+				 *
+				 * <p><br /></p>
+				 *
+				 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+				 * > mutually exclusive. PluginSpec is only used when the Runtime field
+				 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+				 * > field is set to `attachment`.
+				 */
+				PluginSpec: v.optional(
+					v.strictObject({
+						/**
+						 * The name or 'alias' to use for the plugin.
+						 */
+						Name: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The plugin image reference to use.
+						 */
+						Remote: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Disable the plugin once scheduled.
+						 */
+						Disabled: v.optional(v.boolean()),
+						PluginPrivilege: v.optional(
+							v.array(
+								v.strictObject({
+									Name: v.optional(v.pipe(v.string(), v.trim())),
+									Description: v.optional(v.pipe(v.string(), v.trim())),
+									Value: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * Container spec for the service.
+				 *
+				 * <p><br /></p>
+				 *
+				 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+				 * > mutually exclusive. PluginSpec is only used when the Runtime field
+				 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+				 * > field is set to `attachment`.
+				 */
+				ContainerSpec: v.optional(
+					v.strictObject({
+						/**
+						 * The image name to use for the container
+						 */
+						Image: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * User-defined key/value data.
+						 */
+						Labels: v.optional(v.record(v.string(), v.unknown())),
+						/**
+						 * The command to be run in the image.
+						 */
+						Command: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * Arguments to the command.
+						 */
+						Args: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * The hostname to use for the container, as a valid
+						 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+						 */
+						Hostname: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * A list of environment variables in the form `VAR=value`.
+						 */
+						Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * The working directory for commands to run in.
+						 */
+						Dir: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * The user inside the container.
+						 */
+						User: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * A list of additional groups that the container process will run as.
+						 */
+						Groups: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * Security options for the container
+						 */
+						Privileges: v.optional(
+							v.strictObject({
+								/**
+								 * CredentialSpec for managed service account (Windows only)
+								 */
+								CredentialSpec: v.optional(
+									v.strictObject({
+										/**
+										 * Load credential spec from a Swarm Config with the given ID.
+										 * The specified config must also be present in the Configs
+										 * field with the Runtime property set.
+										 *
+										 * <p><br /></p>
+										 *
+										 *
+										 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+										 * > and `CredentialSpec.Config` are mutually exclusive.
+										 */
+										Config: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Load credential spec from this file. The file is read by
+										 * the daemon, and must be present in the `CredentialSpecs`
+										 * subdirectory in the docker data directory, which defaults
+										 * to `C:\ProgramData\Docker\` on Windows.
+										 *
+										 * For example, specifying `spec.json` loads
+										 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+										 *
+										 * <p><br /></p>
+										 *
+										 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+										 * > and `CredentialSpec.Config` are mutually exclusive.
+										 */
+										File: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Load credential spec from this value in the Windows
+										 * registry. The specified registry value must be located in:
+										 *
+										 * `HKLM\SOFTWARE\Microsoft\Windows
+										 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+										 *
+										 * <p><br /></p>
+										 *
+										 *
+										 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+										 * > and `CredentialSpec.Config` are mutually exclusive.
+										 */
+										Registry: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+								/**
+								 * SELinux labels of the container
+								 */
+								SELinuxContext: v.optional(
+									v.strictObject({
+										/**
+										 * Disable SELinux
+										 */
+										Disable: v.optional(v.boolean()),
+										/**
+										 * SELinux user label
+										 */
+										User: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * SELinux role label
+										 */
+										Role: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * SELinux type label
+										 */
+										Type: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * SELinux level label
+										 */
+										Level: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							}),
+						),
+						/**
+						 * Whether a pseudo-TTY should be allocated.
+						 */
+						TTY: v.optional(v.boolean()),
+						/**
+						 * Open `stdin`
+						 */
+						OpenStdin: v.optional(v.boolean()),
+						/**
+						 * Mount the container's root filesystem as read only.
+						 */
+						ReadOnly: v.optional(v.boolean()),
+						/**
+						 * Specification for mounts to be added to containers created as part
+						 * of the service.
+						 */
+						Mounts: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * Container path.
+									 */
+									Target: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Mount source (e.g. a volume name, a host path).
+									 */
+									Source: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * The mount type. Available types:
+									 *
+									 * - `bind` Mounts a file or directory from the host into the container. Must
+									 * exist prior to creating the container.
+									 * - `volume` Creates a volume with the given name and options (or uses a
+									 * pre-existing volume with the same name and options). These are **not**
+									 * removed when the container is removed.
+									 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+									 * specified for tmpfs.
+									 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+									 * prior to creating the container.
+									 * - `cluster` a Swarm cluster volume
+									 */
+									Type: v.optional(
+										v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+									),
+									/**
+									 * Whether the mount should be read-only.
+									 */
+									ReadOnly: v.optional(v.boolean()),
+									/**
+									 * The consistency requirement for the mount: `default`, `consistent`,
+									 * `cached`, or `delegated`.
+									 */
+									Consistency: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Optional configuration for the `bind` type.
+									 */
+									BindOptions: v.optional(
+										v.strictObject({
+											/**
+											 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+											 */
+											Propagation: v.optional(
+												v.picklist([
+													"private",
+													"rprivate",
+													"shared",
+													"rshared",
+													"slave",
+													"rslave",
+												]),
+											),
+											/**
+											 * Disable recursive bind mount.
+											 */
+											NonRecursive: v.optional(v.boolean()),
+											/**
+											 * Create mount point on host if missing
+											 */
+											CreateMountpoint: v.optional(v.boolean()),
+										}),
+									),
+									/**
+									 * Optional configuration for the `volume` type.
+									 */
+									VolumeOptions: v.optional(
+										v.strictObject({
+											/**
+											 * Populate volume with data from the target.
+											 */
+											NoCopy: v.optional(v.boolean()),
+											/**
+											 * User-defined key/value metadata.
+											 */
+											Labels: v.optional(v.record(v.string(), v.unknown())),
+											/**
+											 * Map of driver specific options
+											 */
+											DriverConfig: v.optional(
+												v.strictObject({
+													/**
+													 * Name of the driver to use to create the volume.
+													 */
+													Name: v.optional(v.pipe(v.string(), v.trim())),
+													/**
+													 * key/value map of driver specific options.
+													 */
+													Options: v.optional(
+														v.record(v.string(), v.unknown()),
+													),
+												}),
+											),
+										}),
+									),
+									/**
+									 * Optional configuration for the `tmpfs` type.
+									 */
+									TmpfsOptions: v.optional(
+										v.strictObject({
+											/**
+											 * The size for the tmpfs mount in bytes.
+											 */
+											SizeBytes: v.optional(
+												v.union([
+													v.pipe(
+														v.string(),
+														v.decimal(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.pipe(
+														v.number(),
+														v.integer(),
+														v.toBigint(),
+														v.bigint(),
+													),
+													v.bigint(),
+												]),
+											),
+											/**
+											 * The permission mode for the tmpfs mount in an integer.
+											 */
+											Mode: v.optional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+								}),
+							),
+						),
+						/**
+						 * Signal to stop the container.
+						 */
+						StopSignal: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Amount of time to wait for the container to terminate before
+						 * forcefully killing it.
+						 */
+						StopGracePeriod: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * A test to perform to check that the container is healthy.
+						 */
+						HealthCheck: v.optional(
+							v.strictObject({
+								/**
+								 * The test to perform. Possible values are:
+								 *
+								 * - `[]` inherit healthcheck from image or parent image
+								 * - `["NONE"]` disable healthcheck
+								 * - `["CMD", args...]` exec arguments directly
+								 * - `["CMD-SHELL", command]` run command with system's default shell
+								 */
+								Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * The time to wait between checks in nanoseconds. It should be 0 or at
+								 * least 1000000 (1 ms). 0 means inherit.
+								 */
+								Interval: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * The time to wait before considering the check to have hung. It should
+								 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+								 */
+								Timeout: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * The number of consecutive failures needed to consider a container as
+								 * unhealthy. 0 means inherit.
+								 */
+								Retries: v.optional(v.pipe(v.number(), v.integer())),
+								/**
+								 * Start period for the container to initialize before starting
+								 * health-retries countdown in nanoseconds. It should be 0 or at least
+								 * 1000000 (1 ms). 0 means inherit.
+								 */
+								StartPeriod: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+						/**
+						 * A list of hostname/IP mappings to add to the container's `hosts`
+						 * file. The format of extra hosts is specified in the
+						 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+						 * man page:
+						 *
+						 *
+						 * IP_address canonical_hostname [aliases...]
+						 */
+						Hosts: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * Specification for DNS related configurations in resolver configuration
+						 * file (`resolv.conf`).
+						 */
+						DNSConfig: v.optional(
+							v.strictObject({
+								/**
+								 * The IP addresses of the name servers.
+								 */
+								Nameservers: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * A search list for host-name lookup.
+								 */
+								Search: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+								/**
+								 * A list of internal resolver variables to be modified (e.g.,
+								 * `debug`, `ndots:3`, etc.).
+								 */
+								Options: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							}),
+						),
+						/**
+						 * Secrets contains references to zero or more secrets that will be
+						 * exposed to the service.
+						 */
+						Secrets: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * File represents a specific target that is backed by a file.
+									 */
+									File: v.optional(
+										v.strictObject({
+											/**
+											 * Name represents the final filename in the filesystem.
+											 */
+											Name: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * UID represents the file UID.
+											 */
+											UID: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * GID represents the file GID.
+											 */
+											GID: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Mode represents the FileMode of the file.
+											 */
+											Mode: v.optional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+									/**
+									 * SecretID represents the ID of the specific secret that we're
+									 * referencing.
+									 */
+									SecretID: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * SecretName is the name of the secret that this references,
+									 * but this is just provided for lookup/display purposes. The
+									 * secret in the reference will be identified by its ID.
+									 */
+									SecretName: v.optional(v.pipe(v.string(), v.trim())),
+								}),
+							),
+						),
+						/**
+						 * Configs contains references to zero or more configs that will be
+						 * exposed to the service.
+						 */
+						Configs: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * File represents a specific target that is backed by a file.
+									 *
+									 * <p><br /><p>
+									 *
+									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+									 */
+									File: v.optional(
+										v.strictObject({
+											/**
+											 * Name represents the final filename in the filesystem.
+											 */
+											Name: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * UID represents the file UID.
+											 */
+											UID: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * GID represents the file GID.
+											 */
+											GID: v.optional(v.pipe(v.string(), v.trim())),
+											/**
+											 * Mode represents the FileMode of the file.
+											 */
+											Mode: v.optional(v.pipe(v.number(), v.integer())),
+										}),
+									),
+									/**
+									 * Runtime represents a target that is not mounted into the
+									 * container but is used by the task
+									 *
+									 * <p><br /><p>
+									 *
+									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+									 * > exclusive
+									 */
+									Runtime: v.optional(v.record(v.string(), v.unknown())),
+									/**
+									 * ConfigID represents the ID of the specific config that we're
+									 * referencing.
+									 */
+									ConfigID: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * ConfigName is the name of the config that this references,
+									 * but this is just provided for lookup/display purposes. The
+									 * config in the reference will be identified by its ID.
+									 */
+									ConfigName: v.optional(v.pipe(v.string(), v.trim())),
+								}),
+							),
+						),
+						/**
+						 * Isolation technology of the containers running the service.
+						 * (Windows only)
+						 */
+						Isolation: v.optional(
+							v.picklist(["default", "process", "hyperv", ""]),
+						),
+						/**
+						 * Run an init inside the container that forwards signals and reaps
+						 * processes. This field is omitted if empty, and the default (as
+						 * configured on the daemon) is used.
+						 */
+						Init: v.optional(v.nullable(v.boolean())),
+						/**
+						 * Set kernel namedspaced parameters (sysctls) in the container.
+						 * The Sysctls option on services accepts the same sysctls as the
+						 * are supported on containers. Note that while the same sysctls are
+						 * supported, no guarantees or checks are made about their
+						 * suitability for a clustered environment, and it's up to the user
+						 * to determine whether a given sysctl will work properly in a
+						 * Service.
+						 */
+						Sysctls: v.optional(v.record(v.string(), v.unknown())),
+						/**
+						 * A list of kernel capabilities to add to the default set
+						 * for the container.
+						 */
+						CapabilityAdd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * A list of kernel capabilities to drop from the default set
+						 * for the container.
+						 */
+						CapabilityDrop: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * A list of resource limits to set in the container. For example: `{"Name":
+						 * "nofile", "Soft": 1024, "Hard": 2048}`"
+						 */
+						Ulimits: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * Name of ulimit
+									 */
+									Name: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Soft limit
+									 */
+									Soft: v.optional(v.pipe(v.number(), v.integer())),
+									/**
+									 * Hard limit
+									 */
+									Hard: v.optional(v.pipe(v.number(), v.integer())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * Read-only spec type for non-swarm containers attached to swarm overlay
+				 * networks.
+				 *
+				 * <p><br /></p>
+				 *
+				 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+				 * > mutually exclusive. PluginSpec is only used when the Runtime field
+				 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+				 * > field is set to `attachment`.
+				 */
+				NetworkAttachmentSpec: v.optional(
+					v.strictObject({
+						/**
+						 * ID of the container represented by this task
+						 */
+						ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+				/**
+				 * Resource requirements which apply to each individual container created
+				 * as part of the service.
+				 */
+				Resources: v.optional(
+					v.strictObject({
+						/**
+						 * An object describing a limit on resources which can be requested by a task.
+						 */
+						Limits: v.optional(
+							v.strictObject({
+								NanoCPUs: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								MemoryBytes: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+								 */
+								Pids: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+							}),
+						),
+						/**
+						 * An object describing the resources which can be advertised by a node and
+						 * requested by a task.
+						 */
+						Reservations: v.optional(
+							v.strictObject({
+								NanoCPUs: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								MemoryBytes: v.optional(
+									v.union([
+										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+										v.bigint(),
+									]),
+								),
+								/**
+								 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+								 * String resources (e.g, `GPU=UUID1`).
+								 */
+								GenericResources: v.optional(
+									v.array(
+										v.strictObject({
+											NamedResourceSpec: v.optional(
+												v.strictObject({
+													Kind: v.optional(v.pipe(v.string(), v.trim())),
+													Value: v.optional(v.pipe(v.string(), v.trim())),
+												}),
+											),
+											DiscreteResourceSpec: v.optional(
+												v.strictObject({
+													Kind: v.optional(v.pipe(v.string(), v.trim())),
+													Value: v.optional(
+														v.union([
+															v.pipe(
+																v.string(),
+																v.decimal(),
+																v.toBigint(),
+																v.bigint(),
+															),
+															v.pipe(
+																v.number(),
+																v.integer(),
+																v.toBigint(),
+																v.bigint(),
+															),
+															v.bigint(),
+														]),
+													),
+												}),
+											),
+										}),
+									),
+								),
+							}),
+						),
+					}),
+				),
+				/**
+				 * Specification for the restart policy which applies to containers
+				 * created as part of this service.
+				 */
+				RestartPolicy: v.optional(
+					v.strictObject({
+						/**
+						 * Condition for restart.
+						 */
+						Condition: v.optional(v.picklist(["none", "on-failure", "any"])),
+						/**
+						 * Delay between restart attempts.
+						 */
+						Delay: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Maximum attempts to restart a given container before giving up
+						 * (default value is 0, which is ignored).
+						 */
+						MaxAttempts: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Windows is the time window used to evaluate the restart policy
+						 * (default value is 0, which is unbounded).
+						 */
+						Window: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+					}),
+				),
+				Placement: v.optional(
+					v.strictObject({
+						/**
+						 * An array of constraint expressions to limit the set of nodes where
+						 * a task can be scheduled. Constraint expressions can either use a
+						 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+						 * nodes that satisfy every expression (AND match). Constraints can
+						 * match node or Docker Engine labels as follows:
+						 *
+						 * node attribute       | matches                        | example
+						 * ---------------------|--------------------------------|-----------------------------------------------
+						 * `node.id`            | Node ID                        |
+						 * `node.id==2ivku8v2gvtg4`
+						 * `node.hostname`      | Node hostname                  |
+						 * `node.hostname!=node-2`
+						 * `node.role`          | Node role (`manager`/`worker`) |
+						 * `node.role==manager`
+						 * `node.platform.os`   | Node operating system          |
+						 * `node.platform.os==windows`
+						 * `node.platform.arch` | Node architecture              |
+						 * `node.platform.arch==x86_64`
+						 * `node.labels`        | User-defined node labels       |
+						 * `node.labels.security==high`
+						 * `engine.labels`      | Docker Engine's labels         |
+						 * `engine.labels.operatingsystem==ubuntu-14.04`
+						 *
+						 * `engine.labels` apply to Docker Engine labels like operating system,
+						 * drivers, etc. Swarm administrators add `node.labels` for operational
+						 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+						 */
+						Constraints: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * Preferences provide a way to make the scheduler aware of factors
+						 * such as topology. They are provided in order from highest to
+						 * lowest precedence.
+						 */
+						Preferences: v.optional(
+							v.array(
+								v.strictObject({
+									Spread: v.optional(
+										v.strictObject({
+											/**
+											 * label descriptor, such as `engine.labels.az`.
+											 */
+											SpreadDescriptor: v.optional(
+												v.pipe(v.string(), v.trim()),
+											),
+										}),
+									),
+								}),
+							),
+						),
+						/**
+						 * Maximum number of replicas for per node (default value is 0, which
+						 * is unlimited)
+						 */
+						MaxReplicas: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+						/**
+						 * Platforms stores all the platforms that the service's image can
+						 * run on. This field is used in the platform filter for scheduling.
+						 * If empty, then the platform filter is off, meaning there are no
+						 * scheduling restrictions.
+						 */
+						Platforms: v.optional(
+							v.array(
+								v.strictObject({
+									/**
+									 * Architecture represents the hardware architecture (for example,
+									 * `x86_64`).
+									 */
+									Architecture: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * OS represents the Operating System (for example, `linux` or `windows`).
+									 */
+									OS: v.optional(v.pipe(v.string(), v.trim())),
+								}),
+							),
+						),
+					}),
+				),
+				/**
+				 * A counter that triggers an update even if no relevant parameters have
+				 * been changed.
+				 */
+				ForceUpdate: v.optional(v.pipe(v.number(), v.integer())),
+				/**
+				 * Runtime is the type of runtime specified for the task executor.
+				 */
+				Runtime: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Specifies which networks the service should attach to.
+				 */
+				Networks: v.optional(
+					v.array(
+						v.strictObject({
+							/**
+							 * The target network for attachment. Must be a network name or ID.
+							 */
+							Target: v.optional(v.pipe(v.string(), v.trim())),
+							/**
+							 * Discoverable alternate names for the service on this network.
+							 */
+							Aliases: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * Driver attachment options for the network target.
+							 */
+							DriverOpts: v.optional(v.record(v.string(), v.unknown())),
+						}),
+					),
+				),
+				/**
+				 * Specifies the log driver to use for tasks created from this spec. If
+				 * not present, the default one for the swarm will be used, finally
+				 * falling back to the engine default if not specified.
+				 */
+				LogDriver: v.optional(
+					v.strictObject({
+						Name: v.optional(v.pipe(v.string(), v.trim())),
+						Options: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			}),
+		),
+		/**
+		 * The ID of the service this task is part of.
+		 */
+		ServiceID: v.optional(v.pipe(v.string(), v.trim())),
+		Slot: v.optional(v.pipe(v.number(), v.integer())),
+		/**
+		 * The ID of the node that this task is on.
+		 */
+		NodeID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+		 * String resources (e.g, `GPU=UUID1`).
+		 */
+		AssignedGenericResources: v.optional(
+			v.array(
+				v.strictObject({
+					NamedResourceSpec: v.optional(
+						v.strictObject({
+							Kind: v.optional(v.pipe(v.string(), v.trim())),
+							Value: v.optional(v.pipe(v.string(), v.trim())),
+						}),
+					),
+					DiscreteResourceSpec: v.optional(
+						v.strictObject({
+							Kind: v.optional(v.pipe(v.string(), v.trim())),
+							Value: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+						}),
+					),
+				}),
+			),
+		),
+		Status: v.optional(
+			v.strictObject({
+				Timestamp: v.optional(v.pipe(v.string(), v.trim())),
+				State: v.optional(
+					v.picklist([
+						"new",
+						"allocated",
+						"pending",
+						"assigned",
+						"accepted",
+						"preparing",
+						"ready",
+						"starting",
+						"running",
+						"complete",
+						"shutdown",
+						"failed",
+						"rejected",
+						"remove",
+						"orphaned",
+					]),
+				),
+				Message: v.optional(v.pipe(v.string(), v.trim())),
+				Err: v.optional(v.pipe(v.string(), v.trim())),
+				ContainerStatus: v.optional(
+					v.strictObject({
+						ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+						PID: v.optional(v.pipe(v.number(), v.integer())),
+						ExitCode: v.optional(v.pipe(v.number(), v.integer())),
+					}),
+				),
+			}),
+		),
+		DesiredState: v.optional(
+			v.picklist([
+				"new",
+				"allocated",
+				"pending",
+				"assigned",
+				"accepted",
+				"preparing",
+				"ready",
+				"starting",
+				"running",
+				"complete",
+				"shutdown",
+				"failed",
+				"rejected",
+				"remove",
+				"orphaned",
+			]),
+		),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		JobIteration: v.optional(
+			v.strictObject({
+				Index: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+	}),
+);
 export const exactTaskListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
 export const taskListCommandQuerySchema = v.strictObject({
 	filters: v.optional(v.pipe(v.string(), v.trim())),
+});
+export const exactTaskInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the task.
+	 */
+	ID: v.exactOptional(v.string()),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.exactOptional(
+		v.strictObject({
+			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.exactOptional(v.string()),
+	UpdatedAt: v.exactOptional(v.string()),
+	/**
+	 * Name of the task.
+	 */
+	Name: v.exactOptional(v.string()),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+	/**
+	 * User modifiable task configuration.
+	 */
+	Spec: v.exactOptional(
+		v.strictObject({
+			/**
+			 * Plugin spec for the service.  *(Experimental release only.)*
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+			 * > mutually exclusive. PluginSpec is only used when the Runtime field
+			 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+			 * > field is set to `attachment`.
+			 */
+			PluginSpec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The name or 'alias' to use for the plugin.
+					 */
+					Name: v.exactOptional(v.string()),
+					/**
+					 * The plugin image reference to use.
+					 */
+					Remote: v.exactOptional(v.string()),
+					/**
+					 * Disable the plugin once scheduled.
+					 */
+					Disabled: v.exactOptional(v.boolean()),
+					PluginPrivilege: v.exactOptional(
+						v.array(
+							v.strictObject({
+								Name: v.exactOptional(v.string()),
+								Description: v.exactOptional(v.string()),
+								Value: v.exactOptional(v.array(v.string())),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * Container spec for the service.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+			 * > mutually exclusive. PluginSpec is only used when the Runtime field
+			 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+			 * > field is set to `attachment`.
+			 */
+			ContainerSpec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * The image name to use for the container
+					 */
+					Image: v.exactOptional(v.string()),
+					/**
+					 * User-defined key/value data.
+					 */
+					Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+					/**
+					 * The command to be run in the image.
+					 */
+					Command: v.exactOptional(v.array(v.string())),
+					/**
+					 * Arguments to the command.
+					 */
+					Args: v.exactOptional(v.array(v.string())),
+					/**
+					 * The hostname to use for the container, as a valid
+					 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+					 */
+					Hostname: v.exactOptional(v.string()),
+					/**
+					 * A list of environment variables in the form `VAR=value`.
+					 */
+					Env: v.exactOptional(v.array(v.string())),
+					/**
+					 * The working directory for commands to run in.
+					 */
+					Dir: v.exactOptional(v.string()),
+					/**
+					 * The user inside the container.
+					 */
+					User: v.exactOptional(v.string()),
+					/**
+					 * A list of additional groups that the container process will run as.
+					 */
+					Groups: v.exactOptional(v.array(v.string())),
+					/**
+					 * Security options for the container
+					 */
+					Privileges: v.exactOptional(
+						v.strictObject({
+							/**
+							 * CredentialSpec for managed service account (Windows only)
+							 */
+							CredentialSpec: v.exactOptional(
+								v.strictObject({
+									/**
+									 * Load credential spec from a Swarm Config with the given ID.
+									 * The specified config must also be present in the Configs
+									 * field with the Runtime property set.
+									 *
+									 * <p><br /></p>
+									 *
+									 *
+									 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+									 * > and `CredentialSpec.Config` are mutually exclusive.
+									 */
+									Config: v.exactOptional(v.string()),
+									/**
+									 * Load credential spec from this file. The file is read by
+									 * the daemon, and must be present in the `CredentialSpecs`
+									 * subdirectory in the docker data directory, which defaults
+									 * to `C:\ProgramData\Docker\` on Windows.
+									 *
+									 * For example, specifying `spec.json` loads
+									 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+									 *
+									 * <p><br /></p>
+									 *
+									 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+									 * > and `CredentialSpec.Config` are mutually exclusive.
+									 */
+									File: v.exactOptional(v.string()),
+									/**
+									 * Load credential spec from this value in the Windows
+									 * registry. The specified registry value must be located in:
+									 *
+									 * `HKLM\SOFTWARE\Microsoft\Windows
+									 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+									 *
+									 * <p><br /></p>
+									 *
+									 *
+									 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+									 * > and `CredentialSpec.Config` are mutually exclusive.
+									 */
+									Registry: v.exactOptional(v.string()),
+								}),
+							),
+							/**
+							 * SELinux labels of the container
+							 */
+							SELinuxContext: v.exactOptional(
+								v.strictObject({
+									/**
+									 * Disable SELinux
+									 */
+									Disable: v.exactOptional(v.boolean()),
+									/**
+									 * SELinux user label
+									 */
+									User: v.exactOptional(v.string()),
+									/**
+									 * SELinux role label
+									 */
+									Role: v.exactOptional(v.string()),
+									/**
+									 * SELinux type label
+									 */
+									Type: v.exactOptional(v.string()),
+									/**
+									 * SELinux level label
+									 */
+									Level: v.exactOptional(v.string()),
+								}),
+							),
+						}),
+					),
+					/**
+					 * Whether a pseudo-TTY should be allocated.
+					 */
+					TTY: v.exactOptional(v.boolean()),
+					/**
+					 * Open `stdin`
+					 */
+					OpenStdin: v.exactOptional(v.boolean()),
+					/**
+					 * Mount the container's root filesystem as read only.
+					 */
+					ReadOnly: v.exactOptional(v.boolean()),
+					/**
+					 * Specification for mounts to be added to containers created as part
+					 * of the service.
+					 */
+					Mounts: v.exactOptional(
+						v.array(
+							v.strictObject({
+								/**
+								 * Container path.
+								 */
+								Target: v.exactOptional(v.string()),
+								/**
+								 * Mount source (e.g. a volume name, a host path).
+								 */
+								Source: v.exactOptional(v.string()),
+								/**
+								 * The mount type. Available types:
+								 *
+								 * - `bind` Mounts a file or directory from the host into the container. Must
+								 * exist prior to creating the container.
+								 * - `volume` Creates a volume with the given name and options (or uses a
+								 * pre-existing volume with the same name and options). These are **not**
+								 * removed when the container is removed.
+								 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+								 * specified for tmpfs.
+								 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+								 * prior to creating the container.
+								 * - `cluster` a Swarm cluster volume
+								 */
+								Type: v.exactOptional(
+									v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+								),
+								/**
+								 * Whether the mount should be read-only.
+								 */
+								ReadOnly: v.exactOptional(v.boolean()),
+								/**
+								 * The consistency requirement for the mount: `default`, `consistent`,
+								 * `cached`, or `delegated`.
+								 */
+								Consistency: v.exactOptional(v.string()),
+								/**
+								 * Optional configuration for the `bind` type.
+								 */
+								BindOptions: v.exactOptional(
+									v.strictObject({
+										/**
+										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+										 */
+										Propagation: v.exactOptional(
+											v.picklist([
+												"private",
+												"rprivate",
+												"shared",
+												"rshared",
+												"slave",
+												"rslave",
+											]),
+										),
+										/**
+										 * Disable recursive bind mount.
+										 */
+										NonRecursive: v.exactOptional(v.boolean()),
+										/**
+										 * Create mount point on host if missing
+										 */
+										CreateMountpoint: v.exactOptional(v.boolean()),
+									}),
+								),
+								/**
+								 * Optional configuration for the `volume` type.
+								 */
+								VolumeOptions: v.exactOptional(
+									v.strictObject({
+										/**
+										 * Populate volume with data from the target.
+										 */
+										NoCopy: v.exactOptional(v.boolean()),
+										/**
+										 * User-defined key/value metadata.
+										 */
+										Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+										/**
+										 * Map of driver specific options
+										 */
+										DriverConfig: v.exactOptional(
+											v.strictObject({
+												/**
+												 * Name of the driver to use to create the volume.
+												 */
+												Name: v.exactOptional(v.string()),
+												/**
+												 * key/value map of driver specific options.
+												 */
+												Options: v.exactOptional(
+													v.record(v.string(), v.unknown()),
+												),
+											}),
+										),
+									}),
+								),
+								/**
+								 * Optional configuration for the `tmpfs` type.
+								 */
+								TmpfsOptions: v.exactOptional(
+									v.strictObject({
+										/**
+										 * The size for the tmpfs mount in bytes.
+										 */
+										SizeBytes: v.exactOptional(v.bigint()),
+										/**
+										 * The permission mode for the tmpfs mount in an integer.
+										 */
+										Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+							}),
+						),
+					),
+					/**
+					 * Signal to stop the container.
+					 */
+					StopSignal: v.exactOptional(v.string()),
+					/**
+					 * Amount of time to wait for the container to terminate before
+					 * forcefully killing it.
+					 */
+					StopGracePeriod: v.exactOptional(v.bigint()),
+					/**
+					 * A test to perform to check that the container is healthy.
+					 */
+					HealthCheck: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The test to perform. Possible values are:
+							 *
+							 * - `[]` inherit healthcheck from image or parent image
+							 * - `["NONE"]` disable healthcheck
+							 * - `["CMD", args...]` exec arguments directly
+							 * - `["CMD-SHELL", command]` run command with system's default shell
+							 */
+							Test: v.exactOptional(v.array(v.string())),
+							/**
+							 * The time to wait between checks in nanoseconds. It should be 0 or at
+							 * least 1000000 (1 ms). 0 means inherit.
+							 */
+							Interval: v.exactOptional(v.bigint()),
+							/**
+							 * The time to wait before considering the check to have hung. It should
+							 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+							 */
+							Timeout: v.exactOptional(v.bigint()),
+							/**
+							 * The number of consecutive failures needed to consider a container as
+							 * unhealthy. 0 means inherit.
+							 */
+							Retries: v.exactOptional(v.pipe(v.number(), v.integer())),
+							/**
+							 * Start period for the container to initialize before starting
+							 * health-retries countdown in nanoseconds. It should be 0 or at least
+							 * 1000000 (1 ms). 0 means inherit.
+							 */
+							StartPeriod: v.exactOptional(v.bigint()),
+						}),
+					),
+					/**
+					 * A list of hostname/IP mappings to add to the container's `hosts`
+					 * file. The format of extra hosts is specified in the
+					 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+					 * man page:
+					 *
+					 *
+					 * IP_address canonical_hostname [aliases...]
+					 */
+					Hosts: v.exactOptional(v.array(v.string())),
+					/**
+					 * Specification for DNS related configurations in resolver configuration
+					 * file (`resolv.conf`).
+					 */
+					DNSConfig: v.exactOptional(
+						v.strictObject({
+							/**
+							 * The IP addresses of the name servers.
+							 */
+							Nameservers: v.exactOptional(v.array(v.string())),
+							/**
+							 * A search list for host-name lookup.
+							 */
+							Search: v.exactOptional(v.array(v.string())),
+							/**
+							 * A list of internal resolver variables to be modified (e.g.,
+							 * `debug`, `ndots:3`, etc.).
+							 */
+							Options: v.exactOptional(v.array(v.string())),
+						}),
+					),
+					/**
+					 * Secrets contains references to zero or more secrets that will be
+					 * exposed to the service.
+					 */
+					Secrets: v.exactOptional(
+						v.array(
+							v.strictObject({
+								/**
+								 * File represents a specific target that is backed by a file.
+								 */
+								File: v.exactOptional(
+									v.strictObject({
+										/**
+										 * Name represents the final filename in the filesystem.
+										 */
+										Name: v.exactOptional(v.string()),
+										/**
+										 * UID represents the file UID.
+										 */
+										UID: v.exactOptional(v.string()),
+										/**
+										 * GID represents the file GID.
+										 */
+										GID: v.exactOptional(v.string()),
+										/**
+										 * Mode represents the FileMode of the file.
+										 */
+										Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+								/**
+								 * SecretID represents the ID of the specific secret that we're
+								 * referencing.
+								 */
+								SecretID: v.exactOptional(v.string()),
+								/**
+								 * SecretName is the name of the secret that this references,
+								 * but this is just provided for lookup/display purposes. The
+								 * secret in the reference will be identified by its ID.
+								 */
+								SecretName: v.exactOptional(v.string()),
+							}),
+						),
+					),
+					/**
+					 * Configs contains references to zero or more configs that will be
+					 * exposed to the service.
+					 */
+					Configs: v.exactOptional(
+						v.array(
+							v.strictObject({
+								/**
+								 * File represents a specific target that is backed by a file.
+								 *
+								 * <p><br /><p>
+								 *
+								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+								 */
+								File: v.exactOptional(
+									v.strictObject({
+										/**
+										 * Name represents the final filename in the filesystem.
+										 */
+										Name: v.exactOptional(v.string()),
+										/**
+										 * UID represents the file UID.
+										 */
+										UID: v.exactOptional(v.string()),
+										/**
+										 * GID represents the file GID.
+										 */
+										GID: v.exactOptional(v.string()),
+										/**
+										 * Mode represents the FileMode of the file.
+										 */
+										Mode: v.exactOptional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+								/**
+								 * Runtime represents a target that is not mounted into the
+								 * container but is used by the task
+								 *
+								 * <p><br /><p>
+								 *
+								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+								 * > exclusive
+								 */
+								Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+								/**
+								 * ConfigID represents the ID of the specific config that we're
+								 * referencing.
+								 */
+								ConfigID: v.exactOptional(v.string()),
+								/**
+								 * ConfigName is the name of the config that this references,
+								 * but this is just provided for lookup/display purposes. The
+								 * config in the reference will be identified by its ID.
+								 */
+								ConfigName: v.exactOptional(v.string()),
+							}),
+						),
+					),
+					/**
+					 * Isolation technology of the containers running the service.
+					 * (Windows only)
+					 */
+					Isolation: v.exactOptional(
+						v.picklist(["default", "process", "hyperv", ""]),
+					),
+					/**
+					 * Run an init inside the container that forwards signals and reaps
+					 * processes. This field is omitted if empty, and the default (as
+					 * configured on the daemon) is used.
+					 */
+					Init: v.exactOptional(v.nullable(v.boolean())),
+					/**
+					 * Set kernel namedspaced parameters (sysctls) in the container.
+					 * The Sysctls option on services accepts the same sysctls as the
+					 * are supported on containers. Note that while the same sysctls are
+					 * supported, no guarantees or checks are made about their
+					 * suitability for a clustered environment, and it's up to the user
+					 * to determine whether a given sysctl will work properly in a
+					 * Service.
+					 */
+					Sysctls: v.exactOptional(v.record(v.string(), v.unknown())),
+					/**
+					 * A list of kernel capabilities to add to the default set
+					 * for the container.
+					 */
+					CapabilityAdd: v.exactOptional(v.array(v.string())),
+					/**
+					 * A list of kernel capabilities to drop from the default set
+					 * for the container.
+					 */
+					CapabilityDrop: v.exactOptional(v.array(v.string())),
+					/**
+					 * A list of resource limits to set in the container. For example: `{"Name":
+					 * "nofile", "Soft": 1024, "Hard": 2048}`"
+					 */
+					Ulimits: v.exactOptional(
+						v.array(
+							v.strictObject({
+								/**
+								 * Name of ulimit
+								 */
+								Name: v.exactOptional(v.string()),
+								/**
+								 * Soft limit
+								 */
+								Soft: v.exactOptional(v.pipe(v.number(), v.integer())),
+								/**
+								 * Hard limit
+								 */
+								Hard: v.exactOptional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * Read-only spec type for non-swarm containers attached to swarm overlay
+			 * networks.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+			 * > mutually exclusive. PluginSpec is only used when the Runtime field
+			 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+			 * > field is set to `attachment`.
+			 */
+			NetworkAttachmentSpec: v.exactOptional(
+				v.strictObject({
+					/**
+					 * ID of the container represented by this task
+					 */
+					ContainerID: v.exactOptional(v.string()),
+				}),
+			),
+			/**
+			 * Resource requirements which apply to each individual container created
+			 * as part of the service.
+			 */
+			Resources: v.exactOptional(
+				v.strictObject({
+					/**
+					 * An object describing a limit on resources which can be requested by a task.
+					 */
+					Limits: v.exactOptional(
+						v.strictObject({
+							NanoCPUs: v.exactOptional(v.bigint()),
+							MemoryBytes: v.exactOptional(v.bigint()),
+							/**
+							 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+							 */
+							Pids: v.exactOptional(v.bigint()),
+						}),
+					),
+					/**
+					 * An object describing the resources which can be advertised by a node and
+					 * requested by a task.
+					 */
+					Reservations: v.exactOptional(
+						v.strictObject({
+							NanoCPUs: v.exactOptional(v.bigint()),
+							MemoryBytes: v.exactOptional(v.bigint()),
+							/**
+							 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+							 * String resources (e.g, `GPU=UUID1`).
+							 */
+							GenericResources: v.exactOptional(
+								v.array(
+									v.strictObject({
+										NamedResourceSpec: v.exactOptional(
+											v.strictObject({
+												Kind: v.exactOptional(v.string()),
+												Value: v.exactOptional(v.string()),
+											}),
+										),
+										DiscreteResourceSpec: v.exactOptional(
+											v.strictObject({
+												Kind: v.exactOptional(v.string()),
+												Value: v.exactOptional(v.bigint()),
+											}),
+										),
+									}),
+								),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Specification for the restart policy which applies to containers
+			 * created as part of this service.
+			 */
+			RestartPolicy: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Condition for restart.
+					 */
+					Condition: v.exactOptional(v.picklist(["none", "on-failure", "any"])),
+					/**
+					 * Delay between restart attempts.
+					 */
+					Delay: v.exactOptional(v.bigint()),
+					/**
+					 * Maximum attempts to restart a given container before giving up
+					 * (default value is 0, which is ignored).
+					 */
+					MaxAttempts: v.exactOptional(v.bigint()),
+					/**
+					 * Windows is the time window used to evaluate the restart policy
+					 * (default value is 0, which is unbounded).
+					 */
+					Window: v.exactOptional(v.bigint()),
+				}),
+			),
+			Placement: v.exactOptional(
+				v.strictObject({
+					/**
+					 * An array of constraint expressions to limit the set of nodes where
+					 * a task can be scheduled. Constraint expressions can either use a
+					 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+					 * nodes that satisfy every expression (AND match). Constraints can
+					 * match node or Docker Engine labels as follows:
+					 *
+					 * node attribute       | matches                        | example
+					 * ---------------------|--------------------------------|-----------------------------------------------
+					 * `node.id`            | Node ID                        |
+					 * `node.id==2ivku8v2gvtg4`
+					 * `node.hostname`      | Node hostname                  |
+					 * `node.hostname!=node-2`
+					 * `node.role`          | Node role (`manager`/`worker`) |
+					 * `node.role==manager`
+					 * `node.platform.os`   | Node operating system          |
+					 * `node.platform.os==windows`
+					 * `node.platform.arch` | Node architecture              |
+					 * `node.platform.arch==x86_64`
+					 * `node.labels`        | User-defined node labels       |
+					 * `node.labels.security==high`
+					 * `engine.labels`      | Docker Engine's labels         |
+					 * `engine.labels.operatingsystem==ubuntu-14.04`
+					 *
+					 * `engine.labels` apply to Docker Engine labels like operating system,
+					 * drivers, etc. Swarm administrators add `node.labels` for operational
+					 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+					 */
+					Constraints: v.exactOptional(v.array(v.string())),
+					/**
+					 * Preferences provide a way to make the scheduler aware of factors
+					 * such as topology. They are provided in order from highest to
+					 * lowest precedence.
+					 */
+					Preferences: v.exactOptional(
+						v.array(
+							v.strictObject({
+								Spread: v.exactOptional(
+									v.strictObject({
+										/**
+										 * label descriptor, such as `engine.labels.az`.
+										 */
+										SpreadDescriptor: v.exactOptional(v.string()),
+									}),
+								),
+							}),
+						),
+					),
+					/**
+					 * Maximum number of replicas for per node (default value is 0, which
+					 * is unlimited)
+					 */
+					MaxReplicas: v.exactOptional(v.bigint()),
+					/**
+					 * Platforms stores all the platforms that the service's image can
+					 * run on. This field is used in the platform filter for scheduling.
+					 * If empty, then the platform filter is off, meaning there are no
+					 * scheduling restrictions.
+					 */
+					Platforms: v.exactOptional(
+						v.array(
+							v.strictObject({
+								/**
+								 * Architecture represents the hardware architecture (for example,
+								 * `x86_64`).
+								 */
+								Architecture: v.exactOptional(v.string()),
+								/**
+								 * OS represents the Operating System (for example, `linux` or `windows`).
+								 */
+								OS: v.exactOptional(v.string()),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * A counter that triggers an update even if no relevant parameters have
+			 * been changed.
+			 */
+			ForceUpdate: v.exactOptional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Runtime is the type of runtime specified for the task executor.
+			 */
+			Runtime: v.exactOptional(v.string()),
+			/**
+			 * Specifies which networks the service should attach to.
+			 */
+			Networks: v.exactOptional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The target network for attachment. Must be a network name or ID.
+						 */
+						Target: v.exactOptional(v.string()),
+						/**
+						 * Discoverable alternate names for the service on this network.
+						 */
+						Aliases: v.exactOptional(v.array(v.string())),
+						/**
+						 * Driver attachment options for the network target.
+						 */
+						DriverOpts: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+			/**
+			 * Specifies the log driver to use for tasks created from this spec. If
+			 * not present, the default one for the swarm will be used, finally
+			 * falling back to the engine default if not specified.
+			 */
+			LogDriver: v.exactOptional(
+				v.strictObject({
+					Name: v.exactOptional(v.string()),
+					Options: v.exactOptional(v.record(v.string(), v.unknown())),
+				}),
+			),
+		}),
+	),
+	/**
+	 * The ID of the service this task is part of.
+	 */
+	ServiceID: v.exactOptional(v.string()),
+	Slot: v.exactOptional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The ID of the node that this task is on.
+	 */
+	NodeID: v.exactOptional(v.string()),
+	/**
+	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+	 * String resources (e.g, `GPU=UUID1`).
+	 */
+	AssignedGenericResources: v.exactOptional(
+		v.array(
+			v.strictObject({
+				NamedResourceSpec: v.exactOptional(
+					v.strictObject({
+						Kind: v.exactOptional(v.string()),
+						Value: v.exactOptional(v.string()),
+					}),
+				),
+				DiscreteResourceSpec: v.exactOptional(
+					v.strictObject({
+						Kind: v.exactOptional(v.string()),
+						Value: v.exactOptional(v.bigint()),
+					}),
+				),
+			}),
+		),
+	),
+	Status: v.exactOptional(
+		v.strictObject({
+			Timestamp: v.exactOptional(v.string()),
+			State: v.exactOptional(
+				v.picklist([
+					"new",
+					"allocated",
+					"pending",
+					"assigned",
+					"accepted",
+					"preparing",
+					"ready",
+					"starting",
+					"running",
+					"complete",
+					"shutdown",
+					"failed",
+					"rejected",
+					"remove",
+					"orphaned",
+				]),
+			),
+			Message: v.exactOptional(v.string()),
+			Err: v.exactOptional(v.string()),
+			ContainerStatus: v.exactOptional(
+				v.strictObject({
+					ContainerID: v.exactOptional(v.string()),
+					PID: v.exactOptional(v.pipe(v.number(), v.integer())),
+					ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+		}),
+	),
+	DesiredState: v.exactOptional(
+		v.picklist([
+			"new",
+			"allocated",
+			"pending",
+			"assigned",
+			"accepted",
+			"preparing",
+			"ready",
+			"starting",
+			"running",
+			"complete",
+			"shutdown",
+			"failed",
+			"rejected",
+			"remove",
+			"orphaned",
+		]),
+	),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	JobIteration: v.exactOptional(
+		v.strictObject({
+			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+});
+export const taskInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * The ID of the task.
+	 */
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.optional(
+		v.strictObject({
+			Index: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * Name of the task.
+	 */
+	Name: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * User-defined key/value metadata.
+	 */
+	Labels: v.optional(v.record(v.string(), v.unknown())),
+	/**
+	 * User modifiable task configuration.
+	 */
+	Spec: v.optional(
+		v.strictObject({
+			/**
+			 * Plugin spec for the service.  *(Experimental release only.)*
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+			 * > mutually exclusive. PluginSpec is only used when the Runtime field
+			 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+			 * > field is set to `attachment`.
+			 */
+			PluginSpec: v.optional(
+				v.strictObject({
+					/**
+					 * The name or 'alias' to use for the plugin.
+					 */
+					Name: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The plugin image reference to use.
+					 */
+					Remote: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Disable the plugin once scheduled.
+					 */
+					Disabled: v.optional(v.boolean()),
+					PluginPrivilege: v.optional(
+						v.array(
+							v.strictObject({
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								Description: v.optional(v.pipe(v.string(), v.trim())),
+								Value: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * Container spec for the service.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+			 * > mutually exclusive. PluginSpec is only used when the Runtime field
+			 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+			 * > field is set to `attachment`.
+			 */
+			ContainerSpec: v.optional(
+				v.strictObject({
+					/**
+					 * The image name to use for the container
+					 */
+					Image: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * User-defined key/value data.
+					 */
+					Labels: v.optional(v.record(v.string(), v.unknown())),
+					/**
+					 * The command to be run in the image.
+					 */
+					Command: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * Arguments to the command.
+					 */
+					Args: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * The hostname to use for the container, as a valid
+					 * [RFC 1123](https://tools.ietf.org/html/rfc1123) hostname.
+					 */
+					Hostname: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * A list of environment variables in the form `VAR=value`.
+					 */
+					Env: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * The working directory for commands to run in.
+					 */
+					Dir: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * The user inside the container.
+					 */
+					User: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * A list of additional groups that the container process will run as.
+					 */
+					Groups: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * Security options for the container
+					 */
+					Privileges: v.optional(
+						v.strictObject({
+							/**
+							 * CredentialSpec for managed service account (Windows only)
+							 */
+							CredentialSpec: v.optional(
+								v.strictObject({
+									/**
+									 * Load credential spec from a Swarm Config with the given ID.
+									 * The specified config must also be present in the Configs
+									 * field with the Runtime property set.
+									 *
+									 * <p><br /></p>
+									 *
+									 *
+									 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+									 * > and `CredentialSpec.Config` are mutually exclusive.
+									 */
+									Config: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Load credential spec from this file. The file is read by
+									 * the daemon, and must be present in the `CredentialSpecs`
+									 * subdirectory in the docker data directory, which defaults
+									 * to `C:\ProgramData\Docker\` on Windows.
+									 *
+									 * For example, specifying `spec.json` loads
+									 * `C:\ProgramData\Docker\CredentialSpecs\spec.json`.
+									 *
+									 * <p><br /></p>
+									 *
+									 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+									 * > and `CredentialSpec.Config` are mutually exclusive.
+									 */
+									File: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * Load credential spec from this value in the Windows
+									 * registry. The specified registry value must be located in:
+									 *
+									 * `HKLM\SOFTWARE\Microsoft\Windows
+									 * NT\CurrentVersion\Virtualization\Containers\CredentialSpecs`
+									 *
+									 * <p><br /></p>
+									 *
+									 *
+									 * > **Note**: `CredentialSpec.File`, `CredentialSpec.Registry`,
+									 * > and `CredentialSpec.Config` are mutually exclusive.
+									 */
+									Registry: v.optional(v.pipe(v.string(), v.trim())),
+								}),
+							),
+							/**
+							 * SELinux labels of the container
+							 */
+							SELinuxContext: v.optional(
+								v.strictObject({
+									/**
+									 * Disable SELinux
+									 */
+									Disable: v.optional(v.boolean()),
+									/**
+									 * SELinux user label
+									 */
+									User: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * SELinux role label
+									 */
+									Role: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * SELinux type label
+									 */
+									Type: v.optional(v.pipe(v.string(), v.trim())),
+									/**
+									 * SELinux level label
+									 */
+									Level: v.optional(v.pipe(v.string(), v.trim())),
+								}),
+							),
+						}),
+					),
+					/**
+					 * Whether a pseudo-TTY should be allocated.
+					 */
+					TTY: v.optional(v.boolean()),
+					/**
+					 * Open `stdin`
+					 */
+					OpenStdin: v.optional(v.boolean()),
+					/**
+					 * Mount the container's root filesystem as read only.
+					 */
+					ReadOnly: v.optional(v.boolean()),
+					/**
+					 * Specification for mounts to be added to containers created as part
+					 * of the service.
+					 */
+					Mounts: v.optional(
+						v.array(
+							v.strictObject({
+								/**
+								 * Container path.
+								 */
+								Target: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Mount source (e.g. a volume name, a host path).
+								 */
+								Source: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * The mount type. Available types:
+								 *
+								 * - `bind` Mounts a file or directory from the host into the container. Must
+								 * exist prior to creating the container.
+								 * - `volume` Creates a volume with the given name and options (or uses a
+								 * pre-existing volume with the same name and options). These are **not**
+								 * removed when the container is removed.
+								 * - `tmpfs` Create a tmpfs with the given options. The mount source cannot be
+								 * specified for tmpfs.
+								 * - `npipe` Mounts a named pipe from the host into the container. Must exist
+								 * prior to creating the container.
+								 * - `cluster` a Swarm cluster volume
+								 */
+								Type: v.optional(
+									v.picklist(["bind", "volume", "tmpfs", "npipe", "cluster"]),
+								),
+								/**
+								 * Whether the mount should be read-only.
+								 */
+								ReadOnly: v.optional(v.boolean()),
+								/**
+								 * The consistency requirement for the mount: `default`, `consistent`,
+								 * `cached`, or `delegated`.
+								 */
+								Consistency: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Optional configuration for the `bind` type.
+								 */
+								BindOptions: v.optional(
+									v.strictObject({
+										/**
+										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
+										 */
+										Propagation: v.optional(
+											v.picklist([
+												"private",
+												"rprivate",
+												"shared",
+												"rshared",
+												"slave",
+												"rslave",
+											]),
+										),
+										/**
+										 * Disable recursive bind mount.
+										 */
+										NonRecursive: v.optional(v.boolean()),
+										/**
+										 * Create mount point on host if missing
+										 */
+										CreateMountpoint: v.optional(v.boolean()),
+									}),
+								),
+								/**
+								 * Optional configuration for the `volume` type.
+								 */
+								VolumeOptions: v.optional(
+									v.strictObject({
+										/**
+										 * Populate volume with data from the target.
+										 */
+										NoCopy: v.optional(v.boolean()),
+										/**
+										 * User-defined key/value metadata.
+										 */
+										Labels: v.optional(v.record(v.string(), v.unknown())),
+										/**
+										 * Map of driver specific options
+										 */
+										DriverConfig: v.optional(
+											v.strictObject({
+												/**
+												 * Name of the driver to use to create the volume.
+												 */
+												Name: v.optional(v.pipe(v.string(), v.trim())),
+												/**
+												 * key/value map of driver specific options.
+												 */
+												Options: v.optional(v.record(v.string(), v.unknown())),
+											}),
+										),
+									}),
+								),
+								/**
+								 * Optional configuration for the `tmpfs` type.
+								 */
+								TmpfsOptions: v.optional(
+									v.strictObject({
+										/**
+										 * The size for the tmpfs mount in bytes.
+										 */
+										SizeBytes: v.optional(
+											v.union([
+												v.pipe(
+													v.string(),
+													v.decimal(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.pipe(
+													v.number(),
+													v.integer(),
+													v.toBigint(),
+													v.bigint(),
+												),
+												v.bigint(),
+											]),
+										),
+										/**
+										 * The permission mode for the tmpfs mount in an integer.
+										 */
+										Mode: v.optional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+							}),
+						),
+					),
+					/**
+					 * Signal to stop the container.
+					 */
+					StopSignal: v.optional(v.pipe(v.string(), v.trim())),
+					/**
+					 * Amount of time to wait for the container to terminate before
+					 * forcefully killing it.
+					 */
+					StopGracePeriod: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * A test to perform to check that the container is healthy.
+					 */
+					HealthCheck: v.optional(
+						v.strictObject({
+							/**
+							 * The test to perform. Possible values are:
+							 *
+							 * - `[]` inherit healthcheck from image or parent image
+							 * - `["NONE"]` disable healthcheck
+							 * - `["CMD", args...]` exec arguments directly
+							 * - `["CMD-SHELL", command]` run command with system's default shell
+							 */
+							Test: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * The time to wait between checks in nanoseconds. It should be 0 or at
+							 * least 1000000 (1 ms). 0 means inherit.
+							 */
+							Interval: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * The time to wait before considering the check to have hung. It should
+							 * be 0 or at least 1000000 (1 ms). 0 means inherit.
+							 */
+							Timeout: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * The number of consecutive failures needed to consider a container as
+							 * unhealthy. 0 means inherit.
+							 */
+							Retries: v.optional(v.pipe(v.number(), v.integer())),
+							/**
+							 * Start period for the container to initialize before starting
+							 * health-retries countdown in nanoseconds. It should be 0 or at least
+							 * 1000000 (1 ms). 0 means inherit.
+							 */
+							StartPeriod: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+						}),
+					),
+					/**
+					 * A list of hostname/IP mappings to add to the container's `hosts`
+					 * file. The format of extra hosts is specified in the
+					 * [hosts(5)](http://man7.org/linux/man-pages/man5/hosts.5.html)
+					 * man page:
+					 *
+					 *
+					 * IP_address canonical_hostname [aliases...]
+					 */
+					Hosts: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * Specification for DNS related configurations in resolver configuration
+					 * file (`resolv.conf`).
+					 */
+					DNSConfig: v.optional(
+						v.strictObject({
+							/**
+							 * The IP addresses of the name servers.
+							 */
+							Nameservers: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * A search list for host-name lookup.
+							 */
+							Search: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+							/**
+							 * A list of internal resolver variables to be modified (e.g.,
+							 * `debug`, `ndots:3`, etc.).
+							 */
+							Options: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						}),
+					),
+					/**
+					 * Secrets contains references to zero or more secrets that will be
+					 * exposed to the service.
+					 */
+					Secrets: v.optional(
+						v.array(
+							v.strictObject({
+								/**
+								 * File represents a specific target that is backed by a file.
+								 */
+								File: v.optional(
+									v.strictObject({
+										/**
+										 * Name represents the final filename in the filesystem.
+										 */
+										Name: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * UID represents the file UID.
+										 */
+										UID: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * GID represents the file GID.
+										 */
+										GID: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Mode represents the FileMode of the file.
+										 */
+										Mode: v.optional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+								/**
+								 * SecretID represents the ID of the specific secret that we're
+								 * referencing.
+								 */
+								SecretID: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * SecretName is the name of the secret that this references,
+								 * but this is just provided for lookup/display purposes. The
+								 * secret in the reference will be identified by its ID.
+								 */
+								SecretName: v.optional(v.pipe(v.string(), v.trim())),
+							}),
+						),
+					),
+					/**
+					 * Configs contains references to zero or more configs that will be
+					 * exposed to the service.
+					 */
+					Configs: v.optional(
+						v.array(
+							v.strictObject({
+								/**
+								 * File represents a specific target that is backed by a file.
+								 *
+								 * <p><br /><p>
+								 *
+								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
+								 */
+								File: v.optional(
+									v.strictObject({
+										/**
+										 * Name represents the final filename in the filesystem.
+										 */
+										Name: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * UID represents the file UID.
+										 */
+										UID: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * GID represents the file GID.
+										 */
+										GID: v.optional(v.pipe(v.string(), v.trim())),
+										/**
+										 * Mode represents the FileMode of the file.
+										 */
+										Mode: v.optional(v.pipe(v.number(), v.integer())),
+									}),
+								),
+								/**
+								 * Runtime represents a target that is not mounted into the
+								 * container but is used by the task
+								 *
+								 * <p><br /><p>
+								 *
+								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
+								 * > exclusive
+								 */
+								Runtime: v.optional(v.record(v.string(), v.unknown())),
+								/**
+								 * ConfigID represents the ID of the specific config that we're
+								 * referencing.
+								 */
+								ConfigID: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * ConfigName is the name of the config that this references,
+								 * but this is just provided for lookup/display purposes. The
+								 * config in the reference will be identified by its ID.
+								 */
+								ConfigName: v.optional(v.pipe(v.string(), v.trim())),
+							}),
+						),
+					),
+					/**
+					 * Isolation technology of the containers running the service.
+					 * (Windows only)
+					 */
+					Isolation: v.optional(
+						v.picklist(["default", "process", "hyperv", ""]),
+					),
+					/**
+					 * Run an init inside the container that forwards signals and reaps
+					 * processes. This field is omitted if empty, and the default (as
+					 * configured on the daemon) is used.
+					 */
+					Init: v.optional(v.nullable(v.boolean())),
+					/**
+					 * Set kernel namedspaced parameters (sysctls) in the container.
+					 * The Sysctls option on services accepts the same sysctls as the
+					 * are supported on containers. Note that while the same sysctls are
+					 * supported, no guarantees or checks are made about their
+					 * suitability for a clustered environment, and it's up to the user
+					 * to determine whether a given sysctl will work properly in a
+					 * Service.
+					 */
+					Sysctls: v.optional(v.record(v.string(), v.unknown())),
+					/**
+					 * A list of kernel capabilities to add to the default set
+					 * for the container.
+					 */
+					CapabilityAdd: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * A list of kernel capabilities to drop from the default set
+					 * for the container.
+					 */
+					CapabilityDrop: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * A list of resource limits to set in the container. For example: `{"Name":
+					 * "nofile", "Soft": 1024, "Hard": 2048}`"
+					 */
+					Ulimits: v.optional(
+						v.array(
+							v.strictObject({
+								/**
+								 * Name of ulimit
+								 */
+								Name: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * Soft limit
+								 */
+								Soft: v.optional(v.pipe(v.number(), v.integer())),
+								/**
+								 * Hard limit
+								 */
+								Hard: v.optional(v.pipe(v.number(), v.integer())),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * Read-only spec type for non-swarm containers attached to swarm overlay
+			 * networks.
+			 *
+			 * <p><br /></p>
+			 *
+			 * > **Note**: ContainerSpec, NetworkAttachmentSpec, and PluginSpec are
+			 * > mutually exclusive. PluginSpec is only used when the Runtime field
+			 * > is set to `plugin`. NetworkAttachmentSpec is used when the Runtime
+			 * > field is set to `attachment`.
+			 */
+			NetworkAttachmentSpec: v.optional(
+				v.strictObject({
+					/**
+					 * ID of the container represented by this task
+					 */
+					ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+			/**
+			 * Resource requirements which apply to each individual container created
+			 * as part of the service.
+			 */
+			Resources: v.optional(
+				v.strictObject({
+					/**
+					 * An object describing a limit on resources which can be requested by a task.
+					 */
+					Limits: v.optional(
+						v.strictObject({
+							NanoCPUs: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							MemoryBytes: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
+							 */
+							Pids: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+						}),
+					),
+					/**
+					 * An object describing the resources which can be advertised by a node and
+					 * requested by a task.
+					 */
+					Reservations: v.optional(
+						v.strictObject({
+							NanoCPUs: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							MemoryBytes: v.optional(
+								v.union([
+									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+									v.bigint(),
+								]),
+							),
+							/**
+							 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+							 * String resources (e.g, `GPU=UUID1`).
+							 */
+							GenericResources: v.optional(
+								v.array(
+									v.strictObject({
+										NamedResourceSpec: v.optional(
+											v.strictObject({
+												Kind: v.optional(v.pipe(v.string(), v.trim())),
+												Value: v.optional(v.pipe(v.string(), v.trim())),
+											}),
+										),
+										DiscreteResourceSpec: v.optional(
+											v.strictObject({
+												Kind: v.optional(v.pipe(v.string(), v.trim())),
+												Value: v.optional(
+													v.union([
+														v.pipe(
+															v.string(),
+															v.decimal(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.pipe(
+															v.number(),
+															v.integer(),
+															v.toBigint(),
+															v.bigint(),
+														),
+														v.bigint(),
+													]),
+												),
+											}),
+										),
+									}),
+								),
+							),
+						}),
+					),
+				}),
+			),
+			/**
+			 * Specification for the restart policy which applies to containers
+			 * created as part of this service.
+			 */
+			RestartPolicy: v.optional(
+				v.strictObject({
+					/**
+					 * Condition for restart.
+					 */
+					Condition: v.optional(v.picklist(["none", "on-failure", "any"])),
+					/**
+					 * Delay between restart attempts.
+					 */
+					Delay: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Maximum attempts to restart a given container before giving up
+					 * (default value is 0, which is ignored).
+					 */
+					MaxAttempts: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Windows is the time window used to evaluate the restart policy
+					 * (default value is 0, which is unbounded).
+					 */
+					Window: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+				}),
+			),
+			Placement: v.optional(
+				v.strictObject({
+					/**
+					 * An array of constraint expressions to limit the set of nodes where
+					 * a task can be scheduled. Constraint expressions can either use a
+					 * _match_ (`==`) or _exclude_ (`!=`) rule. Multiple constraints find
+					 * nodes that satisfy every expression (AND match). Constraints can
+					 * match node or Docker Engine labels as follows:
+					 *
+					 * node attribute       | matches                        | example
+					 * ---------------------|--------------------------------|-----------------------------------------------
+					 * `node.id`            | Node ID                        |
+					 * `node.id==2ivku8v2gvtg4`
+					 * `node.hostname`      | Node hostname                  |
+					 * `node.hostname!=node-2`
+					 * `node.role`          | Node role (`manager`/`worker`) |
+					 * `node.role==manager`
+					 * `node.platform.os`   | Node operating system          |
+					 * `node.platform.os==windows`
+					 * `node.platform.arch` | Node architecture              |
+					 * `node.platform.arch==x86_64`
+					 * `node.labels`        | User-defined node labels       |
+					 * `node.labels.security==high`
+					 * `engine.labels`      | Docker Engine's labels         |
+					 * `engine.labels.operatingsystem==ubuntu-14.04`
+					 *
+					 * `engine.labels` apply to Docker Engine labels like operating system,
+					 * drivers, etc. Swarm administrators add `node.labels` for operational
+					 * purposes by using the [`node update endpoint`](#operation/NodeUpdate).
+					 */
+					Constraints: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+					/**
+					 * Preferences provide a way to make the scheduler aware of factors
+					 * such as topology. They are provided in order from highest to
+					 * lowest precedence.
+					 */
+					Preferences: v.optional(
+						v.array(
+							v.strictObject({
+								Spread: v.optional(
+									v.strictObject({
+										/**
+										 * label descriptor, such as `engine.labels.az`.
+										 */
+										SpreadDescriptor: v.optional(v.pipe(v.string(), v.trim())),
+									}),
+								),
+							}),
+						),
+					),
+					/**
+					 * Maximum number of replicas for per node (default value is 0, which
+					 * is unlimited)
+					 */
+					MaxReplicas: v.optional(
+						v.union([
+							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+							v.bigint(),
+						]),
+					),
+					/**
+					 * Platforms stores all the platforms that the service's image can
+					 * run on. This field is used in the platform filter for scheduling.
+					 * If empty, then the platform filter is off, meaning there are no
+					 * scheduling restrictions.
+					 */
+					Platforms: v.optional(
+						v.array(
+							v.strictObject({
+								/**
+								 * Architecture represents the hardware architecture (for example,
+								 * `x86_64`).
+								 */
+								Architecture: v.optional(v.pipe(v.string(), v.trim())),
+								/**
+								 * OS represents the Operating System (for example, `linux` or `windows`).
+								 */
+								OS: v.optional(v.pipe(v.string(), v.trim())),
+							}),
+						),
+					),
+				}),
+			),
+			/**
+			 * A counter that triggers an update even if no relevant parameters have
+			 * been changed.
+			 */
+			ForceUpdate: v.optional(v.pipe(v.number(), v.integer())),
+			/**
+			 * Runtime is the type of runtime specified for the task executor.
+			 */
+			Runtime: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Specifies which networks the service should attach to.
+			 */
+			Networks: v.optional(
+				v.array(
+					v.strictObject({
+						/**
+						 * The target network for attachment. Must be a network name or ID.
+						 */
+						Target: v.optional(v.pipe(v.string(), v.trim())),
+						/**
+						 * Discoverable alternate names for the service on this network.
+						 */
+						Aliases: v.optional(v.array(v.pipe(v.string(), v.trim()))),
+						/**
+						 * Driver attachment options for the network target.
+						 */
+						DriverOpts: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			),
+			/**
+			 * Specifies the log driver to use for tasks created from this spec. If
+			 * not present, the default one for the swarm will be used, finally
+			 * falling back to the engine default if not specified.
+			 */
+			LogDriver: v.optional(
+				v.strictObject({
+					Name: v.optional(v.pipe(v.string(), v.trim())),
+					Options: v.optional(v.record(v.string(), v.unknown())),
+				}),
+			),
+		}),
+	),
+	/**
+	 * The ID of the service this task is part of.
+	 */
+	ServiceID: v.optional(v.pipe(v.string(), v.trim())),
+	Slot: v.optional(v.pipe(v.number(), v.integer())),
+	/**
+	 * The ID of the node that this task is on.
+	 */
+	NodeID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
+	 * String resources (e.g, `GPU=UUID1`).
+	 */
+	AssignedGenericResources: v.optional(
+		v.array(
+			v.strictObject({
+				NamedResourceSpec: v.optional(
+					v.strictObject({
+						Kind: v.optional(v.pipe(v.string(), v.trim())),
+						Value: v.optional(v.pipe(v.string(), v.trim())),
+					}),
+				),
+				DiscreteResourceSpec: v.optional(
+					v.strictObject({
+						Kind: v.optional(v.pipe(v.string(), v.trim())),
+						Value: v.optional(
+							v.union([
+								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+								v.bigint(),
+							]),
+						),
+					}),
+				),
+			}),
+		),
+	),
+	Status: v.optional(
+		v.strictObject({
+			Timestamp: v.optional(v.pipe(v.string(), v.trim())),
+			State: v.optional(
+				v.picklist([
+					"new",
+					"allocated",
+					"pending",
+					"assigned",
+					"accepted",
+					"preparing",
+					"ready",
+					"starting",
+					"running",
+					"complete",
+					"shutdown",
+					"failed",
+					"rejected",
+					"remove",
+					"orphaned",
+				]),
+			),
+			Message: v.optional(v.pipe(v.string(), v.trim())),
+			Err: v.optional(v.pipe(v.string(), v.trim())),
+			ContainerStatus: v.optional(
+				v.strictObject({
+					ContainerID: v.optional(v.pipe(v.string(), v.trim())),
+					PID: v.optional(v.pipe(v.number(), v.integer())),
+					ExitCode: v.optional(v.pipe(v.number(), v.integer())),
+				}),
+			),
+		}),
+	),
+	DesiredState: v.optional(
+		v.picklist([
+			"new",
+			"allocated",
+			"pending",
+			"assigned",
+			"accepted",
+			"preparing",
+			"ready",
+			"starting",
+			"running",
+			"complete",
+			"shutdown",
+			"failed",
+			"rejected",
+			"remove",
+			"orphaned",
+		]),
+	),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	JobIteration: v.optional(
+		v.strictObject({
+			Index: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
 });
 export const exactTaskInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
@@ -35204,6 +57058,156 @@ export const taskLogsCommandQuerySchema = v.strictObject({
 	timestamps: v.optional(v.boolean()),
 	tail: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactSecretListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.exactOptional(v.string()),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.exactOptional(
+			v.strictObject({
+				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.exactOptional(v.string()),
+		UpdatedAt: v.exactOptional(v.string()),
+		Spec: v.exactOptional(
+			v.strictObject({
+				/**
+				 * User-defined name of the secret.
+				 */
+				Name: v.exactOptional(v.string()),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * Base64-url-safe-encoded ([RFC
+				 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+				 * data to store as secret.
+				 *
+				 * This field is only used to _create_ a secret, and is not returned by
+				 * other endpoints.
+				 */
+				Data: v.exactOptional(v.string()),
+				/**
+				 * Driver represents a driver (network, logging, secrets).
+				 */
+				Driver: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Name of the driver.
+						 */
+						Name: v.string(),
+						/**
+						 * Key/value map of driver-specific options.
+						 */
+						Options: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				/**
+				 * Driver represents a driver (network, logging, secrets).
+				 */
+				Templating: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Name of the driver.
+						 */
+						Name: v.string(),
+						/**
+						 * Key/value map of driver-specific options.
+						 */
+						Options: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			}),
+		),
+	}),
+);
+export const secretListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.optional(
+			v.strictObject({
+				Index: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		Spec: v.optional(
+			v.strictObject({
+				/**
+				 * User-defined name of the secret.
+				 */
+				Name: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * Base64-url-safe-encoded ([RFC
+				 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+				 * data to store as secret.
+				 *
+				 * This field is only used to _create_ a secret, and is not returned by
+				 * other endpoints.
+				 */
+				Data: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Driver represents a driver (network, logging, secrets).
+				 */
+				Driver: v.optional(
+					v.strictObject({
+						/**
+						 * Name of the driver.
+						 */
+						Name: v.pipe(v.string(), v.trim()),
+						/**
+						 * Key/value map of driver-specific options.
+						 */
+						Options: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+				/**
+				 * Driver represents a driver (network, logging, secrets).
+				 */
+				Templating: v.optional(
+					v.strictObject({
+						/**
+						 * Name of the driver.
+						 */
+						Name: v.pipe(v.string(), v.trim()),
+						/**
+						 * Key/value map of driver-specific options.
+						 */
+						Options: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			}),
+		),
+	}),
+);
 export const exactSecretListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
@@ -35314,6 +57318,164 @@ export const secretCreateCommandBodySchema = v.intersect([
 	}),
 	v.record(v.string(), v.unknown()),
 ]);
+export const exactSecretCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.string(),
+});
+export const secretCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.pipe(v.string(), v.trim()),
+});
+export const exactSecretInspectCommandResponseSchema = v.strictObject({
+	ID: v.exactOptional(v.string()),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.exactOptional(
+		v.strictObject({
+			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.exactOptional(v.string()),
+	UpdatedAt: v.exactOptional(v.string()),
+	Spec: v.exactOptional(
+		v.strictObject({
+			/**
+			 * User-defined name of the secret.
+			 */
+			Name: v.exactOptional(v.string()),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * Base64-url-safe-encoded ([RFC
+			 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+			 * data to store as secret.
+			 *
+			 * This field is only used to _create_ a secret, and is not returned by
+			 * other endpoints.
+			 */
+			Data: v.exactOptional(v.string()),
+			/**
+			 * Driver represents a driver (network, logging, secrets).
+			 */
+			Driver: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Name of the driver.
+					 */
+					Name: v.string(),
+					/**
+					 * Key/value map of driver-specific options.
+					 */
+					Options: v.exactOptional(v.record(v.string(), v.unknown())),
+				}),
+			),
+			/**
+			 * Driver represents a driver (network, logging, secrets).
+			 */
+			Templating: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Name of the driver.
+					 */
+					Name: v.string(),
+					/**
+					 * Key/value map of driver-specific options.
+					 */
+					Options: v.exactOptional(v.record(v.string(), v.unknown())),
+				}),
+			),
+		}),
+	),
+});
+export const secretInspectCommandResponseSchema = v.strictObject({
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.optional(
+		v.strictObject({
+			Index: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	Spec: v.optional(
+		v.strictObject({
+			/**
+			 * User-defined name of the secret.
+			 */
+			Name: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * Base64-url-safe-encoded ([RFC
+			 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+			 * data to store as secret.
+			 *
+			 * This field is only used to _create_ a secret, and is not returned by
+			 * other endpoints.
+			 */
+			Data: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Driver represents a driver (network, logging, secrets).
+			 */
+			Driver: v.optional(
+				v.strictObject({
+					/**
+					 * Name of the driver.
+					 */
+					Name: v.pipe(v.string(), v.trim()),
+					/**
+					 * Key/value map of driver-specific options.
+					 */
+					Options: v.optional(v.record(v.string(), v.unknown())),
+				}),
+			),
+			/**
+			 * Driver represents a driver (network, logging, secrets).
+			 */
+			Templating: v.optional(
+				v.strictObject({
+					/**
+					 * Name of the driver.
+					 */
+					Name: v.pipe(v.string(), v.trim()),
+					/**
+					 * Key/value map of driver-specific options.
+					 */
+					Options: v.optional(v.record(v.string(), v.unknown())),
+				}),
+			),
+		}),
+	),
+});
 export const exactSecretInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -35440,6 +57602,120 @@ export const secretUpdateCommandQuerySchema = v.strictObject({
 		v.bigint(),
 	]),
 });
+export const exactConfigListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.exactOptional(v.string()),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.exactOptional(
+			v.strictObject({
+				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.exactOptional(v.string()),
+		UpdatedAt: v.exactOptional(v.string()),
+		Spec: v.exactOptional(
+			v.strictObject({
+				/**
+				 * User-defined name of the config.
+				 */
+				Name: v.exactOptional(v.string()),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+				/**
+				 * Base64-url-safe-encoded ([RFC
+				 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+				 * config data.
+				 */
+				Data: v.exactOptional(v.string()),
+				/**
+				 * Driver represents a driver (network, logging, secrets).
+				 */
+				Templating: v.exactOptional(
+					v.strictObject({
+						/**
+						 * Name of the driver.
+						 */
+						Name: v.string(),
+						/**
+						 * Key/value map of driver-specific options.
+						 */
+						Options: v.exactOptional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			}),
+		),
+	}),
+);
+export const configListCommandResponseSchema = v.array(
+	v.strictObject({
+		ID: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The version number of the object such as node, service, etc. This is needed
+		 * to avoid conflicting writes. The client must send the version number along
+		 * with the modified specification when updating these objects.
+		 *
+		 * This approach ensures safe concurrency and determinism in that the change
+		 * on the object may not be applied if the version number has changed from the
+		 * last read. In other words, if two update requests specify the same base
+		 * version, only one of the requests can succeed. As a result, two separate
+		 * update requests that happen at the same time will not unintentionally
+		 * overwrite each other.
+		 */
+		Version: v.optional(
+			v.strictObject({
+				Index: v.optional(v.pipe(v.number(), v.integer())),
+			}),
+		),
+		CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+		Spec: v.optional(
+			v.strictObject({
+				/**
+				 * User-defined name of the config.
+				 */
+				Name: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * User-defined key/value metadata.
+				 */
+				Labels: v.optional(v.record(v.string(), v.unknown())),
+				/**
+				 * Base64-url-safe-encoded ([RFC
+				 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+				 * config data.
+				 */
+				Data: v.optional(v.pipe(v.string(), v.trim())),
+				/**
+				 * Driver represents a driver (network, logging, secrets).
+				 */
+				Templating: v.optional(
+					v.strictObject({
+						/**
+						 * Name of the driver.
+						 */
+						Name: v.pipe(v.string(), v.trim()),
+						/**
+						 * Key/value map of driver-specific options.
+						 */
+						Options: v.optional(v.record(v.string(), v.unknown())),
+					}),
+				),
+			}),
+		),
+	}),
+);
 export const exactConfigListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.string()),
 });
@@ -35514,6 +57790,128 @@ export const configCreateCommandBodySchema = v.intersect([
 	}),
 	v.record(v.string(), v.unknown()),
 ]);
+export const exactConfigCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.string(),
+});
+export const configCreateCommandResponseSchema = v.strictObject({
+	/**
+	 * The id of the newly created object.
+	 */
+	Id: v.pipe(v.string(), v.trim()),
+});
+export const exactConfigInspectCommandResponseSchema = v.strictObject({
+	ID: v.exactOptional(v.string()),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.exactOptional(
+		v.strictObject({
+			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.exactOptional(v.string()),
+	UpdatedAt: v.exactOptional(v.string()),
+	Spec: v.exactOptional(
+		v.strictObject({
+			/**
+			 * User-defined name of the config.
+			 */
+			Name: v.exactOptional(v.string()),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.exactOptional(v.record(v.string(), v.unknown())),
+			/**
+			 * Base64-url-safe-encoded ([RFC
+			 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+			 * config data.
+			 */
+			Data: v.exactOptional(v.string()),
+			/**
+			 * Driver represents a driver (network, logging, secrets).
+			 */
+			Templating: v.exactOptional(
+				v.strictObject({
+					/**
+					 * Name of the driver.
+					 */
+					Name: v.string(),
+					/**
+					 * Key/value map of driver-specific options.
+					 */
+					Options: v.exactOptional(v.record(v.string(), v.unknown())),
+				}),
+			),
+		}),
+	),
+});
+export const configInspectCommandResponseSchema = v.strictObject({
+	ID: v.optional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The version number of the object such as node, service, etc. This is needed
+	 * to avoid conflicting writes. The client must send the version number along
+	 * with the modified specification when updating these objects.
+	 *
+	 * This approach ensures safe concurrency and determinism in that the change
+	 * on the object may not be applied if the version number has changed from the
+	 * last read. In other words, if two update requests specify the same base
+	 * version, only one of the requests can succeed. As a result, two separate
+	 * update requests that happen at the same time will not unintentionally
+	 * overwrite each other.
+	 */
+	Version: v.optional(
+		v.strictObject({
+			Index: v.optional(v.pipe(v.number(), v.integer())),
+		}),
+	),
+	CreatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	UpdatedAt: v.optional(v.pipe(v.string(), v.trim())),
+	Spec: v.optional(
+		v.strictObject({
+			/**
+			 * User-defined name of the config.
+			 */
+			Name: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * User-defined key/value metadata.
+			 */
+			Labels: v.optional(v.record(v.string(), v.unknown())),
+			/**
+			 * Base64-url-safe-encoded ([RFC
+			 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
+			 * config data.
+			 */
+			Data: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Driver represents a driver (network, logging, secrets).
+			 */
+			Templating: v.optional(
+				v.strictObject({
+					/**
+					 * Name of the driver.
+					 */
+					Name: v.pipe(v.string(), v.trim()),
+					/**
+					 * Key/value map of driver-specific options.
+					 */
+					Options: v.optional(v.record(v.string(), v.unknown())),
+				}),
+			),
+		}),
+	),
+});
 export const exactConfigInspectCommandParamsSchema = v.strictObject({
 	id: v.string(),
 });
@@ -35603,6 +58001,114 @@ export const configUpdateCommandQuerySchema = v.strictObject({
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
+});
+export const exactDistributionInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * A descriptor struct containing digest, media type, and size, as defined in
+	 * the [OCI Content Descriptors
+	 * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
+	 */
+	Descriptor: v.strictObject({
+		/**
+		 * The media type of the object this schema refers to.
+		 */
+		mediaType: v.exactOptional(v.string()),
+		/**
+		 * The digest of the targeted content.
+		 */
+		digest: v.exactOptional(v.string()),
+		/**
+		 * The size in bytes of the blob.
+		 */
+		size: v.exactOptional(v.bigint()),
+	}),
+	/**
+	 * An array containing all platforms supported by the image.
+	 */
+	Platforms: v.array(
+		v.strictObject({
+			/**
+			 * The CPU architecture, for example `amd64` or `ppc64`.
+			 */
+			architecture: v.exactOptional(v.string()),
+			/**
+			 * The operating system, for example `linux` or `windows`.
+			 */
+			os: v.exactOptional(v.string()),
+			/**
+			 * Optional field specifying the operating system version, for example on
+			 * Windows `10.0.19041.1165`.
+			 */
+			"os.version": v.exactOptional(v.string()),
+			/**
+			 * Optional field specifying an array of strings, each listing a required
+			 * OS feature (for example on Windows `win32k`).
+			 */
+			"os.features": v.exactOptional(v.array(v.string())),
+			/**
+			 * Optional field specifying a variant of the CPU, for example `v7` to
+			 * specify ARMv7 when architecture is `arm`.
+			 */
+			variant: v.exactOptional(v.string()),
+		}),
+	),
+});
+export const distributionInspectCommandResponseSchema = v.strictObject({
+	/**
+	 * A descriptor struct containing digest, media type, and size, as defined in
+	 * the [OCI Content Descriptors
+	 * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
+	 */
+	Descriptor: v.strictObject({
+		/**
+		 * The media type of the object this schema refers to.
+		 */
+		mediaType: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The digest of the targeted content.
+		 */
+		digest: v.optional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The size in bytes of the blob.
+		 */
+		size: v.optional(
+			v.union([
+				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+				v.bigint(),
+			]),
+		),
+	}),
+	/**
+	 * An array containing all platforms supported by the image.
+	 */
+	Platforms: v.array(
+		v.strictObject({
+			/**
+			 * The CPU architecture, for example `amd64` or `ppc64`.
+			 */
+			architecture: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The operating system, for example `linux` or `windows`.
+			 */
+			os: v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Optional field specifying the operating system version, for example on
+			 * Windows `10.0.19041.1165`.
+			 */
+			"os.version": v.optional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Optional field specifying an array of strings, each listing a required
+			 * OS feature (for example on Windows `win32k`).
+			 */
+			"os.features": v.optional(v.array(v.pipe(v.string(), v.trim()))),
+			/**
+			 * Optional field specifying a variant of the CPU, for example `v7` to
+			 * specify ARMv7 when architecture is `arm`.
+			 */
+			variant: v.optional(v.pipe(v.string(), v.trim())),
+		}),
+	),
 });
 export const exactDistributionInspectCommandParamsSchema = v.strictObject({
 	name: v.string(),

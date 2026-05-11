@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:11.158Z
+ * Generated on 2026-05-11T04:59:34.108Z
  *
  */
 import {
@@ -15,6 +15,8 @@ import type {
 	DeletePetCommandInput,
 	FindPetByIdCommandInput,
 	FindPetsCommandInput,
+	FindPetWrappedCommandInput,
+	FindPetWrappedCommandOutput,
 	Pet,
 } from "./types.js";
 
@@ -22,8 +24,9 @@ type AllInputs =
 	| AddPetCommandInput
 	| DeletePetCommandInput
 	| FindPetByIdCommandInput
-	| FindPetsCommandInput;
-type AllOutputs = Pet | Pet[] | undefined;
+	| FindPetsCommandInput
+	| FindPetWrappedCommandInput;
+type AllOutputs = FindPetWrappedCommandOutput | Pet | Pet[] | undefined;
 
 export class SwaggerPetstoreRestClient extends RestServiceClient<
 	AllInputs,

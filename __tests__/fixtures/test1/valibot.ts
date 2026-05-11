@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:13.582Z
+ * Generated on 2026-05-11T04:55:05.645Z
  *
  */
 import * as v from "valibot";
@@ -524,6 +524,10 @@ export const exactLongRunningOperationSchema = v.union([
 	exactLongRunningOperationSuccessSchema,
 ]);
 export const longRunningOperationSchema = exactLongRunningOperationSchema;
+export const exactImportBillingDataCommandResponseSchema =
+	exactLongRunningOperationSchema;
+export const importBillingDataCommandResponseSchema =
+	longRunningOperationSchema;
 export const exactImportBillingDataCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
@@ -552,16 +556,29 @@ export const importBillingDataCommandHeaderSchema = v.object({
 	]),
 	"x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid())),
 });
+export const exactGetOperationCommandResponseSchema =
+	exactLongRunningOperationSchema;
+export const getOperationCommandResponseSchema = longRunningOperationSchema;
 export const exactGetOperationCommandParamsSchema = v.strictObject({
 	operationId: exactUuidSchema,
 });
 export const getOperationCommandParamsSchema = v.strictObject({
 	operationId: uuidSchema,
 });
+export const exactListBillingAccountsCommandResponseSchema =
+	exactBillingAccountListSchema;
+export const listBillingAccountsCommandResponseSchema =
+	billingAccountListSchema;
 export const exactCreateBillingAccountCommandBodySchema =
 	exactBillingAccountCreateRequestSchema;
 export const createBillingAccountCommandBodySchema =
 	billingAccountCreateRequestSchema;
+export const exactCreateBillingAccountCommandResponseSchema =
+	exactBillingAccountSchema;
+export const createBillingAccountCommandResponseSchema = billingAccountSchema;
+export const exactGetBillingAccountCommandResponseSchema =
+	exactBillingAccountSchema;
+export const getBillingAccountCommandResponseSchema = billingAccountSchema;
 export const exactGetBillingAccountCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
@@ -572,6 +589,9 @@ export const exactUpdateBillingAccountCommandBodySchema =
 	exactBillingAccountUpdateRequestSchema;
 export const updateBillingAccountCommandBodySchema =
 	billingAccountUpdateRequestSchema;
+export const exactUpdateBillingAccountCommandResponseSchema =
+	exactBillingAccountSchema;
+export const updateBillingAccountCommandResponseSchema = billingAccountSchema;
 export const exactUpdateBillingAccountCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
@@ -582,6 +602,10 @@ export const exactGetBillingAccountPortalCommandBodySchema =
 	exactBillingAccountPortalRequestSchema;
 export const getBillingAccountPortalCommandBodySchema =
 	billingAccountPortalRequestSchema;
+export const exactGetBillingAccountPortalCommandResponseSchema =
+	exactBillingAccountPortalSchema;
+export const getBillingAccountPortalCommandResponseSchema =
+	billingAccountPortalSchema;
 export const exactGetBillingAccountPortalCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
@@ -598,18 +622,29 @@ export const exactLinkBillingAccountCommandParamsSchema = v.strictObject({
 export const linkBillingAccountCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
+export const exactListPaymentMethodsCommandResponseSchema =
+	exactPaymentMethodsSchema;
+export const listPaymentMethodsCommandResponseSchema = paymentMethodsSchema;
 export const exactListPaymentMethodsCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
 export const listPaymentMethodsCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
+export const exactCreatePaymentMethodCommandResponseSchema =
+	exactPaymentMethodIntendedLroSchema;
+export const createPaymentMethodCommandResponseSchema =
+	paymentMethodIntendedLroSchema;
 export const exactCreatePaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
 export const createPaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
+export const exactGetPaymentMethodFromStripeCommandResponseSchema =
+	exactPaymentMethodSchema;
+export const getPaymentMethodFromStripeCommandResponseSchema =
+	paymentMethodSchema;
 export const exactGetPaymentMethodFromStripeCommandParamsSchema =
 	v.strictObject({
 		billingAccountId: exactIdSchema,
@@ -619,6 +654,9 @@ export const getPaymentMethodFromStripeCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	stripePaymentMethodId: stripeIdSchema,
 });
+export const exactGetPaymentMethodCommandResponseSchema =
+	exactPaymentMethodSchema;
+export const getPaymentMethodCommandResponseSchema = paymentMethodSchema;
 export const exactGetPaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 	paymentMethodId: exactIdSchema,
@@ -639,6 +677,10 @@ export const updatePaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	paymentMethodId: idSchema,
 });
+export const exactDeletePaymentMethodCommandResponseSchema =
+	exactPaymentMethodDeletedLroSchema;
+export const deletePaymentMethodCommandResponseSchema =
+	paymentMethodDeletedLroSchema;
 export const exactDeletePaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 	paymentMethodId: exactIdSchema,
@@ -647,6 +689,10 @@ export const deletePaymentMethodCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 	paymentMethodId: idSchema,
 });
+export const exactListBillingSubscriptionsCommandResponseSchema =
+	exactBillingSubscriptionsSchema;
+export const listBillingSubscriptionsCommandResponseSchema =
+	billingSubscriptionsSchema;
 export const exactListBillingSubscriptionsCommandParamsSchema = v.strictObject({
 	billingAccountId: exactIdSchema,
 });
@@ -657,6 +703,10 @@ export const exactCreateBillingSubscriptionCommandBodySchema =
 	exactCreateBillingSubscriptionRequestSchema;
 export const createBillingSubscriptionCommandBodySchema =
 	createBillingSubscriptionRequestSchema;
+export const exactCreateBillingSubscriptionCommandResponseSchema =
+	exactBillingSubscriptionLroSchema;
+export const createBillingSubscriptionCommandResponseSchema =
+	billingSubscriptionLroSchema;
 export const exactCreateBillingSubscriptionCommandParamsSchema = v.strictObject(
 	{
 		billingAccountId: exactIdSchema,
@@ -691,6 +741,10 @@ export const exactUpdateBillingSubscriptionPromoCodeCommandBodySchema =
 	exactUpdateBillingSubscriptionPromoCodeRequestSchema;
 export const updateBillingSubscriptionPromoCodeCommandBodySchema =
 	updateBillingSubscriptionPromoCodeRequestSchema;
+export const exactUpdateBillingSubscriptionPromoCodeCommandResponseSchema =
+	exactBillingSubscriptionLroSchema;
+export const updateBillingSubscriptionPromoCodeCommandResponseSchema =
+	billingSubscriptionLroSchema;
 export const exactUpdateBillingSubscriptionPromoCodeCommandParamsSchema =
 	v.strictObject({
 		billingAccountId: exactIdSchema,

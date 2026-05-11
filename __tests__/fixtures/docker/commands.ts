@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:59.952Z
+ * Generated on 2026-05-11T04:55:51.722Z
  *
  */
 /** eslint-disable max-classes */
@@ -243,160 +243,6 @@ import type {
 	DistributionInspectCommandOutput,
 	SessionCommandInput,
 } from "./types.js";
-import {
-	buildPruneCommandQuerySchema,
-	configCreateCommandBodySchema,
-	configDeleteCommandParamsSchema,
-	configInspectCommandParamsSchema,
-	configListCommandQuerySchema,
-	configUpdateCommandBodySchema,
-	configUpdateCommandParamsSchema,
-	configUpdateCommandQuerySchema,
-	containerArchiveCommandParamsSchema,
-	containerArchiveCommandQuerySchema,
-	containerArchiveInfoCommandParamsSchema,
-	containerArchiveInfoCommandQuerySchema,
-	containerAttachCommandParamsSchema,
-	containerAttachCommandQuerySchema,
-	containerAttachWebsocketCommandParamsSchema,
-	containerAttachWebsocketCommandQuerySchema,
-	containerChangesCommandParamsSchema,
-	containerCreateCommandBodySchema,
-	containerCreateCommandQuerySchema,
-	containerDeleteCommandParamsSchema,
-	containerDeleteCommandQuerySchema,
-	containerExecCommandBodySchema,
-	containerExecCommandParamsSchema,
-	containerExportCommandParamsSchema,
-	containerInspectCommandParamsSchema,
-	containerInspectCommandQuerySchema,
-	containerKillCommandParamsSchema,
-	containerKillCommandQuerySchema,
-	containerListCommandQuerySchema,
-	containerLogsCommandParamsSchema,
-	containerLogsCommandQuerySchema,
-	containerPauseCommandParamsSchema,
-	containerPruneCommandQuerySchema,
-	containerRenameCommandParamsSchema,
-	containerRenameCommandQuerySchema,
-	containerResizeCommandParamsSchema,
-	containerResizeCommandQuerySchema,
-	containerRestartCommandParamsSchema,
-	containerRestartCommandQuerySchema,
-	containerStartCommandParamsSchema,
-	containerStartCommandQuerySchema,
-	containerStatsCommandParamsSchema,
-	containerStatsCommandQuerySchema,
-	containerStopCommandParamsSchema,
-	containerStopCommandQuerySchema,
-	containerTopCommandParamsSchema,
-	containerTopCommandQuerySchema,
-	containerUnpauseCommandParamsSchema,
-	containerUpdateCommandBodySchema,
-	containerUpdateCommandParamsSchema,
-	containerWaitCommandParamsSchema,
-	containerWaitCommandQuerySchema,
-	distributionInspectCommandParamsSchema,
-	execInspectCommandParamsSchema,
-	execResizeCommandParamsSchema,
-	execResizeCommandQuerySchema,
-	execStartCommandBodySchema,
-	execStartCommandParamsSchema,
-	getPluginPrivilegesCommandQuerySchema,
-	imageBuildCommandQuerySchema,
-	imageCommitCommandBodySchema,
-	imageCommitCommandQuerySchema,
-	imageCreateCommandQuerySchema,
-	imageDeleteCommandParamsSchema,
-	imageDeleteCommandQuerySchema,
-	imageGetAllCommandQuerySchema,
-	imageGetCommandParamsSchema,
-	imageHistoryCommandParamsSchema,
-	imageInspectCommandParamsSchema,
-	imageListCommandQuerySchema,
-	imageLoadCommandQuerySchema,
-	imagePruneCommandQuerySchema,
-	imagePushCommandParamsSchema,
-	imagePushCommandQuerySchema,
-	imageSearchCommandQuerySchema,
-	imageTagCommandParamsSchema,
-	imageTagCommandQuerySchema,
-	networkConnectCommandBodySchema,
-	networkConnectCommandParamsSchema,
-	networkCreateCommandBodySchema,
-	networkDeleteCommandParamsSchema,
-	networkDisconnectCommandBodySchema,
-	networkDisconnectCommandParamsSchema,
-	networkInspectCommandParamsSchema,
-	networkInspectCommandQuerySchema,
-	networkListCommandQuerySchema,
-	networkPruneCommandQuerySchema,
-	nodeDeleteCommandParamsSchema,
-	nodeDeleteCommandQuerySchema,
-	nodeInspectCommandParamsSchema,
-	nodeListCommandQuerySchema,
-	nodeUpdateCommandBodySchema,
-	nodeUpdateCommandParamsSchema,
-	nodeUpdateCommandQuerySchema,
-	pluginCreateCommandQuerySchema,
-	pluginDeleteCommandParamsSchema,
-	pluginDeleteCommandQuerySchema,
-	pluginDisableCommandParamsSchema,
-	pluginDisableCommandQuerySchema,
-	pluginEnableCommandParamsSchema,
-	pluginEnableCommandQuerySchema,
-	pluginInspectCommandParamsSchema,
-	pluginListCommandQuerySchema,
-	pluginPullCommandBodySchema,
-	pluginPullCommandQuerySchema,
-	pluginPushCommandParamsSchema,
-	pluginSetCommandBodySchema,
-	pluginSetCommandParamsSchema,
-	pluginUpgradeCommandBodySchema,
-	pluginUpgradeCommandParamsSchema,
-	pluginUpgradeCommandQuerySchema,
-	putContainerArchiveCommandParamsSchema,
-	putContainerArchiveCommandQuerySchema,
-	secretCreateCommandBodySchema,
-	secretDeleteCommandParamsSchema,
-	secretInspectCommandParamsSchema,
-	secretListCommandQuerySchema,
-	secretUpdateCommandBodySchema,
-	secretUpdateCommandParamsSchema,
-	secretUpdateCommandQuerySchema,
-	serviceCreateCommandBodySchema,
-	serviceDeleteCommandParamsSchema,
-	serviceInspectCommandParamsSchema,
-	serviceInspectCommandQuerySchema,
-	serviceListCommandQuerySchema,
-	serviceLogsCommandParamsSchema,
-	serviceLogsCommandQuerySchema,
-	serviceUpdateCommandBodySchema,
-	serviceUpdateCommandParamsSchema,
-	serviceUpdateCommandQuerySchema,
-	swarmInitCommandBodySchema,
-	swarmJoinCommandBodySchema,
-	swarmLeaveCommandQuerySchema,
-	swarmUnlockCommandBodySchema,
-	swarmUpdateCommandBodySchema,
-	swarmUpdateCommandQuerySchema,
-	systemAuthCommandBodySchema,
-	systemDataUsageCommandQuerySchema,
-	systemEventsCommandQuerySchema,
-	taskInspectCommandParamsSchema,
-	taskListCommandQuerySchema,
-	taskLogsCommandParamsSchema,
-	taskLogsCommandQuerySchema,
-	volumeCreateCommandBodySchema,
-	volumeDeleteCommandParamsSchema,
-	volumeDeleteCommandQuerySchema,
-	volumeInspectCommandParamsSchema,
-	volumeListCommandQuerySchema,
-	volumePruneCommandQuerySchema,
-	volumeUpdateCommandBodySchema,
-	volumeUpdateCommandParamsSchema,
-	volumeUpdateCommandQuerySchema,
-} from "./valibot.js";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated
@@ -426,7 +272,6 @@ export class ContainerListCommand extends Command<
 	ContainerListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = containerListCommandQuerySchema;
 
 	constructor(input?: ContainerListCommandInput) {
 		const { all, limit, size, filters } = input ?? {};
@@ -449,8 +294,6 @@ export class ContainerCreateCommand extends Command<
 	ContainerCreateCommandQuery
 > {
 	public override method = "post" as const;
-	static bodySchema = containerCreateCommandBodySchema;
-	static querySchema = containerCreateCommandQuerySchema;
 
 	constructor(input: ContainerCreateCommandInput) {
 		const { name, platform, ...body } = input;
@@ -473,8 +316,6 @@ export class ContainerInspectCommand extends Command<
 	ContainerInspectCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerInspectCommandParamsSchema;
-	static querySchema = containerInspectCommandQuerySchema;
 
 	constructor(input: ContainerInspectCommandInput) {
 		const { id, size } = input;
@@ -498,8 +339,6 @@ export class ContainerTopCommand extends Command<
 	ContainerTopCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerTopCommandParamsSchema;
-	static querySchema = containerTopCommandQuerySchema;
 
 	constructor(input: ContainerTopCommandInput) {
 		const { id, ps_args } = input;
@@ -525,8 +364,6 @@ export class ContainerLogsCommand extends Command<
 	ContainerLogsCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerLogsCommandParamsSchema;
-	static querySchema = containerLogsCommandQuerySchema;
 
 	constructor(input: ContainerLogsCommandInput) {
 		const { id, follow, stdout, stderr, since, until, timestamps, tail } =
@@ -562,7 +399,6 @@ export class ContainerChangesCommand extends Command<
 	ContainerChangesCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerChangesCommandParamsSchema;
 
 	constructor(input: ContainerChangesCommandInput) {
 		const { id } = input;
@@ -580,7 +416,6 @@ export class ContainerExportCommand extends Command<
 	unknown
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerExportCommandParamsSchema;
 
 	constructor(input: ContainerExportCommandInput) {
 		const { id } = input;
@@ -627,8 +462,6 @@ export class ContainerStatsCommand extends Command<
 	ContainerStatsCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerStatsCommandParamsSchema;
-	static querySchema = containerStatsCommandQuerySchema;
 
 	constructor(input: ContainerStatsCommandInput) {
 		const { id, stream, oneshot } = input;
@@ -651,8 +484,6 @@ export class ContainerResizeCommand extends Command<
 	ContainerResizeCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerResizeCommandParamsSchema;
-	static querySchema = containerResizeCommandQuerySchema;
 
 	constructor(input: ContainerResizeCommandInput) {
 		const { id, h, w } = input;
@@ -675,8 +506,6 @@ export class ContainerStartCommand extends Command<
 	ContainerStartCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerStartCommandParamsSchema;
-	static querySchema = containerStartCommandQuerySchema;
 
 	constructor(input: ContainerStartCommandInput) {
 		const { id, detachKeys } = input;
@@ -699,8 +528,6 @@ export class ContainerStopCommand extends Command<
 	ContainerStopCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerStopCommandParamsSchema;
-	static querySchema = containerStopCommandQuerySchema;
 
 	constructor(input: ContainerStopCommandInput) {
 		const { id, signal, t } = input;
@@ -723,8 +550,6 @@ export class ContainerRestartCommand extends Command<
 	ContainerRestartCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerRestartCommandParamsSchema;
-	static querySchema = containerRestartCommandQuerySchema;
 
 	constructor(input: ContainerRestartCommandInput) {
 		const { id, signal, t } = input;
@@ -748,8 +573,6 @@ export class ContainerKillCommand extends Command<
 	ContainerKillCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerKillCommandParamsSchema;
-	static querySchema = containerKillCommandQuerySchema;
 
 	constructor(input: ContainerKillCommandInput) {
 		const { id, signal } = input;
@@ -772,8 +595,6 @@ export class ContainerUpdateCommand extends Command<
 	ContainerUpdateCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = containerUpdateCommandBodySchema;
-	static paramsSchema = containerUpdateCommandParamsSchema;
 
 	constructor(input: ContainerUpdateCommandInput) {
 		const { id, ...body } = input;
@@ -792,8 +613,6 @@ export class ContainerRenameCommand extends Command<
 	ContainerRenameCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerRenameCommandParamsSchema;
-	static querySchema = containerRenameCommandQuerySchema;
 
 	constructor(input: ContainerRenameCommandInput) {
 		const { id, name } = input;
@@ -820,7 +639,6 @@ export class ContainerPauseCommand extends Command<
 	undefined
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerPauseCommandParamsSchema;
 
 	constructor(input: ContainerPauseCommandInput) {
 		const { id } = input;
@@ -838,7 +656,6 @@ export class ContainerUnpauseCommand extends Command<
 	undefined
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerUnpauseCommandParamsSchema;
 
 	constructor(input: ContainerUnpauseCommandInput) {
 		const { id } = input;
@@ -954,8 +771,6 @@ export class ContainerAttachCommand extends Command<
 	ContainerAttachCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerAttachCommandParamsSchema;
-	static querySchema = containerAttachCommandQuerySchema;
 
 	constructor(input: ContainerAttachCommandInput) {
 		const { id, detachKeys, logs, stream, stdin, stdout, stderr } = input;
@@ -978,8 +793,6 @@ export class ContainerAttachWebsocketCommand extends Command<
 	ContainerAttachWebsocketCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerAttachWebsocketCommandParamsSchema;
-	static querySchema = containerAttachWebsocketCommandQuerySchema;
 
 	constructor(input: ContainerAttachWebsocketCommandInput) {
 		const { id, detachKeys, logs, stream, stdin, stdout, stderr } = input;
@@ -1002,8 +815,6 @@ export class ContainerWaitCommand extends Command<
 	ContainerWaitCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = containerWaitCommandParamsSchema;
-	static querySchema = containerWaitCommandQuerySchema;
 
 	constructor(input: ContainerWaitCommandInput) {
 		const { id, condition } = input;
@@ -1026,8 +837,6 @@ export class ContainerDeleteCommand extends Command<
 	ContainerDeleteCommandQuery
 > {
 	public override method = "delete" as const;
-	static paramsSchema = containerDeleteCommandParamsSchema;
-	static querySchema = containerDeleteCommandQuerySchema;
 
 	constructor(input: ContainerDeleteCommandInput) {
 		const { id, v, force, link } = input;
@@ -1050,8 +859,6 @@ export class ContainerArchiveCommand extends Command<
 	ContainerArchiveCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = containerArchiveCommandParamsSchema;
-	static querySchema = containerArchiveCommandQuerySchema;
 
 	constructor(input: ContainerArchiveCommandInput) {
 		const { id, path } = input;
@@ -1078,8 +885,6 @@ export class PutContainerArchiveCommand extends Command<
 	PutContainerArchiveCommandQuery
 > {
 	public override method = "put" as const;
-	static paramsSchema = putContainerArchiveCommandParamsSchema;
-	static querySchema = putContainerArchiveCommandQuerySchema;
 
 	constructor(input: PutContainerArchiveCommandInput) {
 		const { id, path, noOverwriteDirNonDir, copyUIDGID, body } = input;
@@ -1104,8 +909,6 @@ export class ContainerArchiveInfoCommand extends Command<
 	ContainerArchiveInfoCommandQuery
 > {
 	public override method = "head" as const;
-	static paramsSchema = containerArchiveInfoCommandParamsSchema;
-	static querySchema = containerArchiveInfoCommandQuerySchema;
 
 	constructor(input: ContainerArchiveInfoCommandInput) {
 		const { id, path } = input;
@@ -1128,7 +931,6 @@ export class ContainerPruneCommand extends Command<
 	ContainerPruneCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = containerPruneCommandQuerySchema;
 
 	constructor(input?: ContainerPruneCommandInput) {
 		const { filters } = input ?? {};
@@ -1148,7 +950,6 @@ export class ImageListCommand extends Command<
 	ImageListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = imageListCommandQuerySchema;
 
 	constructor(input?: ImageListCommandInput) {
 		const { all, filters, sharedsize, digests } = input ?? {};
@@ -1186,7 +987,6 @@ export class ImageBuildCommand extends Command<
 	ImageBuildCommandHeader
 > {
 	public override method = "post" as const;
-	static querySchema = imageBuildCommandQuerySchema;
 
 	constructor(
 		input: ImageBuildCommandInput,
@@ -1266,7 +1066,6 @@ export class BuildPruneCommand extends Command<
 	BuildPruneCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = buildPruneCommandQuerySchema;
 
 	constructor(input?: BuildPruneCommandInput) {
 		const { keepstorage, all, filters } = input ?? {};
@@ -1290,7 +1089,6 @@ export class ImageCreateCommand extends Command<
 	ImageCreateCommandHeader
 > {
 	public override method = "post" as const;
-	static querySchema = imageCreateCommandQuerySchema;
 
 	constructor(
 		input: ImageCreateCommandInput,
@@ -1325,7 +1123,6 @@ export class ImageInspectCommand extends Command<
 	ImageInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = imageInspectCommandParamsSchema;
 
 	constructor(input: ImageInspectCommandInput) {
 		const { name } = input;
@@ -1343,7 +1140,6 @@ export class ImageHistoryCommand extends Command<
 	ImageHistoryCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = imageHistoryCommandParamsSchema;
 
 	constructor(input: ImageHistoryCommandInput) {
 		const { name } = input;
@@ -1369,8 +1165,6 @@ export class ImagePushCommand extends Command<
 	ImagePushCommandHeader
 > {
 	public override method = "post" as const;
-	static paramsSchema = imagePushCommandParamsSchema;
-	static querySchema = imagePushCommandQuerySchema;
 
 	constructor(input: ImagePushCommandInput, headers: ImagePushCommandHeader) {
 		const { name, tag } = input;
@@ -1394,8 +1188,6 @@ export class ImageTagCommand extends Command<
 	ImageTagCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = imageTagCommandParamsSchema;
-	static querySchema = imageTagCommandQuerySchema;
 
 	constructor(input: ImageTagCommandInput) {
 		const { name, repo, tag } = input;
@@ -1422,8 +1214,6 @@ export class ImageDeleteCommand extends Command<
 	ImageDeleteCommandQuery
 > {
 	public override method = "delete" as const;
-	static paramsSchema = imageDeleteCommandParamsSchema;
-	static querySchema = imageDeleteCommandQuerySchema;
 
 	constructor(input: ImageDeleteCommandInput) {
 		const { name, force, noprune } = input;
@@ -1446,7 +1236,6 @@ export class ImageSearchCommand extends Command<
 	ImageSearchCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = imageSearchCommandQuerySchema;
 
 	constructor(input: ImageSearchCommandInput) {
 		const { term, limit, filters } = input;
@@ -1469,7 +1258,6 @@ export class ImagePruneCommand extends Command<
 	ImagePruneCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = imagePruneCommandQuerySchema;
 
 	constructor(input?: ImagePruneCommandInput) {
 		const { filters } = input ?? {};
@@ -1489,7 +1277,6 @@ export class SystemAuthCommand extends Command<
 	undefined
 > {
 	public override method = "post" as const;
-	static bodySchema = systemAuthCommandBodySchema;
 
 	constructor(input: SystemAuthCommandInput) {
 		const body = input;
@@ -1573,8 +1360,6 @@ export class ImageCommitCommand extends Command<
 	ImageCommitCommandQuery
 > {
 	public override method = "post" as const;
-	static bodySchema = imageCommitCommandBodySchema;
-	static querySchema = imageCommitCommandQuerySchema;
 
 	constructor(input: ImageCommitCommandInput) {
 		const { container, repo, tag, comment, author, pause, changes, ...body } =
@@ -1627,7 +1412,6 @@ export class SystemEventsCommand extends Command<
 	SystemEventsCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = systemEventsCommandQuerySchema;
 
 	constructor(input?: SystemEventsCommandInput) {
 		const { since, until, filters } = input ?? {};
@@ -1646,7 +1430,6 @@ export class SystemDataUsageCommand extends Command<
 	SystemDataUsageCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = systemDataUsageCommandQuerySchema;
 
 	constructor(input?: SystemDataUsageCommandInput) {
 		const { type } = input ?? {};
@@ -1695,7 +1478,6 @@ export class SystemDataUsageCommand extends Command<
  */
 export class ImageGetCommand extends Command<ImageGetCommandInput, unknown> {
 	public override method = "get" as const;
-	static paramsSchema = imageGetCommandParamsSchema;
 
 	constructor(input: ImageGetCommandInput) {
 		const { name } = input;
@@ -1724,7 +1506,6 @@ export class ImageGetAllCommand extends Command<
 	ImageGetAllCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = imageGetAllCommandQuerySchema;
 
 	constructor(input?: ImageGetAllCommandInput) {
 		const { names } = input ?? {};
@@ -1746,7 +1527,6 @@ export class ImageLoadCommand extends Command<
 	ImageLoadCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = imageLoadCommandQuerySchema;
 
 	constructor(input: ImageLoadCommandInput) {
 		const { quiet, body } = input;
@@ -1764,8 +1544,6 @@ export class ContainerExecCommand extends Command<
 	ContainerExecCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = containerExecCommandBodySchema;
-	static paramsSchema = containerExecCommandParamsSchema;
 
 	constructor(input: ContainerExecCommandInput) {
 		const { id, ...body } = input;
@@ -1782,8 +1560,6 @@ export class ContainerExecCommand extends Command<
  */
 export class ExecStartCommand extends Command<ExecStartCommandInput, unknown> {
 	public override method = "post" as const;
-	static bodySchema = execStartCommandBodySchema;
-	static paramsSchema = execStartCommandParamsSchema;
 
 	constructor(input: ExecStartCommandInput) {
 		const { id, ...body } = input;
@@ -1803,8 +1579,6 @@ export class ExecResizeCommand extends Command<
 	ExecResizeCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = execResizeCommandParamsSchema;
-	static querySchema = execResizeCommandQuerySchema;
 
 	constructor(input: ExecResizeCommandInput) {
 		const { id, h, w } = input;
@@ -1822,7 +1596,6 @@ export class ExecInspectCommand extends Command<
 	ExecInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = execInspectCommandParamsSchema;
 
 	constructor(input: ExecInspectCommandInput) {
 		const { id } = input;
@@ -1841,7 +1614,6 @@ export class VolumeListCommand extends Command<
 	VolumeListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = volumeListCommandQuerySchema;
 
 	constructor(input?: VolumeListCommandInput) {
 		const { filters } = input ?? {};
@@ -1859,7 +1631,6 @@ export class VolumeCreateCommand extends Command<
 	VolumeCreateCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = volumeCreateCommandBodySchema;
 
 	constructor(input: VolumeCreateCommandInput) {
 		const body = input;
@@ -1877,7 +1648,6 @@ export class VolumeInspectCommand extends Command<
 	VolumeInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = volumeInspectCommandParamsSchema;
 
 	constructor(input: VolumeInspectCommandInput) {
 		const { name } = input;
@@ -1896,9 +1666,6 @@ export class VolumeUpdateCommand extends Command<
 	VolumeUpdateCommandQuery
 > {
 	public override method = "put" as const;
-	static bodySchema = volumeUpdateCommandBodySchema;
-	static paramsSchema = volumeUpdateCommandParamsSchema;
-	static querySchema = volumeUpdateCommandQuerySchema;
 
 	constructor(input: VolumeUpdateCommandInput) {
 		const { name, version, ...body } = input;
@@ -1921,8 +1688,6 @@ export class VolumeDeleteCommand extends Command<
 	VolumeDeleteCommandQuery
 > {
 	public override method = "delete" as const;
-	static paramsSchema = volumeDeleteCommandParamsSchema;
-	static querySchema = volumeDeleteCommandQuerySchema;
 
 	constructor(input: VolumeDeleteCommandInput) {
 		const { name, force } = input;
@@ -1941,7 +1706,6 @@ export class VolumePruneCommand extends Command<
 	VolumePruneCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = volumePruneCommandQuerySchema;
 
 	constructor(input?: VolumePruneCommandInput) {
 		const { filters } = input ?? {};
@@ -1965,7 +1729,6 @@ export class NetworkListCommand extends Command<
 	NetworkListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = networkListCommandQuerySchema;
 
 	constructor(input?: NetworkListCommandInput) {
 		const { filters } = input ?? {};
@@ -1984,8 +1747,6 @@ export class NetworkInspectCommand extends Command<
 	NetworkInspectCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = networkInspectCommandParamsSchema;
-	static querySchema = networkInspectCommandQuerySchema;
 
 	constructor(input: NetworkInspectCommandInput) {
 		const { id, verbose, scope } = input;
@@ -2007,7 +1768,6 @@ export class NetworkDeleteCommand extends Command<
 	undefined
 > {
 	public override method = "delete" as const;
-	static paramsSchema = networkDeleteCommandParamsSchema;
 
 	constructor(input: NetworkDeleteCommandInput) {
 		const { id } = input;
@@ -2025,7 +1785,6 @@ export class NetworkCreateCommand extends Command<
 	NetworkCreateCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = networkCreateCommandBodySchema;
 
 	constructor(input: NetworkCreateCommandInput) {
 		const body = input;
@@ -2043,8 +1802,6 @@ export class NetworkConnectCommand extends Command<
 	unknown
 > {
 	public override method = "post" as const;
-	static bodySchema = networkConnectCommandBodySchema;
-	static paramsSchema = networkConnectCommandParamsSchema;
 
 	constructor(input: NetworkConnectCommandInput) {
 		const { id, ...body } = input;
@@ -2062,8 +1819,6 @@ export class NetworkDisconnectCommand extends Command<
 	unknown
 > {
 	public override method = "post" as const;
-	static bodySchema = networkDisconnectCommandBodySchema;
-	static paramsSchema = networkDisconnectCommandParamsSchema;
 
 	constructor(input: NetworkDisconnectCommandInput) {
 		const { id, ...body } = input;
@@ -2082,7 +1837,6 @@ export class NetworkPruneCommand extends Command<
 	NetworkPruneCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = networkPruneCommandQuerySchema;
 
 	constructor(input?: NetworkPruneCommandInput) {
 		const { filters } = input ?? {};
@@ -2101,7 +1855,6 @@ export class PluginListCommand extends Command<
 	PluginListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = pluginListCommandQuerySchema;
 
 	constructor(input?: PluginListCommandInput) {
 		const { filters } = input ?? {};
@@ -2120,7 +1873,6 @@ export class GetPluginPrivilegesCommand extends Command<
 	GetPluginPrivilegesCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = getPluginPrivilegesCommandQuerySchema;
 
 	constructor(input: GetPluginPrivilegesCommandInput) {
 		const { remote } = input;
@@ -2142,8 +1894,6 @@ export class PluginPullCommand extends Command<
 	PluginPullCommandHeader
 > {
 	public override method = "post" as const;
-	static bodySchema = pluginPullCommandBodySchema;
-	static querySchema = pluginPullCommandQuerySchema;
 
 	constructor(
 		input: PluginPullCommandInput,
@@ -2169,7 +1919,6 @@ export class PluginInspectCommand extends Command<
 	PluginInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = pluginInspectCommandParamsSchema;
 
 	constructor(input: PluginInspectCommandInput) {
 		const { name } = input;
@@ -2188,8 +1937,6 @@ export class PluginDeleteCommand extends Command<
 	PluginDeleteCommandQuery
 > {
 	public override method = "delete" as const;
-	static paramsSchema = pluginDeleteCommandParamsSchema;
-	static querySchema = pluginDeleteCommandQuerySchema;
 
 	constructor(input: PluginDeleteCommandInput) {
 		const { name, force } = input;
@@ -2208,8 +1955,6 @@ export class PluginEnableCommand extends Command<
 	PluginEnableCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = pluginEnableCommandParamsSchema;
-	static querySchema = pluginEnableCommandQuerySchema;
 
 	constructor(input: PluginEnableCommandInput) {
 		const { name, timeout } = input;
@@ -2232,8 +1977,6 @@ export class PluginDisableCommand extends Command<
 	PluginDisableCommandQuery
 > {
 	public override method = "post" as const;
-	static paramsSchema = pluginDisableCommandParamsSchema;
-	static querySchema = pluginDisableCommandQuerySchema;
 
 	constructor(input: PluginDisableCommandInput) {
 		const { name, force } = input;
@@ -2257,9 +2000,6 @@ export class PluginUpgradeCommand extends Command<
 	PluginUpgradeCommandHeader
 > {
 	public override method = "post" as const;
-	static bodySchema = pluginUpgradeCommandBodySchema;
-	static paramsSchema = pluginUpgradeCommandParamsSchema;
-	static querySchema = pluginUpgradeCommandQuerySchema;
 
 	constructor(
 		input: PluginUpgradeCommandInput,
@@ -2286,7 +2026,6 @@ export class PluginCreateCommand extends Command<
 	PluginCreateCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = pluginCreateCommandQuerySchema;
 
 	constructor(input: PluginCreateCommandInput) {
 		const { name, body } = input;
@@ -2304,7 +2043,6 @@ export class PluginPushCommand extends Command<
 	unknown
 > {
 	public override method = "post" as const;
-	static paramsSchema = pluginPushCommandParamsSchema;
 
 	constructor(input: PluginPushCommandInput) {
 		const { name } = input;
@@ -2322,8 +2060,6 @@ export class PluginSetCommand extends Command<
 	undefined
 > {
 	public override method = "post" as const;
-	static bodySchema = pluginSetCommandBodySchema;
-	static paramsSchema = pluginSetCommandParamsSchema;
 
 	constructor(input: PluginSetCommandInput) {
 		const { name, ...body } = input;
@@ -2342,7 +2078,6 @@ export class NodeListCommand extends Command<
 	NodeListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = nodeListCommandQuerySchema;
 
 	constructor(input?: NodeListCommandInput) {
 		const { filters } = input ?? {};
@@ -2360,7 +2095,6 @@ export class NodeInspectCommand extends Command<
 	NodeInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = nodeInspectCommandParamsSchema;
 
 	constructor(input: NodeInspectCommandInput) {
 		const { id } = input;
@@ -2379,8 +2113,6 @@ export class NodeDeleteCommand extends Command<
 	NodeDeleteCommandQuery
 > {
 	public override method = "delete" as const;
-	static paramsSchema = nodeDeleteCommandParamsSchema;
-	static querySchema = nodeDeleteCommandQuerySchema;
 
 	constructor(input: NodeDeleteCommandInput) {
 		const { id, force } = input;
@@ -2399,9 +2131,6 @@ export class NodeUpdateCommand extends Command<
 	NodeUpdateCommandQuery
 > {
 	public override method = "post" as const;
-	static bodySchema = nodeUpdateCommandBodySchema;
-	static paramsSchema = nodeUpdateCommandParamsSchema;
-	static querySchema = nodeUpdateCommandQuerySchema;
 
 	constructor(input: NodeUpdateCommandInput) {
 		const { id, version, ...body } = input;
@@ -2439,7 +2168,6 @@ export class SwarmInitCommand extends Command<
 	SwarmInitCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = swarmInitCommandBodySchema;
 
 	constructor(input: SwarmInitCommandInput) {
 		const body = input;
@@ -2454,7 +2182,6 @@ export class SwarmInitCommand extends Command<
  */
 export class SwarmJoinCommand extends Command<SwarmJoinCommandInput, unknown> {
 	public override method = "post" as const;
-	static bodySchema = swarmJoinCommandBodySchema;
 
 	constructor(input: SwarmJoinCommandInput) {
 		const body = input;
@@ -2473,7 +2200,6 @@ export class SwarmLeaveCommand extends Command<
 	SwarmLeaveCommandQuery
 > {
 	public override method = "post" as const;
-	static querySchema = swarmLeaveCommandQuerySchema;
 
 	constructor(input?: SwarmLeaveCommandInput) {
 		const { force } = input ?? {};
@@ -2492,8 +2218,6 @@ export class SwarmUpdateCommand extends Command<
 	SwarmUpdateCommandQuery
 > {
 	public override method = "post" as const;
-	static bodySchema = swarmUpdateCommandBodySchema;
-	static querySchema = swarmUpdateCommandQuerySchema;
 
 	constructor(input: SwarmUpdateCommandInput) {
 		const {
@@ -2542,7 +2266,6 @@ export class SwarmUnlockCommand extends Command<
 	unknown
 > {
 	public override method = "post" as const;
-	static bodySchema = swarmUnlockCommandBodySchema;
 
 	constructor(input: SwarmUnlockCommandInput) {
 		const body = input;
@@ -2561,7 +2284,6 @@ export class ServiceListCommand extends Command<
 	ServiceListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = serviceListCommandQuerySchema;
 
 	constructor(input?: ServiceListCommandInput) {
 		const { filters, status } = input ?? {};
@@ -2581,7 +2303,6 @@ export class ServiceCreateCommand extends Command<
 	ServiceCreateCommandHeader
 > {
 	public override method = "post" as const;
-	static bodySchema = serviceCreateCommandBodySchema;
 
 	constructor(
 		input: ServiceCreateCommandInput,
@@ -2603,8 +2324,6 @@ export class ServiceInspectCommand extends Command<
 	ServiceInspectCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = serviceInspectCommandParamsSchema;
-	static querySchema = serviceInspectCommandQuerySchema;
 
 	constructor(input: ServiceInspectCommandInput) {
 		const { id, insertDefaults } = input;
@@ -2626,7 +2345,6 @@ export class ServiceDeleteCommand extends Command<
 	unknown
 > {
 	public override method = "delete" as const;
-	static paramsSchema = serviceDeleteCommandParamsSchema;
 
 	constructor(input: ServiceDeleteCommandInput) {
 		const { id } = input;
@@ -2646,9 +2364,6 @@ export class ServiceUpdateCommand extends Command<
 	ServiceUpdateCommandHeader
 > {
 	public override method = "post" as const;
-	static bodySchema = serviceUpdateCommandBodySchema;
-	static paramsSchema = serviceUpdateCommandParamsSchema;
-	static querySchema = serviceUpdateCommandQuerySchema;
 
 	constructor(
 		input: ServiceUpdateCommandInput,
@@ -2679,8 +2394,6 @@ export class ServiceLogsCommand extends Command<
 	ServiceLogsCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = serviceLogsCommandParamsSchema;
-	static querySchema = serviceLogsCommandQuerySchema;
 
 	constructor(input: ServiceLogsCommandInput) {
 		const { id, details, follow, stdout, stderr, since, timestamps, tail } =
@@ -2712,7 +2425,6 @@ export class TaskListCommand extends Command<
 	TaskListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = taskListCommandQuerySchema;
 
 	constructor(input?: TaskListCommandInput) {
 		const { filters } = input ?? {};
@@ -2730,7 +2442,6 @@ export class TaskInspectCommand extends Command<
 	TaskInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = taskInspectCommandParamsSchema;
 
 	constructor(input: TaskInspectCommandInput) {
 		const { id } = input;
@@ -2753,8 +2464,6 @@ export class TaskLogsCommand extends Command<
 	TaskLogsCommandQuery
 > {
 	public override method = "get" as const;
-	static paramsSchema = taskLogsCommandParamsSchema;
-	static querySchema = taskLogsCommandQuerySchema;
 
 	constructor(input: TaskLogsCommandInput) {
 		const { id, details, follow, stdout, stderr, since, timestamps, tail } =
@@ -2786,7 +2495,6 @@ export class SecretListCommand extends Command<
 	SecretListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = secretListCommandQuerySchema;
 
 	constructor(input?: SecretListCommandInput) {
 		const { filters } = input ?? {};
@@ -2804,7 +2512,6 @@ export class SecretCreateCommand extends Command<
 	SecretCreateCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = secretCreateCommandBodySchema;
 
 	constructor(input: SecretCreateCommandInput) {
 		const body = input;
@@ -2822,7 +2529,6 @@ export class SecretInspectCommand extends Command<
 	SecretInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = secretInspectCommandParamsSchema;
 
 	constructor(input: SecretInspectCommandInput) {
 		const { id } = input;
@@ -2840,7 +2546,6 @@ export class SecretDeleteCommand extends Command<
 	undefined
 > {
 	public override method = "delete" as const;
-	static paramsSchema = secretDeleteCommandParamsSchema;
 
 	constructor(input: SecretDeleteCommandInput) {
 		const { id } = input;
@@ -2859,9 +2564,6 @@ export class SecretUpdateCommand extends Command<
 	SecretUpdateCommandQuery
 > {
 	public override method = "post" as const;
-	static bodySchema = secretUpdateCommandBodySchema;
-	static paramsSchema = secretUpdateCommandParamsSchema;
-	static querySchema = secretUpdateCommandQuerySchema;
 
 	constructor(input: SecretUpdateCommandInput) {
 		const { id, version, ...body } = input;
@@ -2884,7 +2586,6 @@ export class ConfigListCommand extends Command<
 	ConfigListCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = configListCommandQuerySchema;
 
 	constructor(input?: ConfigListCommandInput) {
 		const { filters } = input ?? {};
@@ -2902,7 +2603,6 @@ export class ConfigCreateCommand extends Command<
 	ConfigCreateCommandOutput
 > {
 	public override method = "post" as const;
-	static bodySchema = configCreateCommandBodySchema;
 
 	constructor(input: ConfigCreateCommandInput) {
 		const body = input;
@@ -2920,7 +2620,6 @@ export class ConfigInspectCommand extends Command<
 	ConfigInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = configInspectCommandParamsSchema;
 
 	constructor(input: ConfigInspectCommandInput) {
 		const { id } = input;
@@ -2938,7 +2637,6 @@ export class ConfigDeleteCommand extends Command<
 	undefined
 > {
 	public override method = "delete" as const;
-	static paramsSchema = configDeleteCommandParamsSchema;
 
 	constructor(input: ConfigDeleteCommandInput) {
 		const { id } = input;
@@ -2957,9 +2655,6 @@ export class ConfigUpdateCommand extends Command<
 	ConfigUpdateCommandQuery
 > {
 	public override method = "post" as const;
-	static bodySchema = configUpdateCommandBodySchema;
-	static paramsSchema = configUpdateCommandParamsSchema;
-	static querySchema = configUpdateCommandQuerySchema;
 
 	constructor(input: ConfigUpdateCommandInput) {
 		const { id, version, ...body } = input;
@@ -2981,7 +2676,6 @@ export class DistributionInspectCommand extends Command<
 	DistributionInspectCommandOutput
 > {
 	public override method = "get" as const;
-	static paramsSchema = distributionInspectCommandParamsSchema;
 
 	constructor(input: DistributionInspectCommandInput) {
 		const { name } = input;

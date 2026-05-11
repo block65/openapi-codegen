@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:11.158Z
+ * Generated on 2026-05-11T04:59:34.108Z
  *
  */
 /** eslint-disable max-classes */
@@ -15,14 +15,9 @@ import type {
 	AddPetCommandInput,
 	FindPetByIdCommandInput,
 	DeletePetCommandInput,
+	FindPetWrappedCommandInput,
+	FindPetWrappedCommandOutput,
 } from "./types.js";
-import {
-	addPetCommandBodySchema,
-	deletePetCommandParamsSchema,
-	findPetByIdCommandParamsSchema,
-	findPetsCommandQuerySchema,
-	petSchema,
-} from "./valibot.js";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated
@@ -68,8 +63,6 @@ export class FindPetsCommand extends Command<
 	FindPetsCommandQuery
 > {
 	public override method = "get" as const;
-	static querySchema = findPetsCommandQuerySchema;
-	static responseSchema = petSchema;
 
 	constructor(input?: FindPetsCommandInput) {
 		const { tags, limit } = input ?? {};
@@ -83,8 +76,6 @@ export class FindPetsCommand extends Command<
  */
 export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
 	public override method = "post" as const;
-	static bodySchema = addPetCommandBodySchema;
-	static responseSchema = petSchema;
 
 	constructor(input: AddPetCommandInput) {
 		const body = input;
@@ -99,8 +90,6 @@ export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
  */
 export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
 	public override method = "get" as const;
-	static paramsSchema = findPetByIdCommandParamsSchema;
-	static responseSchema = petSchema;
 
 	constructor(input: FindPetByIdCommandInput) {
 		const { id } = input;
@@ -117,10 +106,26 @@ export class DeletePetCommand extends Command<
 	undefined
 > {
 	public override method = "delete" as const;
-	static paramsSchema = deletePetCommandParamsSchema;
 
 	constructor(input: DeletePetCommandInput) {
 		const { id } = input;
 		super(encodePath`/pets/${id}`);
+	}
+}
+
+/**
+ * Returns a pet inside an envelope — exercises inline 2xx response shape with
+ * nested $ref
+ *
+ */
+export class FindPetWrappedCommand extends Command<
+	FindPetWrappedCommandInput,
+	FindPetWrappedCommandOutput
+> {
+	public override method = "get" as const;
+
+	constructor(input: FindPetWrappedCommandInput) {
+		const { id } = input;
+		super(encodePath`/pets/${id}/wrapped`);
 	}
 }

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:11.158Z
+ * Generated on 2026-05-11T04:59:34.108Z
  *
  */
 
@@ -33,3 +33,10 @@ export type DeletePetCommandParams = {
 	id: `${number}`;
 };
 export type DeletePetCommandInput = DeletePetCommandParams;
+export type FindPetWrappedCommandParams = {
+	id: `${number}`;
+};
+export type FindPetWrappedCommandInput = FindPetWrappedCommandParams;
+export type FindPetWrappedCommandOutput = {
+	pet: Pet;
+};

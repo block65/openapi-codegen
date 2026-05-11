@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:17.420Z
+ * Generated on 2026-05-11T04:55:08.981Z
  *
  */
 import * as v from "valibot";
@@ -12416,35 +12416,82 @@ export const exactCreateChatCompletionCommandBodySchema =
 	exactCreateChatCompletionRequestSchema;
 export const createChatCompletionCommandBodySchema =
 	createChatCompletionRequestSchema;
+export const exactCreateChatCompletionCommandResponseSchema =
+	exactCreateChatCompletionResponseSchema;
+export const createChatCompletionCommandResponseSchema =
+	createChatCompletionResponseSchema;
 export const exactCreateCompletionCommandBodySchema =
 	exactCreateCompletionRequestSchema;
 export const createCompletionCommandBodySchema = createCompletionRequestSchema;
+export const exactCreateCompletionCommandResponseSchema =
+	exactCreateCompletionResponseSchema;
+export const createCompletionCommandResponseSchema =
+	createCompletionResponseSchema;
 export const exactCreateImageCommandBodySchema = exactCreateImageRequestSchema;
 export const createImageCommandBodySchema = createImageRequestSchema;
+export const exactCreateImageCommandResponseSchema = exactImagesResponseSchema;
+export const createImageCommandResponseSchema = imagesResponseSchema;
+export const exactCreateImageEditCommandResponseSchema =
+	exactImagesResponseSchema;
+export const createImageEditCommandResponseSchema = imagesResponseSchema;
+export const exactCreateImageVariationCommandResponseSchema =
+	exactImagesResponseSchema;
+export const createImageVariationCommandResponseSchema = imagesResponseSchema;
 export const exactCreateEmbeddingCommandBodySchema =
 	exactCreateEmbeddingRequestSchema;
 export const createEmbeddingCommandBodySchema = createEmbeddingRequestSchema;
+export const exactCreateEmbeddingCommandResponseSchema =
+	exactCreateEmbeddingResponseSchema;
+export const createEmbeddingCommandResponseSchema =
+	createEmbeddingResponseSchema;
 export const exactCreateSpeechCommandBodySchema =
 	exactCreateSpeechRequestSchema;
 export const createSpeechCommandBodySchema = createSpeechRequestSchema;
+export const exactCreateTranscriptionCommandResponseSchema = v.union([
+	exactCreateTranscriptionResponseJsonSchema,
+	exactCreateTranscriptionResponseVerboseJsonSchema,
+]);
+export const createTranscriptionCommandResponseSchema = v.union([
+	createTranscriptionResponseJsonSchema,
+	createTranscriptionResponseVerboseJsonSchema,
+]);
+export const exactCreateTranslationCommandResponseSchema = v.union([
+	exactCreateTranslationResponseJsonSchema,
+	exactCreateTranslationResponseVerboseJsonSchema,
+]);
+export const createTranslationCommandResponseSchema = v.union([
+	createTranslationResponseJsonSchema,
+	createTranslationResponseVerboseJsonSchema,
+]);
+export const exactListFilesCommandResponseSchema = exactListFilesResponseSchema;
+export const listFilesCommandResponseSchema = listFilesResponseSchema;
 export const exactListFilesCommandQuerySchema = v.strictObject({
 	purpose: v.exactOptional(v.string()),
 });
 export const listFilesCommandQuerySchema = v.strictObject({
 	purpose: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactCreateFileCommandResponseSchema = exactOpenAiFileSchema;
+export const createFileCommandResponseSchema = openAiFileSchema;
+export const exactDeleteFileCommandResponseSchema =
+	exactDeleteFileResponseSchema;
+export const deleteFileCommandResponseSchema = deleteFileResponseSchema;
 export const exactDeleteFileCommandParamsSchema = v.strictObject({
 	file_id: v.string(),
 });
 export const deleteFileCommandParamsSchema = v.strictObject({
 	file_id: v.pipe(v.string(), v.trim()),
 });
+export const exactRetrieveFileCommandResponseSchema = exactOpenAiFileSchema;
+export const retrieveFileCommandResponseSchema = openAiFileSchema;
 export const exactRetrieveFileCommandParamsSchema = v.strictObject({
 	file_id: v.string(),
 });
 export const retrieveFileCommandParamsSchema = v.strictObject({
 	file_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDownloadFileCommandResponseSchema = v.string();
+export const downloadFileCommandResponseSchema = v.pipe(v.string(), v.trim());
 export const exactDownloadFileCommandParamsSchema = v.strictObject({
 	file_id: v.string(),
 });
@@ -12454,6 +12501,10 @@ export const downloadFileCommandParamsSchema = v.strictObject({
 export const exactCreateUploadCommandBodySchema =
 	exactCreateUploadRequestSchema;
 export const createUploadCommandBodySchema = createUploadRequestSchema;
+export const exactCreateUploadCommandResponseSchema = exactUploadSchema;
+export const createUploadCommandResponseSchema = uploadSchema;
+export const exactAddUploadPartCommandResponseSchema = exactUploadPartSchema;
+export const addUploadPartCommandResponseSchema = uploadPartSchema;
 export const exactAddUploadPartCommandParamsSchema = v.strictObject({
 	upload_id: v.string(),
 });
@@ -12463,12 +12514,16 @@ export const addUploadPartCommandParamsSchema = v.strictObject({
 export const exactCompleteUploadCommandBodySchema =
 	exactCompleteUploadRequestSchema;
 export const completeUploadCommandBodySchema = completeUploadRequestSchema;
+export const exactCompleteUploadCommandResponseSchema = exactUploadSchema;
+export const completeUploadCommandResponseSchema = uploadSchema;
 export const exactCompleteUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.string(),
 });
 export const completeUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.pipe(v.string(), v.trim()),
 });
+export const exactCancelUploadCommandResponseSchema = exactUploadSchema;
+export const cancelUploadCommandResponseSchema = uploadSchema;
 export const exactCancelUploadCommandParamsSchema = v.strictObject({
 	upload_id: v.string(),
 });
@@ -12479,6 +12534,13 @@ export const exactCreateFineTuningJobCommandBodySchema =
 	exactCreateFineTuningJobRequestSchema;
 export const createFineTuningJobCommandBodySchema =
 	createFineTuningJobRequestSchema;
+export const exactCreateFineTuningJobCommandResponseSchema =
+	exactFineTuningJobSchema;
+export const createFineTuningJobCommandResponseSchema = fineTuningJobSchema;
+export const exactListPaginatedFineTuningJobsCommandResponseSchema =
+	exactListPaginatedFineTuningJobsResponseSchema;
+export const listPaginatedFineTuningJobsCommandResponseSchema =
+	listPaginatedFineTuningJobsResponseSchema;
 export const exactListPaginatedFineTuningJobsCommandQuerySchema =
 	v.strictObject({
 		after: v.exactOptional(v.string()),
@@ -12498,12 +12560,19 @@ export const listPaginatedFineTuningJobsCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
+export const exactRetrieveFineTuningJobCommandResponseSchema =
+	exactFineTuningJobSchema;
+export const retrieveFineTuningJobCommandResponseSchema = fineTuningJobSchema;
 export const exactRetrieveFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.string(),
 });
 export const retrieveFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListFineTuningEventsCommandResponseSchema =
+	exactListFineTuningJobEventsResponseSchema;
+export const listFineTuningEventsCommandResponseSchema =
+	listFineTuningJobEventsResponseSchema;
 export const exactListFineTuningEventsCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.string(),
 });
@@ -12528,12 +12597,19 @@ export const listFineTuningEventsCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
+export const exactCancelFineTuningJobCommandResponseSchema =
+	exactFineTuningJobSchema;
+export const cancelFineTuningJobCommandResponseSchema = fineTuningJobSchema;
 export const exactCancelFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.string(),
 });
 export const cancelFineTuningJobCommandParamsSchema = v.strictObject({
 	fine_tuning_job_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListFineTuningJobCheckpointsCommandResponseSchema =
+	exactListFineTuningJobCheckpointsResponseSchema;
+export const listFineTuningJobCheckpointsCommandResponseSchema =
+	listFineTuningJobCheckpointsResponseSchema;
 export const exactListFineTuningJobCheckpointsCommandParamsSchema =
 	v.strictObject({
 		fine_tuning_job_id: v.string(),
@@ -12560,12 +12636,20 @@ export const listFineTuningJobCheckpointsCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
+export const exactListModelsCommandResponseSchema =
+	exactListModelsResponseSchema;
+export const listModelsCommandResponseSchema = listModelsResponseSchema;
+export const exactRetrieveModelCommandResponseSchema = exactModelSchema;
+export const retrieveModelCommandResponseSchema = modelSchema;
 export const exactRetrieveModelCommandParamsSchema = v.strictObject({
 	model: v.string(),
 });
 export const retrieveModelCommandParamsSchema = v.strictObject({
 	model: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteModelCommandResponseSchema =
+	exactDeleteModelResponseSchema;
+export const deleteModelCommandResponseSchema = deleteModelResponseSchema;
 export const exactDeleteModelCommandParamsSchema = v.strictObject({
 	model: v.string(),
 });
@@ -12575,6 +12659,13 @@ export const deleteModelCommandParamsSchema = v.strictObject({
 export const exactCreateModerationCommandBodySchema =
 	exactCreateModerationRequestSchema;
 export const createModerationCommandBodySchema = createModerationRequestSchema;
+export const exactCreateModerationCommandResponseSchema =
+	exactCreateModerationResponseSchema;
+export const createModerationCommandResponseSchema =
+	createModerationResponseSchema;
+export const exactListAssistantsCommandResponseSchema =
+	exactListAssistantsResponseSchema;
+export const listAssistantsCommandResponseSchema = listAssistantsResponseSchema;
 export const exactListAssistantsCommandQuerySchema = v.strictObject({
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
 	order: v.exactOptional(v.picklist(["asc", "desc"])),
@@ -12600,6 +12691,12 @@ export const listAssistantsCommandQuerySchema = v.strictObject({
 export const exactCreateAssistantCommandBodySchema =
 	exactCreateAssistantRequestSchema;
 export const createAssistantCommandBodySchema = createAssistantRequestSchema;
+export const exactCreateAssistantCommandResponseSchema =
+	exactAssistantObjectSchema;
+export const createAssistantCommandResponseSchema = assistantObjectSchema;
+export const exactGetAssistantCommandResponseSchema =
+	exactAssistantObjectSchema;
+export const getAssistantCommandResponseSchema = assistantObjectSchema;
 export const exactGetAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.string(),
 });
@@ -12609,12 +12706,19 @@ export const getAssistantCommandParamsSchema = v.strictObject({
 export const exactModifyAssistantCommandBodySchema =
 	exactModifyAssistantRequestSchema;
 export const modifyAssistantCommandBodySchema = modifyAssistantRequestSchema;
+export const exactModifyAssistantCommandResponseSchema =
+	exactAssistantObjectSchema;
+export const modifyAssistantCommandResponseSchema = assistantObjectSchema;
 export const exactModifyAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.string(),
 });
 export const modifyAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteAssistantCommandResponseSchema =
+	exactDeleteAssistantResponseSchema;
+export const deleteAssistantCommandResponseSchema =
+	deleteAssistantResponseSchema;
 export const exactDeleteAssistantCommandParamsSchema = v.strictObject({
 	assistant_id: v.string(),
 });
@@ -12624,6 +12728,10 @@ export const deleteAssistantCommandParamsSchema = v.strictObject({
 export const exactCreateThreadCommandBodySchema =
 	exactCreateThreadRequestSchema;
 export const createThreadCommandBodySchema = createThreadRequestSchema;
+export const exactCreateThreadCommandResponseSchema = exactThreadObjectSchema;
+export const createThreadCommandResponseSchema = threadObjectSchema;
+export const exactGetThreadCommandResponseSchema = exactThreadObjectSchema;
+export const getThreadCommandResponseSchema = threadObjectSchema;
 export const exactGetThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
@@ -12633,18 +12741,26 @@ export const getThreadCommandParamsSchema = v.strictObject({
 export const exactModifyThreadCommandBodySchema =
 	exactModifyThreadRequestSchema;
 export const modifyThreadCommandBodySchema = modifyThreadRequestSchema;
+export const exactModifyThreadCommandResponseSchema = exactThreadObjectSchema;
+export const modifyThreadCommandResponseSchema = threadObjectSchema;
 export const exactModifyThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const modifyThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteThreadCommandResponseSchema =
+	exactDeleteThreadResponseSchema;
+export const deleteThreadCommandResponseSchema = deleteThreadResponseSchema;
 export const exactDeleteThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const deleteThreadCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListMessagesCommandResponseSchema =
+	exactListMessagesResponseSchema;
+export const listMessagesCommandResponseSchema = listMessagesResponseSchema;
 export const exactListMessagesCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
@@ -12678,12 +12794,16 @@ export const listMessagesCommandQuerySchema = v.strictObject({
 export const exactCreateMessageCommandBodySchema =
 	exactCreateMessageRequestSchema;
 export const createMessageCommandBodySchema = createMessageRequestSchema;
+export const exactCreateMessageCommandResponseSchema = exactMessageObjectSchema;
+export const createMessageCommandResponseSchema = messageObjectSchema;
 export const exactCreateMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
 export const createMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 });
+export const exactGetMessageCommandResponseSchema = exactMessageObjectSchema;
+export const getMessageCommandResponseSchema = messageObjectSchema;
 export const exactGetMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	message_id: v.string(),
@@ -12695,6 +12815,8 @@ export const getMessageCommandParamsSchema = v.strictObject({
 export const exactModifyMessageCommandBodySchema =
 	exactModifyMessageRequestSchema;
 export const modifyMessageCommandBodySchema = modifyMessageRequestSchema;
+export const exactModifyMessageCommandResponseSchema = exactMessageObjectSchema;
+export const modifyMessageCommandResponseSchema = messageObjectSchema;
 export const exactModifyMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	message_id: v.string(),
@@ -12703,6 +12825,9 @@ export const modifyMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	message_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteMessageCommandResponseSchema =
+	exactDeleteMessageResponseSchema;
+export const deleteMessageCommandResponseSchema = deleteMessageResponseSchema;
 export const exactDeleteMessageCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	message_id: v.string(),
@@ -12715,6 +12840,11 @@ export const exactCreateThreadAndRunCommandBodySchema =
 	exactCreateThreadAndRunRequestSchema;
 export const createThreadAndRunCommandBodySchema =
 	createThreadAndRunRequestSchema;
+export const exactCreateThreadAndRunCommandResponseSchema =
+	exactRunObjectSchema;
+export const createThreadAndRunCommandResponseSchema = runObjectSchema;
+export const exactListRunsCommandResponseSchema = exactListRunsResponseSchema;
+export const listRunsCommandResponseSchema = listRunsResponseSchema;
 export const exactListRunsCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
@@ -12745,6 +12875,8 @@ export const listRunsCommandQuerySchema = v.strictObject({
 });
 export const exactCreateRunCommandBodySchema = exactCreateRunRequestSchema;
 export const createRunCommandBodySchema = createRunRequestSchema;
+export const exactCreateRunCommandResponseSchema = exactRunObjectSchema;
+export const createRunCommandResponseSchema = runObjectSchema;
 export const exactCreateRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 });
@@ -12765,6 +12897,8 @@ export const createRunCommandQuerySchema = v.strictObject({
 		),
 	),
 });
+export const exactGetRunCommandResponseSchema = exactRunObjectSchema;
+export const getRunCommandResponseSchema = runObjectSchema;
 export const exactGetRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
@@ -12775,6 +12909,8 @@ export const getRunCommandParamsSchema = v.strictObject({
 });
 export const exactModifyRunCommandBodySchema = exactModifyRunRequestSchema;
 export const modifyRunCommandBodySchema = modifyRunRequestSchema;
+export const exactModifyRunCommandResponseSchema = exactRunObjectSchema;
+export const modifyRunCommandResponseSchema = runObjectSchema;
 export const exactModifyRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
@@ -12787,6 +12923,9 @@ export const exactSubmitToolOuputsToRunCommandBodySchema =
 	exactSubmitToolOutputsRunRequestSchema;
 export const submitToolOuputsToRunCommandBodySchema =
 	submitToolOutputsRunRequestSchema;
+export const exactSubmitToolOuputsToRunCommandResponseSchema =
+	exactRunObjectSchema;
+export const submitToolOuputsToRunCommandResponseSchema = runObjectSchema;
 export const exactSubmitToolOuputsToRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
@@ -12795,6 +12934,8 @@ export const submitToolOuputsToRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
+export const exactCancelRunCommandResponseSchema = exactRunObjectSchema;
+export const cancelRunCommandResponseSchema = runObjectSchema;
 export const exactCancelRunCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
@@ -12803,6 +12944,9 @@ export const cancelRunCommandParamsSchema = v.strictObject({
 	thread_id: v.pipe(v.string(), v.trim()),
 	run_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListRunStepsCommandResponseSchema =
+	exactListRunStepsResponseSchema;
+export const listRunStepsCommandResponseSchema = listRunStepsResponseSchema;
 export const exactListRunStepsCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
@@ -12843,6 +12987,8 @@ export const listRunStepsCommandQuerySchema = v.strictObject({
 		),
 	),
 });
+export const exactGetRunStepCommandResponseSchema = exactRunStepObjectSchema;
+export const getRunStepCommandResponseSchema = runStepObjectSchema;
 export const exactGetRunStepCommandParamsSchema = v.strictObject({
 	thread_id: v.string(),
 	run_id: v.string(),
@@ -12867,6 +13013,10 @@ export const getRunStepCommandQuerySchema = v.strictObject({
 		),
 	),
 });
+export const exactListVectorStoresCommandResponseSchema =
+	exactListVectorStoresResponseSchema;
+export const listVectorStoresCommandResponseSchema =
+	listVectorStoresResponseSchema;
 export const exactListVectorStoresCommandQuerySchema = v.strictObject({
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
 	order: v.exactOptional(v.picklist(["asc", "desc"])),
@@ -12893,6 +13043,12 @@ export const exactCreateVectorStoreCommandBodySchema =
 	exactCreateVectorStoreRequestSchema;
 export const createVectorStoreCommandBodySchema =
 	createVectorStoreRequestSchema;
+export const exactCreateVectorStoreCommandResponseSchema =
+	exactVectorStoreObjectSchema;
+export const createVectorStoreCommandResponseSchema = vectorStoreObjectSchema;
+export const exactGetVectorStoreCommandResponseSchema =
+	exactVectorStoreObjectSchema;
+export const getVectorStoreCommandResponseSchema = vectorStoreObjectSchema;
 export const exactGetVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
@@ -12903,18 +13059,29 @@ export const exactModifyVectorStoreCommandBodySchema =
 	exactUpdateVectorStoreRequestSchema;
 export const modifyVectorStoreCommandBodySchema =
 	updateVectorStoreRequestSchema;
+export const exactModifyVectorStoreCommandResponseSchema =
+	exactVectorStoreObjectSchema;
+export const modifyVectorStoreCommandResponseSchema = vectorStoreObjectSchema;
 export const exactModifyVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const modifyVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteVectorStoreCommandResponseSchema =
+	exactDeleteVectorStoreResponseSchema;
+export const deleteVectorStoreCommandResponseSchema =
+	deleteVectorStoreResponseSchema;
 export const exactDeleteVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const deleteVectorStoreCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListVectorStoreFilesCommandResponseSchema =
+	exactListVectorStoreFilesResponseSchema;
+export const listVectorStoreFilesCommandResponseSchema =
+	listVectorStoreFilesResponseSchema;
 export const exactListVectorStoreFilesCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
@@ -12953,12 +13120,20 @@ export const exactCreateVectorStoreFileCommandBodySchema =
 	exactCreateVectorStoreFileRequestSchema;
 export const createVectorStoreFileCommandBodySchema =
 	createVectorStoreFileRequestSchema;
+export const exactCreateVectorStoreFileCommandResponseSchema =
+	exactVectorStoreFileObjectSchema;
+export const createVectorStoreFileCommandResponseSchema =
+	vectorStoreFileObjectSchema;
 export const exactCreateVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 });
 export const createVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
+export const exactGetVectorStoreFileCommandResponseSchema =
+	exactVectorStoreFileObjectSchema;
+export const getVectorStoreFileCommandResponseSchema =
+	vectorStoreFileObjectSchema;
 export const exactGetVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 	file_id: v.string(),
@@ -12967,6 +13142,10 @@ export const getVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	file_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteVectorStoreFileCommandResponseSchema =
+	exactDeleteVectorStoreFileResponseSchema;
+export const deleteVectorStoreFileCommandResponseSchema =
+	deleteVectorStoreFileResponseSchema;
 export const exactDeleteVectorStoreFileCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 	file_id: v.string(),
@@ -12979,6 +13158,10 @@ export const exactCreateVectorStoreFileBatchCommandBodySchema =
 	exactCreateVectorStoreFileBatchRequestSchema;
 export const createVectorStoreFileBatchCommandBodySchema =
 	createVectorStoreFileBatchRequestSchema;
+export const exactCreateVectorStoreFileBatchCommandResponseSchema =
+	exactVectorStoreFileBatchObjectSchema;
+export const createVectorStoreFileBatchCommandResponseSchema =
+	vectorStoreFileBatchObjectSchema;
 export const exactCreateVectorStoreFileBatchCommandParamsSchema =
 	v.strictObject({
 		vector_store_id: v.string(),
@@ -12986,6 +13169,10 @@ export const exactCreateVectorStoreFileBatchCommandParamsSchema =
 export const createVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 });
+export const exactGetVectorStoreFileBatchCommandResponseSchema =
+	exactVectorStoreFileBatchObjectSchema;
+export const getVectorStoreFileBatchCommandResponseSchema =
+	vectorStoreFileBatchObjectSchema;
 export const exactGetVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.string(),
 	batch_id: v.string(),
@@ -12994,6 +13181,10 @@ export const getVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	batch_id: v.pipe(v.string(), v.trim()),
 });
+export const exactCancelVectorStoreFileBatchCommandResponseSchema =
+	exactVectorStoreFileBatchObjectSchema;
+export const cancelVectorStoreFileBatchCommandResponseSchema =
+	vectorStoreFileBatchObjectSchema;
 export const exactCancelVectorStoreFileBatchCommandParamsSchema =
 	v.strictObject({
 		vector_store_id: v.string(),
@@ -13003,6 +13194,10 @@ export const cancelVectorStoreFileBatchCommandParamsSchema = v.strictObject({
 	vector_store_id: v.pipe(v.string(), v.trim()),
 	batch_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListFilesInVectorStoreBatchCommandResponseSchema =
+	exactListVectorStoreFilesResponseSchema;
+export const listFilesInVectorStoreBatchCommandResponseSchema =
+	listVectorStoreFilesResponseSchema;
 export const exactListFilesInVectorStoreBatchCommandParamsSchema =
 	v.strictObject({
 		vector_store_id: v.string(),
@@ -13109,6 +13304,11 @@ export const createBatchCommandBodySchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
+export const exactCreateBatchCommandResponseSchema = exactBatchSchema;
+export const createBatchCommandResponseSchema = batchSchema;
+export const exactListBatchesCommandResponseSchema =
+	exactListBatchesResponseSchema;
+export const listBatchesCommandResponseSchema = listBatchesResponseSchema;
 export const exactListBatchesCommandQuerySchema = v.strictObject({
 	after: v.exactOptional(v.string()),
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
@@ -13127,18 +13327,25 @@ export const listBatchesCommandQuerySchema = v.strictObject({
 		]),
 	),
 });
+export const exactRetrieveBatchCommandResponseSchema = exactBatchSchema;
+export const retrieveBatchCommandResponseSchema = batchSchema;
 export const exactRetrieveBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.string(),
 });
 export const retrieveBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.pipe(v.string(), v.trim()),
 });
+export const exactCancelBatchCommandResponseSchema = exactBatchSchema;
+export const cancelBatchCommandResponseSchema = batchSchema;
 export const exactCancelBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.string(),
 });
 export const cancelBatchCommandParamsSchema = v.strictObject({
 	batch_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListAuditLogsCommandResponseSchema =
+	exactListAuditLogsResponseSchema;
+export const listAuditLogsCommandResponseSchema = listAuditLogsResponseSchema;
 export const exactListAuditLogsCommandQuerySchema = v.strictObject({
 	effective_at: v.exactOptional(
 		v.strictObject({
@@ -13217,6 +13424,9 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 	after: v.optional(v.pipe(v.string(), v.trim())),
 	before: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactListInvitesCommandResponseSchema =
+	exactInviteListResponseSchema;
+export const listInvitesCommandResponseSchema = inviteListResponseSchema;
 export const exactListInvitesCommandQuerySchema = v.strictObject({
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
 	after: v.exactOptional(v.string()),
@@ -13237,18 +13447,27 @@ export const listInvitesCommandQuerySchema = v.strictObject({
 });
 export const exactInviteUserCommandBodySchema = exactInviteRequestSchema;
 export const inviteUserCommandBodySchema = inviteRequestSchema;
+export const exactInviteUserCommandResponseSchema = exactInviteSchema;
+export const inviteUserCommandResponseSchema = inviteSchema;
+export const exactRetrieveInviteCommandResponseSchema = exactInviteSchema;
+export const retrieveInviteCommandResponseSchema = inviteSchema;
 export const exactRetrieveInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.string(),
 });
 export const retrieveInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteInviteCommandResponseSchema =
+	exactInviteDeleteResponseSchema;
+export const deleteInviteCommandResponseSchema = inviteDeleteResponseSchema;
 export const exactDeleteInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.string(),
 });
 export const deleteInviteCommandParamsSchema = v.strictObject({
 	invite_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListUsersCommandResponseSchema = exactUserListResponseSchema;
+export const listUsersCommandResponseSchema = userListResponseSchema;
 export const exactListUsersCommandQuerySchema = v.strictObject({
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
 	after: v.exactOptional(v.string()),
@@ -13267,6 +13486,8 @@ export const listUsersCommandQuerySchema = v.strictObject({
 	),
 	after: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactRetrieveUserCommandResponseSchema = exactUserSchema;
+export const retrieveUserCommandResponseSchema = userSchema;
 export const exactRetrieveUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
@@ -13276,18 +13497,26 @@ export const retrieveUserCommandParamsSchema = v.strictObject({
 export const exactModifyUserCommandBodySchema =
 	exactUserRoleUpdateRequestSchema;
 export const modifyUserCommandBodySchema = userRoleUpdateRequestSchema;
+export const exactModifyUserCommandResponseSchema = exactUserSchema;
+export const modifyUserCommandResponseSchema = userSchema;
 export const exactModifyUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
 export const modifyUserCommandParamsSchema = v.strictObject({
 	user_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteUserCommandResponseSchema =
+	exactUserDeleteResponseSchema;
+export const deleteUserCommandResponseSchema = userDeleteResponseSchema;
 export const exactDeleteUserCommandParamsSchema = v.strictObject({
 	user_id: v.string(),
 });
 export const deleteUserCommandParamsSchema = v.strictObject({
 	user_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListProjectsCommandResponseSchema =
+	exactProjectListResponseSchema;
+export const listProjectsCommandResponseSchema = projectListResponseSchema;
 export const exactListProjectsCommandQuerySchema = v.strictObject({
 	limit: v.exactOptional(v.pipe(v.number(), v.integer())),
 	after: v.exactOptional(v.string()),
@@ -13311,6 +13540,10 @@ export const listProjectsCommandQuerySchema = v.strictObject({
 export const exactCreateProjectCommandBodySchema =
 	exactProjectCreateRequestSchema;
 export const createProjectCommandBodySchema = projectCreateRequestSchema;
+export const exactCreateProjectCommandResponseSchema = exactProjectSchema;
+export const createProjectCommandResponseSchema = projectSchema;
+export const exactRetrieveProjectCommandResponseSchema = exactProjectSchema;
+export const retrieveProjectCommandResponseSchema = projectSchema;
 export const exactRetrieveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
@@ -13320,18 +13553,26 @@ export const retrieveProjectCommandParamsSchema = v.strictObject({
 export const exactModifyProjectCommandBodySchema =
 	exactProjectUpdateRequestSchema;
 export const modifyProjectCommandBodySchema = projectUpdateRequestSchema;
+export const exactModifyProjectCommandResponseSchema = exactProjectSchema;
+export const modifyProjectCommandResponseSchema = projectSchema;
 export const exactModifyProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const modifyProjectCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
+export const exactArchiveProjectCommandResponseSchema = exactProjectSchema;
+export const archiveProjectCommandResponseSchema = projectSchema;
 export const exactArchiveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const archiveProjectCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListProjectUsersCommandResponseSchema =
+	exactProjectUserListResponseSchema;
+export const listProjectUsersCommandResponseSchema =
+	projectUserListResponseSchema;
 export const exactListProjectUsersCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
@@ -13360,12 +13601,18 @@ export const exactCreateProjectUserCommandBodySchema =
 	exactProjectUserCreateRequestSchema;
 export const createProjectUserCommandBodySchema =
 	projectUserCreateRequestSchema;
+export const exactCreateProjectUserCommandResponseSchema =
+	exactProjectUserSchema;
+export const createProjectUserCommandResponseSchema = projectUserSchema;
 export const exactCreateProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
 export const createProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
+export const exactRetrieveProjectUserCommandResponseSchema =
+	exactProjectUserSchema;
+export const retrieveProjectUserCommandResponseSchema = projectUserSchema;
 export const exactRetrieveProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),
@@ -13378,6 +13625,9 @@ export const exactModifyProjectUserCommandBodySchema =
 	exactProjectUserUpdateRequestSchema;
 export const modifyProjectUserCommandBodySchema =
 	projectUserUpdateRequestSchema;
+export const exactModifyProjectUserCommandResponseSchema =
+	exactProjectUserSchema;
+export const modifyProjectUserCommandResponseSchema = projectUserSchema;
 export const exactModifyProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),
@@ -13386,6 +13636,10 @@ export const modifyProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	user_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteProjectUserCommandResponseSchema =
+	exactProjectUserDeleteResponseSchema;
+export const deleteProjectUserCommandResponseSchema =
+	projectUserDeleteResponseSchema;
 export const exactDeleteProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	user_id: v.string(),
@@ -13394,6 +13648,10 @@ export const deleteProjectUserCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	user_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListProjectServiceAccountsCommandResponseSchema =
+	exactProjectServiceAccountListResponseSchema;
+export const listProjectServiceAccountsCommandResponseSchema =
+	projectServiceAccountListResponseSchema;
 export const exactListProjectServiceAccountsCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
@@ -13425,6 +13683,10 @@ export const exactCreateProjectServiceAccountCommandBodySchema =
 	exactProjectServiceAccountCreateRequestSchema;
 export const createProjectServiceAccountCommandBodySchema =
 	projectServiceAccountCreateRequestSchema;
+export const exactCreateProjectServiceAccountCommandResponseSchema =
+	exactProjectServiceAccountCreateResponseSchema;
+export const createProjectServiceAccountCommandResponseSchema =
+	projectServiceAccountCreateResponseSchema;
 export const exactCreateProjectServiceAccountCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
@@ -13432,6 +13694,10 @@ export const exactCreateProjectServiceAccountCommandParamsSchema =
 export const createProjectServiceAccountCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 });
+export const exactRetrieveProjectServiceAccountCommandResponseSchema =
+	exactProjectServiceAccountSchema;
+export const retrieveProjectServiceAccountCommandResponseSchema =
+	projectServiceAccountSchema;
 export const exactRetrieveProjectServiceAccountCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
@@ -13441,6 +13707,10 @@ export const retrieveProjectServiceAccountCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	service_account_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteProjectServiceAccountCommandResponseSchema =
+	exactProjectServiceAccountDeleteResponseSchema;
+export const deleteProjectServiceAccountCommandResponseSchema =
+	projectServiceAccountDeleteResponseSchema;
 export const exactDeleteProjectServiceAccountCommandParamsSchema =
 	v.strictObject({
 		project_id: v.string(),
@@ -13450,6 +13720,10 @@ export const deleteProjectServiceAccountCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	service_account_id: v.pipe(v.string(), v.trim()),
 });
+export const exactListProjectApiKeysCommandResponseSchema =
+	exactProjectApiKeyListResponseSchema;
+export const listProjectApiKeysCommandResponseSchema =
+	projectApiKeyListResponseSchema;
 export const exactListProjectApiKeysCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 });
@@ -13474,6 +13748,9 @@ export const listProjectApiKeysCommandQuerySchema = v.strictObject({
 	),
 	after: v.optional(v.pipe(v.string(), v.trim())),
 });
+export const exactRetrieveProjectApiKeyCommandResponseSchema =
+	exactProjectApiKeySchema;
+export const retrieveProjectApiKeyCommandResponseSchema = projectApiKeySchema;
 export const exactRetrieveProjectApiKeyCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	key_id: v.string(),
@@ -13482,6 +13759,10 @@ export const retrieveProjectApiKeyCommandParamsSchema = v.strictObject({
 	project_id: v.pipe(v.string(), v.trim()),
 	key_id: v.pipe(v.string(), v.trim()),
 });
+export const exactDeleteProjectApiKeyCommandResponseSchema =
+	exactProjectApiKeyDeleteResponseSchema;
+export const deleteProjectApiKeyCommandResponseSchema =
+	projectApiKeyDeleteResponseSchema;
 export const exactDeleteProjectApiKeyCommandParamsSchema = v.strictObject({
 	project_id: v.string(),
 	key_id: v.string(),

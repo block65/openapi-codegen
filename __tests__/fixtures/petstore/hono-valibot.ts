@@ -4,7 +4,7 @@ import { PublicValibotHonoError } from "@block65/rest-client";
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-09T08:13:11.158Z
+ * Generated on 2026-05-11T04:59:34.108Z
  *
  */
 import { validator } from "hono/validator";
@@ -13,6 +13,7 @@ import {
 	addPetCommandBodySchema,
 	deletePetCommandParamsSchema,
 	findPetByIdCommandParamsSchema,
+	findPetWrappedCommandParamsSchema,
 	findPetsCommandQuerySchema,
 } from "./valibot.js";
 
@@ -48,6 +49,13 @@ export const deletePet = [
 	validator("param", (value) => {
 		return v
 			.parseAsync(deletePetCommandParamsSchema, value)
+			.catch(toPublicValibotHonoError);
+	}),
+] as const;
+export const findPetWrapped = [
+	validator("param", (value) => {
+		return v
+			.parseAsync(findPetWrappedCommandParamsSchema, value)
 			.catch(toPublicValibotHonoError);
 	}),
 ] as const;
