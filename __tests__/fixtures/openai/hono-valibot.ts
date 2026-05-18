@@ -4,7 +4,7 @@ import { PublicValibotHonoError } from "@block65/rest-client";
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:45.230Z
+ * Generated on 2026-05-18T09:27:31.161Z
  *
  */
 import { validator } from "hono/validator";

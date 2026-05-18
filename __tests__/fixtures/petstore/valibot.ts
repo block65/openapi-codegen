@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:57:32.892Z
+ * Generated on 2026-05-18T09:27:25.693Z
  *
  */
 import * as v from "valibot";
@@ -24,22 +24,18 @@ export const newPetSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 	tag: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputPetSchema = v.intersect([
-	inputNewPetSchema,
-	v.strictObject({
-		id: v.bigint(),
-	}),
-]);
-export const petSchema = v.intersect([
-	newPetSchema,
-	v.strictObject({
-		id: v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
-			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
-			v.bigint(),
-		]),
-	}),
-]);
+export const inputPetSchema = v.strictObject({
+	...inputNewPetSchema.entries,
+	id: v.bigint(),
+});
+export const petSchema = v.strictObject({
+	...newPetSchema.entries,
+	id: v.union([
+		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
+		v.bigint(),
+	]),
+});
 export const inputFindPetsCommandResponseSchema = v.array(inputPetSchema);
 export const findPetsCommandResponseSchema = v.array(petSchema);
 export const inputFindPetsCommandQuerySchema = v.strictObject({

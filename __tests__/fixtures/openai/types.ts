@@ -3,10 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:45.230Z
+ * Generated on 2026-05-18T09:27:31.161Z
  *
  */
-import type { Jsonifiable } from "type-fest";
+import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
 
 export type DeleteModelResponse = {
 	id: string;
@@ -3991,10 +3991,16 @@ export type ErrorResponse = {
 };
 export type CreateChatCompletionCommandBody = CreateChatCompletionRequest;
 export type CreateChatCompletionCommandInput = CreateChatCompletionRequest;
+export type InputCreateChatCompletionCommandResponse =
+	UndefinedOnPartialDeep<CreateChatCompletionResponse>;
 export type CreateCompletionCommandBody = CreateCompletionRequest;
 export type CreateCompletionCommandInput = CreateCompletionRequest;
+export type InputCreateCompletionCommandResponse =
+	UndefinedOnPartialDeep<CreateCompletionResponse>;
 export type CreateImageCommandBody = CreateImageRequest;
 export type CreateImageCommandInput = CreateImageRequest;
+export type InputCreateImageCommandResponse =
+	UndefinedOnPartialDeep<ImagesResponse>;
 type CreateImageEditCommandBodyMultipartFormData = NonNullable<
 	RequestInit["body"]
 >;
@@ -4002,6 +4008,8 @@ export type CreateImageEditCommandBodyNonJson = {
 	body: CreateImageEditCommandBodyMultipartFormData;
 };
 export type CreateImageEditCommandInput = CreateImageEditCommandBodyNonJson;
+export type InputCreateImageEditCommandResponse =
+	UndefinedOnPartialDeep<ImagesResponse>;
 type CreateImageVariationCommandBodyMultipartFormData = NonNullable<
 	RequestInit["body"]
 >;
@@ -4010,8 +4018,12 @@ export type CreateImageVariationCommandBodyNonJson = {
 };
 export type CreateImageVariationCommandInput =
 	CreateImageVariationCommandBodyNonJson;
+export type InputCreateImageVariationCommandResponse =
+	UndefinedOnPartialDeep<ImagesResponse>;
 export type CreateEmbeddingCommandBody = CreateEmbeddingRequest;
 export type CreateEmbeddingCommandInput = CreateEmbeddingRequest;
+export type InputCreateEmbeddingCommandResponse =
+	UndefinedOnPartialDeep<CreateEmbeddingResponse>;
 export type CreateSpeechCommandBody = CreateSpeechRequest;
 export type CreateSpeechCommandInput = CreateSpeechRequest;
 type CreateTranscriptionCommandBodyMultipartFormData = NonNullable<
@@ -4025,6 +4037,8 @@ export type CreateTranscriptionCommandInput =
 export type CreateTranscriptionCommandOutput =
 	| CreateTranscriptionResponseJson
 	| CreateTranscriptionResponseVerboseJson;
+export type InputCreateTranscriptionCommandResponse =
+	UndefinedOnPartialDeep<CreateTranscriptionCommandOutput>;
 type CreateTranslationCommandBodyMultipartFormData = NonNullable<
 	RequestInit["body"]
 >;
@@ -4035,30 +4049,42 @@ export type CreateTranslationCommandInput = CreateTranslationCommandBodyNonJson;
 export type CreateTranslationCommandOutput =
 	| CreateTranslationResponseJson
 	| CreateTranslationResponseVerboseJson;
+export type InputCreateTranslationCommandResponse =
+	UndefinedOnPartialDeep<CreateTranslationCommandOutput>;
 export type ListFilesCommandQuery = {
-	purpose?: string | undefined;
+	purpose?: string;
 };
 export type ListFilesCommandInput = ListFilesCommandQuery;
+export type InputListFilesCommandResponse =
+	UndefinedOnPartialDeep<ListFilesResponse>;
 type CreateFileCommandBodyMultipartFormData = NonNullable<RequestInit["body"]>;
 export type CreateFileCommandBodyNonJson = {
 	body: CreateFileCommandBodyMultipartFormData;
 };
 export type CreateFileCommandInput = CreateFileCommandBodyNonJson;
+export type InputCreateFileCommandResponse = UndefinedOnPartialDeep<OpenAiFile>;
 export type DeleteFileCommandParams = {
 	file_id: string;
 };
 export type DeleteFileCommandInput = DeleteFileCommandParams;
+export type InputDeleteFileCommandResponse =
+	UndefinedOnPartialDeep<DeleteFileResponse>;
 export type RetrieveFileCommandParams = {
 	file_id: string;
 };
 export type RetrieveFileCommandInput = RetrieveFileCommandParams;
+export type InputRetrieveFileCommandResponse =
+	UndefinedOnPartialDeep<OpenAiFile>;
 export type DownloadFileCommandParams = {
 	file_id: string;
 };
 export type DownloadFileCommandInput = DownloadFileCommandParams;
 export type DownloadFileCommandOutput = string | undefined;
+export type InputDownloadFileCommandResponse =
+	UndefinedOnPartialDeep<DownloadFileCommandOutput>;
 export type CreateUploadCommandBody = CreateUploadRequest;
 export type CreateUploadCommandInput = CreateUploadRequest;
+export type InputCreateUploadCommandResponse = UndefinedOnPartialDeep<Upload>;
 type AddUploadPartCommandBodyMultipartFormData = NonNullable<
 	RequestInit["body"]
 >;
@@ -4070,45 +4096,59 @@ export type AddUploadPartCommandParams = {
 };
 export type AddUploadPartCommandInput = AddUploadPartCommandBodyNonJson &
 	AddUploadPartCommandParams;
+export type InputAddUploadPartCommandResponse =
+	UndefinedOnPartialDeep<UploadPart>;
 export type CompleteUploadCommandParams = {
 	upload_id: string;
 };
 export type CompleteUploadCommandBody = CompleteUploadRequest;
 export type CompleteUploadCommandInput = CompleteUploadRequest &
 	CompleteUploadCommandParams;
+export type InputCompleteUploadCommandResponse = UndefinedOnPartialDeep<Upload>;
 export type CancelUploadCommandParams = {
 	upload_id: string;
 };
 export type CancelUploadCommandInput = CancelUploadCommandParams;
+export type InputCancelUploadCommandResponse = UndefinedOnPartialDeep<Upload>;
 export type CreateFineTuningJobCommandBody = CreateFineTuningJobRequest;
 export type CreateFineTuningJobCommandInput = CreateFineTuningJobRequest;
+export type InputCreateFineTuningJobCommandResponse =
+	UndefinedOnPartialDeep<FineTuningJob>;
 export type ListPaginatedFineTuningJobsCommandQuery = {
-	after?: string | undefined;
-	limit?: `${number}` | undefined;
+	after?: string;
+	limit?: `${number}`;
 };
 export type ListPaginatedFineTuningJobsCommandInput =
 	ListPaginatedFineTuningJobsCommandQuery;
+export type InputListPaginatedFineTuningJobsCommandResponse =
+	UndefinedOnPartialDeep<ListPaginatedFineTuningJobsResponse>;
 export type RetrieveFineTuningJobCommandParams = {
 	fine_tuning_job_id: string;
 };
 export type RetrieveFineTuningJobCommandInput =
 	RetrieveFineTuningJobCommandParams;
+export type InputRetrieveFineTuningJobCommandResponse =
+	UndefinedOnPartialDeep<FineTuningJob>;
 export type ListFineTuningEventsCommandQuery = {
-	after?: string | undefined;
-	limit?: `${number}` | undefined;
+	after?: string;
+	limit?: `${number}`;
 };
 export type ListFineTuningEventsCommandParams = {
 	fine_tuning_job_id: string;
 };
 export type ListFineTuningEventsCommandInput =
 	ListFineTuningEventsCommandParams & ListFineTuningEventsCommandQuery;
+export type InputListFineTuningEventsCommandResponse =
+	UndefinedOnPartialDeep<ListFineTuningJobEventsResponse>;
 export type CancelFineTuningJobCommandParams = {
 	fine_tuning_job_id: string;
 };
 export type CancelFineTuningJobCommandInput = CancelFineTuningJobCommandParams;
+export type InputCancelFineTuningJobCommandResponse =
+	UndefinedOnPartialDeep<FineTuningJob>;
 export type ListFineTuningJobCheckpointsCommandQuery = {
-	after?: string | undefined;
-	limit?: `${number}` | undefined;
+	after?: string;
+	limit?: `${number}`;
 };
 export type ListFineTuningJobCheckpointsCommandParams = {
 	fine_tuning_job_id: string;
@@ -4116,79 +4156,112 @@ export type ListFineTuningJobCheckpointsCommandParams = {
 export type ListFineTuningJobCheckpointsCommandInput =
 	ListFineTuningJobCheckpointsCommandParams &
 		ListFineTuningJobCheckpointsCommandQuery;
+export type InputListFineTuningJobCheckpointsCommandResponse =
+	UndefinedOnPartialDeep<ListFineTuningJobCheckpointsResponse>;
 export type ListModelsCommandInput = never;
+export type InputListModelsCommandResponse =
+	UndefinedOnPartialDeep<ListModelsResponse>;
 export type RetrieveModelCommandParams = {
 	model: string;
 };
 export type RetrieveModelCommandInput = RetrieveModelCommandParams;
+export type InputRetrieveModelCommandResponse = UndefinedOnPartialDeep<Model>;
 export type DeleteModelCommandParams = {
 	model: string;
 };
 export type DeleteModelCommandInput = DeleteModelCommandParams;
+export type InputDeleteModelCommandResponse =
+	UndefinedOnPartialDeep<DeleteModelResponse>;
 export type CreateModerationCommandBody = CreateModerationRequest;
 export type CreateModerationCommandInput = CreateModerationRequest;
+export type InputCreateModerationCommandResponse =
+	UndefinedOnPartialDeep<CreateModerationResponse>;
 export type ListAssistantsCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
+	after?: string;
+	before?: string;
 };
 export type ListAssistantsCommandInput = ListAssistantsCommandQuery;
+export type InputListAssistantsCommandResponse =
+	UndefinedOnPartialDeep<ListAssistantsResponse>;
 export type CreateAssistantCommandBody = CreateAssistantRequest;
 export type CreateAssistantCommandInput = CreateAssistantRequest;
+export type InputCreateAssistantCommandResponse =
+	UndefinedOnPartialDeep<AssistantObject>;
 export type GetAssistantCommandParams = {
 	assistant_id: string;
 };
 export type GetAssistantCommandInput = GetAssistantCommandParams;
+export type InputGetAssistantCommandResponse =
+	UndefinedOnPartialDeep<AssistantObject>;
 export type ModifyAssistantCommandParams = {
 	assistant_id: string;
 };
 export type ModifyAssistantCommandBody = ModifyAssistantRequest;
 export type ModifyAssistantCommandInput = ModifyAssistantRequest &
 	ModifyAssistantCommandParams;
+export type InputModifyAssistantCommandResponse =
+	UndefinedOnPartialDeep<AssistantObject>;
 export type DeleteAssistantCommandParams = {
 	assistant_id: string;
 };
 export type DeleteAssistantCommandInput = DeleteAssistantCommandParams;
+export type InputDeleteAssistantCommandResponse =
+	UndefinedOnPartialDeep<DeleteAssistantResponse>;
 export type CreateThreadCommandBody = CreateThreadRequest;
 export type CreateThreadCommandInput = CreateThreadRequest;
+export type InputCreateThreadCommandResponse =
+	UndefinedOnPartialDeep<ThreadObject>;
 export type GetThreadCommandParams = {
 	thread_id: string;
 };
 export type GetThreadCommandInput = GetThreadCommandParams;
+export type InputGetThreadCommandResponse =
+	UndefinedOnPartialDeep<ThreadObject>;
 export type ModifyThreadCommandParams = {
 	thread_id: string;
 };
 export type ModifyThreadCommandBody = ModifyThreadRequest;
 export type ModifyThreadCommandInput = ModifyThreadRequest &
 	ModifyThreadCommandParams;
+export type InputModifyThreadCommandResponse =
+	UndefinedOnPartialDeep<ThreadObject>;
 export type DeleteThreadCommandParams = {
 	thread_id: string;
 };
 export type DeleteThreadCommandInput = DeleteThreadCommandParams;
+export type InputDeleteThreadCommandResponse =
+	UndefinedOnPartialDeep<DeleteThreadResponse>;
 export type ListMessagesCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
-	run_id?: string | undefined;
+	after?: string;
+	before?: string;
+	run_id?: string;
 };
 export type ListMessagesCommandParams = {
 	thread_id: string;
 };
 export type ListMessagesCommandInput = ListMessagesCommandParams &
 	ListMessagesCommandQuery;
+export type InputListMessagesCommandResponse =
+	UndefinedOnPartialDeep<ListMessagesResponse>;
 export type CreateMessageCommandParams = {
 	thread_id: string;
 };
 export type CreateMessageCommandBody = CreateMessageRequest;
 export type CreateMessageCommandInput = CreateMessageRequest &
 	CreateMessageCommandParams;
+export type InputCreateMessageCommandResponse =
+	UndefinedOnPartialDeep<MessageObject>;
 export type GetMessageCommandParams = {
 	thread_id: string;
 	message_id: string;
 };
 export type GetMessageCommandInput = GetMessageCommandParams;
+export type InputGetMessageCommandResponse =
+	UndefinedOnPartialDeep<MessageObject>;
 export type ModifyMessageCommandParams = {
 	thread_id: string;
 	message_id: string;
@@ -4196,27 +4269,33 @@ export type ModifyMessageCommandParams = {
 export type ModifyMessageCommandBody = ModifyMessageRequest;
 export type ModifyMessageCommandInput = ModifyMessageRequest &
 	ModifyMessageCommandParams;
+export type InputModifyMessageCommandResponse =
+	UndefinedOnPartialDeep<MessageObject>;
 export type DeleteMessageCommandParams = {
 	thread_id: string;
 	message_id: string;
 };
 export type DeleteMessageCommandInput = DeleteMessageCommandParams;
+export type InputDeleteMessageCommandResponse =
+	UndefinedOnPartialDeep<DeleteMessageResponse>;
 export type CreateThreadAndRunCommandBody = CreateThreadAndRunRequest;
 export type CreateThreadAndRunCommandInput = CreateThreadAndRunRequest;
+export type InputCreateThreadAndRunCommandResponse =
+	UndefinedOnPartialDeep<RunObject>;
 export type ListRunsCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
+	after?: string;
+	before?: string;
 };
 export type ListRunsCommandParams = {
 	thread_id: string;
 };
 export type ListRunsCommandInput = ListRunsCommandParams & ListRunsCommandQuery;
+export type InputListRunsCommandResponse =
+	UndefinedOnPartialDeep<ListRunsResponse>;
 export type CreateRunCommandQuery = {
-	include?:
-		| readonly "step_details.tool_calls[*].file_search.results[*].content"[]
-		| undefined;
+	include?: readonly "step_details.tool_calls[*].file_search.results[*].content"[];
 };
 export type CreateRunCommandParams = {
 	thread_id: string;
@@ -4225,17 +4304,20 @@ export type CreateRunCommandBody = CreateRunRequest;
 export type CreateRunCommandInput = CreateRunRequest &
 	CreateRunCommandParams &
 	CreateRunCommandQuery;
+export type InputCreateRunCommandResponse = UndefinedOnPartialDeep<RunObject>;
 export type GetRunCommandParams = {
 	thread_id: string;
 	run_id: string;
 };
 export type GetRunCommandInput = GetRunCommandParams;
+export type InputGetRunCommandResponse = UndefinedOnPartialDeep<RunObject>;
 export type ModifyRunCommandParams = {
 	thread_id: string;
 	run_id: string;
 };
 export type ModifyRunCommandBody = ModifyRunRequest;
 export type ModifyRunCommandInput = ModifyRunRequest & ModifyRunCommandParams;
+export type InputModifyRunCommandResponse = UndefinedOnPartialDeep<RunObject>;
 export type SubmitToolOuputsToRunCommandParams = {
 	thread_id: string;
 	run_id: string;
@@ -4243,19 +4325,20 @@ export type SubmitToolOuputsToRunCommandParams = {
 export type SubmitToolOuputsToRunCommandBody = SubmitToolOutputsRunRequest;
 export type SubmitToolOuputsToRunCommandInput = SubmitToolOutputsRunRequest &
 	SubmitToolOuputsToRunCommandParams;
+export type InputSubmitToolOuputsToRunCommandResponse =
+	UndefinedOnPartialDeep<RunObject>;
 export type CancelRunCommandParams = {
 	thread_id: string;
 	run_id: string;
 };
 export type CancelRunCommandInput = CancelRunCommandParams;
+export type InputCancelRunCommandResponse = UndefinedOnPartialDeep<RunObject>;
 export type ListRunStepsCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
-	include?:
-		| readonly "step_details.tool_calls[*].file_search.results[*].content"[]
-		| undefined;
+	after?: string;
+	before?: string;
+	include?: readonly "step_details.tool_calls[*].file_search.results[*].content"[];
 };
 export type ListRunStepsCommandParams = {
 	thread_id: string;
@@ -4263,10 +4346,10 @@ export type ListRunStepsCommandParams = {
 };
 export type ListRunStepsCommandInput = ListRunStepsCommandParams &
 	ListRunStepsCommandQuery;
+export type InputListRunStepsCommandResponse =
+	UndefinedOnPartialDeep<ListRunStepsResponse>;
 export type GetRunStepCommandQuery = {
-	include?:
-		| readonly "step_details.tool_calls[*].file_search.results[*].content"[]
-		| undefined;
+	include?: readonly "step_details.tool_calls[*].file_search.results[*].content"[];
 };
 export type GetRunStepCommandParams = {
 	thread_id: string;
@@ -4275,34 +4358,46 @@ export type GetRunStepCommandParams = {
 };
 export type GetRunStepCommandInput = GetRunStepCommandParams &
 	GetRunStepCommandQuery;
+export type InputGetRunStepCommandResponse =
+	UndefinedOnPartialDeep<RunStepObject>;
 export type ListVectorStoresCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
+	after?: string;
+	before?: string;
 };
 export type ListVectorStoresCommandInput = ListVectorStoresCommandQuery;
+export type InputListVectorStoresCommandResponse =
+	UndefinedOnPartialDeep<ListVectorStoresResponse>;
 export type CreateVectorStoreCommandBody = CreateVectorStoreRequest;
 export type CreateVectorStoreCommandInput = CreateVectorStoreRequest;
+export type InputCreateVectorStoreCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreObject>;
 export type GetVectorStoreCommandParams = {
 	vector_store_id: string;
 };
 export type GetVectorStoreCommandInput = GetVectorStoreCommandParams;
+export type InputGetVectorStoreCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreObject>;
 export type ModifyVectorStoreCommandParams = {
 	vector_store_id: string;
 };
 export type ModifyVectorStoreCommandBody = UpdateVectorStoreRequest;
 export type ModifyVectorStoreCommandInput = UpdateVectorStoreRequest &
 	ModifyVectorStoreCommandParams;
+export type InputModifyVectorStoreCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreObject>;
 export type DeleteVectorStoreCommandParams = {
 	vector_store_id: string;
 };
 export type DeleteVectorStoreCommandInput = DeleteVectorStoreCommandParams;
+export type InputDeleteVectorStoreCommandResponse =
+	UndefinedOnPartialDeep<DeleteVectorStoreResponse>;
 export type ListVectorStoreFilesCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
+	after?: string;
+	before?: string;
 	filter?: "in_progress" | "completed" | "failed" | "cancelled";
 };
 export type ListVectorStoreFilesCommandParams = {
@@ -4310,23 +4405,31 @@ export type ListVectorStoreFilesCommandParams = {
 };
 export type ListVectorStoreFilesCommandInput =
 	ListVectorStoreFilesCommandParams & ListVectorStoreFilesCommandQuery;
+export type InputListVectorStoreFilesCommandResponse =
+	UndefinedOnPartialDeep<ListVectorStoreFilesResponse>;
 export type CreateVectorStoreFileCommandParams = {
 	vector_store_id: string;
 };
 export type CreateVectorStoreFileCommandBody = CreateVectorStoreFileRequest;
 export type CreateVectorStoreFileCommandInput = CreateVectorStoreFileRequest &
 	CreateVectorStoreFileCommandParams;
+export type InputCreateVectorStoreFileCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreFileObject>;
 export type GetVectorStoreFileCommandParams = {
 	vector_store_id: string;
 	file_id: string;
 };
 export type GetVectorStoreFileCommandInput = GetVectorStoreFileCommandParams;
+export type InputGetVectorStoreFileCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreFileObject>;
 export type DeleteVectorStoreFileCommandParams = {
 	vector_store_id: string;
 	file_id: string;
 };
 export type DeleteVectorStoreFileCommandInput =
 	DeleteVectorStoreFileCommandParams;
+export type InputDeleteVectorStoreFileCommandResponse =
+	UndefinedOnPartialDeep<DeleteVectorStoreFileResponse>;
 export type CreateVectorStoreFileBatchCommandParams = {
 	vector_store_id: string;
 };
@@ -4334,23 +4437,29 @@ export type CreateVectorStoreFileBatchCommandBody =
 	CreateVectorStoreFileBatchRequest;
 export type CreateVectorStoreFileBatchCommandInput =
 	CreateVectorStoreFileBatchRequest & CreateVectorStoreFileBatchCommandParams;
+export type InputCreateVectorStoreFileBatchCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreFileBatchObject>;
 export type GetVectorStoreFileBatchCommandParams = {
 	vector_store_id: string;
 	batch_id: string;
 };
 export type GetVectorStoreFileBatchCommandInput =
 	GetVectorStoreFileBatchCommandParams;
+export type InputGetVectorStoreFileBatchCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreFileBatchObject>;
 export type CancelVectorStoreFileBatchCommandParams = {
 	vector_store_id: string;
 	batch_id: string;
 };
 export type CancelVectorStoreFileBatchCommandInput =
 	CancelVectorStoreFileBatchCommandParams;
+export type InputCancelVectorStoreFileBatchCommandResponse =
+	UndefinedOnPartialDeep<VectorStoreFileBatchObject>;
 export type ListFilesInVectorStoreBatchCommandQuery = {
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	order?: "asc" | "desc";
-	after?: string | undefined;
-	before?: string | undefined;
+	after?: string;
+	before?: string;
 	filter?: "in_progress" | "completed" | "failed" | "cancelled";
 };
 export type ListFilesInVectorStoreBatchCommandParams = {
@@ -4360,6 +4469,8 @@ export type ListFilesInVectorStoreBatchCommandParams = {
 export type ListFilesInVectorStoreBatchCommandInput =
 	ListFilesInVectorStoreBatchCommandParams &
 		ListFilesInVectorStoreBatchCommandQuery;
+export type InputListFilesInVectorStoreBatchCommandResponse =
+	UndefinedOnPartialDeep<ListVectorStoreFilesResponse>;
 type createBatchJsonBody = {
 	input_file_id: string;
 	/**
@@ -4383,19 +4494,24 @@ type createBatchJsonBody = {
 };
 export type CreateBatchCommandBody = createBatchJsonBody;
 export type CreateBatchCommandInput = createBatchJsonBody;
+export type InputCreateBatchCommandResponse = UndefinedOnPartialDeep<Batch>;
 export type ListBatchesCommandQuery = {
-	after?: string | undefined;
-	limit?: `${number}` | undefined;
+	after?: string;
+	limit?: `${number}`;
 };
 export type ListBatchesCommandInput = ListBatchesCommandQuery;
+export type InputListBatchesCommandResponse =
+	UndefinedOnPartialDeep<ListBatchesResponse>;
 export type RetrieveBatchCommandParams = {
 	batch_id: string;
 };
 export type RetrieveBatchCommandInput = RetrieveBatchCommandParams;
+export type InputRetrieveBatchCommandResponse = UndefinedOnPartialDeep<Batch>;
 export type CancelBatchCommandParams = {
 	batch_id: string;
 };
 export type CancelBatchCommandInput = CancelBatchCommandParams;
+export type InputCancelBatchCommandResponse = UndefinedOnPartialDeep<Batch>;
 export type ListAuditLogsCommandQuery = {
 	effective_at?: {
 		gt?: number;
@@ -4403,92 +4519,120 @@ export type ListAuditLogsCommandQuery = {
 		lt?: number;
 		lte?: number;
 	};
-	project_ids?: readonly string[] | undefined;
-	event_types?: readonly AuditLogEventType[] | undefined;
-	actor_ids?: readonly string[] | undefined;
-	actor_emails?: readonly string[] | undefined;
-	resource_ids?: readonly string[] | undefined;
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
-	before?: string | undefined;
+	project_ids?: readonly string[];
+	event_types?: readonly AuditLogEventType[];
+	actor_ids?: readonly string[];
+	actor_emails?: readonly string[];
+	resource_ids?: readonly string[];
+	limit?: `${number}`;
+	after?: string;
+	before?: string;
 };
 export type ListAuditLogsCommandInput = ListAuditLogsCommandQuery;
+export type InputListAuditLogsCommandResponse =
+	UndefinedOnPartialDeep<ListAuditLogsResponse>;
 export type ListInvitesCommandQuery = {
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
+	limit?: `${number}`;
+	after?: string;
 };
 export type ListInvitesCommandInput = ListInvitesCommandQuery;
+export type InputListInvitesCommandResponse =
+	UndefinedOnPartialDeep<InviteListResponse>;
 export type InviteUserCommandBody = InviteRequest;
 export type InviteUserCommandInput = InviteRequest;
+export type InputInviteUserCommandResponse = UndefinedOnPartialDeep<Invite>;
 export type RetrieveInviteCommandParams = {
 	invite_id: string;
 };
 export type RetrieveInviteCommandInput = RetrieveInviteCommandParams;
+export type InputRetrieveInviteCommandResponse = UndefinedOnPartialDeep<Invite>;
 export type DeleteInviteCommandParams = {
 	invite_id: string;
 };
 export type DeleteInviteCommandInput = DeleteInviteCommandParams;
+export type InputDeleteInviteCommandResponse =
+	UndefinedOnPartialDeep<InviteDeleteResponse>;
 export type ListUsersCommandQuery = {
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
+	limit?: `${number}`;
+	after?: string;
 };
 export type ListUsersCommandInput = ListUsersCommandQuery;
+export type InputListUsersCommandResponse =
+	UndefinedOnPartialDeep<UserListResponse>;
 export type RetrieveUserCommandParams = {
 	user_id: string;
 };
 export type RetrieveUserCommandInput = RetrieveUserCommandParams;
+export type InputRetrieveUserCommandResponse = UndefinedOnPartialDeep<User>;
 export type ModifyUserCommandParams = {
 	user_id: string;
 };
 export type ModifyUserCommandBody = UserRoleUpdateRequest;
 export type ModifyUserCommandInput = UserRoleUpdateRequest &
 	ModifyUserCommandParams;
+export type InputModifyUserCommandResponse = UndefinedOnPartialDeep<User>;
 export type DeleteUserCommandParams = {
 	user_id: string;
 };
 export type DeleteUserCommandInput = DeleteUserCommandParams;
+export type InputDeleteUserCommandResponse =
+	UndefinedOnPartialDeep<UserDeleteResponse>;
 export type ListProjectsCommandQuery = {
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
+	limit?: `${number}`;
+	after?: string;
 	include_archived?: "true" | "false";
 };
 export type ListProjectsCommandInput = ListProjectsCommandQuery;
+export type InputListProjectsCommandResponse =
+	UndefinedOnPartialDeep<ProjectListResponse>;
 export type CreateProjectCommandBody = ProjectCreateRequest;
 export type CreateProjectCommandInput = ProjectCreateRequest;
+export type InputCreateProjectCommandResponse = UndefinedOnPartialDeep<Project>;
 export type RetrieveProjectCommandParams = {
 	project_id: string;
 };
 export type RetrieveProjectCommandInput = RetrieveProjectCommandParams;
+export type InputRetrieveProjectCommandResponse =
+	UndefinedOnPartialDeep<Project>;
 export type ModifyProjectCommandParams = {
 	project_id: string;
 };
 export type ModifyProjectCommandBody = ProjectUpdateRequest;
 export type ModifyProjectCommandInput = ProjectUpdateRequest &
 	ModifyProjectCommandParams;
+export type InputModifyProjectCommandResponse = UndefinedOnPartialDeep<Project>;
 export type ArchiveProjectCommandParams = {
 	project_id: string;
 };
 export type ArchiveProjectCommandInput = ArchiveProjectCommandParams;
+export type InputArchiveProjectCommandResponse =
+	UndefinedOnPartialDeep<Project>;
 export type ListProjectUsersCommandQuery = {
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
+	limit?: `${number}`;
+	after?: string;
 };
 export type ListProjectUsersCommandParams = {
 	project_id: string;
 };
 export type ListProjectUsersCommandInput = ListProjectUsersCommandParams &
 	ListProjectUsersCommandQuery;
+export type InputListProjectUsersCommandResponse =
+	UndefinedOnPartialDeep<ProjectUserListResponse>;
 export type CreateProjectUserCommandParams = {
 	project_id: string;
 };
 export type CreateProjectUserCommandBody = ProjectUserCreateRequest;
 export type CreateProjectUserCommandInput = ProjectUserCreateRequest &
 	CreateProjectUserCommandParams;
+export type InputCreateProjectUserCommandResponse =
+	UndefinedOnPartialDeep<ProjectUser>;
 export type RetrieveProjectUserCommandParams = {
 	project_id: string;
 	user_id: string;
 };
 export type RetrieveProjectUserCommandInput = RetrieveProjectUserCommandParams;
+export type InputRetrieveProjectUserCommandResponse =
+	UndefinedOnPartialDeep<ProjectUser>;
 export type ModifyProjectUserCommandParams = {
 	project_id: string;
 	user_id: string;
@@ -4496,14 +4640,18 @@ export type ModifyProjectUserCommandParams = {
 export type ModifyProjectUserCommandBody = ProjectUserUpdateRequest;
 export type ModifyProjectUserCommandInput = ProjectUserUpdateRequest &
 	ModifyProjectUserCommandParams;
+export type InputModifyProjectUserCommandResponse =
+	UndefinedOnPartialDeep<ProjectUser>;
 export type DeleteProjectUserCommandParams = {
 	project_id: string;
 	user_id: string;
 };
 export type DeleteProjectUserCommandInput = DeleteProjectUserCommandParams;
+export type InputDeleteProjectUserCommandResponse =
+	UndefinedOnPartialDeep<ProjectUserDeleteResponse>;
 export type ListProjectServiceAccountsCommandQuery = {
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
+	limit?: `${number}`;
+	after?: string;
 };
 export type ListProjectServiceAccountsCommandParams = {
 	project_id: string;
@@ -4511,6 +4659,8 @@ export type ListProjectServiceAccountsCommandParams = {
 export type ListProjectServiceAccountsCommandInput =
 	ListProjectServiceAccountsCommandParams &
 		ListProjectServiceAccountsCommandQuery;
+export type InputListProjectServiceAccountsCommandResponse =
+	UndefinedOnPartialDeep<ProjectServiceAccountListResponse>;
 export type CreateProjectServiceAccountCommandParams = {
 	project_id: string;
 };
@@ -4518,35 +4668,47 @@ export type CreateProjectServiceAccountCommandBody =
 	ProjectServiceAccountCreateRequest;
 export type CreateProjectServiceAccountCommandInput =
 	ProjectServiceAccountCreateRequest & CreateProjectServiceAccountCommandParams;
+export type InputCreateProjectServiceAccountCommandResponse =
+	UndefinedOnPartialDeep<ProjectServiceAccountCreateResponse>;
 export type RetrieveProjectServiceAccountCommandParams = {
 	project_id: string;
 	service_account_id: string;
 };
 export type RetrieveProjectServiceAccountCommandInput =
 	RetrieveProjectServiceAccountCommandParams;
+export type InputRetrieveProjectServiceAccountCommandResponse =
+	UndefinedOnPartialDeep<ProjectServiceAccount>;
 export type DeleteProjectServiceAccountCommandParams = {
 	project_id: string;
 	service_account_id: string;
 };
 export type DeleteProjectServiceAccountCommandInput =
 	DeleteProjectServiceAccountCommandParams;
+export type InputDeleteProjectServiceAccountCommandResponse =
+	UndefinedOnPartialDeep<ProjectServiceAccountDeleteResponse>;
 export type ListProjectApiKeysCommandQuery = {
-	limit?: `${number}` | undefined;
-	after?: string | undefined;
+	limit?: `${number}`;
+	after?: string;
 };
 export type ListProjectApiKeysCommandParams = {
 	project_id: string;
 };
 export type ListProjectApiKeysCommandInput = ListProjectApiKeysCommandParams &
 	ListProjectApiKeysCommandQuery;
+export type InputListProjectApiKeysCommandResponse =
+	UndefinedOnPartialDeep<ProjectApiKeyListResponse>;
 export type RetrieveProjectApiKeyCommandParams = {
 	project_id: string;
 	key_id: string;
 };
 export type RetrieveProjectApiKeyCommandInput =
 	RetrieveProjectApiKeyCommandParams;
+export type InputRetrieveProjectApiKeyCommandResponse =
+	UndefinedOnPartialDeep<ProjectApiKey>;
 export type DeleteProjectApiKeyCommandParams = {
 	project_id: string;
 	key_id: string;
 };
 export type DeleteProjectApiKeyCommandInput = DeleteProjectApiKeyCommandParams;
+export type InputDeleteProjectApiKeyCommandResponse =
+	UndefinedOnPartialDeep<ProjectApiKeyDeleteResponse>;

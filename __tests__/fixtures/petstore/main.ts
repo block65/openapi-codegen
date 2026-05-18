@@ -3,29 +3,30 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:57:32.892Z
+ * Generated on 2026-05-18T09:27:25.693Z
  *
  */
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,
 } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	AddPetCommandInput,
 	DeletePetCommandInput,
 	FindPetByIdCommandInput,
-	FindPetsCommandInput,
 	FindPetWrappedCommandInput,
 	FindPetWrappedCommandOutput,
+	FindPetsCommandInput,
 	Pet,
 } from "./types.js";
 
 type AllInputs =
-	| AddPetCommandInput
-	| DeletePetCommandInput
-	| FindPetByIdCommandInput
-	| FindPetsCommandInput
-	| FindPetWrappedCommandInput;
+	| UndefinedOnPartialDeep<AddPetCommandInput>
+	| UndefinedOnPartialDeep<DeletePetCommandInput>
+	| UndefinedOnPartialDeep<FindPetByIdCommandInput>
+	| UndefinedOnPartialDeep<FindPetsCommandInput>
+	| UndefinedOnPartialDeep<FindPetWrappedCommandInput>;
 type AllOutputs = FindPetWrappedCommandOutput | Pet | Pet[] | undefined;
 
 export class SwaggerPetstoreRestClient extends RestServiceClient<

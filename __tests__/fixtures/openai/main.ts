@@ -3,19 +3,19 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:45.230Z
+ * Generated on 2026-05-18T09:27:31.161Z
  *
  */
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,
 } from "@block65/rest-client";
+import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
 	AddUploadPartCommandInput,
 	ArchiveProjectCommandInput,
 	AssistantObject,
 	Batch,
-	BatchRequestInput,
 	CancelBatchCommandInput,
 	CancelFineTuningJobCommandInput,
 	CancelRunCommandInput,
@@ -74,8 +74,6 @@ import type {
 	DeleteVectorStoreResponse,
 	DownloadFileCommandInput,
 	DownloadFileCommandOutput,
-	FinetuneChatRequestInput,
-	FinetuneCompletionRequestInput,
 	FineTuningJob,
 	GetAssistantCommandInput,
 	GetMessageCommandInput,
@@ -111,13 +109,13 @@ import type {
 	ListPaginatedFineTuningJobsCommandInput,
 	ListPaginatedFineTuningJobsResponse,
 	ListProjectApiKeysCommandInput,
-	ListProjectsCommandInput,
 	ListProjectServiceAccountsCommandInput,
 	ListProjectUsersCommandInput,
-	ListRunsCommandInput,
-	ListRunsResponse,
+	ListProjectsCommandInput,
 	ListRunStepsCommandInput,
 	ListRunStepsResponse,
+	ListRunsCommandInput,
+	ListRunsResponse,
 	ListUsersCommandInput,
 	ListVectorStoreFilesCommandInput,
 	ListVectorStoreFilesResponse,
@@ -171,103 +169,106 @@ import type {
 } from "./types.js";
 
 type AllInputs =
-	| AddUploadPartCommandInput
-	| ArchiveProjectCommandInput
-	| BatchRequestInput
-	| CancelBatchCommandInput
-	| CancelFineTuningJobCommandInput
-	| CancelRunCommandInput
-	| CancelUploadCommandInput
-	| CancelVectorStoreFileBatchCommandInput
-	| CompleteUploadCommandInput
-	| CreateAssistantCommandInput
-	| CreateBatchCommandInput
-	| CreateChatCompletionCommandInput
-	| CreateCompletionCommandInput
-	| CreateEmbeddingCommandInput
-	| CreateFileCommandInput
-	| CreateFineTuningJobCommandInput
-	| CreateImageCommandInput
-	| CreateImageEditCommandInput
-	| CreateImageVariationCommandInput
-	| CreateMessageCommandInput
-	| CreateModerationCommandInput
-	| CreateProjectCommandInput
-	| CreateProjectServiceAccountCommandInput
-	| CreateProjectUserCommandInput
-	| CreateRunCommandInput
-	| CreateSpeechCommandInput
-	| CreateThreadAndRunCommandInput
-	| CreateThreadCommandInput
-	| CreateTranscriptionCommandInput
-	| CreateTranslationCommandInput
-	| CreateUploadCommandInput
-	| CreateVectorStoreCommandInput
-	| CreateVectorStoreFileBatchCommandInput
-	| CreateVectorStoreFileCommandInput
-	| DeleteAssistantCommandInput
-	| DeleteFileCommandInput
-	| DeleteInviteCommandInput
-	| DeleteMessageCommandInput
-	| DeleteModelCommandInput
-	| DeleteProjectApiKeyCommandInput
-	| DeleteProjectServiceAccountCommandInput
-	| DeleteProjectUserCommandInput
-	| DeleteThreadCommandInput
-	| DeleteUserCommandInput
-	| DeleteVectorStoreCommandInput
-	| DeleteVectorStoreFileCommandInput
-	| DownloadFileCommandInput
-	| FinetuneChatRequestInput
-	| FinetuneCompletionRequestInput
-	| GetAssistantCommandInput
-	| GetMessageCommandInput
-	| GetRunCommandInput
-	| GetRunStepCommandInput
-	| GetThreadCommandInput
-	| GetVectorStoreCommandInput
-	| GetVectorStoreFileBatchCommandInput
-	| GetVectorStoreFileCommandInput
-	| InviteUserCommandInput
-	| ListAssistantsCommandInput
-	| ListAuditLogsCommandInput
-	| ListBatchesCommandInput
-	| ListFilesCommandInput
-	| ListFilesInVectorStoreBatchCommandInput
-	| ListFineTuningEventsCommandInput
-	| ListFineTuningJobCheckpointsCommandInput
-	| ListInvitesCommandInput
-	| ListMessagesCommandInput
-	| ListModelsCommandInput
-	| ListPaginatedFineTuningJobsCommandInput
-	| ListProjectApiKeysCommandInput
-	| ListProjectsCommandInput
-	| ListProjectServiceAccountsCommandInput
-	| ListProjectUsersCommandInput
-	| ListRunsCommandInput
-	| ListRunStepsCommandInput
-	| ListUsersCommandInput
-	| ListVectorStoreFilesCommandInput
-	| ListVectorStoresCommandInput
-	| ModifyAssistantCommandInput
-	| ModifyMessageCommandInput
-	| ModifyProjectCommandInput
-	| ModifyProjectUserCommandInput
-	| ModifyRunCommandInput
-	| ModifyThreadCommandInput
-	| ModifyUserCommandInput
-	| ModifyVectorStoreCommandInput
-	| RetrieveBatchCommandInput
-	| RetrieveFileCommandInput
-	| RetrieveFineTuningJobCommandInput
-	| RetrieveInviteCommandInput
-	| RetrieveModelCommandInput
-	| RetrieveProjectApiKeyCommandInput
-	| RetrieveProjectCommandInput
-	| RetrieveProjectServiceAccountCommandInput
-	| RetrieveProjectUserCommandInput
-	| RetrieveUserCommandInput
-	| SubmitToolOuputsToRunCommandInput;
+	| UndefinedOnPartialDeep<ArchiveProjectCommandInput>
+	| UndefinedOnPartialDeep<CancelBatchCommandInput>
+	| UndefinedOnPartialDeep<CancelFineTuningJobCommandInput>
+	| UndefinedOnPartialDeep<CancelRunCommandInput>
+	| UndefinedOnPartialDeep<CancelUploadCommandInput>
+	| UndefinedOnPartialDeep<CancelVectorStoreFileBatchCommandInput>
+	| UndefinedOnPartialDeep<CompleteUploadCommandInput>
+	| UndefinedOnPartialDeep<CreateAssistantCommandInput>
+	| UndefinedOnPartialDeep<CreateBatchCommandInput>
+	| UndefinedOnPartialDeep<CreateChatCompletionCommandInput>
+	| UndefinedOnPartialDeep<CreateCompletionCommandInput>
+	| UndefinedOnPartialDeep<CreateEmbeddingCommandInput>
+	| UndefinedOnPartialDeep<CreateFineTuningJobCommandInput>
+	| UndefinedOnPartialDeep<CreateImageCommandInput>
+	| UndefinedOnPartialDeep<CreateMessageCommandInput>
+	| UndefinedOnPartialDeep<CreateModerationCommandInput>
+	| UndefinedOnPartialDeep<CreateProjectCommandInput>
+	| UndefinedOnPartialDeep<CreateProjectServiceAccountCommandInput>
+	| UndefinedOnPartialDeep<CreateProjectUserCommandInput>
+	| UndefinedOnPartialDeep<CreateRunCommandInput>
+	| UndefinedOnPartialDeep<CreateSpeechCommandInput>
+	| UndefinedOnPartialDeep<CreateThreadAndRunCommandInput>
+	| UndefinedOnPartialDeep<CreateThreadCommandInput>
+	| UndefinedOnPartialDeep<CreateUploadCommandInput>
+	| UndefinedOnPartialDeep<CreateVectorStoreCommandInput>
+	| UndefinedOnPartialDeep<CreateVectorStoreFileBatchCommandInput>
+	| UndefinedOnPartialDeep<CreateVectorStoreFileCommandInput>
+	| UndefinedOnPartialDeep<DeleteAssistantCommandInput>
+	| UndefinedOnPartialDeep<DeleteFileCommandInput>
+	| UndefinedOnPartialDeep<DeleteInviteCommandInput>
+	| UndefinedOnPartialDeep<DeleteMessageCommandInput>
+	| UndefinedOnPartialDeep<DeleteModelCommandInput>
+	| UndefinedOnPartialDeep<DeleteProjectApiKeyCommandInput>
+	| UndefinedOnPartialDeep<DeleteProjectServiceAccountCommandInput>
+	| UndefinedOnPartialDeep<DeleteProjectUserCommandInput>
+	| UndefinedOnPartialDeep<DeleteThreadCommandInput>
+	| UndefinedOnPartialDeep<DeleteUserCommandInput>
+	| UndefinedOnPartialDeep<DeleteVectorStoreCommandInput>
+	| UndefinedOnPartialDeep<DeleteVectorStoreFileCommandInput>
+	| UndefinedOnPartialDeep<DownloadFileCommandInput>
+	| (UndefinedOnPartialDeep<Except<AddUploadPartCommandInput, "body">> &
+			Pick<AddUploadPartCommandInput, "body">)
+	| (UndefinedOnPartialDeep<Except<CreateFileCommandInput, "body">> &
+			Pick<CreateFileCommandInput, "body">)
+	| (UndefinedOnPartialDeep<Except<CreateImageEditCommandInput, "body">> &
+			Pick<CreateImageEditCommandInput, "body">)
+	| (UndefinedOnPartialDeep<Except<CreateImageVariationCommandInput, "body">> &
+			Pick<CreateImageVariationCommandInput, "body">)
+	| (UndefinedOnPartialDeep<Except<CreateTranscriptionCommandInput, "body">> &
+			Pick<CreateTranscriptionCommandInput, "body">)
+	| (UndefinedOnPartialDeep<Except<CreateTranslationCommandInput, "body">> &
+			Pick<CreateTranslationCommandInput, "body">)
+	| UndefinedOnPartialDeep<GetAssistantCommandInput>
+	| UndefinedOnPartialDeep<GetMessageCommandInput>
+	| UndefinedOnPartialDeep<GetRunCommandInput>
+	| UndefinedOnPartialDeep<GetRunStepCommandInput>
+	| UndefinedOnPartialDeep<GetThreadCommandInput>
+	| UndefinedOnPartialDeep<GetVectorStoreCommandInput>
+	| UndefinedOnPartialDeep<GetVectorStoreFileBatchCommandInput>
+	| UndefinedOnPartialDeep<GetVectorStoreFileCommandInput>
+	| UndefinedOnPartialDeep<InviteUserCommandInput>
+	| UndefinedOnPartialDeep<ListAssistantsCommandInput>
+	| UndefinedOnPartialDeep<ListAuditLogsCommandInput>
+	| UndefinedOnPartialDeep<ListBatchesCommandInput>
+	| UndefinedOnPartialDeep<ListFilesCommandInput>
+	| UndefinedOnPartialDeep<ListFilesInVectorStoreBatchCommandInput>
+	| UndefinedOnPartialDeep<ListFineTuningEventsCommandInput>
+	| UndefinedOnPartialDeep<ListFineTuningJobCheckpointsCommandInput>
+	| UndefinedOnPartialDeep<ListInvitesCommandInput>
+	| UndefinedOnPartialDeep<ListMessagesCommandInput>
+	| UndefinedOnPartialDeep<ListModelsCommandInput>
+	| UndefinedOnPartialDeep<ListPaginatedFineTuningJobsCommandInput>
+	| UndefinedOnPartialDeep<ListProjectApiKeysCommandInput>
+	| UndefinedOnPartialDeep<ListProjectsCommandInput>
+	| UndefinedOnPartialDeep<ListProjectServiceAccountsCommandInput>
+	| UndefinedOnPartialDeep<ListProjectUsersCommandInput>
+	| UndefinedOnPartialDeep<ListRunsCommandInput>
+	| UndefinedOnPartialDeep<ListRunStepsCommandInput>
+	| UndefinedOnPartialDeep<ListUsersCommandInput>
+	| UndefinedOnPartialDeep<ListVectorStoreFilesCommandInput>
+	| UndefinedOnPartialDeep<ListVectorStoresCommandInput>
+	| UndefinedOnPartialDeep<ModifyAssistantCommandInput>
+	| UndefinedOnPartialDeep<ModifyMessageCommandInput>
+	| UndefinedOnPartialDeep<ModifyProjectCommandInput>
+	| UndefinedOnPartialDeep<ModifyProjectUserCommandInput>
+	| UndefinedOnPartialDeep<ModifyRunCommandInput>
+	| UndefinedOnPartialDeep<ModifyThreadCommandInput>
+	| UndefinedOnPartialDeep<ModifyUserCommandInput>
+	| UndefinedOnPartialDeep<ModifyVectorStoreCommandInput>
+	| UndefinedOnPartialDeep<RetrieveBatchCommandInput>
+	| UndefinedOnPartialDeep<RetrieveFileCommandInput>
+	| UndefinedOnPartialDeep<RetrieveFineTuningJobCommandInput>
+	| UndefinedOnPartialDeep<RetrieveInviteCommandInput>
+	| UndefinedOnPartialDeep<RetrieveModelCommandInput>
+	| UndefinedOnPartialDeep<RetrieveProjectApiKeyCommandInput>
+	| UndefinedOnPartialDeep<RetrieveProjectCommandInput>
+	| UndefinedOnPartialDeep<RetrieveProjectServiceAccountCommandInput>
+	| UndefinedOnPartialDeep<RetrieveProjectUserCommandInput>
+	| UndefinedOnPartialDeep<RetrieveUserCommandInput>
+	| UndefinedOnPartialDeep<SubmitToolOuputsToRunCommandInput>;
 type AllOutputs =
 	| AssistantObject
 	| Batch

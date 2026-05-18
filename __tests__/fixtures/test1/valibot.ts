@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:41.762Z
+ * Generated on 2026-05-18T09:27:27.836Z
  *
  */
 import * as v from "valibot";
@@ -95,32 +95,28 @@ export const inputBillingSubscriptionIdentifiersSchema = v.strictObject({
 });
 export const billingSubscriptionIdentifiersSchema =
 	inputBillingSubscriptionIdentifiersSchema;
-export const inputBillingSubscriptionSchema = v.intersect([
-	inputBillingSubscriptionIdentifiersSchema,
-	v.strictObject({
-		accountId: v.optional(inputIdSchema),
-		planSku: inputPlanSkuSchema,
-		interval: inputBillingSubscriptionIntervalSchema,
-		status: inputBillingSubscriptionStatusSchema,
-		cycleTime: inputDateTimeSchema,
-		trialEndTime: v.optional(inputDateTimeSchema),
-		createdTime: inputDateTimeSchema,
-		updatedTime: v.optional(inputDateTimeSchema),
-	}),
-]);
-export const billingSubscriptionSchema = v.intersect([
-	billingSubscriptionIdentifiersSchema,
-	v.strictObject({
-		accountId: v.exactOptional(idSchema),
-		planSku: planSkuSchema,
-		interval: billingSubscriptionIntervalSchema,
-		status: billingSubscriptionStatusSchema,
-		cycleTime: dateTimeSchema,
-		trialEndTime: v.exactOptional(dateTimeSchema),
-		createdTime: dateTimeSchema,
-		updatedTime: v.exactOptional(dateTimeSchema),
-	}),
-]);
+export const inputBillingSubscriptionSchema = v.strictObject({
+	...inputBillingSubscriptionIdentifiersSchema.entries,
+	accountId: v.optional(inputIdSchema),
+	planSku: inputPlanSkuSchema,
+	interval: inputBillingSubscriptionIntervalSchema,
+	status: inputBillingSubscriptionStatusSchema,
+	cycleTime: inputDateTimeSchema,
+	trialEndTime: v.optional(inputDateTimeSchema),
+	createdTime: inputDateTimeSchema,
+	updatedTime: v.optional(inputDateTimeSchema),
+});
+export const billingSubscriptionSchema = v.strictObject({
+	...billingSubscriptionIdentifiersSchema.entries,
+	accountId: v.exactOptional(idSchema),
+	planSku: planSkuSchema,
+	interval: billingSubscriptionIntervalSchema,
+	status: billingSubscriptionStatusSchema,
+	cycleTime: dateTimeSchema,
+	trialEndTime: v.exactOptional(dateTimeSchema),
+	createdTime: dateTimeSchema,
+	updatedTime: v.exactOptional(dateTimeSchema),
+});
 export const inputBillingSubscriptionsSchema = v.array(
 	inputBillingSubscriptionSchema,
 );
@@ -229,24 +225,20 @@ export const inputPaymentMethodIdentifiersSchema = v.strictObject({
 });
 export const paymentMethodIdentifiersSchema =
 	inputPaymentMethodIdentifiersSchema;
-export const inputPaymentMethodSchema = v.intersect([
-	inputPaymentMethodIdentifiersSchema,
-	v.strictObject({
-		label: inputNameSchema,
-		expireTime: inputDateTimeSchema,
-		humanId: inputStringU8Schema,
-		brand: v.optional(inputPaymentMethodBrandSchema),
-	}),
-]);
-export const paymentMethodSchema = v.intersect([
-	paymentMethodIdentifiersSchema,
-	v.strictObject({
-		label: nameSchema,
-		expireTime: dateTimeSchema,
-		humanId: stringU8Schema,
-		brand: v.exactOptional(paymentMethodBrandSchema),
-	}),
-]);
+export const inputPaymentMethodSchema = v.strictObject({
+	...inputPaymentMethodIdentifiersSchema.entries,
+	label: inputNameSchema,
+	expireTime: inputDateTimeSchema,
+	humanId: inputStringU8Schema,
+	brand: v.optional(inputPaymentMethodBrandSchema),
+});
+export const paymentMethodSchema = v.strictObject({
+	...paymentMethodIdentifiersSchema.entries,
+	label: nameSchema,
+	expireTime: dateTimeSchema,
+	humanId: stringU8Schema,
+	brand: v.exactOptional(paymentMethodBrandSchema),
+});
 export const inputPaymentMethodsSchema = v.array(inputPaymentMethodSchema);
 export const paymentMethodsSchema = inputPaymentMethodsSchema;
 export const inputPaymentMethodDeletedLongRunningOperationSuccessSchema =
@@ -383,42 +375,38 @@ export const inputBillingAccountIdentifiersSchema = v.strictObject({
 });
 export const billingAccountIdentifiersSchema =
 	inputBillingAccountIdentifiersSchema;
-export const inputBillingAccountSchema = v.intersect([
-	inputBillingAccountIdentifiersSchema,
-	v.strictObject({
-		name: inputNameSchema,
-		email: inputEmailSchema,
-		country: inputBillingCountrySchema,
-		status: inputBillingAccountStatusSchema,
-		currency: inputCurrencySchema,
-		type: inputBillingAccountTypeSchema,
-		createdTime: inputDateTimeSchema,
-		updatedTime: v.optional(inputDateTimeSchema),
-		locale: v.optional(inputBillingLocaleSchema),
-		purchaseOrder: v.optional(inputStringU8Schema),
-		taxId: v.optional(inputStringU8Schema),
-		timeZone: v.optional(inputTimeZoneSchema),
-		defaultPaymentMethodId: v.optional(inputIdSchema),
-	}),
-]);
-export const billingAccountSchema = v.intersect([
-	billingAccountIdentifiersSchema,
-	v.strictObject({
-		name: nameSchema,
-		email: emailSchema,
-		country: billingCountrySchema,
-		status: billingAccountStatusSchema,
-		currency: currencySchema,
-		type: billingAccountTypeSchema,
-		createdTime: dateTimeSchema,
-		updatedTime: v.exactOptional(dateTimeSchema),
-		locale: v.exactOptional(billingLocaleSchema),
-		purchaseOrder: v.exactOptional(stringU8Schema),
-		taxId: v.exactOptional(stringU8Schema),
-		timeZone: v.exactOptional(timeZoneSchema),
-		defaultPaymentMethodId: v.exactOptional(idSchema),
-	}),
-]);
+export const inputBillingAccountSchema = v.strictObject({
+	...inputBillingAccountIdentifiersSchema.entries,
+	name: inputNameSchema,
+	email: inputEmailSchema,
+	country: inputBillingCountrySchema,
+	status: inputBillingAccountStatusSchema,
+	currency: inputCurrencySchema,
+	type: inputBillingAccountTypeSchema,
+	createdTime: inputDateTimeSchema,
+	updatedTime: v.optional(inputDateTimeSchema),
+	locale: v.optional(inputBillingLocaleSchema),
+	purchaseOrder: v.optional(inputStringU8Schema),
+	taxId: v.optional(inputStringU8Schema),
+	timeZone: v.optional(inputTimeZoneSchema),
+	defaultPaymentMethodId: v.optional(inputIdSchema),
+});
+export const billingAccountSchema = v.strictObject({
+	...billingAccountIdentifiersSchema.entries,
+	name: nameSchema,
+	email: emailSchema,
+	country: billingCountrySchema,
+	status: billingAccountStatusSchema,
+	currency: currencySchema,
+	type: billingAccountTypeSchema,
+	createdTime: dateTimeSchema,
+	updatedTime: v.exactOptional(dateTimeSchema),
+	locale: v.exactOptional(billingLocaleSchema),
+	purchaseOrder: v.exactOptional(stringU8Schema),
+	taxId: v.exactOptional(stringU8Schema),
+	timeZone: v.exactOptional(timeZoneSchema),
+	defaultPaymentMethodId: v.exactOptional(idSchema),
+});
 export const inputBillingAccountListSchema = v.array(inputBillingAccountSchema);
 export const billingAccountListSchema = inputBillingAccountListSchema;
 export const inputBillingAccountUpdateRequestSchema = v.strictObject({

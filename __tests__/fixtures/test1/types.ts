@@ -3,10 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:41.762Z
+ * Generated on 2026-05-18T09:27:27.836Z
  *
  */
-import type { Jsonifiable, Jsonify } from "type-fest";
+import type { Jsonifiable, Jsonify, UndefinedOnPartialDeep } from "type-fest";
 
 export type PromoCode = string;
 /** The API version */
@@ -235,29 +235,43 @@ export type ImportBillingDataCommandParams = {
 };
 export type ImportBillingDataCommandInput =
 	ImportBillingDataCommandBodyNonJson & ImportBillingDataCommandParams;
+export type InputImportBillingDataCommandResponse =
+	UndefinedOnPartialDeep<LongRunningOperation>;
 export type GetOperationCommandParams = {
 	operationId: Uuid;
 };
 export type GetOperationCommandInput = GetOperationCommandParams;
+export type InputGetOperationCommandResponse =
+	UndefinedOnPartialDeep<LongRunningOperation>;
 export type ListBillingAccountsCommandInput = never;
+export type InputListBillingAccountsCommandResponse =
+	UndefinedOnPartialDeep<BillingAccountList>;
 export type CreateBillingAccountCommandBody = BillingAccountCreateRequest;
 export type CreateBillingAccountCommandInput = BillingAccountCreateRequest;
+export type InputCreateBillingAccountCommandResponse =
+	UndefinedOnPartialDeep<BillingAccount>;
 export type GetBillingAccountCommandParams = {
 	billingAccountId: Id;
 };
 export type GetBillingAccountCommandInput = GetBillingAccountCommandParams;
+export type InputGetBillingAccountCommandResponse =
+	UndefinedOnPartialDeep<BillingAccount>;
 export type UpdateBillingAccountCommandParams = {
 	billingAccountId: Id;
 };
 export type UpdateBillingAccountCommandBody = BillingAccountUpdateRequest;
 export type UpdateBillingAccountCommandInput = BillingAccountUpdateRequest &
 	UpdateBillingAccountCommandParams;
+export type InputUpdateBillingAccountCommandResponse =
+	UndefinedOnPartialDeep<BillingAccount>;
 export type GetBillingAccountPortalCommandParams = {
 	billingAccountId: Id;
 };
 export type GetBillingAccountPortalCommandBody = BillingAccountPortalRequest;
 export type GetBillingAccountPortalCommandInput = BillingAccountPortalRequest &
 	GetBillingAccountPortalCommandParams;
+export type InputGetBillingAccountPortalCommandResponse =
+	UndefinedOnPartialDeep<BillingAccountPortal>;
 export type LinkBillingAccountCommandParams = {
 	billingAccountId: Id;
 };
@@ -268,21 +282,29 @@ export type ListPaymentMethodsCommandParams = {
 	billingAccountId: Id;
 };
 export type ListPaymentMethodsCommandInput = ListPaymentMethodsCommandParams;
+export type InputListPaymentMethodsCommandResponse =
+	UndefinedOnPartialDeep<PaymentMethods>;
 export type CreatePaymentMethodCommandParams = {
 	billingAccountId: Id;
 };
 export type CreatePaymentMethodCommandInput = CreatePaymentMethodCommandParams;
+export type InputCreatePaymentMethodCommandResponse =
+	UndefinedOnPartialDeep<PaymentMethodIntendedLro>;
 export type GetPaymentMethodFromStripeCommandParams = {
 	billingAccountId: Id;
 	stripePaymentMethodId: StripeId;
 };
 export type GetPaymentMethodFromStripeCommandInput =
 	GetPaymentMethodFromStripeCommandParams;
+export type InputGetPaymentMethodFromStripeCommandResponse =
+	UndefinedOnPartialDeep<PaymentMethod>;
 export type GetPaymentMethodCommandParams = {
 	billingAccountId: Id;
 	paymentMethodId: Id;
 };
 export type GetPaymentMethodCommandInput = GetPaymentMethodCommandParams;
+export type InputGetPaymentMethodCommandResponse =
+	UndefinedOnPartialDeep<PaymentMethod>;
 export type UpdatePaymentMethodCommandParams = {
 	billingAccountId: Id;
 	paymentMethodId: Id;
@@ -295,11 +317,15 @@ export type DeletePaymentMethodCommandParams = {
 	paymentMethodId: Id;
 };
 export type DeletePaymentMethodCommandInput = DeletePaymentMethodCommandParams;
+export type InputDeletePaymentMethodCommandResponse =
+	UndefinedOnPartialDeep<PaymentMethodDeletedLro>;
 export type ListBillingSubscriptionsCommandParams = {
 	billingAccountId: Id;
 };
 export type ListBillingSubscriptionsCommandInput =
 	ListBillingSubscriptionsCommandParams;
+export type InputListBillingSubscriptionsCommandResponse =
+	UndefinedOnPartialDeep<BillingSubscriptions>;
 export type CreateBillingSubscriptionCommandParams = {
 	billingAccountId: Id;
 };
@@ -307,6 +333,8 @@ export type CreateBillingSubscriptionCommandBody =
 	CreateBillingSubscriptionRequest;
 export type CreateBillingSubscriptionCommandInput =
 	CreateBillingSubscriptionRequest & CreateBillingSubscriptionCommandParams;
+export type InputCreateBillingSubscriptionCommandResponse =
+	UndefinedOnPartialDeep<BillingSubscriptionLro>;
 export type UpdateBillingSubscriptionCommandParams = {
 	billingAccountId: Id;
 	subscriptionId: Id;
@@ -329,3 +357,5 @@ export type UpdateBillingSubscriptionPromoCodeCommandBody =
 export type UpdateBillingSubscriptionPromoCodeCommandInput =
 	UpdateBillingSubscriptionPromoCodeRequest &
 		UpdateBillingSubscriptionPromoCodeCommandParams;
+export type InputUpdateBillingSubscriptionPromoCodeCommandResponse =
+	UndefinedOnPartialDeep<BillingSubscriptionLro>;

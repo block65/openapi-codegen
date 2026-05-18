@@ -3,11 +3,12 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:41.762Z
+ * Generated on 2026-05-18T09:27:27.836Z
  *
  */
 /** eslint-disable max-classes */
 import { Command, jsonStringify } from "@block65/rest-client";
+import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
 	ImportBillingDataCommandHeader,
 	ImportBillingDataCommandInput,
@@ -58,7 +59,8 @@ function encodePath(
  *
  */
 export class ImportBillingDataCommand extends Command<
-	ImportBillingDataCommandInput,
+	UndefinedOnPartialDeep<Except<ImportBillingDataCommandInput, "body">> &
+		Pick<ImportBillingDataCommandInput, "body">,
 	LongRunningOperation,
 	never,
 	ImportBillingDataCommandHeader
@@ -66,7 +68,10 @@ export class ImportBillingDataCommand extends Command<
 	public override method = "post" as const;
 
 	constructor(
-		input: ImportBillingDataCommandInput,
+		input: UndefinedOnPartialDeep<
+			Except<ImportBillingDataCommandInput, "body">
+		> &
+			Pick<ImportBillingDataCommandInput, "body">,
 		headers: ImportBillingDataCommandHeader,
 	) {
 		const { billingAccountId, body } = input;
@@ -84,12 +89,12 @@ export class ImportBillingDataCommand extends Command<
  *
  */
 export class GetOperationCommand extends Command<
-	GetOperationCommandInput,
+	UndefinedOnPartialDeep<GetOperationCommandInput>,
 	LongRunningOperation
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetOperationCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetOperationCommandInput>) {
 		const { operationId } = input;
 		super(encodePath`/operations/${operationId}`);
 	}
@@ -100,7 +105,7 @@ export class GetOperationCommand extends Command<
  *
  */
 export class ListBillingAccountsCommand extends Command<
-	ListBillingAccountsCommandInput,
+	UndefinedOnPartialDeep<ListBillingAccountsCommandInput>,
 	BillingAccountList
 > {
 	public override method = "get" as const;
@@ -115,12 +120,12 @@ export class ListBillingAccountsCommand extends Command<
  *
  */
 export class CreateBillingAccountCommand extends Command<
-	CreateBillingAccountCommandInput,
+	UndefinedOnPartialDeep<CreateBillingAccountCommandInput>,
 	BillingAccount
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateBillingAccountCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateBillingAccountCommandInput>) {
 		const body = input;
 		super("/billing-accounts", jsonStringify(body));
 	}
@@ -131,12 +136,12 @@ export class CreateBillingAccountCommand extends Command<
  *
  */
 export class GetBillingAccountCommand extends Command<
-	GetBillingAccountCommandInput,
+	UndefinedOnPartialDeep<GetBillingAccountCommandInput>,
 	BillingAccount
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetBillingAccountCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetBillingAccountCommandInput>) {
 		const { billingAccountId } = input;
 		super(encodePath`/billing-accounts/${billingAccountId}`);
 	}
@@ -147,12 +152,12 @@ export class GetBillingAccountCommand extends Command<
  *
  */
 export class UpdateBillingAccountCommand extends Command<
-	UpdateBillingAccountCommandInput,
+	UndefinedOnPartialDeep<UpdateBillingAccountCommandInput>,
 	BillingAccount
 > {
 	public override method = "put" as const;
 
-	constructor(input: UpdateBillingAccountCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<UpdateBillingAccountCommandInput>) {
 		const { billingAccountId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}`,
@@ -166,12 +171,14 @@ export class UpdateBillingAccountCommand extends Command<
  *
  */
 export class GetBillingAccountPortalCommand extends Command<
-	GetBillingAccountPortalCommandInput,
+	UndefinedOnPartialDeep<GetBillingAccountPortalCommandInput>,
 	BillingAccountPortal
 > {
 	public override method = "post" as const;
 
-	constructor(input: GetBillingAccountPortalCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<GetBillingAccountPortalCommandInput>,
+	) {
 		const { billingAccountId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/portal`,
@@ -185,12 +192,12 @@ export class GetBillingAccountPortalCommand extends Command<
  *
  */
 export class LinkBillingAccountCommand extends Command<
-	LinkBillingAccountCommandInput,
+	UndefinedOnPartialDeep<LinkBillingAccountCommandInput>,
 	unknown
 > {
 	public override method = "post" as const;
 
-	constructor(input: LinkBillingAccountCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<LinkBillingAccountCommandInput>) {
 		const { billingAccountId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/link`,
@@ -204,12 +211,12 @@ export class LinkBillingAccountCommand extends Command<
  *
  */
 export class ListPaymentMethodsCommand extends Command<
-	ListPaymentMethodsCommandInput,
+	UndefinedOnPartialDeep<ListPaymentMethodsCommandInput>,
 	PaymentMethods
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListPaymentMethodsCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListPaymentMethodsCommandInput>) {
 		const { billingAccountId } = input;
 		super(encodePath`/billing-accounts/${billingAccountId}/payment-methods`);
 	}
@@ -220,12 +227,12 @@ export class ListPaymentMethodsCommand extends Command<
  *
  */
 export class CreatePaymentMethodCommand extends Command<
-	CreatePaymentMethodCommandInput,
+	UndefinedOnPartialDeep<CreatePaymentMethodCommandInput>,
 	PaymentMethodIntendedLro
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreatePaymentMethodCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreatePaymentMethodCommandInput>) {
 		const { billingAccountId } = input;
 		super(encodePath`/billing-accounts/${billingAccountId}/payment-methods`);
 	}
@@ -236,12 +243,14 @@ export class CreatePaymentMethodCommand extends Command<
  *
  */
 export class GetPaymentMethodFromStripeCommand extends Command<
-	GetPaymentMethodFromStripeCommandInput,
+	UndefinedOnPartialDeep<GetPaymentMethodFromStripeCommandInput>,
 	PaymentMethod
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetPaymentMethodFromStripeCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<GetPaymentMethodFromStripeCommandInput>,
+	) {
 		const { billingAccountId, stripePaymentMethodId } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/payment-methods/stripe/${stripePaymentMethodId}`,
@@ -254,12 +263,12 @@ export class GetPaymentMethodFromStripeCommand extends Command<
  *
  */
 export class GetPaymentMethodCommand extends Command<
-	GetPaymentMethodCommandInput,
+	UndefinedOnPartialDeep<GetPaymentMethodCommandInput>,
 	PaymentMethod
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetPaymentMethodCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetPaymentMethodCommandInput>) {
 		const { billingAccountId, paymentMethodId } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
@@ -272,12 +281,12 @@ export class GetPaymentMethodCommand extends Command<
  *
  */
 export class UpdatePaymentMethodCommand extends Command<
-	UpdatePaymentMethodCommandInput,
+	UndefinedOnPartialDeep<UpdatePaymentMethodCommandInput>,
 	undefined
 > {
 	public override method = "put" as const;
 
-	constructor(input: UpdatePaymentMethodCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<UpdatePaymentMethodCommandInput>) {
 		const { billingAccountId, paymentMethodId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
@@ -291,12 +300,12 @@ export class UpdatePaymentMethodCommand extends Command<
  *
  */
 export class DeletePaymentMethodCommand extends Command<
-	DeletePaymentMethodCommandInput,
+	UndefinedOnPartialDeep<DeletePaymentMethodCommandInput>,
 	PaymentMethodDeletedLro
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeletePaymentMethodCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeletePaymentMethodCommandInput>) {
 		const { billingAccountId, paymentMethodId } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/payment-methods/${paymentMethodId}`,
@@ -309,12 +318,14 @@ export class DeletePaymentMethodCommand extends Command<
  *
  */
 export class ListBillingSubscriptionsCommand extends Command<
-	ListBillingSubscriptionsCommandInput,
+	UndefinedOnPartialDeep<ListBillingSubscriptionsCommandInput>,
 	BillingSubscriptions
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListBillingSubscriptionsCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<ListBillingSubscriptionsCommandInput>,
+	) {
 		const { billingAccountId } = input;
 		super(encodePath`/billing-accounts/${billingAccountId}/subscriptions`);
 	}
@@ -325,12 +336,14 @@ export class ListBillingSubscriptionsCommand extends Command<
  *
  */
 export class CreateBillingSubscriptionCommand extends Command<
-	CreateBillingSubscriptionCommandInput,
+	UndefinedOnPartialDeep<CreateBillingSubscriptionCommandInput>,
 	BillingSubscriptionLro
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateBillingSubscriptionCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<CreateBillingSubscriptionCommandInput>,
+	) {
 		const { billingAccountId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/subscriptions`,
@@ -344,12 +357,14 @@ export class CreateBillingSubscriptionCommand extends Command<
  *
  */
 export class UpdateBillingSubscriptionCommand extends Command<
-	UpdateBillingSubscriptionCommandInput,
+	UndefinedOnPartialDeep<UpdateBillingSubscriptionCommandInput>,
 	undefined
 > {
 	public override method = "put" as const;
 
-	constructor(input: UpdateBillingSubscriptionCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<UpdateBillingSubscriptionCommandInput>,
+	) {
 		const { billingAccountId, subscriptionId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
@@ -363,12 +378,12 @@ export class UpdateBillingSubscriptionCommand extends Command<
  *
  */
 export class CancelSubscriptionCommand extends Command<
-	CancelSubscriptionCommandInput,
+	UndefinedOnPartialDeep<CancelSubscriptionCommandInput>,
 	undefined
 > {
 	public override method = "delete" as const;
 
-	constructor(input: CancelSubscriptionCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CancelSubscriptionCommandInput>) {
 		const { billingAccountId, subscriptionId } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}`,
@@ -381,12 +396,14 @@ export class CancelSubscriptionCommand extends Command<
  *
  */
 export class UpdateBillingSubscriptionPromoCodeCommand extends Command<
-	UpdateBillingSubscriptionPromoCodeCommandInput,
+	UndefinedOnPartialDeep<UpdateBillingSubscriptionPromoCodeCommandInput>,
 	BillingSubscriptionLro
 > {
 	public override method = "put" as const;
 
-	constructor(input: UpdateBillingSubscriptionPromoCodeCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<UpdateBillingSubscriptionPromoCodeCommandInput>,
+	) {
 		const { billingAccountId, subscriptionId, ...body } = input;
 		super(
 			encodePath`/billing-accounts/${billingAccountId}/subscriptions/${subscriptionId}/promo-code`,

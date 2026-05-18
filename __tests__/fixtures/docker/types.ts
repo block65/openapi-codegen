@@ -3,10 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:13:31.281Z
+ * Generated on 2026-05-18T09:28:16.280Z
  *
  */
-import type { Jsonifiable } from "type-fest";
+import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
 
 /** An open port on a container */
 export type Port = {
@@ -6953,9 +6953,9 @@ export type ClusterVolumeSpec = {
 export type Topology = Record<string, string>;
 export type ContainerListCommandQuery = {
 	all?: "true" | "false";
-	limit?: `${number}` | undefined;
+	limit?: `${number}`;
 	size?: "true" | "false";
-	filters?: string | undefined;
+	filters?: string;
 };
 export type ContainerListCommandInput = ContainerListCommandQuery;
 export type ContainerListCommandOutput = readonly {
@@ -7051,9 +7051,11 @@ export type ContainerListCommandOutput = readonly {
 		Propagation?: string;
 	}[];
 }[];
+export type InputContainerListCommandResponse =
+	UndefinedOnPartialDeep<ContainerListCommandOutput>;
 export type ContainerCreateCommandQuery = {
-	name?: string | undefined;
-	platform?: string | undefined;
+	name?: string;
+	platform?: string;
 };
 type ContainerCreateJsonBody = {
 	/**
@@ -7410,6 +7412,8 @@ export type ContainerCreateCommandOutput = {
 	 */
 	Warnings: readonly string[];
 };
+export type InputContainerCreateCommandResponse =
+	UndefinedOnPartialDeep<ContainerCreateCommandOutput>;
 export type ContainerInspectCommandQuery = {
 	size?: "true" | "false";
 };
@@ -8104,8 +8108,10 @@ export type ContainerInspectCommandOutput = {
 		>;
 	};
 };
+export type InputContainerInspectCommandResponse =
+	UndefinedOnPartialDeep<ContainerInspectCommandOutput>;
 export type ContainerTopCommandQuery = {
-	ps_args?: string | undefined;
+	ps_args?: string;
 };
 export type ContainerTopCommandParams = {
 	id: string;
@@ -8116,14 +8122,16 @@ export type ContainerTopCommandOutput = {
 	Titles?: readonly string[];
 	Processes?: readonly (readonly string[])[];
 };
+export type InputContainerTopCommandResponse =
+	UndefinedOnPartialDeep<ContainerTopCommandOutput>;
 export type ContainerLogsCommandQuery = {
 	follow?: "true" | "false";
 	stdout?: "true" | "false";
 	stderr?: "true" | "false";
-	since?: `${number}` | undefined;
-	until?: `${number}` | undefined;
+	since?: `${number}`;
+	until?: `${number}`;
 	timestamps?: "true" | "false";
-	tail?: string | undefined;
+	tail?: string;
 };
 export type ContainerLogsCommandParams = {
 	id: string;
@@ -8148,6 +8156,8 @@ export type ContainerChangesCommandOutput = readonly {
 	 */
 	Kind: number;
 }[];
+export type InputContainerChangesCommandResponse =
+	UndefinedOnPartialDeep<ContainerChangesCommandOutput>;
 export type ContainerExportCommandParams = {
 	id: string;
 };
@@ -8164,6 +8174,8 @@ export type ContainerStatsCommandInput = ContainerStatsCommandParams &
 export type ContainerStatsCommandOutput =
 	| Record<string | number, Jsonifiable>
 	| undefined;
+export type InputContainerStatsCommandResponse =
+	UndefinedOnPartialDeep<ContainerStatsCommandOutput>;
 export type ContainerResizeCommandQuery = {
 	h: `${number}`;
 	w: `${number}`;
@@ -8174,7 +8186,7 @@ export type ContainerResizeCommandParams = {
 export type ContainerResizeCommandInput = ContainerResizeCommandParams &
 	ContainerResizeCommandQuery;
 export type ContainerStartCommandQuery = {
-	detachKeys?: string | undefined;
+	detachKeys?: string;
 };
 export type ContainerStartCommandParams = {
 	id: string;
@@ -8182,8 +8194,8 @@ export type ContainerStartCommandParams = {
 export type ContainerStartCommandInput = ContainerStartCommandParams &
 	ContainerStartCommandQuery;
 export type ContainerStopCommandQuery = {
-	signal?: string | undefined;
-	t?: `${number}` | undefined;
+	signal?: string;
+	t?: `${number}`;
 };
 export type ContainerStopCommandParams = {
 	id: string;
@@ -8191,8 +8203,8 @@ export type ContainerStopCommandParams = {
 export type ContainerStopCommandInput = ContainerStopCommandParams &
 	ContainerStopCommandQuery;
 export type ContainerRestartCommandQuery = {
-	signal?: string | undefined;
-	t?: `${number}` | undefined;
+	signal?: string;
+	t?: `${number}`;
 };
 export type ContainerRestartCommandParams = {
 	id: string;
@@ -8200,7 +8212,7 @@ export type ContainerRestartCommandParams = {
 export type ContainerRestartCommandInput = ContainerRestartCommandParams &
 	ContainerRestartCommandQuery;
 export type ContainerKillCommandQuery = {
-	signal?: string | undefined;
+	signal?: string;
 };
 export type ContainerKillCommandParams = {
 	id: string;
@@ -8303,6 +8315,8 @@ export type ContainerUpdateCommandInput = ContainerUpdateJsonBody &
 export type ContainerUpdateCommandOutput = {
 	Warnings?: readonly string[];
 };
+export type InputContainerUpdateCommandResponse =
+	UndefinedOnPartialDeep<ContainerUpdateCommandOutput>;
 export type ContainerRenameCommandQuery = {
 	name: string;
 };
@@ -8320,7 +8334,7 @@ export type ContainerUnpauseCommandParams = {
 };
 export type ContainerUnpauseCommandInput = ContainerUnpauseCommandParams;
 export type ContainerAttachCommandQuery = {
-	detachKeys?: string | undefined;
+	detachKeys?: string;
 	logs?: "true" | "false";
 	stream?: "true" | "false";
 	stdin?: "true" | "false";
@@ -8333,7 +8347,7 @@ export type ContainerAttachCommandParams = {
 export type ContainerAttachCommandInput = ContainerAttachCommandParams &
 	ContainerAttachCommandQuery;
 export type ContainerAttachWebsocketCommandQuery = {
-	detachKeys?: string | undefined;
+	detachKeys?: string;
 	logs?: "true" | "false";
 	stream?: "true" | "false";
 	stdin?: "true" | "false";
@@ -8359,6 +8373,8 @@ export type ContainerWaitCommandOutput = {
 		Message?: string;
 	};
 };
+export type InputContainerWaitCommandResponse =
+	UndefinedOnPartialDeep<ContainerWaitCommandOutput>;
 export type ContainerDeleteCommandQuery = {
 	v?: "true" | "false";
 	force?: "true" | "false";
@@ -8379,8 +8395,8 @@ export type ContainerArchiveCommandInput = ContainerArchiveCommandParams &
 	ContainerArchiveCommandQuery;
 export type PutContainerArchiveCommandQuery = {
 	path: string;
-	noOverwriteDirNonDir?: string | undefined;
-	copyUIDGID?: string | undefined;
+	noOverwriteDirNonDir?: string;
+	copyUIDGID?: string;
 };
 type PutContainerArchiveCommandBodyApplicationXTar = NonNullable<
 	RequestInit["body"]
@@ -8409,16 +8425,18 @@ export type ContainerArchiveInfoCommandParams = {
 export type ContainerArchiveInfoCommandInput =
 	ContainerArchiveInfoCommandParams & ContainerArchiveInfoCommandQuery;
 export type ContainerPruneCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type ContainerPruneCommandInput = ContainerPruneCommandQuery;
 export type ContainerPruneCommandOutput = {
 	ContainersDeleted?: readonly string[];
 	SpaceReclaimed?: number;
 };
+export type InputContainerPruneCommandResponse =
+	UndefinedOnPartialDeep<ContainerPruneCommandOutput>;
 export type ImageListCommandQuery = {
 	all?: "true" | "false";
-	filters?: string | undefined;
+	filters?: string;
 	sharedsize?: "true" | "false";
 	digests?: "true" | "false";
 };
@@ -8513,31 +8531,33 @@ export type ImageListCommandOutput = readonly {
 	 */
 	Containers: number;
 }[];
+export type InputImageListCommandResponse =
+	UndefinedOnPartialDeep<ImageListCommandOutput>;
 export type ImageBuildCommandQuery = {
-	dockerfile?: string | undefined;
-	t?: string | undefined;
-	extrahosts?: string | undefined;
-	remote?: string | undefined;
+	dockerfile?: string;
+	t?: string;
+	extrahosts?: string;
+	remote?: string;
 	q?: "true" | "false";
 	nocache?: "true" | "false";
-	cachefrom?: string | undefined;
-	pull?: string | undefined;
+	cachefrom?: string;
+	pull?: string;
 	rm?: "true" | "false";
 	forcerm?: "true" | "false";
-	memory?: `${number}` | undefined;
-	memswap?: `${number}` | undefined;
-	cpushares?: `${number}` | undefined;
-	cpusetcpus?: string | undefined;
-	cpuperiod?: `${number}` | undefined;
-	cpuquota?: `${number}` | undefined;
-	buildargs?: string | undefined;
-	shmsize?: `${number}` | undefined;
+	memory?: `${number}`;
+	memswap?: `${number}`;
+	cpushares?: `${number}`;
+	cpusetcpus?: string;
+	cpuperiod?: `${number}`;
+	cpuquota?: `${number}`;
+	buildargs?: string;
+	shmsize?: `${number}`;
 	squash?: "true" | "false";
-	labels?: string | undefined;
-	networkmode?: string | undefined;
-	platform?: string | undefined;
-	target?: string | undefined;
-	outputs?: string | undefined;
+	labels?: string;
+	networkmode?: string;
+	platform?: string;
+	target?: string;
+	outputs?: string;
 	version?: "1" | "2";
 };
 export type ImageBuildCommandHeader = {
@@ -8553,23 +8573,25 @@ export type ImageBuildCommandBodyNonJson = {
 export type ImageBuildCommandInput = ImageBuildCommandBodyNonJson &
 	ImageBuildCommandQuery;
 export type BuildPruneCommandQuery = {
-	keepstorage?: `${number}` | undefined;
+	keepstorage?: `${number}`;
 	all?: "true" | "false";
-	filters?: string | undefined;
+	filters?: string;
 };
 export type BuildPruneCommandInput = BuildPruneCommandQuery;
 export type BuildPruneCommandOutput = {
 	CachesDeleted?: readonly string[];
 	SpaceReclaimed?: number;
 };
+export type InputBuildPruneCommandResponse =
+	UndefinedOnPartialDeep<BuildPruneCommandOutput>;
 export type ImageCreateCommandQuery = {
-	fromImage?: string | undefined;
-	fromSrc?: string | undefined;
-	repo?: string | undefined;
-	tag?: string | undefined;
-	message?: string | undefined;
-	changes?: readonly string[] | undefined;
-	platform?: string | undefined;
+	fromImage?: string;
+	fromSrc?: string;
+	repo?: string;
+	tag?: string;
+	message?: string;
+	changes?: readonly string[];
+	platform?: string;
 };
 export type ImageCreateCommandHeader = {
 	"x-registry-auth"?: string;
@@ -9004,6 +9026,8 @@ export type ImageInspectCommandOutput = {
 		LastTagTime?: string;
 	};
 };
+export type InputImageInspectCommandResponse =
+	UndefinedOnPartialDeep<ImageInspectCommandOutput>;
 export type ImageHistoryCommandParams = {
 	name: string;
 };
@@ -9016,8 +9040,10 @@ export type ImageHistoryCommandOutput = readonly {
 	Size: number;
 	Comment: string;
 }[];
+export type InputImageHistoryCommandResponse =
+	UndefinedOnPartialDeep<ImageHistoryCommandOutput>;
 export type ImagePushCommandQuery = {
-	tag?: string | undefined;
+	tag?: string;
 };
 export type ImagePushCommandHeader = {
 	"x-registry-auth": string;
@@ -9028,8 +9054,8 @@ export type ImagePushCommandParams = {
 export type ImagePushCommandInput = ImagePushCommandParams &
 	ImagePushCommandQuery;
 export type ImageTagCommandQuery = {
-	repo?: string | undefined;
-	tag?: string | undefined;
+	repo?: string;
+	tag?: string;
 };
 export type ImageTagCommandParams = {
 	name: string;
@@ -9048,10 +9074,12 @@ export type ImageDeleteCommandOutput = readonly {
 	Untagged?: string;
 	Deleted?: string;
 }[];
+export type InputImageDeleteCommandResponse =
+	UndefinedOnPartialDeep<ImageDeleteCommandOutput>;
 export type ImageSearchCommandQuery = {
 	term: string;
-	limit?: `${number}` | undefined;
-	filters?: string | undefined;
+	limit?: `${number}`;
+	filters?: string;
 };
 export type ImageSearchCommandInput = ImageSearchCommandQuery;
 export type ImageSearchCommandOutput = readonly {
@@ -9061,8 +9089,10 @@ export type ImageSearchCommandOutput = readonly {
 	name?: string;
 	star_count?: number;
 }[];
+export type InputImageSearchCommandResponse =
+	UndefinedOnPartialDeep<ImageSearchCommandOutput>;
 export type ImagePruneCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type ImagePruneCommandInput = ImagePruneCommandQuery;
 export type ImagePruneCommandOutput = {
@@ -9072,6 +9102,8 @@ export type ImagePruneCommandOutput = {
 	}[];
 	SpaceReclaimed?: number;
 };
+export type InputImagePruneCommandResponse =
+	UndefinedOnPartialDeep<ImagePruneCommandOutput>;
 type SystemAuthJsonBody = {
 	username?: string;
 	password?: string;
@@ -9084,6 +9116,8 @@ export type SystemAuthCommandOutput = {
 	Status: string;
 	IdentityToken?: string;
 };
+export type InputSystemAuthCommandResponse =
+	UndefinedOnPartialDeep<SystemAuthCommandOutput>;
 export type SystemInfoCommandInput = never;
 export type SystemInfoCommandOutput = {
 	/**
@@ -9838,6 +9872,8 @@ export type SystemInfoCommandOutput = {
 	 */
 	Warnings?: readonly string[];
 };
+export type InputSystemInfoCommandResponse =
+	UndefinedOnPartialDeep<SystemInfoCommandOutput>;
 export type SystemVersionCommandInput = never;
 export type SystemVersionCommandOutput = {
 	Platform?: {
@@ -9912,16 +9948,18 @@ export type SystemVersionCommandOutput = {
 	 */
 	BuildTime?: string;
 };
+export type InputSystemVersionCommandResponse =
+	UndefinedOnPartialDeep<SystemVersionCommandOutput>;
 export type SystemPingCommandInput = never;
 export type SystemPingHeadCommandInput = never;
 export type ImageCommitCommandQuery = {
-	container?: string | undefined;
-	repo?: string | undefined;
-	tag?: string | undefined;
-	comment?: string | undefined;
-	author?: string | undefined;
+	container?: string;
+	repo?: string;
+	tag?: string;
+	comment?: string;
+	author?: string;
 	pause?: "true" | "false";
-	changes?: string | undefined;
+	changes?: string;
 };
 type ImageCommitJsonBody = {
 	/**
@@ -10026,10 +10064,12 @@ export type ImageCommitCommandInput = ImageCommitJsonBody &
 export type ImageCommitCommandOutput = {
 	Id: string;
 };
+export type InputImageCommitCommandResponse =
+	UndefinedOnPartialDeep<ImageCommitCommandOutput>;
 export type SystemEventsCommandQuery = {
-	since?: string | undefined;
-	until?: string | undefined;
-	filters?: string | undefined;
+	since?: string;
+	until?: string;
+	filters?: string;
 };
 export type SystemEventsCommandInput = SystemEventsCommandQuery;
 export type SystemEventsCommandOutput = {
@@ -10083,6 +10123,8 @@ export type SystemEventsCommandOutput = {
 	 */
 	timeNano?: number;
 };
+export type InputSystemEventsCommandResponse =
+	UndefinedOnPartialDeep<SystemEventsCommandOutput>;
 export type SystemDataUsageCommandQuery = {
 	type?: readonly ("container" | "image" | "volume" | "build-cache")[];
 };
@@ -10498,12 +10540,14 @@ export type SystemDataUsageCommandOutput = {
 		UsageCount?: number;
 	}[];
 };
+export type InputSystemDataUsageCommandResponse =
+	UndefinedOnPartialDeep<SystemDataUsageCommandOutput>;
 export type ImageGetCommandParams = {
 	name: string;
 };
 export type ImageGetCommandInput = ImageGetCommandParams;
 export type ImageGetAllCommandQuery = {
-	names?: readonly string[] | undefined;
+	names?: readonly string[];
 };
 export type ImageGetAllCommandInput = ImageGetAllCommandQuery;
 export type ImageLoadCommandQuery = {
@@ -10537,6 +10581,8 @@ export type ContainerExecCommandInput = ContainerExecJsonBody &
 export type ContainerExecCommandOutput = {
 	Id: string;
 };
+export type InputContainerExecCommandResponse =
+	UndefinedOnPartialDeep<ContainerExecCommandOutput>;
 type ExecStartJsonBody = {
 	Detach?: boolean;
 	Tty?: boolean;
@@ -10579,8 +10625,10 @@ export type ExecInspectCommandOutput = {
 	ContainerID?: string;
 	Pid?: number;
 };
+export type InputExecInspectCommandResponse =
+	UndefinedOnPartialDeep<ExecInspectCommandOutput>;
 export type VolumeListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type VolumeListCommandInput = VolumeListCommandQuery;
 export type VolumeListCommandOutput = {
@@ -10751,6 +10799,8 @@ export type VolumeListCommandOutput = {
 	 */
 	Warnings?: readonly string[];
 };
+export type InputVolumeListCommandResponse =
+	UndefinedOnPartialDeep<VolumeListCommandOutput>;
 type VolumeCreateJsonBody = {
 	/**
 	 * The new volume's name. If not specified, Docker generates a name.
@@ -10992,6 +11042,8 @@ export type VolumeCreateCommandOutput = {
 		RefCount: number;
 	};
 };
+export type InputVolumeCreateCommandResponse =
+	UndefinedOnPartialDeep<VolumeCreateCommandOutput>;
 export type VolumeInspectCommandParams = {
 	name: string;
 };
@@ -11157,6 +11209,8 @@ export type VolumeInspectCommandOutput = {
 		RefCount: number;
 	};
 };
+export type InputVolumeInspectCommandResponse =
+	UndefinedOnPartialDeep<VolumeInspectCommandOutput>;
 export type VolumeUpdateCommandQuery = {
 	version: `${number}`;
 };
@@ -11235,15 +11289,17 @@ export type VolumeDeleteCommandParams = {
 export type VolumeDeleteCommandInput = VolumeDeleteCommandParams &
 	VolumeDeleteCommandQuery;
 export type VolumePruneCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type VolumePruneCommandInput = VolumePruneCommandQuery;
 export type VolumePruneCommandOutput = {
 	VolumesDeleted?: readonly string[];
 	SpaceReclaimed?: number;
 };
+export type InputVolumePruneCommandResponse =
+	UndefinedOnPartialDeep<VolumePruneCommandOutput>;
 export type NetworkListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type NetworkListCommandInput = NetworkListCommandQuery;
 export type NetworkListCommandOutput = readonly {
@@ -11353,9 +11409,11 @@ export type NetworkListCommandOutput = readonly {
 		IP?: string;
 	}[];
 }[];
+export type InputNetworkListCommandResponse =
+	UndefinedOnPartialDeep<NetworkListCommandOutput>;
 export type NetworkInspectCommandQuery = {
 	verbose?: "true" | "false";
-	scope?: string | undefined;
+	scope?: string;
 };
 export type NetworkInspectCommandParams = {
 	id: string;
@@ -11469,6 +11527,8 @@ export type NetworkInspectCommandOutput = {
 		IP?: string;
 	}[];
 };
+export type InputNetworkInspectCommandResponse =
+	UndefinedOnPartialDeep<NetworkInspectCommandOutput>;
 export type NetworkDeleteCommandParams = {
 	id: string;
 };
@@ -11568,6 +11628,8 @@ export type NetworkCreateCommandOutput = {
 	Id?: string;
 	Warning?: string;
 };
+export type InputNetworkCreateCommandResponse =
+	UndefinedOnPartialDeep<NetworkCreateCommandOutput>;
 type NetworkConnectJsonBody = {
 	Container?: string;
 	EndpointConfig?: {
@@ -11646,14 +11708,16 @@ export type NetworkDisconnectCommandBody = NetworkDisconnectJsonBody;
 export type NetworkDisconnectCommandInput = NetworkDisconnectJsonBody &
 	NetworkDisconnectCommandParams;
 export type NetworkPruneCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type NetworkPruneCommandInput = NetworkPruneCommandQuery;
 export type NetworkPruneCommandOutput = {
 	NetworksDeleted?: readonly string[];
 };
+export type InputNetworkPruneCommandResponse =
+	UndefinedOnPartialDeep<NetworkPruneCommandOutput>;
 export type PluginListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type PluginListCommandInput = PluginListCommandQuery;
 export type PluginListCommandOutput = readonly {
@@ -11760,6 +11824,8 @@ export type PluginListCommandOutput = readonly {
 		};
 	};
 }[];
+export type InputPluginListCommandResponse =
+	UndefinedOnPartialDeep<PluginListCommandOutput>;
 export type GetPluginPrivilegesCommandQuery = {
 	remote: string;
 };
@@ -11769,9 +11835,11 @@ export type GetPluginPrivilegesCommandOutput = readonly {
 	Description?: string;
 	Value?: readonly string[];
 }[];
+export type InputGetPluginPrivilegesCommandResponse =
+	UndefinedOnPartialDeep<GetPluginPrivilegesCommandOutput>;
 export type PluginPullCommandQuery = {
 	remote: string;
-	name?: string | undefined;
+	name?: string;
 };
 export type PluginPullCommandHeader = {
 	"x-registry-auth"?: string;
@@ -11892,6 +11960,8 @@ export type PluginInspectCommandOutput = {
 		};
 	};
 };
+export type InputPluginInspectCommandResponse =
+	UndefinedOnPartialDeep<PluginInspectCommandOutput>;
 export type PluginDeleteCommandQuery = {
 	force?: "true" | "false";
 };
@@ -12004,8 +12074,10 @@ export type PluginDeleteCommandOutput = {
 		};
 	};
 };
+export type InputPluginDeleteCommandResponse =
+	UndefinedOnPartialDeep<PluginDeleteCommandOutput>;
 export type PluginEnableCommandQuery = {
-	timeout?: `${number}` | undefined;
+	timeout?: `${number}`;
 };
 export type PluginEnableCommandParams = {
 	name: string;
@@ -12058,7 +12130,7 @@ export type PluginSetCommandParams = {
 export type PluginSetCommandBody = PluginSetJsonBody;
 export type PluginSetCommandInput = PluginSetJsonBody & PluginSetCommandParams;
 export type NodeListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type NodeListCommandInput = NodeListCommandQuery;
 export type NodeListCommandOutput = readonly {
@@ -12186,6 +12258,8 @@ export type NodeListCommandOutput = readonly {
 		Addr?: string;
 	};
 }[];
+export type InputNodeListCommandResponse =
+	UndefinedOnPartialDeep<NodeListCommandOutput>;
 export type NodeInspectCommandParams = {
 	id: string;
 };
@@ -12315,6 +12389,8 @@ export type NodeInspectCommandOutput = {
 		Addr?: string;
 	};
 };
+export type InputNodeInspectCommandResponse =
+	UndefinedOnPartialDeep<NodeInspectCommandOutput>;
 export type NodeDeleteCommandQuery = {
 	force?: "true" | "false";
 };
@@ -12526,6 +12602,8 @@ export type SwarmInspectCommandOutput = {
 		Manager?: string;
 	};
 };
+export type InputSwarmInspectCommandResponse =
+	UndefinedOnPartialDeep<SwarmInspectCommandOutput>;
 type SwarmInitJsonBody = {
 	ListenAddr?: string;
 	AdvertiseAddr?: string;
@@ -12643,6 +12721,8 @@ type SwarmInitJsonBody = {
 export type SwarmInitCommandBody = SwarmInitJsonBody;
 export type SwarmInitCommandInput = SwarmInitJsonBody;
 export type SwarmInitCommandOutput = string | undefined;
+export type InputSwarmInitCommandResponse =
+	UndefinedOnPartialDeep<SwarmInitCommandOutput>;
 type SwarmJoinJsonBody = {
 	ListenAddr?: string;
 	AdvertiseAddr?: string;
@@ -12774,13 +12854,15 @@ export type SwarmUnlockkeyCommandInput = never;
 export type SwarmUnlockkeyCommandOutput = {
 	UnlockKey?: string;
 };
+export type InputSwarmUnlockkeyCommandResponse =
+	UndefinedOnPartialDeep<SwarmUnlockkeyCommandOutput>;
 type SwarmUnlockJsonBody = {
 	UnlockKey?: string;
 };
 export type SwarmUnlockCommandBody = SwarmUnlockJsonBody;
 export type SwarmUnlockCommandInput = SwarmUnlockJsonBody;
 export type ServiceListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 	status?: "true" | "false";
 };
 export type ServiceListCommandInput = ServiceListCommandQuery;
@@ -13289,6 +13371,8 @@ export type ServiceListCommandOutput = readonly {
 		LastExecution?: string;
 	};
 }[];
+export type InputServiceListCommandResponse =
+	UndefinedOnPartialDeep<ServiceListCommandOutput>;
 export type ServiceCreateCommandHeader = {
 	"x-registry-auth"?: string;
 };
@@ -13704,6 +13788,8 @@ export type ServiceCreateCommandOutput = {
 	ID?: string;
 	Warning?: string;
 };
+export type InputServiceCreateCommandResponse =
+	UndefinedOnPartialDeep<ServiceCreateCommandOutput>;
 export type ServiceInspectCommandQuery = {
 	insertDefaults?: "true" | "false";
 };
@@ -14217,6 +14303,8 @@ export type ServiceInspectCommandOutput = {
 		LastExecution?: string;
 	};
 };
+export type InputServiceInspectCommandResponse =
+	UndefinedOnPartialDeep<ServiceInspectCommandOutput>;
 export type ServiceDeleteCommandParams = {
 	id: string;
 };
@@ -14224,7 +14312,7 @@ export type ServiceDeleteCommandInput = ServiceDeleteCommandParams;
 export type ServiceUpdateCommandQuery = {
 	version: `${number}`;
 	registryAuthFrom?: "spec" | "previous-spec";
-	rollback?: string | undefined;
+	rollback?: string;
 };
 export type ServiceUpdateCommandHeader = {
 	"x-registry-auth"?: string;
@@ -14645,14 +14733,16 @@ export type ServiceUpdateCommandInput = ServiceUpdateJsonBody &
 export type ServiceUpdateCommandOutput = {
 	Warnings?: readonly string[];
 };
+export type InputServiceUpdateCommandResponse =
+	UndefinedOnPartialDeep<ServiceUpdateCommandOutput>;
 export type ServiceLogsCommandQuery = {
 	details?: "true" | "false";
 	follow?: "true" | "false";
 	stdout?: "true" | "false";
 	stderr?: "true" | "false";
-	since?: `${number}` | undefined;
+	since?: `${number}`;
 	timestamps?: "true" | "false";
-	tail?: string | undefined;
+	tail?: string;
 };
 export type ServiceLogsCommandParams = {
 	id: string;
@@ -14660,7 +14750,7 @@ export type ServiceLogsCommandParams = {
 export type ServiceLogsCommandInput = ServiceLogsCommandParams &
 	ServiceLogsCommandQuery;
 export type TaskListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type TaskListCommandInput = TaskListCommandQuery;
 export type TaskListCommandOutput = readonly {
@@ -15045,6 +15135,8 @@ export type TaskListCommandOutput = readonly {
 		Index?: number;
 	};
 }[];
+export type InputTaskListCommandResponse =
+	UndefinedOnPartialDeep<TaskListCommandOutput>;
 export type TaskInspectCommandParams = {
 	id: string;
 };
@@ -15431,21 +15523,23 @@ export type TaskInspectCommandOutput = {
 		Index?: number;
 	};
 };
+export type InputTaskInspectCommandResponse =
+	UndefinedOnPartialDeep<TaskInspectCommandOutput>;
 export type TaskLogsCommandQuery = {
 	details?: "true" | "false";
 	follow?: "true" | "false";
 	stdout?: "true" | "false";
 	stderr?: "true" | "false";
-	since?: `${number}` | undefined;
+	since?: `${number}`;
 	timestamps?: "true" | "false";
-	tail?: string | undefined;
+	tail?: string;
 };
 export type TaskLogsCommandParams = {
 	id: string;
 };
 export type TaskLogsCommandInput = TaskLogsCommandParams & TaskLogsCommandQuery;
 export type SecretListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type SecretListCommandInput = SecretListCommandQuery;
 export type SecretListCommandOutput = readonly {
@@ -15495,6 +15589,8 @@ export type SecretListCommandOutput = readonly {
 		};
 	};
 }[];
+export type InputSecretListCommandResponse =
+	UndefinedOnPartialDeep<SecretListCommandOutput>;
 type SecretCreateJsonBody = {
 	Name?: string;
 	Labels?: Record<
@@ -15539,6 +15635,8 @@ export type SecretCreateCommandInput = SecretCreateJsonBody;
 export type SecretCreateCommandOutput = {
 	Id: string;
 };
+export type InputSecretCreateCommandResponse =
+	UndefinedOnPartialDeep<SecretCreateCommandOutput>;
 export type SecretInspectCommandParams = {
 	id: string;
 };
@@ -15590,6 +15688,8 @@ export type SecretInspectCommandOutput = {
 		};
 	};
 };
+export type InputSecretInspectCommandResponse =
+	UndefinedOnPartialDeep<SecretInspectCommandOutput>;
 export type SecretDeleteCommandParams = {
 	id: string;
 };
@@ -15644,7 +15744,7 @@ export type SecretUpdateCommandInput = SecretUpdateJsonBody &
 	SecretUpdateCommandParams &
 	SecretUpdateCommandQuery;
 export type ConfigListCommandQuery = {
-	filters?: string | undefined;
+	filters?: string;
 };
 export type ConfigListCommandInput = ConfigListCommandQuery;
 export type ConfigListCommandOutput = readonly {
@@ -15674,6 +15774,8 @@ export type ConfigListCommandOutput = readonly {
 		};
 	};
 }[];
+export type InputConfigListCommandResponse =
+	UndefinedOnPartialDeep<ConfigListCommandOutput>;
 type ConfigCreateJsonBody = {
 	Name?: string;
 	Labels?: Record<
@@ -15698,6 +15800,8 @@ export type ConfigCreateCommandInput = ConfigCreateJsonBody;
 export type ConfigCreateCommandOutput = {
 	Id: string;
 };
+export type InputConfigCreateCommandResponse =
+	UndefinedOnPartialDeep<ConfigCreateCommandOutput>;
 export type ConfigInspectCommandParams = {
 	id: string;
 };
@@ -15729,6 +15833,8 @@ export type ConfigInspectCommandOutput = {
 		};
 	};
 };
+export type InputConfigInspectCommandResponse =
+	UndefinedOnPartialDeep<ConfigInspectCommandOutput>;
 export type ConfigDeleteCommandParams = {
 	id: string;
 };
@@ -15815,4 +15921,6 @@ export type DistributionInspectCommandOutput = {
 		variant?: string;
 	}[];
 };
+export type InputDistributionInspectCommandResponse =
+	UndefinedOnPartialDeep<DistributionInspectCommandOutput>;
 export type SessionCommandInput = never;

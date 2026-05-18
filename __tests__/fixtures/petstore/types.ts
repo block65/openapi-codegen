@@ -3,9 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:57:32.892Z
+ * Generated on 2026-05-18T09:27:25.693Z
  *
  */
+import type { UndefinedOnPartialDeep } from "type-fest";
 
 export type Error = {
 	code: number;
@@ -19,16 +20,19 @@ export type Pet = NewPet & {
 	id: number;
 };
 export type FindPetsCommandQuery = {
-	tags?: readonly string[] | undefined;
-	limit?: `${number}` | undefined;
+	tags?: readonly string[];
+	limit?: `${number}`;
 };
 export type FindPetsCommandInput = FindPetsCommandQuery;
+export type InputFindPetsCommandResponse = UndefinedOnPartialDeep<Pet[]>;
 export type AddPetCommandBody = NewPet;
 export type AddPetCommandInput = NewPet;
+export type InputAddPetCommandResponse = UndefinedOnPartialDeep<Pet>;
 export type FindPetByIdCommandParams = {
 	id: `${number}`;
 };
 export type FindPetByIdCommandInput = FindPetByIdCommandParams;
+export type InputFindPetByIdCommandResponse = UndefinedOnPartialDeep<Pet>;
 export type DeletePetCommandParams = {
 	id: `${number}`;
 };
@@ -40,3 +44,5 @@ export type FindPetWrappedCommandInput = FindPetWrappedCommandParams;
 export type FindPetWrappedCommandOutput = {
 	pet: Pet;
 };
+export type InputFindPetWrappedCommandResponse =
+	UndefinedOnPartialDeep<FindPetWrappedCommandOutput>;

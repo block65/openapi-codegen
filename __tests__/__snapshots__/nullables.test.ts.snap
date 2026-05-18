@@ -23,7 +23,9 @@ export const nullConstSchema = inputNullConstSchema;
 `;
 
 exports[`header parameters 1`] = `
-"export type UploadStatus = "pending" | "complete";
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type UploadStatus = "pending" | "complete";
 export type UploadDataCommandHeader = {
         "content-type": "application/json" | "text/csv" | "application/xml";
         "content-length": \`\${number}\`;
@@ -33,11 +35,13 @@ export type UploadDataCommandParams = {
         uploadId: string;
     };
 export type UploadDataCommandInput = UploadDataCommandParams;
+export type InputUploadDataCommandResponse = UndefinedOnPartialDeep<UploadStatus>;
 "
 `;
 
 exports[`header parameters 2`] = `
 "import { Command } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.js";
 
 /**
@@ -53,10 +57,10 @@ function encodePath(strings: TemplateStringsArray, ...values: string[]): string 
  * UploadDataCommand
  *
  */
-export class UploadDataCommand extends Command<UploadDataCommandInput, UploadStatus, never, UploadDataCommandHeader> {
+export class UploadDataCommand extends Command<UndefinedOnPartialDeep<UploadDataCommandInput>, UploadStatus, never, UploadDataCommandHeader> {
     public override method = "post" as const;
 
-    constructor(input: UploadDataCommandInput, headers: UploadDataCommandHeader) {
+    constructor(input: UndefinedOnPartialDeep<UploadDataCommandInput>, headers: UploadDataCommandHeader) {
         const {uploadId } = input;
         super(encodePath\`/uploads/\${uploadId}\`, undefined, undefined, headers);
     }
@@ -137,16 +141,19 @@ export const nullableImageSchema = v.union([v.pipe(v.string(), v.trim()), v.null
 `;
 
 exports[`query and header integer params coerce strings to numbers 1`] = `
-"export type Dummy = string;
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type Dummy = string;
 export type ExpireTime = number;
 export type ListFilesCommandQuery = {
         exp: \`\${number}\`;
-        limit?: \`\${number}\` | undefined;
+        limit?: \`\${number}\`;
     };
 export type ListFilesCommandHeader = {
         "x-rate-limit": \`\${number}\`;
     };
 export type ListFilesCommandInput = ListFilesCommandQuery;
+export type InputListFilesCommandResponse = UndefinedOnPartialDeep<Dummy>;
 "
 `;
 

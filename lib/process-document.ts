@@ -97,9 +97,6 @@ function createUnion(...types: (string | undefined)[]) {
 	);
 }
 
-const isInput = (t: TypeAliasDeclaration | InterfaceDeclaration) =>
-	t.getName()?.endsWith("Input");
-
 export async function processOpenApiDocument(
 	outputDir: string,
 	schema: Simplify<oas31.OpenAPIObject>,
@@ -162,6 +159,15 @@ export async function processOpenApiDocument(
 		| string
 	>();
 
+	// The exact Input type-arg expressions used in `Command<I, …>` per
+	// operation. The client's `<AllInputs, …>` union is built from these so
+	// commands from other generated clients fail the constraint on `.json()`.
+	const inputTypeArgs = new Set<string>();
+
+	// Bare type names referenced by `inputTypeArgs` expressions — collected at
+	// the source so we don't have to re-extract them from wrapped strings.
+	const inputTypeNames = new Set<string>();
+
 	const refs = await $RefParser.resolve(schema);
 
 	commandsFile.addImportDeclaration({
@@ -199,13 +205,13 @@ export async function processOpenApiDocument(
 	});
 
 	commandsFile.addImportDeclaration({
-		namedImports: ["Jsonifiable"],
+		namedImports: ["Except", "Jsonifiable", "UndefinedOnPartialDeep"],
 		moduleSpecifier: "type-fest",
 		isTypeOnly: true,
 	});
 
 	typesFile.addImportDeclaration({
-		namedImports: ["Jsonifiable", "Jsonify"],
+		namedImports: ["Jsonifiable", "Jsonify", "UndefinedOnPartialDeep"],
 		moduleSpecifier: "type-fest",
 		isTypeOnly: true,
 	});
@@ -520,18 +526,7 @@ export async function processOpenApiDocument(
 												},
 											);
 
-											const resolvedType = iife(() => {
-												if (qp.required) {
-													return type.type;
-												}
-												if (typeof type.type === "function") {
-													return type.type;
-												}
-												if (type.type) {
-													return Writers.unionType(`${type.type}`, "undefined");
-												}
-												return undefined;
-											});
+											const resolvedType = type.type;
 
 											return {
 												...type,
@@ -851,10 +846,29 @@ export async function processOpenApiDocument(
 							: operationSchemas.wire,
 					});
 
-					// CommandInput
+					// CommandInput — widen optional fields with `| undefined` at the
+					// serialization boundary. Outbound payloads are about to be
+					// JSON.stringified (which drops `undefined`), so callers can pass
+					// `{ field: undefined }` even under exactOptionalPropertyTypes.
+					// For non-JSON bodies (octet-stream, multipart, …) the `body`
+					// field carries a BodyInit class instance (Blob, URLSearchParams,
+					// ReadableStream, …). UndefinedOnPartialDeep traverses class
+					// instances and mangles them, so split the input: widen everything
+					// except `body`, then re-intersect the raw body field.
+					const inputTypeArg = inputType
+						? nonJsonBodyType
+							? `UndefinedOnPartialDeep<Except<${inputType.getName()}, "body">> & Pick<${inputType.getName()}, "body">`
+							: `UndefinedOnPartialDeep<${inputType.getName()}>`
+						: unspecifiedKeyword;
+
+					if (inputType) {
+						inputTypeArgs.add(inputTypeArg);
+						inputTypeNames.add(inputType.getName());
+					}
+
 					commandClassDeclaration
 						.getExtends()
-						?.addTypeArgument(inputType?.getName() || unspecifiedKeyword);
+						?.addTypeArgument(inputTypeArg);
 
 					// if (queryType && !isVoidKeyword(queryType)) {
 					//   ctor.addParameter({
@@ -952,6 +966,20 @@ export async function processOpenApiDocument(
 								?.addTypeArgument(`${outputTypeName}`);
 							hasOutputType = true;
 
+							// Handler-return alias for `c.json(...)` on the server side:
+							// about to be JSON.stringified (drops `undefined`), so the
+							// optional fields can carry `undefined`. Mirrors the `input*`
+							// prefix used for the lax variant in valibot.ts.
+							typesFile.addTypeAlias({
+								name: pascalCase(
+									"Input",
+									commandClassDeclaration.getName() || "INVALID",
+									"Response",
+								),
+								type: `UndefinedOnPartialDeep<${outputTypeName}>`,
+								isExported: true,
+							});
+
 							// jsdoc.addTag({
 							//   tagName: 'returns',
 							//   text: `{${retVal}} HTTP ${statusCode}`,
@@ -984,6 +1012,16 @@ export async function processOpenApiDocument(
 								?.addTypeArgument(responseTypeAlias.getName());
 							outputTypes.add(responseTypeAlias);
 							hasOutputType = true;
+
+							typesFile.addTypeAlias({
+								name: pascalCase(
+									"Input",
+									commandClassDeclaration.getName() || "INVALID",
+									"Response",
+								),
+								type: `UndefinedOnPartialDeep<${responseTypeAlias.getName()}>`,
+								isExported: true,
+							});
 						}
 					}
 
@@ -1089,7 +1127,9 @@ export async function processOpenApiDocument(
 						if (!isUnspecifiedKeyword(inputType)) {
 							const cctorParam = ctor.addParameter({
 								name: "input",
-								type: inputType.getName(),
+								type: hasNonJsonBody
+									? `UndefinedOnPartialDeep<Except<${inputType.getName()}, "body">> & Pick<${inputType.getName()}, "body">`
+									: `UndefinedOnPartialDeep<${inputType.getName()}>`,
 								...(allInputOptional && { hasQuestionToken: true }),
 							});
 
@@ -1203,28 +1243,6 @@ export async function processOpenApiDocument(
 		}
 	}
 
-	const inputTypes = typesFile.getTypeAliases().filter((t) => isInput(t));
-	const inputUnion = createUnion(
-		...new Set(inputTypes.toSorted().map((t) => t.getName())),
-	);
-	const outputUnion = createUnion(
-		...[...outputTypes].map((t) => (typeof t === "string" ? t : t.getName())),
-	);
-
-	const allInputs = inputUnion
-		? mainFile.addTypeAlias({
-				name: "AllInputs",
-				type: inputUnion,
-			})
-		: undefined;
-
-	const allOutputs = outputUnion
-		? mainFile.addTypeAlias({
-				name: "AllOutputs",
-				type: outputUnion,
-			})
-		: undefined;
-
 	const serviceClientClassName = "RestServiceClient";
 	const fetcherName = "createIsomorphicNativeFetcher";
 	const configType = "RestServiceClientConfig";
@@ -1241,19 +1259,51 @@ export async function processOpenApiDocument(
 		],
 	});
 
-	const namedImports = [...new Set([...inputTypes, ...outputTypes])].filter(
-		<T>(t: T | string | typeof unspecifiedKeyword): t is T =>
-			typeof t !== "string",
+	// Cross-client guard: commands from another generated client fail the
+	// `<AllInputs, AllOutputs>` constraint on `.json()`.
+	const outputUnionMembers = [...outputTypes]
+		.map((t) => (typeof t === "string" ? t : t.getName()))
+		.filter(
+			(name): name is string => !!name && name !== unspecifiedKeyword,
+		);
+
+	const allInputs =
+		inputTypeArgs.size > 0
+			? mainFile.addTypeAlias({
+					name: "AllInputs",
+					type: createUnion(...inputTypeArgs),
+				})
+			: undefined;
+
+	const allOutputs =
+		outputUnionMembers.length > 0
+			? mainFile.addTypeAlias({
+					name: "AllOutputs",
+					type: createUnion(...outputUnionMembers),
+				})
+			: undefined;
+
+	const outputTypeNames = new Set<string>(
+		[...outputTypes]
+			.map((t) => (typeof t === "string" ? t : t.getName()))
+			.filter((n): n is string => !!n && n !== emptyKeyword)
+			.map((n) => n.replace(/\[\]$/, "")),
 	);
 
-	if (namedImports.length > 0) {
+	const importNames = new Set([...inputTypeNames, ...outputTypeNames]);
+
+	if (importNames.size > 0) {
 		mainFile.addImportDeclaration({
 			moduleSpecifier: typesModuleSpecifier,
-			namedImports: namedImports
-				.toSorted((a, b) => a.getName().localeCompare(b.getName()))
-				.map((t) => ({
-					name: t.getName(),
-				})),
+			namedImports: [...importNames].toSorted(),
+			isTypeOnly: true,
+		});
+	}
+
+	if (inputTypeArgs.size > 0) {
+		mainFile.addImportDeclaration({
+			moduleSpecifier: "type-fest",
+			namedImports: ["Except", "UndefinedOnPartialDeep"],
 			isTypeOnly: true,
 		});
 	}
@@ -1261,9 +1311,7 @@ export async function processOpenApiDocument(
 	const clientClassDeclaration = mainFile.addClass({
 		name: pascalCase(schema.info.title, "RestClient"),
 		isExported: true,
-		extends: `${serviceClientClassName}<${allInputs?.getName() || unspecifiedKeyword}, ${
-			allOutputs?.getName() || unspecifiedKeyword
-		}>`,
+		extends: `${serviceClientClassName}<${allInputs?.getName() || unspecifiedKeyword}, ${allOutputs?.getName() || unspecifiedKeyword}>`,
 	});
 
 	const ctor = clientClassDeclaration.addConstructor();

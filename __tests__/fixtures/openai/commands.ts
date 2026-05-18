@@ -3,11 +3,12 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:45.230Z
+ * Generated on 2026-05-18T09:27:31.161Z
  *
  */
 /** eslint-disable max-classes */
 import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
+import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
 	CreateChatCompletionCommandInput,
 	CreateChatCompletionResponse,
@@ -204,12 +205,12 @@ function encodePath(
  * @summary Creates a model response for the given chat conversation.
  */
 export class CreateChatCompletionCommand extends Command<
-	CreateChatCompletionCommandInput,
+	UndefinedOnPartialDeep<CreateChatCompletionCommandInput>,
 	CreateChatCompletionResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateChatCompletionCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateChatCompletionCommandInput>) {
 		const body = input;
 		super("/chat/completions", jsonStringify(body));
 	}
@@ -221,12 +222,12 @@ export class CreateChatCompletionCommand extends Command<
  * @summary Creates a completion for the provided prompt and parameters.
  */
 export class CreateCompletionCommand extends Command<
-	CreateCompletionCommandInput,
+	UndefinedOnPartialDeep<CreateCompletionCommandInput>,
 	CreateCompletionResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateCompletionCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateCompletionCommandInput>) {
 		const body = input;
 		super("/completions", jsonStringify(body));
 	}
@@ -238,12 +239,12 @@ export class CreateCompletionCommand extends Command<
  * @summary Creates an image given a prompt.
  */
 export class CreateImageCommand extends Command<
-	CreateImageCommandInput,
+	UndefinedOnPartialDeep<CreateImageCommandInput>,
 	ImagesResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateImageCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateImageCommandInput>) {
 		const body = input;
 		super("/images/generations", jsonStringify(body));
 	}
@@ -255,12 +256,16 @@ export class CreateImageCommand extends Command<
  * @summary Creates an edited or extended image given an original image and a prompt.
  */
 export class CreateImageEditCommand extends Command<
-	CreateImageEditCommandInput,
+	UndefinedOnPartialDeep<Except<CreateImageEditCommandInput, "body">> &
+		Pick<CreateImageEditCommandInput, "body">,
 	ImagesResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateImageEditCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<Except<CreateImageEditCommandInput, "body">> &
+			Pick<CreateImageEditCommandInput, "body">,
+	) {
 		const { body } = input;
 		super("/images/edits", body);
 	}
@@ -272,12 +277,18 @@ export class CreateImageEditCommand extends Command<
  * @summary Creates a variation of a given image.
  */
 export class CreateImageVariationCommand extends Command<
-	CreateImageVariationCommandInput,
+	UndefinedOnPartialDeep<Except<CreateImageVariationCommandInput, "body">> &
+		Pick<CreateImageVariationCommandInput, "body">,
 	ImagesResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateImageVariationCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<
+			Except<CreateImageVariationCommandInput, "body">
+		> &
+			Pick<CreateImageVariationCommandInput, "body">,
+	) {
 		const { body } = input;
 		super("/images/variations", body);
 	}
@@ -289,12 +300,12 @@ export class CreateImageVariationCommand extends Command<
  * @summary Creates an embedding vector representing the input text.
  */
 export class CreateEmbeddingCommand extends Command<
-	CreateEmbeddingCommandInput,
+	UndefinedOnPartialDeep<CreateEmbeddingCommandInput>,
 	CreateEmbeddingResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateEmbeddingCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateEmbeddingCommandInput>) {
 		const body = input;
 		super("/embeddings", jsonStringify(body));
 	}
@@ -306,12 +317,12 @@ export class CreateEmbeddingCommand extends Command<
  * @summary Generates audio from the input text.
  */
 export class CreateSpeechCommand extends Command<
-	CreateSpeechCommandInput,
+	UndefinedOnPartialDeep<CreateSpeechCommandInput>,
 	unknown
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateSpeechCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateSpeechCommandInput>) {
 		const body = input;
 		super("/audio/speech", jsonStringify(body));
 	}
@@ -323,12 +334,18 @@ export class CreateSpeechCommand extends Command<
  * @summary Transcribes audio into the input language.
  */
 export class CreateTranscriptionCommand extends Command<
-	CreateTranscriptionCommandInput,
+	UndefinedOnPartialDeep<Except<CreateTranscriptionCommandInput, "body">> &
+		Pick<CreateTranscriptionCommandInput, "body">,
 	CreateTranscriptionCommandOutput
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateTranscriptionCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<
+			Except<CreateTranscriptionCommandInput, "body">
+		> &
+			Pick<CreateTranscriptionCommandInput, "body">,
+	) {
 		const { body } = input;
 		super("/audio/transcriptions", body);
 	}
@@ -340,12 +357,18 @@ export class CreateTranscriptionCommand extends Command<
  * @summary Translates audio into English.
  */
 export class CreateTranslationCommand extends Command<
-	CreateTranslationCommandInput,
+	UndefinedOnPartialDeep<Except<CreateTranslationCommandInput, "body">> &
+		Pick<CreateTranslationCommandInput, "body">,
 	CreateTranslationCommandOutput
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateTranslationCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<
+			Except<CreateTranslationCommandInput, "body">
+		> &
+			Pick<CreateTranslationCommandInput, "body">,
+	) {
 		const { body } = input;
 		super("/audio/translations", body);
 	}
@@ -357,13 +380,13 @@ export class CreateTranslationCommand extends Command<
  * @summary Returns a list of files that belong to the user's organization.
  */
 export class ListFilesCommand extends Command<
-	ListFilesCommandInput,
+	UndefinedOnPartialDeep<ListFilesCommandInput>,
 	ListFilesResponse,
 	ListFilesCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListFilesCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListFilesCommandInput>) {
 		const { purpose } = input ?? {};
 		super("/files", undefined, stripUndefined({ purpose }));
 	}
@@ -393,12 +416,16 @@ export class ListFilesCommand extends Command<
  * storage limits.
  */
 export class CreateFileCommand extends Command<
-	CreateFileCommandInput,
+	UndefinedOnPartialDeep<Except<CreateFileCommandInput, "body">> &
+		Pick<CreateFileCommandInput, "body">,
 	OpenAiFile
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateFileCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<Except<CreateFileCommandInput, "body">> &
+			Pick<CreateFileCommandInput, "body">,
+	) {
 		const { body } = input;
 		super("/files", body);
 	}
@@ -410,12 +437,12 @@ export class CreateFileCommand extends Command<
  * @summary Delete a file.
  */
 export class DeleteFileCommand extends Command<
-	DeleteFileCommandInput,
+	UndefinedOnPartialDeep<DeleteFileCommandInput>,
 	DeleteFileResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteFileCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteFileCommandInput>) {
 		const { file_id } = input;
 		super(encodePath`/files/${file_id}`);
 	}
@@ -427,12 +454,12 @@ export class DeleteFileCommand extends Command<
  * @summary Returns information about a specific file.
  */
 export class RetrieveFileCommand extends Command<
-	RetrieveFileCommandInput,
+	UndefinedOnPartialDeep<RetrieveFileCommandInput>,
 	OpenAiFile
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveFileCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveFileCommandInput>) {
 		const { file_id } = input;
 		super(encodePath`/files/${file_id}`);
 	}
@@ -444,12 +471,12 @@ export class RetrieveFileCommand extends Command<
  * @summary Returns the contents of the specified file.
  */
 export class DownloadFileCommand extends Command<
-	DownloadFileCommandInput,
+	UndefinedOnPartialDeep<DownloadFileCommandInput>,
 	DownloadFileCommandOutput
 > {
 	public override method = "get" as const;
 
-	constructor(input: DownloadFileCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DownloadFileCommandInput>) {
 		const { file_id } = input;
 		super(encodePath`/files/${file_id}/content`);
 	}
@@ -477,12 +504,12 @@ export class DownloadFileCommand extends Command<
  * File](/docs/api-reference/files/create).
  */
 export class CreateUploadCommand extends Command<
-	CreateUploadCommandInput,
+	UndefinedOnPartialDeep<CreateUploadCommandInput>,
 	Upload
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateUploadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateUploadCommandInput>) {
 		const body = input;
 		super("/uploads", jsonStringify(body));
 	}
@@ -503,12 +530,16 @@ export class CreateUploadCommand extends Command<
  * Upload](/docs/api-reference/uploads/complete).
  */
 export class AddUploadPartCommand extends Command<
-	AddUploadPartCommandInput,
+	UndefinedOnPartialDeep<Except<AddUploadPartCommandInput, "body">> &
+		Pick<AddUploadPartCommandInput, "body">,
 	UploadPart
 > {
 	public override method = "post" as const;
 
-	constructor(input: AddUploadPartCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<Except<AddUploadPartCommandInput, "body">> &
+			Pick<AddUploadPartCommandInput, "body">,
+	) {
 		const { upload_id, body } = input;
 		super(encodePath`/uploads/${upload_id}/parts`, body);
 	}
@@ -531,12 +562,12 @@ export class AddUploadPartCommand extends Command<
  * after an Upload is completed.
  */
 export class CompleteUploadCommand extends Command<
-	CompleteUploadCommandInput,
+	UndefinedOnPartialDeep<CompleteUploadCommandInput>,
 	Upload
 > {
 	public override method = "post" as const;
 
-	constructor(input: CompleteUploadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CompleteUploadCommandInput>) {
 		const { upload_id, ...body } = input;
 		super(encodePath`/uploads/${upload_id}/complete`, jsonStringify(body));
 	}
@@ -548,12 +579,12 @@ export class CompleteUploadCommand extends Command<
  * @summary Cancels the Upload. No Parts may be added after an Upload is cancelled.
  */
 export class CancelUploadCommand extends Command<
-	CancelUploadCommandInput,
+	UndefinedOnPartialDeep<CancelUploadCommandInput>,
 	Upload
 > {
 	public override method = "post" as const;
 
-	constructor(input: CancelUploadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CancelUploadCommandInput>) {
 		const { upload_id } = input;
 		super(encodePath`/uploads/${upload_id}/cancel`);
 	}
@@ -571,12 +602,12 @@ export class CancelUploadCommand extends Command<
  * [Learn more about fine-tuning](/docs/guides/fine-tuning)
  */
 export class CreateFineTuningJobCommand extends Command<
-	CreateFineTuningJobCommandInput,
+	UndefinedOnPartialDeep<CreateFineTuningJobCommandInput>,
 	FineTuningJob
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateFineTuningJobCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateFineTuningJobCommandInput>) {
 		const body = input;
 		super("/fine_tuning/jobs", jsonStringify(body));
 	}
@@ -588,13 +619,15 @@ export class CreateFineTuningJobCommand extends Command<
  * @summary List your organization's fine-tuning jobs
  */
 export class ListPaginatedFineTuningJobsCommand extends Command<
-	ListPaginatedFineTuningJobsCommandInput,
+	UndefinedOnPartialDeep<ListPaginatedFineTuningJobsCommandInput>,
 	ListPaginatedFineTuningJobsResponse,
 	ListPaginatedFineTuningJobsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListPaginatedFineTuningJobsCommandInput) {
+	constructor(
+		input?: UndefinedOnPartialDeep<ListPaginatedFineTuningJobsCommandInput>,
+	) {
 		const { after, limit } = input ?? {};
 		super("/fine_tuning/jobs", undefined, stripUndefined({ after, limit }));
 	}
@@ -608,12 +641,14 @@ export class ListPaginatedFineTuningJobsCommand extends Command<
  * [Learn more about fine-tuning](/docs/guides/fine-tuning)
  */
 export class RetrieveFineTuningJobCommand extends Command<
-	RetrieveFineTuningJobCommandInput,
+	UndefinedOnPartialDeep<RetrieveFineTuningJobCommandInput>,
 	FineTuningJob
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveFineTuningJobCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<RetrieveFineTuningJobCommandInput>,
+	) {
 		const { fine_tuning_job_id } = input;
 		super(encodePath`/fine_tuning/jobs/${fine_tuning_job_id}`);
 	}
@@ -625,13 +660,13 @@ export class RetrieveFineTuningJobCommand extends Command<
  * @summary Get status updates for a fine-tuning job.
  */
 export class ListFineTuningEventsCommand extends Command<
-	ListFineTuningEventsCommandInput,
+	UndefinedOnPartialDeep<ListFineTuningEventsCommandInput>,
 	ListFineTuningJobEventsResponse,
 	ListFineTuningEventsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListFineTuningEventsCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListFineTuningEventsCommandInput>) {
 		const { fine_tuning_job_id, after, limit } = input;
 		super(
 			encodePath`/fine_tuning/jobs/${fine_tuning_job_id}/events`,
@@ -647,12 +682,12 @@ export class ListFineTuningEventsCommand extends Command<
  * @summary Immediately cancel a fine-tune job.
  */
 export class CancelFineTuningJobCommand extends Command<
-	CancelFineTuningJobCommandInput,
+	UndefinedOnPartialDeep<CancelFineTuningJobCommandInput>,
 	FineTuningJob
 > {
 	public override method = "post" as const;
 
-	constructor(input: CancelFineTuningJobCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CancelFineTuningJobCommandInput>) {
 		const { fine_tuning_job_id } = input;
 		super(encodePath`/fine_tuning/jobs/${fine_tuning_job_id}/cancel`);
 	}
@@ -664,13 +699,15 @@ export class CancelFineTuningJobCommand extends Command<
  * @summary List checkpoints for a fine-tuning job.
  */
 export class ListFineTuningJobCheckpointsCommand extends Command<
-	ListFineTuningJobCheckpointsCommandInput,
+	UndefinedOnPartialDeep<ListFineTuningJobCheckpointsCommandInput>,
 	ListFineTuningJobCheckpointsResponse,
 	ListFineTuningJobCheckpointsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListFineTuningJobCheckpointsCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<ListFineTuningJobCheckpointsCommandInput>,
+	) {
 		const { fine_tuning_job_id, after, limit } = input;
 		super(
 			encodePath`/fine_tuning/jobs/${fine_tuning_job_id}/checkpoints`,
@@ -687,7 +724,7 @@ export class ListFineTuningJobCheckpointsCommand extends Command<
  * each one such as the owner and availability.
  */
 export class ListModelsCommand extends Command<
-	ListModelsCommandInput,
+	UndefinedOnPartialDeep<ListModelsCommandInput>,
 	ListModelsResponse
 > {
 	public override method = "get" as const;
@@ -704,12 +741,12 @@ export class ListModelsCommand extends Command<
  * such as the owner and permissioning.
  */
 export class RetrieveModelCommand extends Command<
-	RetrieveModelCommandInput,
+	UndefinedOnPartialDeep<RetrieveModelCommandInput>,
 	Model
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveModelCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveModelCommandInput>) {
 		const { model } = input;
 		super(encodePath`/models/${model}`);
 	}
@@ -722,12 +759,12 @@ export class RetrieveModelCommand extends Command<
  * organization to delete a model.
  */
 export class DeleteModelCommand extends Command<
-	DeleteModelCommandInput,
+	UndefinedOnPartialDeep<DeleteModelCommandInput>,
 	DeleteModelResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteModelCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteModelCommandInput>) {
 		const { model } = input;
 		super(encodePath`/models/${model}`);
 	}
@@ -740,12 +777,12 @@ export class DeleteModelCommand extends Command<
  * more in the [moderation guide](/docs/guides/moderation).
  */
 export class CreateModerationCommand extends Command<
-	CreateModerationCommandInput,
+	UndefinedOnPartialDeep<CreateModerationCommandInput>,
 	CreateModerationResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateModerationCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateModerationCommandInput>) {
 		const body = input;
 		super("/moderations", jsonStringify(body));
 	}
@@ -757,13 +794,13 @@ export class CreateModerationCommand extends Command<
  * @summary Returns a list of assistants.
  */
 export class ListAssistantsCommand extends Command<
-	ListAssistantsCommandInput,
+	UndefinedOnPartialDeep<ListAssistantsCommandInput>,
 	ListAssistantsResponse,
 	ListAssistantsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListAssistantsCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListAssistantsCommandInput>) {
 		const { limit, order, after, before } = input ?? {};
 		super(
 			"/assistants",
@@ -779,12 +816,12 @@ export class ListAssistantsCommand extends Command<
  * @summary Create an assistant with a model and instructions.
  */
 export class CreateAssistantCommand extends Command<
-	CreateAssistantCommandInput,
+	UndefinedOnPartialDeep<CreateAssistantCommandInput>,
 	AssistantObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateAssistantCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateAssistantCommandInput>) {
 		const body = input;
 		super("/assistants", jsonStringify(body));
 	}
@@ -796,12 +833,12 @@ export class CreateAssistantCommand extends Command<
  * @summary Retrieves an assistant.
  */
 export class GetAssistantCommand extends Command<
-	GetAssistantCommandInput,
+	UndefinedOnPartialDeep<GetAssistantCommandInput>,
 	AssistantObject
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetAssistantCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetAssistantCommandInput>) {
 		const { assistant_id } = input;
 		super(encodePath`/assistants/${assistant_id}`);
 	}
@@ -813,12 +850,12 @@ export class GetAssistantCommand extends Command<
  * @summary Modifies an assistant.
  */
 export class ModifyAssistantCommand extends Command<
-	ModifyAssistantCommandInput,
+	UndefinedOnPartialDeep<ModifyAssistantCommandInput>,
 	AssistantObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyAssistantCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyAssistantCommandInput>) {
 		const { assistant_id, ...body } = input;
 		super(encodePath`/assistants/${assistant_id}`, jsonStringify(body));
 	}
@@ -830,12 +867,12 @@ export class ModifyAssistantCommand extends Command<
  * @summary Delete an assistant.
  */
 export class DeleteAssistantCommand extends Command<
-	DeleteAssistantCommandInput,
+	UndefinedOnPartialDeep<DeleteAssistantCommandInput>,
 	DeleteAssistantResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteAssistantCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteAssistantCommandInput>) {
 		const { assistant_id } = input;
 		super(encodePath`/assistants/${assistant_id}`);
 	}
@@ -847,12 +884,12 @@ export class DeleteAssistantCommand extends Command<
  * @summary Create a thread.
  */
 export class CreateThreadCommand extends Command<
-	CreateThreadCommandInput,
+	UndefinedOnPartialDeep<CreateThreadCommandInput>,
 	ThreadObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateThreadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateThreadCommandInput>) {
 		const body = input;
 		super("/threads", jsonStringify(body));
 	}
@@ -864,12 +901,12 @@ export class CreateThreadCommand extends Command<
  * @summary Retrieves a thread.
  */
 export class GetThreadCommand extends Command<
-	GetThreadCommandInput,
+	UndefinedOnPartialDeep<GetThreadCommandInput>,
 	ThreadObject
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetThreadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetThreadCommandInput>) {
 		const { thread_id } = input;
 		super(encodePath`/threads/${thread_id}`);
 	}
@@ -881,12 +918,12 @@ export class GetThreadCommand extends Command<
  * @summary Modifies a thread.
  */
 export class ModifyThreadCommand extends Command<
-	ModifyThreadCommandInput,
+	UndefinedOnPartialDeep<ModifyThreadCommandInput>,
 	ThreadObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyThreadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyThreadCommandInput>) {
 		const { thread_id, ...body } = input;
 		super(encodePath`/threads/${thread_id}`, jsonStringify(body));
 	}
@@ -898,12 +935,12 @@ export class ModifyThreadCommand extends Command<
  * @summary Delete a thread.
  */
 export class DeleteThreadCommand extends Command<
-	DeleteThreadCommandInput,
+	UndefinedOnPartialDeep<DeleteThreadCommandInput>,
 	DeleteThreadResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteThreadCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteThreadCommandInput>) {
 		const { thread_id } = input;
 		super(encodePath`/threads/${thread_id}`);
 	}
@@ -915,13 +952,13 @@ export class DeleteThreadCommand extends Command<
  * @summary Returns a list of messages for a given thread.
  */
 export class ListMessagesCommand extends Command<
-	ListMessagesCommandInput,
+	UndefinedOnPartialDeep<ListMessagesCommandInput>,
 	ListMessagesResponse,
 	ListMessagesCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListMessagesCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListMessagesCommandInput>) {
 		const { thread_id, limit, order, after, before, run_id } = input;
 		super(
 			encodePath`/threads/${thread_id}/messages`,
@@ -937,12 +974,12 @@ export class ListMessagesCommand extends Command<
  * @summary Create a message.
  */
 export class CreateMessageCommand extends Command<
-	CreateMessageCommandInput,
+	UndefinedOnPartialDeep<CreateMessageCommandInput>,
 	MessageObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateMessageCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateMessageCommandInput>) {
 		const { thread_id, ...body } = input;
 		super(encodePath`/threads/${thread_id}/messages`, jsonStringify(body));
 	}
@@ -954,12 +991,12 @@ export class CreateMessageCommand extends Command<
  * @summary Retrieve a message.
  */
 export class GetMessageCommand extends Command<
-	GetMessageCommandInput,
+	UndefinedOnPartialDeep<GetMessageCommandInput>,
 	MessageObject
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetMessageCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetMessageCommandInput>) {
 		const { thread_id, message_id } = input;
 		super(encodePath`/threads/${thread_id}/messages/${message_id}`);
 	}
@@ -971,12 +1008,12 @@ export class GetMessageCommand extends Command<
  * @summary Modifies a message.
  */
 export class ModifyMessageCommand extends Command<
-	ModifyMessageCommandInput,
+	UndefinedOnPartialDeep<ModifyMessageCommandInput>,
 	MessageObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyMessageCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyMessageCommandInput>) {
 		const { thread_id, message_id, ...body } = input;
 		super(
 			encodePath`/threads/${thread_id}/messages/${message_id}`,
@@ -991,12 +1028,12 @@ export class ModifyMessageCommand extends Command<
  * @summary Deletes a message.
  */
 export class DeleteMessageCommand extends Command<
-	DeleteMessageCommandInput,
+	UndefinedOnPartialDeep<DeleteMessageCommandInput>,
 	DeleteMessageResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteMessageCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteMessageCommandInput>) {
 		const { thread_id, message_id } = input;
 		super(encodePath`/threads/${thread_id}/messages/${message_id}`);
 	}
@@ -1008,12 +1045,12 @@ export class DeleteMessageCommand extends Command<
  * @summary Create a thread and run it in one request.
  */
 export class CreateThreadAndRunCommand extends Command<
-	CreateThreadAndRunCommandInput,
+	UndefinedOnPartialDeep<CreateThreadAndRunCommandInput>,
 	RunObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateThreadAndRunCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateThreadAndRunCommandInput>) {
 		const body = input;
 		super("/threads/runs", jsonStringify(body));
 	}
@@ -1025,13 +1062,13 @@ export class CreateThreadAndRunCommand extends Command<
  * @summary Returns a list of runs belonging to a thread.
  */
 export class ListRunsCommand extends Command<
-	ListRunsCommandInput,
+	UndefinedOnPartialDeep<ListRunsCommandInput>,
 	ListRunsResponse,
 	ListRunsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListRunsCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListRunsCommandInput>) {
 		const { thread_id, limit, order, after, before } = input;
 		super(
 			encodePath`/threads/${thread_id}/runs`,
@@ -1047,13 +1084,13 @@ export class ListRunsCommand extends Command<
  * @summary Create a run.
  */
 export class CreateRunCommand extends Command<
-	CreateRunCommandInput,
+	UndefinedOnPartialDeep<CreateRunCommandInput>,
 	RunObject,
 	CreateRunCommandQuery
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateRunCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateRunCommandInput>) {
 		const { thread_id, include, ...body } = input;
 		super(
 			encodePath`/threads/${thread_id}/runs`,
@@ -1068,10 +1105,13 @@ export class CreateRunCommand extends Command<
  *
  * @summary Retrieves a run.
  */
-export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
+export class GetRunCommand extends Command<
+	UndefinedOnPartialDeep<GetRunCommandInput>,
+	RunObject
+> {
 	public override method = "get" as const;
 
-	constructor(input: GetRunCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetRunCommandInput>) {
 		const { thread_id, run_id } = input;
 		super(encodePath`/threads/${thread_id}/runs/${run_id}`);
 	}
@@ -1083,12 +1123,12 @@ export class GetRunCommand extends Command<GetRunCommandInput, RunObject> {
  * @summary Modifies a run.
  */
 export class ModifyRunCommand extends Command<
-	ModifyRunCommandInput,
+	UndefinedOnPartialDeep<ModifyRunCommandInput>,
 	RunObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyRunCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyRunCommandInput>) {
 		const { thread_id, run_id, ...body } = input;
 		super(
 			encodePath`/threads/${thread_id}/runs/${run_id}`,
@@ -1106,12 +1146,14 @@ export class ModifyRunCommand extends Command<
  * submitted in a single request.
  */
 export class SubmitToolOuputsToRunCommand extends Command<
-	SubmitToolOuputsToRunCommandInput,
+	UndefinedOnPartialDeep<SubmitToolOuputsToRunCommandInput>,
 	RunObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: SubmitToolOuputsToRunCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<SubmitToolOuputsToRunCommandInput>,
+	) {
 		const { thread_id, run_id, ...body } = input;
 		super(
 			encodePath`/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`,
@@ -1126,12 +1168,12 @@ export class SubmitToolOuputsToRunCommand extends Command<
  * @summary Cancels a run that is `in_progress`.
  */
 export class CancelRunCommand extends Command<
-	CancelRunCommandInput,
+	UndefinedOnPartialDeep<CancelRunCommandInput>,
 	RunObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CancelRunCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CancelRunCommandInput>) {
 		const { thread_id, run_id } = input;
 		super(encodePath`/threads/${thread_id}/runs/${run_id}/cancel`);
 	}
@@ -1143,13 +1185,13 @@ export class CancelRunCommand extends Command<
  * @summary Returns a list of run steps belonging to a run.
  */
 export class ListRunStepsCommand extends Command<
-	ListRunStepsCommandInput,
+	UndefinedOnPartialDeep<ListRunStepsCommandInput>,
 	ListRunStepsResponse,
 	ListRunStepsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListRunStepsCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListRunStepsCommandInput>) {
 		const { thread_id, run_id, limit, order, after, before, include } = input;
 		super(
 			encodePath`/threads/${thread_id}/runs/${run_id}/steps`,
@@ -1165,13 +1207,13 @@ export class ListRunStepsCommand extends Command<
  * @summary Retrieves a run step.
  */
 export class GetRunStepCommand extends Command<
-	GetRunStepCommandInput,
+	UndefinedOnPartialDeep<GetRunStepCommandInput>,
 	RunStepObject,
 	GetRunStepCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetRunStepCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetRunStepCommandInput>) {
 		const { thread_id, run_id, step_id, include } = input;
 		super(
 			encodePath`/threads/${thread_id}/runs/${run_id}/steps/${step_id}`,
@@ -1187,13 +1229,13 @@ export class GetRunStepCommand extends Command<
  * @summary Returns a list of vector stores.
  */
 export class ListVectorStoresCommand extends Command<
-	ListVectorStoresCommandInput,
+	UndefinedOnPartialDeep<ListVectorStoresCommandInput>,
 	ListVectorStoresResponse,
 	ListVectorStoresCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListVectorStoresCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListVectorStoresCommandInput>) {
 		const { limit, order, after, before } = input ?? {};
 		super(
 			"/vector_stores",
@@ -1209,12 +1251,12 @@ export class ListVectorStoresCommand extends Command<
  * @summary Create a vector store.
  */
 export class CreateVectorStoreCommand extends Command<
-	CreateVectorStoreCommandInput,
+	UndefinedOnPartialDeep<CreateVectorStoreCommandInput>,
 	VectorStoreObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateVectorStoreCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateVectorStoreCommandInput>) {
 		const body = input;
 		super("/vector_stores", jsonStringify(body));
 	}
@@ -1226,12 +1268,12 @@ export class CreateVectorStoreCommand extends Command<
  * @summary Retrieves a vector store.
  */
 export class GetVectorStoreCommand extends Command<
-	GetVectorStoreCommandInput,
+	UndefinedOnPartialDeep<GetVectorStoreCommandInput>,
 	VectorStoreObject
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetVectorStoreCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetVectorStoreCommandInput>) {
 		const { vector_store_id } = input;
 		super(encodePath`/vector_stores/${vector_store_id}`);
 	}
@@ -1243,12 +1285,12 @@ export class GetVectorStoreCommand extends Command<
  * @summary Modifies a vector store.
  */
 export class ModifyVectorStoreCommand extends Command<
-	ModifyVectorStoreCommandInput,
+	UndefinedOnPartialDeep<ModifyVectorStoreCommandInput>,
 	VectorStoreObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyVectorStoreCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyVectorStoreCommandInput>) {
 		const { vector_store_id, ...body } = input;
 		super(encodePath`/vector_stores/${vector_store_id}`, jsonStringify(body));
 	}
@@ -1260,12 +1302,12 @@ export class ModifyVectorStoreCommand extends Command<
  * @summary Delete a vector store.
  */
 export class DeleteVectorStoreCommand extends Command<
-	DeleteVectorStoreCommandInput,
+	UndefinedOnPartialDeep<DeleteVectorStoreCommandInput>,
 	DeleteVectorStoreResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteVectorStoreCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteVectorStoreCommandInput>) {
 		const { vector_store_id } = input;
 		super(encodePath`/vector_stores/${vector_store_id}`);
 	}
@@ -1277,13 +1319,13 @@ export class DeleteVectorStoreCommand extends Command<
  * @summary Returns a list of vector store files.
  */
 export class ListVectorStoreFilesCommand extends Command<
-	ListVectorStoreFilesCommandInput,
+	UndefinedOnPartialDeep<ListVectorStoreFilesCommandInput>,
 	ListVectorStoreFilesResponse,
 	ListVectorStoreFilesCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListVectorStoreFilesCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListVectorStoreFilesCommandInput>) {
 		const { vector_store_id, limit, order, after, before, filter } = input;
 		super(
 			encodePath`/vector_stores/${vector_store_id}/files`,
@@ -1300,12 +1342,14 @@ export class ListVectorStoreFilesCommand extends Command<
  * to a [vector store](/docs/api-reference/vector-stores/object).
  */
 export class CreateVectorStoreFileCommand extends Command<
-	CreateVectorStoreFileCommandInput,
+	UndefinedOnPartialDeep<CreateVectorStoreFileCommandInput>,
 	VectorStoreFileObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateVectorStoreFileCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<CreateVectorStoreFileCommandInput>,
+	) {
 		const { vector_store_id, ...body } = input;
 		super(
 			encodePath`/vector_stores/${vector_store_id}/files`,
@@ -1320,12 +1364,12 @@ export class CreateVectorStoreFileCommand extends Command<
  * @summary Retrieves a vector store file.
  */
 export class GetVectorStoreFileCommand extends Command<
-	GetVectorStoreFileCommandInput,
+	UndefinedOnPartialDeep<GetVectorStoreFileCommandInput>,
 	VectorStoreFileObject
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetVectorStoreFileCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<GetVectorStoreFileCommandInput>) {
 		const { vector_store_id, file_id } = input;
 		super(encodePath`/vector_stores/${vector_store_id}/files/${file_id}`);
 	}
@@ -1339,12 +1383,14 @@ export class GetVectorStoreFileCommand extends Command<
  * [delete file](/docs/api-reference/files/delete) endpoint.
  */
 export class DeleteVectorStoreFileCommand extends Command<
-	DeleteVectorStoreFileCommandInput,
+	UndefinedOnPartialDeep<DeleteVectorStoreFileCommandInput>,
 	DeleteVectorStoreFileResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteVectorStoreFileCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<DeleteVectorStoreFileCommandInput>,
+	) {
 		const { vector_store_id, file_id } = input;
 		super(encodePath`/vector_stores/${vector_store_id}/files/${file_id}`);
 	}
@@ -1356,12 +1402,14 @@ export class DeleteVectorStoreFileCommand extends Command<
  * @summary Create a vector store file batch.
  */
 export class CreateVectorStoreFileBatchCommand extends Command<
-	CreateVectorStoreFileBatchCommandInput,
+	UndefinedOnPartialDeep<CreateVectorStoreFileBatchCommandInput>,
 	VectorStoreFileBatchObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateVectorStoreFileBatchCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<CreateVectorStoreFileBatchCommandInput>,
+	) {
 		const { vector_store_id, ...body } = input;
 		super(
 			encodePath`/vector_stores/${vector_store_id}/file_batches`,
@@ -1376,12 +1424,14 @@ export class CreateVectorStoreFileBatchCommand extends Command<
  * @summary Retrieves a vector store file batch.
  */
 export class GetVectorStoreFileBatchCommand extends Command<
-	GetVectorStoreFileBatchCommandInput,
+	UndefinedOnPartialDeep<GetVectorStoreFileBatchCommandInput>,
 	VectorStoreFileBatchObject
 > {
 	public override method = "get" as const;
 
-	constructor(input: GetVectorStoreFileBatchCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<GetVectorStoreFileBatchCommandInput>,
+	) {
 		const { vector_store_id, batch_id } = input;
 		super(
 			encodePath`/vector_stores/${vector_store_id}/file_batches/${batch_id}`,
@@ -1396,12 +1446,14 @@ export class GetVectorStoreFileBatchCommand extends Command<
  * files in this batch as soon as possible.
  */
 export class CancelVectorStoreFileBatchCommand extends Command<
-	CancelVectorStoreFileBatchCommandInput,
+	UndefinedOnPartialDeep<CancelVectorStoreFileBatchCommandInput>,
 	VectorStoreFileBatchObject
 > {
 	public override method = "post" as const;
 
-	constructor(input: CancelVectorStoreFileBatchCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<CancelVectorStoreFileBatchCommandInput>,
+	) {
 		const { vector_store_id, batch_id } = input;
 		super(
 			encodePath`/vector_stores/${vector_store_id}/file_batches/${batch_id}/cancel`,
@@ -1415,13 +1467,15 @@ export class CancelVectorStoreFileBatchCommand extends Command<
  * @summary Returns a list of vector store files in a batch.
  */
 export class ListFilesInVectorStoreBatchCommand extends Command<
-	ListFilesInVectorStoreBatchCommandInput,
+	UndefinedOnPartialDeep<ListFilesInVectorStoreBatchCommandInput>,
 	ListVectorStoreFilesResponse,
 	ListFilesInVectorStoreBatchCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListFilesInVectorStoreBatchCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<ListFilesInVectorStoreBatchCommandInput>,
+	) {
 		const { vector_store_id, batch_id, limit, order, after, before, filter } =
 			input;
 		super(
@@ -1438,12 +1492,12 @@ export class ListFilesInVectorStoreBatchCommand extends Command<
  * @summary Creates and executes a batch from an uploaded file of requests
  */
 export class CreateBatchCommand extends Command<
-	CreateBatchCommandInput,
+	UndefinedOnPartialDeep<CreateBatchCommandInput>,
 	Batch
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateBatchCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateBatchCommandInput>) {
 		const body = input;
 		super("/batches", jsonStringify(body));
 	}
@@ -1455,13 +1509,13 @@ export class CreateBatchCommand extends Command<
  * @summary List your organization's batches.
  */
 export class ListBatchesCommand extends Command<
-	ListBatchesCommandInput,
+	UndefinedOnPartialDeep<ListBatchesCommandInput>,
 	ListBatchesResponse,
 	ListBatchesCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListBatchesCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListBatchesCommandInput>) {
 		const { after, limit } = input ?? {};
 		super("/batches", undefined, stripUndefined({ after, limit }));
 	}
@@ -1473,12 +1527,12 @@ export class ListBatchesCommand extends Command<
  * @summary Retrieves a batch.
  */
 export class RetrieveBatchCommand extends Command<
-	RetrieveBatchCommandInput,
+	UndefinedOnPartialDeep<RetrieveBatchCommandInput>,
 	Batch
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveBatchCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveBatchCommandInput>) {
 		const { batch_id } = input;
 		super(encodePath`/batches/${batch_id}`);
 	}
@@ -1492,12 +1546,12 @@ export class RetrieveBatchCommand extends Command<
  * partial results (if any) available in the output file.
  */
 export class CancelBatchCommand extends Command<
-	CancelBatchCommandInput,
+	UndefinedOnPartialDeep<CancelBatchCommandInput>,
 	Batch
 > {
 	public override method = "post" as const;
 
-	constructor(input: CancelBatchCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CancelBatchCommandInput>) {
 		const { batch_id } = input;
 		super(encodePath`/batches/${batch_id}/cancel`);
 	}
@@ -1509,13 +1563,13 @@ export class CancelBatchCommand extends Command<
  * @summary List user actions and configuration changes within this organization.
  */
 export class ListAuditLogsCommand extends Command<
-	ListAuditLogsCommandInput,
+	UndefinedOnPartialDeep<ListAuditLogsCommandInput>,
 	ListAuditLogsResponse,
 	ListAuditLogsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListAuditLogsCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListAuditLogsCommandInput>) {
 		const {
 			effective_at,
 			project_ids,
@@ -1551,13 +1605,13 @@ export class ListAuditLogsCommand extends Command<
  * @summary Returns a list of invites in the organization.
  */
 export class ListInvitesCommand extends Command<
-	ListInvitesCommandInput,
+	UndefinedOnPartialDeep<ListInvitesCommandInput>,
 	InviteListResponse,
 	ListInvitesCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListInvitesCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListInvitesCommandInput>) {
 		const { limit, after } = input ?? {};
 		super("/organization/invites", undefined, stripUndefined({ limit, after }));
 	}
@@ -1569,10 +1623,13 @@ export class ListInvitesCommand extends Command<
  * @summary Create an invite for a user to the organization. The invite must be
  * accepted by the user before they have access to the organization.
  */
-export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
+export class InviteUserCommand extends Command<
+	UndefinedOnPartialDeep<InviteUserCommandInput>,
+	Invite
+> {
 	public override method = "post" as const;
 
-	constructor(input: InviteUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<InviteUserCommandInput>) {
 		const body = input;
 		super("/organization/invites", jsonStringify(body));
 	}
@@ -1584,12 +1641,12 @@ export class InviteUserCommand extends Command<InviteUserCommandInput, Invite> {
  * @summary Retrieves an invite.
  */
 export class RetrieveInviteCommand extends Command<
-	RetrieveInviteCommandInput,
+	UndefinedOnPartialDeep<RetrieveInviteCommandInput>,
 	Invite
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveInviteCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveInviteCommandInput>) {
 		const { invite_id } = input;
 		super(encodePath`/organization/invites/${invite_id}`);
 	}
@@ -1602,12 +1659,12 @@ export class RetrieveInviteCommand extends Command<
  * deleted.
  */
 export class DeleteInviteCommand extends Command<
-	DeleteInviteCommandInput,
+	UndefinedOnPartialDeep<DeleteInviteCommandInput>,
 	InviteDeleteResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteInviteCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteInviteCommandInput>) {
 		const { invite_id } = input;
 		super(encodePath`/organization/invites/${invite_id}`);
 	}
@@ -1619,13 +1676,13 @@ export class DeleteInviteCommand extends Command<
  * @summary Lists all of the users in the organization.
  */
 export class ListUsersCommand extends Command<
-	ListUsersCommandInput,
+	UndefinedOnPartialDeep<ListUsersCommandInput>,
 	UserListResponse,
 	ListUsersCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListUsersCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListUsersCommandInput>) {
 		const { limit, after } = input ?? {};
 		super("/organization/users", undefined, stripUndefined({ limit, after }));
 	}
@@ -1637,12 +1694,12 @@ export class ListUsersCommand extends Command<
  * @summary Retrieves a user by their identifier.
  */
 export class RetrieveUserCommand extends Command<
-	RetrieveUserCommandInput,
+	UndefinedOnPartialDeep<RetrieveUserCommandInput>,
 	User
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveUserCommandInput>) {
 		const { user_id } = input;
 		super(encodePath`/organization/users/${user_id}`);
 	}
@@ -1653,10 +1710,13 @@ export class RetrieveUserCommand extends Command<
  *
  * @summary Modifies a user's role in the organization.
  */
-export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
+export class ModifyUserCommand extends Command<
+	UndefinedOnPartialDeep<ModifyUserCommandInput>,
+	User
+> {
 	public override method = "post" as const;
 
-	constructor(input: ModifyUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyUserCommandInput>) {
 		const { user_id, ...body } = input;
 		super(encodePath`/organization/users/${user_id}`, jsonStringify(body));
 	}
@@ -1668,12 +1728,12 @@ export class ModifyUserCommand extends Command<ModifyUserCommandInput, User> {
  * @summary Deletes a user from the organization.
  */
 export class DeleteUserCommand extends Command<
-	DeleteUserCommandInput,
+	UndefinedOnPartialDeep<DeleteUserCommandInput>,
 	UserDeleteResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteUserCommandInput>) {
 		const { user_id } = input;
 		super(encodePath`/organization/users/${user_id}`);
 	}
@@ -1685,13 +1745,13 @@ export class DeleteUserCommand extends Command<
  * @summary Returns a list of projects.
  */
 export class ListProjectsCommand extends Command<
-	ListProjectsCommandInput,
+	UndefinedOnPartialDeep<ListProjectsCommandInput>,
 	ProjectListResponse,
 	ListProjectsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: ListProjectsCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<ListProjectsCommandInput>) {
 		const { limit, after, include_archived } = input ?? {};
 		super(
 			"/organization/projects",
@@ -1708,12 +1768,12 @@ export class ListProjectsCommand extends Command<
  * archived, but cannot be deleted.
  */
 export class CreateProjectCommand extends Command<
-	CreateProjectCommandInput,
+	UndefinedOnPartialDeep<CreateProjectCommandInput>,
 	Project
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateProjectCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateProjectCommandInput>) {
 		const body = input;
 		super("/organization/projects", jsonStringify(body));
 	}
@@ -1725,12 +1785,12 @@ export class CreateProjectCommand extends Command<
  * @summary Retrieves a project.
  */
 export class RetrieveProjectCommand extends Command<
-	RetrieveProjectCommandInput,
+	UndefinedOnPartialDeep<RetrieveProjectCommandInput>,
 	Project
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveProjectCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveProjectCommandInput>) {
 		const { project_id } = input;
 		super(encodePath`/organization/projects/${project_id}`);
 	}
@@ -1742,12 +1802,12 @@ export class RetrieveProjectCommand extends Command<
  * @summary Modifies a project in the organization.
  */
 export class ModifyProjectCommand extends Command<
-	ModifyProjectCommandInput,
+	UndefinedOnPartialDeep<ModifyProjectCommandInput>,
 	Project
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyProjectCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyProjectCommandInput>) {
 		const { project_id, ...body } = input;
 		super(
 			encodePath`/organization/projects/${project_id}`,
@@ -1763,12 +1823,12 @@ export class ModifyProjectCommand extends Command<
  * updated.
  */
 export class ArchiveProjectCommand extends Command<
-	ArchiveProjectCommandInput,
+	UndefinedOnPartialDeep<ArchiveProjectCommandInput>,
 	Project
 > {
 	public override method = "post" as const;
 
-	constructor(input: ArchiveProjectCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ArchiveProjectCommandInput>) {
 		const { project_id } = input;
 		super(encodePath`/organization/projects/${project_id}/archive`);
 	}
@@ -1780,13 +1840,13 @@ export class ArchiveProjectCommand extends Command<
  * @summary Returns a list of users in the project.
  */
 export class ListProjectUsersCommand extends Command<
-	ListProjectUsersCommandInput,
+	UndefinedOnPartialDeep<ListProjectUsersCommandInput>,
 	ProjectUserListResponse,
 	ListProjectUsersCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListProjectUsersCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListProjectUsersCommandInput>) {
 		const { project_id, limit, after } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/users`,
@@ -1803,12 +1863,12 @@ export class ListProjectUsersCommand extends Command<
  * organization to be added to a project.
  */
 export class CreateProjectUserCommand extends Command<
-	CreateProjectUserCommandInput,
+	UndefinedOnPartialDeep<CreateProjectUserCommandInput>,
 	ProjectUser
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateProjectUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<CreateProjectUserCommandInput>) {
 		const { project_id, ...body } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/users`,
@@ -1823,12 +1883,12 @@ export class CreateProjectUserCommand extends Command<
  * @summary Retrieves a user in the project.
  */
 export class RetrieveProjectUserCommand extends Command<
-	RetrieveProjectUserCommandInput,
+	UndefinedOnPartialDeep<RetrieveProjectUserCommandInput>,
 	ProjectUser
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveProjectUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<RetrieveProjectUserCommandInput>) {
 		const { project_id, user_id } = input;
 		super(encodePath`/organization/projects/${project_id}/users/${user_id}`);
 	}
@@ -1840,12 +1900,12 @@ export class RetrieveProjectUserCommand extends Command<
  * @summary Modifies a user's role in the project.
  */
 export class ModifyProjectUserCommand extends Command<
-	ModifyProjectUserCommandInput,
+	UndefinedOnPartialDeep<ModifyProjectUserCommandInput>,
 	ProjectUser
 > {
 	public override method = "post" as const;
 
-	constructor(input: ModifyProjectUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ModifyProjectUserCommandInput>) {
 		const { project_id, user_id, ...body } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/users/${user_id}`,
@@ -1860,12 +1920,12 @@ export class ModifyProjectUserCommand extends Command<
  * @summary Deletes a user from the project.
  */
 export class DeleteProjectUserCommand extends Command<
-	DeleteProjectUserCommandInput,
+	UndefinedOnPartialDeep<DeleteProjectUserCommandInput>,
 	ProjectUserDeleteResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteProjectUserCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteProjectUserCommandInput>) {
 		const { project_id, user_id } = input;
 		super(encodePath`/organization/projects/${project_id}/users/${user_id}`);
 	}
@@ -1877,13 +1937,15 @@ export class DeleteProjectUserCommand extends Command<
  * @summary Returns a list of service accounts in the project.
  */
 export class ListProjectServiceAccountsCommand extends Command<
-	ListProjectServiceAccountsCommandInput,
+	UndefinedOnPartialDeep<ListProjectServiceAccountsCommandInput>,
 	ProjectServiceAccountListResponse,
 	ListProjectServiceAccountsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListProjectServiceAccountsCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<ListProjectServiceAccountsCommandInput>,
+	) {
 		const { project_id, limit, after } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/service_accounts`,
@@ -1900,12 +1962,14 @@ export class ListProjectServiceAccountsCommand extends Command<
  * unredacted API key for the service account.
  */
 export class CreateProjectServiceAccountCommand extends Command<
-	CreateProjectServiceAccountCommandInput,
+	UndefinedOnPartialDeep<CreateProjectServiceAccountCommandInput>,
 	ProjectServiceAccountCreateResponse
 > {
 	public override method = "post" as const;
 
-	constructor(input: CreateProjectServiceAccountCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<CreateProjectServiceAccountCommandInput>,
+	) {
 		const { project_id, ...body } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/service_accounts`,
@@ -1920,12 +1984,14 @@ export class CreateProjectServiceAccountCommand extends Command<
  * @summary Retrieves a service account in the project.
  */
 export class RetrieveProjectServiceAccountCommand extends Command<
-	RetrieveProjectServiceAccountCommandInput,
+	UndefinedOnPartialDeep<RetrieveProjectServiceAccountCommandInput>,
 	ProjectServiceAccount
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveProjectServiceAccountCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<RetrieveProjectServiceAccountCommandInput>,
+	) {
 		const { project_id, service_account_id } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
@@ -1939,12 +2005,14 @@ export class RetrieveProjectServiceAccountCommand extends Command<
  * @summary Deletes a service account from the project.
  */
 export class DeleteProjectServiceAccountCommand extends Command<
-	DeleteProjectServiceAccountCommandInput,
+	UndefinedOnPartialDeep<DeleteProjectServiceAccountCommandInput>,
 	ProjectServiceAccountDeleteResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteProjectServiceAccountCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<DeleteProjectServiceAccountCommandInput>,
+	) {
 		const { project_id, service_account_id } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/service_accounts/${service_account_id}`,
@@ -1958,13 +2026,13 @@ export class DeleteProjectServiceAccountCommand extends Command<
  * @summary Returns a list of API keys in the project.
  */
 export class ListProjectApiKeysCommand extends Command<
-	ListProjectApiKeysCommandInput,
+	UndefinedOnPartialDeep<ListProjectApiKeysCommandInput>,
 	ProjectApiKeyListResponse,
 	ListProjectApiKeysCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input: ListProjectApiKeysCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<ListProjectApiKeysCommandInput>) {
 		const { project_id, limit, after } = input;
 		super(
 			encodePath`/organization/projects/${project_id}/api_keys`,
@@ -1980,12 +2048,14 @@ export class ListProjectApiKeysCommand extends Command<
  * @summary Retrieves an API key in the project.
  */
 export class RetrieveProjectApiKeyCommand extends Command<
-	RetrieveProjectApiKeyCommandInput,
+	UndefinedOnPartialDeep<RetrieveProjectApiKeyCommandInput>,
 	ProjectApiKey
 > {
 	public override method = "get" as const;
 
-	constructor(input: RetrieveProjectApiKeyCommandInput) {
+	constructor(
+		input: UndefinedOnPartialDeep<RetrieveProjectApiKeyCommandInput>,
+	) {
 		const { project_id, key_id } = input;
 		super(encodePath`/organization/projects/${project_id}/api_keys/${key_id}`);
 	}
@@ -1997,12 +2067,12 @@ export class RetrieveProjectApiKeyCommand extends Command<
  * @summary Deletes an API key from the project.
  */
 export class DeleteProjectApiKeyCommand extends Command<
-	DeleteProjectApiKeyCommandInput,
+	UndefinedOnPartialDeep<DeleteProjectApiKeyCommandInput>,
 	ProjectApiKeyDeleteResponse
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeleteProjectApiKeyCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeleteProjectApiKeyCommandInput>) {
 		const { project_id, key_id } = input;
 		super(encodePath`/organization/projects/${project_id}/api_keys/${key_id}`);
 	}

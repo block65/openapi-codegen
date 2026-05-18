@@ -53,7 +53,7 @@ function vcall(
 					if (typeof item === "function") {
 						item(writer);
 					} else {
-						writer.write(String(item));
+						writer.write(item?.toString() ?? "undefined");
 					}
 					if (itemIndex < arg.length - 1) {
 						writer.write(", ");
@@ -149,6 +149,45 @@ function resolveRef(
 		return vcall("unknown");
 	}
 	return mode === "input" ? entry.input : entry.wire;
+}
+
+type AnySchemaOrRef =
+	| oas30.SchemaObject
+	| oas30.ReferenceObject
+	| oas31.SchemaObject
+	| oas31.ReferenceObject;
+
+function writeStrictObjectEntries(
+	writer: CodeBlockWriter,
+	validators: Map<string, ValidatorEntry>,
+	properties: Record<string, AnySchemaOrRef>,
+	requiredProps: ReadonlySet<string>,
+	mode: SchemaMode,
+) {
+	const optionalWrapper = mode === "input" ? "optional" : "exactOptional";
+	Object.entries(properties).forEach(([name, s]) => {
+		const isRequired = requiredProps.has(name);
+		const validator = schemaToValidator(validators, s, mode);
+		const finalValidator = isRequired
+			? validator
+			: vcall(optionalWrapper, validator);
+
+		if (!("$ref" in s) && s.description) {
+			writer.writeLine("/**");
+			writer.writeLine(
+				` * ${wordWrap(s.description).split("\n").join("\n * ")}`,
+			);
+			writer.writeLine(" */");
+		}
+
+		writer.write(`${JSON.stringify(name)}: `);
+		if (typeof finalValidator === "function") {
+			finalValidator(writer);
+		} else {
+			writer.write(finalValidator);
+		}
+		writer.writeLine(",");
+	});
 }
 
 function schemaToValidator(
@@ -336,10 +375,66 @@ function schemaToValidator(
 
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
 	if (combinator) {
+		// allOf of object schemas: compose into a single v.strictObject. Inline
+		// object members contribute their properties directly; $ref members are
+		// spread via `<refName>.entries`. v.intersect of strictObjects is
+		// unsatisfiable when member property sets differ (each strictObject
+		// independently rejects keys the others contribute).
+		const allOfMembers = schema.allOf;
+		if (allOfMembers) {
+			return maybeNullable(
+				vcall("strictObject", (writer: CodeBlockWriter) => {
+					writer.writeLine("{");
+					writer.indent(() => {
+						allOfMembers.forEach((member) => {
+							if ("$ref" in member) {
+								const resolved = resolveRef(validators, member.$ref, mode);
+								writer.write("...");
+								if (typeof resolved === "function") {
+									resolved(writer);
+								} else {
+									writer.write(resolved);
+								}
+								writer.writeLine(".entries,");
+								return;
+							}
+
+							const isObjectShape =
+								member.type === "object" ||
+								(member.properties !== undefined && member.type === undefined);
+							if (isObjectShape) {
+								writeStrictObjectEntries(
+									writer,
+									validators,
+									member.properties ?? {},
+									new Set(member.required ?? []),
+									mode,
+								);
+								return;
+							}
+
+							// Nested combinators / unusual shapes: recurse and spread the
+							// result's entries (valid as long as the recursion yields an
+							// object-like schema; otherwise GIGO).
+							const validator = schemaToValidator(validators, member, mode);
+							writer.write("...");
+							if (typeof validator === "function") {
+								validator(writer);
+							} else {
+								writer.write(validator);
+							}
+							writer.writeLine(".entries,");
+						});
+					});
+					writer.write("}");
+				}),
+				isNullable,
+			);
+		}
+
 		const variants = combinator.map((s) =>
 			schemaToValidator(validators, s, mode),
 		);
-		const type = schema.allOf ? "intersect" : "union";
 
 		if (schema.oneOf && schema.discriminator?.propertyName) {
 			return maybeNullable(
@@ -351,7 +446,7 @@ function schemaToValidator(
 				isNullable,
 			);
 		}
-		return maybeNullable(vcall(type, variants), isNullable);
+		return maybeNullable(vcall("union", variants), isNullable);
 	}
 
 	if (schema.type === "object" || schema.properties || !schema.type) {
@@ -364,40 +459,23 @@ function schemaToValidator(
 		}
 
 		const requiredProps = new Set(schema.required ?? []);
-		const optionalWrapper = mode === "input" ? "optional" : "exactOptional";
 
-		const strictObjectWriter = (writer: CodeBlockWriter) => {
-			writer.writeLine("{");
-			writer.indent(() => {
-				Object.entries(props).forEach(([name, s]) => {
-					const isRequired = requiredProps.has(name);
-					const validator = schemaToValidator(validators, s, mode);
-					const finalValidator = isRequired
-						? validator
-						: vcall(optionalWrapper, validator);
-
-					// write comment
-					if (!("$ref" in s) && s.description) {
-						writer.writeLine("/**");
-						writer.writeLine(
-							` * ${wordWrap(s.description).split("\n").join("\n * ")}`,
-						);
-						writer.writeLine(" */");
-					}
-
-					writer.write(`${JSON.stringify(name)}: `);
-					if (typeof finalValidator === "function") {
-						finalValidator(writer);
-					} else {
-						writer.write(finalValidator);
-					}
-					writer.writeLine(",");
+		return maybeNullable(
+			vcall("strictObject", (writer: CodeBlockWriter) => {
+				writer.writeLine("{");
+				writer.indent(() => {
+					writeStrictObjectEntries(
+						writer,
+						validators,
+						props,
+						requiredProps,
+						mode,
+					);
 				});
-			});
-			writer.write("}");
-		};
-
-		return maybeNullable(vcall("strictObject", strictObjectWriter), isNullable);
+				writer.write("}");
+			}),
+			isNullable,
+		);
 	}
 
 	if (schema.type === "null") {
@@ -668,10 +746,7 @@ export function createValidatorForOperationInput(
 
 	// 1b. Generate the Response Schema (mirrors body — accepts inline or $ref)
 	if (input.response) {
-		const { inputName, wireName } = emitSchemaPair(
-			"response",
-			input.response,
-		);
+		const { inputName, wireName } = emitSchemaPair("response", input.response);
 		inputResult.response = inputName;
 		wireResult.response = wireName;
 	}

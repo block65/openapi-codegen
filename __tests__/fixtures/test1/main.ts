@@ -3,13 +3,14 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:41.762Z
+ * Generated on 2026-05-18T09:27:27.836Z
  *
  */
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,
 } from "@block65/rest-client";
+import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
 	BillingAccount,
 	BillingAccountList,
@@ -43,25 +44,26 @@ import type {
 } from "./types.js";
 
 type AllInputs =
-	| CancelSubscriptionCommandInput
-	| CreateBillingAccountCommandInput
-	| CreateBillingSubscriptionCommandInput
-	| CreatePaymentMethodCommandInput
-	| DeletePaymentMethodCommandInput
-	| GetBillingAccountCommandInput
-	| GetBillingAccountPortalCommandInput
-	| GetOperationCommandInput
-	| GetPaymentMethodCommandInput
-	| GetPaymentMethodFromStripeCommandInput
-	| ImportBillingDataCommandInput
-	| LinkBillingAccountCommandInput
-	| ListBillingAccountsCommandInput
-	| ListBillingSubscriptionsCommandInput
-	| ListPaymentMethodsCommandInput
-	| UpdateBillingAccountCommandInput
-	| UpdateBillingSubscriptionCommandInput
-	| UpdateBillingSubscriptionPromoCodeCommandInput
-	| UpdatePaymentMethodCommandInput;
+	| UndefinedOnPartialDeep<CancelSubscriptionCommandInput>
+	| UndefinedOnPartialDeep<CreateBillingAccountCommandInput>
+	| UndefinedOnPartialDeep<CreateBillingSubscriptionCommandInput>
+	| UndefinedOnPartialDeep<CreatePaymentMethodCommandInput>
+	| UndefinedOnPartialDeep<DeletePaymentMethodCommandInput>
+	| (UndefinedOnPartialDeep<Except<ImportBillingDataCommandInput, "body">> &
+			Pick<ImportBillingDataCommandInput, "body">)
+	| UndefinedOnPartialDeep<GetBillingAccountCommandInput>
+	| UndefinedOnPartialDeep<GetBillingAccountPortalCommandInput>
+	| UndefinedOnPartialDeep<GetOperationCommandInput>
+	| UndefinedOnPartialDeep<GetPaymentMethodCommandInput>
+	| UndefinedOnPartialDeep<GetPaymentMethodFromStripeCommandInput>
+	| UndefinedOnPartialDeep<LinkBillingAccountCommandInput>
+	| UndefinedOnPartialDeep<ListBillingAccountsCommandInput>
+	| UndefinedOnPartialDeep<ListBillingSubscriptionsCommandInput>
+	| UndefinedOnPartialDeep<ListPaymentMethodsCommandInput>
+	| UndefinedOnPartialDeep<UpdateBillingAccountCommandInput>
+	| UndefinedOnPartialDeep<UpdateBillingSubscriptionCommandInput>
+	| UndefinedOnPartialDeep<UpdateBillingSubscriptionPromoCodeCommandInput>
+	| UndefinedOnPartialDeep<UpdatePaymentMethodCommandInput>;
 type AllOutputs =
 	| BillingAccount
 	| BillingAccountList

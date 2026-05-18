@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:12:45.230Z
+ * Generated on 2026-05-18T09:27:31.161Z
  *
  */
 import * as v from "valibot";
@@ -11812,24 +11812,21 @@ export const chatCompletionResponseMessageSchema = v.strictObject({
 	),
 });
 export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
-	v.intersect([
-		v.strictObject({
-			/**
-			 * Controls whether the assistant message is trained against (0 or 1)
-			 */
-			weight: v.optional(v.pipe(v.number(), v.integer())),
-		}),
-		inputChatCompletionRequestAssistantMessageSchema,
-	]);
-export const fineTuneChatCompletionRequestAssistantMessageSchema = v.intersect([
+	v.strictObject({
+		/**
+		 * Controls whether the assistant message is trained against (0 or 1)
+		 */
+		weight: v.optional(v.pipe(v.number(), v.integer())),
+		...inputChatCompletionRequestAssistantMessageSchema.entries,
+	});
+export const fineTuneChatCompletionRequestAssistantMessageSchema =
 	v.strictObject({
 		/**
 		 * Controls whether the assistant message is trained against (0 or 1)
 		 */
 		weight: v.exactOptional(v.pipe(v.number(), v.integer())),
-	}),
-	chatCompletionRequestAssistantMessageSchema,
-]);
+		...chatCompletionRequestAssistantMessageSchema.entries,
+	});
 /**
  * Represents a completion response from the API. Note: both the streamed and
  * non-streamed response objects share the same shape (unlike the chat

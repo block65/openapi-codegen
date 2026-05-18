@@ -3,11 +3,12 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-11T06:57:32.892Z
+ * Generated on 2026-05-18T09:27:25.693Z
  *
  */
 /** eslint-disable max-classes */
 import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	FindPetsCommandQuery,
 	FindPetsCommandInput,
@@ -58,13 +59,13 @@ function encodePath(
  *
  */
 export class FindPetsCommand extends Command<
-	FindPetsCommandInput,
+	UndefinedOnPartialDeep<FindPetsCommandInput>,
 	Pet[],
 	FindPetsCommandQuery
 > {
 	public override method = "get" as const;
 
-	constructor(input?: FindPetsCommandInput) {
+	constructor(input?: UndefinedOnPartialDeep<FindPetsCommandInput>) {
 		const { tags, limit } = input ?? {};
 		super("/pets", undefined, stripUndefined({ tags, limit }));
 	}
@@ -74,10 +75,13 @@ export class FindPetsCommand extends Command<
  * Creates a new pet in the store. Duplicates are allowed
  *
  */
-export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
+export class AddPetCommand extends Command<
+	UndefinedOnPartialDeep<AddPetCommandInput>,
+	Pet
+> {
 	public override method = "post" as const;
 
-	constructor(input: AddPetCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<AddPetCommandInput>) {
 		const body = input;
 		super("/pets", jsonStringify(body));
 	}
@@ -88,10 +92,13 @@ export class AddPetCommand extends Command<AddPetCommandInput, Pet> {
  * the pet
  *
  */
-export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
+export class FindPetByIdCommand extends Command<
+	UndefinedOnPartialDeep<FindPetByIdCommandInput>,
+	Pet
+> {
 	public override method = "get" as const;
 
-	constructor(input: FindPetByIdCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<FindPetByIdCommandInput>) {
 		const { id } = input;
 		super(encodePath`/pets/${id}`);
 	}
@@ -102,12 +109,12 @@ export class FindPetByIdCommand extends Command<FindPetByIdCommandInput, Pet> {
  *
  */
 export class DeletePetCommand extends Command<
-	DeletePetCommandInput,
+	UndefinedOnPartialDeep<DeletePetCommandInput>,
 	undefined
 > {
 	public override method = "delete" as const;
 
-	constructor(input: DeletePetCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<DeletePetCommandInput>) {
 		const { id } = input;
 		super(encodePath`/pets/${id}`);
 	}
@@ -119,12 +126,12 @@ export class DeletePetCommand extends Command<
  *
  */
 export class FindPetWrappedCommand extends Command<
-	FindPetWrappedCommandInput,
+	UndefinedOnPartialDeep<FindPetWrappedCommandInput>,
 	FindPetWrappedCommandOutput
 > {
 	public override method = "get" as const;
 
-	constructor(input: FindPetWrappedCommandInput) {
+	constructor(input: UndefinedOnPartialDeep<FindPetWrappedCommandInput>) {
 		const { id } = input;
 		super(encodePath`/pets/${id}/wrapped`);
 	}
