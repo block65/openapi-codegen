@@ -866,9 +866,7 @@ export async function processOpenApiDocument(
 						inputTypeNames.add(inputType.getName());
 					}
 
-					commandClassDeclaration
-						.getExtends()
-						?.addTypeArgument(inputTypeArg);
+					commandClassDeclaration.getExtends()?.addTypeArgument(inputTypeArg);
 
 					// if (queryType && !isVoidKeyword(queryType)) {
 					//   ctor.addParameter({
@@ -1259,13 +1257,18 @@ export async function processOpenApiDocument(
 		],
 	});
 
+	// Re-export the runtime error consumers need for `instanceof` narrowing so
+	// they don't have to add a direct @block65/rest-client dependency just for it.
+	mainFile.addExportDeclaration({
+		moduleSpecifier: "@block65/rest-client",
+		namedExports: ["ResponseValidationError"],
+	});
+
 	// Cross-client guard: commands from another generated client fail the
 	// `<AllInputs, AllOutputs>` constraint on `.json()`.
 	const outputUnionMembers = [...outputTypes]
 		.map((t) => (typeof t === "string" ? t : t.getName()))
-		.filter(
-			(name): name is string => !!name && name !== unspecifiedKeyword,
-		);
+		.filter((name): name is string => !!name && name !== unspecifiedKeyword);
 
 	const allInputs =
 		inputTypeArgs.size > 0
@@ -1395,9 +1398,7 @@ export async function processOpenApiDocument(
 	if (validatedReExports.length > 0) {
 		commandsValidatedFile.addExportDeclaration({
 			moduleSpecifier: commandsModuleSpecifier,
-			namedExports: validatedReExports
-				.toSorted()
-				.map((name) => ({ name })),
+			namedExports: validatedReExports.toSorted().map((name) => ({ name })),
 		});
 	}
 

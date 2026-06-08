@@ -94,6 +94,17 @@ function maybePipe(
 	return valid.length > 0 ? vcall("pipe", base, ...valid) : base;
 }
 
+function minMaxProperties(schema: oas30.SchemaObject | oas31.SchemaObject) {
+	return [
+		schema.minProperties !== undefined
+			? vcall("minEntries", schema.minProperties)
+			: undefined,
+		schema.maxProperties !== undefined
+			? vcall("maxEntries", schema.maxProperties)
+			: undefined,
+	];
+}
+
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
 function stringNeedsCoercion(
@@ -383,51 +394,55 @@ function schemaToValidator(
 		const allOfMembers = schema.allOf;
 		if (allOfMembers) {
 			return maybeNullable(
-				vcall("strictObject", (writer: CodeBlockWriter) => {
-					writer.writeLine("{");
-					writer.indent(() => {
-						allOfMembers.forEach((member) => {
-							if ("$ref" in member) {
-								const resolved = resolveRef(validators, member.$ref, mode);
+				maybePipe(
+					vcall("strictObject", (writer: CodeBlockWriter) => {
+						writer.writeLine("{");
+						writer.indent(() => {
+							allOfMembers.forEach((member) => {
+								if ("$ref" in member) {
+									const resolved = resolveRef(validators, member.$ref, mode);
+									writer.write("...");
+									if (typeof resolved === "function") {
+										resolved(writer);
+									} else {
+										writer.write(resolved);
+									}
+									writer.writeLine(".entries,");
+									return;
+								}
+
+								const isObjectShape =
+									member.type === "object" ||
+									(member.properties !== undefined &&
+										member.type === undefined);
+								if (isObjectShape) {
+									writeStrictObjectEntries(
+										writer,
+										validators,
+										member.properties ?? {},
+										new Set(member.required ?? []),
+										mode,
+									);
+									return;
+								}
+
+								// Nested combinators / unusual shapes: recurse and spread the
+								// result's entries (valid as long as the recursion yields an
+								// object-like schema; otherwise GIGO).
+								const validator = schemaToValidator(validators, member, mode);
 								writer.write("...");
-								if (typeof resolved === "function") {
-									resolved(writer);
+								if (typeof validator === "function") {
+									validator(writer);
 								} else {
-									writer.write(resolved);
+									writer.write(validator);
 								}
 								writer.writeLine(".entries,");
-								return;
-							}
-
-							const isObjectShape =
-								member.type === "object" ||
-								(member.properties !== undefined && member.type === undefined);
-							if (isObjectShape) {
-								writeStrictObjectEntries(
-									writer,
-									validators,
-									member.properties ?? {},
-									new Set(member.required ?? []),
-									mode,
-								);
-								return;
-							}
-
-							// Nested combinators / unusual shapes: recurse and spread the
-							// result's entries (valid as long as the recursion yields an
-							// object-like schema; otherwise GIGO).
-							const validator = schemaToValidator(validators, member, mode);
-							writer.write("...");
-							if (typeof validator === "function") {
-								validator(writer);
-							} else {
-								writer.write(validator);
-							}
-							writer.writeLine(".entries,");
+							});
 						});
-					});
-					writer.write("}");
-				}),
+						writer.write("}");
+					}),
+					...minMaxProperties(schema),
+				),
 				isNullable,
 			);
 		}
@@ -453,7 +468,10 @@ function schemaToValidator(
 		const props = schema.properties ?? {};
 		if (Object.keys(props).length === 0) {
 			return maybeNullable(
-				vcall("record", vcall("string"), vcall("unknown")),
+				maybePipe(
+					vcall("record", vcall("string"), vcall("unknown")),
+					...minMaxProperties(schema),
+				),
 				isNullable,
 			);
 		}
@@ -461,19 +479,22 @@ function schemaToValidator(
 		const requiredProps = new Set(schema.required ?? []);
 
 		return maybeNullable(
-			vcall("strictObject", (writer: CodeBlockWriter) => {
-				writer.writeLine("{");
-				writer.indent(() => {
-					writeStrictObjectEntries(
-						writer,
-						validators,
-						props,
-						requiredProps,
-						mode,
-					);
-				});
-				writer.write("}");
-			}),
+			maybePipe(
+				vcall("strictObject", (writer: CodeBlockWriter) => {
+					writer.writeLine("{");
+					writer.indent(() => {
+						writeStrictObjectEntries(
+							writer,
+							validators,
+							props,
+							requiredProps,
+							mode,
+						);
+					});
+					writer.write("}");
+				}),
+				...minMaxProperties(schema),
+			),
 			isNullable,
 		);
 	}

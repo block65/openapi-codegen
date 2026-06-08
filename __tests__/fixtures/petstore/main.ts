@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-18T09:27:25.693Z
+ * Generated on 2026-06-08T01:22:43.911Z
  *
  */
 import {
@@ -20,6 +20,8 @@ import type {
 	FindPetsCommandInput,
 	Pet,
 } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
 
 type AllInputs =
 	| UndefinedOnPartialDeep<AddPetCommandInput>

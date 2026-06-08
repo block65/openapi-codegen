@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-18T09:27:27.836Z
+ * Generated on 2026-06-08T01:22:47.528Z
  *
  */
 import * as v from "valibot";
@@ -167,13 +167,15 @@ export const inputBillingSubscriptionLroSchema = v.union([
 	inputLongRunningOperationFailSchema,
 ]);
 export const billingSubscriptionLroSchema = inputBillingSubscriptionLroSchema;
-export const inputUpdateBillingSubscriptionPromoCodeRequestSchema =
+export const inputUpdateBillingSubscriptionPromoCodeRequestSchema = v.pipe(
 	v.strictObject({
 		promoCode: v.union([
 			inputStringU8Schema,
 			v.nullable(v.record(v.string(), v.unknown())),
 		]),
-	});
+	}),
+	v.minEntries(1),
+);
 export const updateBillingSubscriptionPromoCodeRequestSchema =
 	inputUpdateBillingSubscriptionPromoCodeRequestSchema;
 /** Reasonable string to be used as a name of a person, or an object */
@@ -188,14 +190,20 @@ export const nameSchema = v.pipe(
 	v.minLength(2),
 	v.maxLength(512),
 );
-export const inputUpdateBillingSubscriptionRequestSchema = v.strictObject({
-	label: v.optional(inputNameSchema),
-	trialEndTime: v.optional(inputDateTimeSchema),
-});
-export const updateBillingSubscriptionRequestSchema = v.strictObject({
-	label: v.exactOptional(nameSchema),
-	trialEndTime: v.exactOptional(dateTimeSchema),
-});
+export const inputUpdateBillingSubscriptionRequestSchema = v.pipe(
+	v.strictObject({
+		label: v.optional(inputNameSchema),
+		trialEndTime: v.optional(inputDateTimeSchema),
+	}),
+	v.minEntries(1),
+);
+export const updateBillingSubscriptionRequestSchema = v.pipe(
+	v.strictObject({
+		label: v.exactOptional(nameSchema),
+		trialEndTime: v.exactOptional(dateTimeSchema),
+	}),
+	v.minEntries(1),
+);
 export const inputCreateBillingSubscriptionRequestSchema = v.strictObject({
 	accountId: inputIdSchema,
 	planSku: inputPlanSkuSchema,
@@ -285,14 +293,20 @@ export const inputPaymentMethodIntendedLroSchema = v.union([
 ]);
 export const paymentMethodIntendedLroSchema =
 	inputPaymentMethodIntendedLroSchema;
-export const inputUpdatePaymentMethodRequestSchema = v.strictObject({
-	label: v.optional(inputNameSchema),
-	isDefault: v.optional(v.boolean()),
-});
-export const updatePaymentMethodRequestSchema = v.strictObject({
-	label: v.exactOptional(nameSchema),
-	isDefault: v.exactOptional(v.boolean()),
-});
+export const inputUpdatePaymentMethodRequestSchema = v.pipe(
+	v.strictObject({
+		label: v.optional(inputNameSchema),
+		isDefault: v.optional(v.boolean()),
+	}),
+	v.minEntries(1),
+);
+export const updatePaymentMethodRequestSchema = v.pipe(
+	v.strictObject({
+		label: v.exactOptional(nameSchema),
+		isDefault: v.exactOptional(v.boolean()),
+	}),
+	v.minEntries(1),
+);
 export const inputLinkBillingAccountRequestSchema = v.strictObject({
 	accountId: inputIdSchema,
 });
@@ -409,50 +423,56 @@ export const billingAccountSchema = v.strictObject({
 });
 export const inputBillingAccountListSchema = v.array(inputBillingAccountSchema);
 export const billingAccountListSchema = inputBillingAccountListSchema;
-export const inputBillingAccountUpdateRequestSchema = v.strictObject({
-	name: v.optional(inputNameSchema),
-	email: v.optional(inputEmailSchema),
-	country: v.optional(inputBillingCountrySchema),
-	timeZone: v.optional(inputTimeZoneSchema),
-	currency: v.optional(inputCurrencySchema),
-	locale: v.optional(
-		v.union([
-			inputBillingLocaleSchema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-	purchaseOrder: v.optional(
-		v.union([
-			inputStringU8Schema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-	taxId: v.optional(
-		v.union([
-			inputStringU8Schema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-});
-export const billingAccountUpdateRequestSchema = v.strictObject({
-	name: v.exactOptional(nameSchema),
-	email: v.exactOptional(emailSchema),
-	country: v.exactOptional(billingCountrySchema),
-	timeZone: v.exactOptional(timeZoneSchema),
-	currency: v.exactOptional(currencySchema),
-	locale: v.exactOptional(
-		v.union([
-			billingLocaleSchema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-	purchaseOrder: v.exactOptional(
-		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
-	),
-	taxId: v.exactOptional(
-		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
-	),
-});
+export const inputBillingAccountUpdateRequestSchema = v.pipe(
+	v.strictObject({
+		name: v.optional(inputNameSchema),
+		email: v.optional(inputEmailSchema),
+		country: v.optional(inputBillingCountrySchema),
+		timeZone: v.optional(inputTimeZoneSchema),
+		currency: v.optional(inputCurrencySchema),
+		locale: v.optional(
+			v.union([
+				inputBillingLocaleSchema,
+				v.nullable(v.record(v.string(), v.unknown())),
+			]),
+		),
+		purchaseOrder: v.optional(
+			v.union([
+				inputStringU8Schema,
+				v.nullable(v.record(v.string(), v.unknown())),
+			]),
+		),
+		taxId: v.optional(
+			v.union([
+				inputStringU8Schema,
+				v.nullable(v.record(v.string(), v.unknown())),
+			]),
+		),
+	}),
+	v.minEntries(1),
+);
+export const billingAccountUpdateRequestSchema = v.pipe(
+	v.strictObject({
+		name: v.exactOptional(nameSchema),
+		email: v.exactOptional(emailSchema),
+		country: v.exactOptional(billingCountrySchema),
+		timeZone: v.exactOptional(timeZoneSchema),
+		currency: v.exactOptional(currencySchema),
+		locale: v.exactOptional(
+			v.union([
+				billingLocaleSchema,
+				v.nullable(v.record(v.string(), v.unknown())),
+			]),
+		),
+		purchaseOrder: v.exactOptional(
+			v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
+		),
+		taxId: v.exactOptional(
+			v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
+		),
+	}),
+	v.minEntries(1),
+);
 export const inputBillingAccountCreateRequestSchema = v.strictObject({
 	name: inputNameSchema,
 	email: inputEmailSchema,

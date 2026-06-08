@@ -1,3 +1,4 @@
+import { createIsomorphicNativeFetcher } from "@block65/rest-client";
 import { MockAgent, fetch as undiciFetch } from "undici";
 import { describe, expect, test } from "vitest";
 import { CreateModerationCommand } from "./fixtures/openai/commands.ts";
@@ -26,14 +27,17 @@ describe("OpenAI", () => {
 	test("CreateModeration", async () => {
 		const openAiClient = new OpenAiApiRestClient(apiUrl, {
 			logger: console.debug,
-			fetch: (input, init) =>
-				undiciFetch(
-					// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
-					// import undici@8 directly — Request.headers.keys() iterator types diverge.
-					// Fix: remove when @types/node ships undici-types@8
-					input,
-					{ ...init, dispatcher: mockAgent },
-				),
+			fetcher: createIsomorphicNativeFetcher({
+				retry: { retries: 0 },
+				fetch: (input, init) =>
+					undiciFetch(
+						// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
+						// import undici@8 directly — Request.headers.keys() iterator types diverge.
+						// Fix: remove when @types/node ships undici-types@8
+						input,
+						{ ...init, dispatcher: mockAgent },
+					),
+			}),
 		});
 
 		const command = new CreateModerationCommand({

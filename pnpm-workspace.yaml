@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - "@block65/rest-client"

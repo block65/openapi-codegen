@@ -1,3 +1,4 @@
+import { createIsomorphicNativeFetcher } from "@block65/rest-client";
 import { MockAgent, fetch as undiciFetch } from "undici";
 import { describe, expect, test, vi } from "vitest";
 import { FindPetsCommand } from "./fixtures/petstore/commands.ts";
@@ -15,7 +16,8 @@ describe("Petstore", () => {
 
 	pool
 		.intercept({
-			path: "/pets?tags=tag1%2Ctag2&limit=10",
+			// `style: form` + default `explode: true` → repeated keys
+			path: "/pets?tags=tag1&tags=tag2&limit=10",
 			method: "GET",
 			body(body) {
 				bodySpy(body);
@@ -28,14 +30,17 @@ describe("Petstore", () => {
 	test("find pets", async () => {
 		const petStoreClient = new SwaggerPetstoreRestClient(apiUrl, {
 			logger: console.log,
-			fetch: (input, init) =>
-				undiciFetch(
-					// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
-					// import undici@8 directly — Request.headers.keys() iterator types diverge.
-					// Fix: remove when @types/node ships undici-types@8
-					input,
-					{ ...init, dispatcher: mockAgent },
-				),
+			fetcher: createIsomorphicNativeFetcher({
+				retry: { retries: 0 },
+				fetch: (input, init) =>
+					undiciFetch(
+						// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
+						// import undici@8 directly — Request.headers.keys() iterator types diverge.
+						// Fix: remove when @types/node ships undici-types@8
+						input,
+						{ ...init, dispatcher: mockAgent },
+					),
+			}),
 		});
 		const command = new FindPetsCommand({
 			limit: "10",

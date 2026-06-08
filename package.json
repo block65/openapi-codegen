@@ -24,37 +24,36 @@
 		"camelcase": "^9.0.0",
 		"toposort": "^2.0.2",
 		"ts-morph": "^28.0.0",
-		"type-fest": "^5.6.0",
+		"type-fest": "^5.7.0",
 		"word-wrap": "^1.2.5",
 		"yargs": "^18.0.0"
 	},
 	"devDependencies": {
 		"@block65/custom-error": "^14.1.0",
-		"@block65/rest-client": "^13.0.3",
+		"@block65/rest-client": "^13.1.0",
 		"@tsconfig/node24": "^24.0.4",
 		"@tsconfig/strictest": "^2.0.8",
-		"@types/node": "^24",
+		"@types/node": "^25.9.2",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
-		"hono": "^4.12.18",
-		"js-yaml": "^4.1.1",
-		"openapi3-ts": "^4.5.0",
-		"oxfmt": "^0.48.0",
-		"oxlint": "^1.63.0",
+		"hono": "^4.12.23",
+		"js-yaml": "^4.2.0",
+		"openapi3-ts": "^4.6.0",
+		"oxfmt": "^0.53.0",
+		"oxlint": "^1.68.0",
 		"typescript": "^6.0.3",
-		"undici": "^8.2.0",
-		"valibot": "^1.4.0",
-		"vite": "^8.0.11",
-		"vitest": "^4.1.5"
+		"undici": "^8.4.0",
+		"valibot": "^1.4.1",
+		"vite": "^8.0.16",
+		"vitest": "^4.1.8"
 	},
 	"peerDependencies": {
 		"@block65/custom-error": "^14.1.0",
-		"@block65/rest-client": "^13.0.3",
-		"hono": "^4.12.18",
-		"valibot": "^1.4.0"
+		"@block65/rest-client": "^13.1.0",
+		"hono": "^4.12.23",
+		"valibot": "^1.4.1"
 	},
 	"engines": {
-		"node": ">=24.0.0"
-	},
-	"packageManager": "pnpm@10.30.3"
+		"node": ">=26.0.0"
+	}
 }

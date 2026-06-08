@@ -1,3 +1,4 @@
+import { createIsomorphicNativeFetcher } from "@block65/rest-client";
 import { MockAgent, fetch as undiciFetch } from "undici";
 import { describe, expect, test, vi } from "vitest";
 import {
@@ -36,14 +37,17 @@ describe("Test1", () => {
 	test("get billing account", async () => {
 		const client = new BillingServiceRestApiRestClient(apiUrl, {
 			logger: console.debug,
-			fetch: (input, init) =>
-				undiciFetch(
-					// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
-					// import undici@8 directly — Request.headers.keys() iterator types diverge.
-					// Fix: remove when @types/node ships undici-types@8
-					input,
-					{ ...init, dispatcher: mockAgent },
-				),
+			fetcher: createIsomorphicNativeFetcher({
+				retry: { retries: 0 },
+				fetch: (input, init) =>
+					undiciFetch(
+						// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
+						// import undici@8 directly — Request.headers.keys() iterator types diverge.
+						// Fix: remove when @types/node ships undici-types@8
+						input,
+						{ ...init, dispatcher: mockAgent },
+					),
+			}),
 		});
 		const command = new GetBillingAccountCommand({
 			billingAccountId: "1234",

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-18T09:27:31.161Z
+ * Generated on 2026-06-08T01:22:53.010Z
  *
  */
 /** The role of the author of a message */

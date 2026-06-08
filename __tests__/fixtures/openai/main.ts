@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-18T09:27:31.161Z
+ * Generated on 2026-06-08T01:22:53.010Z
  *
  */
 import {
@@ -167,6 +167,8 @@ import type {
 	VectorStoreFileObject,
 	VectorStoreObject,
 } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
 
 type AllInputs =
 	| UndefinedOnPartialDeep<ArchiveProjectCommandInput>

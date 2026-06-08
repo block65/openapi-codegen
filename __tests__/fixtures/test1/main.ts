@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-05-18T09:27:27.836Z
+ * Generated on 2026-06-08T01:22:47.528Z
  *
  */
 import {
@@ -42,6 +42,8 @@ import type {
 	UpdateBillingSubscriptionPromoCodeCommandInput,
 	UpdatePaymentMethodCommandInput,
 } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
 
 type AllInputs =
 	| UndefinedOnPartialDeep<CancelSubscriptionCommandInput>
