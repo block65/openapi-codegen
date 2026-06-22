@@ -3,10 +3,10 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-08T01:22:47.528Z
+ * Generated on 2026-06-09T09:17:30.892Z
  *
  */
-import type { Jsonifiable, Jsonify, UndefinedOnPartialDeep } from "type-fest";
+import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
 
 export type PromoCode = string;
 /** The API version */
@@ -24,7 +24,8 @@ export type EventSource =
 	| `https://embed.example.com/${string}`
 	| `https://syndicated.example.com/${string}`;
 export type StripeId = string;
-export type DateTime = Jsonify<Date>;
+export type DateTime =
+	`${number}-${number}-${number}T${number}:${number}:${number}${string}`;
 export type BillingSubscriptionStatus = "active" | "inactive";
 export type BillingSubscriptionInterval = "monthly" | "yearly";
 export type PlanSku =
@@ -221,7 +222,7 @@ export type LongRunningOperation =
 	| LongRunningOperationSuccess;
 export type ImportBillingDataCommandHeader = {
 	"content-type": "application/json" | "text/csv" | "application/xml";
-	"content-length": `${number}`;
+	"content-length": `${bigint}`;
 	"x-idempotency-key"?: string;
 };
 type ImportBillingDataCommandBodyApplicationOctetStream = NonNullable<

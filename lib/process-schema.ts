@@ -25,6 +25,51 @@ function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
 	return withNull && type !== "null" ? Writers.unionType(type, "null") : type;
 }
 
+// RFC 3339 temporal `format`s as template-literal TypeScript types, so the
+// digit shape is visible in the type (strictly narrower than `string`). These
+// are shape hints — the runtime valibot schema does the real RFC 3339
+// validation. Kept in lock-step with valibot's `temporalTypeHint`.
+function temporalStringType(format: string | undefined): string | undefined {
+	switch (format) {
+		case "date":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`${number}-${number}-${number}`";
+		case "time":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`${number}:${number}:${number}${string}`";
+		case "date-time":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`${number}-${number}-${number}T${number}:${number}:${number}${string}`";
+		case "duration":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`P${string}`";
+		default:
+			return undefined;
+	}
+}
+
+// int64 carries values beyond Number.MAX_SAFE_INTEGER, so it maps to `bigint`
+// as the domain type and `${bigint}` on the wire (query/header/path/body values
+// arrive as strings). Every other integer/number stays `number` / `${number}`.
+function numericType(isInt64: boolean, stringish: boolean | undefined): string {
+	if (isInt64) {
+		// eslint-disable-next-line no-template-curly-in-string
+		// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+		return stringish ? "`${bigint}`" : "bigint";
+	}
+	// eslint-disable-next-line no-template-curly-in-string
+	// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+	return stringish ? "`${number}`" : "number";
+}
+
+function isInt64Schema(schema: oas30.SchemaObject | oas31.SchemaObject) {
+	return schema.type === "integer" && schema.format === "int64";
+}
+
 function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	return (
 		schema.type === "null" ||
@@ -380,9 +425,7 @@ export function schemaToType(
 			name,
 			hasQuestionToken,
 			type: maybeWithNullUnion(
-				// eslint-disable-next-line no-template-curly-in-string
-				// biome-ignore lint/suspicious/noTemplateCurlyInString: intentional
-				options.integerAsStringish ? "`${number}`" : "number",
+				numericType(isInt64Schema(schemaObject), options.integerAsStringish),
 				schemaTypeIsNull(schemaObject),
 			),
 			docs,
@@ -421,6 +464,16 @@ export function schemaToType(
 				name,
 				hasQuestionToken,
 				type: schemaObject["x-typescript-hint"],
+				docs,
+			};
+		}
+
+		const temporal = temporalStringType(schemaObject.format);
+		if (temporal) {
+			return {
+				name,
+				hasQuestionToken,
+				type: maybeWithNullUnion(temporal, schemaTypeIsNull(schemaObject)),
 				docs,
 			};
 		}
@@ -700,9 +753,17 @@ export function registerTypesFromSchema(
 			// default
 			type: maybeWithNullUnion("string", schemaTypeIsNull(schemaObject)),
 
-			// date format
-			...(schemaObject.format === "date-time" && {
-				type: "Jsonify<Date>",
+			// RFC 3339 temporal formats (date, date-time, time, duration)
+			...iife(() => {
+				const temporal = temporalStringType(schemaObject.format);
+				return temporal
+					? {
+							type: maybeWithNullUnion(
+								temporal,
+								schemaTypeIsNull(schemaObject),
+							),
+						}
+					: {};
 			}),
 
 			// custom extension
@@ -729,7 +790,10 @@ export function registerTypesFromSchema(
 		const typeAlias = typesFile.addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
-			type: maybeWithNullUnion("number", schemaTypeIsNull(schemaObject)),
+			type: maybeWithNullUnion(
+				numericType(isInt64Schema(schemaObject), false),
+				schemaTypeIsNull(schemaObject),
+			),
 		});
 
 		if (schemaObject.description) {

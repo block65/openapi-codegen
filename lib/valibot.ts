@@ -107,6 +107,85 @@ function minMaxProperties(schema: oas30.SchemaObject | oas31.SchemaObject) {
 
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
+// RFC 3339 temporal formats. The regex does the real runtime validation; the
+// matching template-literal *type* is carried separately by `temporalHintSchema`
+// (a `v.custom<...>`) so the schema's InferOutput equals the template-literal
+// type emitted into types.ts by process-schema's `temporalStringType`. Without
+// it the schema would infer bare `string`, diverging from the consumer-facing
+// type — visible to `v.parse` / hono `c.req.valid()` callers.
+//   - date-time / time require an offset (`Z` or `±hh:mm`) — RFC 3339 has no
+//     bare-local form, unlike ISO 8601.
+//   - the seconds field permits a leap second (`60`).
+//   - `T`/`Z` may be lower-case and the date/time separator may be a space.
+//   - `duration` is the ISO 8601 grammar from RFC 3339 Appendix A.
+function temporalRegexConstraint(
+	format: string | undefined,
+): WriterFunction | undefined {
+	switch (format) {
+		case "date":
+			return vcall(
+				"regex",
+				String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u`,
+				JSON.stringify(format),
+			);
+		case "time":
+			return vcall(
+				"regex",
+				String.raw`/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
+				JSON.stringify(format),
+			);
+		case "date-time":
+			return vcall(
+				"regex",
+				String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
+				JSON.stringify(format),
+			);
+		case "duration":
+			return vcall(
+				"regex",
+				String.raw`/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u`,
+				JSON.stringify(format),
+			);
+		default:
+			return undefined;
+	}
+}
+
+// Template-literal type for each temporal format. Kept in lock-step with
+// process-schema's `temporalStringType` (types.ts is the source of truth for
+// consumer-facing types); duplicated rather than shared so neither generator
+// has to import the other.
+function temporalTypeHint(format: string | undefined): string | undefined {
+	switch (format) {
+		case "date":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`${number}-${number}-${number}`";
+		case "time":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`${number}:${number}:${number}${string}`";
+		case "date-time":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`${number}-${number}-${number}T${number}:${number}:${number}${string}`";
+		case "duration":
+			// eslint-disable-next-line no-template-curly-in-string
+			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
+			return "`P${string}`";
+		default:
+			return undefined;
+	}
+}
+
+// `v.custom<TemplateType>(() => true)` narrows the schema's inferred output type
+// (the regex already validates), so a direct `v.parse(schema, x)` yields the
+// template-literal type rather than bare `string`.
+function temporalHintSchema(format: string | undefined): string | undefined {
+	const type = temporalTypeHint(format);
+	return type ? `v.custom<${type}>(() => true)` : undefined;
+}
+
 function stringNeedsCoercion(
 	schema: oas30.SchemaObject | oas31.SchemaObject,
 ): boolean {
@@ -232,6 +311,43 @@ function schemaToValidator(
 				);
 	}
 
+	// Enums short-circuit every type-specific constraint. Whatever the declared
+	// type / format / minLength, the only valid values are the enum members, so
+	// emit a bare picklist — layering string()/minLength()/regex() on top yields
+	// a misleading "expected string" / "minLength" error when the real contract
+	// is simply "must be one of [...]".
+	if (schema.enum) {
+		const hasNull = schema.enum.some((value) => value === null);
+		const members = schema.enum.filter((value) => value !== null);
+		const [first, ...rest] = members;
+		if (first === undefined) {
+			return vcall("null");
+		}
+		// `picklist` only accepts string | number | bigint members.
+		const picklistable = members.every(
+			(value) => typeof value === "string" || typeof value === "number",
+		);
+		if (picklistable) {
+			return maybeNullable(
+				vcall(
+					"picklist",
+					members.map((value) => JSON.stringify(value)),
+				),
+				isNullable || hasNull,
+			);
+		}
+		// Boolean (and any other) literals go through `literal()` instead — or a
+		// `union` of them when there's more than one.
+		const base =
+			rest.length === 0
+				? vcall("literal", JSON.stringify(first))
+				: vcall(
+						"union",
+						members.map((value) => vcall("literal", JSON.stringify(value))),
+					);
+		return maybeNullable(base, isNullable || hasNull);
+	}
+
 	// Handle type arrays (OpenAPI 3.1: type: ["string", "null"])
 	if (Array.isArray(schema.type)) {
 		const nonNullTypes = schema.type.filter((t) => t !== "null");
@@ -273,22 +389,13 @@ function schemaToValidator(
 			!schema.pattern &&
 			(!schema.format || !noTrimFormats.has(schema.format));
 
-		if (schema.enum) {
-			return maybeNullable(
-				vcall(
-					"picklist",
-					schema.enum.map((e) => JSON.stringify(e)),
-				),
-				isNullable,
-			);
-		}
-
 		return maybeNullable(
 			maybePipe(
 				vcall("string"),
 				shouldTrim ? vcall("trim") : undefined,
 				schema.format === "email" ? vcall("email") : undefined,
 				schema.format === "uuid" ? vcall("uuid") : undefined,
+				temporalRegexConstraint(schema.format),
 
 				schema.minLength !== undefined
 					? vcall("minLength", schema.minLength)
@@ -299,6 +406,8 @@ function schemaToValidator(
 				schema.pattern
 					? vcall("regex", `new RegExp(${JSON.stringify(schema.pattern)})`)
 					: undefined,
+				// An explicit x-typescript-hint wins over the format-derived hint.
+				typescriptHint ? undefined : temporalHintSchema(schema.format),
 				typescriptHintSchema,
 			),
 			isNullable,

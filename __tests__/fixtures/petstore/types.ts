@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-08T01:22:43.911Z
+ * Generated on 2026-06-09T09:17:26.648Z
  *
  */
 import type { UndefinedOnPartialDeep } from "type-fest";
@@ -17,7 +17,7 @@ export type NewPet = {
 	tag?: string;
 };
 export type Pet = NewPet & {
-	id: number;
+	id: bigint;
 };
 export type FindPetsCommandQuery = {
 	tags?: readonly string[];
@@ -29,16 +29,16 @@ export type AddPetCommandBody = NewPet;
 export type AddPetCommandInput = NewPet;
 export type InputAddPetCommandResponse = UndefinedOnPartialDeep<Pet>;
 export type FindPetByIdCommandParams = {
-	id: `${number}`;
+	id: `${bigint}`;
 };
 export type FindPetByIdCommandInput = FindPetByIdCommandParams;
 export type InputFindPetByIdCommandResponse = UndefinedOnPartialDeep<Pet>;
 export type DeletePetCommandParams = {
-	id: `${number}`;
+	id: `${bigint}`;
 };
 export type DeletePetCommandInput = DeletePetCommandParams;
 export type FindPetWrappedCommandParams = {
-	id: `${number}`;
+	id: `${bigint}`;
 };
 export type FindPetWrappedCommandInput = FindPetWrappedCommandParams;
 export type FindPetWrappedCommandOutput = {

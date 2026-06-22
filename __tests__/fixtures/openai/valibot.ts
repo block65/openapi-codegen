@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-08T01:22:53.010Z
+ * Generated on 2026-06-09T09:17:36.716Z
  *
  */
 import * as v from "valibot";
@@ -11816,7 +11816,7 @@ export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
 		/**
 		 * Controls whether the assistant message is trained against (0 or 1)
 		 */
-		weight: v.optional(v.pipe(v.number(), v.integer())),
+		weight: v.optional(v.picklist([0, 1])),
 		...inputChatCompletionRequestAssistantMessageSchema.entries,
 	});
 export const fineTuneChatCompletionRequestAssistantMessageSchema =
@@ -11824,7 +11824,7 @@ export const fineTuneChatCompletionRequestAssistantMessageSchema =
 		/**
 		 * Controls whether the assistant message is trained against (0 or 1)
 		 */
-		weight: v.exactOptional(v.pipe(v.number(), v.integer())),
+		weight: v.exactOptional(v.picklist([0, 1])),
 		...chatCompletionRequestAssistantMessageSchema.entries,
 	});
 /**

@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-08T01:23:59.032Z
+ * Generated on 2026-06-09T09:18:39.851Z
  *
  */
 import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
@@ -104,7 +104,7 @@ export type DeviceRequest = {
 };
 export type ThrottleDevice = {
 	Path?: string;
-	Rate?: number;
+	Rate?: bigint;
 };
 export type Mount = {
 	Target?: string;
@@ -157,7 +157,7 @@ export type Mount = {
 		};
 	};
 	TmpfsOptions?: {
-		SizeBytes?: number;
+		SizeBytes?: bigint;
 		Mode?: number;
 	};
 };
@@ -184,7 +184,7 @@ export type RestartPolicy = {
 /** A container's resources (cgroups config, ulimits, etc) */
 export type Resources = {
 	CpuShares?: number;
-	Memory?: number;
+	Memory?: bigint;
 	CgroupParent?: string;
 	BlkioWeight?: number;
 	BlkioWeightDevice?: readonly {
@@ -193,24 +193,24 @@ export type Resources = {
 	}[];
 	BlkioDeviceReadBps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceWriteBps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceReadIOps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceWriteIOps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
-	CpuPeriod?: number;
-	CpuQuota?: number;
-	CpuRealtimePeriod?: number;
-	CpuRealtimeRuntime?: number;
+	CpuPeriod?: bigint;
+	CpuQuota?: bigint;
+	CpuRealtimePeriod?: bigint;
+	CpuRealtimeRuntime?: bigint;
 	/**
 	 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
 	 * @example 0-3
@@ -237,41 +237,41 @@ export type Resources = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	}[];
-	KernelMemoryTCP?: number;
-	MemoryReservation?: number;
-	MemorySwap?: number;
-	MemorySwappiness?: number;
-	NanoCpus?: number;
+	KernelMemoryTCP?: bigint;
+	MemoryReservation?: bigint;
+	MemorySwap?: bigint;
+	MemorySwappiness?: bigint;
+	NanoCpus?: bigint;
 	OomKillDisable?: boolean;
 	Init?: boolean | null;
-	PidsLimit?: number | null;
+	PidsLimit?: bigint | null;
 	Ulimits?: readonly {
 		Name?: string;
 		Soft?: number;
 		Hard?: number;
 	}[];
-	CpuCount?: number;
-	CpuPercent?: number;
-	IOMaximumIOps?: number;
-	IOMaximumBandwidth?: number;
+	CpuCount?: bigint;
+	CpuPercent?: bigint;
+	IOMaximumIOps?: bigint;
+	IOMaximumBandwidth?: bigint;
 };
 /** An object describing a limit on resources which can be requested by a task. */
 export type Limit = {
-	NanoCPUs?: number;
-	MemoryBytes?: number;
+	NanoCPUs?: bigint;
+	MemoryBytes?: bigint;
 	/**
 	 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 	 * @example 100
 	 */
-	Pids?: number;
+	Pids?: bigint;
 };
 /**
  * An object describing the resources which can be advertised by a node and
  * requested by a task.
  */
 export type ResourceObject = {
-	NanoCPUs?: number;
-	MemoryBytes?: number;
+	NanoCPUs?: bigint;
+	MemoryBytes?: bigint;
 	/**
 	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 	 * String resources (e.g, `GPU=UUID1`).
@@ -284,17 +284,17 @@ export type ResourceObject = {
 		};
 		DiscreteResourceSpec?: {
 			Kind?: string;
-			Value?: number;
+			Value?: bigint;
 		};
 	}[];
 };
 /** A test to perform to check that the container is healthy. */
 export type HealthConfig = {
 	Test?: readonly string[];
-	Interval?: number;
-	Timeout?: number;
+	Interval?: bigint;
+	Timeout?: bigint;
 	Retries?: number;
-	StartPeriod?: number;
+	StartPeriod?: bigint;
 };
 /** Health stores information about the container's healthcheck results. */
 export type Health = {
@@ -320,7 +320,7 @@ export type Health = {
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 		 * @example 2020-01-04T10:44:24.496525531Z
 		 */
-		Start?: string;
+		Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
 		/**
 		 * Date and time at which this check ended in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -350,7 +350,7 @@ export type HealthcheckResult = {
 	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 	 * @example 2020-01-04T10:44:24.496525531Z
 	 */
-	Start?: string;
+	Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
 	/**
 	 * Date and time at which this check ended in
 	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -372,7 +372,7 @@ export type HealthcheckResult = {
 /** Container configuration that depends on the host we are running on */
 export type HostConfig = {
 	CpuShares?: number;
-	Memory?: number;
+	Memory?: bigint;
 	CgroupParent?: string;
 	BlkioWeight?: number;
 	BlkioWeightDevice?: readonly {
@@ -381,24 +381,24 @@ export type HostConfig = {
 	}[];
 	BlkioDeviceReadBps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceWriteBps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceReadIOps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceWriteIOps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
-	CpuPeriod?: number;
-	CpuQuota?: number;
-	CpuRealtimePeriod?: number;
-	CpuRealtimeRuntime?: number;
+	CpuPeriod?: bigint;
+	CpuQuota?: bigint;
+	CpuRealtimePeriod?: bigint;
+	CpuRealtimeRuntime?: bigint;
 	/**
 	 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
 	 * @example 0-3
@@ -425,23 +425,23 @@ export type HostConfig = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	}[];
-	KernelMemoryTCP?: number;
-	MemoryReservation?: number;
-	MemorySwap?: number;
-	MemorySwappiness?: number;
-	NanoCpus?: number;
+	KernelMemoryTCP?: bigint;
+	MemoryReservation?: bigint;
+	MemorySwap?: bigint;
+	MemorySwappiness?: bigint;
+	NanoCpus?: bigint;
 	OomKillDisable?: boolean;
 	Init?: boolean | null;
-	PidsLimit?: number | null;
+	PidsLimit?: bigint | null;
 	Ulimits?: readonly {
 		Name?: string;
 		Soft?: number;
 		Hard?: number;
 	}[];
-	CpuCount?: number;
-	CpuPercent?: number;
-	IOMaximumIOps?: number;
-	IOMaximumBandwidth?: number;
+	CpuCount?: bigint;
+	CpuPercent?: bigint;
+	IOMaximumIOps?: bigint;
+	IOMaximumBandwidth?: bigint;
 } & {
 	Binds?: readonly string[];
 	ContainerIDFile?: string;
@@ -533,7 +533,7 @@ export type HostConfig = {
 			};
 		};
 		TmpfsOptions?: {
-			SizeBytes?: number;
+			SizeBytes?: bigint;
 			Mode?: number;
 		};
 	}[];
@@ -585,7 +585,7 @@ export type HostConfig = {
 	>;
 	UTSMode?: string;
 	UsernsMode?: string;
-	ShmSize?: number;
+	ShmSize?: bigint;
 	Sysctls?: Record<
 		string | number,
 		/* additionalProperties is not handled yet */ unknown
@@ -649,10 +649,10 @@ export type ContainerConfig = {
 	Cmd?: readonly string[];
 	Healthcheck?: {
 		Test?: readonly string[];
-		Interval?: number;
-		Timeout?: number;
+		Interval?: bigint;
+		Timeout?: bigint;
 		Retries?: number;
-		StartPeriod?: number;
+		StartPeriod?: bigint;
 	};
 	/**
 	 * Command is already escaped (Windows only)
@@ -806,10 +806,10 @@ export type ImageConfig = {
 	Cmd?: readonly string[];
 	Healthcheck?: {
 		Test?: readonly string[];
-		Interval?: number;
-		Timeout?: number;
+		Interval?: bigint;
+		Timeout?: bigint;
 		Retries?: number;
-		StartPeriod?: number;
+		StartPeriod?: bigint;
 	};
 	/**
 	 * Command is already escaped (Windows only)
@@ -1221,10 +1221,10 @@ export type ImageInspect = {
 		Cmd?: readonly string[];
 		Healthcheck?: {
 			Test?: readonly string[];
-			Interval?: number;
-			Timeout?: number;
+			Interval?: bigint;
+			Timeout?: bigint;
 			Retries?: number;
-			StartPeriod?: number;
+			StartPeriod?: bigint;
 		};
 		/**
 		 * Command is already escaped (Windows only)
@@ -1392,10 +1392,10 @@ export type ImageInspect = {
 		Cmd?: readonly string[];
 		Healthcheck?: {
 			Test?: readonly string[];
-			Interval?: number;
-			Timeout?: number;
+			Interval?: bigint;
+			Timeout?: bigint;
 			Retries?: number;
-			StartPeriod?: number;
+			StartPeriod?: bigint;
 		};
 		/**
 		 * Command is already escaped (Windows only)
@@ -1494,7 +1494,7 @@ export type ImageInspect = {
 	 * Total size of the image including all layers it is composed of.
 	 * @example 1239828
 	 */
-	Size?: number;
+	Size?: bigint;
 	/**
 	 * Total size of the image including all layers it is composed of.
 	 *
@@ -1507,7 +1507,7 @@ export type ImageInspect = {
 	 * > will be removed in API v1.44.
 	 * @example 1239828
 	 */
-	VirtualSize?: number;
+	VirtualSize?: bigint;
 	GraphDriver?: {
 		/**
 		 * Name of the storage driver.
@@ -1588,7 +1588,7 @@ export type ImageSummary = {
 	 * Total size of the image including all layers it is composed of.
 	 * @example 172064416
 	 */
-	Size: number;
+	Size: bigint;
 	/**
 	 * Total size of image layers that are shared between this image and other
 	 * images.
@@ -1597,7 +1597,7 @@ export type ImageSummary = {
 	 * has not been set / calculated.
 	 * @example 1239828
 	 */
-	SharedSize: number;
+	SharedSize: bigint;
 	/**
 	 * Total size of the image including all layers it is composed of.
 	 *
@@ -1610,7 +1610,7 @@ export type ImageSummary = {
 	 * removed in API v1.44.
 	 * @example 172064416
 	 */
-	VirtualSize?: number;
+	VirtualSize?: bigint;
 	Labels: Record<
 		string | number,
 		/* additionalProperties is not handled yet */ unknown
@@ -1723,8 +1723,8 @@ export type Volume = {
 					>[];
 				};
 				CapacityRange?: {
-					RequiredBytes?: number;
-					LimitBytes?: number;
+					RequiredBytes?: bigint;
+					LimitBytes?: bigint;
 				};
 				/**
 				 * The availability of the volume for use in tasks.
@@ -1740,7 +1740,7 @@ export type Volume = {
 			};
 		};
 		Info?: {
-			CapacityBytes?: number;
+			CapacityBytes?: bigint;
 			VolumeContext?: Record<
 				string | number,
 				/* additionalProperties is not handled yet */ unknown
@@ -1790,13 +1790,13 @@ export type Volume = {
 		 * is set to `-1` ("not available")
 		 * @default -1
 		 */
-		Size: number;
+		Size: bigint;
 		/**
 		 * The number of containers referencing this volume. This field
 		 * is set to `-1` if the reference-count is not available.
 		 * @default -1
 		 */
-		RefCount: number;
+		RefCount: bigint;
 	};
 };
 /** Volume configuration */
@@ -1861,8 +1861,8 @@ export type VolumeCreateOptions = {
 				>[];
 			};
 			CapacityRange?: {
-				RequiredBytes?: number;
-				LimitBytes?: number;
+				RequiredBytes?: bigint;
+				LimitBytes?: bigint;
 			};
 			/**
 			 * The availability of the volume for use in tasks.
@@ -1965,8 +1965,8 @@ export type VolumeListResponse = {
 						>[];
 					};
 					CapacityRange?: {
-						RequiredBytes?: number;
-						LimitBytes?: number;
+						RequiredBytes?: bigint;
+						LimitBytes?: bigint;
 					};
 					/**
 					 * The availability of the volume for use in tasks.
@@ -1982,7 +1982,7 @@ export type VolumeListResponse = {
 				};
 			};
 			Info?: {
-				CapacityBytes?: number;
+				CapacityBytes?: bigint;
 				VolumeContext?: Record<
 					string | number,
 					/* additionalProperties is not handled yet */ unknown
@@ -2032,13 +2032,13 @@ export type VolumeListResponse = {
 			 * is set to `-1` ("not available")
 			 * @default -1
 			 */
-			Size: number;
+			Size: bigint;
 			/**
 			 * The number of containers referencing this volume. This field
 			 * is set to `-1` if the reference-count is not available.
 			 * @default -1
 			 */
-			RefCount: number;
+			RefCount: bigint;
 		};
 	}[];
 	/**
@@ -2395,7 +2395,7 @@ export type EndpointSettings = {
 	 * Mask length of the global IPv6 address.
 	 * @example 64
 	 */
-	GlobalIPv6PrefixLen?: number;
+	GlobalIPv6PrefixLen?: bigint;
 	/**
 	 * MAC address for the endpoint on this network.
 	 * @example 02:42:ac:11:00:04
@@ -2646,8 +2646,8 @@ export type Node = {
 			OS?: string;
 		};
 		Resources?: {
-			NanoCPUs?: number;
-			MemoryBytes?: number;
+			NanoCPUs?: bigint;
+			MemoryBytes?: bigint;
 			/**
 			 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 			 * String resources (e.g, `GPU=UUID1`).
@@ -2660,7 +2660,7 @@ export type Node = {
 				};
 				DiscreteResourceSpec?: {
 					Kind?: string;
-					Value?: number;
+					Value?: bigint;
 				};
 			}[];
 		};
@@ -2735,8 +2735,8 @@ export type NodeDescription = {
 		OS?: string;
 	};
 	Resources?: {
-		NanoCPUs?: number;
-		MemoryBytes?: number;
+		NanoCPUs?: bigint;
+		MemoryBytes?: bigint;
 		/**
 		 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 		 * String resources (e.g, `GPU=UUID1`).
@@ -2749,7 +2749,7 @@ export type NodeDescription = {
 			};
 			DiscreteResourceSpec?: {
 				Kind?: string;
-				Value?: number;
+				Value?: bigint;
 			};
 		}[];
 	};
@@ -2870,7 +2870,7 @@ export type SwarmSpec = {
 		 * negative, never remove completed or failed tasks.
 		 * @example 10
 		 */
-		TaskHistoryRetentionLimit?: number;
+		TaskHistoryRetentionLimit?: bigint;
 	};
 	Raft?: {
 		/**
@@ -2910,14 +2910,14 @@ export type SwarmSpec = {
 		 * The delay for an agent to send a heartbeat to the dispatcher.
 		 * @example 5000000000
 		 */
-		HeartbeatPeriod?: number;
+		HeartbeatPeriod?: bigint;
 	};
 	CAConfig?: {
 		/**
 		 * The duration node certificates are issued for.
 		 * @example 7776000000000000
 		 */
-		NodeCertExpiry?: number;
+		NodeCertExpiry?: bigint;
 		ExternalCAs?: readonly {
 			/**
 			 * Protocol for communication with the external CA (currently
@@ -3000,7 +3000,7 @@ export type ClusterInfo = {
 			 * negative, never remove completed or failed tasks.
 			 * @example 10
 			 */
-			TaskHistoryRetentionLimit?: number;
+			TaskHistoryRetentionLimit?: bigint;
 		};
 		Raft?: {
 			/**
@@ -3040,14 +3040,14 @@ export type ClusterInfo = {
 			 * The delay for an agent to send a heartbeat to the dispatcher.
 			 * @example 5000000000
 			 */
-			HeartbeatPeriod?: number;
+			HeartbeatPeriod?: bigint;
 		};
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
 			 * @example 7776000000000000
 			 */
-			NodeCertExpiry?: number;
+			NodeCertExpiry?: bigint;
 			ExternalCAs?: readonly {
 				/**
 				 * Protocol for communication with the external CA (currently
@@ -3169,7 +3169,7 @@ export type Swarm = {
 			 * negative, never remove completed or failed tasks.
 			 * @example 10
 			 */
-			TaskHistoryRetentionLimit?: number;
+			TaskHistoryRetentionLimit?: bigint;
 		};
 		Raft?: {
 			/**
@@ -3209,14 +3209,14 @@ export type Swarm = {
 			 * The delay for an agent to send a heartbeat to the dispatcher.
 			 * @example 5000000000
 			 */
-			HeartbeatPeriod?: number;
+			HeartbeatPeriod?: bigint;
 		};
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
 			 * @example 7776000000000000
 			 */
-			NodeCertExpiry?: number;
+			NodeCertExpiry?: bigint;
 			ExternalCAs?: readonly {
 				/**
 				 * Protocol for communication with the external CA (currently
@@ -3421,18 +3421,18 @@ export type TaskSpec = {
 				};
 			};
 			TmpfsOptions?: {
-				SizeBytes?: number;
+				SizeBytes?: bigint;
 				Mode?: number;
 			};
 		}[];
 		StopSignal?: string;
-		StopGracePeriod?: number;
+		StopGracePeriod?: bigint;
 		HealthCheck?: {
 			Test?: readonly string[];
-			Interval?: number;
-			Timeout?: number;
+			Interval?: bigint;
+			Timeout?: bigint;
 			Retries?: number;
-			StartPeriod?: number;
+			StartPeriod?: bigint;
 		};
 		Hosts?: readonly string[];
 		DNSConfig?: {
@@ -3495,17 +3495,17 @@ export type TaskSpec = {
 	};
 	Resources?: {
 		Limits?: {
-			NanoCPUs?: number;
-			MemoryBytes?: number;
+			NanoCPUs?: bigint;
+			MemoryBytes?: bigint;
 			/**
 			 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 			 * @example 100
 			 */
-			Pids?: number;
+			Pids?: bigint;
 		};
 		Reservations?: {
-			NanoCPUs?: number;
-			MemoryBytes?: number;
+			NanoCPUs?: bigint;
+			MemoryBytes?: bigint;
 			/**
 			 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 			 * String resources (e.g, `GPU=UUID1`).
@@ -3518,7 +3518,7 @@ export type TaskSpec = {
 				};
 				DiscreteResourceSpec?: {
 					Kind?: string;
-					Value?: number;
+					Value?: bigint;
 				};
 			}[];
 		};
@@ -3529,9 +3529,9 @@ export type TaskSpec = {
 		 * @enum none,on-failure,any
 		 */
 		Condition?: "none" | "on-failure" | "any";
-		Delay?: number;
-		MaxAttempts?: number;
-		Window?: number;
+		Delay?: bigint;
+		MaxAttempts?: bigint;
+		Window?: bigint;
 	};
 	Placement?: {
 		/**
@@ -3575,7 +3575,7 @@ export type TaskSpec = {
 				SpreadDescriptor?: string;
 			};
 		}[];
-		MaxReplicas?: number;
+		MaxReplicas?: bigint;
 		Platforms?: readonly {
 			/**
 			 * Architecture represents the hardware architecture (for example,
@@ -3755,18 +3755,18 @@ export type Task = {
 					};
 				};
 				TmpfsOptions?: {
-					SizeBytes?: number;
+					SizeBytes?: bigint;
 					Mode?: number;
 				};
 			}[];
 			StopSignal?: string;
-			StopGracePeriod?: number;
+			StopGracePeriod?: bigint;
 			HealthCheck?: {
 				Test?: readonly string[];
-				Interval?: number;
-				Timeout?: number;
+				Interval?: bigint;
+				Timeout?: bigint;
 				Retries?: number;
-				StartPeriod?: number;
+				StartPeriod?: bigint;
 			};
 			Hosts?: readonly string[];
 			DNSConfig?: {
@@ -3829,17 +3829,17 @@ export type Task = {
 		};
 		Resources?: {
 			Limits?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 				 * @example 100
 				 */
-				Pids?: number;
+				Pids?: bigint;
 			};
 			Reservations?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 				 * String resources (e.g, `GPU=UUID1`).
@@ -3852,7 +3852,7 @@ export type Task = {
 					};
 					DiscreteResourceSpec?: {
 						Kind?: string;
-						Value?: number;
+						Value?: bigint;
 					};
 				}[];
 			};
@@ -3863,9 +3863,9 @@ export type Task = {
 			 * @enum none,on-failure,any
 			 */
 			Condition?: "none" | "on-failure" | "any";
-			Delay?: number;
-			MaxAttempts?: number;
-			Window?: number;
+			Delay?: bigint;
+			MaxAttempts?: bigint;
+			Window?: bigint;
 		};
 		Placement?: {
 			/**
@@ -3909,7 +3909,7 @@ export type Task = {
 					SpreadDescriptor?: string;
 				};
 			}[];
-			MaxReplicas?: number;
+			MaxReplicas?: bigint;
 			Platforms?: readonly {
 				/**
 				 * Architecture represents the hardware architecture (for example,
@@ -3957,7 +3957,7 @@ export type Task = {
 		};
 		DiscreteResourceSpec?: {
 			Kind?: string;
-			Value?: number;
+			Value?: bigint;
 		};
 	}[];
 	Status?: {
@@ -4132,18 +4132,18 @@ export type ServiceSpec = {
 					};
 				};
 				TmpfsOptions?: {
-					SizeBytes?: number;
+					SizeBytes?: bigint;
 					Mode?: number;
 				};
 			}[];
 			StopSignal?: string;
-			StopGracePeriod?: number;
+			StopGracePeriod?: bigint;
 			HealthCheck?: {
 				Test?: readonly string[];
-				Interval?: number;
-				Timeout?: number;
+				Interval?: bigint;
+				Timeout?: bigint;
 				Retries?: number;
-				StartPeriod?: number;
+				StartPeriod?: bigint;
 			};
 			Hosts?: readonly string[];
 			DNSConfig?: {
@@ -4206,17 +4206,17 @@ export type ServiceSpec = {
 		};
 		Resources?: {
 			Limits?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 				 * @example 100
 				 */
-				Pids?: number;
+				Pids?: bigint;
 			};
 			Reservations?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 				 * String resources (e.g, `GPU=UUID1`).
@@ -4229,7 +4229,7 @@ export type ServiceSpec = {
 					};
 					DiscreteResourceSpec?: {
 						Kind?: string;
-						Value?: number;
+						Value?: bigint;
 					};
 				}[];
 			};
@@ -4240,9 +4240,9 @@ export type ServiceSpec = {
 			 * @enum none,on-failure,any
 			 */
 			Condition?: "none" | "on-failure" | "any";
-			Delay?: number;
-			MaxAttempts?: number;
-			Window?: number;
+			Delay?: bigint;
+			MaxAttempts?: bigint;
+			Window?: bigint;
 		};
 		Placement?: {
 			/**
@@ -4286,7 +4286,7 @@ export type ServiceSpec = {
 					SpreadDescriptor?: string;
 				};
 			}[];
-			MaxReplicas?: number;
+			MaxReplicas?: bigint;
 			Platforms?: readonly {
 				/**
 				 * Architecture represents the hardware architecture (for example,
@@ -4321,7 +4321,7 @@ export type ServiceSpec = {
 	};
 	Mode?: {
 		Replicated?: {
-			Replicas?: number;
+			Replicas?: bigint;
 		};
 		Global?: {};
 		ReplicatedJob?: {
@@ -4329,21 +4329,21 @@ export type ServiceSpec = {
 			 * The maximum number of replicas to run simultaneously.
 			 * @default 1
 			 */
-			MaxConcurrent?: number;
-			TotalCompletions?: number;
+			MaxConcurrent?: bigint;
+			TotalCompletions?: bigint;
 		};
 		GlobalJob?: {};
 	};
 	UpdateConfig?: {
-		Parallelism?: number;
-		Delay?: number;
+		Parallelism?: bigint;
+		Delay?: bigint;
 		/**
 		 * Action to take if an updated task fails to run, or stops running
 		 * during the update.
 		 * @enum continue,pause,rollback
 		 */
 		FailureAction?: "continue" | "pause" | "rollback";
-		Monitor?: number;
+		Monitor?: bigint;
 		MaxFailureRatio?: number;
 		/**
 		 * The order of operations when rolling out an updated task. Either
@@ -4354,15 +4354,15 @@ export type ServiceSpec = {
 		Order?: "stop-first" | "start-first";
 	};
 	RollbackConfig?: {
-		Parallelism?: number;
-		Delay?: number;
+		Parallelism?: bigint;
+		Delay?: bigint;
 		/**
 		 * Action to take if an rolled back task fails to run, or stops
 		 * running during the rollback.
 		 * @enum continue,pause
 		 */
 		FailureAction?: "continue" | "pause";
-		Monitor?: number;
+		Monitor?: bigint;
 		MaxFailureRatio?: number;
 		/**
 		 * The order of operations when rolling back a task. Either the old
@@ -4602,18 +4602,18 @@ export type Service = {
 						};
 					};
 					TmpfsOptions?: {
-						SizeBytes?: number;
+						SizeBytes?: bigint;
 						Mode?: number;
 					};
 				}[];
 				StopSignal?: string;
-				StopGracePeriod?: number;
+				StopGracePeriod?: bigint;
 				HealthCheck?: {
 					Test?: readonly string[];
-					Interval?: number;
-					Timeout?: number;
+					Interval?: bigint;
+					Timeout?: bigint;
 					Retries?: number;
-					StartPeriod?: number;
+					StartPeriod?: bigint;
 				};
 				Hosts?: readonly string[];
 				DNSConfig?: {
@@ -4676,17 +4676,17 @@ export type Service = {
 			};
 			Resources?: {
 				Limits?: {
-					NanoCPUs?: number;
-					MemoryBytes?: number;
+					NanoCPUs?: bigint;
+					MemoryBytes?: bigint;
 					/**
 					 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 					 * @example 100
 					 */
-					Pids?: number;
+					Pids?: bigint;
 				};
 				Reservations?: {
-					NanoCPUs?: number;
-					MemoryBytes?: number;
+					NanoCPUs?: bigint;
+					MemoryBytes?: bigint;
 					/**
 					 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 					 * String resources (e.g, `GPU=UUID1`).
@@ -4699,7 +4699,7 @@ export type Service = {
 						};
 						DiscreteResourceSpec?: {
 							Kind?: string;
-							Value?: number;
+							Value?: bigint;
 						};
 					}[];
 				};
@@ -4710,9 +4710,9 @@ export type Service = {
 				 * @enum none,on-failure,any
 				 */
 				Condition?: "none" | "on-failure" | "any";
-				Delay?: number;
-				MaxAttempts?: number;
-				Window?: number;
+				Delay?: bigint;
+				MaxAttempts?: bigint;
+				Window?: bigint;
 			};
 			Placement?: {
 				/**
@@ -4756,7 +4756,7 @@ export type Service = {
 						SpreadDescriptor?: string;
 					};
 				}[];
-				MaxReplicas?: number;
+				MaxReplicas?: bigint;
 				Platforms?: readonly {
 					/**
 					 * Architecture represents the hardware architecture (for example,
@@ -4791,7 +4791,7 @@ export type Service = {
 		};
 		Mode?: {
 			Replicated?: {
-				Replicas?: number;
+				Replicas?: bigint;
 			};
 			Global?: {};
 			ReplicatedJob?: {
@@ -4799,21 +4799,21 @@ export type Service = {
 				 * The maximum number of replicas to run simultaneously.
 				 * @default 1
 				 */
-				MaxConcurrent?: number;
-				TotalCompletions?: number;
+				MaxConcurrent?: bigint;
+				TotalCompletions?: bigint;
 			};
 			GlobalJob?: {};
 		};
 		UpdateConfig?: {
-			Parallelism?: number;
-			Delay?: number;
+			Parallelism?: bigint;
+			Delay?: bigint;
 			/**
 			 * Action to take if an updated task fails to run, or stops running
 			 * during the update.
 			 * @enum continue,pause,rollback
 			 */
 			FailureAction?: "continue" | "pause" | "rollback";
-			Monitor?: number;
+			Monitor?: bigint;
 			MaxFailureRatio?: number;
 			/**
 			 * The order of operations when rolling out an updated task. Either
@@ -4824,15 +4824,15 @@ export type Service = {
 			Order?: "stop-first" | "start-first";
 		};
 		RollbackConfig?: {
-			Parallelism?: number;
-			Delay?: number;
+			Parallelism?: bigint;
+			Delay?: bigint;
 			/**
 			 * Action to take if an rolled back task fails to run, or stops
 			 * running during the rollback.
 			 * @enum continue,pause
 			 */
 			FailureAction?: "continue" | "pause";
-			Monitor?: number;
+			Monitor?: bigint;
 			MaxFailureRatio?: number;
 			/**
 			 * The order of operations when rolling back a task. Either the old
@@ -4988,15 +4988,15 @@ export type ContainerSummary = {
 	Image?: string;
 	ImageID?: string;
 	Command?: string;
-	Created?: number;
+	Created?: bigint;
 	Ports?: readonly {
 		IP?: string;
 		PrivatePort: number;
 		PublicPort?: number;
 		Type: "tcp" | "udp" | "sctp";
 	}[];
-	SizeRw?: number;
-	SizeRootFs?: number;
+	SizeRw?: bigint;
+	SizeRootFs?: bigint;
 	Labels?: Record<
 		string | number,
 		/* additionalProperties is not handled yet */ unknown
@@ -5317,7 +5317,7 @@ export type ContainerState = {
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 			 * @example 2020-01-04T10:44:24.496525531Z
 			 */
-			Start?: string;
+			Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
 			/**
 			 * Date and time at which this check ended in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -5353,7 +5353,7 @@ export type ContainerCreateResponse = {
 };
 /** OK response to ContainerWait operation */
 export type ContainerWaitResponse = {
-	StatusCode: number;
+	StatusCode: bigint;
 	Error?: {
 		Message?: string;
 	};
@@ -5697,7 +5697,7 @@ export type SystemInfo = {
 	 * Total amount of physical memory available on the host, in bytes.
 	 * @example 2095882240
 	 */
-	MemTotal?: number;
+	MemTotal?: bigint;
 	/**
 	 * Address / URL of the index server that is used for image search,
 	 * and as a default for user authentication for Docker Hub and Docker Cloud.
@@ -5805,7 +5805,7 @@ export type SystemInfo = {
 		};
 		DiscreteResourceSpec?: {
 			Kind?: string;
-			Value?: number;
+			Value?: bigint;
 		};
 	}[];
 	/**
@@ -5965,7 +5965,7 @@ export type SystemInfo = {
 					 * negative, never remove completed or failed tasks.
 					 * @example 10
 					 */
-					TaskHistoryRetentionLimit?: number;
+					TaskHistoryRetentionLimit?: bigint;
 				};
 				Raft?: {
 					/**
@@ -6005,14 +6005,14 @@ export type SystemInfo = {
 					 * The delay for an agent to send a heartbeat to the dispatcher.
 					 * @example 5000000000
 					 */
-					HeartbeatPeriod?: number;
+					HeartbeatPeriod?: bigint;
 				};
 				CAConfig?: {
 					/**
 					 * The duration node certificates are issued for.
 					 * @example 7776000000000000
 					 */
-					NodeCertExpiry?: number;
+					NodeCertExpiry?: bigint;
 					ExternalCAs?: readonly {
 						/**
 						 * Protocol for communication with the external CA (currently
@@ -6461,7 +6461,7 @@ export type SwarmInfo = {
 				 * negative, never remove completed or failed tasks.
 				 * @example 10
 				 */
-				TaskHistoryRetentionLimit?: number;
+				TaskHistoryRetentionLimit?: bigint;
 			};
 			Raft?: {
 				/**
@@ -6501,14 +6501,14 @@ export type SwarmInfo = {
 				 * The delay for an agent to send a heartbeat to the dispatcher.
 				 * @example 5000000000
 				 */
-				HeartbeatPeriod?: number;
+				HeartbeatPeriod?: bigint;
 			};
 			CAConfig?: {
 				/**
 				 * The duration node certificates are issued for.
 				 * @example 7776000000000000
 				 */
-				NodeCertExpiry?: number;
+				NodeCertExpiry?: bigint;
 				ExternalCAs?: readonly {
 					/**
 					 * Protocol for communication with the external CA (currently
@@ -6663,12 +6663,12 @@ export type EventMessage = {
 	 * Timestamp of event
 	 * @example 1629574695
 	 */
-	time?: number;
+	time?: bigint;
 	/**
 	 * Timestamp of event, with nanosecond accuracy
 	 * @example 1629574695515050000
 	 */
-	timeNano?: number;
+	timeNano?: bigint;
 };
 /**
  * A descriptor struct containing digest, media type, and size, as defined in
@@ -6690,7 +6690,7 @@ export type OciDescriptor = {
 	 * The size in bytes of the blob.
 	 * @example 3987495
 	 */
-	size?: number;
+	size?: bigint;
 };
 /**
  * Describes the platform which the image in the manifest runs on, as defined
@@ -6747,7 +6747,7 @@ export type DistributionInspect = {
 		 * The size in bytes of the blob.
 		 * @example 3987495
 		 */
-		size?: number;
+		size?: bigint;
 	};
 	Platforms: readonly {
 		/**
@@ -6832,8 +6832,8 @@ export type ClusterVolume = {
 				>[];
 			};
 			CapacityRange?: {
-				RequiredBytes?: number;
-				LimitBytes?: number;
+				RequiredBytes?: bigint;
+				LimitBytes?: bigint;
 			};
 			/**
 			 * The availability of the volume for use in tasks.
@@ -6849,7 +6849,7 @@ export type ClusterVolume = {
 		};
 	};
 	Info?: {
-		CapacityBytes?: number;
+		CapacityBytes?: bigint;
 		VolumeContext?: Record<
 			string | number,
 			/* additionalProperties is not handled yet */ unknown
@@ -6929,8 +6929,8 @@ export type ClusterVolumeSpec = {
 			>[];
 		};
 		CapacityRange?: {
-			RequiredBytes?: number;
-			LimitBytes?: number;
+			RequiredBytes?: bigint;
+			LimitBytes?: bigint;
 		};
 		/**
 		 * The availability of the volume for use in tasks.
@@ -6964,15 +6964,15 @@ export type ContainerListCommandOutput = readonly {
 	Image?: string;
 	ImageID?: string;
 	Command?: string;
-	Created?: number;
+	Created?: bigint;
 	Ports?: readonly {
 		IP?: string;
 		PrivatePort: number;
 		PublicPort?: number;
 		Type: "tcp" | "udp" | "sctp";
 	}[];
-	SizeRw?: number;
-	SizeRootFs?: number;
+	SizeRw?: bigint;
+	SizeRootFs?: bigint;
 	Labels?: Record<
 		string | number,
 		/* additionalProperties is not handled yet */ unknown
@@ -7097,10 +7097,10 @@ type ContainerCreateJsonBody = {
 	Cmd?: readonly string[];
 	Healthcheck?: {
 		Test?: readonly string[];
-		Interval?: number;
-		Timeout?: number;
+		Interval?: bigint;
+		Timeout?: bigint;
 		Retries?: number;
-		StartPeriod?: number;
+		StartPeriod?: bigint;
 	};
 	/**
 	 * Command is already escaped (Windows only)
@@ -7156,7 +7156,7 @@ type ContainerCreateJsonBody = {
 } & {
 	HostConfig?: {
 		CpuShares?: number;
-		Memory?: number;
+		Memory?: bigint;
 		CgroupParent?: string;
 		BlkioWeight?: number;
 		BlkioWeightDevice?: readonly {
@@ -7165,24 +7165,24 @@ type ContainerCreateJsonBody = {
 		}[];
 		BlkioDeviceReadBps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
 		BlkioDeviceWriteBps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
 		BlkioDeviceReadIOps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
 		BlkioDeviceWriteIOps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
-		CpuPeriod?: number;
-		CpuQuota?: number;
-		CpuRealtimePeriod?: number;
-		CpuRealtimeRuntime?: number;
+		CpuPeriod?: bigint;
+		CpuQuota?: bigint;
+		CpuRealtimePeriod?: bigint;
+		CpuRealtimeRuntime?: bigint;
 		/**
 		 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
 		 * @example 0-3
@@ -7209,23 +7209,23 @@ type ContainerCreateJsonBody = {
 				/* additionalProperties is not handled yet */ unknown
 			>;
 		}[];
-		KernelMemoryTCP?: number;
-		MemoryReservation?: number;
-		MemorySwap?: number;
-		MemorySwappiness?: number;
-		NanoCpus?: number;
+		KernelMemoryTCP?: bigint;
+		MemoryReservation?: bigint;
+		MemorySwap?: bigint;
+		MemorySwappiness?: bigint;
+		NanoCpus?: bigint;
 		OomKillDisable?: boolean;
 		Init?: boolean | null;
-		PidsLimit?: number | null;
+		PidsLimit?: bigint | null;
 		Ulimits?: readonly {
 			Name?: string;
 			Soft?: number;
 			Hard?: number;
 		}[];
-		CpuCount?: number;
-		CpuPercent?: number;
-		IOMaximumIOps?: number;
-		IOMaximumBandwidth?: number;
+		CpuCount?: bigint;
+		CpuPercent?: bigint;
+		IOMaximumIOps?: bigint;
+		IOMaximumBandwidth?: bigint;
 	} & {
 		Binds?: readonly string[];
 		ContainerIDFile?: string;
@@ -7317,7 +7317,7 @@ type ContainerCreateJsonBody = {
 				};
 			};
 			TmpfsOptions?: {
-				SizeBytes?: number;
+				SizeBytes?: bigint;
 				Mode?: number;
 			};
 		}[];
@@ -7369,7 +7369,7 @@ type ContainerCreateJsonBody = {
 		>;
 		UTSMode?: string;
 		UsernsMode?: string;
-		ShmSize?: number;
+		ShmSize?: bigint;
 		Sysctls?: Record<
 			string | number,
 			/* additionalProperties is not handled yet */ unknown
@@ -7520,7 +7520,7 @@ export type ContainerInspectCommandOutput = {
 				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 				 * @example 2020-01-04T10:44:24.496525531Z
 				 */
-				Start?: string;
+				Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
 				/**
 				 * Date and time at which this check ended in
 				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -7556,7 +7556,7 @@ export type ContainerInspectCommandOutput = {
 	ExecIDs?: readonly string[];
 	HostConfig?: {
 		CpuShares?: number;
-		Memory?: number;
+		Memory?: bigint;
 		CgroupParent?: string;
 		BlkioWeight?: number;
 		BlkioWeightDevice?: readonly {
@@ -7565,24 +7565,24 @@ export type ContainerInspectCommandOutput = {
 		}[];
 		BlkioDeviceReadBps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
 		BlkioDeviceWriteBps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
 		BlkioDeviceReadIOps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
 		BlkioDeviceWriteIOps?: readonly {
 			Path?: string;
-			Rate?: number;
+			Rate?: bigint;
 		}[];
-		CpuPeriod?: number;
-		CpuQuota?: number;
-		CpuRealtimePeriod?: number;
-		CpuRealtimeRuntime?: number;
+		CpuPeriod?: bigint;
+		CpuQuota?: bigint;
+		CpuRealtimePeriod?: bigint;
+		CpuRealtimeRuntime?: bigint;
 		/**
 		 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
 		 * @example 0-3
@@ -7609,23 +7609,23 @@ export type ContainerInspectCommandOutput = {
 				/* additionalProperties is not handled yet */ unknown
 			>;
 		}[];
-		KernelMemoryTCP?: number;
-		MemoryReservation?: number;
-		MemorySwap?: number;
-		MemorySwappiness?: number;
-		NanoCpus?: number;
+		KernelMemoryTCP?: bigint;
+		MemoryReservation?: bigint;
+		MemorySwap?: bigint;
+		MemorySwappiness?: bigint;
+		NanoCpus?: bigint;
 		OomKillDisable?: boolean;
 		Init?: boolean | null;
-		PidsLimit?: number | null;
+		PidsLimit?: bigint | null;
 		Ulimits?: readonly {
 			Name?: string;
 			Soft?: number;
 			Hard?: number;
 		}[];
-		CpuCount?: number;
-		CpuPercent?: number;
-		IOMaximumIOps?: number;
-		IOMaximumBandwidth?: number;
+		CpuCount?: bigint;
+		CpuPercent?: bigint;
+		IOMaximumIOps?: bigint;
+		IOMaximumBandwidth?: bigint;
 	} & {
 		Binds?: readonly string[];
 		ContainerIDFile?: string;
@@ -7717,7 +7717,7 @@ export type ContainerInspectCommandOutput = {
 				};
 			};
 			TmpfsOptions?: {
-				SizeBytes?: number;
+				SizeBytes?: bigint;
 				Mode?: number;
 			};
 		}[];
@@ -7769,7 +7769,7 @@ export type ContainerInspectCommandOutput = {
 		>;
 		UTSMode?: string;
 		UsernsMode?: string;
-		ShmSize?: number;
+		ShmSize?: bigint;
 		Sysctls?: Record<
 			string | number,
 			/* additionalProperties is not handled yet */ unknown
@@ -7794,8 +7794,8 @@ export type ContainerInspectCommandOutput = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	};
-	SizeRw?: number;
-	SizeRootFs?: number;
+	SizeRw?: bigint;
+	SizeRootFs?: bigint;
 	Mounts?: readonly {
 		/**
 		 * The mount type:
@@ -7898,10 +7898,10 @@ export type ContainerInspectCommandOutput = {
 		Cmd?: readonly string[];
 		Healthcheck?: {
 			Test?: readonly string[];
-			Interval?: number;
-			Timeout?: number;
+			Interval?: bigint;
+			Timeout?: bigint;
 			Retries?: number;
-			StartPeriod?: number;
+			StartPeriod?: bigint;
 		};
 		/**
 		 * Command is already escaped (Windows only)
@@ -8221,7 +8221,7 @@ export type ContainerKillCommandInput = ContainerKillCommandParams &
 	ContainerKillCommandQuery;
 type ContainerUpdateJsonBody = {
 	CpuShares?: number;
-	Memory?: number;
+	Memory?: bigint;
 	CgroupParent?: string;
 	BlkioWeight?: number;
 	BlkioWeightDevice?: readonly {
@@ -8230,24 +8230,24 @@ type ContainerUpdateJsonBody = {
 	}[];
 	BlkioDeviceReadBps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceWriteBps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceReadIOps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
 	BlkioDeviceWriteIOps?: readonly {
 		Path?: string;
-		Rate?: number;
+		Rate?: bigint;
 	}[];
-	CpuPeriod?: number;
-	CpuQuota?: number;
-	CpuRealtimePeriod?: number;
-	CpuRealtimeRuntime?: number;
+	CpuPeriod?: bigint;
+	CpuQuota?: bigint;
+	CpuRealtimePeriod?: bigint;
+	CpuRealtimeRuntime?: bigint;
 	/**
 	 * CPUs in which to allow execution (e.g., `0-3`, `0,1`).
 	 * @example 0-3
@@ -8274,23 +8274,23 @@ type ContainerUpdateJsonBody = {
 			/* additionalProperties is not handled yet */ unknown
 		>;
 	}[];
-	KernelMemoryTCP?: number;
-	MemoryReservation?: number;
-	MemorySwap?: number;
-	MemorySwappiness?: number;
-	NanoCpus?: number;
+	KernelMemoryTCP?: bigint;
+	MemoryReservation?: bigint;
+	MemorySwap?: bigint;
+	MemorySwappiness?: bigint;
+	NanoCpus?: bigint;
 	OomKillDisable?: boolean;
 	Init?: boolean | null;
-	PidsLimit?: number | null;
+	PidsLimit?: bigint | null;
 	Ulimits?: readonly {
 		Name?: string;
 		Soft?: number;
 		Hard?: number;
 	}[];
-	CpuCount?: number;
-	CpuPercent?: number;
-	IOMaximumIOps?: number;
-	IOMaximumBandwidth?: number;
+	CpuCount?: bigint;
+	CpuPercent?: bigint;
+	IOMaximumIOps?: bigint;
+	IOMaximumBandwidth?: bigint;
 } & {
 	RestartPolicy?: {
 		/**
@@ -8368,7 +8368,7 @@ export type ContainerWaitCommandParams = {
 export type ContainerWaitCommandInput = ContainerWaitCommandParams &
 	ContainerWaitCommandQuery;
 export type ContainerWaitCommandOutput = {
-	StatusCode: number;
+	StatusCode: bigint;
 	Error?: {
 		Message?: string;
 	};
@@ -8430,7 +8430,7 @@ export type ContainerPruneCommandQuery = {
 export type ContainerPruneCommandInput = ContainerPruneCommandQuery;
 export type ContainerPruneCommandOutput = {
 	ContainersDeleted?: readonly string[];
-	SpaceReclaimed?: number;
+	SpaceReclaimed?: bigint;
 };
 export type InputContainerPruneCommandResponse =
 	UndefinedOnPartialDeep<ContainerPruneCommandOutput>;
@@ -8494,7 +8494,7 @@ export type ImageListCommandOutput = readonly {
 	 * Total size of the image including all layers it is composed of.
 	 * @example 172064416
 	 */
-	Size: number;
+	Size: bigint;
 	/**
 	 * Total size of image layers that are shared between this image and other
 	 * images.
@@ -8503,7 +8503,7 @@ export type ImageListCommandOutput = readonly {
 	 * has not been set / calculated.
 	 * @example 1239828
 	 */
-	SharedSize: number;
+	SharedSize: bigint;
 	/**
 	 * Total size of the image including all layers it is composed of.
 	 *
@@ -8516,7 +8516,7 @@ export type ImageListCommandOutput = readonly {
 	 * removed in API v1.44.
 	 * @example 172064416
 	 */
-	VirtualSize?: number;
+	VirtualSize?: bigint;
 	Labels: Record<
 		string | number,
 		/* additionalProperties is not handled yet */ unknown
@@ -8573,14 +8573,14 @@ export type ImageBuildCommandBodyNonJson = {
 export type ImageBuildCommandInput = ImageBuildCommandBodyNonJson &
 	ImageBuildCommandQuery;
 export type BuildPruneCommandQuery = {
-	keepstorage?: `${number}`;
+	keepstorage?: `${bigint}`;
 	all?: "true" | "false";
 	filters?: string;
 };
 export type BuildPruneCommandInput = BuildPruneCommandQuery;
 export type BuildPruneCommandOutput = {
 	CachesDeleted?: readonly string[];
-	SpaceReclaimed?: number;
+	SpaceReclaimed?: bigint;
 };
 export type InputBuildPruneCommandResponse =
 	UndefinedOnPartialDeep<BuildPruneCommandOutput>;
@@ -8712,10 +8712,10 @@ export type ImageInspectCommandOutput = {
 		Cmd?: readonly string[];
 		Healthcheck?: {
 			Test?: readonly string[];
-			Interval?: number;
-			Timeout?: number;
+			Interval?: bigint;
+			Timeout?: bigint;
 			Retries?: number;
-			StartPeriod?: number;
+			StartPeriod?: bigint;
 		};
 		/**
 		 * Command is already escaped (Windows only)
@@ -8883,10 +8883,10 @@ export type ImageInspectCommandOutput = {
 		Cmd?: readonly string[];
 		Healthcheck?: {
 			Test?: readonly string[];
-			Interval?: number;
-			Timeout?: number;
+			Interval?: bigint;
+			Timeout?: bigint;
 			Retries?: number;
-			StartPeriod?: number;
+			StartPeriod?: bigint;
 		};
 		/**
 		 * Command is already escaped (Windows only)
@@ -8985,7 +8985,7 @@ export type ImageInspectCommandOutput = {
 	 * Total size of the image including all layers it is composed of.
 	 * @example 1239828
 	 */
-	Size?: number;
+	Size?: bigint;
 	/**
 	 * Total size of the image including all layers it is composed of.
 	 *
@@ -8998,7 +8998,7 @@ export type ImageInspectCommandOutput = {
 	 * > will be removed in API v1.44.
 	 * @example 1239828
 	 */
-	VirtualSize?: number;
+	VirtualSize?: bigint;
 	GraphDriver?: {
 		/**
 		 * Name of the storage driver.
@@ -9034,10 +9034,10 @@ export type ImageHistoryCommandParams = {
 export type ImageHistoryCommandInput = ImageHistoryCommandParams;
 export type ImageHistoryCommandOutput = readonly {
 	Id: string;
-	Created: number;
+	Created: bigint;
 	CreatedBy: string;
 	Tags: readonly string[];
-	Size: number;
+	Size: bigint;
 	Comment: string;
 }[];
 export type InputImageHistoryCommandResponse =
@@ -9100,7 +9100,7 @@ export type ImagePruneCommandOutput = {
 		Untagged?: string;
 		Deleted?: string;
 	}[];
-	SpaceReclaimed?: number;
+	SpaceReclaimed?: bigint;
 };
 export type InputImagePruneCommandResponse =
 	UndefinedOnPartialDeep<ImagePruneCommandOutput>;
@@ -9380,7 +9380,7 @@ export type SystemInfoCommandOutput = {
 	 * Total amount of physical memory available on the host, in bytes.
 	 * @example 2095882240
 	 */
-	MemTotal?: number;
+	MemTotal?: bigint;
 	/**
 	 * Address / URL of the index server that is used for image search,
 	 * and as a default for user authentication for Docker Hub and Docker Cloud.
@@ -9488,7 +9488,7 @@ export type SystemInfoCommandOutput = {
 		};
 		DiscreteResourceSpec?: {
 			Kind?: string;
-			Value?: number;
+			Value?: bigint;
 		};
 	}[];
 	/**
@@ -9648,7 +9648,7 @@ export type SystemInfoCommandOutput = {
 					 * negative, never remove completed or failed tasks.
 					 * @example 10
 					 */
-					TaskHistoryRetentionLimit?: number;
+					TaskHistoryRetentionLimit?: bigint;
 				};
 				Raft?: {
 					/**
@@ -9688,14 +9688,14 @@ export type SystemInfoCommandOutput = {
 					 * The delay for an agent to send a heartbeat to the dispatcher.
 					 * @example 5000000000
 					 */
-					HeartbeatPeriod?: number;
+					HeartbeatPeriod?: bigint;
 				};
 				CAConfig?: {
 					/**
 					 * The duration node certificates are issued for.
 					 * @example 7776000000000000
 					 */
-					NodeCertExpiry?: number;
+					NodeCertExpiry?: bigint;
 					ExternalCAs?: readonly {
 						/**
 						 * Protocol for communication with the external CA (currently
@@ -10001,10 +10001,10 @@ type ImageCommitJsonBody = {
 	Cmd?: readonly string[];
 	Healthcheck?: {
 		Test?: readonly string[];
-		Interval?: number;
-		Timeout?: number;
+		Interval?: bigint;
+		Timeout?: bigint;
 		Retries?: number;
-		StartPeriod?: number;
+		StartPeriod?: bigint;
 	};
 	/**
 	 * Command is already escaped (Windows only)
@@ -10116,12 +10116,12 @@ export type SystemEventsCommandOutput = {
 	 * Timestamp of event
 	 * @example 1629574695
 	 */
-	time?: number;
+	time?: bigint;
 	/**
 	 * Timestamp of event, with nanosecond accuracy
 	 * @example 1629574695515050000
 	 */
-	timeNano?: number;
+	timeNano?: bigint;
 };
 export type InputSystemEventsCommandResponse =
 	UndefinedOnPartialDeep<SystemEventsCommandOutput>;
@@ -10130,7 +10130,7 @@ export type SystemDataUsageCommandQuery = {
 };
 export type SystemDataUsageCommandInput = SystemDataUsageCommandQuery;
 export type SystemDataUsageCommandOutput = {
-	LayersSize?: number;
+	LayersSize?: bigint;
 	Images?: readonly {
 		/**
 		 * ID is the content-addressable ID of an image.
@@ -10184,7 +10184,7 @@ export type SystemDataUsageCommandOutput = {
 		 * Total size of the image including all layers it is composed of.
 		 * @example 172064416
 		 */
-		Size: number;
+		Size: bigint;
 		/**
 		 * Total size of image layers that are shared between this image and other
 		 * images.
@@ -10193,7 +10193,7 @@ export type SystemDataUsageCommandOutput = {
 		 * has not been set / calculated.
 		 * @example 1239828
 		 */
-		SharedSize: number;
+		SharedSize: bigint;
 		/**
 		 * Total size of the image including all layers it is composed of.
 		 *
@@ -10206,7 +10206,7 @@ export type SystemDataUsageCommandOutput = {
 		 * removed in API v1.44.
 		 * @example 172064416
 		 */
-		VirtualSize?: number;
+		VirtualSize?: bigint;
 		Labels: Record<
 			string | number,
 			/* additionalProperties is not handled yet */ unknown
@@ -10227,15 +10227,15 @@ export type SystemDataUsageCommandOutput = {
 		Image?: string;
 		ImageID?: string;
 		Command?: string;
-		Created?: number;
+		Created?: bigint;
 		Ports?: readonly {
 			IP?: string;
 			PrivatePort: number;
 			PublicPort?: number;
 			Type: "tcp" | "udp" | "sctp";
 		}[];
-		SizeRw?: number;
-		SizeRootFs?: number;
+		SizeRw?: bigint;
+		SizeRootFs?: bigint;
 		Labels?: Record<
 			string | number,
 			/* additionalProperties is not handled yet */ unknown
@@ -10399,8 +10399,8 @@ export type SystemDataUsageCommandOutput = {
 						>[];
 					};
 					CapacityRange?: {
-						RequiredBytes?: number;
-						LimitBytes?: number;
+						RequiredBytes?: bigint;
+						LimitBytes?: bigint;
 					};
 					/**
 					 * The availability of the volume for use in tasks.
@@ -10416,7 +10416,7 @@ export type SystemDataUsageCommandOutput = {
 				};
 			};
 			Info?: {
-				CapacityBytes?: number;
+				CapacityBytes?: bigint;
 				VolumeContext?: Record<
 					string | number,
 					/* additionalProperties is not handled yet */ unknown
@@ -10466,13 +10466,13 @@ export type SystemDataUsageCommandOutput = {
 			 * is set to `-1` ("not available")
 			 * @default -1
 			 */
-			Size: number;
+			Size: bigint;
 			/**
 			 * The number of containers referencing this volume. This field
 			 * is set to `-1` if the reference-count is not available.
 			 * @default -1
 			 */
-			RefCount: number;
+			RefCount: bigint;
 		};
 	}[];
 	BuildCache?: readonly {
@@ -10717,8 +10717,8 @@ export type VolumeListCommandOutput = {
 						>[];
 					};
 					CapacityRange?: {
-						RequiredBytes?: number;
-						LimitBytes?: number;
+						RequiredBytes?: bigint;
+						LimitBytes?: bigint;
 					};
 					/**
 					 * The availability of the volume for use in tasks.
@@ -10734,7 +10734,7 @@ export type VolumeListCommandOutput = {
 				};
 			};
 			Info?: {
-				CapacityBytes?: number;
+				CapacityBytes?: bigint;
 				VolumeContext?: Record<
 					string | number,
 					/* additionalProperties is not handled yet */ unknown
@@ -10784,13 +10784,13 @@ export type VolumeListCommandOutput = {
 			 * is set to `-1` ("not available")
 			 * @default -1
 			 */
-			Size: number;
+			Size: bigint;
 			/**
 			 * The number of containers referencing this volume. This field
 			 * is set to `-1` if the reference-count is not available.
 			 * @default -1
 			 */
-			RefCount: number;
+			RefCount: bigint;
 		};
 	}[];
 	/**
@@ -10862,8 +10862,8 @@ type VolumeCreateJsonBody = {
 				>[];
 			};
 			CapacityRange?: {
-				RequiredBytes?: number;
-				LimitBytes?: number;
+				RequiredBytes?: bigint;
+				LimitBytes?: bigint;
 			};
 			/**
 			 * The availability of the volume for use in tasks.
@@ -10966,8 +10966,8 @@ export type VolumeCreateCommandOutput = {
 					>[];
 				};
 				CapacityRange?: {
-					RequiredBytes?: number;
-					LimitBytes?: number;
+					RequiredBytes?: bigint;
+					LimitBytes?: bigint;
 				};
 				/**
 				 * The availability of the volume for use in tasks.
@@ -10983,7 +10983,7 @@ export type VolumeCreateCommandOutput = {
 			};
 		};
 		Info?: {
-			CapacityBytes?: number;
+			CapacityBytes?: bigint;
 			VolumeContext?: Record<
 				string | number,
 				/* additionalProperties is not handled yet */ unknown
@@ -11033,13 +11033,13 @@ export type VolumeCreateCommandOutput = {
 		 * is set to `-1` ("not available")
 		 * @default -1
 		 */
-		Size: number;
+		Size: bigint;
 		/**
 		 * The number of containers referencing this volume. This field
 		 * is set to `-1` if the reference-count is not available.
 		 * @default -1
 		 */
-		RefCount: number;
+		RefCount: bigint;
 	};
 };
 export type InputVolumeCreateCommandResponse =
@@ -11133,8 +11133,8 @@ export type VolumeInspectCommandOutput = {
 					>[];
 				};
 				CapacityRange?: {
-					RequiredBytes?: number;
-					LimitBytes?: number;
+					RequiredBytes?: bigint;
+					LimitBytes?: bigint;
 				};
 				/**
 				 * The availability of the volume for use in tasks.
@@ -11150,7 +11150,7 @@ export type VolumeInspectCommandOutput = {
 			};
 		};
 		Info?: {
-			CapacityBytes?: number;
+			CapacityBytes?: bigint;
 			VolumeContext?: Record<
 				string | number,
 				/* additionalProperties is not handled yet */ unknown
@@ -11200,19 +11200,19 @@ export type VolumeInspectCommandOutput = {
 		 * is set to `-1` ("not available")
 		 * @default -1
 		 */
-		Size: number;
+		Size: bigint;
 		/**
 		 * The number of containers referencing this volume. This field
 		 * is set to `-1` if the reference-count is not available.
 		 * @default -1
 		 */
-		RefCount: number;
+		RefCount: bigint;
 	};
 };
 export type InputVolumeInspectCommandResponse =
 	UndefinedOnPartialDeep<VolumeInspectCommandOutput>;
 export type VolumeUpdateCommandQuery = {
-	version: `${number}`;
+	version: `${bigint}`;
 };
 type VolumeUpdateJsonBody = {
 	Spec?: {
@@ -11256,8 +11256,8 @@ type VolumeUpdateJsonBody = {
 				>[];
 			};
 			CapacityRange?: {
-				RequiredBytes?: number;
-				LimitBytes?: number;
+				RequiredBytes?: bigint;
+				LimitBytes?: bigint;
 			};
 			/**
 			 * The availability of the volume for use in tasks.
@@ -11294,7 +11294,7 @@ export type VolumePruneCommandQuery = {
 export type VolumePruneCommandInput = VolumePruneCommandQuery;
 export type VolumePruneCommandOutput = {
 	VolumesDeleted?: readonly string[];
-	SpaceReclaimed?: number;
+	SpaceReclaimed?: bigint;
 };
 export type InputVolumePruneCommandResponse =
 	UndefinedOnPartialDeep<VolumePruneCommandOutput>;
@@ -11679,7 +11679,7 @@ type NetworkConnectJsonBody = {
 		 * Mask length of the global IPv6 address.
 		 * @example 64
 		 */
-		GlobalIPv6PrefixLen?: number;
+		GlobalIPv6PrefixLen?: bigint;
 		/**
 		 * MAC address for the endpoint on this network.
 		 * @example 02:42:ac:11:00:04
@@ -12189,8 +12189,8 @@ export type NodeListCommandOutput = readonly {
 			OS?: string;
 		};
 		Resources?: {
-			NanoCPUs?: number;
-			MemoryBytes?: number;
+			NanoCPUs?: bigint;
+			MemoryBytes?: bigint;
 			/**
 			 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 			 * String resources (e.g, `GPU=UUID1`).
@@ -12203,7 +12203,7 @@ export type NodeListCommandOutput = readonly {
 				};
 				DiscreteResourceSpec?: {
 					Kind?: string;
-					Value?: number;
+					Value?: bigint;
 				};
 			}[];
 		};
@@ -12320,8 +12320,8 @@ export type NodeInspectCommandOutput = {
 			OS?: string;
 		};
 		Resources?: {
-			NanoCPUs?: number;
-			MemoryBytes?: number;
+			NanoCPUs?: bigint;
+			MemoryBytes?: bigint;
 			/**
 			 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 			 * String resources (e.g, `GPU=UUID1`).
@@ -12334,7 +12334,7 @@ export type NodeInspectCommandOutput = {
 				};
 				DiscreteResourceSpec?: {
 					Kind?: string;
-					Value?: number;
+					Value?: bigint;
 				};
 			}[];
 		};
@@ -12400,7 +12400,7 @@ export type NodeDeleteCommandParams = {
 export type NodeDeleteCommandInput = NodeDeleteCommandParams &
 	NodeDeleteCommandQuery;
 export type NodeUpdateCommandQuery = {
-	version: `${number}`;
+	version: `${bigint}`;
 };
 type NodeUpdateJsonBody = {
 	/**
@@ -12470,7 +12470,7 @@ export type SwarmInspectCommandOutput = {
 			 * negative, never remove completed or failed tasks.
 			 * @example 10
 			 */
-			TaskHistoryRetentionLimit?: number;
+			TaskHistoryRetentionLimit?: bigint;
 		};
 		Raft?: {
 			/**
@@ -12510,14 +12510,14 @@ export type SwarmInspectCommandOutput = {
 			 * The delay for an agent to send a heartbeat to the dispatcher.
 			 * @example 5000000000
 			 */
-			HeartbeatPeriod?: number;
+			HeartbeatPeriod?: bigint;
 		};
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
 			 * @example 7776000000000000
 			 */
-			NodeCertExpiry?: number;
+			NodeCertExpiry?: bigint;
 			ExternalCAs?: readonly {
 				/**
 				 * Protocol for communication with the external CA (currently
@@ -12628,7 +12628,7 @@ type SwarmInitJsonBody = {
 			 * negative, never remove completed or failed tasks.
 			 * @example 10
 			 */
-			TaskHistoryRetentionLimit?: number;
+			TaskHistoryRetentionLimit?: bigint;
 		};
 		Raft?: {
 			/**
@@ -12668,14 +12668,14 @@ type SwarmInitJsonBody = {
 			 * The delay for an agent to send a heartbeat to the dispatcher.
 			 * @example 5000000000
 			 */
-			HeartbeatPeriod?: number;
+			HeartbeatPeriod?: bigint;
 		};
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
 			 * @example 7776000000000000
 			 */
-			NodeCertExpiry?: number;
+			NodeCertExpiry?: bigint;
 			ExternalCAs?: readonly {
 				/**
 				 * Protocol for communication with the external CA (currently
@@ -12737,7 +12737,7 @@ export type SwarmLeaveCommandQuery = {
 };
 export type SwarmLeaveCommandInput = SwarmLeaveCommandQuery;
 export type SwarmUpdateCommandQuery = {
-	version: `${number}`;
+	version: `${bigint}`;
 	rotateWorkerToken?: "true" | "false";
 	rotateManagerToken?: "true" | "false";
 	rotateManagerUnlockKey?: "true" | "false";
@@ -12758,7 +12758,7 @@ type SwarmUpdateJsonBody = {
 		 * negative, never remove completed or failed tasks.
 		 * @example 10
 		 */
-		TaskHistoryRetentionLimit?: number;
+		TaskHistoryRetentionLimit?: bigint;
 	};
 	Raft?: {
 		/**
@@ -12798,14 +12798,14 @@ type SwarmUpdateJsonBody = {
 		 * The delay for an agent to send a heartbeat to the dispatcher.
 		 * @example 5000000000
 		 */
-		HeartbeatPeriod?: number;
+		HeartbeatPeriod?: bigint;
 	};
 	CAConfig?: {
 		/**
 		 * The duration node certificates are issued for.
 		 * @example 7776000000000000
 		 */
-		NodeCertExpiry?: number;
+		NodeCertExpiry?: bigint;
 		ExternalCAs?: readonly {
 			/**
 			 * Protocol for communication with the external CA (currently
@@ -12998,18 +12998,18 @@ export type ServiceListCommandOutput = readonly {
 						};
 					};
 					TmpfsOptions?: {
-						SizeBytes?: number;
+						SizeBytes?: bigint;
 						Mode?: number;
 					};
 				}[];
 				StopSignal?: string;
-				StopGracePeriod?: number;
+				StopGracePeriod?: bigint;
 				HealthCheck?: {
 					Test?: readonly string[];
-					Interval?: number;
-					Timeout?: number;
+					Interval?: bigint;
+					Timeout?: bigint;
 					Retries?: number;
-					StartPeriod?: number;
+					StartPeriod?: bigint;
 				};
 				Hosts?: readonly string[];
 				DNSConfig?: {
@@ -13072,17 +13072,17 @@ export type ServiceListCommandOutput = readonly {
 			};
 			Resources?: {
 				Limits?: {
-					NanoCPUs?: number;
-					MemoryBytes?: number;
+					NanoCPUs?: bigint;
+					MemoryBytes?: bigint;
 					/**
 					 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 					 * @example 100
 					 */
-					Pids?: number;
+					Pids?: bigint;
 				};
 				Reservations?: {
-					NanoCPUs?: number;
-					MemoryBytes?: number;
+					NanoCPUs?: bigint;
+					MemoryBytes?: bigint;
 					/**
 					 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 					 * String resources (e.g, `GPU=UUID1`).
@@ -13095,7 +13095,7 @@ export type ServiceListCommandOutput = readonly {
 						};
 						DiscreteResourceSpec?: {
 							Kind?: string;
-							Value?: number;
+							Value?: bigint;
 						};
 					}[];
 				};
@@ -13106,9 +13106,9 @@ export type ServiceListCommandOutput = readonly {
 				 * @enum none,on-failure,any
 				 */
 				Condition?: "none" | "on-failure" | "any";
-				Delay?: number;
-				MaxAttempts?: number;
-				Window?: number;
+				Delay?: bigint;
+				MaxAttempts?: bigint;
+				Window?: bigint;
 			};
 			Placement?: {
 				/**
@@ -13152,7 +13152,7 @@ export type ServiceListCommandOutput = readonly {
 						SpreadDescriptor?: string;
 					};
 				}[];
-				MaxReplicas?: number;
+				MaxReplicas?: bigint;
 				Platforms?: readonly {
 					/**
 					 * Architecture represents the hardware architecture (for example,
@@ -13187,7 +13187,7 @@ export type ServiceListCommandOutput = readonly {
 		};
 		Mode?: {
 			Replicated?: {
-				Replicas?: number;
+				Replicas?: bigint;
 			};
 			Global?: {};
 			ReplicatedJob?: {
@@ -13195,21 +13195,21 @@ export type ServiceListCommandOutput = readonly {
 				 * The maximum number of replicas to run simultaneously.
 				 * @default 1
 				 */
-				MaxConcurrent?: number;
-				TotalCompletions?: number;
+				MaxConcurrent?: bigint;
+				TotalCompletions?: bigint;
 			};
 			GlobalJob?: {};
 		};
 		UpdateConfig?: {
-			Parallelism?: number;
-			Delay?: number;
+			Parallelism?: bigint;
+			Delay?: bigint;
 			/**
 			 * Action to take if an updated task fails to run, or stops running
 			 * during the update.
 			 * @enum continue,pause,rollback
 			 */
 			FailureAction?: "continue" | "pause" | "rollback";
-			Monitor?: number;
+			Monitor?: bigint;
 			MaxFailureRatio?: number;
 			/**
 			 * The order of operations when rolling out an updated task. Either
@@ -13220,15 +13220,15 @@ export type ServiceListCommandOutput = readonly {
 			Order?: "stop-first" | "start-first";
 		};
 		RollbackConfig?: {
-			Parallelism?: number;
-			Delay?: number;
+			Parallelism?: bigint;
+			Delay?: bigint;
 			/**
 			 * Action to take if an rolled back task fails to run, or stops
 			 * running during the rollback.
 			 * @enum continue,pause
 			 */
 			FailureAction?: "continue" | "pause";
-			Monitor?: number;
+			Monitor?: bigint;
 			MaxFailureRatio?: number;
 			/**
 			 * The order of operations when rolling back a task. Either the old
@@ -13501,18 +13501,18 @@ type ServiceCreateJsonBody = {
 					};
 				};
 				TmpfsOptions?: {
-					SizeBytes?: number;
+					SizeBytes?: bigint;
 					Mode?: number;
 				};
 			}[];
 			StopSignal?: string;
-			StopGracePeriod?: number;
+			StopGracePeriod?: bigint;
 			HealthCheck?: {
 				Test?: readonly string[];
-				Interval?: number;
-				Timeout?: number;
+				Interval?: bigint;
+				Timeout?: bigint;
 				Retries?: number;
-				StartPeriod?: number;
+				StartPeriod?: bigint;
 			};
 			Hosts?: readonly string[];
 			DNSConfig?: {
@@ -13575,17 +13575,17 @@ type ServiceCreateJsonBody = {
 		};
 		Resources?: {
 			Limits?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 				 * @example 100
 				 */
-				Pids?: number;
+				Pids?: bigint;
 			};
 			Reservations?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 				 * String resources (e.g, `GPU=UUID1`).
@@ -13598,7 +13598,7 @@ type ServiceCreateJsonBody = {
 					};
 					DiscreteResourceSpec?: {
 						Kind?: string;
-						Value?: number;
+						Value?: bigint;
 					};
 				}[];
 			};
@@ -13609,9 +13609,9 @@ type ServiceCreateJsonBody = {
 			 * @enum none,on-failure,any
 			 */
 			Condition?: "none" | "on-failure" | "any";
-			Delay?: number;
-			MaxAttempts?: number;
-			Window?: number;
+			Delay?: bigint;
+			MaxAttempts?: bigint;
+			Window?: bigint;
 		};
 		Placement?: {
 			/**
@@ -13655,7 +13655,7 @@ type ServiceCreateJsonBody = {
 					SpreadDescriptor?: string;
 				};
 			}[];
-			MaxReplicas?: number;
+			MaxReplicas?: bigint;
 			Platforms?: readonly {
 				/**
 				 * Architecture represents the hardware architecture (for example,
@@ -13690,7 +13690,7 @@ type ServiceCreateJsonBody = {
 	};
 	Mode?: {
 		Replicated?: {
-			Replicas?: number;
+			Replicas?: bigint;
 		};
 		Global?: {};
 		ReplicatedJob?: {
@@ -13698,21 +13698,21 @@ type ServiceCreateJsonBody = {
 			 * The maximum number of replicas to run simultaneously.
 			 * @default 1
 			 */
-			MaxConcurrent?: number;
-			TotalCompletions?: number;
+			MaxConcurrent?: bigint;
+			TotalCompletions?: bigint;
 		};
 		GlobalJob?: {};
 	};
 	UpdateConfig?: {
-		Parallelism?: number;
-		Delay?: number;
+		Parallelism?: bigint;
+		Delay?: bigint;
 		/**
 		 * Action to take if an updated task fails to run, or stops running
 		 * during the update.
 		 * @enum continue,pause,rollback
 		 */
 		FailureAction?: "continue" | "pause" | "rollback";
-		Monitor?: number;
+		Monitor?: bigint;
 		MaxFailureRatio?: number;
 		/**
 		 * The order of operations when rolling out an updated task. Either
@@ -13723,15 +13723,15 @@ type ServiceCreateJsonBody = {
 		Order?: "stop-first" | "start-first";
 	};
 	RollbackConfig?: {
-		Parallelism?: number;
-		Delay?: number;
+		Parallelism?: bigint;
+		Delay?: bigint;
 		/**
 		 * Action to take if an rolled back task fails to run, or stops
 		 * running during the rollback.
 		 * @enum continue,pause
 		 */
 		FailureAction?: "continue" | "pause";
-		Monitor?: number;
+		Monitor?: bigint;
 		MaxFailureRatio?: number;
 		/**
 		 * The order of operations when rolling back a task. Either the old
@@ -13930,18 +13930,18 @@ export type ServiceInspectCommandOutput = {
 						};
 					};
 					TmpfsOptions?: {
-						SizeBytes?: number;
+						SizeBytes?: bigint;
 						Mode?: number;
 					};
 				}[];
 				StopSignal?: string;
-				StopGracePeriod?: number;
+				StopGracePeriod?: bigint;
 				HealthCheck?: {
 					Test?: readonly string[];
-					Interval?: number;
-					Timeout?: number;
+					Interval?: bigint;
+					Timeout?: bigint;
 					Retries?: number;
-					StartPeriod?: number;
+					StartPeriod?: bigint;
 				};
 				Hosts?: readonly string[];
 				DNSConfig?: {
@@ -14004,17 +14004,17 @@ export type ServiceInspectCommandOutput = {
 			};
 			Resources?: {
 				Limits?: {
-					NanoCPUs?: number;
-					MemoryBytes?: number;
+					NanoCPUs?: bigint;
+					MemoryBytes?: bigint;
 					/**
 					 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 					 * @example 100
 					 */
-					Pids?: number;
+					Pids?: bigint;
 				};
 				Reservations?: {
-					NanoCPUs?: number;
-					MemoryBytes?: number;
+					NanoCPUs?: bigint;
+					MemoryBytes?: bigint;
 					/**
 					 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 					 * String resources (e.g, `GPU=UUID1`).
@@ -14027,7 +14027,7 @@ export type ServiceInspectCommandOutput = {
 						};
 						DiscreteResourceSpec?: {
 							Kind?: string;
-							Value?: number;
+							Value?: bigint;
 						};
 					}[];
 				};
@@ -14038,9 +14038,9 @@ export type ServiceInspectCommandOutput = {
 				 * @enum none,on-failure,any
 				 */
 				Condition?: "none" | "on-failure" | "any";
-				Delay?: number;
-				MaxAttempts?: number;
-				Window?: number;
+				Delay?: bigint;
+				MaxAttempts?: bigint;
+				Window?: bigint;
 			};
 			Placement?: {
 				/**
@@ -14084,7 +14084,7 @@ export type ServiceInspectCommandOutput = {
 						SpreadDescriptor?: string;
 					};
 				}[];
-				MaxReplicas?: number;
+				MaxReplicas?: bigint;
 				Platforms?: readonly {
 					/**
 					 * Architecture represents the hardware architecture (for example,
@@ -14119,7 +14119,7 @@ export type ServiceInspectCommandOutput = {
 		};
 		Mode?: {
 			Replicated?: {
-				Replicas?: number;
+				Replicas?: bigint;
 			};
 			Global?: {};
 			ReplicatedJob?: {
@@ -14127,21 +14127,21 @@ export type ServiceInspectCommandOutput = {
 				 * The maximum number of replicas to run simultaneously.
 				 * @default 1
 				 */
-				MaxConcurrent?: number;
-				TotalCompletions?: number;
+				MaxConcurrent?: bigint;
+				TotalCompletions?: bigint;
 			};
 			GlobalJob?: {};
 		};
 		UpdateConfig?: {
-			Parallelism?: number;
-			Delay?: number;
+			Parallelism?: bigint;
+			Delay?: bigint;
 			/**
 			 * Action to take if an updated task fails to run, or stops running
 			 * during the update.
 			 * @enum continue,pause,rollback
 			 */
 			FailureAction?: "continue" | "pause" | "rollback";
-			Monitor?: number;
+			Monitor?: bigint;
 			MaxFailureRatio?: number;
 			/**
 			 * The order of operations when rolling out an updated task. Either
@@ -14152,15 +14152,15 @@ export type ServiceInspectCommandOutput = {
 			Order?: "stop-first" | "start-first";
 		};
 		RollbackConfig?: {
-			Parallelism?: number;
-			Delay?: number;
+			Parallelism?: bigint;
+			Delay?: bigint;
 			/**
 			 * Action to take if an rolled back task fails to run, or stops
 			 * running during the rollback.
 			 * @enum continue,pause
 			 */
 			FailureAction?: "continue" | "pause";
-			Monitor?: number;
+			Monitor?: bigint;
 			MaxFailureRatio?: number;
 			/**
 			 * The order of operations when rolling back a task. Either the old
@@ -14442,18 +14442,18 @@ type ServiceUpdateJsonBody = {
 					};
 				};
 				TmpfsOptions?: {
-					SizeBytes?: number;
+					SizeBytes?: bigint;
 					Mode?: number;
 				};
 			}[];
 			StopSignal?: string;
-			StopGracePeriod?: number;
+			StopGracePeriod?: bigint;
 			HealthCheck?: {
 				Test?: readonly string[];
-				Interval?: number;
-				Timeout?: number;
+				Interval?: bigint;
+				Timeout?: bigint;
 				Retries?: number;
-				StartPeriod?: number;
+				StartPeriod?: bigint;
 			};
 			Hosts?: readonly string[];
 			DNSConfig?: {
@@ -14516,17 +14516,17 @@ type ServiceUpdateJsonBody = {
 		};
 		Resources?: {
 			Limits?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 				 * @example 100
 				 */
-				Pids?: number;
+				Pids?: bigint;
 			};
 			Reservations?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 				 * String resources (e.g, `GPU=UUID1`).
@@ -14539,7 +14539,7 @@ type ServiceUpdateJsonBody = {
 					};
 					DiscreteResourceSpec?: {
 						Kind?: string;
-						Value?: number;
+						Value?: bigint;
 					};
 				}[];
 			};
@@ -14550,9 +14550,9 @@ type ServiceUpdateJsonBody = {
 			 * @enum none,on-failure,any
 			 */
 			Condition?: "none" | "on-failure" | "any";
-			Delay?: number;
-			MaxAttempts?: number;
-			Window?: number;
+			Delay?: bigint;
+			MaxAttempts?: bigint;
+			Window?: bigint;
 		};
 		Placement?: {
 			/**
@@ -14596,7 +14596,7 @@ type ServiceUpdateJsonBody = {
 					SpreadDescriptor?: string;
 				};
 			}[];
-			MaxReplicas?: number;
+			MaxReplicas?: bigint;
 			Platforms?: readonly {
 				/**
 				 * Architecture represents the hardware architecture (for example,
@@ -14631,7 +14631,7 @@ type ServiceUpdateJsonBody = {
 	};
 	Mode?: {
 		Replicated?: {
-			Replicas?: number;
+			Replicas?: bigint;
 		};
 		Global?: {};
 		ReplicatedJob?: {
@@ -14639,21 +14639,21 @@ type ServiceUpdateJsonBody = {
 			 * The maximum number of replicas to run simultaneously.
 			 * @default 1
 			 */
-			MaxConcurrent?: number;
-			TotalCompletions?: number;
+			MaxConcurrent?: bigint;
+			TotalCompletions?: bigint;
 		};
 		GlobalJob?: {};
 	};
 	UpdateConfig?: {
-		Parallelism?: number;
-		Delay?: number;
+		Parallelism?: bigint;
+		Delay?: bigint;
 		/**
 		 * Action to take if an updated task fails to run, or stops running
 		 * during the update.
 		 * @enum continue,pause,rollback
 		 */
 		FailureAction?: "continue" | "pause" | "rollback";
-		Monitor?: number;
+		Monitor?: bigint;
 		MaxFailureRatio?: number;
 		/**
 		 * The order of operations when rolling out an updated task. Either
@@ -14664,15 +14664,15 @@ type ServiceUpdateJsonBody = {
 		Order?: "stop-first" | "start-first";
 	};
 	RollbackConfig?: {
-		Parallelism?: number;
-		Delay?: number;
+		Parallelism?: bigint;
+		Delay?: bigint;
 		/**
 		 * Action to take if an rolled back task fails to run, or stops
 		 * running during the rollback.
 		 * @enum continue,pause
 		 */
 		FailureAction?: "continue" | "pause";
-		Monitor?: number;
+		Monitor?: bigint;
 		MaxFailureRatio?: number;
 		/**
 		 * The order of operations when rolling back a task. Either the old
@@ -14884,18 +14884,18 @@ export type TaskListCommandOutput = readonly {
 					};
 				};
 				TmpfsOptions?: {
-					SizeBytes?: number;
+					SizeBytes?: bigint;
 					Mode?: number;
 				};
 			}[];
 			StopSignal?: string;
-			StopGracePeriod?: number;
+			StopGracePeriod?: bigint;
 			HealthCheck?: {
 				Test?: readonly string[];
-				Interval?: number;
-				Timeout?: number;
+				Interval?: bigint;
+				Timeout?: bigint;
 				Retries?: number;
-				StartPeriod?: number;
+				StartPeriod?: bigint;
 			};
 			Hosts?: readonly string[];
 			DNSConfig?: {
@@ -14958,17 +14958,17 @@ export type TaskListCommandOutput = readonly {
 		};
 		Resources?: {
 			Limits?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 				 * @example 100
 				 */
-				Pids?: number;
+				Pids?: bigint;
 			};
 			Reservations?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 				 * String resources (e.g, `GPU=UUID1`).
@@ -14981,7 +14981,7 @@ export type TaskListCommandOutput = readonly {
 					};
 					DiscreteResourceSpec?: {
 						Kind?: string;
-						Value?: number;
+						Value?: bigint;
 					};
 				}[];
 			};
@@ -14992,9 +14992,9 @@ export type TaskListCommandOutput = readonly {
 			 * @enum none,on-failure,any
 			 */
 			Condition?: "none" | "on-failure" | "any";
-			Delay?: number;
-			MaxAttempts?: number;
-			Window?: number;
+			Delay?: bigint;
+			MaxAttempts?: bigint;
+			Window?: bigint;
 		};
 		Placement?: {
 			/**
@@ -15038,7 +15038,7 @@ export type TaskListCommandOutput = readonly {
 					SpreadDescriptor?: string;
 				};
 			}[];
-			MaxReplicas?: number;
+			MaxReplicas?: bigint;
 			Platforms?: readonly {
 				/**
 				 * Architecture represents the hardware architecture (for example,
@@ -15086,7 +15086,7 @@ export type TaskListCommandOutput = readonly {
 		};
 		DiscreteResourceSpec?: {
 			Kind?: string;
-			Value?: number;
+			Value?: bigint;
 		};
 	}[];
 	Status?: {
@@ -15272,18 +15272,18 @@ export type TaskInspectCommandOutput = {
 					};
 				};
 				TmpfsOptions?: {
-					SizeBytes?: number;
+					SizeBytes?: bigint;
 					Mode?: number;
 				};
 			}[];
 			StopSignal?: string;
-			StopGracePeriod?: number;
+			StopGracePeriod?: bigint;
 			HealthCheck?: {
 				Test?: readonly string[];
-				Interval?: number;
-				Timeout?: number;
+				Interval?: bigint;
+				Timeout?: bigint;
 				Retries?: number;
-				StartPeriod?: number;
+				StartPeriod?: bigint;
 			};
 			Hosts?: readonly string[];
 			DNSConfig?: {
@@ -15346,17 +15346,17 @@ export type TaskInspectCommandOutput = {
 		};
 		Resources?: {
 			Limits?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * Limits the maximum number of PIDs in the container. Set `0` for unlimited.
 				 * @example 100
 				 */
-				Pids?: number;
+				Pids?: bigint;
 			};
 			Reservations?: {
-				NanoCPUs?: number;
-				MemoryBytes?: number;
+				NanoCPUs?: bigint;
+				MemoryBytes?: bigint;
 				/**
 				 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 				 * String resources (e.g, `GPU=UUID1`).
@@ -15369,7 +15369,7 @@ export type TaskInspectCommandOutput = {
 					};
 					DiscreteResourceSpec?: {
 						Kind?: string;
-						Value?: number;
+						Value?: bigint;
 					};
 				}[];
 			};
@@ -15380,9 +15380,9 @@ export type TaskInspectCommandOutput = {
 			 * @enum none,on-failure,any
 			 */
 			Condition?: "none" | "on-failure" | "any";
-			Delay?: number;
-			MaxAttempts?: number;
-			Window?: number;
+			Delay?: bigint;
+			MaxAttempts?: bigint;
+			Window?: bigint;
 		};
 		Placement?: {
 			/**
@@ -15426,7 +15426,7 @@ export type TaskInspectCommandOutput = {
 					SpreadDescriptor?: string;
 				};
 			}[];
-			MaxReplicas?: number;
+			MaxReplicas?: bigint;
 			Platforms?: readonly {
 				/**
 				 * Architecture represents the hardware architecture (for example,
@@ -15474,7 +15474,7 @@ export type TaskInspectCommandOutput = {
 		};
 		DiscreteResourceSpec?: {
 			Kind?: string;
-			Value?: number;
+			Value?: bigint;
 		};
 	}[];
 	Status?: {
@@ -15695,7 +15695,7 @@ export type SecretDeleteCommandParams = {
 };
 export type SecretDeleteCommandInput = SecretDeleteCommandParams;
 export type SecretUpdateCommandQuery = {
-	version: `${number}`;
+	version: `${bigint}`;
 };
 type SecretUpdateJsonBody = {
 	Name?: string;
@@ -15840,7 +15840,7 @@ export type ConfigDeleteCommandParams = {
 };
 export type ConfigDeleteCommandInput = ConfigDeleteCommandParams;
 export type ConfigUpdateCommandQuery = {
-	version: `${number}`;
+	version: `${bigint}`;
 };
 type ConfigUpdateJsonBody = {
 	Name?: string;
@@ -15888,7 +15888,7 @@ export type DistributionInspectCommandOutput = {
 		 * The size in bytes of the blob.
 		 * @example 3987495
 		 */
-		size?: number;
+		size?: bigint;
 	};
 	Platforms: readonly {
 		/**

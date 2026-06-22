@@ -103,6 +103,83 @@ test("const values", async () => {
 	expect(result.valibotFile?.getText()).toMatchSnapshot();
 });
 
+test("RFC 3339 temporal formats", async () => {
+	const result = await processOpenApiDocument("/tmp/like-you-know-whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				MyDate: { type: "string", format: "date" },
+				MyTime: { type: "string", format: "time" },
+				MyDateTime: { type: "string", format: "date-time" },
+				MyDuration: { type: "string", format: "duration" },
+			},
+		},
+	});
+
+	const types = result.typesFile.getText();
+	// Template-literal string types capture the digit shape for every format.
+	expect(types).toContain(
+		"export type MyDate = `${number}-${number}-${number}`",
+	);
+	expect(types).toContain(
+		"export type MyTime = `${number}:${number}:${number}${string}`",
+	);
+	expect(types).toContain(
+		"export type MyDateTime = `${number}-${number}-${number}T${number}:${number}:${number}${string}`",
+	);
+	expect(types).toContain("export type MyDuration = `P${string}`");
+
+	const valibot = result.valibotFile.getText();
+	// Each format gets a runtime regex plus a v.custom<...> type hint, in both
+	// the input and wire schema (8 of each across the four formats).
+	expect(valibot.match(/v\.regex\(/g)?.length).toBe(8);
+	expect(valibot.match(/v\.custom</g)?.length).toBe(8);
+	// The hint type matches the generated TS type (date shown).
+	expect(valibot).toContain(
+		"v.custom<`${number}-${number}-${number}`>(() => true)",
+	);
+});
+
+test("enums short-circuit type constraints (picklist only)", async () => {
+	const result = await processOpenApiDocument("/tmp/like-you-know-whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				// integer enum with a range constraint: must NOT emit minValue/integer
+				IntegerEnum: {
+					type: "integer",
+					enum: [0, 1, 2],
+					minimum: 0,
+					maximum: 9,
+				},
+				// string enum carrying minLength/format: must NOT emit minLength/regex
+				StringEnum: {
+					type: "string",
+					format: "email",
+					enum: ["a@example.com", "b@example.com"],
+					minLength: 1,
+				},
+			},
+		},
+	});
+
+	const valibot = result.valibotFile.getText();
+	expect(valibot).toContain(
+		"export const inputIntegerEnumSchema = v.picklist([0, 1, 2])",
+	);
+	expect(valibot).toContain(
+		'export const inputStringEnumSchema = v.picklist(["a@example.com", "b@example.com"])',
+	);
+	// No leftover type-specific constraints leaked onto the enums.
+	expect(valibot).not.toContain("v.minValue");
+	expect(valibot).not.toContain("v.minLength");
+	expect(valibot).not.toContain("v.email");
+});
+
 test("oneOf with type null generates v.null()", async () => {
 	const result = await processOpenApiDocument("/tmp/like-you-know-whatever", {
 		openapi: "3.1.0",

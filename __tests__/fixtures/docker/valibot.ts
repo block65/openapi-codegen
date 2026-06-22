@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-08T01:23:59.032Z
+ * Generated on 2026-06-09T09:18:39.851Z
  *
  */
 import * as v from "valibot";
@@ -1514,7 +1514,18 @@ export const inputHealthSchema = v.nullable(
 						 * Date and time at which this check started in
 						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 						 */
-						Start: v.optional(v.string()),
+						Start: v.optional(
+							v.pipe(
+								v.string(),
+								v.regex(
+									/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+									"date-time",
+								),
+								v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+									() => true,
+								),
+							),
+						),
 						/**
 						 * Date and time at which this check ended in
 						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1567,7 +1578,19 @@ export const healthSchema = v.nullable(
 						 * Date and time at which this check started in
 						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 						 */
-						Start: v.exactOptional(v.pipe(v.string(), v.trim())),
+						Start: v.exactOptional(
+							v.pipe(
+								v.string(),
+								v.trim(),
+								v.regex(
+									/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+									"date-time",
+								),
+								v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+									() => true,
+								),
+							),
+						),
 						/**
 						 * Date and time at which this check ended in
 						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1602,7 +1625,18 @@ export const inputHealthcheckResultSchema = v.nullable(
 		 * Date and time at which this check started in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 		 */
-		Start: v.optional(v.string()),
+		Start: v.optional(
+			v.pipe(
+				v.string(),
+				v.regex(
+					/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+					"date-time",
+				),
+				v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+					() => true,
+				),
+			),
+		),
 		/**
 		 * Date and time at which this check ended in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1629,7 +1663,19 @@ export const healthcheckResultSchema = v.nullable(
 		 * Date and time at which this check started in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 		 */
-		Start: v.exactOptional(v.pipe(v.string(), v.trim())),
+		Start: v.exactOptional(
+			v.pipe(
+				v.string(),
+				v.trim(),
+				v.regex(
+					/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+					"date-time",
+				),
+				v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+					() => true,
+				),
+			),
+		),
 		/**
 		 * Date and time at which this check ended in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -4562,7 +4608,7 @@ export const inputFilesystemChangeSchema = v.strictObject({
 	 * - `1`: Added ("A")
 	 * - `2`: Deleted ("D")
 	 */
-	Kind: v.pipe(v.number(), v.integer()),
+	Kind: v.picklist([0, 1, 2]),
 });
 export const filesystemChangeSchema = v.strictObject({
 	/**
@@ -4578,7 +4624,7 @@ export const filesystemChangeSchema = v.strictObject({
 	 * - `1`: Added ("A")
 	 * - `2`: Deleted ("D")
 	 */
-	Kind: v.pipe(v.number(), v.integer()),
+	Kind: v.picklist([0, 1, 2]),
 });
 /**
  * Kind of change
@@ -4589,7 +4635,7 @@ export const filesystemChangeSchema = v.strictObject({
  * - `1`: Added ("A")
  * - `2`: Deleted ("D")
  */
-export const inputChangeTypeSchema = v.pipe(v.number(), v.integer());
+export const inputChangeTypeSchema = v.picklist([0, 1, 2]);
 export const changeTypeSchema = inputChangeTypeSchema;
 /** Information about an image in the local image cache. */
 export const inputImageInspectSchema = v.strictObject({
@@ -20086,7 +20132,18 @@ export const inputContainerStateSchema = v.nullable(
 									 * Date and time at which this check started in
 									 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 									 */
-									Start: v.optional(v.string()),
+									Start: v.optional(
+										v.pipe(
+											v.string(),
+											v.regex(
+												/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+												"date-time",
+											),
+											v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+												() => true,
+											),
+										),
+									),
 									/**
 									 * Date and time at which this check ended in
 									 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -20210,7 +20267,19 @@ export const containerStateSchema = v.nullable(
 									 * Date and time at which this check started in
 									 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 									 */
-									Start: v.exactOptional(v.pipe(v.string(), v.trim())),
+									Start: v.exactOptional(
+										v.pipe(
+											v.string(),
+											v.trim(),
+											v.regex(
+												/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+												"date-time",
+											),
+											v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+												() => true,
+											),
+										),
+									),
 									/**
 									 * Date and time at which this check ended in
 									 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -27003,7 +27072,18 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 											 * Date and time at which this check started in
 											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 											 */
-											Start: v.optional(v.string()),
+											Start: v.optional(
+												v.pipe(
+													v.string(),
+													v.regex(
+														/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+														"date-time",
+													),
+													v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+														() => true,
+													),
+												),
+											),
 											/**
 											 * Date and time at which this check ended in
 											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -28313,7 +28393,19 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 											 * Date and time at which this check started in
 											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 											 */
-											Start: v.exactOptional(v.pipe(v.string(), v.trim())),
+											Start: v.exactOptional(
+												v.pipe(
+													v.string(),
+													v.trim(),
+													v.regex(
+														/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+														"date-time",
+													),
+													v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+														() => true,
+													),
+												),
+											),
 											/**
 											 * Date and time at which this check ended in
 											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -29837,7 +29929,7 @@ export const inputContainerChangesCommandResponseSchema = v.array(
 		 * - `1`: Added ("A")
 		 * - `2`: Deleted ("D")
 		 */
-		Kind: v.pipe(v.number(), v.integer()),
+		Kind: v.picklist([0, 1, 2]),
 	}),
 );
 export const containerChangesCommandResponseSchema = v.array(
@@ -29855,7 +29947,7 @@ export const containerChangesCommandResponseSchema = v.array(
 		 * - `1`: Added ("A")
 		 * - `2`: Deleted ("D")
 		 */
-		Kind: v.pipe(v.number(), v.integer()),
+		Kind: v.picklist([0, 1, 2]),
 	}),
 );
 export const inputContainerChangesCommandParamsSchema = v.strictObject({

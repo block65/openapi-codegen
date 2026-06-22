@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-08T01:22:47.528Z
+ * Generated on 2026-06-09T09:17:30.892Z
  *
  */
 import * as v from "valibot";
@@ -60,8 +60,27 @@ export const inputStripeIdSchema = v.pipe(
 	v.regex(new RegExp("^(pm|cus|sub)_\\w{8,}$")),
 );
 export const stripeIdSchema = inputStripeIdSchema;
-export const inputDateTimeSchema = v.string();
-export const dateTimeSchema = v.pipe(v.string(), v.trim());
+export const inputDateTimeSchema = v.pipe(
+	v.string(),
+	v.regex(
+		/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+		"date-time",
+	),
+	v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+		() => true,
+	),
+);
+export const dateTimeSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.regex(
+		/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+		"date-time",
+	),
+	v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+		() => true,
+	),
+);
 export const inputBillingSubscriptionStatusSchema = v.picklist([
 	"active",
 	"inactive",
@@ -125,7 +144,7 @@ export const inputUuidSchema = v.pipe(v.string(), v.uuid());
 export const uuidSchema = inputUuidSchema;
 export const inputLongRunningOperationFailSchema = v.strictObject({
 	operationId: inputUuidSchema,
-	done: v.boolean(),
+	done: v.literal(true),
 	result: v.strictObject({
 		error: v.number(),
 	}),
@@ -146,7 +165,7 @@ export const stringU8Schema = v.pipe(
 export const inputBillingSubscriptionPromoCodeLongRunningOperationSuccessSchema =
 	v.strictObject({
 		operationId: inputUuidSchema,
-		done: v.boolean(),
+		done: v.literal(true),
 		result: v.strictObject({
 			response: v.strictObject({
 				promoCode: inputStringU8Schema,
@@ -169,10 +188,7 @@ export const inputBillingSubscriptionLroSchema = v.union([
 export const billingSubscriptionLroSchema = inputBillingSubscriptionLroSchema;
 export const inputUpdateBillingSubscriptionPromoCodeRequestSchema = v.pipe(
 	v.strictObject({
-		promoCode: v.union([
-			inputStringU8Schema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
+		promoCode: v.union([inputStringU8Schema, v.null()]),
 	}),
 	v.minEntries(1),
 );
@@ -252,7 +268,7 @@ export const paymentMethodsSchema = inputPaymentMethodsSchema;
 export const inputPaymentMethodDeletedLongRunningOperationSuccessSchema =
 	v.strictObject({
 		operationId: inputUuidSchema,
-		done: v.boolean(),
+		done: v.literal(true),
 		result: v.strictObject({
 			response: v.strictObject({
 				ok: v.boolean(),
@@ -270,7 +286,7 @@ export const paymentMethodDeletedLroSchema = inputPaymentMethodDeletedLroSchema;
 export const inputPaymentMethodLongRunningOperationSuccessSchema =
 	v.strictObject({
 		operationId: inputUuidSchema,
-		done: v.boolean(),
+		done: v.literal(true),
 		result: v.strictObject({
 			response: v.strictObject({
 				clientSecret: v.string(),
@@ -279,7 +295,7 @@ export const inputPaymentMethodLongRunningOperationSuccessSchema =
 	});
 export const paymentMethodLongRunningOperationSuccessSchema = v.strictObject({
 	operationId: uuidSchema,
-	done: v.boolean(),
+	done: v.literal(true),
 	result: v.strictObject({
 		response: v.strictObject({
 			clientSecret: v.pipe(v.string(), v.trim()),
@@ -430,24 +446,9 @@ export const inputBillingAccountUpdateRequestSchema = v.pipe(
 		country: v.optional(inputBillingCountrySchema),
 		timeZone: v.optional(inputTimeZoneSchema),
 		currency: v.optional(inputCurrencySchema),
-		locale: v.optional(
-			v.union([
-				inputBillingLocaleSchema,
-				v.nullable(v.record(v.string(), v.unknown())),
-			]),
-		),
-		purchaseOrder: v.optional(
-			v.union([
-				inputStringU8Schema,
-				v.nullable(v.record(v.string(), v.unknown())),
-			]),
-		),
-		taxId: v.optional(
-			v.union([
-				inputStringU8Schema,
-				v.nullable(v.record(v.string(), v.unknown())),
-			]),
-		),
+		locale: v.optional(v.union([inputBillingLocaleSchema, v.null()])),
+		purchaseOrder: v.optional(v.union([inputStringU8Schema, v.null()])),
+		taxId: v.optional(v.union([inputStringU8Schema, v.null()])),
 	}),
 	v.minEntries(1),
 );
@@ -458,18 +459,9 @@ export const billingAccountUpdateRequestSchema = v.pipe(
 		country: v.exactOptional(billingCountrySchema),
 		timeZone: v.exactOptional(timeZoneSchema),
 		currency: v.exactOptional(currencySchema),
-		locale: v.exactOptional(
-			v.union([
-				billingLocaleSchema,
-				v.nullable(v.record(v.string(), v.unknown())),
-			]),
-		),
-		purchaseOrder: v.exactOptional(
-			v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
-		),
-		taxId: v.exactOptional(
-			v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
-		),
+		locale: v.exactOptional(v.union([billingLocaleSchema, v.null()])),
+		purchaseOrder: v.exactOptional(v.union([stringU8Schema, v.null()])),
+		taxId: v.exactOptional(v.union([stringU8Schema, v.null()])),
 	}),
 	v.minEntries(1),
 );
@@ -479,24 +471,9 @@ export const inputBillingAccountCreateRequestSchema = v.strictObject({
 	country: inputBillingCountrySchema,
 	timeZone: inputTimeZoneSchema,
 	currency: inputCurrencySchema,
-	locale: v.optional(
-		v.union([
-			inputBillingLocaleSchema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-	purchaseOrder: v.optional(
-		v.union([
-			inputStringU8Schema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-	taxId: v.optional(
-		v.union([
-			inputStringU8Schema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
+	locale: v.optional(v.union([inputBillingLocaleSchema, v.null()])),
+	purchaseOrder: v.optional(v.union([inputStringU8Schema, v.null()])),
+	taxId: v.optional(v.union([inputStringU8Schema, v.null()])),
 });
 export const billingAccountCreateRequestSchema = v.strictObject({
 	name: nameSchema,
@@ -504,22 +481,13 @@ export const billingAccountCreateRequestSchema = v.strictObject({
 	country: billingCountrySchema,
 	timeZone: timeZoneSchema,
 	currency: currencySchema,
-	locale: v.exactOptional(
-		v.union([
-			billingLocaleSchema,
-			v.nullable(v.record(v.string(), v.unknown())),
-		]),
-	),
-	purchaseOrder: v.exactOptional(
-		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
-	),
-	taxId: v.exactOptional(
-		v.union([stringU8Schema, v.nullable(v.record(v.string(), v.unknown()))]),
-	),
+	locale: v.exactOptional(v.union([billingLocaleSchema, v.null()])),
+	purchaseOrder: v.exactOptional(v.union([stringU8Schema, v.null()])),
+	taxId: v.exactOptional(v.union([stringU8Schema, v.null()])),
 });
 export const inputLongRunningOperationSuccessSchema = v.strictObject({
 	operationId: inputUuidSchema,
-	done: v.boolean(),
+	done: v.literal(true),
 	result: v.strictObject({
 		response: v.record(v.string(), v.unknown()),
 	}),
