@@ -15,8 +15,7 @@ typecheck: node_modules tsconfig.json $(SRCS)
 	pnpm exec tsc
 
 .PHONY: test
-test: node_modules
-	pnpm exec tsc
+test: node_modules typecheck
 	pnpm exec vitest
 
 node_modules: package.json
