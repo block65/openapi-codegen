@@ -43,7 +43,9 @@ test("main.ts emits file-level `import type` for type-only imports", async () =>
 		/import type \{[^}]*UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/,
 	);
 	expect(mainText).not.toMatch(/import \{[^}]*type\s+OneCommandInput/);
-	expect(mainText).not.toMatch(/import \{[^}]*type\s+UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/);
+	expect(mainText).not.toMatch(
+		/import \{[^}]*type\s+UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/,
+	);
 });
 
 test("optional query params do not carry `| undefined` in their property type", async () => {
@@ -83,6 +85,93 @@ test("optional query params do not carry `| undefined` in their property type", 
 	expect(queryBlock).toContain("purpose?: string");
 	expect(queryBlock).toContain("limit?: `${number}`");
 	expect(queryBlock).not.toContain("undefined");
+});
+
+test("Xquik search operation preserves query and header auth shapes", async () => {
+	const schema: oas31.OpenAPIObject = {
+		openapi: "3.1.0",
+		info: { title: "Xquik API", version: "1.0" },
+		components: {
+			securitySchemes: {
+				apiKey: {
+					type: "apiKey",
+					in: "header",
+					name: "x-api-key",
+				},
+			},
+			schemas: {
+				PaginatedTweets: {
+					type: "object",
+					properties: {
+						tweets: {
+							type: "array",
+							items: { $ref: "#/components/schemas/SearchTweet" },
+						},
+						has_next_page: { type: "boolean" },
+						next_cursor: { type: "string" },
+					},
+				},
+				SearchTweet: {
+					type: "object",
+					properties: {
+						id: { type: "string" },
+						text: { type: "string" },
+						likeCount: { type: "integer" },
+					},
+				},
+			},
+		},
+		paths: {
+			"/api/v1/x/tweets/search": {
+				get: {
+					operationId: "searchTweets",
+					security: [{ apiKey: [] }],
+					parameters: [
+						{
+							name: "q",
+							in: "query",
+							required: true,
+							schema: { type: "string" },
+						},
+						{
+							name: "cursor",
+							in: "query",
+							schema: { type: "string" },
+						},
+						{
+							name: "limit",
+							in: "query",
+							schema: { type: "integer", maximum: 200 },
+						},
+					],
+					responses: {
+						"200": {
+							description: "Search results",
+							content: {
+								"application/json": {
+									schema: {
+										$ref: "#/components/schemas/PaginatedTweets",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	};
+
+	const result = await processOpenApiDocument("/tmp/whatever", schema);
+	const commandsText = result.commandsFile.getText();
+	const mainText = result.mainFile.getText();
+	const typesText = result.typesFile.getText();
+
+	expect(commandsText).toContain("export class SearchTweetsCommand");
+	expect(mainText).toContain("SearchTweetsCommandInput");
+	expect(typesText).toContain("export type SearchTweetsCommandQuery = {");
+	expect(typesText).toContain("q: string");
+	expect(typesText).toContain("cursor?: string");
+	expect(typesText).toContain("limit?: `${number}`");
 });
 
 test("AllInputs union includes every command's Input (no silent drops)", async () => {
@@ -136,8 +225,7 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	const mainText = result.mainFile.getText();
 	const commandsText = result.commandsFile.getText();
 
-	const allInputsBlock =
-		mainText.match(/type AllInputs =[\s\S]*?;/)?.[0] ?? "";
+	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0] ?? "";
 
 	const commandNames = [
 		...commandsText.matchAll(/^export class (\w+Command) extends Command</gm),
