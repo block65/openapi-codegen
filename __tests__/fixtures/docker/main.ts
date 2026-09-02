@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-09T09:18:39.851Z
+ * Generated on 2026-09-02T06:50:50.541Z (rev 58de2e8988d1887aa3674def93a3f438)
  *
  */
 import {

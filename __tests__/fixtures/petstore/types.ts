@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-09T09:17:26.648Z
+ * Generated on 2026-09-02T06:46:58.991Z (rev ba39f344891e60d7b6684b4505d0d7c3)
  *
  */
 import type { UndefinedOnPartialDeep } from "type-fest";

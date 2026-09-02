@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-09T09:17:30.892Z
+ * Generated on 2026-09-02T06:47:29.101Z (rev 6e0ac5f0811859a075f1b40b4001cc15)
  *
  */
 export const nullableStatus = ["active", "paused", "cancelled"] as const;
