@@ -34,8 +34,11 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0
       '@block65/rest-client':
-        specifier: ^13.1.0
-        version: 13.1.0(valibot@1.4.1(typescript@6.0.3))
+        specifier: ^14.0.0
+        version: 14.0.0(valibot@1.4.1(typescript@6.0.3))
+      '@standard-schema/spec':
+        specifier: ^1.1.0
+        version: 1.1.0
       '@tsconfig/node24':
         specifier: ^24.0.4
         version: 24.0.4
@@ -93,10 +96,10 @@ packages:
   '@block65/custom-error@14.1.0':
     resolution: {integrity: sha512-smbcm4A4TwTwKDxJz639scvwCSVtU8qmk/Em2n9P5NT2JLGeK/beRI8acUS/yuAK04LYQrjfDqUFSva4472OcQ==}
 
-  '@block65/rest-client@13.1.0':
-    resolution: {integrity: sha512-l/iM1VkV07BOBdPnrKbWjlKeflHLTFPIBGbWpRR4cbQQIJuLSyRaekvLlNarF+56lkZ4/kCfuVxJTgKrpVND8A==}
+  '@block65/rest-client@14.0.0':
+    resolution: {integrity: sha512-ErjE6EHsona8OgA2yoZWXdYPcs5xvDa8jS86tltaORbTki8BoQNM0VWMtZLGqIy6zt0hunLPDvyuWIViZKN7gA==}
     peerDependencies:
-      valibot: ^1.0.0
+      valibot: ^1.4.1
     peerDependenciesMeta:
       valibot:
         optional: true
@@ -983,9 +986,10 @@ snapshots:
     dependencies:
       serialize-error: 13.0.1
 
-  '@block65/rest-client@13.1.0(valibot@1.4.1(typescript@6.0.3))':
+  '@block65/rest-client@14.0.0(valibot@1.4.1(typescript@6.0.3))':
     dependencies:
       '@block65/custom-error': 14.1.0
+      '@standard-schema/spec': 1.1.0
       p-retry: 8.0.0
     optionalDependencies:
       valibot: 1.4.1(typescript@6.0.3)

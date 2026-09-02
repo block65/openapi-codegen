@@ -3,15 +3,13 @@ import camelcase from "camelcase";
 import type { Project, SourceFile } from "ts-morph";
 import { VariableDeclarationKind } from "ts-morph";
 
-export function createHonoValibotFile(
+export function createHonoFile(
 	project: Project,
 	outputDir: string,
 ): SourceFile {
-	const file = project.createSourceFile(
-		join(outputDir, "hono-valibot.ts"),
-		"",
-		{ overwrite: true },
-	);
+	const file = project.createSourceFile(join(outputDir, "hono.ts"), "", {
+		overwrite: true,
+	});
 
 	file.addImportDeclaration({
 		moduleSpecifier: "hono/validator",
@@ -19,32 +17,39 @@ export function createHonoValibotFile(
 	});
 
 	file.addImportDeclaration({
-		moduleSpecifier: "valibot",
-		namespaceImport: "v",
+		moduleSpecifier: "@standard-schema/spec",
+		namedImports: ["StandardSchemaV1"],
+		isTypeOnly: true,
 	});
 
 	file.addImportDeclaration({
 		moduleSpecifier: "@block65/rest-client",
-		namedImports: ["PublicValibotHonoError"],
+		namedImports: ["PublicValidationError"],
 	});
 
 	file.addFunction({
-		name: "toPublicValibotHonoError",
-		parameters: [{ name: "err", type: "unknown" }],
-		returnType: "never",
+		name: "standardParse",
+		isAsync: true,
+		typeParameters: [{ name: "TSchema", constraint: "StandardSchemaV1" }],
+		parameters: [
+			{ name: "schema", type: "TSchema" },
+			{ name: "value", type: "unknown" },
+		],
+		returnType: "Promise<StandardSchemaV1.InferOutput<TSchema>>",
 		statements: `
-      if (err instanceof v.ValiError) {
-        throw PublicValibotHonoError.from(err);
+      const result = await schema["~standard"].validate(value);
+      if (result.issues) {
+        throw PublicValidationError.fromIssues(result.issues);
       }
-      throw err;
+      return result.value;
     `,
 	});
 
 	return file;
 }
 
-export function createHonoValibotMiddleware(
-	honoValibotFile: SourceFile,
+export function createHonoMiddleware(
+	honoFile: SourceFile,
 	exportName: string,
 	schemas: {
 		json?: string;
@@ -54,7 +59,7 @@ export function createHonoValibotMiddleware(
 		header?: string;
 	},
 ): void {
-	honoValibotFile.addVariableStatement({
+	honoFile.addVariableStatement({
 		isExported: true,
 		declarationKind: VariableDeclarationKind.Const,
 		declarations: [
@@ -70,14 +75,8 @@ export function createHonoValibotMiddleware(
 							([t]) => t !== "header" && t !== "response",
 						)) {
 							writer.writeLine(
-								`validator(${JSON.stringify(target)}, (value) => {`,
+								`validator(${JSON.stringify(target)}, (value) => standardParse(${schemaName}, value)),`,
 							);
-							writer.indent(() => {
-								writer.writeLine(
-									`return v.parseAsync(${schemaName}, value).catch(toPublicValibotHonoError);`,
-								);
-							});
-							writer.writeLine("}),");
 						}
 					});
 					writer.write("] as const");
@@ -87,15 +86,15 @@ export function createHonoValibotMiddleware(
 	});
 }
 
-export function addValibotImportsToHonoValibotFile(
-	honoValibotFile: SourceFile,
+export function addSchemaImportsToHonoFile(
+	honoFile: SourceFile,
 	schemaNames: string[],
 ): void {
 	if (schemaNames.length === 0) {
 		return;
 	}
 
-	honoValibotFile.addImportDeclaration({
+	honoFile.addImportDeclaration({
 		moduleSpecifier: "./valibot.js",
 		namedImports: schemaNames.toSorted(),
 	});

@@ -353,7 +353,7 @@ test("header parameters", async () => {
 	expect(result.commandsFile.getText()).toMatchSnapshot();
 	expect(result.commandsValidatedFile.getText()).toMatchSnapshot();
 	expect(result.valibotFile.getText()).toMatchSnapshot();
-	expect(result.honoValibotFile.getText()).toMatchSnapshot();
+	expect(result.honoFile.getText()).toMatchSnapshot();
 });
 
 test("input-only mode omits wire schemas", async () => {

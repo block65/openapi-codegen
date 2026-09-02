@@ -30,7 +30,8 @@
 	},
 	"devDependencies": {
 		"@block65/custom-error": "^14.1.0",
-		"@block65/rest-client": "^13.1.0",
+		"@block65/rest-client": "^14.0.0",
+		"@standard-schema/spec": "^1.1.0",
 		"@tsconfig/node24": "^24.0.4",
 		"@tsconfig/strictest": "^2.0.8",
 		"@types/node": "^25.9.2",
@@ -49,7 +50,7 @@
 	},
 	"peerDependencies": {
 		"@block65/custom-error": "^14.1.0",
-		"@block65/rest-client": "^13.1.0",
+		"@block65/rest-client": "^14.0.0",
 		"hono": "^4.12.23",
 		"valibot": "^1.4.1"
 	},
