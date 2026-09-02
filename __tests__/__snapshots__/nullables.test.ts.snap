@@ -106,23 +106,22 @@ export const uploadDataCommandHeaderSchema = v.object({
 
 exports[`header parameters 5`] = `
 "import { validator } from "hono/validator";
-import * as v from "valibot";
-import { PublicValibotHonoError } from "@block65/rest-client";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
+import { PublicValidationError } from "@block65/rest-client";
 import { uploadDataCommandParamsSchema } from "./valibot.js";
 
-function toPublicValibotHonoError(err: unknown): never {
+async function standardParse<TSchema extends StandardSchemaV1>(schema: TSchema, value: unknown): Promise<StandardSchemaV1.InferOutput<TSchema>> {
 
-          if (err instanceof v.ValiError) {
-            throw PublicValibotHonoError.from(err);
+          const result = await schema["~standard"].validate(value);
+          if (result.issues) {
+            throw PublicValidationError.fromIssues(result.issues);
           }
-          throw err;
+          return result.value;
         
 }
 
 export const uploadData = [
-        validator("param", (value) => {
-            return v.parseAsync(uploadDataCommandParamsSchema, value).catch(toPublicValibotHonoError);
-        }),
+        validator("param", (value) => standardParse(uploadDataCommandParamsSchema, value)),
     ] as const;
 "
 `;

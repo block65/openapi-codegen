@@ -19,10 +19,10 @@ import {
 } from "ts-morph";
 import type { Simplify } from "type-fest";
 import {
-	addValibotImportsToHonoValibotFile,
-	createHonoValibotFile,
-	createHonoValibotMiddleware,
-} from "./hono-valibot.ts";
+	addSchemaImportsToHonoFile,
+	createHonoFile,
+	createHonoMiddleware,
+} from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
 	camelCase,
@@ -1031,7 +1031,7 @@ export async function processOpenApiDocument(
 
 					// Defer static schema attachment to commands-validated.ts. The lean
 					// commands.ts file carries no schema imports — body/param/query
-					// schemas aren't read by rest-client anyway (hono-valibot.ts imports
+					// schemas aren't read by rest-client anyway (hono.ts imports
 					// directly from valibot.ts for server middleware), and the response
 					// schema lives on the validated subclass.
 					// Wire variant is what rest-client + hono consume; falls back to
@@ -1410,8 +1410,8 @@ export async function processOpenApiDocument(
 	commandsValidatedFile.fixUnusedIdentifiers();
 	valibotFile.fixUnusedIdentifiers();
 
-	// Generate hono-valibot file
-	const honoValibotFile = createHonoValibotFile(project, outputDir);
+	// Generate hono file
+	const honoFile = createHonoFile(project, outputDir);
 
 	// Collect all schema names needed
 	const schemaImports = new Set<string>();
@@ -1424,14 +1424,14 @@ export async function processOpenApiDocument(
 	}
 
 	// Add imports from valibot.ts
-	addValibotImportsToHonoValibotFile(honoValibotFile, [...schemaImports]);
+	addSchemaImportsToHonoFile(honoFile, [...schemaImports]);
 
 	// Generate middleware exports for each operation
 	for (const op of allOperations) {
-		createHonoValibotMiddleware(honoValibotFile, op.exportName, op.schemas);
+		createHonoMiddleware(honoFile, op.exportName, op.schemas);
 	}
 
-	honoValibotFile.fixUnusedIdentifiers();
+	honoFile.fixUnusedIdentifiers();
 
 	return {
 		commandsFile,
@@ -1439,7 +1439,7 @@ export async function processOpenApiDocument(
 		typesFile,
 		mainFile,
 		valibotFile,
-		honoValibotFile,
+		honoFile,
 		enumsFile,
 	};
 }
