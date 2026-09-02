@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-09T09:18:39.851Z
+ * Generated on 2026-09-02T06:50:50.156Z (rev 62542d7746647f792d6ff83347d682c9)
  *
  */
 import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";

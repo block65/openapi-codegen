@@ -3,7 +3,7 @@
  *
  * WARN: Do not edit directly.
  *
- * Generated on 2026-06-09T09:18:39.851Z
+ * Generated on 2026-09-02T06:50:52.307Z (rev 849d2ab9133fcb2a14ee14ff782a9b1c)
  *
  */
 /** eslint-disable max-classes */
