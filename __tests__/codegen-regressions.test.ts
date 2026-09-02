@@ -43,7 +43,9 @@ test("main.ts emits file-level `import type` for type-only imports", async () =>
 		/import type \{[^}]*UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/,
 	);
 	expect(mainText).not.toMatch(/import \{[^}]*type\s+OneCommandInput/);
-	expect(mainText).not.toMatch(/import \{[^}]*type\s+UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/);
+	expect(mainText).not.toMatch(
+		/import \{[^}]*type\s+UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/,
+	);
 });
 
 test("optional query params do not carry `| undefined` in their property type", async () => {
@@ -136,8 +138,7 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	const mainText = result.mainFile.getText();
 	const commandsText = result.commandsFile.getText();
 
-	const allInputsBlock =
-		mainText.match(/type AllInputs =[\s\S]*?;/)?.[0] ?? "";
+	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0] ?? "";
 
 	const commandNames = [
 		...commandsText.matchAll(/^export class (\w+Command) extends Command</gm),

@@ -20,33 +20,33 @@
 		"preversion": "make test"
 	},
 	"dependencies": {
-		"@apidevtools/json-schema-ref-parser": "^15.3.5",
+		"@apidevtools/json-schema-ref-parser": "^16.0.1",
 		"camelcase": "^9.0.0",
 		"toposort": "^2.0.2",
 		"ts-morph": "^28.0.0",
-		"type-fest": "^5.7.0",
+		"type-fest": "^5.9.0",
 		"word-wrap": "^1.2.5",
-		"yargs": "^18.0.0"
+		"yargs": "^18.1.0"
 	},
 	"devDependencies": {
 		"@block65/custom-error": "^14.1.0",
 		"@block65/rest-client": "^14.0.0",
 		"@standard-schema/spec": "^1.1.0",
-		"@tsconfig/node24": "^24.0.4",
+		"@tsconfig/node24": "^24.0.5",
 		"@tsconfig/strictest": "^2.0.8",
-		"@types/node": "^25.9.2",
+		"@types/node": "^26.4.0",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
-		"hono": "^4.12.23",
-		"js-yaml": "^4.2.0",
-		"openapi3-ts": "^4.6.0",
-		"oxfmt": "^0.53.0",
-		"oxlint": "^1.68.0",
-		"typescript": "^6.0.3",
-		"undici": "^8.4.0",
-		"valibot": "^1.4.1",
-		"vite": "^8.0.16",
-		"vitest": "^4.1.8"
+		"hono": "^4.13.5",
+		"js-yaml": "^5.4.1",
+		"openapi3-ts": "^4.6.1",
+		"oxfmt": "^0.65.0",
+		"oxlint": "^1.80.0",
+		"typescript": "^7.0.2",
+		"undici": "^8.10.1",
+		"valibot": "^1.4.2",
+		"vite": "^8.2.2",
+		"vitest": "^4.1.11"
 	},
 	"peerDependencies": {
 		"@block65/custom-error": "^14.1.0",

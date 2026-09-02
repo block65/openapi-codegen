@@ -50,7 +50,10 @@ export async function build(
 	];
 
 	commandsFile.insertStatements(0, "/** eslint-disable max-classes */");
-	commandsValidatedFile.insertStatements(0, "/** eslint-disable max-classes */");
+	commandsValidatedFile.insertStatements(
+		0,
+		"/** eslint-disable max-classes */",
+	);
 
 	// eslint-disable-next-line no-restricted-syntax
 	for await (const file of files) {
