@@ -49,7 +49,7 @@ import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } fr
  * values, protecting path integrity from characters like \`/\` and \`#\`.
  * @example encodePath\`/users/\${userId}\` // "/users/foo%2Fbar"
  */
-function encodePath(strings: TemplateStringsArray, ...values: string[]): string {
+function encodePath(strings: TemplateStringsArray, ...values: string[]) {
     return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
 }
 
@@ -110,7 +110,7 @@ import type { StandardSchemaV1 } from "@standard-schema/spec";
 import { PublicValidationError } from "@block65/rest-client";
 import { uploadDataCommandParamsSchema } from "./valibot.js";
 
-async function standardParse<TSchema extends StandardSchemaV1>(schema: TSchema, value: unknown): Promise<StandardSchemaV1.InferOutput<TSchema>> {
+async function standardParse<TSchema extends StandardSchemaV1>(schema: TSchema, value: unknown) {
 
           const result = await schema["~standard"].validate(value);
           if (result.issues) {

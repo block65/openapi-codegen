@@ -119,7 +119,8 @@ test("RFC 3339 temporal formats", async () => {
 	});
 
 	const types = result.typesFile.getText();
-	// Template-literal string types capture the digit shape for every format.
+
+	// Template-literal string types capture the digit shape for every format
 	expect(types).toContain(
 		"export type MyDate = `${number}-${number}-${number}`",
 	);
@@ -132,11 +133,13 @@ test("RFC 3339 temporal formats", async () => {
 	expect(types).toContain("export type MyDuration = `P${string}`");
 
 	const valibot = result.valibotFile.getText();
+
 	// Each format gets a runtime regex plus a v.custom<...> type hint, in both
-	// the input and wire schema (8 of each across the four formats).
+	// the input and wire schema (8 of each across the four formats)
 	expect(valibot.match(/v\.regex\(/g)?.length).toBe(8);
 	expect(valibot.match(/v\.custom</g)?.length).toBe(8);
-	// The hint type matches the generated TS type (date shown).
+
+	// The hint type matches the generated TS type (date shown)
 	expect(valibot).toContain(
 		"v.custom<`${number}-${number}-${number}`>(() => true)",
 	);
@@ -174,7 +177,8 @@ test("enums short-circuit type constraints (picklist only)", async () => {
 	expect(valibot).toContain(
 		'export const inputStringEnumSchema = v.picklist(["a@example.com", "b@example.com"])',
 	);
-	// No leftover type-specific constraints leaked onto the enums.
+
+	// No leftover type-specific constraints leaked onto the enums
 	expect(valibot).not.toContain("v.minValue");
 	expect(valibot).not.toContain("v.minLength");
 	expect(valibot).not.toContain("v.email");
