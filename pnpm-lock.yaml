@@ -38,8 +38,8 @@ importers:
         specifier: ^14.0.1
         version: 14.0.1(valibot@1.5.0(typescript@7.0.2))
       '@block65/shared-config':
-        specifier: ^0.3.0
-        version: 0.3.0(@block65/oxlint-tsgolint@7.0.2001)(@block65/oxlint@1.82.0(@block65/oxlint-tsgolint@7.0.2001))(eslint@10.10.0)(oxfmt@0.68.0)
+        specifier: ^0.3.1
+        version: 0.3.1(@block65/oxlint-tsgolint@7.0.2001)(@block65/oxlint@1.82.0(@block65/oxlint-tsgolint@7.0.2001))(eslint@10.10.0)(oxfmt@0.68.0)
       '@standard-schema/spec':
         specifier: ^1.1.0
         version: 1.1.0
@@ -161,8 +161,8 @@ packages:
       valibot:
         optional: true
 
-  '@block65/shared-config@0.3.0':
-    resolution: {integrity: sha512-8hge4NmUrwLH6XSS4MCdvpwWkDsmOimoG9jGF++p7AfA6nKKqvGl7vPDLvZenO2edx6/4HqahyvObDVHYOyfTA==}
+  '@block65/shared-config@0.3.1':
+    resolution: {integrity: sha512-ZDJ/ewL/oM4n8Pmr5oQqELy16NaaqFtE++OYoJvTrqB2WjrYc1LrXCHvRZ/KyuXQxpPRWUUg1e0jqtpE5D7zfA==}
     engines: {node: '>=24'}
     peerDependencies:
       fallow: '>=3.0.0'
@@ -1452,7 +1452,7 @@ snapshots:
     optionalDependencies:
       valibot: 1.5.0(typescript@7.0.2)
 
-  '@block65/shared-config@0.3.0(@block65/oxlint-tsgolint@7.0.2001)(@block65/oxlint@1.82.0(@block65/oxlint-tsgolint@7.0.2001))(eslint@10.10.0)(oxfmt@0.68.0)':
+  '@block65/shared-config@0.3.1(@block65/oxlint-tsgolint@7.0.2001)(@block65/oxlint@1.82.0(@block65/oxlint-tsgolint@7.0.2001))(eslint@10.10.0)(oxfmt@0.68.0)':
     dependencies:
       '@block65/oxlint-plugin': 0.6.0(@block65/oxlint@1.82.0(@block65/oxlint-tsgolint@7.0.2001))(eslint@10.10.0)
     optionalDependencies:
