@@ -22,13 +22,13 @@ import { wordWrap } from "./utils.ts";
 //   wire  — for incoming JSON-parsed values (server middleware, response
 //     parsing). Uses `v.exactOptional(...)` — undefined can't appear on the
 //     wire, so a field is either present-with-a-value or absent. Includes
-//     bigint / number coercion since JSON & HTTP carry those as strings.
+//     bigint / number coercion since JSON & HTTP carry those as strings
 type SchemaMode = "input" | "wire";
 
-interface ValidatorEntry {
+type ValidatorEntry = {
 	input: string;
 	wire: string;
-}
+};
 
 /**
  * Helper to generate v.name(...args) using ts-morph Writers
@@ -117,7 +117,7 @@ const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 //     bare-local form, unlike ISO 8601.
 //   - the seconds field permits a leap second (`60`).
 //   - `T`/`Z` may be lower-case and the date/time separator may be a space.
-//   - `duration` is the ISO 8601 grammar from RFC 3339 Appendix A.
+//   - `duration` is the ISO 8601 grammar from RFC 3339 Appendix A
 function temporalRegexConstraint(
 	format: string | undefined,
 ): WriterFunction | undefined {
@@ -154,23 +154,19 @@ function temporalRegexConstraint(
 // Template-literal type for each temporal format. Kept in lock-step with
 // process-schema's `temporalStringType` (types.ts is the source of truth for
 // consumer-facing types); duplicated rather than shared so neither generator
-// has to import the other.
+// has to import the other
 function temporalTypeHint(format: string | undefined): string | undefined {
 	switch (format) {
 		case "date":
-			// eslint-disable-next-line no-template-curly-in-string
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`${number}-${number}-${number}`";
 		case "time":
-			// eslint-disable-next-line no-template-curly-in-string
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`${number}:${number}:${number}${string}`";
 		case "date-time":
-			// eslint-disable-next-line no-template-curly-in-string
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`${number}-${number}-${number}T${number}:${number}:${number}${string}`";
 		case "duration":
-			// eslint-disable-next-line no-template-curly-in-string
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`P${string}`";
 		default:
@@ -180,7 +176,7 @@ function temporalTypeHint(format: string | undefined): string | undefined {
 
 // `v.custom<TemplateType>(() => true)` narrows the schema's inferred output type
 // (the regex already validates), so a direct `v.parse(schema, x)` yields the
-// template-literal type rather than bare `string`.
+// template-literal type rather than bare `string`
 function temporalHintSchema(format: string | undefined): string | undefined {
 	const type = temporalTypeHint(format);
 	return type ? `v.custom<${type}>(() => true)` : undefined;
@@ -202,6 +198,7 @@ function propertiesNeedCoercion(
 	const properties = schema.properties ?? {};
 	const required = new Set(schema.required ?? []);
 	const hasOptional = Object.keys(properties).some((k) => !required.has(k));
+
 	return (
 		hasOptional || Object.values(properties).some((s) => schemaNeedsCoercion(s))
 	);
@@ -213,19 +210,25 @@ function schemaNeedsCoercion(
 	if ("$ref" in schema || "const" in schema) {
 		return false;
 	}
+
 	if (schema.type === "integer" && schema.format === "int64") {
 		return true;
 	}
+
 	if (schema.type === "string" && stringNeedsCoercion(schema)) {
 		return true;
 	}
+
 	if (schema.properties) {
 		return propertiesNeedCoercion(schema);
 	}
+
 	if (schema.items && !("$ref" in schema.items)) {
 		return schemaNeedsCoercion(schema.items);
 	}
+
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
+
 	return combinator ? combinator.some((s) => schemaNeedsCoercion(s)) : false;
 }
 
@@ -253,11 +256,16 @@ function writeStrictObjectEntries(
 	properties: Record<string, AnySchemaOrRef>,
 	requiredProps: ReadonlySet<string>,
 	mode: SchemaMode,
+	toValidator: (
+		validators: Map<string, ValidatorEntry>,
+		schema: AnySchemaOrRef,
+		mode: SchemaMode,
+	) => WriterFunction | string = schemaToValidator,
 ) {
 	const optionalWrapper = mode === "input" ? "optional" : "exactOptional";
 	Object.entries(properties).forEach(([name, s]) => {
 		const isRequired = requiredProps.has(name);
-		const validator = schemaToValidator(validators, s, mode);
+		const validator = toValidator(validators, s, mode);
 		const finalValidator = isRequired
 			? validator
 			: vcall(optionalWrapper, validator);
@@ -271,11 +279,13 @@ function writeStrictObjectEntries(
 		}
 
 		writer.write(`${JSON.stringify(name)}: `);
+
 		if (typeof finalValidator === "function") {
 			finalValidator(writer);
 		} else {
 			writer.write(finalValidator);
 		}
+
 		writer.writeLine(",");
 	});
 }
@@ -315,18 +325,21 @@ function schemaToValidator(
 	// type / format / minLength, the only valid values are the enum members, so
 	// emit a bare picklist — layering string()/minLength()/regex() on top yields
 	// a misleading "expected string" / "minLength" error when the real contract
-	// is simply "must be one of [...]".
+	// is simply "must be one of [...]"
 	if (schema.enum) {
 		const hasNull = schema.enum.some((value) => value === null);
 		const members = schema.enum.filter((value) => value !== null);
 		const [first, ...rest] = members;
+
 		if (first === undefined) {
 			return vcall("null");
 		}
-		// `picklist` only accepts string | number | bigint members.
+
+		// `picklist` only accepts string | number | bigint members
 		const picklistable = members.every(
 			(value) => typeof value === "string" || typeof value === "number",
 		);
+
 		if (picklistable) {
 			return maybeNullable(
 				vcall(
@@ -336,8 +349,9 @@ function schemaToValidator(
 				isNullable || hasNull,
 			);
 		}
+
 		// Boolean (and any other) literals go through `literal()` instead — or a
-		// `union` of them when there's more than one.
+		// `union` of them when there's more than one
 		const base =
 			rest.length === 0
 				? vcall("literal", JSON.stringify(first))
@@ -345,6 +359,7 @@ function schemaToValidator(
 						"union",
 						members.map((value) => vcall("literal", JSON.stringify(value))),
 					);
+
 		return maybeNullable(base, isNullable || hasNull);
 	}
 
@@ -377,6 +392,7 @@ function schemaToValidator(
 				mode,
 			),
 		);
+
 		return maybeNullable(
 			variants.length > 0 ? vcall("union", variants) : vcall("unknown"),
 			isNullable,
@@ -406,8 +422,8 @@ function schemaToValidator(
 				schema.pattern
 					? vcall("regex", `new RegExp(${JSON.stringify(schema.pattern)})`)
 					: undefined,
-				// An explicit x-typescript-hint wins over the format-derived hint.
-				typescriptHint ? undefined : temporalHintSchema(schema.format),
+				// An explicit x-typescript-hint wins over the format-derived hint
+				!typescriptHint ? temporalHintSchema(schema.format) : undefined,
 				typescriptHintSchema,
 			),
 			isNullable,
@@ -454,6 +470,7 @@ function schemaToValidator(
 
 	if (schema.type === "number" || schema.type === "integer") {
 		const isInteger = schema.type === "integer";
+
 		return maybeNullable(
 			maybePipe(
 				vcall("number"),
@@ -494,13 +511,15 @@ function schemaToValidator(
 	}
 
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
+
 	if (combinator) {
 		// allOf of object schemas: compose into a single v.strictObject. Inline
 		// object members contribute their properties directly; $ref members are
 		// spread via `<refName>.entries`. v.intersect of strictObjects is
 		// unsatisfiable when member property sets differ (each strictObject
-		// independently rejects keys the others contribute).
+		// independently rejects keys the others contribute)
 		const allOfMembers = schema.allOf;
+
 		if (allOfMembers) {
 			return maybeNullable(
 				maybePipe(
@@ -511,12 +530,15 @@ function schemaToValidator(
 								if ("$ref" in member) {
 									const resolved = resolveRef(validators, member.$ref, mode);
 									writer.write("...");
+
 									if (typeof resolved === "function") {
 										resolved(writer);
 									} else {
 										writer.write(resolved);
 									}
+
 									writer.writeLine(".entries,");
+
 									return;
 								}
 
@@ -524,6 +546,7 @@ function schemaToValidator(
 									member.type === "object" ||
 									(member.properties !== undefined &&
 										member.type === undefined);
+
 								if (isObjectShape) {
 									writeStrictObjectEntries(
 										writer,
@@ -532,19 +555,22 @@ function schemaToValidator(
 										new Set(member.required ?? []),
 										mode,
 									);
+
 									return;
 								}
 
 								// Nested combinators / unusual shapes: recurse and spread the
 								// result's entries (valid as long as the recursion yields an
-								// object-like schema; otherwise GIGO).
+								// object-like schema; otherwise GIGO)
 								const validator = schemaToValidator(validators, member, mode);
 								writer.write("...");
+
 								if (typeof validator === "function") {
 									validator(writer);
 								} else {
 									writer.write(validator);
 								}
+
 								writer.writeLine(".entries,");
 							});
 						});
@@ -570,15 +596,28 @@ function schemaToValidator(
 				isNullable,
 			);
 		}
+
 		return maybeNullable(vcall("union", variants), isNullable);
 	}
 
 	if (schema.type === "object" || schema.properties || !schema.type) {
 		const props = schema.properties ?? {};
+
+		// `additionalProperties` names the schema every key outside `properties`
+		// has to satisfy, so those keys are part of the contract and a
+		// strictObject would reject them. `true` allows any key, and an absent
+		// keyword leaves the generator strict
+		const rest =
+			typeof schema.additionalProperties === "object" &&
+			schema.additionalProperties !== null
+				? schemaToValidator(validators, schema.additionalProperties, mode)
+				: undefined;
+		const allowsAnyKey = schema.additionalProperties === true;
+
 		if (Object.keys(props).length === 0) {
 			return maybeNullable(
 				maybePipe(
-					vcall("record", vcall("string"), vcall("unknown")),
+					vcall("record", vcall("string"), rest ?? vcall("unknown")),
 					...minMaxProperties(schema),
 				),
 				isNullable,
@@ -587,21 +626,25 @@ function schemaToValidator(
 
 		const requiredProps = new Set(schema.required ?? []);
 
+		const entries = (writer: CodeBlockWriter) => {
+			writer.writeLine("{");
+			writer.indent(() => {
+				writeStrictObjectEntries(
+					writer,
+					validators,
+					props,
+					requiredProps,
+					mode,
+				);
+			});
+			writer.write("}");
+		};
+
 		return maybeNullable(
 			maybePipe(
-				vcall("strictObject", (writer: CodeBlockWriter) => {
-					writer.writeLine("{");
-					writer.indent(() => {
-						writeStrictObjectEntries(
-							writer,
-							validators,
-							props,
-							requiredProps,
-							mode,
-						);
-					});
-					writer.write("}");
-				}),
+				rest
+					? vcall("objectWithRest", entries, rest)
+					: vcall(allowsAnyKey ? "looseObject" : "strictObject", entries),
 				...minMaxProperties(schema),
 			),
 			isNullable,
@@ -694,7 +737,7 @@ export function registerValidatorFromSchema(
 	// Wire schema — unless --input-only (parses incoming JSON: no undefined,
 	// with bigint/number coercion). Aliases to the input schema when the type
 	// has no coercion concerns and the only difference would be optional vs
-	// exactOptional — both are equivalent on JSON-parsed data anyway.
+	// exactOptional — both are equivalent on JSON-parsed data anyway
 	if (!inputOnly) {
 		if (schemaNeedsCoercion(schemaObject)) {
 			valibotFile.addVariableStatement({
@@ -725,7 +768,7 @@ export function registerValidatorFromSchema(
 /**
  * Wraps a validator with string-to-native coercion for HTTP params (query/header).
  * These always arrive as strings on the wire, so coercion is justified.
- * For non-numeric types, returns the validator unchanged.
+ * For non-numeric types, returns the validator unchanged
  */
 function asHttpParamValidator(
 	validatorSchemas: Map<string, ValidatorEntry>,
@@ -733,6 +776,48 @@ function asHttpParamValidator(
 ): WriterFunction | string {
 	if ("$ref" in schema) {
 		return resolveRef(validatorSchemas, schema.$ref, "wire");
+	}
+
+	// The members of an object-valued query parameter reach the validator as
+	// strings for the same reason its scalar siblings do — they are bracket-
+	// encoded into the query string — so the coercion below has to reach them
+	// too. Recursion stops at a `$ref`, which resolves to the one named schema
+	// emitted for the whole document and so cannot carry a query-only variant,
+	// and at shapes whose emission carries more than members and items
+	if (
+		schema.type === "object" &&
+		schema.properties &&
+		Object.keys(schema.properties).length > 0 &&
+		schema.additionalProperties === undefined &&
+		!schemaIsNullable(schema)
+	) {
+		const properties = schema.properties;
+		const requiredProps = new Set(schema.required ?? []);
+
+		return vcall("strictObject", (writer: CodeBlockWriter) => {
+			writer.writeLine("{");
+			writer.indent(() => {
+				writeStrictObjectEntries(
+					writer,
+					validatorSchemas,
+					properties,
+					requiredProps,
+					"wire",
+					asHttpParamValidator,
+				);
+			});
+			writer.write("}");
+		});
+	}
+
+	if (
+		schema.type === "array" &&
+		schema.items &&
+		schema.minItems === undefined &&
+		schema.maxItems === undefined &&
+		!schemaIsNullable(schema)
+	) {
+		return vcall("array", asHttpParamValidator(validatorSchemas, schema.items));
 	}
 
 	const baseValidator = schemaToValidator(validatorSchemas, schema, "input");
@@ -788,7 +873,7 @@ function asHttpParamValidator(
 
 /**
  * Creates validator schemas for operation input (body, params, query) in the
- * valibot file. Returns the schema names for use in middleware generation.
+ * valibot file. Returns the schema names for use in middleware generation
  */
 export function createValidatorForOperationInput(
 	validatorSchemas: Map<string, ValidatorEntry>,
@@ -889,6 +974,7 @@ export function createValidatorForOperationInput(
 		if (list.length === 0) {
 			return;
 		}
+
 		const schemaKey = type === "params" ? "param" : "query";
 
 		const inputName = camelcase(["input", commandName, type, "schema"]);
@@ -908,6 +994,7 @@ export function createValidatorForOperationInput(
 						mode === "wire" && isHttpParam
 							? asHttpParamValidator(validatorSchemas, paramSchema)
 							: schemaToValidator(validatorSchemas, paramSchema, mode);
+
 					return [
 						JSON.stringify(p.name),
 						p.required ? validator : vcall(optionalWrapper, validator),
@@ -966,6 +1053,7 @@ export function createValidatorForOperationInput(
 						mode === "wire"
 							? asHttpParamValidator(validatorSchemas, paramSchema)
 							: schemaToValidator(validatorSchemas, paramSchema, mode);
+
 					return [
 						JSON.stringify(p.name.toLowerCase()),
 						p.required ? validator : vcall(optionalWrapper, validator),
