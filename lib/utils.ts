@@ -10,7 +10,7 @@ function getDependency(obj: unknown): string | undefined {
 	return isReferenceObject(obj) ? obj.$ref : undefined;
 }
 
-export function isNotReferenceObject<T extends oas31.ReferenceObject | unknown>(
+export function isNotReferenceObject<T>(
 	obj: T,
 ): obj is Exclude<T, oas31.ReferenceObject> {
 	return !isReferenceObject(obj);

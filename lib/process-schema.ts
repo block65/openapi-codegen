@@ -425,12 +425,14 @@ export function schemaToType(
 			)
 			.map((t) => t.type);
 
+		const [onlyType] = types;
+
 		// only one type, so just return that type
-		if (types.length === 1) {
+		if (types.length === 1 && onlyType !== undefined) {
 			return {
 				name,
 				hasQuestionToken,
-				type: `${types[0]}`,
+				type: onlyType,
 				docs,
 			};
 		}
@@ -739,7 +741,12 @@ export function registerTypesFromSchema(
 				...typeAliases.map((t) => t.getName()),
 				...objectTypesFromNonRefSchemas,
 				...nonObjectTypesFromNonRefSchemas
-					.map((t) => (t.isReadonly ? `Readonly<${t.type}>` : t.type))
+					.map((t) =>
+						// a writer's text is not available here, so it cannot be wrapped
+						t.isReadonly && typeof t.type === "string"
+							? `Readonly<${t.type}>`
+							: t.type,
+					)
 					.filter(isNotNullOrUndefined),
 			]),
 		];
@@ -845,7 +852,7 @@ export function registerTypesFromSchema(
 		// });
 
 		const stringUnion = typesFile.addTypeAlias({
-			name: pascalCase(schemaName /* , schemaObject.type */),
+			name: pascalCase(schemaName),
 			isExported: true,
 			type: maybeUnion(
 				// enumDeclaration.getName()

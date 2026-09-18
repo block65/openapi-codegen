@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`const values 1`] = `
+exports[`const values > types 1`] = `
 "export type StringConst = "hello";
 export type NumberConst = 42;
 export type BooleanConst = true;
@@ -8,7 +8,7 @@ export type NullConst = null;
 "
 `;
 
-exports[`const values 2`] = `
+exports[`const values > valibot 1`] = `
 "import * as v from "valibot";
 
 export const inputStringConstSchema = v.literal("hello");
@@ -22,24 +22,7 @@ export const nullConstSchema = inputNullConstSchema;
 "
 `;
 
-exports[`header parameters 1`] = `
-"import type { UndefinedOnPartialDeep } from "type-fest";
-
-export type UploadStatus = "pending" | "complete";
-export type UploadDataCommandHeader = {
-        "content-type": "application/json" | "text/csv" | "application/xml";
-        "content-length": \`\${bigint}\`;
-        "x-idempotency-key"?: string;
-    };
-export type UploadDataCommandParams = {
-        uploadId: string;
-    };
-export type UploadDataCommandInput = UploadDataCommandParams;
-export type InputUploadDataCommandResponse = UndefinedOnPartialDeep<UploadStatus>;
-"
-`;
-
-exports[`header parameters 2`] = `
+exports[`header parameters > commands 1`] = `
 "import { Command } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
 import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.js";
@@ -68,7 +51,7 @@ export class UploadDataCommand extends Command<UndefinedOnPartialDeep<UploadData
 "
 `;
 
-exports[`header parameters 3`] = `
+exports[`header parameters > commands-validated 1`] = `
 "import * as commands from "./commands.js";
 import * as schemas from "./valibot.js";
 
@@ -78,7 +61,46 @@ export class UploadDataCommand extends commands.UploadDataCommand {
 "
 `;
 
-exports[`header parameters 4`] = `
+exports[`header parameters > hono 1`] = `
+"import { validator } from "hono/validator";
+import type { StandardSchemaV1 } from "@standard-schema/spec";
+import { PublicValidationError } from "@block65/rest-client";
+import { uploadDataCommandParamsSchema } from "./valibot.js";
+
+async function standardParse<TSchema extends StandardSchemaV1>(schema: TSchema, value: unknown) {
+
+          const result = await schema["~standard"].validate(value);
+          if (result.issues) {
+            throw PublicValidationError.fromIssues(result.issues);
+          }
+          return result.value;
+        
+}
+
+export const uploadData = [
+        validator("param", (value) => standardParse(uploadDataCommandParamsSchema, value)),
+    ] as const;
+"
+`;
+
+exports[`header parameters > types 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type UploadStatus = "pending" | "complete";
+export type UploadDataCommandHeader = {
+        "content-type": "application/json" | "text/csv" | "application/xml";
+        "content-length": \`\${bigint}\`;
+        "x-idempotency-key"?: string;
+    };
+export type UploadDataCommandParams = {
+        uploadId: string;
+    };
+export type UploadDataCommandInput = UploadDataCommandParams;
+export type InputUploadDataCommandResponse = UndefinedOnPartialDeep<UploadStatus>;
+"
+`;
+
+exports[`header parameters > valibot 1`] = `
 "import * as v from "valibot";
 
 export const inputUploadStatusSchema = v.picklist(["pending", "complete"]);
@@ -104,34 +126,12 @@ export const uploadDataCommandHeaderSchema = v.object({
 "
 `;
 
-exports[`header parameters 5`] = `
-"import { validator } from "hono/validator";
-import type { StandardSchemaV1 } from "@standard-schema/spec";
-import { PublicValidationError } from "@block65/rest-client";
-import { uploadDataCommandParamsSchema } from "./valibot.js";
-
-async function standardParse<TSchema extends StandardSchemaV1>(schema: TSchema, value: unknown) {
-
-          const result = await schema["~standard"].validate(value);
-          if (result.issues) {
-            throw PublicValidationError.fromIssues(result.issues);
-          }
-          return result.value;
-        
-}
-
-export const uploadData = [
-        validator("param", (value) => standardParse(uploadDataCommandParamsSchema, value)),
-    ] as const;
-"
-`;
-
-exports[`nullables 1`] = `
+exports[`nullables > types 1`] = `
 "export type MySchemaLolOrNullable = "lol" | "kek" | null;
 "
 `;
 
-exports[`oneOf with type null generates v.null() 1`] = `
+exports[`oneOf with type null generates v.null() > valibot 1`] = `
 "import * as v from "valibot";
 
 export const inputNullableImageSchema = v.union([v.string(), v.null()]);
@@ -139,7 +139,7 @@ export const nullableImageSchema = v.union([v.pipe(v.string(), v.trim()), v.null
 "
 `;
 
-exports[`query and header integer params coerce strings to numbers 1`] = `
+exports[`query and header integer params coerce strings to numbers > types 1`] = `
 "import type { UndefinedOnPartialDeep } from "type-fest";
 
 export type Dummy = string;
@@ -156,7 +156,7 @@ export type InputListFilesCommandResponse = UndefinedOnPartialDeep<Dummy>;
 "
 `;
 
-exports[`query and header integer params coerce strings to numbers 2`] = `
+exports[`query and header integer params coerce strings to numbers > valibot 1`] = `
 "import * as v from "valibot";
 
 export const inputDummySchema = v.string();
@@ -182,7 +182,12 @@ export const listFilesCommandHeaderSchema = v.object({
 "
 `;
 
-exports[`top-level type array with null 1`] = `
+exports[`top-level type array with null > enums 1`] = `
+"export const nullableStringEnum = ["active", "inactive"] as const;
+"
+`;
+
+exports[`top-level type array with null > types 1`] = `
 "export type NullableString = string | null;
 export type NullableStringEnum = "active" | "inactive" | null;
 export type NullableInteger = number | null;
@@ -190,7 +195,7 @@ export type MultiType = string | number;
 "
 `;
 
-exports[`top-level type array with null 2`] = `
+exports[`top-level type array with null > valibot 1`] = `
 "import * as v from "valibot";
 
 export const inputNullableStringSchema = v.nullable(v.string());
@@ -201,10 +206,5 @@ export const inputNullableIntegerSchema = v.nullable(v.pipe(v.number(), v.intege
 export const nullableIntegerSchema = inputNullableIntegerSchema;
 export const inputMultiTypeSchema = v.union([v.string(), v.number()]);
 export const multiTypeSchema = inputMultiTypeSchema;
-"
-`;
-
-exports[`top-level type array with null 3`] = `
-"export const nullableStringEnum = ["active", "inactive"] as const;
 "
 `;

@@ -28,7 +28,7 @@ test("nullables", async () => {
 		[],
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot();
+	expect(result.typesFile.getText()).toMatchSnapshot("types");
 });
 
 test("top-level type array with null", async () => {
@@ -62,9 +62,9 @@ test("top-level type array with null", async () => {
 		[],
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot();
-	expect(result.valibotFile?.getText()).toMatchSnapshot();
-	expect(result.enumsFile.getText()).toMatchSnapshot();
+	expect(result.typesFile.getText()).toMatchSnapshot("types");
+	expect(result.valibotFile?.getText()).toMatchSnapshot("valibot");
+	expect(result.enumsFile.getText()).toMatchSnapshot("enums");
 });
 
 test("const values", async () => {
@@ -99,8 +99,8 @@ test("const values", async () => {
 		[],
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot();
-	expect(result.valibotFile?.getText()).toMatchSnapshot();
+	expect(result.typesFile.getText()).toMatchSnapshot("types");
+	expect(result.valibotFile?.getText()).toMatchSnapshot("valibot");
 });
 
 test("RFC 3339 temporal formats", async () => {
@@ -198,7 +198,7 @@ test("oneOf with type null generates v.null()", async () => {
 		},
 	});
 
-	expect(result.valibotFile.getText()).toMatchSnapshot();
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
 });
 
 test("query and header integer params coerce strings to numbers", async () => {
@@ -273,8 +273,8 @@ test("query and header integer params coerce strings to numbers", async () => {
 		schema,
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot();
-	expect(result.valibotFile.getText()).toMatchSnapshot();
+	expect(result.typesFile.getText()).toMatchSnapshot("types");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
 });
 
 test("header parameters", async () => {
@@ -353,11 +353,11 @@ test("header parameters", async () => {
 		schema,
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot();
-	expect(result.commandsFile.getText()).toMatchSnapshot();
-	expect(result.commandsValidatedFile.getText()).toMatchSnapshot();
-	expect(result.valibotFile.getText()).toMatchSnapshot();
-	expect(result.honoFile.getText()).toMatchSnapshot();
+	expect(result.typesFile.getText()).toMatchSnapshot("types");
+	expect(result.commandsFile.getText()).toMatchSnapshot("commands");
+	expect(result.commandsValidatedFile.getText()).toMatchSnapshot("commands-validated");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
+	expect(result.honoFile.getText()).toMatchSnapshot("hono");
 });
 
 test("input-only mode omits wire schemas", async () => {

@@ -259,10 +259,7 @@ export async function processOpenApiDocument(
 	const allOperations: OperationMiddlewareInfo[] = [];
 
 	const outputTypes = new Set<
-		| InterfaceDeclaration
-		| TypeAliasDeclaration
-		| typeof unspecifiedKeyword
-		| string
+		InterfaceDeclaration | TypeAliasDeclaration | string
 	>();
 
 	// The exact Input type-arg expressions used in `Command<I, …>` per
@@ -1519,9 +1516,9 @@ export async function processOpenApiDocument(
 	const baseUrl = ctor.addParameter({
 		name: "baseUrl",
 		type: Writers.unionType("string", "URL"),
-		initializer: `new URL('${new URL(
-			`${schema.servers?.[0]?.url || "https://api.example.com"}/`,
-		)}')`,
+		initializer: `new URL('${
+			new URL(`${schema.servers?.[0]?.url || "https://api.example.com"}/`).href
+		}')`,
 	});
 
 	// const fetcherParam = ctor.addParameter({
@@ -1559,8 +1556,8 @@ export async function processOpenApiDocument(
 
 	if (validatedSubclasses.length > 0) {
 		// Namespace imports keep the generated file compact and stable across
-		// regenerations — adding/removing a single command no longer churns the
-		// import list. Modern bundlers tree-shake namespace imports correctly
+		// regenerations: adding or removing a single command leaves the import
+		// list alone. Modern bundlers tree-shake namespace imports correctly
 		// when source modules are side-effect-free (which valibot.ts and
 		// commands.ts both are)
 		const commandsNs = "commands";

@@ -22,11 +22,14 @@ async function validatedQuery(
 	middleware: readonly MiddlewareHandler[],
 	search: string,
 ): Promise<unknown> {
-	const response = await appFor(middleware).request(`/target?${search}`);
+	const res = await appFor(middleware).request(`/target?${search}`);
+	const body = await res.clone().text();
 
-	expect(response.status, await response.clone().text()).toBe(200);
+	// the body says why a route rejected the query, so it rides along into the
+	// failure output
+	expect({ status: res.status, body }).toMatchObject({ status: 200 });
 
-	return response.json();
+	return res.json();
 }
 
 // OpenAI's ListAuditLogs `effective_at` is an object and its document states no
@@ -51,14 +54,18 @@ test("an object query parameter under the default style survives the round trip"
 		"gt=1700000000&lte=1700000100&limit=20&after=audit_log_abc",
 	);
 
-	await expect(validatedQuery(listauditlogs, search)).resolves.toStrictEqual(query);
+	await expect(validatedQuery(listauditlogs, search)).resolves.toStrictEqual(
+		query,
+	);
 });
 
 // the parent stays absent rather than arriving as an empty object
 test("an absent object query parameter does not materialise", async () => {
-	await expect(validatedQuery(listauditlogs, "limit=5")).resolves.toStrictEqual({
-		limit: 5,
-	});
+	await expect(validatedQuery(listauditlogs, "limit=5")).resolves.toStrictEqual(
+		{
+			limit: 5,
+		},
+	);
 });
 
 // Hono hands a validator one repeated key as an array but a single occurrence
@@ -68,7 +75,9 @@ test("an array query parameter with one value is still an array", async () => {
 		tags: ["cat"],
 	});
 
-	await expect(validatedQuery(findPets, "tags=cat&tags=dog")).resolves.toStrictEqual({
+	await expect(
+		validatedQuery(findPets, "tags=cat&tags=dog"),
+	).resolves.toStrictEqual({
 		tags: ["cat", "dog"],
 	});
 });
@@ -233,12 +242,12 @@ test("a malformed bracket key is rejected by name rather than reinterpreted", as
 	const app = appFor(middleware);
 	app.onError((error, c) => c.json({ detail: JSON.stringify(error) }, 400));
 
-	const response = await app.request(
+	const res = await app.request(
 		`/target?${new URLSearchParams([["at[gt", "1"]]).toString()}`,
 	);
 
-	expect(response.status).toBe(400);
-	await expect(response.text()).resolves.toContain("at[gt");
+	expect(res.status).toBe(400);
+	await expect(res.text()).resolves.toContain("at[gt");
 });
 
 // The document is the only thing that says where a member belongs, so a
@@ -323,7 +332,8 @@ test("style and explode combinations the spec leaves undefined are warned about"
 		items: { type: "string" },
 	} as const;
 
-	await expect(warningsFrom([
+	await expect(
+		warningsFrom([
 			{
 				name: "ids",
 				in: "query",
@@ -331,16 +341,19 @@ test("style and explode combinations the spec leaves undefined are warned about"
 				explode: true,
 				schema: arrayOfStrings,
 			},
-		])).resolves.toContain("`style: pipeDelimited` with `explode: true`");
+		]),
+	).resolves.toContain("`style: pipeDelimited` with `explode: true`");
 
-	await expect(warningsFrom([
+	await expect(
+		warningsFrom([
 			{
 				name: "ids",
 				in: "query",
 				style: "deepObject",
 				schema: arrayOfStrings,
 			},
-		])).resolves.toContain("is an array with `style: deepObject`");
+		]),
+	).resolves.toContain("is an array with `style: deepObject`");
 });
 
 // `in: "querystring"` matches no branch in the parameter loop, so without a

@@ -82,7 +82,7 @@ export async function build(
 	const previous = await readManifest(manifestPath);
 	const next: Record<string, string> = {};
 
-	for await (const file of files) {
+	for (const file of files) {
 		try {
 			file.formatText();
 		} catch (err) {
