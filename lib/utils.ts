@@ -17,7 +17,7 @@ export function isNotReferenceObject<T extends oas31.ReferenceObject | unknown>(
 }
 
 export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
-	return obj !== null && typeof obj !== "undefined";
+	return obj !== null && obj !== undefined;
 }
 
 const strOnly = (x: string | undefined): x is string => typeof x === "string";
@@ -31,6 +31,7 @@ export function getDependents(
 
 	if ("properties" in obj) {
 		const properties = Object.values(obj.properties);
+
 		return properties.flatMap(getDependents).filter(strOnly);
 	}
 

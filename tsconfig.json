@@ -9,6 +9,6 @@
 		"skipLibCheck": true,
 		"types": ["node"]
 	},
-	"include": ["./lib", "./bin"],
+	"include": ["./lib", "./bin", "./oxlint.config.ts"],
 	"exclude": ["node_modules"]
 }
