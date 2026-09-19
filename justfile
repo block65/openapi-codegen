@@ -1,35 +1,20 @@
-# https://just.systems
+check: typecheck lint fmt-check test typecheck-fixtures
 
-_default: typecheck
-
-# typecheck with tsc
 typecheck:
-	pnpm exec tsc
+	pnpm exec oxlint --type-aware --type-check
 
-# reported, not gated: the two TS2416s are the generator's queryStyles literal
-typecheck-fixtures:
-	-pnpm exec tsc -p __tests__/tsconfig.json
-
-# lint
 lint:
 	pnpm exec oxlint
 
-# typecheck, then run the test suite
-test: typecheck typecheck-fixtures
-	pnpm exec vitest run
-
-# apply lint fixes, then format
-pretty:
-	pnpm exec oxlint --fix
+fmt:
 	pnpm exec oxfmt
 
-# report formatting that pretty would change
-pretty-check:
+fmt-check:
 	pnpm exec oxfmt --check
 
-# what CI runs
-check: typecheck lint pretty-check test
+test:
+	pnpm exec vitest run
 
-# remove installed dependencies
-dist-clean:
-	rm -rf node_modules
+# reported, not gated: the generator's queryStyles literal leaves two TS2416s
+typecheck-fixtures:
+	-pnpm exec tsc -p __tests__/tsconfig.json
