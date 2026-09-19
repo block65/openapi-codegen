@@ -508,8 +508,8 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 			?.getTypeNode()
 			?.getText() ?? "";
 
-	// The composition branch has to forward the codegen options the same way the
-	// array and object branches do, or a oneOf collapses back to the JSON types
+	// Composition has to forward the codegen options the same way the array
+	// and object branches do, or a oneOf collapses back to the JSON types
 	expect(queryBlock).toContain("`${number}`");
 	expect(queryBlock).toContain('"true" | "false"');
 	expect(queryBlock).not.toMatch(/size\?: number/);

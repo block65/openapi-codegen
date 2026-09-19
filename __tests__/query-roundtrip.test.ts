@@ -8,16 +8,7 @@ import { processOpenApiDocument } from "../lib/process-document.ts";
 import { listauditlogs } from "./fixtures/openai/hono.ts";
 import { findPets } from "./fixtures/petstore/hono.ts";
 
-// A query parameter's `style` and `explode` decide how a client writes it into
-// a query string, so they also decide how the server has to read it back. These
-// take the exact query string a client sends for an operation, hand it to that
-// same operation's generated middleware through a real Hono app, and check that
-// what comes out of validation is what went in.
-//
-// The client half of each contract is pinned on the other side, by the
-// "query string building" tests in @block65/rest-client — this repo installs a
-// released copy of that package, which predates the style work, so the wire
-// strings here are written out rather than generated
+// Runs a real query string through the generated middleware and back out
 async function validatedQuery(
 	middleware: readonly MiddlewareHandler[],
 	search: string,
@@ -25,17 +16,16 @@ async function validatedQuery(
 	const res = await appFor(middleware).request(`/target?${search}`);
 	const body = await res.clone().text();
 
-	// the body says why a route rejected the query, so it rides along into the
-	// failure output
+	// the body says why a route rejected the query, so the failure output
+	// includes it
 	expect({ status: res.status, body }).toMatchObject({ status: 200 });
 
 	return res.json();
 }
 
-// OpenAI's ListAuditLogs `effective_at` is an object and its document states no
-// style, so OpenAPI's default applies: the members go out on their own, without
-// the parent name, and only the member list the document declares can put them
-// back together
+// OpenAI's ListAuditLogs `effective_at` is an object and its document states
+// no style. OpenAPI's default sends the members without the parent name, and
+// the declared member list is what puts them back together
 test("an object query parameter under the default style survives the round trip", async () => {
 	const query = {
 		effective_at: { gt: 1700000000, lte: 1700000100 },
@@ -59,7 +49,7 @@ test("an object query parameter under the default style survives the round trip"
 	);
 });
 
-// the parent stays absent rather than arriving as an empty object
+// an absent parent stays absent, and never arrives as an empty object
 test("an absent object query parameter does not materialise", async () => {
 	await expect(validatedQuery(listauditlogs, "limit=5")).resolves.toStrictEqual(
 		{
@@ -82,14 +72,10 @@ test("an array query parameter with one value is still an array", async () => {
 	});
 });
 
-// Nothing in the corpus declares `deepObject` or puts `explode: false` on an
-// object, so those shapes have no fixture to borrow: the server is generated
-// from a document written here, written to disk and imported, so the round trip
-// runs real generated code rather than matching against its text
+// Root for documents generated, written to disk and imported by these tests
 const generatedRoot = join(import.meta.dirname, ".generated");
 
-// The validated data's key is not visible through a spread of middleware, so
-// the handler reads it untyped
+// Mounts the middleware on a Hono app, with an untyped handler reading it
 function appFor(middleware: readonly MiddlewareHandler[]) {
 	const app = new Hono();
 
@@ -179,7 +165,7 @@ test("a deepObject parameter survives the round trip as bracket keys", async () 
 	});
 });
 
-// the collision the default style cannot express, which deepObject can
+// deepObject expresses a collision that the default style flattens away
 test("two deepObject parameters sharing a member name stay apart", async () => {
 	const middleware = await serverFor("deep-object-pair", [
 		{ name: "created", in: "query", style: "deepObject", schema: rangeSchema },
@@ -250,8 +236,8 @@ test("a malformed bracket key is rejected by name rather than reinterpreted", as
 	await expect(res.text()).resolves.toContain("at[gt");
 });
 
-// The document is the only thing that says where a member belongs, so a
-// parameter that declares no style is worth saying out loud
+// Member placement comes from the document alone, so an undeclared style is
+// worth saying out loud
 test("an object query parameter with no declared style is warned about", async () => {
 	const warnings: string[] = [];
 	const original = console.warn;
@@ -270,8 +256,8 @@ test("an object query parameter with no declared style is warned about", async (
 	);
 });
 
-// Two such parameters cannot be told apart once their members lose the parent
-// name, and no encoding this generator could pick would change that
+// Two such parameters read alike once their members lose the parent name, and
+// every encoding this generator could pick keeps them alike
 test("two default-style object parameters sharing a member name are warned about", async () => {
 	const warnings: string[] = [];
 	const original = console.warn;
@@ -325,7 +311,7 @@ async function warningsFrom(parameters: oas31.ParameterObject[]) {
 }
 
 // OpenAPI marks these n/a and leaves them undefined, so the generator says so
-// rather than both sides confidently producing something different
+// before both sides confidently produce something different
 test("style and explode combinations the spec leaves undefined are warned about", async () => {
 	const arrayOfStrings = {
 		type: "array",
@@ -356,8 +342,8 @@ test("style and explode combinations the spec leaves undefined are warned about"
 	).resolves.toContain("is an array with `style: deepObject`");
 });
 
-// `in: "querystring"` matches no branch in the parameter loop, so without a
-// word from the generator the operation silently loses its query entirely
+// `in: "querystring"` matches no branch in the parameter loop, so a warning
+// is what keeps the operation from silently losing its query
 test("an in: querystring parameter is warned about rather than dropped in silence", async () => {
 	const warning = await warningsFrom([
 		{
