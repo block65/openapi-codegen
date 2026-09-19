@@ -27,7 +27,7 @@ pretty:
 pretty-check:
 	pnpm exec oxfmt --check
 
-# what CI runs
+# everything, for before a push - CI gates on typecheck and test alone
 check: typecheck lint pretty-check test
 
 # remove installed dependencies
