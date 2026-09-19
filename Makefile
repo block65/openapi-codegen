@@ -1,43 +1,38 @@
-# Codegen only: the fixtures are files built from other files, which is the one
-# job here that wants a dependency graph. Task running is in the justfile, so
-# bare `make` regenerates rather than typechecks
+# Codegen only. Task running is in the justfile, so bare `make` regenerates.
+#
+# A fixture is built from a document by this generator, so both are
+# prerequisites: editing a document rebuilds that fixture, editing the
+# generator rebuilds all of them. lib/build.ts rewrites the manifest on every
+# run, which makes it a dependable stamp for the whole output directory.
+
+CODEGEN := bin/index.ts $(wildcard lib/*.ts)
+FIXTURES := __tests__/fixtures
+MANIFEST := .openapi-codegen-manifest.json
+DOCUMENTS := petstore test1 openai docker
+STAMPS := $(DOCUMENTS:%=$(FIXTURES)/%/$(MANIFEST))
+
+.DEFAULT_GOAL := fixtures
+
+# a half-written document would otherwise satisfy the rule that produced it
+.DELETE_ON_ERROR:
 
 .PHONY: fixtures
-fixtures:
-	$(MAKE) petstore test1 openai docker
+fixtures: $(STAMPS)
 
-.PHONY: petstore
-petstore:  __tests__/fixtures/petstore.json
+$(FIXTURES)/%/$(MANIFEST): $(FIXTURES)/%.json $(CODEGEN)
 	node --enable-source-maps bin/index.ts \
 		-i $< \
-		-o __tests__/fixtures/petstore
-	pnpm exec oxfmt --write __tests__/fixtures/petstore
+		-o $(@D)
+	pnpm exec oxfmt --write $(@D)
 
-.PHONY: test1
-test1:  __tests__/fixtures/test1.json
-	node --enable-source-maps bin/index.ts \
-		-i $< \
-		-o __tests__/fixtures/test1
-	pnpm exec oxfmt --write __tests__/fixtures/test1
-
-
-__tests__/fixtures/openai.json: __tests__/fixtures/openai.yaml
+# the generator reads json, and openai publishes yaml
+$(FIXTURES)/openai.json: $(FIXTURES)/openai.yaml
 	mkdir -p $(@D)
 	pnpm exec js-yaml $< > $@
 
-__tests__/fixtures/openai.yaml:
+$(FIXTURES)/openai.yaml:
 	curl https://raw.githubusercontent.com/openai/openai-openapi/refs/heads/master/openapi.yaml --output $@
 
-.PHONY: openai
-openai: __tests__/fixtures/openai.json
-	node --enable-source-maps bin/index.ts \
-		-i $< \
-		-o __tests__/fixtures/openai
-	pnpm exec oxfmt --write __tests__/fixtures/openai
-
-.PHONY: docker
-docker: __tests__/fixtures/docker.json
-	node --enable-source-maps bin/index.ts \
-		-i $< \
-		-o __tests__/fixtures/docker
-	pnpm exec oxfmt --write __tests__/fixtures/docker
+# `make petstore` reads better than the stamp path
+.PHONY: $(DOCUMENTS)
+$(DOCUMENTS): %: $(FIXTURES)/%/$(MANIFEST)
