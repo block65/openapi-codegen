@@ -4,8 +4,8 @@ import type { Project, SourceFile } from "ts-morph";
 import { VariableDeclarationKind } from "ts-morph";
 
 /**
- * `hasQueryValidator` gates the query decoder rather than leaving it to
- * `fixUnusedIdentifiers`, which removes the unused entry point but strands the
+ * `hasQueryValidator` controls whether the query decoder is emitted.
+ * `fixUnusedIdentifiers` would drop the unused entry point and strand the
  * helpers it called
  */
 export function createHonoFile(
@@ -57,13 +57,7 @@ export function createHonoFile(
 	return file;
 }
 
-// Hono hands a query validator a flat map of literal query keys. How those keys
-// relate to the schema's shape is the document's decision: OpenAPI's `style`
-// and `explode` say whether an object arrived hoisted to the top level, joined
-// into one value, or bracketed under its own name. The decoder below inverts
-// the Style Examples table (OAS 3.2 §4.12.6) and is driven by the same
-// per-parameter entries the client encodes from, so the two agree by
-// specification rather than by convention
+// Inverts the OAS 3.2 §4.12.6 style table to decode Hono's flat query map
 function addQueryDecoder(file: SourceFile): void {
 	file.addStatements(`
 type QueryParamSpec = {
@@ -311,8 +305,8 @@ export function createHonoMiddleware(
 ): void {
 	const name = camelcase(exportName);
 
-	// Only a parameter that is not a plain scalar needs a spec: a scalar reaches
-	// the validator as the string it was sent as, whatever its style
+	// A parameter beyond a plain scalar needs a spec. A scalar reaches the
+	// validator as the string it was sent as, under every style
 	if (schemas.query && queryParams.length > 0) {
 		honoFile.addVariableStatement({
 			declarationKind: VariableDeclarationKind.Const,
@@ -334,9 +328,9 @@ export function createHonoMiddleware(
 				initializer: (writer) => {
 					writer.write("[");
 					writer.indent(() => {
-						// Hono validators only run on inbound request data; response
-						// schemas are emitted for client-side consumption only, and
-						// `header` is intentionally skipped (extra HTTP headers ok)
+						// Hono validators run on inbound request data alone. Response
+						// schemas are emitted for client-side consumption, and `header`
+						// is skipped so extra HTTP headers pass
 						for (const [target, schemaName] of Object.entries(schemas).filter(
 							([t]) => t !== "header" && t !== "response",
 						)) {

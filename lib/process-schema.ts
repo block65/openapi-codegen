@@ -24,10 +24,7 @@ function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
 	return withNull && type !== "null" ? Writers.unionType(type, "null") : type;
 }
 
-// RFC 3339 temporal `format`s as template-literal TypeScript types, so the
-// digit shape is visible in the type (strictly narrower than `string`). These
-// are shape hints — the runtime valibot schema does the real RFC 3339
-// validation. Kept in lock-step with valibot's `temporalTypeHint`
+// Template-literal type per RFC 3339 temporal format, mirrored in valibot
 function temporalStringType(format: string | undefined): string | undefined {
 	switch (format) {
 		case "date":
@@ -47,9 +44,7 @@ function temporalStringType(format: string | undefined): string | undefined {
 	}
 }
 
-// int64 carries values beyond Number.MAX_SAFE_INTEGER, so it maps to `bigint`
-// as the domain type and `${bigint}` on the wire (query/header/path/body values
-// arrive as strings). Every other integer/number stays `number` / `${number}`
+// int64 maps to bigint, and every other integer or number maps to number
 function numericType(isInt64: boolean, stringish: boolean | undefined): string {
 	if (isInt64) {
 		// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
@@ -71,9 +66,7 @@ function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	);
 }
 
-// `unknown` swallows a union, `never` adds nothing to one, and the same
-// constituent twice is still one type. Only string members can be compared:
-// a writer's text is not available until it runs
+// Drops `unknown`, `never` and duplicate string members from a union
 function collapseUnion(types: (string | WriterFunction)[]) {
 	const seen = new Set<string>();
 	const deduped = types.filter((type) => {
@@ -125,10 +118,7 @@ function recordType(value: string | WriterFunction): WriterFunction {
 	};
 }
 
-// OpenAPI spells "one of these known values, or any other string" as an anyOf
-// of the bare type and an enum of it. TypeScript collapses that union to the
-// bare type, so the known values disappear from completion. LiteralUnion keeps
-// them offered without narrowing what the property accepts
+// LiteralUnion keeps known values in completion and accepts any other string
 function literalUnionType(
 	schemaItems: (
 		| oas31.SchemaObject
@@ -201,7 +191,6 @@ export function schemaToType(
 		const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
 		if (!existingSchema) {
-			// throw new Error(`ref used before available: ${schemaObject.$ref}`);
 			console.warn("ref used before available: schema=%j", schemaObject);
 
 			return {
@@ -444,7 +433,7 @@ export function schemaToType(
 		const isNullable = schemaTypeIsNull(schemaObject);
 
 		if (intersect) {
-			// For allOf: intersect non-null types, wrap in union with null if nullable
+			// For allOf, intersect the non-null types and add null when nullable
 			const nonNullTypes = filteredTypes.filter((t) => t !== "null");
 			const intersectionType = maybeIntersection(...nonNullTypes);
 
@@ -458,7 +447,7 @@ export function schemaToType(
 			};
 		}
 
-		// For oneOf/anyOf: union all types (include null if present or if nullable)
+		// For oneOf and anyOf, union every type, adding null when nullable
 		return {
 			name,
 			hasQuestionToken,
@@ -470,8 +459,8 @@ export function schemaToType(
 		};
 	}
 
-	// A document often leaves `type` off a schema that plainly describes an
-	// object, so the keys that only an object can carry stand in for it
+	// A document often omits `type` from a schema that plainly describes an
+	// object, so keys unique to objects stand in for it
 	const describesObject =
 		schemaObject.type === "object" ||
 		(schemaObject.type === undefined &&
@@ -521,8 +510,8 @@ export function schemaToType(
 			typeof schemaObject.additionalProperties === "object" &&
 			schemaObject.additionalProperties !== null
 		) {
-			// The parent is empty because the value schema keys off nothing in it:
-			// a record value is always present, so it never takes a question token
+			// A record value is always present, so it stays required and the
+			// parent contributes an empty set of keys
 			const value = schemaToType(
 				typesAndInterfaces,
 				{},
@@ -742,7 +731,7 @@ export function registerTypesFromSchema(
 				...objectTypesFromNonRefSchemas,
 				...nonObjectTypesFromNonRefSchemas
 					.map((t) =>
-						// a writer's text is not available here, so it cannot be wrapped
+						// a writer's text is unavailable here, so wrapping applies to strings
 						t.isReadonly && typeof t.type === "string"
 							? `Readonly<${t.type}>`
 							: t.type,
@@ -768,7 +757,7 @@ export function registerTypesFromSchema(
 		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
 	}
 
-	// deal with type arrays (OpenAPI 3.1: type: ["string", "null"])
+	// deal with type arrays, added in OpenAPI 3.1
 	else if (Array.isArray(schemaObject.type)) {
 		const prop = schemaToType(typesAndInterfaces, {}, schemaName, schemaObject);
 
@@ -812,10 +801,9 @@ export function registerTypesFromSchema(
 		const newIf = typesFile.addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
-			// The same walk an inline schema takes, so a named schema and an
+			// Reuses the walk an inline schema takes, so a named schema and an
 			// inline one of the same shape agree. It also spells the value type
-			// in TypeScript: the JSON Schema name for it is not always one, and
-			// `integer` is not
+			// in TypeScript, since JSON Schema names such as `integer` differ
 			type:
 				schemaToType(typesAndInterfaces, {}, schemaName, schemaObject).type ??
 				"Record<string | number, Jsonifiable>",
@@ -960,7 +948,5 @@ export function registerTypesFromSchema(
 			`unsupported ${schemaObject.type} schema object: %j`,
 			schemaObject,
 		);
-
-		// throw new Error(`unsupported type "${schemaObject.type}"`);
 	}
 }

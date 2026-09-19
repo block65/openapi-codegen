@@ -13,16 +13,7 @@ import type { Primitive } from "type-fest";
 import type * as v from "valibot";
 import { wordWrap } from "./utils.ts";
 
-// Two variants per type, split by direction of data flow:
-//
-//   input — for outgoing/TS-side values. Uses `v.optional(...)`, so callers can
-//     pass `{ foo: undefined }` (common in destructure-with-default patterns).
-//     No wire coercion since TS types are already native.
-//
-//   wire  — for incoming JSON-parsed values (server middleware, response
-//     parsing). Uses `v.exactOptional(...)` — undefined can't appear on the
-//     wire, so a field is either present-with-a-value or absent. Includes
-//     bigint / number coercion since JSON & HTTP carry those as strings
+// input uses `v.optional` and skips coercion, wire uses `v.exactOptional`
 type SchemaMode = "input" | "wire";
 
 type ValidatorEntry = {
@@ -107,17 +98,7 @@ function minMaxProperties(schema: oas30.SchemaObject | oas31.SchemaObject) {
 
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
-// RFC 3339 temporal formats. The regex does the real runtime validation; the
-// matching template-literal *type* is carried separately by `temporalHintSchema`
-// (a `v.custom<...>`) so the schema's InferOutput equals the template-literal
-// type emitted into types.ts by process-schema's `temporalStringType`. Without
-// it the schema would infer bare `string`, diverging from the consumer-facing
-// type — visible to `v.parse` / hono `c.req.valid()` callers.
-//   - date-time / time require an offset (`Z` or `±hh:mm`) — RFC 3339 has no
-//     bare-local form, unlike ISO 8601.
-//   - the seconds field permits a leap second (`60`).
-//   - `T`/`Z` may be lower-case and the date/time separator may be a space.
-//   - `duration` is the ISO 8601 grammar from RFC 3339 Appendix A
+// RFC 3339 temporal formats, validated by regex at runtime
 function temporalRegexConstraint(
 	format: string | undefined,
 ): WriterFunction | undefined {
@@ -151,10 +132,7 @@ function temporalRegexConstraint(
 	}
 }
 
-// Template-literal type for each temporal format. Kept in lock-step with
-// process-schema's `temporalStringType` (types.ts is the source of truth for
-// consumer-facing types); duplicated rather than shared so neither generator
-// has to import the other
+// Template-literal type per temporal format, mirrored in process-schema
 function temporalTypeHint(format: string | undefined): string | undefined {
 	switch (format) {
 		case "date":
@@ -174,9 +152,7 @@ function temporalTypeHint(format: string | undefined): string | undefined {
 	}
 }
 
-// `v.custom<TemplateType>(() => true)` narrows the schema's inferred output type
-// (the regex already validates), so a direct `v.parse(schema, x)` yields the
-// template-literal type rather than bare `string`
+// Narrows the inferred output to the template-literal type, past the regex
 function temporalHintSchema(format: string | undefined): string | undefined {
 	const type = temporalTypeHint(format);
 	return type ? `v.custom<${type}>(() => true)` : undefined;
@@ -311,7 +287,7 @@ function schemaToValidator(
 		? `v.custom<${typescriptHint}>(() => true)`
 		: undefined;
 
-	// Handle const values (OpenAPI 3.1: const: "value")
+	// Handle const values, added in OpenAPI 3.1
 	if ("const" in schema) {
 		return schema.const === null
 			? vcall("null")
@@ -321,11 +297,10 @@ function schemaToValidator(
 				);
 	}
 
-	// Enums short-circuit every type-specific constraint. Whatever the declared
-	// type / format / minLength, the only valid values are the enum members, so
-	// emit a bare picklist — layering string()/minLength()/regex() on top yields
-	// a misleading "expected string" / "minLength" error when the real contract
-	// is simply "must be one of [...]"
+	// Enums short-circuit every type-specific constraint. Valid values are
+	// exactly the enum members, under any declared type, format or minLength.
+	// Layering string() or minLength() on top yields a misleading error about
+	// the wrong contract, so emit a bare picklist
 	if (schema.enum) {
 		const hasNull = schema.enum.some((value) => value === null);
 		const members = schema.enum.filter((value) => value !== null);
@@ -350,8 +325,8 @@ function schemaToValidator(
 			);
 		}
 
-		// Boolean (and any other) literals go through `literal()` instead — or a
-		// `union` of them when there's more than one
+		// Boolean and other literals use `literal()` instead, or a `union` of
+		// them when there is more than one
 		const base =
 			rest.length === 0
 				? vcall("literal", JSON.stringify(first))
@@ -363,7 +338,7 @@ function schemaToValidator(
 		return maybeNullable(base, isNullable || hasNull);
 	}
 
-	// Handle type arrays (OpenAPI 3.1: type: ["string", "null"])
+	// Handle type arrays, added in OpenAPI 3.1
 	if (Array.isArray(schema.type)) {
 		const nonNullTypes = schema.type.filter((t) => t !== "null");
 		const [singleType] = nonNullTypes;
@@ -422,7 +397,7 @@ function schemaToValidator(
 				schema.pattern
 					? vcall("regex", `new RegExp(${JSON.stringify(schema.pattern)})`)
 					: undefined,
-				// An explicit x-typescript-hint wins over the format-derived hint
+				// A hint set by the `x-typescript-hint` extension wins over the format
 				!typescriptHint ? temporalHintSchema(schema.format) : undefined,
 				typescriptHintSchema,
 			),
@@ -513,11 +488,11 @@ function schemaToValidator(
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
 
 	if (combinator) {
-		// allOf of object schemas: compose into a single v.strictObject. Inline
-		// object members contribute their properties directly; $ref members are
-		// spread via `<refName>.entries`. v.intersect of strictObjects is
-		// unsatisfiable when member property sets differ (each strictObject
-		// independently rejects keys the others contribute)
+		// allOf of object schemas composes into a single v.strictObject. Inline
+		// object members contribute their properties directly, and $ref members
+		// are spread via `<refName>.entries`. v.intersect of strictObjects is
+		// unsatisfiable when member property sets differ, because each
+		// strictObject independently rejects keys the others contribute
 		const allOfMembers = schema.allOf;
 
 		if (allOfMembers) {
@@ -559,9 +534,9 @@ function schemaToValidator(
 									return;
 								}
 
-								// Nested combinators / unusual shapes: recurse and spread the
-								// result's entries (valid as long as the recursion yields an
-								// object-like schema; otherwise GIGO)
+								// Nested combinators and unusual shapes recurse, spreading the
+								// result's entries. Valid as long as the recursion yields an
+								// object-like schema, and GIGO otherwise
 								const validator = schemaToValidator(validators, member, mode);
 								writer.write("...");
 
@@ -734,10 +709,10 @@ export function registerValidatorFromSchema(
 		],
 	});
 
-	// Wire schema — unless --input-only (parses incoming JSON: no undefined,
-	// with bigint/number coercion). Aliases to the input schema when the type
-	// has no coercion concerns and the only difference would be optional vs
-	// exactOptional — both are equivalent on JSON-parsed data anyway
+	// Wire schema, skipped under --input-only. It parses incoming JSON with
+	// bigint and number coercion. Aliases to the input schema when the type
+	// lacks coercion concerns and the difference would be optional versus
+	// exactOptional, which are equivalent on JSON-parsed data
 	if (!inputOnly) {
 		if (schemaNeedsCoercion(schemaObject)) {
 			valibotFile.addVariableStatement({
@@ -765,11 +740,7 @@ export function registerValidatorFromSchema(
 	}
 }
 
-/**
- * Wraps a validator with string-to-native coercion for HTTP params (query/header).
- * These always arrive as strings on the wire, so coercion is justified.
- * For non-numeric types, returns the validator unchanged
- */
+/** Coerces HTTP param strings to native values, leaving other types alone */
 function asHttpParamValidator(
 	validatorSchemas: Map<string, ValidatorEntry>,
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
@@ -778,12 +749,12 @@ function asHttpParamValidator(
 		return resolveRef(validatorSchemas, schema.$ref, "wire");
 	}
 
-	// The members of an object-valued query parameter reach the validator as
-	// strings for the same reason its scalar siblings do — they are bracket-
-	// encoded into the query string — so the coercion below has to reach them
+	// Members of an object-valued query parameter reach the validator as
+	// strings, for the same reason its scalar siblings do. They are bracket-
+	// encoded into the query string, so the coercion below has to reach them
 	// too. Recursion stops at a `$ref`, which resolves to the one named schema
-	// emitted for the whole document and so cannot carry a query-only variant,
-	// and at shapes whose emission carries more than members and items
+	// emitted for the whole document and therefore lacks a query-only variant.
+	// It also stops at shapes that emit more than members and items
 	if (
 		schema.type === "object" &&
 		schema.properties &&
