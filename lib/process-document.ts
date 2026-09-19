@@ -176,10 +176,6 @@ function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
 
 const emptyKeyword = "undefined" as const;
 
-// function isEmptyKeyword(type: TypeAliasDeclaration) {
-//   return type?.getTypeNode()?.getKindName() === emptyKeyword;
-// }
-
 // the union/intersect helpers keep TypeScript happy due to ts-morph typings
 function createIntersection(...types: (string | undefined)[]) {
 	// create a type  of all the inputs
@@ -542,15 +538,6 @@ export async function processOpenApiDocument(
 
 						if (resolvedParameter.in === "path") {
 							pathParameters.push(resolvedParameter);
-
-							// jsdoc.addTag({
-							//   tagName: 'param',
-							//   text: wordWrap(
-							//     `${parameterName} {String} ${
-							//       resolvedParameter.description || ''
-							//     }`,
-							//   ).trim(),
-							// });
 						}
 
 						if (
@@ -767,13 +754,6 @@ export async function processOpenApiDocument(
 							pascalCase(operationObject.operationId || "", "JsonBody"),
 						);
 
-						// if (!requestBodySchema) {
-						//   return {
-						//     name,
-						//     hasQuestionToken: !requestBodyObjectJson.schema.required,
-						//   };
-						// }
-
 						const type = schemaToType(
 							typesAndInterfaces,
 							jsonRequestBodyObject.schema.required
@@ -791,10 +771,6 @@ export async function processOpenApiDocument(
 							type:
 								typeof type.type === "function" ? type.type : String(type.type),
 						});
-
-						// console.warn("Couldn't find a body type for", requestBodyObjectJson.schema);
-
-						// return undefined;
 					});
 
 					const nonJsonBodyEntries = requestBodyObject?.content
@@ -835,19 +811,6 @@ export async function processOpenApiDocument(
 																type: "NonNullable<RequestInit['body']>",
 															});
 
-															// nonJsonBody.addJsDoc({
-															//   description: `The body of the request, encoded as ${contentType}`,
-															//   tags: [
-															//     {
-															//       tagName: 'param',
-															//       text: wordWrap(
-															//         `body {${nonJsonBody.getName()}} ${mediaTypeObj.schema?.description || ''
-															//         }`,
-															//       ).trim(),
-															//     },
-															//   ],
-															// });
-
 															return nonJsonBody.getName();
 														},
 													),
@@ -857,18 +820,6 @@ export async function processOpenApiDocument(
 									}),
 								})
 							: undefined;
-
-					// ensureImport(bodyType);
-
-					// const paramsParamName = 'parameters';
-					// if (bodyType) {
-					//   jsdoc.addTag({
-					//     tagName: 'param',
-					//     text: wordWrap(
-					//       `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`,
-					//     ).trim(),
-					//   });
-					// }
 
 					const paramsType =
 						pathParameters.length > 0
@@ -1052,30 +1003,6 @@ export async function processOpenApiDocument(
 
 					commandClassDeclaration.getExtends()?.addTypeArgument(inputTypeArg);
 
-					// if (queryType && !isVoidKeyword(queryType)) {
-					//   ctor.addParameter({
-					//     name: 'query',
-					//     type: queryType.getName(),
-					//   });
-					// }
-
-					// for (const queryParam of queryParameters) {
-					//   const queryParameterName = camelcase(queryParam.name);
-
-					//   jsdoc.addTag({
-					//     tagName: 'param',
-					//     text: wordWrap(
-					//       `${paramsParamName}.query.${queryParameterName}${
-					//         queryParam.required ? '' : '?'
-					//       } {String} ${maybeJsDocDescription(
-					//         queryParam.deprecated && 'DEPRECATED',
-					//         queryParam.description,
-					//         String(queryParam.example || ''),
-					//       )}`,
-					//     ).trim(),
-					//   });
-					// }
-
 					// this is just like a 204 response
 					let hasOutputType = false;
 
@@ -1169,11 +1096,6 @@ export async function processOpenApiDocument(
 								type: `UndefinedOnPartialDeep<${outputTypeName}>`,
 								isExported: true,
 							});
-
-							// jsdoc.addTag({
-							//   tagName: 'returns',
-							//   text: `{${retVal}} HTTP ${statusCode}`,
-							// });
 						} else if (jsonResponse.schema) {
 							const outputType = schemaToType(
 								typesAndInterfaces,
@@ -1521,12 +1443,6 @@ export async function processOpenApiDocument(
 		}')`,
 	});
 
-	// const fetcherParam = ctor.addParameter({
-	//   name: 'fetcher',
-	//   // type: fetcherMethodType,
-	//   initializer: `${fetcherName}()`,
-	// });
-
 	const configParam = ctor.addParameter({
 		name: "config",
 		type: configType,
@@ -1542,11 +1458,7 @@ export async function processOpenApiDocument(
 
 	// type narrowing
 	if (Node.isCallExpression(callExpr)) {
-		callExpr?.addArguments([
-			baseUrl.getName(),
-			// fetcherParam.getName()
-			configParam.getName(),
-		]);
+		callExpr?.addArguments([baseUrl.getName(), configParam.getName()]);
 	}
 
 	// Build commands-validated.ts: subclasses attach `static responseSchema`,

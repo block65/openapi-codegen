@@ -840,33 +840,14 @@ export function registerTypesFromSchema(
 				]
 			: [];
 
-		// bonus enum interface for the same set of strings
-		// handy for looping over the enum values
-		// const enumDeclaration = typesFile.addEnum({
-		//   name: pascalCase(schemaName, 'Enum'),
-		//   isExported: true,
-		//   members: schemaObject.enum.map((e: unknown) => ({
-		//     name: typeof e === 'string' ? pascalCase(e) : String(e),
-		//     value: String(e),
-		//   })),
-		// });
-
 		const stringUnion = typesFile.addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
-			type: maybeUnion(
-				// enumDeclaration.getName()
-				...schemaObject.enum.map((e) => JSON.stringify(e)),
-			),
+			type: maybeUnion(...schemaObject.enum.map((e) => JSON.stringify(e))),
 			docs,
 		});
 
 		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, stringUnion);
-
-		// typesAndInterfaces.set(
-		//   `#/components/schemas/${enumDeclaration.getName()}`,
-		//   enumDeclaration,
-		// );
 	}
 
 	// deal with non-enum strings
