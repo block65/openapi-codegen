@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { $RefParser } from "@apidevtools/json-schema-ref-parser";
+import type { QueryParamSpec } from "@block65/rest-client";
 import type { oas30, oas31 } from "openapi3-ts";
 import toposort from "toposort";
 import {
@@ -20,7 +21,6 @@ import {
 	addSchemaImportsToHonoFile,
 	createHonoFile,
 	createHonoMiddleware,
-	type QueryParamSpec,
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
@@ -58,15 +58,16 @@ type OperationMiddlewareInfo = {
 	queryParams: QueryParamSpec[];
 };
 
-const queryStyles = [
-	"form",
-	"spaceDelimited",
-	"pipeDelimited",
-	"deepObject",
-] as const;
+// keyed by the union, so a style added or dropped fails here
+const queryStyles: Record<QueryParamSpec["style"], true> = {
+	form: true,
+	spaceDelimited: true,
+	pipeDelimited: true,
+	deepObject: true,
+};
 
 function isQueryStyle(style: string): style is QueryParamSpec["style"] {
-	return queryStyles.some((candidate) => candidate === style);
+	return Object.hasOwn(queryStyles, style);
 }
 
 // OAS 3.2 added this location, so the 3.0 union this generator reads omits it
@@ -1524,11 +1525,7 @@ export async function processOpenApiDocument(
 	valibotFile.fixUnusedIdentifiers();
 
 	// Generate hono file
-	const honoFile = createHonoFile(
-		project,
-		outputDir,
-		allOperations.some((op) => op.schemas.query),
-	);
+	const honoFile = createHonoFile(project, outputDir);
 
 	// Collect all schema names needed
 	const schemaImports = new Set<string>();
