@@ -83,12 +83,24 @@ function appFor(middleware: readonly MiddlewareHandler[]) {
 		app.use("/target", handler);
 	}
 
+	// TYPESAFETY: `c.req.valid` keys off the validator types a route was built
+	// with, and these middleware arrive as an opaque array, so the key is
+	// unreachable through the spread.
 	app.get("/target", (c) => c.json(c.req.valid("query" as never)));
 
 	return app;
 }
 
-async function serverFor(name: string, parameters: oas31.ParameterObject[]) {
+// OAS 3.2 added `in: "querystring"`, which the 3.1 types predate
+type TestParameter =
+	| oas31.ParameterObject
+	| {
+			name: string;
+			in: "querystring";
+			content: oas31.ParameterObject["content"];
+	  };
+
+async function serverFor(name: string, parameters: readonly TestParameter[]) {
 	const document: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
@@ -96,7 +108,10 @@ async function serverFor(name: string, parameters: oas31.ParameterObject[]) {
 			"/things": {
 				get: {
 					operationId: "listThingsCommand",
-					parameters,
+					// TYPESAFETY: `TestParameter` widens the 3.1 union by the one 3.2
+					// location these tests exercise, and the generator reads `in` as a
+					// string.
+					parameters: parameters as oas31.ParameterObject[],
 					responses: {
 						"200": {
 							description: "OK",
@@ -115,6 +130,8 @@ async function serverFor(name: string, parameters: oas31.ParameterObject[]) {
 	await mkdir(outputDir, { recursive: true });
 	await Promise.all([result.honoFile.save(), result.valibotFile.save()]);
 
+	// TYPESAFETY: a dynamic import is typed `any`, and the exports are read by
+	// name below rather than trusted as a shape.
 	const module = (await import(join(outputDir, "hono.ts"))) as Record<
 		string,
 		unknown
@@ -128,6 +145,8 @@ async function serverFor(name: string, parameters: oas31.ParameterObject[]) {
 
 	expect(middleware).toBeDefined();
 
+	// TYPESAFETY: the generator emits one array export per operation, and the
+	// `toBeDefined` above fails the test before this runs if it is missing.
 	return middleware as readonly MiddlewareHandler[];
 }
 
@@ -293,7 +312,7 @@ test("two default-style object parameters sharing a member name are warned about
 	);
 });
 
-async function warningsFrom(parameters: oas31.ParameterObject[]) {
+async function warningsFrom(parameters: readonly TestParameter[]) {
 	const warnings: string[] = [];
 	const original = console.warn;
 	console.warn = (message: string) => warnings.push(message);
@@ -347,7 +366,7 @@ test("an in: querystring parameter is warned about rather than dropped in silenc
 			name: "whole",
 			in: "querystring",
 			content: { "application/json": { schema: { type: "object" } } },
-		} as unknown as oas31.ParameterObject,
+		},
 	]);
 
 	expect(warning).toContain("uses `in: querystring`");

@@ -30,6 +30,9 @@ async function readManifest(path: string) {
 
 	try {
 		const parsed: unknown = JSON.parse(text);
+		// TYPESAFETY: this file is only ever written by `writeManifest` below,
+		// which stores a string revision per path. A hand-edited one degrades to
+		// a rewrite of every file, which is what an absent manifest already does.
 		return typeof parsed === "object" && parsed !== null
 			? (parsed as Record<string, string>)
 			: {};
@@ -44,6 +47,8 @@ export async function build(
 	tags?: string[],
 	options?: CodegenOptions,
 ) {
+	// TYPESAFETY: a JSON import is typed `any`, and the document is validated
+	// by `$RefParser` downstream rather than here.
 	const apischema = (await import(inputFile, {
 		with: { type: "json" },
 	})) as { default: oas31.OpenAPIObject };

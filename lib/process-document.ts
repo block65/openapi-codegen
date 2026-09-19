@@ -58,9 +58,23 @@ type OperationMiddlewareInfo = {
 	queryParams: QueryParamSpec[];
 };
 
+const queryStyles = [
+	"form",
+	"spaceDelimited",
+	"pipeDelimited",
+	"deepObject",
+] as const;
+
+function isQueryStyle(style: string): style is QueryParamSpec["style"] {
+	return queryStyles.some((candidate) => candidate === style);
+}
+
 // Resolves the OAS 3.2 §4.12.6 style and explode defaults for a parameter
 function queryParameterEncoding(parameter: oas30.ParameterObject) {
-	const style = (parameter.style ?? "form") as QueryParamSpec["style"];
+	const style =
+		parameter.style !== undefined && isQueryStyle(parameter.style)
+			? parameter.style
+			: "form";
 
 	return {
 		style,
@@ -73,7 +87,10 @@ function queryParameterEncoding(parameter: oas30.ParameterObject) {
 function queryParameterSpec(
 	parameter: oas30.ParameterObject,
 ): QueryParamSpec | undefined {
-	const schema = (parameter.schema ?? {}) as oas30.SchemaObject;
+	const schema: oas30.SchemaObject =
+		parameter.schema !== undefined && !("$ref" in parameter.schema)
+			? parameter.schema
+			: {};
 	const { style, explode } = queryParameterEncoding(parameter);
 
 	if (schema.type === "array") {
@@ -516,6 +533,9 @@ export async function processOpenApiDocument(
 						...(operationObject.parameters || []),
 						...(pathItemObject.parameters || []),
 					]) {
+						// TYPESAFETY: `$RefParser.resolve` types every target as
+						// `unknown`, and this pointer came from a parameter list, so the
+						// document declares it as a parameter.
 						const resolvedParameter = (
 							"$ref" in parameter ? refs.get(parameter.$ref) : parameter
 						) as oas30.ParameterObject;
@@ -556,7 +576,9 @@ export async function processOpenApiDocument(
 						// way to express. A warning is all that is left, since a valid
 						// document would otherwise generate an operation with its query
 						// silently dropped
-						if (resolvedParameter.in === ("querystring" as string)) {
+						const parameterIn: string = resolvedParameter.in;
+
+						if (parameterIn === "querystring") {
 							console.warn(
 								`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support — the operation is generated with no query at all. Declare the members as \`in: query\` parameters instead.`,
 							);

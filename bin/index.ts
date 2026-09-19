@@ -35,9 +35,13 @@ const cliArgs = await yargs(hideBin(process.argv))
 	})
 	.help().argv;
 
+const tags = Array.isArray(cliArgs.tags)
+	? cliArgs.tags.map((tag) => String(tag))
+	: undefined;
+
 await build(
 	join(process.cwd(), String(cliArgs.i)),
 	join(process.cwd(), String(cliArgs.o)),
-	cliArgs.t as Array<string>,
+	tags,
 	{ inputOnly: Boolean(cliArgs.inputOnly) },
 );
