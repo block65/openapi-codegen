@@ -355,7 +355,9 @@ test("header parameters", async () => {
 
 	expect(result.typesFile.getText()).toMatchSnapshot("types");
 	expect(result.commandsFile.getText()).toMatchSnapshot("commands");
-	expect(result.commandsValidatedFile.getText()).toMatchSnapshot("commands-validated");
+	expect(result.commandsValidatedFile.getText()).toMatchSnapshot(
+		"commands-validated",
+	);
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
 	expect(result.honoFile.getText()).toMatchSnapshot("hono");
 });

@@ -41,7 +41,7 @@ export type CodegenOptions = {
 	/**
 	 * Emit only `input*` variants (TS-side schemas: `v.optional`, no wire
 	 * coercion). Skips the `*Schema` (wire) variants used by hono middleware
-	 * and response parsing. For non-HTTP / in-memory-only consumers.
+	 * and response parsing. For non-HTTP / in-memory-only consumers
 	 */
 	inputOnly?: boolean;
 };

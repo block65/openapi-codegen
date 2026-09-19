@@ -6,7 +6,7 @@ import { VariableDeclarationKind } from "ts-morph";
 /**
  * `hasQueryValidator` gates the query decoder rather than leaving it to
  * `fixUnusedIdentifiers`, which removes the unused entry point but strands the
- * helpers it called.
+ * helpers it called
  */
 export function createHonoFile(
 	project: Project,
