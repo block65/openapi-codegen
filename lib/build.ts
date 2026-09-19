@@ -17,10 +17,6 @@ const BANNER = `/**
 // Records emitter output so a file reformatted on disk still compares equal
 const MANIFEST = ".openapi-codegen-manifest.json";
 
-function revision(text: string) {
-	return createHash("sha256").update(text).digest("hex").slice(0, 32);
-}
-
 async function readManifest(path: string) {
 	const text = await readFile(path, "utf8").catch(() => {});
 
@@ -80,33 +76,37 @@ export async function build(
 
 	const manifestPath = join(outputDir, MANIFEST);
 	const previous = await readManifest(manifestPath);
-	const next: Record<string, string> = {};
+	const revisions = await Promise.all(
+		files.map(async (file) => {
+			try {
+				file.formatText();
+			} catch (err) {
+				console.warn(err);
+			}
 
-	for (const file of files) {
-		try {
-			file.formatText();
-		} catch (err) {
-			console.warn(err);
-		}
+			const contents = `${BANNER}\n${file.getFullText()}`;
+			const name = file.getBaseName();
+			const rev = createHash("sha256")
+				.update(contents)
+				.digest("hex")
+				.slice(0, 32);
 
-		const contents = `${BANNER}\n${file.getFullText()}`;
-		const name = file.getBaseName();
-		const rev = revision(contents);
-
-		next[name] = rev;
-
-		const unchanged =
-			previous[name] === rev &&
-			(await readFile(file.getFilePath(), "utf8")
+			const present = await readFile(file.getFilePath(), "utf8")
 				.then(() => true)
-				.catch(() => false));
+				.catch(() => false);
 
-		if (unchanged) {
-			continue;
-		}
+			if (previous[name] !== rev || !present) {
+				await writeFile(file.getFilePath(), contents);
+			}
 
-		await writeFile(file.getFilePath(), contents);
-	}
+			return { name, rev };
+		}),
+	);
 
-	await writeFile(manifestPath, `${JSON.stringify(next, null, "\t")}\n`);
+	const next = new Map(revisions.map(({ name, rev }) => [name, rev]));
+
+	await writeFile(
+		manifestPath,
+		`${JSON.stringify(Object.fromEntries(next), null, "\t")}\n`,
+	);
 }

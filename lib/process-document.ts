@@ -69,6 +69,11 @@ function isQueryStyle(style: string): style is QueryParamSpec["style"] {
 	return queryStyles.some((candidate) => candidate === style);
 }
 
+// OAS 3.2 added this location, so the 3.0 union this generator reads omits it
+function isQuerystringLocation(location: string) {
+	return location === "querystring";
+}
+
 // Resolves the OAS 3.2 §4.12.6 style and explode defaults for a parameter
 function queryParameterEncoding(parameter: oas30.ParameterObject) {
 	const style =
@@ -576,9 +581,7 @@ export async function processOpenApiDocument(
 						// way to express. A warning is all that is left, since a valid
 						// document would otherwise generate an operation with its query
 						// silently dropped
-						const parameterIn: string = resolvedParameter.in;
-
-						if (parameterIn === "querystring") {
+						if (isQuerystringLocation(resolvedParameter.in)) {
 							console.warn(
 								`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support — the operation is generated with no query at all. Declare the members as \`in: query\` parameters instead.`,
 							);

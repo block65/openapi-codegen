@@ -20,7 +20,9 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && obj !== undefined;
 }
 
-const strOnly = (x: string | undefined): x is string => typeof x === "string";
+function strOnly(x: string | undefined): x is string {
+	return typeof x === "string";
+}
 
 export function getDependents(
 	obj: oas31.ReferenceObject | oas31.SchemaObject,
@@ -78,4 +80,13 @@ export function castToValidJsIdentifier(name: string) {
 
 export function iife<T>(fn: () => T): T {
 	return fn();
+}
+
+export function typedEntries<T extends object>(
+	obj: T,
+): [keyof T & string, T[keyof T]][] {
+	// TYPESAFETY: `Object.entries` types every key as `string`, and this puts
+	// back what `T` declares. An index signature on `T` would widen them again,
+	// and every caller passes a closed object type
+	return Object.entries(obj) as [keyof T & string, T[keyof T]][];
 }

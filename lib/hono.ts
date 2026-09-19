@@ -2,6 +2,7 @@ import { join } from "node:path";
 import camelcase from "camelcase";
 import type { Project, SourceFile } from "ts-morph";
 import { VariableDeclarationKind } from "ts-morph";
+import { typedEntries } from "./utils.ts";
 
 /**
  * `hasQueryValidator` controls whether the query decoder is emitted.
@@ -331,7 +332,7 @@ export function createHonoMiddleware(
 						// Hono validators run on inbound request data alone. Response
 						// schemas are emitted for client-side consumption, and `header`
 						// is skipped so extra HTTP headers pass
-						for (const [target, schemaName] of Object.entries(schemas).filter(
+						for (const [target, schemaName] of typedEntries(schemas).filter(
 							([t]) => t !== "header" && t !== "response",
 						)) {
 							const value =
@@ -353,7 +354,7 @@ export function createHonoMiddleware(
 export function addSchemaImportsToHonoFile(
 	honoFile: SourceFile,
 	schemaNames: string[],
-): void {
+) {
 	if (schemaNames.length === 0) {
 		return;
 	}
