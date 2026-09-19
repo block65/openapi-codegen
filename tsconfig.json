@@ -1,14 +1,12 @@
 {
-	"extends": ["@tsconfig/node24", "@tsconfig/strictest"],
+	"extends": ["@block65/tsconfig/nodejs26", "@block65/tsconfig/noprojref"],
+
 	"compilerOptions": {
-		"composite": true,
-		"noEmit": true,
-		"allowImportingTsExtensions": true,
-		"noPropertyAccessFromIndexSignature": false,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"types": ["node"]
+		"types": ["node"],
+
+		// the generator reads the OpenAPI documents it is pointed at
+		"resolveJsonModule": true
 	},
-	"include": ["./lib", "./bin", "./oxlint.config.ts"],
-	"exclude": ["node_modules"]
+
+	"include": ["bin", "lib", "oxlint.config.ts"]
 }
