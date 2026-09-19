@@ -535,7 +535,7 @@ export async function processOpenApiDocument(
 					]) {
 						// TYPESAFETY: `$RefParser.resolve` types every target as
 						// `unknown`, and this pointer came from a parameter list, so the
-						// document declares it as a parameter.
+						// document declares it as a parameter
 						const resolvedParameter = (
 							"$ref" in parameter ? refs.get(parameter.$ref) : parameter
 						) as oas30.ParameterObject;
