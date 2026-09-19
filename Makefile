@@ -19,14 +19,14 @@ STAMPS := $(DOCUMENTS:%=$(FIXTURES)/%/$(MANIFEST))
 .PHONY: fixtures
 fixtures: $(STAMPS)
 
-$(FIXTURES)/%/$(MANIFEST): $(FIXTURES)/%.json $(CODEGEN)
+$(FIXTURES)/%/$(MANIFEST): $(FIXTURES)/%.json $(CODEGEN) | node_modules
 	node --enable-source-maps bin/index.ts \
 		-i $< \
 		-o $(@D)
 	pnpm exec oxfmt --write $(@D)
 
 # the generator reads json, and openai publishes yaml
-$(FIXTURES)/openai.json: $(FIXTURES)/openai.yaml
+$(FIXTURES)/openai.json: $(FIXTURES)/openai.yaml | node_modules
 	mkdir -p $(@D)
 	pnpm exec js-yaml $< > $@
 
@@ -36,3 +36,9 @@ $(FIXTURES)/openai.yaml:
 # `make petstore` reads better than the stamp path
 .PHONY: $(DOCUMENTS)
 $(DOCUMENTS): %: $(FIXTURES)/%/$(MANIFEST)
+
+# pnpm leaves the directory alone when it has nothing to do, so the touch is
+# what stops every invocation reinstalling
+node_modules: package.json pnpm-lock.yaml
+	pnpm install
+	touch node_modules
