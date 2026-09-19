@@ -151,10 +151,7 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	expect(missing).toEqual([]);
 });
 
-function docWithSchema(
-	name: string,
-	schema: oas31.SchemaObject,
-): oas31.OpenAPIObject {
+function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	return {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },

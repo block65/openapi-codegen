@@ -965,7 +965,7 @@ export async function processOpenApiDocument(
 					// under exactOptionalPropertyTypes. A non-JSON `body` field holds
 					// a BodyInit class instance, which UndefinedOnPartialDeep would
 					// mangle, so widen everything else and re-intersect `body`
-					const inputTypeArg = ((): string => {
+					const inputTypeArg = (() => {
 						if (!inputType) {
 							return unspecifiedKeyword;
 						}

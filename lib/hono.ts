@@ -58,7 +58,7 @@ export function createHonoFile(
 }
 
 // Inverts the OAS 3.2 §4.12.6 style table to decode Hono's flat query map
-function addQueryDecoder(file: SourceFile): void {
+function addQueryDecoder(file: SourceFile) {
 	file.addStatements(`
 type QueryParamSpec = {
   readonly name: string;

@@ -25,7 +25,7 @@ function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
 }
 
 // Template-literal type per RFC 3339 temporal format, mirrored in valibot
-function temporalStringType(format: string | undefined): string | undefined {
+function temporalStringType(format: string | undefined) {
 	switch (format) {
 		case "date":
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
@@ -45,7 +45,7 @@ function temporalStringType(format: string | undefined): string | undefined {
 }
 
 // int64 maps to bigint, and every other integer or number maps to number
-function numericType(isInt64: boolean, stringish: boolean | undefined): string {
+function numericType(isInt64: boolean, stringish: boolean | undefined) {
 	if (isInt64) {
 		// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 		return stringish ? "`${bigint}`" : "bigint";
@@ -104,7 +104,7 @@ function maybeUnion(...types: (string | WriterFunction)[]) {
 		: Writers.unionType(first, second, ...rest);
 }
 
-function recordType(value: string | WriterFunction): WriterFunction {
+function recordType(value: string | WriterFunction) {
 	return (writer: CodeBlockWriter) => {
 		writer.write("Record<string | number, ");
 
@@ -125,7 +125,7 @@ function literalUnionType(
 		| oas30.SchemaObject
 		| oas31.ReferenceObject
 	)[],
-): string | undefined {
+) {
 	const objects = schemaItems.filter(isNotReferenceObject);
 
 	if (objects.length !== schemaItems.length || objects.length < 2) {

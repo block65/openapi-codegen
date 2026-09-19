@@ -22,7 +22,7 @@ const cliArgs = await yargs(hideBin(process.argv))
 				alias: "t",
 				type: "array",
 				description: "tags",
-				coerce(arg: string[] | string): string[] {
+				coerce(arg: string[] | string) {
 					return Array.isArray(arg) ? arg : [arg];
 				},
 			})

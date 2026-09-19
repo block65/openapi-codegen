@@ -12,7 +12,7 @@ import { findPets } from "./fixtures/petstore/hono.ts";
 async function validatedQuery(
 	middleware: readonly MiddlewareHandler[],
 	search: string,
-): Promise<unknown> {
+) {
 	const res = await appFor(middleware).request(`/target?${search}`);
 	const body = await res.clone().text();
 
@@ -88,10 +88,7 @@ function appFor(middleware: readonly MiddlewareHandler[]) {
 	return app;
 }
 
-async function serverFor(
-	name: string,
-	parameters: oas31.ParameterObject[],
-): Promise<readonly MiddlewareHandler[]> {
+async function serverFor(name: string, parameters: oas31.ParameterObject[]) {
 	const document: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },

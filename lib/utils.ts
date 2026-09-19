@@ -6,7 +6,7 @@ export function isReferenceObject(obj: unknown): obj is oas31.ReferenceObject {
 	return typeof obj === "object" && obj !== null && "$ref" in obj;
 }
 
-function getDependency(obj: unknown): string | undefined {
+function getDependency(obj: unknown) {
 	return isReferenceObject(obj) ? obj.$ref : undefined;
 }
 

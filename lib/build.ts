@@ -17,11 +17,11 @@ const BANNER = `/**
 // Records emitter output so a file reformatted on disk still compares equal
 const MANIFEST = ".openapi-codegen-manifest.json";
 
-function revision(text: string): string {
+function revision(text: string) {
 	return createHash("sha256").update(text).digest("hex").slice(0, 32);
 }
 
-async function readManifest(path: string): Promise<Record<string, string>> {
+async function readManifest(path: string) {
 	const text = await readFile(path, "utf8").catch(() => {});
 
 	if (text === undefined) {

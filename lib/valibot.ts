@@ -99,9 +99,7 @@ function minMaxProperties(schema: oas30.SchemaObject | oas31.SchemaObject) {
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
 // RFC 3339 temporal formats, validated by regex at runtime
-function temporalRegexConstraint(
-	format: string | undefined,
-): WriterFunction | undefined {
+function temporalRegexConstraint(format: string | undefined) {
 	switch (format) {
 		case "date":
 			return vcall(
@@ -133,7 +131,7 @@ function temporalRegexConstraint(
 }
 
 // Template-literal type per temporal format, mirrored in process-schema
-function temporalTypeHint(format: string | undefined): string | undefined {
+function temporalTypeHint(format: string | undefined) {
 	switch (format) {
 		case "date":
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
@@ -153,14 +151,12 @@ function temporalTypeHint(format: string | undefined): string | undefined {
 }
 
 // Narrows the inferred output to the template-literal type, past the regex
-function temporalHintSchema(format: string | undefined): string | undefined {
+function temporalHintSchema(format: string | undefined) {
 	const type = temporalTypeHint(format);
 	return type ? `v.custom<${type}>(() => true)` : undefined;
 }
 
-function stringNeedsCoercion(
-	schema: oas30.SchemaObject | oas31.SchemaObject,
-): boolean {
+function stringNeedsCoercion(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	return (
 		!schema.enum &&
 		!schema.pattern &&
@@ -170,7 +166,7 @@ function stringNeedsCoercion(
 
 function propertiesNeedCoercion(
 	schema: oas30.SchemaObject | oas31.SchemaObject,
-): boolean {
+) {
 	const properties = schema.properties ?? {};
 	const required = new Set(schema.required ?? []);
 	const hasOptional = Object.keys(properties).some((k) => !required.has(k));
@@ -212,7 +208,7 @@ function resolveRef(
 	validators: Map<string, ValidatorEntry>,
 	ref: string,
 	mode: SchemaMode,
-): string | WriterFunction {
+) {
 	const entry = validators.get(ref);
 	if (!entry) {
 		return vcall("unknown");
