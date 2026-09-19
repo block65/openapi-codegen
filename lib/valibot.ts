@@ -100,6 +100,10 @@ const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
 // RFC 3339 temporal formats, validated by regex at runtime
 function temporalRegexConstraint(format: string | undefined) {
+	// RFC 3339 departs from ISO 8601 in ways these patterns encode. `date-time`
+	// and `time` require an offset. The seconds field admits a leap second of
+	// `60`. `T` and `Z` may be lower case, and a space may separate the date
+	// from the time. `duration` follows the ISO 8601 grammar in Appendix A
 	switch (format) {
 		case "date":
 			return vcall(
@@ -126,7 +130,7 @@ function temporalRegexConstraint(format: string | undefined) {
 				JSON.stringify(format),
 			);
 		default:
-			return undefined;
+			return;
 	}
 }
 
@@ -146,7 +150,7 @@ function temporalTypeHint(format: string | undefined) {
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`P${string}`";
 		default:
-			return undefined;
+			return;
 	}
 }
 
@@ -234,6 +238,9 @@ function writeStrictObjectEntries(
 		mode: SchemaMode,
 	) => WriterFunction | string = schemaToValidator,
 ) {
+	// input schemas face TS callers, so `v.optional` lets them pass
+	// `{ foo: undefined }`. wire schemas face JSON-parsed payloads, where
+	// `undefined` is absent by construction
 	const optionalWrapper = mode === "input" ? "optional" : "exactOptional";
 	Object.entries(properties).forEach(([name, s]) => {
 		const isRequired = requiredProps.has(name);

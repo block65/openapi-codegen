@@ -40,12 +40,14 @@ function temporalStringType(format: string | undefined) {
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`P${string}`";
 		default:
-			return undefined;
+			return;
 	}
 }
 
 // int64 maps to bigint, and every other integer or number maps to number
 function numericType(isInt64: boolean, stringish: boolean | undefined) {
+	// int64 reaches past Number.MAX_SAFE_INTEGER, and query, header, path and
+	// body values arrive as strings, hence the `${bigint}` wire form
 	if (isInt64) {
 		// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 		return stringish ? "`${bigint}`" : "bigint";
@@ -129,7 +131,7 @@ function literalUnionType(
 	const objects = schemaItems.filter(isNotReferenceObject);
 
 	if (objects.length !== schemaItems.length || objects.length < 2) {
-		return undefined;
+		return;
 	}
 
 	const bare = objects.filter((schema) => !schema.enum);
@@ -137,11 +139,11 @@ function literalUnionType(
 	const [base] = bare;
 
 	if (bare.length !== 1 || enums.length === 0 || base?.type !== "string") {
-		return undefined;
+		return;
 	}
 
 	if (!enums.every((schema) => schema.type === "string")) {
-		return undefined;
+		return;
 	}
 
 	const values = [

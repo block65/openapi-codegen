@@ -35,10 +35,7 @@ describe("Petstore", () => {
 			fetcher: createIsomorphicNativeFetcher({
 				retry: { retries: 0 },
 				fetch: (input, init) =>
-					undiciFetch(
-						input,
-						{ ...init, dispatcher: mockAgent },
-					),
+					undiciFetch(input, { ...init, dispatcher: mockAgent }),
 			}),
 		});
 		const command = new FindPetsCommand({

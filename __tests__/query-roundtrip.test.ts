@@ -13,6 +13,10 @@ async function validatedQuery(
 	middleware: readonly MiddlewareHandler[],
 	search: string,
 ) {
+	// Coverage of the client half lives with the "query string building" tests
+	// in @block65/rest-client. This repo installs a released
+	// copy of that package, which predates the style work, so the wire strings
+	// here are written out by hand
 	const res = await appFor(middleware).request(`/target?${search}`);
 	const body = await res.clone().text();
 
@@ -101,6 +105,10 @@ type TestParameter =
 	  };
 
 async function serverFor(name: string, parameters: readonly TestParameter[]) {
+	// Nowhere in the corpus does `deepObject` or `explode: false` appear on an
+	// object, so those shapes need a document of their own. Generating it and importing
+	// the result exercises the emitted code, where a text match would only read
+	// it
 	const document: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
@@ -145,8 +153,8 @@ async function serverFor(name: string, parameters: readonly TestParameter[]) {
 
 	expect(middleware).toBeDefined();
 
-	// TYPESAFETY: the generator emits one array export per operation, and the
-	// `toBeDefined` above fails the test before this runs if it is missing
+	// TYPESAFETY: the generator emits one array export per operation, and
+	// `toBeDefined` fails the test on a missing one
 	return middleware as readonly MiddlewareHandler[];
 }
 

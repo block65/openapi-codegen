@@ -76,6 +76,9 @@ function isQuerystringLocation(location: string) {
 
 // Resolves the OAS 3.2 §4.12.6 style and explode defaults for a parameter
 function queryParameterEncoding(parameter: oas30.ParameterObject) {
+	// OpenAPI defaults `style` to `form`, and `explode` to true for `form` and
+	// false elsewhere. OAS 3.2 marks `explode` n/a for `deepObject`, so it is
+	// normalised to true here and both sides of the generated code ignore it
 	const style =
 		parameter.style !== undefined && isQueryStyle(parameter.style)
 			? parameter.style
