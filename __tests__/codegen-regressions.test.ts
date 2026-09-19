@@ -1,15 +1,6 @@
 import type { oas31 } from "openapi3-ts";
-import { expect, test } from "vitest";
+import { assert, expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
-
-// Fails the test on an absent value, where `""` would pass a later assertion
-function required<T>(value: T | undefined, what: string) {
-	if (value === undefined) {
-		throw new Error(`the generator emitted no ${what}`);
-	}
-
-	return value;
-}
 
 const respOk = {
 	"200": {
@@ -87,10 +78,10 @@ test("optional query params do not carry `| undefined` in their property type", 
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 	const typesText = result.typesFile.getText();
-	const queryBlock = required(
-		typesText.match(/export type ListFilesCommandQuery = \{[\s\S]*?\};/)?.[0],
-		"ListFilesCommandQuery",
-	);
+	const queryBlock = typesText.match(
+		/export type ListFilesCommandQuery = \{[\s\S]*?\};/,
+	)?.[0];
+	assert.isDefined(queryBlock, "ListFilesCommandQuery");
 
 	expect(queryBlock).toContain("purpose?: string");
 	expect(queryBlock).toContain("limit?: `${number}`");
@@ -148,14 +139,16 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	const mainText = result.mainFile.getText();
 	const commandsText = result.commandsFile.getText();
 
-	const allInputsBlock = required(
-		mainText.match(/type AllInputs =[\s\S]*?;/)?.[0],
-		"AllInputs",
-	);
+	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0];
+	assert.isDefined(allInputsBlock, "AllInputs");
 
 	const commandNames = [
 		...commandsText.matchAll(/^export class (\w+Command) extends Command</gm),
-	].map((m) => required(m[1], "command name"));
+	].map(([, name]) => {
+		assert.isDefined(name, "command name");
+
+		return name;
+	});
 
 	expect(commandNames.length).toBeGreaterThan(0);
 	const missing = commandNames.filter(
@@ -345,13 +338,11 @@ test("an array request body with parameters stays readable as both", async () =>
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const inputBlock = required(
-		result.typesFile
-			.getTypeAlias("PluginPullCommandInput")
-			?.getTypeNode()
-			?.getText(),
-		"PluginPullCommandInput",
-	);
+	const inputBlock = result.typesFile
+		.getTypeAlias("PluginPullCommandInput")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(inputBlock, "PluginPullCommandInput");
 
 	expect(inputBlock).toContain("PluginPullCommandBodyWrapper");
 	expect(result.commandsFile.getText()).toMatch(
@@ -402,13 +393,11 @@ test("nested query param members get the same stringish treatment as top-level o
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const queryBlock = required(
-		result.typesFile
-			.getTypeAlias("SearchCommandQuery")
-			?.getTypeNode()
-			?.getText(),
-		"SearchCommandQuery",
-	);
+	const queryBlock = result.typesFile
+		.getTypeAlias("SearchCommandQuery")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(queryBlock, "SearchCommandQuery");
 
 	expect(queryBlock).toMatch(/limit\?: `\$\{number\}`/);
 	expect(queryBlock).toMatch(/"age"\?: `\$\{number\}`/);
@@ -455,13 +444,11 @@ test("json request body members keep their real JSON types, nested included", as
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const bodyBlock = required(
-		result.typesFile
-			.getTypeAlias("CreateContainerCommandJsonBody")
-			?.getTypeNode()
-			?.getText(),
-		"CreateContainerCommandJsonBody",
-	);
+	const bodyBlock = result.typesFile
+		.getTypeAlias("CreateContainerCommandJsonBody")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(bodyBlock, "CreateContainerCommandJsonBody");
 
 	expect(bodyBlock).toMatch(/"tty"\?: boolean/);
 	expect(bodyBlock).toMatch(/"retries"\?: number/);
@@ -518,13 +505,11 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const queryBlock = required(
-		result.typesFile
-			.getTypeAlias("ListThingsCommandQuery")
-			?.getTypeNode()
-			?.getText(),
-		"ListThingsCommandQuery",
-	);
+	const queryBlock = result.typesFile
+		.getTypeAlias("ListThingsCommandQuery")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(queryBlock, "ListThingsCommandQuery");
 
 	// Composition has to forward the codegen options the same way the array
 	// and object branches do, or a oneOf collapses back to the JSON types

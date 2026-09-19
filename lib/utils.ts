@@ -82,11 +82,13 @@ export function iife<T>(fn: () => T): T {
 	return fn();
 }
 
-export function typedEntries<T extends object>(
-	obj: T,
-): [keyof T & string, T[keyof T]][] {
-	// TYPESAFETY: `Object.entries` types every key as `string`, and this puts
-	// back what `T` declares. An index signature on `T` would widen them again,
-	// and every caller passes a closed object type
-	return Object.entries(obj) as [keyof T & string, T[keyof T]][];
+/**
+ * `Object.entries` types every key as `string`, and this puts back what `T`
+ * declares. An index signature on `T` would widen them again, and every caller
+ * passes a closed object type
+ */
+export function typedEntries<T extends object>(obj: T) {
+	// TYPESAFETY: this is the etire point of the function
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+	return Object.entries(obj) as [keyof T, T[keyof T]][];
 }
