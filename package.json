@@ -17,13 +17,13 @@
 	"type": "module",
 	"sideEffects": false,
 	"scripts": {
-		"typecheck": "just typecheck",
-		"test": "just test",
+		"check": "just check",
 		"lint": "just lint",
 		"pretty": "just pretty",
 		"pretty-check": "just pretty-check",
-		"check": "just check",
-		"preversion": "just test"
+		"preversion": "just test",
+		"test": "just test",
+		"typecheck": "just typecheck"
 	},
 	"dependencies": {
 		"@apidevtools/json-schema-ref-parser": "^16.0.2",

@@ -18,16 +18,16 @@ lint:
 test: typecheck typecheck-fixtures
 	pnpm exec vitest run
 
-# apply lint fixes, then format even if oxlint leaves what it cannot fix
+# apply lint fixes, then format
 pretty:
-	-pnpm exec oxlint --fix
+	pnpm exec oxlint --fix
 	pnpm exec oxfmt
 
 # report formatting that pretty would change
 pretty-check:
 	pnpm exec oxfmt --check
 
-# everything, for before a push - CI gates on typecheck and test alone
+# what CI runs
 check: typecheck lint pretty-check test
 
 # remove installed dependencies

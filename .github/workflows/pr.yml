@@ -30,6 +30,8 @@ jobs:
 
       - run: pnpm install
 
-      # Spelled out rather than `just test`, which runners do not ship.
+      # Spelled out rather than `just`, which runners do not ship.
       - run: pnpm exec tsc
       - run: pnpm exec vitest run
+      - run: pnpm exec oxlint --format=github
+      - run: pnpm exec oxfmt --check
