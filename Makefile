@@ -1,32 +1,6 @@
-
-SRCS = $(wildcard lib/**)
-
-all: typecheck
-
-.PHONY: deps
-deps: node_modules
-
-.PHONY: distclean
-distclean:
-	rm -rf node_modules
-
-.PHONY: typecheck
-typecheck: node_modules tsconfig.json $(SRCS)
-	pnpm exec tsc
-
-# The generated fixtures under __tests__/fixtures are typechecked on their own
-# tsconfig, and reported rather than gated: one known error survives there (an
-# OpenAI `deepObject` query parameter) whose fix belongs in @block65/rest-client
-.PHONY: typecheck-fixtures
-typecheck-fixtures: node_modules __tests__/tsconfig.json
-	-pnpm exec tsc -p __tests__/tsconfig.json
-
-.PHONY: test
-test: node_modules typecheck typecheck-fixtures
-	pnpm exec vitest run
-
-node_modules: package.json
-	pnpm install
+# Codegen only: the fixtures are files built from other files, which is the one
+# job here that wants a dependency graph. Task running is in the justfile, so
+# bare `make` regenerates rather than typechecks
 
 .PHONY: fixtures
 fixtures:
@@ -67,8 +41,3 @@ docker: __tests__/fixtures/docker.json
 		-i $< \
 		-o __tests__/fixtures/docker
 	pnpm exec oxfmt --write __tests__/fixtures/docker
-
-.PHONY: pretty
-pretty: node_modules
-	pnpm exec oxlint --fix . || true
-	pnpm exec oxfmt --write .
