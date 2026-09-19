@@ -28,4 +28,8 @@ jobs:
           node-version: ${{ matrix.version }}
           cache: "pnpm"
 
-      - run: make test
+      - run: pnpm install
+
+      # Spelled out rather than `just test`, which runners do not ship.
+      - run: pnpm exec tsc
+      - run: pnpm exec vitest run
