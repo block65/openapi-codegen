@@ -3,29 +3,30 @@
  *
  * Do not edit directly
  */
+
 import * as v from "valibot";
 
-export const inputErrorSchema = v.strictObject({
+export const inputErrorSchema = v.looseObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.string(),
 });
-export const errorSchema = v.strictObject({
+export const errorSchema = v.looseObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.pipe(v.string(), v.trim()),
 });
-export const inputNewPetSchema = v.strictObject({
+export const inputNewPetSchema = v.looseObject({
 	name: v.string(),
 	tag: v.optional(v.string()),
 });
-export const newPetSchema = v.strictObject({
+export const newPetSchema = v.looseObject({
 	name: v.pipe(v.string(), v.trim()),
 	tag: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputPetSchema = v.strictObject({
+export const inputPetSchema = v.looseObject({
 	...inputNewPetSchema.entries,
 	id: v.bigint(),
 });
-export const petSchema = v.strictObject({
+export const petSchema = v.looseObject({
 	...newPetSchema.entries,
 	id: v.union([
 		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -79,10 +80,10 @@ export const deletePetCommandParamsSchema = v.strictObject({
 		v.bigint(),
 	]),
 });
-export const inputFindPetWrappedCommandResponseSchema = v.strictObject({
+export const inputFindPetWrappedCommandResponseSchema = v.looseObject({
 	pet: inputPetSchema,
 });
-export const findPetWrappedCommandResponseSchema = v.strictObject({
+export const findPetWrappedCommandResponseSchema = v.looseObject({
 	pet: petSchema,
 });
 export const inputFindPetWrappedCommandParamsSchema = v.strictObject({

@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
 
 export type PromoCode = string;

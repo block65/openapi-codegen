@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import * as commands from "./commands.js";
 import * as schemas from "./valibot.js";
 

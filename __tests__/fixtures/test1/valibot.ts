@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import * as v from "valibot";
 
 export const inputPromoCodeSchema = v.pipe(
@@ -32,7 +33,7 @@ export const inputAccountTierSchema = v.picklist(["free", "pro", "enterprise"]);
 export const accountTierSchema = inputAccountTierSchema;
 export const inputEmbedUrlSchema = v.pipe(
 	v.string(),
-	v.regex(new RegExp("^https://embed\\.example\\.com/.+$")),
+	v.regex(new RegExp(String.raw`^https://embed\.example\.com/.+$`)),
 	v.custom<`https://embed.example.com/${string}`>(() => true),
 );
 export const embedUrlSchema = inputEmbedUrlSchema;
@@ -40,12 +41,12 @@ export const inputEventSourceSchema = v.union([
 	v.picklist(["native"]),
 	v.pipe(
 		v.string(),
-		v.regex(new RegExp("^https://embed\\.example\\.com/.+$")),
+		v.regex(new RegExp(String.raw`^https://embed\.example\.com/.+$`)),
 		v.custom<`https://embed.example.com/${string}`>(() => true),
 	),
 	v.pipe(
 		v.string(),
-		v.regex(new RegExp("^https://syndicated\\.example\\.com/.+$")),
+		v.regex(new RegExp(String.raw`^https://syndicated\.example\.com/.+$`)),
 		v.custom<`https://syndicated.example.com/${string}`>(() => true),
 	),
 ]);
@@ -54,7 +55,7 @@ export const inputStripeIdSchema = v.pipe(
 	v.string(),
 	v.minLength(11),
 	v.maxLength(255),
-	v.regex(new RegExp("^(pm|cus|sub)_\\w{8,}$")),
+	v.regex(new RegExp(String.raw`^(pm|cus|sub)_\w{8,}$`)),
 );
 export const stripeIdSchema = inputStripeIdSchema;
 export const inputDateTimeSchema = v.pipe(
@@ -111,7 +112,7 @@ export const inputBillingSubscriptionIdentifiersSchema = v.strictObject({
 });
 export const billingSubscriptionIdentifiersSchema =
 	inputBillingSubscriptionIdentifiersSchema;
-export const inputBillingSubscriptionSchema = v.strictObject({
+export const inputBillingSubscriptionSchema = v.looseObject({
 	...inputBillingSubscriptionIdentifiersSchema.entries,
 	accountId: v.optional(inputIdSchema),
 	planSku: inputPlanSkuSchema,
@@ -122,7 +123,7 @@ export const inputBillingSubscriptionSchema = v.strictObject({
 	createdTime: inputDateTimeSchema,
 	updatedTime: v.optional(inputDateTimeSchema),
 });
-export const billingSubscriptionSchema = v.strictObject({
+export const billingSubscriptionSchema = v.looseObject({
 	...billingSubscriptionIdentifiersSchema.entries,
 	accountId: v.exactOptional(idSchema),
 	planSku: planSkuSchema,
@@ -139,7 +140,7 @@ export const inputBillingSubscriptionsSchema = v.array(
 export const billingSubscriptionsSchema = inputBillingSubscriptionsSchema;
 export const inputUuidSchema = v.pipe(v.string(), v.uuid());
 export const uuidSchema = inputUuidSchema;
-export const inputLongRunningOperationFailSchema = v.strictObject({
+export const inputLongRunningOperationFailSchema = v.looseObject({
 	operationId: inputUuidSchema,
 	done: v.literal(true),
 	result: v.strictObject({
@@ -246,14 +247,14 @@ export const inputPaymentMethodIdentifiersSchema = v.strictObject({
 });
 export const paymentMethodIdentifiersSchema =
 	inputPaymentMethodIdentifiersSchema;
-export const inputPaymentMethodSchema = v.strictObject({
+export const inputPaymentMethodSchema = v.looseObject({
 	...inputPaymentMethodIdentifiersSchema.entries,
 	label: inputNameSchema,
 	expireTime: inputDateTimeSchema,
 	humanId: inputStringU8Schema,
 	brand: v.optional(inputPaymentMethodBrandSchema),
 });
-export const paymentMethodSchema = v.strictObject({
+export const paymentMethodSchema = v.looseObject({
 	...paymentMethodIdentifiersSchema.entries,
 	label: nameSchema,
 	expireTime: dateTimeSchema,
@@ -351,7 +352,7 @@ export const billingAccountPortalRequestSchema =
 	inputBillingAccountPortalRequestSchema;
 export const inputTimeZoneSchema = v.pipe(
 	v.string(),
-	v.regex(new RegExp("^\\w{1,32}/\\w{1,32}$")),
+	v.regex(new RegExp(String.raw`^\w{1,32}/\w{1,32}$`)),
 );
 export const timeZoneSchema = inputTimeZoneSchema;
 export const inputBillingLocaleSchema = v.picklist(["en"]);
@@ -402,7 +403,7 @@ export const inputBillingAccountIdentifiersSchema = v.strictObject({
 });
 export const billingAccountIdentifiersSchema =
 	inputBillingAccountIdentifiersSchema;
-export const inputBillingAccountSchema = v.strictObject({
+export const inputBillingAccountSchema = v.looseObject({
 	...inputBillingAccountIdentifiersSchema.entries,
 	name: inputNameSchema,
 	email: inputEmailSchema,
@@ -418,7 +419,7 @@ export const inputBillingAccountSchema = v.strictObject({
 	timeZone: v.optional(inputTimeZoneSchema),
 	defaultPaymentMethodId: v.optional(inputIdSchema),
 });
-export const billingAccountSchema = v.strictObject({
+export const billingAccountSchema = v.looseObject({
 	...billingAccountIdentifiersSchema.entries,
 	name: nameSchema,
 	email: emailSchema,

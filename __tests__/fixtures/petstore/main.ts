@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,

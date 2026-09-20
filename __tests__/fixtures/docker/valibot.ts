@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import * as v from "valibot";
 
 /**
@@ -13,7 +14,7 @@ import * as v from "valibot";
  *   "Type": "tcp"
  * }
  */
-export const inputPortSchema = v.strictObject({
+export const inputPortSchema = v.looseObject({
 	/**
 	 * Host IP address that the container's port is mapped to
 	 */
@@ -28,7 +29,7 @@ export const inputPortSchema = v.strictObject({
 	PublicPort: v.optional(v.pipe(v.number(), v.integer())),
 	Type: v.picklist(["tcp", "udp", "sctp"]),
 });
-export const portSchema = v.strictObject({
+export const portSchema = v.looseObject({
 	/**
 	 * Host IP address that the container's port is mapped to
 	 */
@@ -47,7 +48,7 @@ export const portSchema = v.strictObject({
  * MountPoint represents a mount point configuration inside the container.
  * This is used for reporting the mountpoints in use by a container.
  */
-export const inputMountPointSchema = v.strictObject({
+export const inputMountPointSchema = v.looseObject({
 	/**
 	 * The mount type:
 	 *
@@ -100,7 +101,7 @@ export const inputMountPointSchema = v.strictObject({
 	 */
 	Propagation: v.optional(v.string()),
 });
-export const mountPointSchema = v.strictObject({
+export const mountPointSchema = v.looseObject({
 	/**
 	 * The mount type:
 	 *
@@ -163,18 +164,18 @@ export const mountPointSchema = v.strictObject({
  *   "CgroupPermissions": "mrw"
  * }
  */
-export const inputDeviceMappingSchema = v.strictObject({
+export const inputDeviceMappingSchema = v.looseObject({
 	PathOnHost: v.optional(v.string()),
 	PathInContainer: v.optional(v.string()),
 	CgroupPermissions: v.optional(v.string()),
 });
-export const deviceMappingSchema = v.strictObject({
+export const deviceMappingSchema = v.looseObject({
 	PathOnHost: v.exactOptional(v.pipe(v.string(), v.trim())),
 	PathInContainer: v.exactOptional(v.pipe(v.string(), v.trim())),
 	CgroupPermissions: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** A request for devices to be sent to device drivers */
-export const inputDeviceRequestSchema = v.strictObject({
+export const inputDeviceRequestSchema = v.looseObject({
 	Driver: v.optional(v.string()),
 	Count: v.optional(v.pipe(v.number(), v.integer())),
 	DeviceIDs: v.optional(v.array(v.string())),
@@ -188,7 +189,7 @@ export const inputDeviceRequestSchema = v.strictObject({
 	 */
 	Options: v.optional(v.record(v.string(), v.string())),
 });
-export const deviceRequestSchema = v.strictObject({
+export const deviceRequestSchema = v.looseObject({
 	Driver: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Count: v.exactOptional(v.pipe(v.number(), v.integer())),
 	DeviceIDs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -202,7 +203,7 @@ export const deviceRequestSchema = v.strictObject({
 	 */
 	Options: v.exactOptional(v.record(v.string(), v.pipe(v.string(), v.trim()))),
 });
-export const inputThrottleDeviceSchema = v.strictObject({
+export const inputThrottleDeviceSchema = v.looseObject({
 	/**
 	 * Device path
 	 */
@@ -210,9 +211,9 @@ export const inputThrottleDeviceSchema = v.strictObject({
 	/**
 	 * Rate
 	 */
-	Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+	Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 });
-export const throttleDeviceSchema = v.strictObject({
+export const throttleDeviceSchema = v.looseObject({
 	/**
 	 * Device path
 	 */
@@ -226,19 +227,19 @@ export const throttleDeviceSchema = v.strictObject({
 				v.string(),
 				v.decimal(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0))),
+				v.pipe(v.bigint(), v.minValue(0n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0))),
+				v.pipe(v.bigint(), v.minValue(0n)),
 			),
-			v.pipe(v.bigint(), v.minValue(BigInt(0))),
+			v.pipe(v.bigint(), v.minValue(0n)),
 		]),
 	),
 });
-export const inputMountSchema = v.strictObject({
+export const inputMountSchema = v.looseObject({
 	/**
 	 * Container path.
 	 */
@@ -275,7 +276,7 @@ export const inputMountSchema = v.strictObject({
 	 * Optional configuration for the `bind` type.
 	 */
 	BindOptions: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 			 */
@@ -303,7 +304,7 @@ export const inputMountSchema = v.strictObject({
 	 * Optional configuration for the `volume` type.
 	 */
 	VolumeOptions: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Populate volume with data from the target.
 			 */
@@ -316,7 +317,7 @@ export const inputMountSchema = v.strictObject({
 			 * Map of driver specific options
 			 */
 			DriverConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver to use to create the volume.
 					 */
@@ -333,7 +334,7 @@ export const inputMountSchema = v.strictObject({
 	 * Optional configuration for the `tmpfs` type.
 	 */
 	TmpfsOptions: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The size for the tmpfs mount in bytes.
 			 */
@@ -345,7 +346,7 @@ export const inputMountSchema = v.strictObject({
 		}),
 	),
 });
-export const mountSchema = v.strictObject({
+export const mountSchema = v.looseObject({
 	/**
 	 * Container path.
 	 */
@@ -384,7 +385,7 @@ export const mountSchema = v.strictObject({
 	 * Optional configuration for the `bind` type.
 	 */
 	BindOptions: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 			 */
@@ -412,7 +413,7 @@ export const mountSchema = v.strictObject({
 	 * Optional configuration for the `volume` type.
 	 */
 	VolumeOptions: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Populate volume with data from the target.
 			 */
@@ -427,7 +428,7 @@ export const mountSchema = v.strictObject({
 			 * Map of driver specific options
 			 */
 			DriverConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver to use to create the volume.
 					 */
@@ -446,7 +447,7 @@ export const mountSchema = v.strictObject({
 	 * Optional configuration for the `tmpfs` type.
 	 */
 	TmpfsOptions: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The size for the tmpfs mount in bytes.
 			 */
@@ -471,7 +472,7 @@ export const mountSchema = v.strictObject({
  * An ever increasing delay (double the previous delay, starting at 100ms) is
  * added before each restart to prevent flooding the server.
  */
-export const inputRestartPolicySchema = v.strictObject({
+export const inputRestartPolicySchema = v.looseObject({
 	/**
 	 * - Empty string means not to restart
 	 * - `no` Do not automatically restart
@@ -488,7 +489,7 @@ export const inputRestartPolicySchema = v.strictObject({
 	 */
 	MaximumRetryCount: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const restartPolicySchema = v.strictObject({
+export const restartPolicySchema = v.looseObject({
 	/**
 	 * - Empty string means not to restart
 	 * - `no` Do not automatically restart
@@ -506,7 +507,7 @@ export const restartPolicySchema = v.strictObject({
 	MaximumRetryCount: v.exactOptional(v.pipe(v.number(), v.integer())),
 });
 /** A container's resources (cgroups config, ulimits, etc) */
-export const inputResourcesSchema = v.strictObject({
+export const inputResourcesSchema = v.looseObject({
 	/**
 	 * An integer value representing this container's relative CPU weight
 	 * versus other containers.
@@ -538,7 +539,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	BlkioWeightDevice: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Path: v.optional(v.string()),
 				Weight: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 			}),
@@ -553,7 +554,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceReadBps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -561,7 +562,7 @@ export const inputResourcesSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -574,7 +575,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteBps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -582,7 +583,7 @@ export const inputResourcesSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -595,7 +596,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceReadIOps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -603,7 +604,7 @@ export const inputResourcesSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -616,7 +617,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteIOps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -624,7 +625,7 @@ export const inputResourcesSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -660,7 +661,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	Devices: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				PathOnHost: v.optional(v.string()),
 				PathInContainer: v.optional(v.string()),
 				CgroupPermissions: v.optional(v.string()),
@@ -676,7 +677,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	DeviceRequests: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Driver: v.optional(v.string()),
 				Count: v.optional(v.pipe(v.number(), v.integer())),
 				DeviceIDs: v.optional(v.array(v.string())),
@@ -714,7 +715,7 @@ export const inputResourcesSchema = v.strictObject({
 	 * between 0 and 100.
 	 */
 	MemorySwappiness: v.optional(
-		v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+		v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 	),
 	/**
 	 * CPU quota in units of 10<sup>-9</sup> CPUs.
@@ -744,7 +745,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	Ulimits: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of ulimit
 				 */
@@ -786,7 +787,7 @@ export const inputResourcesSchema = v.strictObject({
 	 */
 	IOMaximumBandwidth: v.optional(v.bigint()),
 });
-export const resourcesSchema = v.strictObject({
+export const resourcesSchema = v.looseObject({
 	/**
 	 * An integer value representing this container's relative CPU weight
 	 * versus other containers.
@@ -824,7 +825,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	BlkioWeightDevice: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Path: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Weight: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 			}),
@@ -839,7 +840,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceReadBps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -853,15 +854,15 @@ export const resourcesSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -876,7 +877,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteBps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -890,15 +891,15 @@ export const resourcesSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -913,7 +914,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceReadIOps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -927,15 +928,15 @@ export const resourcesSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -950,7 +951,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteIOps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -964,15 +965,15 @@ export const resourcesSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -1034,7 +1035,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	Devices: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				PathOnHost: v.exactOptional(v.pipe(v.string(), v.trim())),
 				PathInContainer: v.exactOptional(v.pipe(v.string(), v.trim())),
 				CgroupPermissions: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -1050,7 +1051,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	DeviceRequests: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Driver: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Count: v.exactOptional(v.pipe(v.number(), v.integer())),
 				DeviceIDs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -1115,15 +1116,15 @@ export const resourcesSchema = v.strictObject({
 				v.string(),
 				v.decimal(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
-			v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+			v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 		]),
 	),
 	/**
@@ -1168,7 +1169,7 @@ export const resourcesSchema = v.strictObject({
 	 */
 	Ulimits: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of ulimit
 				 */
@@ -1235,7 +1236,7 @@ export const resourcesSchema = v.strictObject({
 	),
 });
 /** An object describing a limit on resources which can be requested by a task. */
-export const inputLimitSchema = v.strictObject({
+export const inputLimitSchema = v.looseObject({
 	NanoCPUs: v.optional(v.bigint()),
 	MemoryBytes: v.optional(v.bigint()),
 	/**
@@ -1243,7 +1244,7 @@ export const inputLimitSchema = v.strictObject({
 	 */
 	Pids: v.optional(v.bigint()),
 });
-export const limitSchema = v.strictObject({
+export const limitSchema = v.looseObject({
 	NanoCPUs: v.exactOptional(
 		v.union([
 			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -1273,7 +1274,7 @@ export const limitSchema = v.strictObject({
  * An object describing the resources which can be advertised by a node and
  * requested by a task.
  */
-export const inputResourceObjectSchema = v.strictObject({
+export const inputResourceObjectSchema = v.looseObject({
 	NanoCPUs: v.optional(v.bigint()),
 	MemoryBytes: v.optional(v.bigint()),
 	/**
@@ -1282,15 +1283,15 @@ export const inputResourceObjectSchema = v.strictObject({
 	 */
 	GenericResources: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.string()),
 					}),
 				),
 				DiscreteResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.bigint()),
 					}),
@@ -1299,7 +1300,7 @@ export const inputResourceObjectSchema = v.strictObject({
 		),
 	),
 });
-export const resourceObjectSchema = v.strictObject({
+export const resourceObjectSchema = v.looseObject({
 	NanoCPUs: v.exactOptional(
 		v.union([
 			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -1320,15 +1321,15 @@ export const resourceObjectSchema = v.strictObject({
 	 */
 	GenericResources: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
 				),
 				DiscreteResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
@@ -1368,15 +1369,15 @@ export const resourceObjectSchema = v.strictObject({
  * ]
  */
 export const inputGenericResourcesSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		NamedResourceSpec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Kind: v.optional(v.string()),
 				Value: v.optional(v.string()),
 			}),
 		),
 		DiscreteResourceSpec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Kind: v.optional(v.string()),
 				Value: v.optional(v.bigint()),
 			}),
@@ -1384,15 +1385,15 @@ export const inputGenericResourcesSchema = v.array(
 	}),
 );
 export const genericResourcesSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		NamedResourceSpec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
 		),
 		DiscreteResourceSpec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Value: v.exactOptional(
 					v.union([
@@ -1406,7 +1407,7 @@ export const genericResourcesSchema = v.array(
 	}),
 );
 /** A test to perform to check that the container is healthy. */
-export const inputHealthConfigSchema = v.strictObject({
+export const inputHealthConfigSchema = v.looseObject({
 	/**
 	 * The test to perform. Possible values are:
 	 *
@@ -1438,7 +1439,7 @@ export const inputHealthConfigSchema = v.strictObject({
 	 */
 	StartPeriod: v.optional(v.bigint()),
 });
-export const healthConfigSchema = v.strictObject({
+export const healthConfigSchema = v.looseObject({
 	/**
 	 * The test to perform. Possible values are:
 	 *
@@ -1490,7 +1491,7 @@ export const healthConfigSchema = v.strictObject({
 });
 /** Health stores information about the container's healthcheck results. */
 export const inputHealthSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
 		 *
@@ -1512,7 +1513,7 @@ export const inputHealthSchema = v.nullable(
 		Log: v.optional(
 			v.array(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Date and time at which this check started in
 						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1554,7 +1555,7 @@ export const inputHealthSchema = v.nullable(
 	}),
 );
 export const healthSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
 		 *
@@ -1576,7 +1577,7 @@ export const healthSchema = v.nullable(
 		Log: v.exactOptional(
 			v.array(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Date and time at which this check started in
 						 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1623,7 +1624,7 @@ export const healthSchema = v.nullable(
  * probe
  */
 export const inputHealthcheckResultSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Date and time at which this check started in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1661,7 +1662,7 @@ export const inputHealthcheckResultSchema = v.nullable(
 	}),
 );
 export const healthcheckResultSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Date and time at which this check started in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -1700,7 +1701,7 @@ export const healthcheckResultSchema = v.nullable(
 	}),
 );
 /** Container configuration that depends on the host we are running on */
-export const inputHostConfigSchema = v.strictObject({
+export const inputHostConfigSchema = v.looseObject({
 	/**
 	 * An integer value representing this container's relative CPU weight
 	 * versus other containers.
@@ -1732,7 +1733,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	BlkioWeightDevice: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Path: v.optional(v.string()),
 				Weight: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 			}),
@@ -1747,7 +1748,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceReadBps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -1755,7 +1756,7 @@ export const inputHostConfigSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -1768,7 +1769,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteBps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -1776,7 +1777,7 @@ export const inputHostConfigSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -1789,7 +1790,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceReadIOps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -1797,7 +1798,7 @@ export const inputHostConfigSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -1810,7 +1811,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteIOps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -1818,7 +1819,7 @@ export const inputHostConfigSchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -1854,7 +1855,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	Devices: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				PathOnHost: v.optional(v.string()),
 				PathInContainer: v.optional(v.string()),
 				CgroupPermissions: v.optional(v.string()),
@@ -1870,7 +1871,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	DeviceRequests: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Driver: v.optional(v.string()),
 				Count: v.optional(v.pipe(v.number(), v.integer())),
 				DeviceIDs: v.optional(v.array(v.string())),
@@ -1908,7 +1909,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 * between 0 and 100.
 	 */
 	MemorySwappiness: v.optional(
-		v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+		v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 	),
 	/**
 	 * CPU quota in units of 10<sup>-9</sup> CPUs.
@@ -1938,7 +1939,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	Ulimits: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of ulimit
 				 */
@@ -2055,7 +2056,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 * The logging configuration for this container
 	 */
 	LogConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Type: v.optional(
 				v.picklist([
 					"json-file",
@@ -2093,7 +2094,7 @@ export const inputHostConfigSchema = v.strictObject({
 			v.string(),
 			v.nullable(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Host IP address that the container's port is mapped to.
 						 */
@@ -2115,7 +2116,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 * added before each restart to prevent flooding the server.
 	 */
 	RestartPolicy: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * - Empty string means not to restart
 			 * - `no` Do not automatically restart
@@ -2152,7 +2153,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	Mounts: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Container path.
 				 */
@@ -2191,7 +2192,7 @@ export const inputHostConfigSchema = v.strictObject({
 				 * Optional configuration for the `bind` type.
 				 */
 				BindOptions: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 						 */
@@ -2219,7 +2220,7 @@ export const inputHostConfigSchema = v.strictObject({
 				 * Optional configuration for the `volume` type.
 				 */
 				VolumeOptions: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Populate volume with data from the target.
 						 */
@@ -2232,7 +2233,7 @@ export const inputHostConfigSchema = v.strictObject({
 						 * Map of driver specific options
 						 */
 						DriverConfig: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the driver to use to create the volume.
 								 */
@@ -2249,7 +2250,7 @@ export const inputHostConfigSchema = v.strictObject({
 				 * Optional configuration for the `tmpfs` type.
 				 */
 				TmpfsOptions: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The size for the tmpfs mount in bytes.
 						 */
@@ -2409,7 +2410,7 @@ export const inputHostConfigSchema = v.strictObject({
 	/**
 	 * Size of `/dev/shm` in bytes. If omitted, the system uses 64MB.
 	 */
-	ShmSize: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+	ShmSize: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 	/**
 	 * A list of kernel parameters (sysctls) to set in the container.
 	 * For example:
@@ -2438,7 +2439,7 @@ export const inputHostConfigSchema = v.strictObject({
 	 */
 	ReadonlyPaths: v.optional(v.array(v.string())),
 });
-export const hostConfigSchema = v.strictObject({
+export const hostConfigSchema = v.looseObject({
 	/**
 	 * An integer value representing this container's relative CPU weight
 	 * versus other containers.
@@ -2476,7 +2477,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	BlkioWeightDevice: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Path: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Weight: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 			}),
@@ -2491,7 +2492,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceReadBps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -2505,15 +2506,15 @@ export const hostConfigSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -2528,7 +2529,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteBps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -2542,15 +2543,15 @@ export const hostConfigSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -2565,7 +2566,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceReadIOps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -2579,15 +2580,15 @@ export const hostConfigSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -2602,7 +2603,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	BlkioDeviceWriteIOps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -2616,15 +2617,15 @@ export const hostConfigSchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -2686,7 +2687,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	Devices: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				PathOnHost: v.exactOptional(v.pipe(v.string(), v.trim())),
 				PathInContainer: v.exactOptional(v.pipe(v.string(), v.trim())),
 				CgroupPermissions: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -2702,7 +2703,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	DeviceRequests: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Driver: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Count: v.exactOptional(v.pipe(v.number(), v.integer())),
 				DeviceIDs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -2767,15 +2768,15 @@ export const hostConfigSchema = v.strictObject({
 				v.string(),
 				v.decimal(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
-			v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+			v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 		]),
 	),
 	/**
@@ -2820,7 +2821,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	Ulimits: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of ulimit
 				 */
@@ -2961,7 +2962,7 @@ export const hostConfigSchema = v.strictObject({
 	 * The logging configuration for this container
 	 */
 	LogConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Type: v.exactOptional(
 				v.picklist([
 					"json-file",
@@ -3001,7 +3002,7 @@ export const hostConfigSchema = v.strictObject({
 			v.string(),
 			v.nullable(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Host IP address that the container's port is mapped to.
 						 */
@@ -3023,7 +3024,7 @@ export const hostConfigSchema = v.strictObject({
 	 * added before each restart to prevent flooding the server.
 	 */
 	RestartPolicy: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * - Empty string means not to restart
 			 * - `no` Do not automatically restart
@@ -3060,7 +3061,7 @@ export const hostConfigSchema = v.strictObject({
 	 */
 	Mounts: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Container path.
 				 */
@@ -3099,7 +3100,7 @@ export const hostConfigSchema = v.strictObject({
 				 * Optional configuration for the `bind` type.
 				 */
 				BindOptions: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 						 */
@@ -3127,7 +3128,7 @@ export const hostConfigSchema = v.strictObject({
 				 * Optional configuration for the `volume` type.
 				 */
 				VolumeOptions: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Populate volume with data from the target.
 						 */
@@ -3142,7 +3143,7 @@ export const hostConfigSchema = v.strictObject({
 						 * Map of driver specific options
 						 */
 						DriverConfig: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the driver to use to create the volume.
 								 */
@@ -3161,7 +3162,7 @@ export const hostConfigSchema = v.strictObject({
 				 * Optional configuration for the `tmpfs` type.
 				 */
 				TmpfsOptions: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The size for the tmpfs mount in bytes.
 						 */
@@ -3337,15 +3338,15 @@ export const hostConfigSchema = v.strictObject({
 				v.string(),
 				v.decimal(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0))),
+				v.pipe(v.bigint(), v.minValue(0n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0))),
+				v.pipe(v.bigint(), v.minValue(0n)),
 			),
-			v.pipe(v.bigint(), v.minValue(BigInt(0))),
+			v.pipe(v.bigint(), v.minValue(0n)),
 		]),
 	),
 	/**
@@ -3386,7 +3387,7 @@ export const hostConfigSchema = v.strictObject({
  * Previous versions of Docker builder used this field to store build cache,
  * and it is not in active use anymore.
  */
-export const inputContainerConfigSchema = v.strictObject({
+export const inputContainerConfigSchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 */
@@ -3445,7 +3446,7 @@ export const inputContainerConfigSchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -3533,7 +3534,7 @@ export const inputContainerConfigSchema = v.strictObject({
 	 */
 	Shell: v.optional(v.nullable(v.array(v.string()))),
 });
-export const containerConfigSchema = v.strictObject({
+export const containerConfigSchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 */
@@ -3592,7 +3593,7 @@ export const containerConfigSchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -3753,7 +3754,7 @@ export const containerConfigSchema = v.strictObject({
  *   ]
  * }
  */
-export const inputImageConfigSchema = v.strictObject({
+export const inputImageConfigSchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 *
@@ -3844,7 +3845,7 @@ export const inputImageConfigSchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -3948,7 +3949,7 @@ export const inputImageConfigSchema = v.strictObject({
 	 */
 	Shell: v.optional(v.nullable(v.array(v.string()))),
 });
-export const imageConfigSchema = v.strictObject({
+export const imageConfigSchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 *
@@ -4039,7 +4040,7 @@ export const imageConfigSchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -4191,20 +4192,20 @@ export const imageConfigSchema = v.strictObject({
  *   }
  * }
  */
-export const inputNetworkingConfigSchema = v.strictObject({
+export const inputNetworkingConfigSchema = v.looseObject({
 	/**
 	 * A mapping of network name to endpoint configuration for that network.
 	 */
 	EndpointsConfig: v.optional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 				 */
 				IPAMConfig: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							IPv4Address: v.optional(v.string()),
 							IPv6Address: v.optional(v.string()),
 							LinkLocalIPs: v.optional(v.array(v.string())),
@@ -4258,20 +4259,20 @@ export const inputNetworkingConfigSchema = v.strictObject({
 		),
 	),
 });
-export const networkingConfigSchema = v.strictObject({
+export const networkingConfigSchema = v.looseObject({
 	/**
 	 * A mapping of network name to endpoint configuration for that network.
 	 */
 	EndpointsConfig: v.exactOptional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 				 */
 				IPAMConfig: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 							IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 							LinkLocalIPs: v.exactOptional(
@@ -4336,7 +4337,7 @@ export const networkingConfigSchema = v.strictObject({
 	),
 });
 /** NetworkSettings exposes the network settings in the API */
-export const inputNetworkSettingsSchema = v.strictObject({
+export const inputNetworkSettingsSchema = v.looseObject({
 	/**
 	 * Name of the network's bridge (for example, `docker0`).
 	 */
@@ -4371,7 +4372,7 @@ export const inputNetworkSettingsSchema = v.strictObject({
 			v.string(),
 			v.nullable(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Host IP address that the container's port is mapped to.
 						 */
@@ -4392,7 +4393,7 @@ export const inputNetworkSettingsSchema = v.strictObject({
 	SecondaryIPAddresses: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * IP address.
 					 */
@@ -4408,7 +4409,7 @@ export const inputNetworkSettingsSchema = v.strictObject({
 	SecondaryIPv6Addresses: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * IP address.
 					 */
@@ -4523,13 +4524,13 @@ export const inputNetworkSettingsSchema = v.strictObject({
 	Networks: v.optional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 				 */
 				IPAMConfig: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							IPv4Address: v.optional(v.string()),
 							IPv6Address: v.optional(v.string()),
 							LinkLocalIPs: v.optional(v.array(v.string())),
@@ -4583,7 +4584,7 @@ export const inputNetworkSettingsSchema = v.strictObject({
 		),
 	),
 });
-export const networkSettingsSchema = v.strictObject({
+export const networkSettingsSchema = v.looseObject({
 	/**
 	 * Name of the network's bridge (for example, `docker0`).
 	 */
@@ -4618,7 +4619,7 @@ export const networkSettingsSchema = v.strictObject({
 			v.string(),
 			v.nullable(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Host IP address that the container's port is mapped to.
 						 */
@@ -4639,7 +4640,7 @@ export const networkSettingsSchema = v.strictObject({
 	SecondaryIPAddresses: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * IP address.
 					 */
@@ -4655,7 +4656,7 @@ export const networkSettingsSchema = v.strictObject({
 	SecondaryIPv6Addresses: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * IP address.
 					 */
@@ -4770,13 +4771,13 @@ export const networkSettingsSchema = v.strictObject({
 	Networks: v.exactOptional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 				 */
 				IPAMConfig: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 							IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 							LinkLocalIPs: v.exactOptional(
@@ -4841,7 +4842,7 @@ export const networkSettingsSchema = v.strictObject({
 	),
 });
 /** Address represents an IPv4 or IPv6 IP address. */
-export const inputAddressSchema = v.strictObject({
+export const inputAddressSchema = v.looseObject({
 	/**
 	 * IP address.
 	 */
@@ -4851,7 +4852,7 @@ export const inputAddressSchema = v.strictObject({
 	 */
 	PrefixLen: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const addressSchema = v.strictObject({
+export const addressSchema = v.looseObject({
 	/**
 	 * IP address.
 	 */
@@ -4904,7 +4905,7 @@ export const inputPortMapSchema = v.record(
 	v.string(),
 	v.nullable(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Host IP address that the container's port is mapped to.
 				 */
@@ -4922,7 +4923,7 @@ export const portMapSchema = inputPortMapSchema;
  * PortBinding represents a binding between a host IP address and a host
  * port.
  */
-export const inputPortBindingSchema = v.strictObject({
+export const inputPortBindingSchema = v.looseObject({
 	/**
 	 * Host IP address that the container's port is mapped to.
 	 */
@@ -4932,7 +4933,7 @@ export const inputPortBindingSchema = v.strictObject({
 	 */
 	HostPort: v.optional(v.string()),
 });
-export const portBindingSchema = v.strictObject({
+export const portBindingSchema = v.looseObject({
 	/**
 	 * Host IP address that the container's port is mapped to.
 	 */
@@ -4946,7 +4947,7 @@ export const portBindingSchema = v.strictObject({
  * Information about the storage driver used to store the container's and
  * image's filesystem.
  */
-export const inputGraphDriverDataSchema = v.strictObject({
+export const inputGraphDriverDataSchema = v.looseObject({
 	/**
 	 * Name of the storage driver.
 	 */
@@ -4959,7 +4960,7 @@ export const inputGraphDriverDataSchema = v.strictObject({
 	 */
 	Data: v.record(v.string(), v.string()),
 });
-export const graphDriverDataSchema = v.strictObject({
+export const graphDriverDataSchema = v.looseObject({
 	/**
 	 * Name of the storage driver.
 	 */
@@ -4973,7 +4974,7 @@ export const graphDriverDataSchema = v.strictObject({
 	Data: v.record(v.string(), v.pipe(v.string(), v.trim())),
 });
 /** Change in the container's filesystem. */
-export const inputFilesystemChangeSchema = v.strictObject({
+export const inputFilesystemChangeSchema = v.looseObject({
 	/**
 	 * Path to file or directory that has changed.
 	 */
@@ -4989,7 +4990,7 @@ export const inputFilesystemChangeSchema = v.strictObject({
 	 */
 	Kind: v.picklist([0, 1, 2]),
 });
-export const filesystemChangeSchema = v.strictObject({
+export const filesystemChangeSchema = v.looseObject({
 	/**
 	 * Path to file or directory that has changed.
 	 */
@@ -5017,7 +5018,7 @@ export const filesystemChangeSchema = v.strictObject({
 export const inputChangeTypeSchema = v.picklist([0, 1, 2]);
 export const changeTypeSchema = inputChangeTypeSchema;
 /** Information about an image in the local image cache. */
-export const inputImageInspectSchema = v.strictObject({
+export const inputImageInspectSchema = v.looseObject({
 	/**
 	 * ID is the content-addressable ID of an image.
 	 *
@@ -5082,7 +5083,7 @@ export const inputImageInspectSchema = v.strictObject({
 	 * and it is not in active use anymore.
 	 */
 	ContainerConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 */
@@ -5141,7 +5142,7 @@ export const inputImageInspectSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -5248,7 +5249,7 @@ export const inputImageInspectSchema = v.strictObject({
 	 * when starting a container from the image.
 	 */
 	Config: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 *
@@ -5339,7 +5340,7 @@ export const inputImageInspectSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -5484,7 +5485,7 @@ export const inputImageInspectSchema = v.strictObject({
 	 * image's filesystem.
 	 */
 	GraphDriver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the storage driver.
 			 */
@@ -5502,7 +5503,7 @@ export const inputImageInspectSchema = v.strictObject({
 	 * Information about the image's RootFS, including the layer IDs.
 	 */
 	RootFS: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Type: v.string(),
 			Layers: v.optional(v.array(v.string())),
 		}),
@@ -5512,7 +5513,7 @@ export const inputImageInspectSchema = v.strictObject({
 	 * is local to the daemon, and not part of the image itself.
 	 */
 	Metadata: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Date and time at which the image was last tagged in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -5524,7 +5525,7 @@ export const inputImageInspectSchema = v.strictObject({
 		}),
 	),
 });
-export const imageInspectSchema = v.strictObject({
+export const imageInspectSchema = v.looseObject({
 	/**
 	 * ID is the content-addressable ID of an image.
 	 *
@@ -5589,7 +5590,7 @@ export const imageInspectSchema = v.strictObject({
 	 * and it is not in active use anymore.
 	 */
 	ContainerConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 */
@@ -5648,7 +5649,7 @@ export const imageInspectSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -5777,7 +5778,7 @@ export const imageInspectSchema = v.strictObject({
 	 * when starting a container from the image.
 	 */
 	Config: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 *
@@ -5868,7 +5869,7 @@ export const imageInspectSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -6047,7 +6048,7 @@ export const imageInspectSchema = v.strictObject({
 	 * image's filesystem.
 	 */
 	GraphDriver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the storage driver.
 			 */
@@ -6065,7 +6066,7 @@ export const imageInspectSchema = v.strictObject({
 	 * Information about the image's RootFS, including the layer IDs.
 	 */
 	RootFS: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Type: v.pipe(v.string(), v.trim()),
 			Layers: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 		}),
@@ -6075,7 +6076,7 @@ export const imageInspectSchema = v.strictObject({
 	 * is local to the daemon, and not part of the image itself.
 	 */
 	Metadata: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Date and time at which the image was last tagged in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -6087,7 +6088,7 @@ export const imageInspectSchema = v.strictObject({
 		}),
 	),
 });
-export const inputImageSummarySchema = v.strictObject({
+export const inputImageSummarySchema = v.looseObject({
 	/**
 	 * ID is the content-addressable ID of an image.
 	 *
@@ -6168,7 +6169,7 @@ export const inputImageSummarySchema = v.strictObject({
 	 */
 	Containers: v.pipe(v.number(), v.integer()),
 });
-export const imageSummarySchema = v.strictObject({
+export const imageSummarySchema = v.looseObject({
 	/**
 	 * ID is the content-addressable ID of an image.
 	 *
@@ -6263,33 +6264,33 @@ export const imageSummarySchema = v.strictObject({
 	 */
 	Containers: v.pipe(v.number(), v.integer()),
 });
-export const inputAuthConfigSchema = v.strictObject({
+export const inputAuthConfigSchema = v.looseObject({
 	username: v.optional(v.string()),
 	password: v.optional(v.string()),
 	email: v.optional(v.string()),
 	serveraddress: v.optional(v.string()),
 });
-export const authConfigSchema = v.strictObject({
+export const authConfigSchema = v.looseObject({
 	username: v.exactOptional(v.pipe(v.string(), v.trim())),
 	password: v.exactOptional(v.pipe(v.string(), v.trim())),
 	email: v.exactOptional(v.pipe(v.string(), v.trim())),
 	serveraddress: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputProcessConfigSchema = v.strictObject({
+export const inputProcessConfigSchema = v.looseObject({
 	privileged: v.optional(v.boolean()),
 	user: v.optional(v.string()),
 	tty: v.optional(v.boolean()),
 	entrypoint: v.optional(v.string()),
 	arguments: v.optional(v.array(v.string())),
 });
-export const processConfigSchema = v.strictObject({
+export const processConfigSchema = v.looseObject({
 	privileged: v.exactOptional(v.boolean()),
 	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 	tty: v.exactOptional(v.boolean()),
 	entrypoint: v.exactOptional(v.pipe(v.string(), v.trim())),
 	arguments: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 });
-export const inputVolumeSchema = v.strictObject({
+export const inputVolumeSchema = v.looseObject({
 	/**
 	 * Name of the volume.
 	 */
@@ -6329,7 +6330,7 @@ export const inputVolumeSchema = v.strictObject({
 	 * cluster volumes.
 	 */
 	ClusterVolume: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The Swarm ID of this volume. Because cluster volumes are Swarm
 			 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -6349,7 +6350,7 @@ export const inputVolumeSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			Version: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.optional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -6359,7 +6360,7 @@ export const inputVolumeSchema = v.strictObject({
 			 * Cluster-specific options used to create the volume.
 			 */
 			Spec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Group defines the volume group of this volume. Volumes belonging to
 					 * the same group can be referred to by group name when creating
@@ -6373,7 +6374,7 @@ export const inputVolumeSchema = v.strictObject({
 					 * Defines how the volume is used by tasks.
 					 */
 					AccessMode: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The set of nodes this volume can be used on at one time.
 							 * - `single` The volume may only be scheduled to one node at a time.
@@ -6442,7 +6443,7 @@ export const inputVolumeSchema = v.strictObject({
 							 */
 							Secrets: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Key is the name of the key of the key-value pair passed to
 										 * the plugin.
@@ -6464,7 +6465,7 @@ export const inputVolumeSchema = v.strictObject({
 							 * fields mean, see the CSI specification.
 							 */
 							AccessibilityRequirements: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * A list of required topologies, at least one of which the
 									 * volume must be accessible from.
@@ -6486,7 +6487,7 @@ export const inputVolumeSchema = v.strictObject({
 							 * empty, the plugin will decide the capacity.
 							 */
 							CapacityRange: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The volume must be at least this big. The value of 0
 									 * indicates an unspecified minimum
@@ -6518,7 +6519,7 @@ export const inputVolumeSchema = v.strictObject({
 			 * Information about the global status of the volume.
 			 */
 			Info: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The capacity of the volume in bytes. A value of 0 indicates that
 					 * the capacity is unknown.
@@ -6551,7 +6552,7 @@ export const inputVolumeSchema = v.strictObject({
 			 */
 			PublishStatus: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the Swarm node the volume is published on.
 						 */
@@ -6597,7 +6598,7 @@ export const inputVolumeSchema = v.strictObject({
 	 */
 	UsageData: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Amount of disk space used by the volume (in bytes). This information
 				 * is only available for volumes created with the `"local"` volume
@@ -6614,7 +6615,7 @@ export const inputVolumeSchema = v.strictObject({
 		),
 	),
 });
-export const volumeSchema = v.strictObject({
+export const volumeSchema = v.looseObject({
 	/**
 	 * Name of the volume.
 	 */
@@ -6656,7 +6657,7 @@ export const volumeSchema = v.strictObject({
 	 * cluster volumes.
 	 */
 	ClusterVolume: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The Swarm ID of this volume. Because cluster volumes are Swarm
 			 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -6676,7 +6677,7 @@ export const volumeSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			Version: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -6686,7 +6687,7 @@ export const volumeSchema = v.strictObject({
 			 * Cluster-specific options used to create the volume.
 			 */
 			Spec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Group defines the volume group of this volume. Volumes belonging to
 					 * the same group can be referred to by group name when creating
@@ -6700,7 +6701,7 @@ export const volumeSchema = v.strictObject({
 					 * Defines how the volume is used by tasks.
 					 */
 					AccessMode: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The set of nodes this volume can be used on at one time.
 							 * - `single` The volume may only be scheduled to one node at a time.
@@ -6769,7 +6770,7 @@ export const volumeSchema = v.strictObject({
 							 */
 							Secrets: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Key is the name of the key of the key-value pair passed to
 										 * the plugin.
@@ -6791,7 +6792,7 @@ export const volumeSchema = v.strictObject({
 							 * fields mean, see the CSI specification.
 							 */
 							AccessibilityRequirements: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * A list of required topologies, at least one of which the
 									 * volume must be accessible from.
@@ -6813,7 +6814,7 @@ export const volumeSchema = v.strictObject({
 							 * empty, the plugin will decide the capacity.
 							 */
 							CapacityRange: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The volume must be at least this big. The value of 0
 									 * indicates an unspecified minimum
@@ -6857,7 +6858,7 @@ export const volumeSchema = v.strictObject({
 			 * Information about the global status of the volume.
 			 */
 			Info: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The capacity of the volume in bytes. A value of 0 indicates that
 					 * the capacity is unknown.
@@ -6898,7 +6899,7 @@ export const volumeSchema = v.strictObject({
 			 */
 			PublishStatus: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the Swarm node the volume is published on.
 						 */
@@ -6946,7 +6947,7 @@ export const volumeSchema = v.strictObject({
 	 */
 	UsageData: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Amount of disk space used by the volume (in bytes). This information
 				 * is only available for volumes created with the `"local"` volume
@@ -6975,7 +6976,7 @@ export const volumeSchema = v.strictObject({
  * Volume configuration
  * @title VolumeConfig
  */
-export const inputVolumeCreateOptionsSchema = v.strictObject({
+export const inputVolumeCreateOptionsSchema = v.looseObject({
 	/**
 	 * The new volume's name. If not specified, Docker generates a name.
 	 */
@@ -6997,7 +6998,7 @@ export const inputVolumeCreateOptionsSchema = v.strictObject({
 	 * Cluster-specific options used to create the volume.
 	 */
 	ClusterVolumeSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -7011,7 +7012,7 @@ export const inputVolumeCreateOptionsSchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -7080,7 +7081,7 @@ export const inputVolumeCreateOptionsSchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -7102,7 +7103,7 @@ export const inputVolumeCreateOptionsSchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -7120,7 +7121,7 @@ export const inputVolumeCreateOptionsSchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -7147,7 +7148,7 @@ export const inputVolumeCreateOptionsSchema = v.strictObject({
 		}),
 	),
 });
-export const volumeCreateOptionsSchema = v.strictObject({
+export const volumeCreateOptionsSchema = v.looseObject({
 	/**
 	 * The new volume's name. If not specified, Docker generates a name.
 	 */
@@ -7171,7 +7172,7 @@ export const volumeCreateOptionsSchema = v.strictObject({
 	 * Cluster-specific options used to create the volume.
 	 */
 	ClusterVolumeSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -7185,7 +7186,7 @@ export const volumeCreateOptionsSchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -7254,7 +7255,7 @@ export const volumeCreateOptionsSchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -7276,7 +7277,7 @@ export const volumeCreateOptionsSchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -7298,7 +7299,7 @@ export const volumeCreateOptionsSchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -7343,13 +7344,13 @@ export const volumeCreateOptionsSchema = v.strictObject({
  * Volume list response
  * @title VolumeListResponse
  */
-export const inputVolumeListResponseSchema = v.strictObject({
+export const inputVolumeListResponseSchema = v.looseObject({
 	/**
 	 * List of volumes
 	 */
 	Volumes: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the volume.
 				 */
@@ -7391,7 +7392,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 				 * cluster volumes.
 				 */
 				ClusterVolume: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The Swarm ID of this volume. Because cluster volumes are Swarm
 						 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -7411,7 +7412,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.optional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -7421,7 +7422,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 						 * Cluster-specific options used to create the volume.
 						 */
 						Spec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Group defines the volume group of this volume. Volumes belonging to
 								 * the same group can be referred to by group name when creating
@@ -7435,7 +7436,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 								 * Defines how the volume is used by tasks.
 								 */
 								AccessMode: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The set of nodes this volume can be used on at one time.
 										 * - `single` The volume may only be scheduled to one node at a time.
@@ -7504,7 +7505,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 										 */
 										Secrets: v.optional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Key is the name of the key of the key-value pair passed to
 													 * the plugin.
@@ -7526,7 +7527,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 										 * fields mean, see the CSI specification.
 										 */
 										AccessibilityRequirements: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A list of required topologies, at least one of which the
 												 * volume must be accessible from.
@@ -7548,7 +7549,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 										 * empty, the plugin will decide the capacity.
 										 */
 										CapacityRange: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The volume must be at least this big. The value of 0
 												 * indicates an unspecified minimum
@@ -7580,7 +7581,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 						 * Information about the global status of the volume.
 						 */
 						Info: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The capacity of the volume in bytes. A value of 0 indicates that
 								 * the capacity is unknown.
@@ -7613,7 +7614,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 						 */
 						PublishStatus: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The ID of the Swarm node the volume is published on.
 									 */
@@ -7659,7 +7660,7 @@ export const inputVolumeListResponseSchema = v.strictObject({
 				 */
 				UsageData: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Amount of disk space used by the volume (in bytes). This information
 							 * is only available for volumes created with the `"local"` volume
@@ -7683,13 +7684,13 @@ export const inputVolumeListResponseSchema = v.strictObject({
 	 */
 	Warnings: v.optional(v.array(v.string())),
 });
-export const volumeListResponseSchema = v.strictObject({
+export const volumeListResponseSchema = v.looseObject({
 	/**
 	 * List of volumes
 	 */
 	Volumes: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the volume.
 				 */
@@ -7731,7 +7732,7 @@ export const volumeListResponseSchema = v.strictObject({
 				 * cluster volumes.
 				 */
 				ClusterVolume: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The Swarm ID of this volume. Because cluster volumes are Swarm
 						 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -7751,7 +7752,7 @@ export const volumeListResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -7761,7 +7762,7 @@ export const volumeListResponseSchema = v.strictObject({
 						 * Cluster-specific options used to create the volume.
 						 */
 						Spec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Group defines the volume group of this volume. Volumes belonging to
 								 * the same group can be referred to by group name when creating
@@ -7775,7 +7776,7 @@ export const volumeListResponseSchema = v.strictObject({
 								 * Defines how the volume is used by tasks.
 								 */
 								AccessMode: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The set of nodes this volume can be used on at one time.
 										 * - `single` The volume may only be scheduled to one node at a time.
@@ -7846,7 +7847,7 @@ export const volumeListResponseSchema = v.strictObject({
 										 */
 										Secrets: v.exactOptional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Key is the name of the key of the key-value pair passed to
 													 * the plugin.
@@ -7868,7 +7869,7 @@ export const volumeListResponseSchema = v.strictObject({
 										 * fields mean, see the CSI specification.
 										 */
 										AccessibilityRequirements: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A list of required topologies, at least one of which the
 												 * volume must be accessible from.
@@ -7894,7 +7895,7 @@ export const volumeListResponseSchema = v.strictObject({
 										 * empty, the plugin will decide the capacity.
 										 */
 										CapacityRange: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The volume must be at least this big. The value of 0
 												 * indicates an unspecified minimum
@@ -7958,7 +7959,7 @@ export const volumeListResponseSchema = v.strictObject({
 						 * Information about the global status of the volume.
 						 */
 						Info: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The capacity of the volume in bytes. A value of 0 indicates that
 								 * the capacity is unknown.
@@ -7999,7 +8000,7 @@ export const volumeListResponseSchema = v.strictObject({
 						 */
 						PublishStatus: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The ID of the Swarm node the volume is published on.
 									 */
@@ -8047,7 +8048,7 @@ export const volumeListResponseSchema = v.strictObject({
 				 */
 				UsageData: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Amount of disk space used by the volume (in bytes). This information
 							 * is only available for volumes created with the `"local"` volume
@@ -8079,7 +8080,7 @@ export const volumeListResponseSchema = v.strictObject({
 	 */
 	Warnings: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 });
-export const inputNetworkSchema = v.strictObject({
+export const inputNetworkSchema = v.looseObject({
 	/**
 	 * Name of the network.
 	 */
@@ -8108,7 +8109,7 @@ export const inputNetworkSchema = v.strictObject({
 	 */
 	EnableIPv6: v.optional(v.boolean()),
 	IPAM: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the IPAM driver to use.
 			 */
@@ -8123,7 +8124,7 @@ export const inputNetworkSchema = v.strictObject({
 			 */
 			Config: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Subnet: v.optional(v.string()),
 						IPRange: v.optional(v.string()),
 						Gateway: v.optional(v.string()),
@@ -8156,7 +8157,7 @@ export const inputNetworkSchema = v.strictObject({
 	 * this network.
 	 */
 	ConfigFrom: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the config-only network that provides the network's
 			 * configuration. The specified network must be an existing config-only
@@ -8178,7 +8179,7 @@ export const inputNetworkSchema = v.strictObject({
 	Containers: v.optional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				Name: v.optional(v.string()),
 				EndpointID: v.optional(v.string()),
 				MacAddress: v.optional(v.string()),
@@ -8202,7 +8203,7 @@ export const inputNetworkSchema = v.strictObject({
 	Peers: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the peer-node in the Swarm cluster.
 					 */
@@ -8216,7 +8217,7 @@ export const inputNetworkSchema = v.strictObject({
 		),
 	),
 });
-export const networkSchema = v.strictObject({
+export const networkSchema = v.looseObject({
 	/**
 	 * Name of the network.
 	 */
@@ -8245,7 +8246,7 @@ export const networkSchema = v.strictObject({
 	 */
 	EnableIPv6: v.exactOptional(v.boolean()),
 	IPAM: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the IPAM driver to use.
 			 */
@@ -8260,7 +8261,7 @@ export const networkSchema = v.strictObject({
 			 */
 			Config: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Subnet: v.exactOptional(v.pipe(v.string(), v.trim())),
 						IPRange: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Gateway: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -8297,7 +8298,7 @@ export const networkSchema = v.strictObject({
 	 * this network.
 	 */
 	ConfigFrom: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the config-only network that provides the network's
 			 * configuration. The specified network must be an existing config-only
@@ -8319,7 +8320,7 @@ export const networkSchema = v.strictObject({
 	Containers: v.exactOptional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 				EndpointID: v.exactOptional(v.pipe(v.string(), v.trim())),
 				MacAddress: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -8343,7 +8344,7 @@ export const networkSchema = v.strictObject({
 	Peers: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the peer-node in the Swarm cluster.
 					 */
@@ -8361,7 +8362,7 @@ export const networkSchema = v.strictObject({
  * The config-only network source to provide the configuration for
  * this network.
  */
-export const inputConfigReferenceSchema = v.strictObject({
+export const inputConfigReferenceSchema = v.looseObject({
 	/**
 	 * The name of the config-only network that provides the network's
 	 * configuration. The specified network must be an existing config-only
@@ -8369,7 +8370,7 @@ export const inputConfigReferenceSchema = v.strictObject({
 	 */
 	Network: v.optional(v.string()),
 });
-export const configReferenceSchema = v.strictObject({
+export const configReferenceSchema = v.looseObject({
 	/**
 	 * The name of the config-only network that provides the network's
 	 * configuration. The specified network must be an existing config-only
@@ -8377,7 +8378,7 @@ export const configReferenceSchema = v.strictObject({
 	 */
 	Network: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputIpamSchema = v.strictObject({
+export const inputIpamSchema = v.looseObject({
 	/**
 	 * Name of the IPAM driver to use.
 	 */
@@ -8392,7 +8393,7 @@ export const inputIpamSchema = v.strictObject({
 	 */
 	Config: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Subnet: v.optional(v.string()),
 				IPRange: v.optional(v.string()),
 				Gateway: v.optional(v.string()),
@@ -8405,7 +8406,7 @@ export const inputIpamSchema = v.strictObject({
 	 */
 	Options: v.optional(v.record(v.string(), v.string())),
 });
-export const ipamSchema = v.strictObject({
+export const ipamSchema = v.looseObject({
 	/**
 	 * Name of the IPAM driver to use.
 	 */
@@ -8420,7 +8421,7 @@ export const ipamSchema = v.strictObject({
 	 */
 	Config: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Subnet: v.exactOptional(v.pipe(v.string(), v.trim())),
 				IPRange: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Gateway: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -8435,13 +8436,13 @@ export const ipamSchema = v.strictObject({
 	 */
 	Options: v.exactOptional(v.record(v.string(), v.pipe(v.string(), v.trim()))),
 });
-export const inputIpamConfigSchema = v.strictObject({
+export const inputIpamConfigSchema = v.looseObject({
 	Subnet: v.optional(v.string()),
 	IPRange: v.optional(v.string()),
 	Gateway: v.optional(v.string()),
 	AuxiliaryAddresses: v.optional(v.record(v.string(), v.string())),
 });
-export const ipamConfigSchema = v.strictObject({
+export const ipamConfigSchema = v.looseObject({
 	Subnet: v.exactOptional(v.pipe(v.string(), v.trim())),
 	IPRange: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Gateway: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -8449,14 +8450,14 @@ export const ipamConfigSchema = v.strictObject({
 		v.record(v.string(), v.pipe(v.string(), v.trim())),
 	),
 });
-export const inputNetworkContainerSchema = v.strictObject({
+export const inputNetworkContainerSchema = v.looseObject({
 	Name: v.optional(v.string()),
 	EndpointID: v.optional(v.string()),
 	MacAddress: v.optional(v.string()),
 	IPv4Address: v.optional(v.string()),
 	IPv6Address: v.optional(v.string()),
 });
-export const networkContainerSchema = v.strictObject({
+export const networkContainerSchema = v.looseObject({
 	Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 	EndpointID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	MacAddress: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -8464,7 +8465,7 @@ export const networkContainerSchema = v.strictObject({
 	IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** PeerInfo represents one peer of an overlay network. */
-export const inputPeerInfoSchema = v.strictObject({
+export const inputPeerInfoSchema = v.looseObject({
 	/**
 	 * ID of the peer-node in the Swarm cluster.
 	 */
@@ -8474,7 +8475,7 @@ export const inputPeerInfoSchema = v.strictObject({
 	 */
 	IP: v.optional(v.string()),
 });
-export const peerInfoSchema = v.strictObject({
+export const peerInfoSchema = v.looseObject({
 	/**
 	 * ID of the peer-node in the Swarm cluster.
 	 */
@@ -8484,12 +8485,12 @@ export const peerInfoSchema = v.strictObject({
 	 */
 	IP: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputBuildInfoSchema = v.strictObject({
+export const inputBuildInfoSchema = v.looseObject({
 	id: v.optional(v.string()),
 	stream: v.optional(v.string()),
 	error: v.optional(v.string()),
 	errorDetail: v.optional(
-		v.strictObject({
+		v.looseObject({
 			code: v.optional(v.pipe(v.number(), v.integer())),
 			message: v.optional(v.string()),
 		}),
@@ -8497,7 +8498,7 @@ export const inputBuildInfoSchema = v.strictObject({
 	status: v.optional(v.string()),
 	progress: v.optional(v.string()),
 	progressDetail: v.optional(
-		v.strictObject({
+		v.looseObject({
 			current: v.optional(v.pipe(v.number(), v.integer())),
 			total: v.optional(v.pipe(v.number(), v.integer())),
 		}),
@@ -8506,17 +8507,17 @@ export const inputBuildInfoSchema = v.strictObject({
 	 * Image ID or Digest
 	 */
 	aux: v.optional(
-		v.strictObject({
+		v.looseObject({
 			ID: v.optional(v.string()),
 		}),
 	),
 });
-export const buildInfoSchema = v.strictObject({
+export const buildInfoSchema = v.looseObject({
 	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	stream: v.exactOptional(v.pipe(v.string(), v.trim())),
 	error: v.exactOptional(v.pipe(v.string(), v.trim())),
 	errorDetail: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			code: v.exactOptional(v.pipe(v.number(), v.integer())),
 			message: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
@@ -8524,7 +8525,7 @@ export const buildInfoSchema = v.strictObject({
 	status: v.exactOptional(v.pipe(v.string(), v.trim())),
 	progress: v.exactOptional(v.pipe(v.string(), v.trim())),
 	progressDetail: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			current: v.exactOptional(v.pipe(v.number(), v.integer())),
 			total: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
@@ -8533,13 +8534,13 @@ export const buildInfoSchema = v.strictObject({
 	 * Image ID or Digest
 	 */
 	aux: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
 });
 /** BuildCache contains information about a build cache record. */
-export const inputBuildCacheSchema = v.strictObject({
+export const inputBuildCacheSchema = v.looseObject({
 	/**
 	 * Unique ID of the build cache record.
 	 */
@@ -8595,7 +8596,7 @@ export const inputBuildCacheSchema = v.strictObject({
 	LastUsedAt: v.optional(v.nullable(v.string())),
 	UsageCount: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const buildCacheSchema = v.strictObject({
+export const buildCacheSchema = v.looseObject({
 	/**
 	 * Unique ID of the build cache record.
 	 */
@@ -8657,17 +8658,17 @@ export const buildCacheSchema = v.strictObject({
  *   "ID": "sha256:85f05633ddc1c50679be2b16a0479ab6f7637f8884e0cfe0f4d20e1ebb3d6e7c"
  * }
  */
-export const inputImageIdSchema = v.strictObject({
+export const inputImageIdSchema = v.looseObject({
 	ID: v.optional(v.string()),
 });
-export const imageIdSchema = v.strictObject({
+export const imageIdSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputCreateImageInfoSchema = v.strictObject({
+export const inputCreateImageInfoSchema = v.looseObject({
 	id: v.optional(v.string()),
 	error: v.optional(v.string()),
 	errorDetail: v.optional(
-		v.strictObject({
+		v.looseObject({
 			code: v.optional(v.pipe(v.number(), v.integer())),
 			message: v.optional(v.string()),
 		}),
@@ -8675,17 +8676,17 @@ export const inputCreateImageInfoSchema = v.strictObject({
 	status: v.optional(v.string()),
 	progress: v.optional(v.string()),
 	progressDetail: v.optional(
-		v.strictObject({
+		v.looseObject({
 			current: v.optional(v.pipe(v.number(), v.integer())),
 			total: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
-export const createImageInfoSchema = v.strictObject({
+export const createImageInfoSchema = v.looseObject({
 	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	error: v.exactOptional(v.pipe(v.string(), v.trim())),
 	errorDetail: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			code: v.exactOptional(v.pipe(v.number(), v.integer())),
 			message: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
@@ -8693,47 +8694,47 @@ export const createImageInfoSchema = v.strictObject({
 	status: v.exactOptional(v.pipe(v.string(), v.trim())),
 	progress: v.exactOptional(v.pipe(v.string(), v.trim())),
 	progressDetail: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			current: v.exactOptional(v.pipe(v.number(), v.integer())),
 			total: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
-export const inputPushImageInfoSchema = v.strictObject({
+export const inputPushImageInfoSchema = v.looseObject({
 	error: v.optional(v.string()),
 	status: v.optional(v.string()),
 	progress: v.optional(v.string()),
 	progressDetail: v.optional(
-		v.strictObject({
+		v.looseObject({
 			current: v.optional(v.pipe(v.number(), v.integer())),
 			total: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
-export const pushImageInfoSchema = v.strictObject({
+export const pushImageInfoSchema = v.looseObject({
 	error: v.exactOptional(v.pipe(v.string(), v.trim())),
 	status: v.exactOptional(v.pipe(v.string(), v.trim())),
 	progress: v.exactOptional(v.pipe(v.string(), v.trim())),
 	progressDetail: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			current: v.exactOptional(v.pipe(v.number(), v.integer())),
 			total: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
-export const inputErrorDetailSchema = v.strictObject({
+export const inputErrorDetailSchema = v.looseObject({
 	code: v.optional(v.pipe(v.number(), v.integer())),
 	message: v.optional(v.string()),
 });
-export const errorDetailSchema = v.strictObject({
+export const errorDetailSchema = v.looseObject({
 	code: v.exactOptional(v.pipe(v.number(), v.integer())),
 	message: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputProgressDetailSchema = v.strictObject({
+export const inputProgressDetailSchema = v.looseObject({
 	current: v.optional(v.pipe(v.number(), v.integer())),
 	total: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const progressDetailSchema = v.strictObject({
+export const progressDetailSchema = v.looseObject({
 	current: v.exactOptional(v.pipe(v.number(), v.integer())),
 	total: v.exactOptional(v.pipe(v.number(), v.integer())),
 });
@@ -8743,39 +8744,39 @@ export const progressDetailSchema = v.strictObject({
  *   "message": "Something went wrong."
  * }
  */
-export const inputErrorResponseSchema = v.strictObject({
+export const inputErrorResponseSchema = v.looseObject({
 	/**
 	 * The error message.
 	 */
 	message: v.string(),
 });
-export const errorResponseSchema = v.strictObject({
+export const errorResponseSchema = v.looseObject({
 	/**
 	 * The error message.
 	 */
 	message: v.pipe(v.string(), v.trim()),
 });
 /** Response to an API call that returns just an Id */
-export const inputIdResponseSchema = v.strictObject({
+export const inputIdResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.string(),
 });
-export const idResponseSchema = v.strictObject({
+export const idResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.pipe(v.string(), v.trim()),
 });
 /** Configuration for a network endpoint. */
-export const inputEndpointSettingsSchema = v.strictObject({
+export const inputEndpointSettingsSchema = v.looseObject({
 	/**
 	 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 	 */
 	IPAMConfig: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				IPv4Address: v.optional(v.string()),
 				IPv6Address: v.optional(v.string()),
 				LinkLocalIPs: v.optional(v.array(v.string())),
@@ -8826,13 +8827,13 @@ export const inputEndpointSettingsSchema = v.strictObject({
 	 */
 	DriverOpts: v.optional(v.nullable(v.record(v.string(), v.string()))),
 });
-export const endpointSettingsSchema = v.strictObject({
+export const endpointSettingsSchema = v.looseObject({
 	/**
 	 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 	 */
 	IPAMConfig: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 				IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 				LinkLocalIPs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -8893,20 +8894,20 @@ export const endpointSettingsSchema = v.strictObject({
 });
 /** EndpointIPAMConfig represents an endpoint's IPAM configuration. */
 export const inputEndpointIpamConfigSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		IPv4Address: v.optional(v.string()),
 		IPv6Address: v.optional(v.string()),
 		LinkLocalIPs: v.optional(v.array(v.string())),
 	}),
 );
 export const endpointIpamConfigSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 		IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 		LinkLocalIPs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 	}),
 );
-export const inputPluginMountSchema = v.strictObject({
+export const inputPluginMountSchema = v.looseObject({
 	Name: v.string(),
 	Description: v.string(),
 	Settable: v.array(v.string()),
@@ -8915,7 +8916,7 @@ export const inputPluginMountSchema = v.strictObject({
 	Type: v.string(),
 	Options: v.array(v.string()),
 });
-export const pluginMountSchema = v.strictObject({
+export const pluginMountSchema = v.looseObject({
 	Name: v.pipe(v.string(), v.trim()),
 	Description: v.pipe(v.string(), v.trim()),
 	Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -8924,36 +8925,36 @@ export const pluginMountSchema = v.strictObject({
 	Type: v.pipe(v.string(), v.trim()),
 	Options: v.array(v.pipe(v.string(), v.trim())),
 });
-export const inputPluginDeviceSchema = v.strictObject({
+export const inputPluginDeviceSchema = v.looseObject({
 	Name: v.string(),
 	Description: v.string(),
 	Settable: v.array(v.string()),
 	Path: v.string(),
 });
-export const pluginDeviceSchema = v.strictObject({
+export const pluginDeviceSchema = v.looseObject({
 	Name: v.pipe(v.string(), v.trim()),
 	Description: v.pipe(v.string(), v.trim()),
 	Settable: v.array(v.pipe(v.string(), v.trim())),
 	Path: v.pipe(v.string(), v.trim()),
 });
-export const inputPluginEnvSchema = v.strictObject({
+export const inputPluginEnvSchema = v.looseObject({
 	Name: v.string(),
 	Description: v.string(),
 	Settable: v.array(v.string()),
 	Value: v.string(),
 });
-export const pluginEnvSchema = v.strictObject({
+export const pluginEnvSchema = v.looseObject({
 	Name: v.pipe(v.string(), v.trim()),
 	Description: v.pipe(v.string(), v.trim()),
 	Settable: v.array(v.pipe(v.string(), v.trim())),
 	Value: v.pipe(v.string(), v.trim()),
 });
-export const inputPluginInterfaceTypeSchema = v.strictObject({
+export const inputPluginInterfaceTypeSchema = v.looseObject({
 	Prefix: v.string(),
 	Capability: v.string(),
 	Version: v.string(),
 });
-export const pluginInterfaceTypeSchema = v.strictObject({
+export const pluginInterfaceTypeSchema = v.looseObject({
 	Prefix: v.pipe(v.string(), v.trim()),
 	Capability: v.pipe(v.string(), v.trim()),
 	Version: v.pipe(v.string(), v.trim()),
@@ -8962,18 +8963,18 @@ export const pluginInterfaceTypeSchema = v.strictObject({
  * Describes a permission the user has to accept upon installing
  * the plugin.
  */
-export const inputPluginPrivilegeSchema = v.strictObject({
+export const inputPluginPrivilegeSchema = v.looseObject({
 	Name: v.optional(v.string()),
 	Description: v.optional(v.string()),
 	Value: v.optional(v.array(v.string())),
 });
-export const pluginPrivilegeSchema = v.strictObject({
+export const pluginPrivilegeSchema = v.looseObject({
 	Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 });
 /** A plugin for the Engine API */
-export const inputPluginSchema = v.strictObject({
+export const inputPluginSchema = v.looseObject({
 	Id: v.optional(v.string()),
 	Name: v.string(),
 	/**
@@ -8984,9 +8985,9 @@ export const inputPluginSchema = v.strictObject({
 	/**
 	 * Settings that can be modified by users.
 	 */
-	Settings: v.strictObject({
+	Settings: v.looseObject({
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -8999,7 +9000,7 @@ export const inputPluginSchema = v.strictObject({
 		Env: v.array(v.string()),
 		Args: v.array(v.string()),
 		Devices: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -9014,7 +9015,7 @@ export const inputPluginSchema = v.strictObject({
 	/**
 	 * The config of a plugin.
 	 */
-	Config: v.strictObject({
+	Config: v.looseObject({
 		/**
 		 * Docker Version used to create the plugin
 		 */
@@ -9024,9 +9025,9 @@ export const inputPluginSchema = v.strictObject({
 		/**
 		 * The interface between Docker and the plugin
 		 */
-		Interface: v.strictObject({
+		Interface: v.looseObject({
 			Types: v.array(
-				v.strictObject({
+				v.looseObject({
 					Prefix: v.string(),
 					Capability: v.string(),
 					Version: v.string(),
@@ -9041,19 +9042,19 @@ export const inputPluginSchema = v.strictObject({
 		Entrypoint: v.array(v.string()),
 		WorkDir: v.string(),
 		User: v.optional(
-			v.strictObject({
+			v.looseObject({
 				UID: v.optional(v.pipe(v.number(), v.integer())),
 				GID: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
-		Network: v.strictObject({
+		Network: v.looseObject({
 			Type: v.string(),
 		}),
-		Linux: v.strictObject({
+		Linux: v.looseObject({
 			Capabilities: v.array(v.string()),
 			AllowAllDevices: v.boolean(),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
@@ -9065,7 +9066,7 @@ export const inputPluginSchema = v.strictObject({
 		IpcHost: v.boolean(),
 		PidHost: v.boolean(),
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -9076,28 +9077,28 @@ export const inputPluginSchema = v.strictObject({
 			}),
 		),
 		Env: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
 				Value: v.string(),
 			}),
 		),
-		Args: v.strictObject({
+		Args: v.looseObject({
 			Name: v.string(),
 			Description: v.string(),
 			Settable: v.array(v.string()),
 			Value: v.array(v.string()),
 		}),
 		rootfs: v.optional(
-			v.strictObject({
+			v.looseObject({
 				type: v.optional(v.string()),
 				diff_ids: v.optional(v.array(v.string())),
 			}),
 		),
 	}),
 });
-export const pluginSchema = v.strictObject({
+export const pluginSchema = v.looseObject({
 	Id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Name: v.pipe(v.string(), v.trim()),
 	/**
@@ -9108,9 +9109,9 @@ export const pluginSchema = v.strictObject({
 	/**
 	 * Settings that can be modified by users.
 	 */
-	Settings: v.strictObject({
+	Settings: v.looseObject({
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -9123,7 +9124,7 @@ export const pluginSchema = v.strictObject({
 		Env: v.array(v.pipe(v.string(), v.trim())),
 		Args: v.array(v.pipe(v.string(), v.trim())),
 		Devices: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -9138,7 +9139,7 @@ export const pluginSchema = v.strictObject({
 	/**
 	 * The config of a plugin.
 	 */
-	Config: v.strictObject({
+	Config: v.looseObject({
 		/**
 		 * Docker Version used to create the plugin
 		 */
@@ -9148,9 +9149,9 @@ export const pluginSchema = v.strictObject({
 		/**
 		 * The interface between Docker and the plugin
 		 */
-		Interface: v.strictObject({
+		Interface: v.looseObject({
 			Types: v.array(
-				v.strictObject({
+				v.looseObject({
 					Prefix: v.pipe(v.string(), v.trim()),
 					Capability: v.pipe(v.string(), v.trim()),
 					Version: v.pipe(v.string(), v.trim()),
@@ -9165,19 +9166,19 @@ export const pluginSchema = v.strictObject({
 		Entrypoint: v.array(v.pipe(v.string(), v.trim())),
 		WorkDir: v.pipe(v.string(), v.trim()),
 		User: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				UID: v.exactOptional(v.pipe(v.number(), v.integer())),
 				GID: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
-		Network: v.strictObject({
+		Network: v.looseObject({
 			Type: v.pipe(v.string(), v.trim()),
 		}),
-		Linux: v.strictObject({
+		Linux: v.looseObject({
 			Capabilities: v.array(v.pipe(v.string(), v.trim())),
 			AllowAllDevices: v.boolean(),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -9189,7 +9190,7 @@ export const pluginSchema = v.strictObject({
 		IpcHost: v.boolean(),
 		PidHost: v.boolean(),
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -9200,21 +9201,21 @@ export const pluginSchema = v.strictObject({
 			}),
 		),
 		Env: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
 				Value: v.pipe(v.string(), v.trim()),
 			}),
 		),
-		Args: v.strictObject({
+		Args: v.looseObject({
 			Name: v.pipe(v.string(), v.trim()),
 			Description: v.pipe(v.string(), v.trim()),
 			Settable: v.array(v.pipe(v.string(), v.trim())),
 			Value: v.array(v.pipe(v.string(), v.trim())),
 		}),
 		rootfs: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				type: v.exactOptional(v.pipe(v.string(), v.trim())),
 				diff_ids: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 			}),
@@ -9233,13 +9234,13 @@ export const pluginSchema = v.strictObject({
  * update requests that happen at the same time will not unintentionally
  * overwrite each other.
  */
-export const inputObjectVersionSchema = v.strictObject({
+export const inputObjectVersionSchema = v.looseObject({
 	Index: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const objectVersionSchema = v.strictObject({
+export const objectVersionSchema = v.looseObject({
 	Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 });
-export const inputNodeSpecSchema = v.strictObject({
+export const inputNodeSpecSchema = v.looseObject({
 	/**
 	 * Name for the node.
 	 */
@@ -9257,7 +9258,7 @@ export const inputNodeSpecSchema = v.strictObject({
 	 */
 	Availability: v.optional(v.picklist(["active", "pause", "drain"])),
 });
-export const nodeSpecSchema = v.strictObject({
+export const nodeSpecSchema = v.looseObject({
 	/**
 	 * Name for the node.
 	 */
@@ -9275,7 +9276,7 @@ export const nodeSpecSchema = v.strictObject({
 	 */
 	Availability: v.exactOptional(v.picklist(["active", "pause", "drain"])),
 });
-export const inputNodeSchema = v.strictObject({
+export const inputNodeSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -9290,7 +9291,7 @@ export const inputNodeSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -9305,7 +9306,7 @@ export const inputNodeSchema = v.strictObject({
 	 */
 	UpdatedAt: v.optional(v.string()),
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name for the node.
 			 */
@@ -9329,13 +9330,13 @@ export const inputNodeSchema = v.strictObject({
 	 * agent.
 	 */
 	Description: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Hostname: v.optional(v.string()),
 			/**
 			 * Platform represents the platform (Arch/OS).
 			 */
 			Platform: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Architecture represents the hardware architecture (for example,
 					 * `x86_64`).
@@ -9352,7 +9353,7 @@ export const inputNodeSchema = v.strictObject({
 			 * requested by a task.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.optional(v.bigint()),
 					MemoryBytes: v.optional(v.bigint()),
 					/**
@@ -9361,15 +9362,15 @@ export const inputNodeSchema = v.strictObject({
 					 */
 					GenericResources: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								NamedResourceSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.optional(v.string()),
 										Value: v.optional(v.string()),
 									}),
 								),
 								DiscreteResourceSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.optional(v.string()),
 										Value: v.optional(v.bigint()),
 									}),
@@ -9383,12 +9384,12 @@ export const inputNodeSchema = v.strictObject({
 			 * EngineDescription provides information about an engine.
 			 */
 			Engine: v.optional(
-				v.strictObject({
+				v.looseObject({
 					EngineVersion: v.optional(v.string()),
 					Labels: v.optional(v.record(v.string(), v.string())),
 					Plugins: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Type: v.optional(v.string()),
 								Name: v.optional(v.string()),
 							}),
@@ -9401,7 +9402,7 @@ export const inputNodeSchema = v.strictObject({
 			 * CA certificate.
 			 */
 			TLSInfo: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The root CA certificate(s) that are used to validate leaf TLS
 					 * certificates.
@@ -9425,7 +9426,7 @@ export const inputNodeSchema = v.strictObject({
 	 * It provides the current status of the node, as seen by the manager.
 	 */
 	Status: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * NodeState represents the state of a node.
 			 */
@@ -9447,7 +9448,7 @@ export const inputNodeSchema = v.strictObject({
 	 */
 	ManagerStatus: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				Leader: v.optional(v.boolean()),
 				/**
 				 * Reachability represents the reachability of a node.
@@ -9463,7 +9464,7 @@ export const inputNodeSchema = v.strictObject({
 		),
 	),
 });
-export const nodeSchema = v.strictObject({
+export const nodeSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -9478,7 +9479,7 @@ export const nodeSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -9493,7 +9494,7 @@ export const nodeSchema = v.strictObject({
 	 */
 	UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name for the node.
 			 */
@@ -9519,13 +9520,13 @@ export const nodeSchema = v.strictObject({
 	 * agent.
 	 */
 	Description: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Hostname: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * Platform represents the platform (Arch/OS).
 			 */
 			Platform: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Architecture represents the hardware architecture (for example,
 					 * `x86_64`).
@@ -9542,7 +9543,7 @@ export const nodeSchema = v.strictObject({
 			 * requested by a task.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -9563,15 +9564,15 @@ export const nodeSchema = v.strictObject({
 					 */
 					GenericResources: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								NamedResourceSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 									}),
 								),
 								DiscreteResourceSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(
 											v.union([
@@ -9601,14 +9602,14 @@ export const nodeSchema = v.strictObject({
 			 * EngineDescription provides information about an engine.
 			 */
 			Engine: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					EngineVersion: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Labels: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
 					),
 					Plugins: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Type: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 							}),
@@ -9621,7 +9622,7 @@ export const nodeSchema = v.strictObject({
 			 * CA certificate.
 			 */
 			TLSInfo: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The root CA certificate(s) that are used to validate leaf TLS
 					 * certificates.
@@ -9645,7 +9646,7 @@ export const nodeSchema = v.strictObject({
 	 * It provides the current status of the node, as seen by the manager.
 	 */
 	Status: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * NodeState represents the state of a node.
 			 */
@@ -9667,7 +9668,7 @@ export const nodeSchema = v.strictObject({
 	 */
 	ManagerStatus: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				Leader: v.exactOptional(v.boolean()),
 				/**
 				 * Reachability represents the reachability of a node.
@@ -9687,13 +9688,13 @@ export const nodeSchema = v.strictObject({
  * NodeDescription encapsulates the properties of the Node as reported by the
  * agent.
  */
-export const inputNodeDescriptionSchema = v.strictObject({
+export const inputNodeDescriptionSchema = v.looseObject({
 	Hostname: v.optional(v.string()),
 	/**
 	 * Platform represents the platform (Arch/OS).
 	 */
 	Platform: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Architecture represents the hardware architecture (for example,
 			 * `x86_64`).
@@ -9710,7 +9711,7 @@ export const inputNodeDescriptionSchema = v.strictObject({
 	 * requested by a task.
 	 */
 	Resources: v.optional(
-		v.strictObject({
+		v.looseObject({
 			NanoCPUs: v.optional(v.bigint()),
 			MemoryBytes: v.optional(v.bigint()),
 			/**
@@ -9719,15 +9720,15 @@ export const inputNodeDescriptionSchema = v.strictObject({
 			 */
 			GenericResources: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						NamedResourceSpec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Kind: v.optional(v.string()),
 								Value: v.optional(v.string()),
 							}),
 						),
 						DiscreteResourceSpec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Kind: v.optional(v.string()),
 								Value: v.optional(v.bigint()),
 							}),
@@ -9741,12 +9742,12 @@ export const inputNodeDescriptionSchema = v.strictObject({
 	 * EngineDescription provides information about an engine.
 	 */
 	Engine: v.optional(
-		v.strictObject({
+		v.looseObject({
 			EngineVersion: v.optional(v.string()),
 			Labels: v.optional(v.record(v.string(), v.string())),
 			Plugins: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Type: v.optional(v.string()),
 						Name: v.optional(v.string()),
 					}),
@@ -9759,7 +9760,7 @@ export const inputNodeDescriptionSchema = v.strictObject({
 	 * CA certificate.
 	 */
 	TLSInfo: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The root CA certificate(s) that are used to validate leaf TLS
 			 * certificates.
@@ -9776,13 +9777,13 @@ export const inputNodeDescriptionSchema = v.strictObject({
 		}),
 	),
 });
-export const nodeDescriptionSchema = v.strictObject({
+export const nodeDescriptionSchema = v.looseObject({
 	Hostname: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * Platform represents the platform (Arch/OS).
 	 */
 	Platform: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Architecture represents the hardware architecture (for example,
 			 * `x86_64`).
@@ -9799,7 +9800,7 @@ export const nodeDescriptionSchema = v.strictObject({
 	 * requested by a task.
 	 */
 	Resources: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			NanoCPUs: v.exactOptional(
 				v.union([
 					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -9820,15 +9821,15 @@ export const nodeDescriptionSchema = v.strictObject({
 			 */
 			GenericResources: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						NamedResourceSpec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 							}),
 						),
 						DiscreteResourceSpec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(
 									v.union([
@@ -9848,14 +9849,14 @@ export const nodeDescriptionSchema = v.strictObject({
 	 * EngineDescription provides information about an engine.
 	 */
 	Engine: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			EngineVersion: v.exactOptional(v.pipe(v.string(), v.trim())),
 			Labels: v.exactOptional(
 				v.record(v.string(), v.pipe(v.string(), v.trim())),
 			),
 			Plugins: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Type: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
@@ -9868,7 +9869,7 @@ export const nodeDescriptionSchema = v.strictObject({
 	 * CA certificate.
 	 */
 	TLSInfo: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The root CA certificate(s) that are used to validate leaf TLS
 			 * certificates.
@@ -9886,7 +9887,7 @@ export const nodeDescriptionSchema = v.strictObject({
 	),
 });
 /** Platform represents the platform (Arch/OS). */
-export const inputPlatformSchema = v.strictObject({
+export const inputPlatformSchema = v.looseObject({
 	/**
 	 * Architecture represents the hardware architecture (for example,
 	 * `x86_64`).
@@ -9897,7 +9898,7 @@ export const inputPlatformSchema = v.strictObject({
 	 */
 	OS: v.optional(v.string()),
 });
-export const platformSchema = v.strictObject({
+export const platformSchema = v.looseObject({
 	/**
 	 * Architecture represents the hardware architecture (for example,
 	 * `x86_64`).
@@ -9909,24 +9910,24 @@ export const platformSchema = v.strictObject({
 	OS: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** EngineDescription provides information about an engine. */
-export const inputEngineDescriptionSchema = v.strictObject({
+export const inputEngineDescriptionSchema = v.looseObject({
 	EngineVersion: v.optional(v.string()),
 	Labels: v.optional(v.record(v.string(), v.string())),
 	Plugins: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Type: v.optional(v.string()),
 				Name: v.optional(v.string()),
 			}),
 		),
 	),
 });
-export const engineDescriptionSchema = v.strictObject({
+export const engineDescriptionSchema = v.looseObject({
 	EngineVersion: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Labels: v.exactOptional(v.record(v.string(), v.pipe(v.string(), v.trim()))),
 	Plugins: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Type: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
@@ -9942,7 +9943,7 @@ export const engineDescriptionSchema = v.strictObject({
  *   "CertIssuerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEmT9XIw9h1qoNclv9VeHmf/Vi6/uI2vFXdBveXTpcPjqx6i9wNazchk1XWV/dKTKvSh9xyGKmiIeRcE4OiMnJ1A=="
  * }
  */
-export const inputTlsInfoSchema = v.strictObject({
+export const inputTlsInfoSchema = v.looseObject({
 	/**
 	 * The root CA certificate(s) that are used to validate leaf TLS
 	 * certificates.
@@ -9957,7 +9958,7 @@ export const inputTlsInfoSchema = v.strictObject({
 	 */
 	CertIssuerPublicKey: v.optional(v.string()),
 });
-export const tlsInfoSchema = v.strictObject({
+export const tlsInfoSchema = v.looseObject({
 	/**
 	 * The root CA certificate(s) that are used to validate leaf TLS
 	 * certificates.
@@ -9977,7 +9978,7 @@ export const tlsInfoSchema = v.strictObject({
  *
  * It provides the current status of the node, as seen by the manager.
  */
-export const inputNodeStatusSchema = v.strictObject({
+export const inputNodeStatusSchema = v.looseObject({
 	/**
 	 * NodeState represents the state of a node.
 	 */
@@ -9988,7 +9989,7 @@ export const inputNodeStatusSchema = v.strictObject({
 	 */
 	Addr: v.optional(v.string()),
 });
-export const nodeStatusSchema = v.strictObject({
+export const nodeStatusSchema = v.looseObject({
 	/**
 	 * NodeState represents the state of a node.
 	 */
@@ -10019,7 +10020,7 @@ export const nodeStateSchema = inputNodeStateSchema;
  * is a manager.
  */
 export const inputManagerStatusSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		Leader: v.optional(v.boolean()),
 		/**
 		 * Reachability represents the reachability of a node.
@@ -10034,7 +10035,7 @@ export const inputManagerStatusSchema = v.nullable(
 	}),
 );
 export const managerStatusSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		Leader: v.exactOptional(v.boolean()),
 		/**
 		 * Reachability represents the reachability of a node.
@@ -10059,7 +10060,7 @@ export const inputReachabilitySchema = v.picklist([
 ]);
 export const reachabilitySchema = inputReachabilitySchema;
 /** User modifiable swarm configuration. */
-export const inputSwarmSpecSchema = v.strictObject({
+export const inputSwarmSpecSchema = v.looseObject({
 	/**
 	 * Name of the swarm.
 	 */
@@ -10073,7 +10074,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 	 */
 	Orchestration: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The number of historic tasks to keep per instance or node. If
 				 * negative, never remove completed or failed tasks.
@@ -10086,7 +10087,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 	 * Raft configuration.
 	 */
 	Raft: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of log entries between snapshots.
 			 */
@@ -10124,7 +10125,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 	 */
 	Dispatcher: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The delay for an agent to send a heartbeat to the dispatcher.
 				 */
@@ -10137,7 +10138,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 	 */
 	CAConfig: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The duration node certificates are issued for.
 				 */
@@ -10148,7 +10149,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 				 */
 				ExternalCAs: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Protocol for communication with the external CA (currently
 							 * only `cfssl` is supported).
@@ -10195,7 +10196,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 	 * Parameters related to encryption-at-rest.
 	 */
 	EncryptionConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * If set, generate a key and use it to lock data stored on the
 			 * managers.
@@ -10207,7 +10208,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 	 * Defaults for creating tasks in this cluster.
 	 */
 	TaskDefaults: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The log driver to use for tasks created in the orchestrator if
 			 * unspecified by a service.
@@ -10216,7 +10217,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 			 * to use their previously configured log driver until recreated.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use as a default for new tasks.
 					 */
@@ -10231,7 +10232,7 @@ export const inputSwarmSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const swarmSpecSchema = v.strictObject({
+export const swarmSpecSchema = v.looseObject({
 	/**
 	 * Name of the swarm.
 	 */
@@ -10245,7 +10246,7 @@ export const swarmSpecSchema = v.strictObject({
 	 */
 	Orchestration: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The number of historic tasks to keep per instance or node. If
 				 * negative, never remove completed or failed tasks.
@@ -10264,7 +10265,7 @@ export const swarmSpecSchema = v.strictObject({
 	 * Raft configuration.
 	 */
 	Raft: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of log entries between snapshots.
 			 */
@@ -10304,7 +10305,7 @@ export const swarmSpecSchema = v.strictObject({
 	 */
 	Dispatcher: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The delay for an agent to send a heartbeat to the dispatcher.
 				 */
@@ -10323,7 +10324,7 @@ export const swarmSpecSchema = v.strictObject({
 	 */
 	CAConfig: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The duration node certificates are issued for.
 				 */
@@ -10340,7 +10341,7 @@ export const swarmSpecSchema = v.strictObject({
 				 */
 				ExternalCAs: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Protocol for communication with the external CA (currently
 							 * only `cfssl` is supported).
@@ -10389,7 +10390,7 @@ export const swarmSpecSchema = v.strictObject({
 	 * Parameters related to encryption-at-rest.
 	 */
 	EncryptionConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * If set, generate a key and use it to lock data stored on the
 			 * managers.
@@ -10401,7 +10402,7 @@ export const swarmSpecSchema = v.strictObject({
 	 * Defaults for creating tasks in this cluster.
 	 */
 	TaskDefaults: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The log driver to use for tasks created in the orchestrator if
 			 * unspecified by a service.
@@ -10410,7 +10411,7 @@ export const swarmSpecSchema = v.strictObject({
 			 * to use their previously configured log driver until recreated.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use as a default for new tasks.
 					 */
@@ -10432,7 +10433,7 @@ export const swarmSpecSchema = v.strictObject({
  * "/info" endpoint. Join-tokens are not included.
  */
 export const inputClusterInfoSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of the swarm.
 		 */
@@ -10450,7 +10451,7 @@ export const inputClusterInfoSchema = v.nullable(
 		 * overwrite each other.
 		 */
 		Version: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -10468,7 +10469,7 @@ export const inputClusterInfoSchema = v.nullable(
 		 * User modifiable swarm configuration.
 		 */
 		Spec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the swarm.
 				 */
@@ -10482,7 +10483,7 @@ export const inputClusterInfoSchema = v.nullable(
 				 */
 				Orchestration: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The number of historic tasks to keep per instance or node. If
 							 * negative, never remove completed or failed tasks.
@@ -10495,7 +10496,7 @@ export const inputClusterInfoSchema = v.nullable(
 				 * Raft configuration.
 				 */
 				Raft: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of log entries between snapshots.
 						 */
@@ -10535,7 +10536,7 @@ export const inputClusterInfoSchema = v.nullable(
 				 */
 				Dispatcher: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The delay for an agent to send a heartbeat to the dispatcher.
 							 */
@@ -10548,7 +10549,7 @@ export const inputClusterInfoSchema = v.nullable(
 				 */
 				CAConfig: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The duration node certificates are issued for.
 							 */
@@ -10559,7 +10560,7 @@ export const inputClusterInfoSchema = v.nullable(
 							 */
 							ExternalCAs: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Protocol for communication with the external CA (currently
 										 * only `cfssl` is supported).
@@ -10606,7 +10607,7 @@ export const inputClusterInfoSchema = v.nullable(
 				 * Parameters related to encryption-at-rest.
 				 */
 				EncryptionConfig: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * If set, generate a key and use it to lock data stored on the
 						 * managers.
@@ -10618,7 +10619,7 @@ export const inputClusterInfoSchema = v.nullable(
 				 * Defaults for creating tasks in this cluster.
 				 */
 				TaskDefaults: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The log driver to use for tasks created in the orchestrator if
 						 * unspecified by a service.
@@ -10627,7 +10628,7 @@ export const inputClusterInfoSchema = v.nullable(
 						 * to use their previously configured log driver until recreated.
 						 */
 						LogDriver: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The log driver to use as a default for new tasks.
 								 */
@@ -10648,7 +10649,7 @@ export const inputClusterInfoSchema = v.nullable(
 		 * CA certificate.
 		 */
 		TLSInfo: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The root CA certificate(s) that are used to validate leaf TLS
 				 * certificates.
@@ -10687,7 +10688,7 @@ export const inputClusterInfoSchema = v.nullable(
 	}),
 );
 export const clusterInfoSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of the swarm.
 		 */
@@ -10705,7 +10706,7 @@ export const clusterInfoSchema = v.nullable(
 		 * overwrite each other.
 		 */
 		Version: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -10723,7 +10724,7 @@ export const clusterInfoSchema = v.nullable(
 		 * User modifiable swarm configuration.
 		 */
 		Spec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the swarm.
 				 */
@@ -10739,7 +10740,7 @@ export const clusterInfoSchema = v.nullable(
 				 */
 				Orchestration: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The number of historic tasks to keep per instance or node. If
 							 * negative, never remove completed or failed tasks.
@@ -10758,7 +10759,7 @@ export const clusterInfoSchema = v.nullable(
 				 * Raft configuration.
 				 */
 				Raft: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of log entries between snapshots.
 						 */
@@ -10798,7 +10799,7 @@ export const clusterInfoSchema = v.nullable(
 				 */
 				Dispatcher: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The delay for an agent to send a heartbeat to the dispatcher.
 							 */
@@ -10817,7 +10818,7 @@ export const clusterInfoSchema = v.nullable(
 				 */
 				CAConfig: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The duration node certificates are issued for.
 							 */
@@ -10834,7 +10835,7 @@ export const clusterInfoSchema = v.nullable(
 							 */
 							ExternalCAs: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Protocol for communication with the external CA (currently
 										 * only `cfssl` is supported).
@@ -10883,7 +10884,7 @@ export const clusterInfoSchema = v.nullable(
 				 * Parameters related to encryption-at-rest.
 				 */
 				EncryptionConfig: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * If set, generate a key and use it to lock data stored on the
 						 * managers.
@@ -10895,7 +10896,7 @@ export const clusterInfoSchema = v.nullable(
 				 * Defaults for creating tasks in this cluster.
 				 */
 				TaskDefaults: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The log driver to use for tasks created in the orchestrator if
 						 * unspecified by a service.
@@ -10904,7 +10905,7 @@ export const clusterInfoSchema = v.nullable(
 						 * to use their previously configured log driver until recreated.
 						 */
 						LogDriver: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The log driver to use as a default for new tasks.
 								 */
@@ -10927,7 +10928,7 @@ export const clusterInfoSchema = v.nullable(
 		 * CA certificate.
 		 */
 		TLSInfo: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The root CA certificate(s) that are used to validate leaf TLS
 				 * certificates.
@@ -10968,7 +10969,7 @@ export const clusterInfoSchema = v.nullable(
 	}),
 );
 /** JoinTokens contains the tokens workers and managers need to join the swarm. */
-export const inputJoinTokensSchema = v.strictObject({
+export const inputJoinTokensSchema = v.looseObject({
 	/**
 	 * The token workers can use to join the swarm.
 	 */
@@ -10978,7 +10979,7 @@ export const inputJoinTokensSchema = v.strictObject({
 	 */
 	Manager: v.optional(v.string()),
 });
-export const joinTokensSchema = v.strictObject({
+export const joinTokensSchema = v.looseObject({
 	/**
 	 * The token workers can use to join the swarm.
 	 */
@@ -10988,7 +10989,7 @@ export const joinTokensSchema = v.strictObject({
 	 */
 	Manager: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSwarmSchema = v.strictObject({
+export const inputSwarmSchema = v.looseObject({
 	/**
 	 * The ID of the swarm.
 	 */
@@ -11006,7 +11007,7 @@ export const inputSwarmSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -11024,7 +11025,7 @@ export const inputSwarmSchema = v.strictObject({
 	 * User modifiable swarm configuration.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the swarm.
 			 */
@@ -11038,7 +11039,7 @@ export const inputSwarmSchema = v.strictObject({
 			 */
 			Orchestration: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of historic tasks to keep per instance or node. If
 						 * negative, never remove completed or failed tasks.
@@ -11051,7 +11052,7 @@ export const inputSwarmSchema = v.strictObject({
 			 * Raft configuration.
 			 */
 			Raft: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The number of log entries between snapshots.
 					 */
@@ -11091,7 +11092,7 @@ export const inputSwarmSchema = v.strictObject({
 			 */
 			Dispatcher: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The delay for an agent to send a heartbeat to the dispatcher.
 						 */
@@ -11104,7 +11105,7 @@ export const inputSwarmSchema = v.strictObject({
 			 */
 			CAConfig: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The duration node certificates are issued for.
 						 */
@@ -11115,7 +11116,7 @@ export const inputSwarmSchema = v.strictObject({
 						 */
 						ExternalCAs: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Protocol for communication with the external CA (currently
 									 * only `cfssl` is supported).
@@ -11162,7 +11163,7 @@ export const inputSwarmSchema = v.strictObject({
 			 * Parameters related to encryption-at-rest.
 			 */
 			EncryptionConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * If set, generate a key and use it to lock data stored on the
 					 * managers.
@@ -11174,7 +11175,7 @@ export const inputSwarmSchema = v.strictObject({
 			 * Defaults for creating tasks in this cluster.
 			 */
 			TaskDefaults: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use for tasks created in the orchestrator if
 					 * unspecified by a service.
@@ -11183,7 +11184,7 @@ export const inputSwarmSchema = v.strictObject({
 					 * to use their previously configured log driver until recreated.
 					 */
 					LogDriver: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The log driver to use as a default for new tasks.
 							 */
@@ -11204,7 +11205,7 @@ export const inputSwarmSchema = v.strictObject({
 	 * CA certificate.
 	 */
 	TLSInfo: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The root CA certificate(s) that are used to validate leaf TLS
 			 * certificates.
@@ -11244,7 +11245,7 @@ export const inputSwarmSchema = v.strictObject({
 	 * JoinTokens contains the tokens workers and managers need to join the swarm.
 	 */
 	JoinTokens: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The token workers can use to join the swarm.
 			 */
@@ -11256,7 +11257,7 @@ export const inputSwarmSchema = v.strictObject({
 		}),
 	),
 });
-export const swarmSchema = v.strictObject({
+export const swarmSchema = v.looseObject({
 	/**
 	 * The ID of the swarm.
 	 */
@@ -11274,7 +11275,7 @@ export const swarmSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -11292,7 +11293,7 @@ export const swarmSchema = v.strictObject({
 	 * User modifiable swarm configuration.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the swarm.
 			 */
@@ -11308,7 +11309,7 @@ export const swarmSchema = v.strictObject({
 			 */
 			Orchestration: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of historic tasks to keep per instance or node. If
 						 * negative, never remove completed or failed tasks.
@@ -11327,7 +11328,7 @@ export const swarmSchema = v.strictObject({
 			 * Raft configuration.
 			 */
 			Raft: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The number of log entries between snapshots.
 					 */
@@ -11367,7 +11368,7 @@ export const swarmSchema = v.strictObject({
 			 */
 			Dispatcher: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The delay for an agent to send a heartbeat to the dispatcher.
 						 */
@@ -11386,7 +11387,7 @@ export const swarmSchema = v.strictObject({
 			 */
 			CAConfig: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The duration node certificates are issued for.
 						 */
@@ -11403,7 +11404,7 @@ export const swarmSchema = v.strictObject({
 						 */
 						ExternalCAs: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Protocol for communication with the external CA (currently
 									 * only `cfssl` is supported).
@@ -11452,7 +11453,7 @@ export const swarmSchema = v.strictObject({
 			 * Parameters related to encryption-at-rest.
 			 */
 			EncryptionConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * If set, generate a key and use it to lock data stored on the
 					 * managers.
@@ -11464,7 +11465,7 @@ export const swarmSchema = v.strictObject({
 			 * Defaults for creating tasks in this cluster.
 			 */
 			TaskDefaults: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use for tasks created in the orchestrator if
 					 * unspecified by a service.
@@ -11473,7 +11474,7 @@ export const swarmSchema = v.strictObject({
 					 * to use their previously configured log driver until recreated.
 					 */
 					LogDriver: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The log driver to use as a default for new tasks.
 							 */
@@ -11496,7 +11497,7 @@ export const swarmSchema = v.strictObject({
 	 * CA certificate.
 	 */
 	TLSInfo: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The root CA certificate(s) that are used to validate leaf TLS
 			 * certificates.
@@ -11536,7 +11537,7 @@ export const swarmSchema = v.strictObject({
 	 * JoinTokens contains the tokens workers and managers need to join the swarm.
 	 */
 	JoinTokens: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The token workers can use to join the swarm.
 			 */
@@ -11549,7 +11550,7 @@ export const swarmSchema = v.strictObject({
 	),
 });
 /** User modifiable task configuration. */
-export const inputTaskSpecSchema = v.strictObject({
+export const inputTaskSpecSchema = v.looseObject({
 	/**
 	 * Plugin spec for the service.  *(Experimental release only.)*
 	 *
@@ -11561,7 +11562,7 @@ export const inputTaskSpecSchema = v.strictObject({
 	 * > field is set to `attachment`.
 	 */
 	PluginSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name or 'alias' to use for the plugin.
 			 */
@@ -11576,7 +11577,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			Disabled: v.optional(v.boolean()),
 			PluginPrivilege: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Description: v.optional(v.string()),
 						Value: v.optional(v.array(v.string())),
@@ -11596,7 +11597,7 @@ export const inputTaskSpecSchema = v.strictObject({
 	 * > field is set to `attachment`.
 	 */
 	ContainerSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The image name to use for the container
 			 */
@@ -11638,12 +11639,12 @@ export const inputTaskSpecSchema = v.strictObject({
 			 * Security options for the container
 			 */
 			Privileges: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * CredentialSpec for managed service account (Windows only)
 					 */
 					CredentialSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Load credential spec from a Swarm Config with the given ID.
 							 * The specified config must also be present in the Configs
@@ -11691,7 +11692,7 @@ export const inputTaskSpecSchema = v.strictObject({
 					 * SELinux labels of the container
 					 */
 					SELinuxContext: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Disable SELinux
 							 */
@@ -11734,7 +11735,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 */
 			Mounts: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Container path.
 						 */
@@ -11773,7 +11774,7 @@ export const inputTaskSpecSchema = v.strictObject({
 						 * Optional configuration for the `bind` type.
 						 */
 						BindOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 								 */
@@ -11801,7 +11802,7 @@ export const inputTaskSpecSchema = v.strictObject({
 						 * Optional configuration for the `volume` type.
 						 */
 						VolumeOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Populate volume with data from the target.
 								 */
@@ -11814,7 +11815,7 @@ export const inputTaskSpecSchema = v.strictObject({
 								 * Map of driver specific options
 								 */
 								DriverConfig: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of the driver to use to create the volume.
 										 */
@@ -11831,7 +11832,7 @@ export const inputTaskSpecSchema = v.strictObject({
 						 * Optional configuration for the `tmpfs` type.
 						 */
 						TmpfsOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The size for the tmpfs mount in bytes.
 								 */
@@ -11858,7 +11859,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			HealthCheck: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -11906,7 +11907,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 * file (`resolv.conf`).
 			 */
 			DNSConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The IP addresses of the name servers.
 					 */
@@ -11928,12 +11929,12 @@ export const inputTaskSpecSchema = v.strictObject({
 			 */
 			Secrets: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * File represents a specific target that is backed by a file.
 						 */
 						File: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name represents the final filename in the filesystem.
 								 */
@@ -11972,7 +11973,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 */
 			Configs: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * File represents a specific target that is backed by a file.
 						 *
@@ -11981,7 +11982,7 @@ export const inputTaskSpecSchema = v.strictObject({
 						 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 						 */
 						File: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name represents the final filename in the filesystem.
 								 */
@@ -12061,7 +12062,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 */
 			Ulimits: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of ulimit
 						 */
@@ -12091,7 +12092,7 @@ export const inputTaskSpecSchema = v.strictObject({
 	 * > field is set to `attachment`.
 	 */
 	NetworkAttachmentSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * ID of the container represented by this task
 			 */
@@ -12103,12 +12104,12 @@ export const inputTaskSpecSchema = v.strictObject({
 	 * as part of the service.
 	 */
 	Resources: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An object describing a limit on resources which can be requested by a task.
 			 */
 			Limits: v.optional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.optional(v.bigint()),
 					MemoryBytes: v.optional(v.bigint()),
 					/**
@@ -12122,7 +12123,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 * requested by a task.
 			 */
 			Reservations: v.optional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.optional(v.bigint()),
 					MemoryBytes: v.optional(v.bigint()),
 					/**
@@ -12131,15 +12132,15 @@ export const inputTaskSpecSchema = v.strictObject({
 					 */
 					GenericResources: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								NamedResourceSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.optional(v.string()),
 										Value: v.optional(v.string()),
 									}),
 								),
 								DiscreteResourceSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.optional(v.string()),
 										Value: v.optional(v.bigint()),
 									}),
@@ -12156,7 +12157,7 @@ export const inputTaskSpecSchema = v.strictObject({
 	 * created as part of this service.
 	 */
 	RestartPolicy: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Condition for restart.
 			 */
@@ -12178,7 +12179,7 @@ export const inputTaskSpecSchema = v.strictObject({
 		}),
 	),
 	Placement: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An array of constraint expressions to limit the set of nodes where
 			 * a task can be scheduled. Constraint expressions can either use a
@@ -12215,9 +12216,9 @@ export const inputTaskSpecSchema = v.strictObject({
 			 */
 			Preferences: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Spread: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * label descriptor, such as `engine.labels.az`.
 								 */
@@ -12240,7 +12241,7 @@ export const inputTaskSpecSchema = v.strictObject({
 			 */
 			Platforms: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Architecture represents the hardware architecture (for example,
 						 * `x86_64`).
@@ -12269,7 +12270,7 @@ export const inputTaskSpecSchema = v.strictObject({
 	 */
 	Networks: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -12291,13 +12292,13 @@ export const inputTaskSpecSchema = v.strictObject({
 	 * falling back to the engine default if not specified.
 	 */
 	LogDriver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Name: v.optional(v.string()),
 			Options: v.optional(v.record(v.string(), v.string())),
 		}),
 	),
 });
-export const taskSpecSchema = v.strictObject({
+export const taskSpecSchema = v.looseObject({
 	/**
 	 * Plugin spec for the service.  *(Experimental release only.)*
 	 *
@@ -12309,7 +12310,7 @@ export const taskSpecSchema = v.strictObject({
 	 * > field is set to `attachment`.
 	 */
 	PluginSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name or 'alias' to use for the plugin.
 			 */
@@ -12324,7 +12325,7 @@ export const taskSpecSchema = v.strictObject({
 			Disabled: v.exactOptional(v.boolean()),
 			PluginPrivilege: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -12344,7 +12345,7 @@ export const taskSpecSchema = v.strictObject({
 	 * > field is set to `attachment`.
 	 */
 	ContainerSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The image name to use for the container
 			 */
@@ -12388,12 +12389,12 @@ export const taskSpecSchema = v.strictObject({
 			 * Security options for the container
 			 */
 			Privileges: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * CredentialSpec for managed service account (Windows only)
 					 */
 					CredentialSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Load credential spec from a Swarm Config with the given ID.
 							 * The specified config must also be present in the Configs
@@ -12441,7 +12442,7 @@ export const taskSpecSchema = v.strictObject({
 					 * SELinux labels of the container
 					 */
 					SELinuxContext: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Disable SELinux
 							 */
@@ -12484,7 +12485,7 @@ export const taskSpecSchema = v.strictObject({
 			 */
 			Mounts: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Container path.
 						 */
@@ -12523,7 +12524,7 @@ export const taskSpecSchema = v.strictObject({
 						 * Optional configuration for the `bind` type.
 						 */
 						BindOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 								 */
@@ -12551,7 +12552,7 @@ export const taskSpecSchema = v.strictObject({
 						 * Optional configuration for the `volume` type.
 						 */
 						VolumeOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Populate volume with data from the target.
 								 */
@@ -12566,7 +12567,7 @@ export const taskSpecSchema = v.strictObject({
 								 * Map of driver specific options
 								 */
 								DriverConfig: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of the driver to use to create the volume.
 										 */
@@ -12585,7 +12586,7 @@ export const taskSpecSchema = v.strictObject({
 						 * Optional configuration for the `tmpfs` type.
 						 */
 						TmpfsOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The size for the tmpfs mount in bytes.
 								 */
@@ -12624,7 +12625,7 @@ export const taskSpecSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			HealthCheck: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -12690,7 +12691,7 @@ export const taskSpecSchema = v.strictObject({
 			 * file (`resolv.conf`).
 			 */
 			DNSConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The IP addresses of the name servers.
 					 */
@@ -12712,12 +12713,12 @@ export const taskSpecSchema = v.strictObject({
 			 */
 			Secrets: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * File represents a specific target that is backed by a file.
 						 */
 						File: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name represents the final filename in the filesystem.
 								 */
@@ -12756,7 +12757,7 @@ export const taskSpecSchema = v.strictObject({
 			 */
 			Configs: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * File represents a specific target that is backed by a file.
 						 *
@@ -12765,7 +12766,7 @@ export const taskSpecSchema = v.strictObject({
 						 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 						 */
 						File: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name represents the final filename in the filesystem.
 								 */
@@ -12849,7 +12850,7 @@ export const taskSpecSchema = v.strictObject({
 			 */
 			Ulimits: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of ulimit
 						 */
@@ -12879,7 +12880,7 @@ export const taskSpecSchema = v.strictObject({
 	 * > field is set to `attachment`.
 	 */
 	NetworkAttachmentSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * ID of the container represented by this task
 			 */
@@ -12891,12 +12892,12 @@ export const taskSpecSchema = v.strictObject({
 	 * as part of the service.
 	 */
 	Resources: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An object describing a limit on resources which can be requested by a task.
 			 */
 			Limits: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -12928,7 +12929,7 @@ export const taskSpecSchema = v.strictObject({
 			 * requested by a task.
 			 */
 			Reservations: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -12949,15 +12950,15 @@ export const taskSpecSchema = v.strictObject({
 					 */
 					GenericResources: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								NamedResourceSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 									}),
 								),
 								DiscreteResourceSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(
 											v.union([
@@ -12990,7 +12991,7 @@ export const taskSpecSchema = v.strictObject({
 	 * created as part of this service.
 	 */
 	RestartPolicy: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Condition for restart.
 			 */
@@ -13030,7 +13031,7 @@ export const taskSpecSchema = v.strictObject({
 		}),
 	),
 	Placement: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An array of constraint expressions to limit the set of nodes where
 			 * a task can be scheduled. Constraint expressions can either use a
@@ -13067,9 +13068,9 @@ export const taskSpecSchema = v.strictObject({
 			 */
 			Preferences: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Spread: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * label descriptor, such as `engine.labels.az`.
 								 */
@@ -13098,7 +13099,7 @@ export const taskSpecSchema = v.strictObject({
 			 */
 			Platforms: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Architecture represents the hardware architecture (for example,
 						 * `x86_64`).
@@ -13127,7 +13128,7 @@ export const taskSpecSchema = v.strictObject({
 	 */
 	Networks: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -13151,7 +13152,7 @@ export const taskSpecSchema = v.strictObject({
 	 * falling back to the engine default if not specified.
 	 */
 	LogDriver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 			Options: v.exactOptional(
 				v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -13177,7 +13178,7 @@ export const inputTaskStateSchema = v.picklist([
 	"orphaned",
 ]);
 export const taskStateSchema = inputTaskStateSchema;
-export const inputTaskSchema = v.strictObject({
+export const inputTaskSchema = v.looseObject({
 	/**
 	 * The ID of the task.
 	 */
@@ -13195,7 +13196,7 @@ export const inputTaskSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -13213,7 +13214,7 @@ export const inputTaskSchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -13225,7 +13226,7 @@ export const inputTaskSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -13240,7 +13241,7 @@ export const inputTaskSchema = v.strictObject({
 					Disabled: v.optional(v.boolean()),
 					PluginPrivilege: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Description: v.optional(v.string()),
 								Value: v.optional(v.array(v.string())),
@@ -13260,7 +13261,7 @@ export const inputTaskSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -13302,12 +13303,12 @@ export const inputTaskSchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -13355,7 +13356,7 @@ export const inputTaskSchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -13398,7 +13399,7 @@ export const inputTaskSchema = v.strictObject({
 					 */
 					Mounts: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -13437,7 +13438,7 @@ export const inputTaskSchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -13465,7 +13466,7 @@ export const inputTaskSchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -13478,7 +13479,7 @@ export const inputTaskSchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -13495,7 +13496,7 @@ export const inputTaskSchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -13522,7 +13523,7 @@ export const inputTaskSchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -13570,7 +13571,7 @@ export const inputTaskSchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -13592,12 +13593,12 @@ export const inputTaskSchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -13636,7 +13637,7 @@ export const inputTaskSchema = v.strictObject({
 					 */
 					Configs: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -13645,7 +13646,7 @@ export const inputTaskSchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -13727,7 +13728,7 @@ export const inputTaskSchema = v.strictObject({
 					 */
 					Ulimits: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -13757,7 +13758,7 @@ export const inputTaskSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -13769,12 +13770,12 @@ export const inputTaskSchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -13788,7 +13789,7 @@ export const inputTaskSchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -13797,15 +13798,15 @@ export const inputTaskSchema = v.strictObject({
 							 */
 							GenericResources: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.string()),
 											}),
 										),
 										DiscreteResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.bigint()),
 											}),
@@ -13822,7 +13823,7 @@ export const inputTaskSchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -13844,7 +13845,7 @@ export const inputTaskSchema = v.strictObject({
 				}),
 			),
 			Placement: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -13881,9 +13882,9 @@ export const inputTaskSchema = v.strictObject({
 					 */
 					Preferences: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -13906,7 +13907,7 @@ export const inputTaskSchema = v.strictObject({
 					 */
 					Platforms: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -13935,7 +13936,7 @@ export const inputTaskSchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -13957,7 +13958,7 @@ export const inputTaskSchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.optional(v.string()),
 					Options: v.optional(v.record(v.string(), v.string())),
 				}),
@@ -13979,15 +13980,15 @@ export const inputTaskSchema = v.strictObject({
 	 */
 	AssignedGenericResources: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.string()),
 					}),
 				),
 				DiscreteResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.bigint()),
 					}),
@@ -13996,7 +13997,7 @@ export const inputTaskSchema = v.strictObject({
 		),
 	),
 	Status: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Timestamp: v.optional(v.string()),
 			State: v.optional(
 				v.picklist([
@@ -14020,7 +14021,7 @@ export const inputTaskSchema = v.strictObject({
 			Message: v.optional(v.string()),
 			Err: v.optional(v.string()),
 			ContainerStatus: v.optional(
-				v.strictObject({
+				v.looseObject({
 					ContainerID: v.optional(v.string()),
 					PID: v.optional(v.pipe(v.number(), v.integer())),
 					ExitCode: v.optional(v.pipe(v.number(), v.integer())),
@@ -14060,12 +14061,12 @@ export const inputTaskSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	JobIteration: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
-export const taskSchema = v.strictObject({
+export const taskSchema = v.looseObject({
 	/**
 	 * The ID of the task.
 	 */
@@ -14083,7 +14084,7 @@ export const taskSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -14101,7 +14102,7 @@ export const taskSchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -14113,7 +14114,7 @@ export const taskSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -14128,7 +14129,7 @@ export const taskSchema = v.strictObject({
 					Disabled: v.exactOptional(v.boolean()),
 					PluginPrivilege: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -14148,7 +14149,7 @@ export const taskSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -14192,12 +14193,12 @@ export const taskSchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -14245,7 +14246,7 @@ export const taskSchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -14288,7 +14289,7 @@ export const taskSchema = v.strictObject({
 					 */
 					Mounts: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -14327,7 +14328,7 @@ export const taskSchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -14355,7 +14356,7 @@ export const taskSchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -14370,7 +14371,7 @@ export const taskSchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -14389,7 +14390,7 @@ export const taskSchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -14438,7 +14439,7 @@ export const taskSchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -14504,7 +14505,7 @@ export const taskSchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -14528,12 +14529,12 @@ export const taskSchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -14572,7 +14573,7 @@ export const taskSchema = v.strictObject({
 					 */
 					Configs: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -14581,7 +14582,7 @@ export const taskSchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -14667,7 +14668,7 @@ export const taskSchema = v.strictObject({
 					 */
 					Ulimits: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -14697,7 +14698,7 @@ export const taskSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -14709,12 +14710,12 @@ export const taskSchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -14746,7 +14747,7 @@ export const taskSchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -14767,15 +14768,15 @@ export const taskSchema = v.strictObject({
 							 */
 							GenericResources: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 											}),
 										),
 										DiscreteResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(
 													v.union([
@@ -14808,7 +14809,7 @@ export const taskSchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -14848,7 +14849,7 @@ export const taskSchema = v.strictObject({
 				}),
 			),
 			Placement: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -14885,9 +14886,9 @@ export const taskSchema = v.strictObject({
 					 */
 					Preferences: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -14918,7 +14919,7 @@ export const taskSchema = v.strictObject({
 					 */
 					Platforms: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -14947,7 +14948,7 @@ export const taskSchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -14971,7 +14972,7 @@ export const taskSchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Options: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -14995,15 +14996,15 @@ export const taskSchema = v.strictObject({
 	 */
 	AssignedGenericResources: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
 				),
 				DiscreteResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
@@ -15018,7 +15019,7 @@ export const taskSchema = v.strictObject({
 		),
 	),
 	Status: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Timestamp: v.exactOptional(v.pipe(v.string(), v.trim())),
 			State: v.exactOptional(
 				v.picklist([
@@ -15042,7 +15043,7 @@ export const taskSchema = v.strictObject({
 			Message: v.exactOptional(v.pipe(v.string(), v.trim())),
 			Err: v.exactOptional(v.pipe(v.string(), v.trim())),
 			ContainerStatus: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					ContainerID: v.exactOptional(v.pipe(v.string(), v.trim())),
 					PID: v.exactOptional(v.pipe(v.number(), v.integer())),
 					ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
@@ -15082,13 +15083,13 @@ export const taskSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	JobIteration: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
 /** User modifiable configuration for a service. */
-export const inputServiceSpecSchema = v.strictObject({
+export const inputServiceSpecSchema = v.looseObject({
 	/**
 	 * Name of the service.
 	 */
@@ -15101,7 +15102,7 @@ export const inputServiceSpecSchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	TaskTemplate: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -15113,7 +15114,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -15128,7 +15129,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					Disabled: v.optional(v.boolean()),
 					PluginPrivilege: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Description: v.optional(v.string()),
 								Value: v.optional(v.array(v.string())),
@@ -15148,7 +15149,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -15190,12 +15191,12 @@ export const inputServiceSpecSchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -15243,7 +15244,7 @@ export const inputServiceSpecSchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -15286,7 +15287,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 */
 					Mounts: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -15325,7 +15326,7 @@ export const inputServiceSpecSchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -15353,7 +15354,7 @@ export const inputServiceSpecSchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -15366,7 +15367,7 @@ export const inputServiceSpecSchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -15383,7 +15384,7 @@ export const inputServiceSpecSchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -15410,7 +15411,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -15458,7 +15459,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -15480,12 +15481,12 @@ export const inputServiceSpecSchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -15524,7 +15525,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 */
 					Configs: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -15533,7 +15534,7 @@ export const inputServiceSpecSchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -15615,7 +15616,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 */
 					Ulimits: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -15645,7 +15646,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -15657,12 +15658,12 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -15676,7 +15677,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -15685,15 +15686,15 @@ export const inputServiceSpecSchema = v.strictObject({
 							 */
 							GenericResources: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.string()),
 											}),
 										),
 										DiscreteResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.bigint()),
 											}),
@@ -15710,7 +15711,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -15732,7 +15733,7 @@ export const inputServiceSpecSchema = v.strictObject({
 				}),
 			),
 			Placement: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -15769,9 +15770,9 @@ export const inputServiceSpecSchema = v.strictObject({
 					 */
 					Preferences: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -15794,7 +15795,7 @@ export const inputServiceSpecSchema = v.strictObject({
 					 */
 					Platforms: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -15823,7 +15824,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -15845,7 +15846,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.optional(v.string()),
 					Options: v.optional(v.record(v.string(), v.string())),
 				}),
@@ -15856,9 +15857,9 @@ export const inputServiceSpecSchema = v.strictObject({
 	 * Scheduling mode for the service.
 	 */
 	Mode: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Replicated: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Replicas: v.optional(v.bigint()),
 				}),
 			),
@@ -15868,7 +15869,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 * to a completed state.
 			 */
 			ReplicatedJob: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The maximum number of replicas to run simultaneously.
 					 */
@@ -15891,7 +15892,7 @@ export const inputServiceSpecSchema = v.strictObject({
 	 * Specification for the update strategy of the service.
 	 */
 	UpdateConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be updated in one iteration (0 means
 			 * unlimited parallelism).
@@ -15929,7 +15930,7 @@ export const inputServiceSpecSchema = v.strictObject({
 	 * Specification for the rollback strategy of the service.
 	 */
 	RollbackConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be rolled back in one iteration (0 means
 			 * unlimited parallelism).
@@ -15968,7 +15969,7 @@ export const inputServiceSpecSchema = v.strictObject({
 	 */
 	Networks: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -15988,7 +15989,7 @@ export const inputServiceSpecSchema = v.strictObject({
 	 * Properties that can be configured to access and load balance a service.
 	 */
 	EndpointSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The mode of resolution to use for internal load balancing between tasks.
 			 */
@@ -15999,7 +16000,7 @@ export const inputServiceSpecSchema = v.strictObject({
 			 */
 			Ports: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -16031,7 +16032,7 @@ export const inputServiceSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const serviceSpecSchema = v.strictObject({
+export const serviceSpecSchema = v.looseObject({
 	/**
 	 * Name of the service.
 	 */
@@ -16044,7 +16045,7 @@ export const serviceSpecSchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	TaskTemplate: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -16056,7 +16057,7 @@ export const serviceSpecSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -16071,7 +16072,7 @@ export const serviceSpecSchema = v.strictObject({
 					Disabled: v.exactOptional(v.boolean()),
 					PluginPrivilege: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -16091,7 +16092,7 @@ export const serviceSpecSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -16135,12 +16136,12 @@ export const serviceSpecSchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -16188,7 +16189,7 @@ export const serviceSpecSchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -16231,7 +16232,7 @@ export const serviceSpecSchema = v.strictObject({
 					 */
 					Mounts: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -16270,7 +16271,7 @@ export const serviceSpecSchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -16298,7 +16299,7 @@ export const serviceSpecSchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -16313,7 +16314,7 @@ export const serviceSpecSchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -16332,7 +16333,7 @@ export const serviceSpecSchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -16381,7 +16382,7 @@ export const serviceSpecSchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -16447,7 +16448,7 @@ export const serviceSpecSchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -16471,12 +16472,12 @@ export const serviceSpecSchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -16515,7 +16516,7 @@ export const serviceSpecSchema = v.strictObject({
 					 */
 					Configs: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -16524,7 +16525,7 @@ export const serviceSpecSchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -16610,7 +16611,7 @@ export const serviceSpecSchema = v.strictObject({
 					 */
 					Ulimits: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -16640,7 +16641,7 @@ export const serviceSpecSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -16652,12 +16653,12 @@ export const serviceSpecSchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -16689,7 +16690,7 @@ export const serviceSpecSchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -16710,15 +16711,15 @@ export const serviceSpecSchema = v.strictObject({
 							 */
 							GenericResources: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 											}),
 										),
 										DiscreteResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(
 													v.union([
@@ -16751,7 +16752,7 @@ export const serviceSpecSchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -16791,7 +16792,7 @@ export const serviceSpecSchema = v.strictObject({
 				}),
 			),
 			Placement: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -16828,9 +16829,9 @@ export const serviceSpecSchema = v.strictObject({
 					 */
 					Preferences: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -16861,7 +16862,7 @@ export const serviceSpecSchema = v.strictObject({
 					 */
 					Platforms: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -16890,7 +16891,7 @@ export const serviceSpecSchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -16914,7 +16915,7 @@ export const serviceSpecSchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Options: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -16927,9 +16928,9 @@ export const serviceSpecSchema = v.strictObject({
 	 * Scheduling mode for the service.
 	 */
 	Mode: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Replicated: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Replicas: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -16945,7 +16946,7 @@ export const serviceSpecSchema = v.strictObject({
 			 * to a completed state.
 			 */
 			ReplicatedJob: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The maximum number of replicas to run simultaneously.
 					 */
@@ -16980,7 +16981,7 @@ export const serviceSpecSchema = v.strictObject({
 	 * Specification for the update strategy of the service.
 	 */
 	UpdateConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be updated in one iteration (0 means
 			 * unlimited parallelism).
@@ -17038,7 +17039,7 @@ export const serviceSpecSchema = v.strictObject({
 	 * Specification for the rollback strategy of the service.
 	 */
 	RollbackConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be rolled back in one iteration (0 means
 			 * unlimited parallelism).
@@ -17095,7 +17096,7 @@ export const serviceSpecSchema = v.strictObject({
 	 */
 	Networks: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -17117,7 +17118,7 @@ export const serviceSpecSchema = v.strictObject({
 	 * Properties that can be configured to access and load balance a service.
 	 */
 	EndpointSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The mode of resolution to use for internal load balancing between tasks.
 			 */
@@ -17128,7 +17129,7 @@ export const serviceSpecSchema = v.strictObject({
 			 */
 			Ports: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -17160,7 +17161,7 @@ export const serviceSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const inputEndpointPortConfigSchema = v.strictObject({
+export const inputEndpointPortConfigSchema = v.looseObject({
 	Name: v.optional(v.string()),
 	Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 	/**
@@ -17187,7 +17188,7 @@ export const inputEndpointPortConfigSchema = v.strictObject({
 	 */
 	PublishMode: v.optional(v.picklist(["ingress", "host"])),
 });
-export const endpointPortConfigSchema = v.strictObject({
+export const endpointPortConfigSchema = v.looseObject({
 	Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 	/**
@@ -17215,7 +17216,7 @@ export const endpointPortConfigSchema = v.strictObject({
 	PublishMode: v.exactOptional(v.picklist(["ingress", "host"])),
 });
 /** Properties that can be configured to access and load balance a service. */
-export const inputEndpointSpecSchema = v.strictObject({
+export const inputEndpointSpecSchema = v.looseObject({
 	/**
 	 * The mode of resolution to use for internal load balancing between tasks.
 	 */
@@ -17226,7 +17227,7 @@ export const inputEndpointSpecSchema = v.strictObject({
 	 */
 	Ports: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.optional(v.string()),
 				Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 				/**
@@ -17256,7 +17257,7 @@ export const inputEndpointSpecSchema = v.strictObject({
 		),
 	),
 });
-export const endpointSpecSchema = v.strictObject({
+export const endpointSpecSchema = v.looseObject({
 	/**
 	 * The mode of resolution to use for internal load balancing between tasks.
 	 */
@@ -17267,7 +17268,7 @@ export const endpointSpecSchema = v.strictObject({
 	 */
 	Ports: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 				/**
@@ -17297,7 +17298,7 @@ export const endpointSpecSchema = v.strictObject({
 		),
 	),
 });
-export const inputServiceSchema = v.strictObject({
+export const inputServiceSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -17312,7 +17313,7 @@ export const inputServiceSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -17322,7 +17323,7 @@ export const inputServiceSchema = v.strictObject({
 	 * User modifiable configuration for a service.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the service.
 			 */
@@ -17335,7 +17336,7 @@ export const inputServiceSchema = v.strictObject({
 			 * User modifiable task configuration.
 			 */
 			TaskTemplate: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Plugin spec for the service.  *(Experimental release only.)*
 					 *
@@ -17347,7 +17348,7 @@ export const inputServiceSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					PluginSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The name or 'alias' to use for the plugin.
 							 */
@@ -17362,7 +17363,7 @@ export const inputServiceSchema = v.strictObject({
 							Disabled: v.optional(v.boolean()),
 							PluginPrivilege: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Name: v.optional(v.string()),
 										Description: v.optional(v.string()),
 										Value: v.optional(v.array(v.string())),
@@ -17382,7 +17383,7 @@ export const inputServiceSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					ContainerSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The image name to use for the container
 							 */
@@ -17424,12 +17425,12 @@ export const inputServiceSchema = v.strictObject({
 							 * Security options for the container
 							 */
 							Privileges: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * CredentialSpec for managed service account (Windows only)
 									 */
 									CredentialSpec: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Load credential spec from a Swarm Config with the given ID.
 											 * The specified config must also be present in the Configs
@@ -17477,7 +17478,7 @@ export const inputServiceSchema = v.strictObject({
 									 * SELinux labels of the container
 									 */
 									SELinuxContext: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Disable SELinux
 											 */
@@ -17520,7 +17521,7 @@ export const inputServiceSchema = v.strictObject({
 							 */
 							Mounts: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Container path.
 										 */
@@ -17565,7 +17566,7 @@ export const inputServiceSchema = v.strictObject({
 										 * Optional configuration for the `bind` type.
 										 */
 										BindOptions: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 												 */
@@ -17593,7 +17594,7 @@ export const inputServiceSchema = v.strictObject({
 										 * Optional configuration for the `volume` type.
 										 */
 										VolumeOptions: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Populate volume with data from the target.
 												 */
@@ -17606,7 +17607,7 @@ export const inputServiceSchema = v.strictObject({
 												 * Map of driver specific options
 												 */
 												DriverConfig: v.optional(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Name of the driver to use to create the volume.
 														 */
@@ -17625,7 +17626,7 @@ export const inputServiceSchema = v.strictObject({
 										 * Optional configuration for the `tmpfs` type.
 										 */
 										TmpfsOptions: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The size for the tmpfs mount in bytes.
 												 */
@@ -17652,7 +17653,7 @@ export const inputServiceSchema = v.strictObject({
 							 * A test to perform to check that the container is healthy.
 							 */
 							HealthCheck: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The test to perform. Possible values are:
 									 *
@@ -17700,7 +17701,7 @@ export const inputServiceSchema = v.strictObject({
 							 * file (`resolv.conf`).
 							 */
 							DNSConfig: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The IP addresses of the name servers.
 									 */
@@ -17722,12 +17723,12 @@ export const inputServiceSchema = v.strictObject({
 							 */
 							Secrets: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 */
 										File: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -17766,7 +17767,7 @@ export const inputServiceSchema = v.strictObject({
 							 */
 							Configs: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 *
@@ -17775,7 +17776,7 @@ export const inputServiceSchema = v.strictObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 										 */
 										File: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -17857,7 +17858,7 @@ export const inputServiceSchema = v.strictObject({
 							 */
 							Ulimits: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of ulimit
 										 */
@@ -17887,7 +17888,7 @@ export const inputServiceSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					NetworkAttachmentSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * ID of the container represented by this task
 							 */
@@ -17899,12 +17900,12 @@ export const inputServiceSchema = v.strictObject({
 					 * as part of the service.
 					 */
 					Resources: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An object describing a limit on resources which can be requested by a task.
 							 */
 							Limits: v.optional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.optional(v.bigint()),
 									MemoryBytes: v.optional(v.bigint()),
 									/**
@@ -17918,7 +17919,7 @@ export const inputServiceSchema = v.strictObject({
 							 * requested by a task.
 							 */
 							Reservations: v.optional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.optional(v.bigint()),
 									MemoryBytes: v.optional(v.bigint()),
 									/**
@@ -17927,15 +17928,15 @@ export const inputServiceSchema = v.strictObject({
 									 */
 									GenericResources: v.optional(
 										v.array(
-											v.strictObject({
+											v.looseObject({
 												NamedResourceSpec: v.optional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.optional(v.string()),
 														Value: v.optional(v.string()),
 													}),
 												),
 												DiscreteResourceSpec: v.optional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.optional(v.string()),
 														Value: v.optional(v.bigint()),
 													}),
@@ -17952,7 +17953,7 @@ export const inputServiceSchema = v.strictObject({
 					 * created as part of this service.
 					 */
 					RestartPolicy: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Condition for restart.
 							 */
@@ -17974,7 +17975,7 @@ export const inputServiceSchema = v.strictObject({
 						}),
 					),
 					Placement: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An array of constraint expressions to limit the set of nodes where
 							 * a task can be scheduled. Constraint expressions can either use a
@@ -18011,9 +18012,9 @@ export const inputServiceSchema = v.strictObject({
 							 */
 							Preferences: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Spread: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * label descriptor, such as `engine.labels.az`.
 												 */
@@ -18036,7 +18037,7 @@ export const inputServiceSchema = v.strictObject({
 							 */
 							Platforms: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Architecture represents the hardware architecture (for example,
 										 * `x86_64`).
@@ -18065,7 +18066,7 @@ export const inputServiceSchema = v.strictObject({
 					 */
 					Networks: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The target network for attachment. Must be a network name or ID.
 								 */
@@ -18087,7 +18088,7 @@ export const inputServiceSchema = v.strictObject({
 					 * falling back to the engine default if not specified.
 					 */
 					LogDriver: v.optional(
-						v.strictObject({
+						v.looseObject({
 							Name: v.optional(v.string()),
 							Options: v.optional(v.record(v.string(), v.string())),
 						}),
@@ -18098,9 +18099,9 @@ export const inputServiceSchema = v.strictObject({
 			 * Scheduling mode for the service.
 			 */
 			Mode: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Replicated: v.optional(
-						v.strictObject({
+						v.looseObject({
 							Replicas: v.optional(v.bigint()),
 						}),
 					),
@@ -18110,7 +18111,7 @@ export const inputServiceSchema = v.strictObject({
 					 * to a completed state.
 					 */
 					ReplicatedJob: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The maximum number of replicas to run simultaneously.
 							 */
@@ -18133,7 +18134,7 @@ export const inputServiceSchema = v.strictObject({
 			 * Specification for the update strategy of the service.
 			 */
 			UpdateConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be updated in one iteration (0 means
 					 * unlimited parallelism).
@@ -18173,7 +18174,7 @@ export const inputServiceSchema = v.strictObject({
 			 * Specification for the rollback strategy of the service.
 			 */
 			RollbackConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be rolled back in one iteration (0 means
 					 * unlimited parallelism).
@@ -18212,7 +18213,7 @@ export const inputServiceSchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -18232,7 +18233,7 @@ export const inputServiceSchema = v.strictObject({
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			EndpointSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -18243,7 +18244,7 @@ export const inputServiceSchema = v.strictObject({
 					 */
 					Ports: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -18277,12 +18278,12 @@ export const inputServiceSchema = v.strictObject({
 		}),
 	),
 	Endpoint: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			Spec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -18293,7 +18294,7 @@ export const inputServiceSchema = v.strictObject({
 					 */
 					Ports: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -18326,7 +18327,7 @@ export const inputServiceSchema = v.strictObject({
 			),
 			Ports: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -18357,7 +18358,7 @@ export const inputServiceSchema = v.strictObject({
 			),
 			VirtualIPs: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						NetworkID: v.optional(v.string()),
 						Addr: v.optional(v.string()),
 					}),
@@ -18369,7 +18370,7 @@ export const inputServiceSchema = v.strictObject({
 	 * The status of a service update.
 	 */
 	UpdateStatus: v.optional(
-		v.strictObject({
+		v.looseObject({
 			State: v.optional(v.picklist(["updating", "paused", "completed"])),
 			StartedAt: v.optional(v.string()),
 			CompletedAt: v.optional(v.string()),
@@ -18381,7 +18382,7 @@ export const inputServiceSchema = v.strictObject({
 	 * part of a ServiceList operation.
 	 */
 	ServiceStatus: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of tasks for the service currently in the Running state.
 			 */
@@ -18410,7 +18411,7 @@ export const inputServiceSchema = v.strictObject({
 	 * does not need to be sent with an update request.
 	 */
 	JobStatus: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The version number of the object such as node, service, etc. This is needed
 			 * to avoid conflicting writes. The client must send the version number along
@@ -18424,7 +18425,7 @@ export const inputServiceSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			JobIteration: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.optional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -18436,7 +18437,7 @@ export const inputServiceSchema = v.strictObject({
 		}),
 	),
 });
-export const serviceSchema = v.strictObject({
+export const serviceSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -18451,7 +18452,7 @@ export const serviceSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -18461,7 +18462,7 @@ export const serviceSchema = v.strictObject({
 	 * User modifiable configuration for a service.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the service.
 			 */
@@ -18476,7 +18477,7 @@ export const serviceSchema = v.strictObject({
 			 * User modifiable task configuration.
 			 */
 			TaskTemplate: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Plugin spec for the service.  *(Experimental release only.)*
 					 *
@@ -18488,7 +18489,7 @@ export const serviceSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					PluginSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The name or 'alias' to use for the plugin.
 							 */
@@ -18503,7 +18504,7 @@ export const serviceSchema = v.strictObject({
 							Disabled: v.exactOptional(v.boolean()),
 							PluginPrivilege: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(
@@ -18525,7 +18526,7 @@ export const serviceSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					ContainerSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The image name to use for the container
 							 */
@@ -18569,12 +18570,12 @@ export const serviceSchema = v.strictObject({
 							 * Security options for the container
 							 */
 							Privileges: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * CredentialSpec for managed service account (Windows only)
 									 */
 									CredentialSpec: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Load credential spec from a Swarm Config with the given ID.
 											 * The specified config must also be present in the Configs
@@ -18622,7 +18623,7 @@ export const serviceSchema = v.strictObject({
 									 * SELinux labels of the container
 									 */
 									SELinuxContext: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Disable SELinux
 											 */
@@ -18665,7 +18666,7 @@ export const serviceSchema = v.strictObject({
 							 */
 							Mounts: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Container path.
 										 */
@@ -18710,7 +18711,7 @@ export const serviceSchema = v.strictObject({
 										 * Optional configuration for the `bind` type.
 										 */
 										BindOptions: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 												 */
@@ -18738,7 +18739,7 @@ export const serviceSchema = v.strictObject({
 										 * Optional configuration for the `volume` type.
 										 */
 										VolumeOptions: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Populate volume with data from the target.
 												 */
@@ -18753,7 +18754,7 @@ export const serviceSchema = v.strictObject({
 												 * Map of driver specific options
 												 */
 												DriverConfig: v.exactOptional(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Name of the driver to use to create the volume.
 														 */
@@ -18775,7 +18776,7 @@ export const serviceSchema = v.strictObject({
 										 * Optional configuration for the `tmpfs` type.
 										 */
 										TmpfsOptions: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The size for the tmpfs mount in bytes.
 												 */
@@ -18824,7 +18825,7 @@ export const serviceSchema = v.strictObject({
 							 * A test to perform to check that the container is healthy.
 							 */
 							HealthCheck: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The test to perform. Possible values are:
 									 *
@@ -18890,7 +18891,7 @@ export const serviceSchema = v.strictObject({
 							 * file (`resolv.conf`).
 							 */
 							DNSConfig: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The IP addresses of the name servers.
 									 */
@@ -18918,12 +18919,12 @@ export const serviceSchema = v.strictObject({
 							 */
 							Secrets: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 */
 										File: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -18962,7 +18963,7 @@ export const serviceSchema = v.strictObject({
 							 */
 							Configs: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 *
@@ -18971,7 +18972,7 @@ export const serviceSchema = v.strictObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 										 */
 										File: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -19059,7 +19060,7 @@ export const serviceSchema = v.strictObject({
 							 */
 							Ulimits: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of ulimit
 										 */
@@ -19089,7 +19090,7 @@ export const serviceSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					NetworkAttachmentSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * ID of the container represented by this task
 							 */
@@ -19101,12 +19102,12 @@ export const serviceSchema = v.strictObject({
 					 * as part of the service.
 					 */
 					Resources: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An object describing a limit on resources which can be requested by a task.
 							 */
 							Limits: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
 											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -19138,7 +19139,7 @@ export const serviceSchema = v.strictObject({
 							 * requested by a task.
 							 */
 							Reservations: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
 											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -19159,9 +19160,9 @@ export const serviceSchema = v.strictObject({
 									 */
 									GenericResources: v.exactOptional(
 										v.array(
-											v.strictObject({
+											v.looseObject({
 												NamedResourceSpec: v.exactOptional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 														Value: v.exactOptional(
 															v.pipe(v.string(), v.trim()),
@@ -19169,7 +19170,7 @@ export const serviceSchema = v.strictObject({
 													}),
 												),
 												DiscreteResourceSpec: v.exactOptional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 														Value: v.exactOptional(
 															v.union([
@@ -19202,7 +19203,7 @@ export const serviceSchema = v.strictObject({
 					 * created as part of this service.
 					 */
 					RestartPolicy: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Condition for restart.
 							 */
@@ -19244,7 +19245,7 @@ export const serviceSchema = v.strictObject({
 						}),
 					),
 					Placement: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An array of constraint expressions to limit the set of nodes where
 							 * a task can be scheduled. Constraint expressions can either use a
@@ -19283,9 +19284,9 @@ export const serviceSchema = v.strictObject({
 							 */
 							Preferences: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Spread: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * label descriptor, such as `engine.labels.az`.
 												 */
@@ -19316,7 +19317,7 @@ export const serviceSchema = v.strictObject({
 							 */
 							Platforms: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Architecture represents the hardware architecture (for example,
 										 * `x86_64`).
@@ -19345,7 +19346,7 @@ export const serviceSchema = v.strictObject({
 					 */
 					Networks: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The target network for attachment. Must be a network name or ID.
 								 */
@@ -19369,7 +19370,7 @@ export const serviceSchema = v.strictObject({
 					 * falling back to the engine default if not specified.
 					 */
 					LogDriver: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Options: v.exactOptional(
 								v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -19382,9 +19383,9 @@ export const serviceSchema = v.strictObject({
 			 * Scheduling mode for the service.
 			 */
 			Mode: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Replicated: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							Replicas: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -19400,7 +19401,7 @@ export const serviceSchema = v.strictObject({
 					 * to a completed state.
 					 */
 					ReplicatedJob: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The maximum number of replicas to run simultaneously.
 							 */
@@ -19435,7 +19436,7 @@ export const serviceSchema = v.strictObject({
 			 * Specification for the update strategy of the service.
 			 */
 			UpdateConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be updated in one iteration (0 means
 					 * unlimited parallelism).
@@ -19493,7 +19494,7 @@ export const serviceSchema = v.strictObject({
 			 * Specification for the rollback strategy of the service.
 			 */
 			RollbackConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be rolled back in one iteration (0 means
 					 * unlimited parallelism).
@@ -19550,7 +19551,7 @@ export const serviceSchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -19572,7 +19573,7 @@ export const serviceSchema = v.strictObject({
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			EndpointSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -19583,7 +19584,7 @@ export const serviceSchema = v.strictObject({
 					 */
 					Ports: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -19617,12 +19618,12 @@ export const serviceSchema = v.strictObject({
 		}),
 	),
 	Endpoint: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			Spec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -19633,7 +19634,7 @@ export const serviceSchema = v.strictObject({
 					 */
 					Ports: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -19666,7 +19667,7 @@ export const serviceSchema = v.strictObject({
 			),
 			Ports: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -19697,7 +19698,7 @@ export const serviceSchema = v.strictObject({
 			),
 			VirtualIPs: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						NetworkID: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Addr: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
@@ -19709,7 +19710,7 @@ export const serviceSchema = v.strictObject({
 	 * The status of a service update.
 	 */
 	UpdateStatus: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			State: v.exactOptional(v.picklist(["updating", "paused", "completed"])),
 			StartedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 			CompletedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -19721,7 +19722,7 @@ export const serviceSchema = v.strictObject({
 	 * part of a ServiceList operation.
 	 */
 	ServiceStatus: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of tasks for the service currently in the Running state.
 			 */
@@ -19750,7 +19751,7 @@ export const serviceSchema = v.strictObject({
 	 * does not need to be sent with an update request.
 	 */
 	JobStatus: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The version number of the object such as node, service, etc. This is needed
 			 * to avoid conflicting writes. The client must send the version number along
@@ -19764,7 +19765,7 @@ export const serviceSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			JobIteration: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -19776,7 +19777,7 @@ export const serviceSchema = v.strictObject({
 		}),
 	),
 });
-export const inputImageDeleteResponseItemSchema = v.strictObject({
+export const inputImageDeleteResponseItemSchema = v.looseObject({
 	/**
 	 * The image ID of an image that was untagged
 	 */
@@ -19786,7 +19787,7 @@ export const inputImageDeleteResponseItemSchema = v.strictObject({
 	 */
 	Deleted: v.optional(v.string()),
 });
-export const imageDeleteResponseItemSchema = v.strictObject({
+export const imageDeleteResponseItemSchema = v.looseObject({
 	/**
 	 * The image ID of an image that was untagged
 	 */
@@ -19796,19 +19797,19 @@ export const imageDeleteResponseItemSchema = v.strictObject({
 	 */
 	Deleted: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputServiceUpdateResponseSchema = v.strictObject({
+export const inputServiceUpdateResponseSchema = v.looseObject({
 	/**
 	 * Optional warning messages
 	 */
 	Warnings: v.optional(v.array(v.string())),
 });
-export const serviceUpdateResponseSchema = v.strictObject({
+export const serviceUpdateResponseSchema = v.looseObject({
 	/**
 	 * Optional warning messages
 	 */
 	Warnings: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 });
-export const inputContainerSummarySchema = v.strictObject({
+export const inputContainerSummarySchema = v.looseObject({
 	/**
 	 * The ID of this container
 	 */
@@ -19838,7 +19839,7 @@ export const inputContainerSummarySchema = v.strictObject({
 	 */
 	Ports: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Host IP address that the container's port is mapped to
 				 */
@@ -19876,7 +19877,7 @@ export const inputContainerSummarySchema = v.strictObject({
 	 */
 	Status: v.optional(v.string()),
 	HostConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			NetworkMode: v.optional(v.string()),
 		}),
 	),
@@ -19884,17 +19885,17 @@ export const inputContainerSummarySchema = v.strictObject({
 	 * A summary of the container's network settings
 	 */
 	NetworkSettings: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Networks: v.optional(
 				v.record(
 					v.string(),
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 						 */
 						IPAMConfig: v.optional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									IPv4Address: v.optional(v.string()),
 									IPv6Address: v.optional(v.string()),
 									LinkLocalIPs: v.optional(v.array(v.string())),
@@ -19953,7 +19954,7 @@ export const inputContainerSummarySchema = v.strictObject({
 	),
 	Mounts: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The mount type:
 				 *
@@ -20011,7 +20012,7 @@ export const inputContainerSummarySchema = v.strictObject({
 		),
 	),
 });
-export const containerSummarySchema = v.strictObject({
+export const containerSummarySchema = v.looseObject({
 	/**
 	 * The ID of this container
 	 */
@@ -20047,7 +20048,7 @@ export const containerSummarySchema = v.strictObject({
 	 */
 	Ports: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Host IP address that the container's port is mapped to
 				 */
@@ -20097,7 +20098,7 @@ export const containerSummarySchema = v.strictObject({
 	 */
 	Status: v.exactOptional(v.pipe(v.string(), v.trim())),
 	HostConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			NetworkMode: v.exactOptional(v.pipe(v.string(), v.trim())),
 		}),
 	),
@@ -20105,17 +20106,17 @@ export const containerSummarySchema = v.strictObject({
 	 * A summary of the container's network settings
 	 */
 	NetworkSettings: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Networks: v.exactOptional(
 				v.record(
 					v.string(),
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 						 */
 						IPAMConfig: v.exactOptional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 									IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 									LinkLocalIPs: v.exactOptional(
@@ -20182,7 +20183,7 @@ export const containerSummarySchema = v.strictObject({
 	),
 	Mounts: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The mount type:
 				 *
@@ -20241,7 +20242,7 @@ export const containerSummarySchema = v.strictObject({
 	),
 });
 /** Driver represents a driver (network, logging, secrets). */
-export const inputDriverSchema = v.strictObject({
+export const inputDriverSchema = v.looseObject({
 	/**
 	 * Name of the driver.
 	 */
@@ -20251,7 +20252,7 @@ export const inputDriverSchema = v.strictObject({
 	 */
 	Options: v.optional(v.record(v.string(), v.string())),
 });
-export const driverSchema = v.strictObject({
+export const driverSchema = v.looseObject({
 	/**
 	 * Name of the driver.
 	 */
@@ -20261,7 +20262,7 @@ export const driverSchema = v.strictObject({
 	 */
 	Options: v.exactOptional(v.record(v.string(), v.pipe(v.string(), v.trim()))),
 });
-export const inputSecretSpecSchema = v.strictObject({
+export const inputSecretSpecSchema = v.looseObject({
 	/**
 	 * User-defined name of the secret.
 	 */
@@ -20283,7 +20284,7 @@ export const inputSecretSpecSchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Driver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -20298,7 +20299,7 @@ export const inputSecretSpecSchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -20310,7 +20311,7 @@ export const inputSecretSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const secretSpecSchema = v.strictObject({
+export const secretSpecSchema = v.looseObject({
 	/**
 	 * User-defined name of the secret.
 	 */
@@ -20332,7 +20333,7 @@ export const secretSpecSchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Driver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -20349,7 +20350,7 @@ export const secretSpecSchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -20363,7 +20364,7 @@ export const secretSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const inputSecretSchema = v.strictObject({
+export const inputSecretSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -20378,14 +20379,14 @@ export const inputSecretSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.optional(v.string()),
 	UpdatedAt: v.optional(v.string()),
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the secret.
 			 */
@@ -20407,7 +20408,7 @@ export const inputSecretSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Driver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -20422,7 +20423,7 @@ export const inputSecretSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -20436,7 +20437,7 @@ export const inputSecretSchema = v.strictObject({
 		}),
 	),
 });
-export const secretSchema = v.strictObject({
+export const secretSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -20451,14 +20452,14 @@ export const secretSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the secret.
 			 */
@@ -20482,7 +20483,7 @@ export const secretSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Driver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -20499,7 +20500,7 @@ export const secretSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -20515,7 +20516,7 @@ export const secretSchema = v.strictObject({
 		}),
 	),
 });
-export const inputConfigSpecSchema = v.strictObject({
+export const inputConfigSpecSchema = v.looseObject({
 	/**
 	 * User-defined name of the config.
 	 */
@@ -20534,7 +20535,7 @@ export const inputConfigSpecSchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -20546,7 +20547,7 @@ export const inputConfigSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const configSpecSchema = v.strictObject({
+export const configSpecSchema = v.looseObject({
 	/**
 	 * User-defined name of the config.
 	 */
@@ -20565,7 +20566,7 @@ export const configSpecSchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -20579,7 +20580,7 @@ export const configSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const inputConfigSchema = v.strictObject({
+export const inputConfigSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -20594,14 +20595,14 @@ export const inputConfigSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.optional(v.string()),
 	UpdatedAt: v.optional(v.string()),
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the config.
 			 */
@@ -20620,7 +20621,7 @@ export const inputConfigSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -20634,7 +20635,7 @@ export const inputConfigSchema = v.strictObject({
 		}),
 	),
 });
-export const configSchema = v.strictObject({
+export const configSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -20649,14 +20650,14 @@ export const configSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the config.
 			 */
@@ -20677,7 +20678,7 @@ export const configSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -20699,7 +20700,7 @@ export const configSchema = v.strictObject({
  * and will be returned by the "inspect" command.
  */
 export const inputContainerStateSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * String representation of the container state. Can be one of "created",
 		 * "running", "paused", "restarting", "removing", "exited", or "dead".
@@ -20767,7 +20768,7 @@ export const inputContainerStateSchema = v.nullable(
 		 */
 		Health: v.optional(
 			v.nullable(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
 					 *
@@ -20789,7 +20790,7 @@ export const inputContainerStateSchema = v.nullable(
 					Log: v.optional(
 						v.array(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Date and time at which this check started in
 									 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -20834,7 +20835,7 @@ export const inputContainerStateSchema = v.nullable(
 	}),
 );
 export const containerStateSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * String representation of the container state. Can be one of "created",
 		 * "running", "paused", "restarting", "removing", "exited", or "dead".
@@ -20902,7 +20903,7 @@ export const containerStateSchema = v.nullable(
 		 */
 		Health: v.exactOptional(
 			v.nullable(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
 					 *
@@ -20924,7 +20925,7 @@ export const containerStateSchema = v.nullable(
 					Log: v.exactOptional(
 						v.array(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Date and time at which this check started in
 									 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -20973,7 +20974,7 @@ export const containerStateSchema = v.nullable(
  * OK response to ContainerCreate operation
  * @title ContainerCreateResponse
  */
-export const inputContainerCreateResponseSchema = v.strictObject({
+export const inputContainerCreateResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created container
 	 */
@@ -20983,7 +20984,7 @@ export const inputContainerCreateResponseSchema = v.strictObject({
 	 */
 	Warnings: v.array(v.string()),
 });
-export const containerCreateResponseSchema = v.strictObject({
+export const containerCreateResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created container
 	 */
@@ -20997,7 +20998,7 @@ export const containerCreateResponseSchema = v.strictObject({
  * OK response to ContainerWait operation
  * @title ContainerWaitResponse
  */
-export const inputContainerWaitResponseSchema = v.strictObject({
+export const inputContainerWaitResponseSchema = v.looseObject({
 	/**
 	 * Exit code of the container
 	 */
@@ -21006,7 +21007,7 @@ export const inputContainerWaitResponseSchema = v.strictObject({
 	 * container waiting error, if any
 	 */
 	Error: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Details of an error
 			 */
@@ -21014,7 +21015,7 @@ export const inputContainerWaitResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const containerWaitResponseSchema = v.strictObject({
+export const containerWaitResponseSchema = v.looseObject({
 	/**
 	 * Exit code of the container
 	 */
@@ -21027,7 +21028,7 @@ export const containerWaitResponseSchema = v.strictObject({
 	 * container waiting error, if any
 	 */
 	Error: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Details of an error
 			 */
@@ -21036,22 +21037,22 @@ export const containerWaitResponseSchema = v.strictObject({
 	),
 });
 /** container waiting error, if any */
-export const inputContainerWaitExitErrorSchema = v.strictObject({
+export const inputContainerWaitExitErrorSchema = v.looseObject({
 	/**
 	 * Details of an error
 	 */
 	Message: v.optional(v.string()),
 });
-export const containerWaitExitErrorSchema = v.strictObject({
+export const containerWaitExitErrorSchema = v.looseObject({
 	/**
 	 * Details of an error
 	 */
 	Message: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** Response of Engine API: GET "/version" */
-export const inputSystemVersionSchema = v.strictObject({
+export const inputSystemVersionSchema = v.looseObject({
 	Platform: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Name: v.string(),
 		}),
 	),
@@ -21060,7 +21061,7 @@ export const inputSystemVersionSchema = v.strictObject({
 	 */
 	Components: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the component
 				 */
@@ -21127,9 +21128,9 @@ export const inputSystemVersionSchema = v.strictObject({
 	 */
 	BuildTime: v.optional(v.string()),
 });
-export const systemVersionSchema = v.strictObject({
+export const systemVersionSchema = v.looseObject({
 	Platform: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Name: v.pipe(v.string(), v.trim()),
 		}),
 	),
@@ -21138,7 +21139,7 @@ export const systemVersionSchema = v.strictObject({
 	 */
 	Components: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the component
 				 */
@@ -21205,7 +21206,7 @@ export const systemVersionSchema = v.strictObject({
 	 */
 	BuildTime: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSystemInfoSchema = v.strictObject({
+export const inputSystemInfoSchema = v.looseObject({
 	/**
 	 * Unique identifier of the daemon.
 	 *
@@ -21273,7 +21274,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 * > if there is no resource using the plugin.
 	 */
 	Plugins: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Names of available volume-drivers, and network-driver plugins.
 			 */
@@ -21452,7 +21453,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 */
 	RegistryConfig: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * List of IP ranges to which nondistributable artifacts can be pushed,
 				 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
@@ -21532,7 +21533,7 @@ export const inputSystemInfoSchema = v.strictObject({
 					v.record(
 						v.string(),
 						v.nullable(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the registry, such as "docker.io".
 								 */
@@ -21579,15 +21580,15 @@ export const inputSystemInfoSchema = v.strictObject({
 	 */
 	GenericResources: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.string()),
 					}),
 				),
 				DiscreteResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.bigint()),
 					}),
@@ -21667,7 +21668,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	Runtimes: v.optional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name and, optional, path, of the OCI executable binary.
 				 *
@@ -21692,7 +21693,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 * Represents generic information about swarm.
 	 */
 	Swarm: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Unique identifier of for this node in the swarm.
 			 */
@@ -21716,7 +21717,7 @@ export const inputSystemInfoSchema = v.strictObject({
 			RemoteManagers: v.optional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Unique identifier of for this node in the swarm.
 							 */
@@ -21743,7 +21744,7 @@ export const inputSystemInfoSchema = v.strictObject({
 			 */
 			Cluster: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the swarm.
 						 */
@@ -21761,7 +21762,7 @@ export const inputSystemInfoSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.optional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -21779,7 +21780,7 @@ export const inputSystemInfoSchema = v.strictObject({
 						 * User modifiable swarm configuration.
 						 */
 						Spec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the swarm.
 								 */
@@ -21793,7 +21794,7 @@ export const inputSystemInfoSchema = v.strictObject({
 								 */
 								Orchestration: v.optional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The number of historic tasks to keep per instance or node. If
 											 * negative, never remove completed or failed tasks.
@@ -21806,7 +21807,7 @@ export const inputSystemInfoSchema = v.strictObject({
 								 * Raft configuration.
 								 */
 								Raft: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The number of log entries between snapshots.
 										 */
@@ -21850,7 +21851,7 @@ export const inputSystemInfoSchema = v.strictObject({
 								 */
 								Dispatcher: v.optional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The delay for an agent to send a heartbeat to the dispatcher.
 											 */
@@ -21863,7 +21864,7 @@ export const inputSystemInfoSchema = v.strictObject({
 								 */
 								CAConfig: v.optional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The duration node certificates are issued for.
 											 */
@@ -21874,7 +21875,7 @@ export const inputSystemInfoSchema = v.strictObject({
 											 */
 											ExternalCAs: v.optional(
 												v.array(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Protocol for communication with the external CA (currently
 														 * only `cfssl` is supported).
@@ -21923,7 +21924,7 @@ export const inputSystemInfoSchema = v.strictObject({
 								 * Parameters related to encryption-at-rest.
 								 */
 								EncryptionConfig: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * If set, generate a key and use it to lock data stored on the
 										 * managers.
@@ -21935,7 +21936,7 @@ export const inputSystemInfoSchema = v.strictObject({
 								 * Defaults for creating tasks in this cluster.
 								 */
 								TaskDefaults: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The log driver to use for tasks created in the orchestrator if
 										 * unspecified by a service.
@@ -21944,7 +21945,7 @@ export const inputSystemInfoSchema = v.strictObject({
 										 * to use their previously configured log driver until recreated.
 										 */
 										LogDriver: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The log driver to use as a default for new tasks.
 												 */
@@ -21965,7 +21966,7 @@ export const inputSystemInfoSchema = v.strictObject({
 						 * CA certificate.
 						 */
 						TLSInfo: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The root CA certificate(s) that are used to validate leaf TLS
 								 * certificates.
@@ -22038,7 +22039,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	ContainerdCommit: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -22055,7 +22056,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	RuncCommit: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -22072,7 +22073,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	InitCommit: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -22109,7 +22110,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 */
 	DefaultAddressPools: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The network address in CIDR format
 				 */
@@ -22129,7 +22130,7 @@ export const inputSystemInfoSchema = v.strictObject({
 	 */
 	Warnings: v.optional(v.array(v.string())),
 });
-export const systemInfoSchema = v.strictObject({
+export const systemInfoSchema = v.looseObject({
 	/**
 	 * Unique identifier of the daemon.
 	 *
@@ -22197,7 +22198,7 @@ export const systemInfoSchema = v.strictObject({
 	 * > if there is no resource using the plugin.
 	 */
 	Plugins: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Names of available volume-drivers, and network-driver plugins.
 			 */
@@ -22382,7 +22383,7 @@ export const systemInfoSchema = v.strictObject({
 	 */
 	RegistryConfig: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * List of IP ranges to which nondistributable artifacts can be pushed,
 				 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
@@ -22466,7 +22467,7 @@ export const systemInfoSchema = v.strictObject({
 					v.record(
 						v.string(),
 						v.nullable(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the registry, such as "docker.io".
 								 */
@@ -22513,15 +22514,15 @@ export const systemInfoSchema = v.strictObject({
 	 */
 	GenericResources: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
 				),
 				DiscreteResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
@@ -22607,7 +22608,7 @@ export const systemInfoSchema = v.strictObject({
 	Runtimes: v.exactOptional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name and, optional, path, of the OCI executable binary.
 				 *
@@ -22634,7 +22635,7 @@ export const systemInfoSchema = v.strictObject({
 	 * Represents generic information about swarm.
 	 */
 	Swarm: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Unique identifier of for this node in the swarm.
 			 */
@@ -22658,7 +22659,7 @@ export const systemInfoSchema = v.strictObject({
 			RemoteManagers: v.exactOptional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Unique identifier of for this node in the swarm.
 							 */
@@ -22685,7 +22686,7 @@ export const systemInfoSchema = v.strictObject({
 			 */
 			Cluster: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the swarm.
 						 */
@@ -22703,7 +22704,7 @@ export const systemInfoSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -22721,7 +22722,7 @@ export const systemInfoSchema = v.strictObject({
 						 * User modifiable swarm configuration.
 						 */
 						Spec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the swarm.
 								 */
@@ -22737,7 +22738,7 @@ export const systemInfoSchema = v.strictObject({
 								 */
 								Orchestration: v.exactOptional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The number of historic tasks to keep per instance or node. If
 											 * negative, never remove completed or failed tasks.
@@ -22766,7 +22767,7 @@ export const systemInfoSchema = v.strictObject({
 								 * Raft configuration.
 								 */
 								Raft: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The number of log entries between snapshots.
 										 */
@@ -22814,7 +22815,7 @@ export const systemInfoSchema = v.strictObject({
 								 */
 								Dispatcher: v.exactOptional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The delay for an agent to send a heartbeat to the dispatcher.
 											 */
@@ -22843,7 +22844,7 @@ export const systemInfoSchema = v.strictObject({
 								 */
 								CAConfig: v.exactOptional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The duration node certificates are issued for.
 											 */
@@ -22870,7 +22871,7 @@ export const systemInfoSchema = v.strictObject({
 											 */
 											ExternalCAs: v.exactOptional(
 												v.array(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Protocol for communication with the external CA (currently
 														 * only `cfssl` is supported).
@@ -22930,7 +22931,7 @@ export const systemInfoSchema = v.strictObject({
 								 * Parameters related to encryption-at-rest.
 								 */
 								EncryptionConfig: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * If set, generate a key and use it to lock data stored on the
 										 * managers.
@@ -22942,7 +22943,7 @@ export const systemInfoSchema = v.strictObject({
 								 * Defaults for creating tasks in this cluster.
 								 */
 								TaskDefaults: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The log driver to use for tasks created in the orchestrator if
 										 * unspecified by a service.
@@ -22951,7 +22952,7 @@ export const systemInfoSchema = v.strictObject({
 										 * to use their previously configured log driver until recreated.
 										 */
 										LogDriver: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The log driver to use as a default for new tasks.
 												 */
@@ -22974,7 +22975,7 @@ export const systemInfoSchema = v.strictObject({
 						 * CA certificate.
 						 */
 						TLSInfo: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The root CA certificate(s) that are used to validate leaf TLS
 								 * certificates.
@@ -23053,7 +23054,7 @@ export const systemInfoSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	ContainerdCommit: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -23070,7 +23071,7 @@ export const systemInfoSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	RuncCommit: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -23087,7 +23088,7 @@ export const systemInfoSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	InitCommit: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -23124,7 +23125,7 @@ export const systemInfoSchema = v.strictObject({
 	 */
 	DefaultAddressPools: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The network address in CIDR format
 				 */
@@ -23153,7 +23154,7 @@ export const systemInfoSchema = v.strictObject({
  * > V1 plugins are "lazily" loaded, and are not returned in this list
  * > if there is no resource using the plugin.
  */
-export const inputPluginsInfoSchema = v.strictObject({
+export const inputPluginsInfoSchema = v.looseObject({
 	/**
 	 * Names of available volume-drivers, and network-driver plugins.
 	 */
@@ -23171,7 +23172,7 @@ export const inputPluginsInfoSchema = v.strictObject({
 	 */
 	Log: v.optional(v.array(v.string())),
 });
-export const pluginsInfoSchema = v.strictObject({
+export const pluginsInfoSchema = v.looseObject({
 	/**
 	 * Names of available volume-drivers, and network-driver plugins.
 	 */
@@ -23191,7 +23192,7 @@ export const pluginsInfoSchema = v.strictObject({
 });
 /** RegistryServiceConfig stores daemon registry services configuration. */
 export const inputRegistryServiceConfigSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * List of IP ranges to which nondistributable artifacts can be pushed,
 		 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
@@ -23269,7 +23270,7 @@ export const inputRegistryServiceConfigSchema = v.nullable(
 			v.record(
 				v.string(),
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the registry, such as "docker.io".
 						 */
@@ -23310,7 +23311,7 @@ export const inputRegistryServiceConfigSchema = v.nullable(
 	}),
 );
 export const registryServiceConfigSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * List of IP ranges to which nondistributable artifacts can be pushed,
 		 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
@@ -23394,7 +23395,7 @@ export const registryServiceConfigSchema = v.nullable(
 			v.record(
 				v.string(),
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the registry, such as "docker.io".
 						 */
@@ -23436,7 +23437,7 @@ export const registryServiceConfigSchema = v.nullable(
 );
 /** IndexInfo contains information about a registry. */
 export const inputIndexInfoSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Name of the registry, such as "docker.io".
 		 */
@@ -23468,7 +23469,7 @@ export const inputIndexInfoSchema = v.nullable(
 	}),
 );
 export const indexInfoSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Name of the registry, such as "docker.io".
 		 */
@@ -23508,7 +23509,7 @@ export const indexInfoSchema = v.nullable(
  * runtimes act as an interface to the Linux kernel namespaces, cgroups,
  * and SELinux.
  */
-export const inputRuntimeSchema = v.strictObject({
+export const inputRuntimeSchema = v.looseObject({
 	/**
 	 * Name and, optional, path, of the OCI executable binary.
 	 *
@@ -23521,7 +23522,7 @@ export const inputRuntimeSchema = v.strictObject({
 	 */
 	runtimeArgs: v.optional(v.nullable(v.array(v.string()))),
 });
-export const runtimeSchema = v.strictObject({
+export const runtimeSchema = v.looseObject({
 	/**
 	 * Name and, optional, path, of the OCI executable binary.
 	 *
@@ -23541,7 +23542,7 @@ export const runtimeSchema = v.strictObject({
  * reported in the version-string of external tools, such as `containerd`,
  * or `runC`.
  */
-export const inputCommitSchema = v.strictObject({
+export const inputCommitSchema = v.looseObject({
 	/**
 	 * Actual commit ID of external tool.
 	 */
@@ -23551,7 +23552,7 @@ export const inputCommitSchema = v.strictObject({
 	 */
 	Expected: v.optional(v.string()),
 });
-export const commitSchema = v.strictObject({
+export const commitSchema = v.looseObject({
 	/**
 	 * Actual commit ID of external tool.
 	 */
@@ -23562,7 +23563,7 @@ export const commitSchema = v.strictObject({
 	Expected: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** Represents generic information about swarm. */
-export const inputSwarmInfoSchema = v.strictObject({
+export const inputSwarmInfoSchema = v.looseObject({
 	/**
 	 * Unique identifier of for this node in the swarm.
 	 */
@@ -23586,7 +23587,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 	RemoteManagers: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Unique identifier of for this node in the swarm.
 					 */
@@ -23613,7 +23614,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 	 */
 	Cluster: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the swarm.
 				 */
@@ -23631,7 +23632,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 				 * overwrite each other.
 				 */
 				Version: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Index: v.optional(v.pipe(v.number(), v.integer())),
 					}),
 				),
@@ -23649,7 +23650,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 				 * User modifiable swarm configuration.
 				 */
 				Spec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the swarm.
 						 */
@@ -23663,7 +23664,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 						 */
 						Orchestration: v.optional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The number of historic tasks to keep per instance or node. If
 									 * negative, never remove completed or failed tasks.
@@ -23676,7 +23677,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 						 * Raft configuration.
 						 */
 						Raft: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The number of log entries between snapshots.
 								 */
@@ -23716,7 +23717,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 						 */
 						Dispatcher: v.optional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The delay for an agent to send a heartbeat to the dispatcher.
 									 */
@@ -23729,7 +23730,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 						 */
 						CAConfig: v.optional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The duration node certificates are issued for.
 									 */
@@ -23740,7 +23741,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 									 */
 									ExternalCAs: v.optional(
 										v.array(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Protocol for communication with the external CA (currently
 												 * only `cfssl` is supported).
@@ -23787,7 +23788,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 						 * Parameters related to encryption-at-rest.
 						 */
 						EncryptionConfig: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * If set, generate a key and use it to lock data stored on the
 								 * managers.
@@ -23799,7 +23800,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 						 * Defaults for creating tasks in this cluster.
 						 */
 						TaskDefaults: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The log driver to use for tasks created in the orchestrator if
 								 * unspecified by a service.
@@ -23808,7 +23809,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 								 * to use their previously configured log driver until recreated.
 								 */
 								LogDriver: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The log driver to use as a default for new tasks.
 										 */
@@ -23829,7 +23830,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 				 * CA certificate.
 				 */
 				TLSInfo: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The root CA certificate(s) that are used to validate leaf TLS
 						 * certificates.
@@ -23869,7 +23870,7 @@ export const inputSwarmInfoSchema = v.strictObject({
 		),
 	),
 });
-export const swarmInfoSchema = v.strictObject({
+export const swarmInfoSchema = v.looseObject({
 	/**
 	 * Unique identifier of for this node in the swarm.
 	 */
@@ -23893,7 +23894,7 @@ export const swarmInfoSchema = v.strictObject({
 	RemoteManagers: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Unique identifier of for this node in the swarm.
 					 */
@@ -23920,7 +23921,7 @@ export const swarmInfoSchema = v.strictObject({
 	 */
 	Cluster: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the swarm.
 				 */
@@ -23938,7 +23939,7 @@ export const swarmInfoSchema = v.strictObject({
 				 * overwrite each other.
 				 */
 				Version: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 					}),
 				),
@@ -23956,7 +23957,7 @@ export const swarmInfoSchema = v.strictObject({
 				 * User modifiable swarm configuration.
 				 */
 				Spec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the swarm.
 						 */
@@ -23972,7 +23973,7 @@ export const swarmInfoSchema = v.strictObject({
 						 */
 						Orchestration: v.exactOptional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The number of historic tasks to keep per instance or node. If
 									 * negative, never remove completed or failed tasks.
@@ -23991,7 +23992,7 @@ export const swarmInfoSchema = v.strictObject({
 						 * Raft configuration.
 						 */
 						Raft: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The number of log entries between snapshots.
 								 */
@@ -24035,7 +24036,7 @@ export const swarmInfoSchema = v.strictObject({
 						 */
 						Dispatcher: v.exactOptional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The delay for an agent to send a heartbeat to the dispatcher.
 									 */
@@ -24054,7 +24055,7 @@ export const swarmInfoSchema = v.strictObject({
 						 */
 						CAConfig: v.exactOptional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The duration node certificates are issued for.
 									 */
@@ -24071,7 +24072,7 @@ export const swarmInfoSchema = v.strictObject({
 									 */
 									ExternalCAs: v.exactOptional(
 										v.array(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Protocol for communication with the external CA (currently
 												 * only `cfssl` is supported).
@@ -24120,7 +24121,7 @@ export const swarmInfoSchema = v.strictObject({
 						 * Parameters related to encryption-at-rest.
 						 */
 						EncryptionConfig: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * If set, generate a key and use it to lock data stored on the
 								 * managers.
@@ -24132,7 +24133,7 @@ export const swarmInfoSchema = v.strictObject({
 						 * Defaults for creating tasks in this cluster.
 						 */
 						TaskDefaults: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The log driver to use for tasks created in the orchestrator if
 								 * unspecified by a service.
@@ -24141,7 +24142,7 @@ export const swarmInfoSchema = v.strictObject({
 								 * to use their previously configured log driver until recreated.
 								 */
 								LogDriver: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The log driver to use as a default for new tasks.
 										 */
@@ -24164,7 +24165,7 @@ export const swarmInfoSchema = v.strictObject({
 				 * CA certificate.
 				 */
 				TLSInfo: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The root CA certificate(s) that are used to validate leaf TLS
 						 * certificates.
@@ -24220,7 +24221,7 @@ export const inputLocalNodeStateSchema = v.picklist([
 ]);
 export const localNodeStateSchema = inputLocalNodeStateSchema;
 /** Represents a peer-node in the swarm */
-export const inputPeerNodeSchema = v.strictObject({
+export const inputPeerNodeSchema = v.looseObject({
 	/**
 	 * Unique identifier of for this node in the swarm.
 	 */
@@ -24230,7 +24231,7 @@ export const inputPeerNodeSchema = v.strictObject({
 	 */
 	Addr: v.optional(v.string()),
 });
-export const peerNodeSchema = v.strictObject({
+export const peerNodeSchema = v.looseObject({
 	/**
 	 * Unique identifier of for this node in the swarm.
 	 */
@@ -24241,7 +24242,7 @@ export const peerNodeSchema = v.strictObject({
 	Addr: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** Specifies how a service should be attached to a particular network. */
-export const inputNetworkAttachmentConfigSchema = v.strictObject({
+export const inputNetworkAttachmentConfigSchema = v.looseObject({
 	/**
 	 * The target network for attachment. Must be a network name or ID.
 	 */
@@ -24255,7 +24256,7 @@ export const inputNetworkAttachmentConfigSchema = v.strictObject({
 	 */
 	DriverOpts: v.optional(v.record(v.string(), v.string())),
 });
-export const networkAttachmentConfigSchema = v.strictObject({
+export const networkAttachmentConfigSchema = v.looseObject({
 	/**
 	 * The target network for attachment. Must be a network name or ID.
 	 */
@@ -24275,7 +24276,7 @@ export const networkAttachmentConfigSchema = v.strictObject({
  * Actor describes something that generates events, like a container, network,
  * or a volume.
  */
-export const inputEventActorSchema = v.strictObject({
+export const inputEventActorSchema = v.looseObject({
 	/**
 	 * The ID of the object emitting the event
 	 */
@@ -24285,7 +24286,7 @@ export const inputEventActorSchema = v.strictObject({
 	 */
 	Attributes: v.optional(v.record(v.string(), v.string())),
 });
-export const eventActorSchema = v.strictObject({
+export const eventActorSchema = v.looseObject({
 	/**
 	 * The ID of the object emitting the event
 	 */
@@ -24301,7 +24302,7 @@ export const eventActorSchema = v.strictObject({
  * EventMessage represents the information an event contains.
  * @title SystemEventsResponse
  */
-export const inputEventMessageSchema = v.strictObject({
+export const inputEventMessageSchema = v.looseObject({
 	/**
 	 * The type of object emitting the event
 	 */
@@ -24329,7 +24330,7 @@ export const inputEventMessageSchema = v.strictObject({
 	 * or a volume.
 	 */
 	Actor: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the object emitting the event
 			 */
@@ -24354,7 +24355,7 @@ export const inputEventMessageSchema = v.strictObject({
 	 */
 	timeNano: v.optional(v.bigint()),
 });
-export const eventMessageSchema = v.strictObject({
+export const eventMessageSchema = v.looseObject({
 	/**
 	 * The type of object emitting the event
 	 */
@@ -24382,7 +24383,7 @@ export const eventMessageSchema = v.strictObject({
 	 * or a volume.
 	 */
 	Actor: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the object emitting the event
 			 */
@@ -24426,7 +24427,7 @@ export const eventMessageSchema = v.strictObject({
  * the [OCI Content Descriptors
  * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
  */
-export const inputOciDescriptorSchema = v.strictObject({
+export const inputOciDescriptorSchema = v.looseObject({
 	/**
 	 * The media type of the object this schema refers to.
 	 */
@@ -24440,7 +24441,7 @@ export const inputOciDescriptorSchema = v.strictObject({
 	 */
 	size: v.optional(v.bigint()),
 });
-export const ociDescriptorSchema = v.strictObject({
+export const ociDescriptorSchema = v.looseObject({
 	/**
 	 * The media type of the object this schema refers to.
 	 */
@@ -24465,7 +24466,7 @@ export const ociDescriptorSchema = v.strictObject({
  * in the [OCI Image Index
  * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/image-index.md).
  */
-export const inputOciPlatformSchema = v.strictObject({
+export const inputOciPlatformSchema = v.looseObject({
 	/**
 	 * The CPU architecture, for example `amd64` or `ppc64`.
 	 */
@@ -24490,7 +24491,7 @@ export const inputOciPlatformSchema = v.strictObject({
 	 */
 	variant: v.optional(v.string()),
 });
-export const ociPlatformSchema = v.strictObject({
+export const ociPlatformSchema = v.looseObject({
 	/**
 	 * The CPU architecture, for example `amd64` or `ppc64`.
 	 */
@@ -24520,13 +24521,13 @@ export const ociPlatformSchema = v.strictObject({
  * image metadata.
  * @title DistributionInspectResponse
  */
-export const inputDistributionInspectSchema = v.strictObject({
+export const inputDistributionInspectSchema = v.looseObject({
 	/**
 	 * A descriptor struct containing digest, media type, and size, as defined in
 	 * the [OCI Content Descriptors
 	 * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
 	 */
-	Descriptor: v.strictObject({
+	Descriptor: v.looseObject({
 		/**
 		 * The media type of the object this schema refers to.
 		 */
@@ -24544,7 +24545,7 @@ export const inputDistributionInspectSchema = v.strictObject({
 	 * An array containing all platforms supported by the image.
 	 */
 	Platforms: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The CPU architecture, for example `amd64` or `ppc64`.
 			 */
@@ -24571,13 +24572,13 @@ export const inputDistributionInspectSchema = v.strictObject({
 		}),
 	),
 });
-export const distributionInspectSchema = v.strictObject({
+export const distributionInspectSchema = v.looseObject({
 	/**
 	 * A descriptor struct containing digest, media type, and size, as defined in
 	 * the [OCI Content Descriptors
 	 * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
 	 */
-	Descriptor: v.strictObject({
+	Descriptor: v.looseObject({
 		/**
 		 * The media type of the object this schema refers to.
 		 */
@@ -24601,7 +24602,7 @@ export const distributionInspectSchema = v.strictObject({
 	 * An array containing all platforms supported by the image.
 	 */
 	Platforms: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The CPU architecture, for example `amd64` or `ppc64`.
 			 */
@@ -24632,7 +24633,7 @@ export const distributionInspectSchema = v.strictObject({
  * Options and information specific to, and only present on, Swarm CSI
  * cluster volumes.
  */
-export const inputClusterVolumeSchema = v.strictObject({
+export const inputClusterVolumeSchema = v.looseObject({
 	/**
 	 * The Swarm ID of this volume. Because cluster volumes are Swarm
 	 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -24652,7 +24653,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -24662,7 +24663,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 	 * Cluster-specific options used to create the volume.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -24676,7 +24677,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -24745,7 +24746,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -24767,7 +24768,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -24785,7 +24786,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -24815,7 +24816,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 	 * Information about the global status of the volume.
 	 */
 	Info: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The capacity of the volume in bytes. A value of 0 indicates that
 			 * the capacity is unknown.
@@ -24846,7 +24847,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 	 */
 	PublishStatus: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the Swarm node the volume is published on.
 				 */
@@ -24881,7 +24882,7 @@ export const inputClusterVolumeSchema = v.strictObject({
 		),
 	),
 });
-export const clusterVolumeSchema = v.strictObject({
+export const clusterVolumeSchema = v.looseObject({
 	/**
 	 * The Swarm ID of this volume. Because cluster volumes are Swarm
 	 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -24901,7 +24902,7 @@ export const clusterVolumeSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -24911,7 +24912,7 @@ export const clusterVolumeSchema = v.strictObject({
 	 * Cluster-specific options used to create the volume.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -24925,7 +24926,7 @@ export const clusterVolumeSchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -24994,7 +24995,7 @@ export const clusterVolumeSchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -25016,7 +25017,7 @@ export const clusterVolumeSchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -25038,7 +25039,7 @@ export const clusterVolumeSchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -25082,7 +25083,7 @@ export const clusterVolumeSchema = v.strictObject({
 	 * Information about the global status of the volume.
 	 */
 	Info: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The capacity of the volume in bytes. A value of 0 indicates that
 			 * the capacity is unknown.
@@ -25123,7 +25124,7 @@ export const clusterVolumeSchema = v.strictObject({
 	 */
 	PublishStatus: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the Swarm node the volume is published on.
 				 */
@@ -25161,7 +25162,7 @@ export const clusterVolumeSchema = v.strictObject({
 	),
 });
 /** Cluster-specific options used to create the volume. */
-export const inputClusterVolumeSpecSchema = v.strictObject({
+export const inputClusterVolumeSpecSchema = v.looseObject({
 	/**
 	 * Group defines the volume group of this volume. Volumes belonging to
 	 * the same group can be referred to by group name when creating
@@ -25175,7 +25176,7 @@ export const inputClusterVolumeSpecSchema = v.strictObject({
 	 * Defines how the volume is used by tasks.
 	 */
 	AccessMode: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The set of nodes this volume can be used on at one time.
 			 * - `single` The volume may only be scheduled to one node at a time.
@@ -25242,7 +25243,7 @@ export const inputClusterVolumeSpecSchema = v.strictObject({
 			 */
 			Secrets: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Key is the name of the key of the key-value pair passed to
 						 * the plugin.
@@ -25264,7 +25265,7 @@ export const inputClusterVolumeSpecSchema = v.strictObject({
 			 * fields mean, see the CSI specification.
 			 */
 			AccessibilityRequirements: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of required topologies, at least one of which the
 					 * volume must be accessible from.
@@ -25282,7 +25283,7 @@ export const inputClusterVolumeSpecSchema = v.strictObject({
 			 * empty, the plugin will decide the capacity.
 			 */
 			CapacityRange: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The volume must be at least this big. The value of 0
 					 * indicates an unspecified minimum
@@ -25307,7 +25308,7 @@ export const inputClusterVolumeSpecSchema = v.strictObject({
 		}),
 	),
 });
-export const clusterVolumeSpecSchema = v.strictObject({
+export const clusterVolumeSpecSchema = v.looseObject({
 	/**
 	 * Group defines the volume group of this volume. Volumes belonging to
 	 * the same group can be referred to by group name when creating
@@ -25321,7 +25322,7 @@ export const clusterVolumeSpecSchema = v.strictObject({
 	 * Defines how the volume is used by tasks.
 	 */
 	AccessMode: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The set of nodes this volume can be used on at one time.
 			 * - `single` The volume may only be scheduled to one node at a time.
@@ -25390,7 +25391,7 @@ export const clusterVolumeSpecSchema = v.strictObject({
 			 */
 			Secrets: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Key is the name of the key of the key-value pair passed to
 						 * the plugin.
@@ -25412,7 +25413,7 @@ export const clusterVolumeSpecSchema = v.strictObject({
 			 * fields mean, see the CSI specification.
 			 */
 			AccessibilityRequirements: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of required topologies, at least one of which the
 					 * volume must be accessible from.
@@ -25434,7 +25435,7 @@ export const clusterVolumeSpecSchema = v.strictObject({
 			 * empty, the plugin will decide the capacity.
 			 */
 			CapacityRange: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The volume must be at least this big. The value of 0
 					 * indicates an unspecified minimum
@@ -25479,7 +25480,7 @@ export const clusterVolumeSpecSchema = v.strictObject({
 export const inputTopologySchema = v.record(v.string(), v.string());
 export const topologySchema = inputTopologySchema;
 export const inputContainerListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of this container
 		 */
@@ -25509,7 +25510,7 @@ export const inputContainerListCommandResponseSchema = v.array(
 		 */
 		Ports: v.optional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Host IP address that the container's port is mapped to
 					 */
@@ -25547,7 +25548,7 @@ export const inputContainerListCommandResponseSchema = v.array(
 		 */
 		Status: v.optional(v.string()),
 		HostConfig: v.optional(
-			v.strictObject({
+			v.looseObject({
 				NetworkMode: v.optional(v.string()),
 			}),
 		),
@@ -25555,17 +25556,17 @@ export const inputContainerListCommandResponseSchema = v.array(
 		 * A summary of the container's network settings
 		 */
 		NetworkSettings: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Networks: v.optional(
 					v.record(
 						v.string(),
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 							 */
 							IPAMConfig: v.optional(
 								v.nullable(
-									v.strictObject({
+									v.looseObject({
 										IPv4Address: v.optional(v.string()),
 										IPv6Address: v.optional(v.string()),
 										LinkLocalIPs: v.optional(v.array(v.string())),
@@ -25624,7 +25625,7 @@ export const inputContainerListCommandResponseSchema = v.array(
 		),
 		Mounts: v.optional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mount type:
 					 *
@@ -25684,7 +25685,7 @@ export const inputContainerListCommandResponseSchema = v.array(
 	}),
 );
 export const containerListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of this container
 		 */
@@ -25720,7 +25721,7 @@ export const containerListCommandResponseSchema = v.array(
 		 */
 		Ports: v.exactOptional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Host IP address that the container's port is mapped to
 					 */
@@ -25770,7 +25771,7 @@ export const containerListCommandResponseSchema = v.array(
 		 */
 		Status: v.exactOptional(v.pipe(v.string(), v.trim())),
 		HostConfig: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				NetworkMode: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
 		),
@@ -25778,17 +25779,17 @@ export const containerListCommandResponseSchema = v.array(
 		 * A summary of the container's network settings
 		 */
 		NetworkSettings: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Networks: v.exactOptional(
 					v.record(
 						v.string(),
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 							 */
 							IPAMConfig: v.exactOptional(
 								v.nullable(
-									v.strictObject({
+									v.looseObject({
 										IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 										IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 										LinkLocalIPs: v.exactOptional(
@@ -25855,7 +25856,7 @@ export const containerListCommandResponseSchema = v.array(
 		),
 		Mounts: v.exactOptional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mount type:
 					 *
@@ -25936,7 +25937,7 @@ export const containerListCommandQuerySchema = v.strictObject({
 	size: v.exactOptional(v.boolean()),
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputContainerCreateCommandBodySchema = v.strictObject({
+export const inputContainerCreateCommandBodySchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 */
@@ -25995,7 +25996,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -26086,7 +26087,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 	 * Container configuration that depends on the host we are running on
 	 */
 	HostConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An integer value representing this container's relative CPU weight
 			 * versus other containers.
@@ -26118,7 +26119,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioWeightDevice: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Path: v.optional(v.string()),
 						Weight: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 					}),
@@ -26133,7 +26134,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceReadBps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -26141,7 +26142,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -26154,7 +26155,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceWriteBps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -26162,7 +26163,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -26175,7 +26176,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceReadIOps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -26183,7 +26184,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -26196,7 +26197,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceWriteIOps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -26204,7 +26205,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -26240,7 +26241,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			Devices: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						PathOnHost: v.optional(v.string()),
 						PathInContainer: v.optional(v.string()),
 						CgroupPermissions: v.optional(v.string()),
@@ -26256,7 +26257,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			DeviceRequests: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Driver: v.optional(v.string()),
 						Count: v.optional(v.pipe(v.number(), v.integer())),
 						DeviceIDs: v.optional(v.array(v.string())),
@@ -26294,7 +26295,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 * between 0 and 100.
 			 */
 			MemorySwappiness: v.optional(
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			/**
 			 * CPU quota in units of 10<sup>-9</sup> CPUs.
@@ -26324,7 +26325,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			Ulimits: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of ulimit
 						 */
@@ -26441,7 +26442,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 * The logging configuration for this container
 			 */
 			LogConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Type: v.optional(
 						v.picklist([
 							"json-file",
@@ -26479,7 +26480,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 					v.string(),
 					v.nullable(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Host IP address that the container's port is mapped to.
 								 */
@@ -26501,7 +26502,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 * added before each restart to prevent flooding the server.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * - Empty string means not to restart
 					 * - `no` Do not automatically restart
@@ -26538,7 +26539,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			 */
 			Mounts: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Container path.
 						 */
@@ -26577,7 +26578,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						 * Optional configuration for the `bind` type.
 						 */
 						BindOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 								 */
@@ -26605,7 +26606,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						 * Optional configuration for the `volume` type.
 						 */
 						VolumeOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Populate volume with data from the target.
 								 */
@@ -26618,7 +26619,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 								 * Map of driver specific options
 								 */
 								DriverConfig: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of the driver to use to create the volume.
 										 */
@@ -26635,7 +26636,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 						 * Optional configuration for the `tmpfs` type.
 						 */
 						TmpfsOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The size for the tmpfs mount in bytes.
 								 */
@@ -26795,7 +26796,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 			/**
 			 * Size of `/dev/shm` in bytes. If omitted, the system uses 64MB.
 			 */
-			ShmSize: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+			ShmSize: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			/**
 			 * A list of kernel parameters (sysctls) to set in the container.
 			 * For example:
@@ -26832,20 +26833,20 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 	 * and `docker network connect` commands.
 	 */
 	NetworkingConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * A mapping of network name to endpoint configuration for that network.
 			 */
 			EndpointsConfig: v.optional(
 				v.record(
 					v.string(),
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 						 */
 						IPAMConfig: v.optional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									IPv4Address: v.optional(v.string()),
 									IPv6Address: v.optional(v.string()),
 									LinkLocalIPs: v.optional(v.array(v.string())),
@@ -26903,7 +26904,7 @@ export const inputContainerCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const containerCreateCommandBodySchema = v.strictObject({
+export const containerCreateCommandBodySchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 */
@@ -26962,7 +26963,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -27073,7 +27074,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 	 * Container configuration that depends on the host we are running on
 	 */
 	HostConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An integer value representing this container's relative CPU weight
 			 * versus other containers.
@@ -27111,7 +27112,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioWeightDevice: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Path: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Weight: v.exactOptional(
 							v.pipe(v.number(), v.integer(), v.minValue(0)),
@@ -27128,7 +27129,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceReadBps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -27142,15 +27143,15 @@ export const containerCreateCommandBodySchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -27165,7 +27166,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceWriteBps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -27179,15 +27180,15 @@ export const containerCreateCommandBodySchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -27202,7 +27203,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceReadIOps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -27216,15 +27217,15 @@ export const containerCreateCommandBodySchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -27239,7 +27240,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			BlkioDeviceWriteIOps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -27253,15 +27254,15 @@ export const containerCreateCommandBodySchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -27323,7 +27324,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			Devices: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						PathOnHost: v.exactOptional(v.pipe(v.string(), v.trim())),
 						PathInContainer: v.exactOptional(v.pipe(v.string(), v.trim())),
 						CgroupPermissions: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -27339,7 +27340,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			DeviceRequests: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Driver: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Count: v.exactOptional(v.pipe(v.number(), v.integer())),
 						DeviceIDs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -27404,15 +27405,15 @@ export const containerCreateCommandBodySchema = v.strictObject({
 						v.string(),
 						v.decimal(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
-					v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+					v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 				]),
 			),
 			/**
@@ -27457,7 +27458,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			Ulimits: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of ulimit
 						 */
@@ -27598,7 +27599,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 * The logging configuration for this container
 			 */
 			LogConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Type: v.exactOptional(
 						v.picklist([
 							"json-file",
@@ -27638,7 +27639,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 					v.string(),
 					v.nullable(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Host IP address that the container's port is mapped to.
 								 */
@@ -27660,7 +27661,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 * added before each restart to prevent flooding the server.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * - Empty string means not to restart
 					 * - `no` Do not automatically restart
@@ -27697,7 +27698,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 			 */
 			Mounts: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Container path.
 						 */
@@ -27736,7 +27737,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 						 * Optional configuration for the `bind` type.
 						 */
 						BindOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 								 */
@@ -27764,7 +27765,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 						 * Optional configuration for the `volume` type.
 						 */
 						VolumeOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Populate volume with data from the target.
 								 */
@@ -27779,7 +27780,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 								 * Map of driver specific options
 								 */
 								DriverConfig: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of the driver to use to create the volume.
 										 */
@@ -27798,7 +27799,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 						 * Optional configuration for the `tmpfs` type.
 						 */
 						TmpfsOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The size for the tmpfs mount in bytes.
 								 */
@@ -27976,15 +27977,15 @@ export const containerCreateCommandBodySchema = v.strictObject({
 						v.string(),
 						v.decimal(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					),
-					v.pipe(v.bigint(), v.minValue(BigInt(0))),
+					v.pipe(v.bigint(), v.minValue(0n)),
 				]),
 			),
 			/**
@@ -28027,20 +28028,20 @@ export const containerCreateCommandBodySchema = v.strictObject({
 	 * and `docker network connect` commands.
 	 */
 	NetworkingConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * A mapping of network name to endpoint configuration for that network.
 			 */
 			EndpointsConfig: v.exactOptional(
 				v.record(
 					v.string(),
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 						 */
 						IPAMConfig: v.exactOptional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 									IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 									LinkLocalIPs: v.exactOptional(
@@ -28106,7 +28107,7 @@ export const containerCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputContainerCreateCommandResponseSchema = v.strictObject({
+export const inputContainerCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created container
 	 */
@@ -28116,7 +28117,7 @@ export const inputContainerCreateCommandResponseSchema = v.strictObject({
 	 */
 	Warnings: v.array(v.string()),
 });
-export const containerCreateCommandResponseSchema = v.strictObject({
+export const containerCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created container
 	 */
@@ -28138,7 +28139,7 @@ export const containerCreateCommandQuerySchema = v.strictObject({
 	),
 	platform: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputContainerInspectCommandResponseSchema = v.strictObject({
+export const inputContainerInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the container
 	 */
@@ -28162,7 +28163,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 	 */
 	State: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * String representation of the container state. Can be one of "created",
 				 * "running", "paused", "restarting", "removing", "exited", or "dead".
@@ -28230,7 +28231,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 				 */
 				Health: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
 							 *
@@ -28252,7 +28253,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 							Log: v.optional(
 								v.array(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Date and time at which this check started in
 											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -28320,7 +28321,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 	 * Container configuration that depends on the host we are running on
 	 */
 	HostConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An integer value representing this container's relative CPU weight
 			 * versus other containers.
@@ -28352,7 +28353,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioWeightDevice: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Path: v.optional(v.string()),
 						Weight: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 					}),
@@ -28367,7 +28368,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceReadBps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -28375,7 +28376,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -28388,7 +28389,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceWriteBps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -28396,7 +28397,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -28409,7 +28410,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceReadIOps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -28417,7 +28418,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -28430,7 +28431,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceWriteIOps: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -28438,7 +28439,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						/**
 						 * Rate
 						 */
-						Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+						Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 					}),
 				),
 			),
@@ -28474,7 +28475,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			Devices: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						PathOnHost: v.optional(v.string()),
 						PathInContainer: v.optional(v.string()),
 						CgroupPermissions: v.optional(v.string()),
@@ -28490,7 +28491,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			DeviceRequests: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Driver: v.optional(v.string()),
 						Count: v.optional(v.pipe(v.number(), v.integer())),
 						DeviceIDs: v.optional(v.array(v.string())),
@@ -28528,7 +28529,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 * between 0 and 100.
 			 */
 			MemorySwappiness: v.optional(
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			/**
 			 * CPU quota in units of 10<sup>-9</sup> CPUs.
@@ -28558,7 +28559,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			Ulimits: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of ulimit
 						 */
@@ -28675,7 +28676,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 * The logging configuration for this container
 			 */
 			LogConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Type: v.optional(
 						v.picklist([
 							"json-file",
@@ -28713,7 +28714,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 					v.string(),
 					v.nullable(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Host IP address that the container's port is mapped to.
 								 */
@@ -28735,7 +28736,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 * added before each restart to prevent flooding the server.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * - Empty string means not to restart
 					 * - `no` Do not automatically restart
@@ -28772,7 +28773,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 */
 			Mounts: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Container path.
 						 */
@@ -28811,7 +28812,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						 * Optional configuration for the `bind` type.
 						 */
 						BindOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 								 */
@@ -28839,7 +28840,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						 * Optional configuration for the `volume` type.
 						 */
 						VolumeOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Populate volume with data from the target.
 								 */
@@ -28852,7 +28853,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 								 * Map of driver specific options
 								 */
 								DriverConfig: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of the driver to use to create the volume.
 										 */
@@ -28869,7 +28870,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 						 * Optional configuration for the `tmpfs` type.
 						 */
 						TmpfsOptions: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The size for the tmpfs mount in bytes.
 								 */
@@ -29029,7 +29030,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			/**
 			 * Size of `/dev/shm` in bytes. If omitted, the system uses 64MB.
 			 */
-			ShmSize: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+			ShmSize: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			/**
 			 * A list of kernel parameters (sysctls) to set in the container.
 			 * For example:
@@ -29064,7 +29065,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 	 * image's filesystem.
 	 */
 	GraphDriver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the storage driver.
 			 */
@@ -29089,7 +29090,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 	SizeRootFs: v.optional(v.bigint()),
 	Mounts: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The mount type:
 				 *
@@ -29157,7 +29158,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 	 * and it is not in active use anymore.
 	 */
 	Config: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 */
@@ -29216,7 +29217,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -29311,7 +29312,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 	 * NetworkSettings exposes the network settings in the API
 	 */
 	NetworkSettings: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the network's bridge (for example, `docker0`).
 			 */
@@ -29346,7 +29347,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 					v.string(),
 					v.nullable(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Host IP address that the container's port is mapped to.
 								 */
@@ -29367,7 +29368,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			SecondaryIPAddresses: v.optional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * IP address.
 							 */
@@ -29383,7 +29384,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			SecondaryIPv6Addresses: v.optional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * IP address.
 							 */
@@ -29498,13 +29499,13 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 			Networks: v.optional(
 				v.record(
 					v.string(),
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 						 */
 						IPAMConfig: v.optional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									IPv4Address: v.optional(v.string()),
 									IPv6Address: v.optional(v.string()),
 									LinkLocalIPs: v.optional(v.array(v.string())),
@@ -29562,7 +29563,7 @@ export const inputContainerInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const containerInspectCommandResponseSchema = v.strictObject({
+export const containerInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the container
 	 */
@@ -29586,7 +29587,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 	 */
 	State: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * String representation of the container state. Can be one of "created",
 				 * "running", "paused", "restarting", "removing", "exited", or "dead".
@@ -29654,7 +29655,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 				 */
 				Health: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Status is one of `none`, `starting`, `healthy` or `unhealthy`
 							 *
@@ -29676,7 +29677,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 							Log: v.exactOptional(
 								v.array(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Date and time at which this check started in
 											 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -29747,7 +29748,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 	 * Container configuration that depends on the host we are running on
 	 */
 	HostConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * An integer value representing this container's relative CPU weight
 			 * versus other containers.
@@ -29785,7 +29786,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioWeightDevice: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Path: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Weight: v.exactOptional(
 							v.pipe(v.number(), v.integer(), v.minValue(0)),
@@ -29802,7 +29803,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceReadBps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -29816,15 +29817,15 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -29839,7 +29840,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceWriteBps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -29853,15 +29854,15 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -29876,7 +29877,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceReadIOps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -29890,15 +29891,15 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -29913,7 +29914,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			BlkioDeviceWriteIOps: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Device path
 						 */
@@ -29927,15 +29928,15 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 									v.string(),
 									v.decimal(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
 									v.toBigint(),
-									v.pipe(v.bigint(), v.minValue(BigInt(0))),
+									v.pipe(v.bigint(), v.minValue(0n)),
 								),
-								v.pipe(v.bigint(), v.minValue(BigInt(0))),
+								v.pipe(v.bigint(), v.minValue(0n)),
 							]),
 						),
 					}),
@@ -29997,7 +29998,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			Devices: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						PathOnHost: v.exactOptional(v.pipe(v.string(), v.trim())),
 						PathInContainer: v.exactOptional(v.pipe(v.string(), v.trim())),
 						CgroupPermissions: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -30013,7 +30014,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			DeviceRequests: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Driver: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Count: v.exactOptional(v.pipe(v.number(), v.integer())),
 						DeviceIDs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -30078,15 +30079,15 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 						v.string(),
 						v.decimal(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
-					v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+					v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 				]),
 			),
 			/**
@@ -30131,7 +30132,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			Ulimits: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of ulimit
 						 */
@@ -30272,7 +30273,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 * The logging configuration for this container
 			 */
 			LogConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Type: v.exactOptional(
 						v.picklist([
 							"json-file",
@@ -30312,7 +30313,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 					v.string(),
 					v.nullable(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Host IP address that the container's port is mapped to.
 								 */
@@ -30334,7 +30335,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 * added before each restart to prevent flooding the server.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * - Empty string means not to restart
 					 * - `no` Do not automatically restart
@@ -30371,7 +30372,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 */
 			Mounts: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Container path.
 						 */
@@ -30410,7 +30411,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 						 * Optional configuration for the `bind` type.
 						 */
 						BindOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 								 */
@@ -30438,7 +30439,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 						 * Optional configuration for the `volume` type.
 						 */
 						VolumeOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Populate volume with data from the target.
 								 */
@@ -30453,7 +30454,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 								 * Map of driver specific options
 								 */
 								DriverConfig: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of the driver to use to create the volume.
 										 */
@@ -30472,7 +30473,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 						 * Optional configuration for the `tmpfs` type.
 						 */
 						TmpfsOptions: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The size for the tmpfs mount in bytes.
 								 */
@@ -30650,15 +30651,15 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 						v.string(),
 						v.decimal(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
 						v.toBigint(),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					),
-					v.pipe(v.bigint(), v.minValue(BigInt(0))),
+					v.pipe(v.bigint(), v.minValue(0n)),
 				]),
 			),
 			/**
@@ -30699,7 +30700,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 	 * image's filesystem.
 	 */
 	GraphDriver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the storage driver.
 			 */
@@ -30736,7 +30737,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 	),
 	Mounts: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The mount type:
 				 *
@@ -30804,7 +30805,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 	 * and it is not in active use anymore.
 	 */
 	Config: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 */
@@ -30863,7 +30864,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -30980,7 +30981,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 	 * NetworkSettings exposes the network settings in the API
 	 */
 	NetworkSettings: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the network's bridge (for example, `docker0`).
 			 */
@@ -31015,7 +31016,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 					v.string(),
 					v.nullable(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Host IP address that the container's port is mapped to.
 								 */
@@ -31036,7 +31037,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			SecondaryIPAddresses: v.exactOptional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * IP address.
 							 */
@@ -31052,7 +31053,7 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			SecondaryIPv6Addresses: v.exactOptional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * IP address.
 							 */
@@ -31167,13 +31168,13 @@ export const containerInspectCommandResponseSchema = v.strictObject({
 			Networks: v.exactOptional(
 				v.record(
 					v.string(),
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 						 */
 						IPAMConfig: v.exactOptional(
 							v.nullable(
-								v.strictObject({
+								v.looseObject({
 									IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 									IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 									LinkLocalIPs: v.exactOptional(
@@ -31251,7 +31252,7 @@ export const inputContainerInspectCommandQuerySchema = v.strictObject({
 export const containerInspectCommandQuerySchema = v.strictObject({
 	size: v.exactOptional(v.boolean()),
 });
-export const inputContainerTopCommandResponseSchema = v.strictObject({
+export const inputContainerTopCommandResponseSchema = v.looseObject({
 	/**
 	 * The ps column titles
 	 */
@@ -31262,7 +31263,7 @@ export const inputContainerTopCommandResponseSchema = v.strictObject({
 	 */
 	Processes: v.optional(v.array(v.array(v.string()))),
 });
-export const containerTopCommandResponseSchema = v.strictObject({
+export const containerTopCommandResponseSchema = v.looseObject({
 	/**
 	 * The ps column titles
 	 */
@@ -31330,7 +31331,7 @@ export const containerLogsCommandQuerySchema = v.strictObject({
 	tail: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputContainerChangesCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Path to file or directory that has changed.
 		 */
@@ -31348,7 +31349,7 @@ export const inputContainerChangesCommandResponseSchema = v.array(
 	}),
 );
 export const containerChangesCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Path to file or directory that has changed.
 		 */
@@ -31501,7 +31502,7 @@ export const inputContainerKillCommandQuerySchema = v.strictObject({
 export const containerKillCommandQuerySchema = v.strictObject({
 	signal: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputContainerUpdateCommandBodySchema = v.strictObject({
+export const inputContainerUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * An integer value representing this container's relative CPU weight
 	 * versus other containers.
@@ -31533,7 +31534,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioWeightDevice: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Path: v.optional(v.string()),
 				Weight: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 			}),
@@ -31548,7 +31549,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceReadBps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31556,7 +31557,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -31569,7 +31570,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceWriteBps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31577,7 +31578,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -31590,7 +31591,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceReadIOps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31598,7 +31599,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -31611,7 +31612,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceWriteIOps: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31619,7 +31620,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 				/**
 				 * Rate
 				 */
-				Rate: v.optional(v.pipe(v.bigint(), v.minValue(BigInt(0)))),
+				Rate: v.optional(v.pipe(v.bigint(), v.minValue(0n))),
 			}),
 		),
 	),
@@ -31655,7 +31656,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	Devices: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				PathOnHost: v.optional(v.string()),
 				PathInContainer: v.optional(v.string()),
 				CgroupPermissions: v.optional(v.string()),
@@ -31671,7 +31672,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	DeviceRequests: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Driver: v.optional(v.string()),
 				Count: v.optional(v.pipe(v.number(), v.integer())),
 				DeviceIDs: v.optional(v.array(v.string())),
@@ -31709,7 +31710,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 * between 0 and 100.
 	 */
 	MemorySwappiness: v.optional(
-		v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+		v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 	),
 	/**
 	 * CPU quota in units of 10<sup>-9</sup> CPUs.
@@ -31739,7 +31740,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 */
 	Ulimits: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of ulimit
 				 */
@@ -31788,7 +31789,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 	 * added before each restart to prevent flooding the server.
 	 */
 	RestartPolicy: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * - Empty string means not to restart
 			 * - `no` Do not automatically restart
@@ -31807,7 +31808,7 @@ export const inputContainerUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const containerUpdateCommandBodySchema = v.strictObject({
+export const containerUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * An integer value representing this container's relative CPU weight
 	 * versus other containers.
@@ -31845,7 +31846,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioWeightDevice: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Path: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Weight: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 			}),
@@ -31860,7 +31861,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceReadBps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31874,15 +31875,15 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -31897,7 +31898,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceWriteBps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31911,15 +31912,15 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -31934,7 +31935,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceReadIOps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31948,15 +31949,15 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -31971,7 +31972,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	BlkioDeviceWriteIOps: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Device path
 				 */
@@ -31985,15 +31986,15 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 							v.string(),
 							v.decimal(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
 							v.toBigint(),
-							v.pipe(v.bigint(), v.minValue(BigInt(0))),
+							v.pipe(v.bigint(), v.minValue(0n)),
 						),
-						v.pipe(v.bigint(), v.minValue(BigInt(0))),
+						v.pipe(v.bigint(), v.minValue(0n)),
 					]),
 				),
 			}),
@@ -32055,7 +32056,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	Devices: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				PathOnHost: v.exactOptional(v.pipe(v.string(), v.trim())),
 				PathInContainer: v.exactOptional(v.pipe(v.string(), v.trim())),
 				CgroupPermissions: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -32071,7 +32072,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	DeviceRequests: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				Driver: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Count: v.exactOptional(v.pipe(v.number(), v.integer())),
 				DeviceIDs: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -32136,15 +32137,15 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 				v.string(),
 				v.decimal(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
 				v.toBigint(),
-				v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
-			v.pipe(v.bigint(), v.minValue(BigInt(0)), v.maxValue(BigInt(100))),
+			v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 		]),
 	),
 	/**
@@ -32189,7 +32190,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 */
 	Ulimits: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of ulimit
 				 */
@@ -32262,7 +32263,7 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 	 * added before each restart to prevent flooding the server.
 	 */
 	RestartPolicy: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * - Empty string means not to restart
 			 * - `no` Do not automatically restart
@@ -32281,10 +32282,10 @@ export const containerUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputContainerUpdateCommandResponseSchema = v.strictObject({
+export const inputContainerUpdateCommandResponseSchema = v.looseObject({
 	Warnings: v.optional(v.array(v.string())),
 });
-export const containerUpdateCommandResponseSchema = v.strictObject({
+export const containerUpdateCommandResponseSchema = v.looseObject({
 	Warnings: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 });
 export const inputContainerUpdateCommandParamsSchema = v.strictObject({
@@ -32361,7 +32362,7 @@ export const containerAttachWebsocketCommandQuerySchema = v.strictObject({
 	stdout: v.exactOptional(v.boolean()),
 	stderr: v.exactOptional(v.boolean()),
 });
-export const inputContainerWaitCommandResponseSchema = v.strictObject({
+export const inputContainerWaitCommandResponseSchema = v.looseObject({
 	/**
 	 * Exit code of the container
 	 */
@@ -32370,7 +32371,7 @@ export const inputContainerWaitCommandResponseSchema = v.strictObject({
 	 * container waiting error, if any
 	 */
 	Error: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Details of an error
 			 */
@@ -32378,7 +32379,7 @@ export const inputContainerWaitCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const containerWaitCommandResponseSchema = v.strictObject({
+export const containerWaitCommandResponseSchema = v.looseObject({
 	/**
 	 * Exit code of the container
 	 */
@@ -32391,7 +32392,7 @@ export const containerWaitCommandResponseSchema = v.strictObject({
 	 * container waiting error, if any
 	 */
 	Error: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Details of an error
 			 */
@@ -32469,7 +32470,7 @@ export const inputContainerArchiveInfoCommandQuerySchema = v.strictObject({
 export const containerArchiveInfoCommandQuerySchema = v.strictObject({
 	path: v.pipe(v.string(), v.trim()),
 });
-export const inputContainerPruneCommandResponseSchema = v.strictObject({
+export const inputContainerPruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Container IDs that were deleted
 	 */
@@ -32479,7 +32480,7 @@ export const inputContainerPruneCommandResponseSchema = v.strictObject({
 	 */
 	SpaceReclaimed: v.optional(v.bigint()),
 });
-export const containerPruneCommandResponseSchema = v.strictObject({
+export const containerPruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Container IDs that were deleted
 	 */
@@ -32502,7 +32503,7 @@ export const containerPruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputImageListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * ID is the content-addressable ID of an image.
 		 *
@@ -32585,7 +32586,7 @@ export const inputImageListCommandResponseSchema = v.array(
 	}),
 );
 export const imageListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * ID is the content-addressable ID of an image.
 		 *
@@ -32815,14 +32816,14 @@ export const imageBuildCommandHeaderSchema = v.object({
 	"content-type": v.exactOptional(v.picklist(["application/x-tar"])),
 	"x-registry-config": v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputBuildPruneCommandResponseSchema = v.strictObject({
+export const inputBuildPruneCommandResponseSchema = v.looseObject({
 	CachesDeleted: v.optional(v.array(v.string())),
 	/**
 	 * Disk space reclaimed in bytes
 	 */
 	SpaceReclaimed: v.optional(v.bigint()),
 });
-export const buildPruneCommandResponseSchema = v.strictObject({
+export const buildPruneCommandResponseSchema = v.looseObject({
 	CachesDeleted: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 	/**
 	 * Disk space reclaimed in bytes
@@ -32875,7 +32876,7 @@ export const inputImageCreateCommandHeaderSchema = v.object({
 export const imageCreateCommandHeaderSchema = v.object({
 	"x-registry-auth": v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputImageInspectCommandResponseSchema = v.strictObject({
+export const inputImageInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * ID is the content-addressable ID of an image.
 	 *
@@ -32940,7 +32941,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 	 * and it is not in active use anymore.
 	 */
 	ContainerConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 */
@@ -32999,7 +33000,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -33106,7 +33107,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 	 * when starting a container from the image.
 	 */
 	Config: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 *
@@ -33197,7 +33198,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -33342,7 +33343,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 	 * image's filesystem.
 	 */
 	GraphDriver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the storage driver.
 			 */
@@ -33360,7 +33361,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 	 * Information about the image's RootFS, including the layer IDs.
 	 */
 	RootFS: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Type: v.string(),
 			Layers: v.optional(v.array(v.string())),
 		}),
@@ -33370,7 +33371,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 	 * is local to the daemon, and not part of the image itself.
 	 */
 	Metadata: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Date and time at which the image was last tagged in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -33382,7 +33383,7 @@ export const inputImageInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const imageInspectCommandResponseSchema = v.strictObject({
+export const imageInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * ID is the content-addressable ID of an image.
 	 *
@@ -33447,7 +33448,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 	 * and it is not in active use anymore.
 	 */
 	ContainerConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 */
@@ -33506,7 +33507,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -33635,7 +33636,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 	 * when starting a container from the image.
 	 */
 	Config: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The hostname to use for the container, as a valid RFC 1123 hostname.
 			 *
@@ -33726,7 +33727,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 			 * A test to perform to check that the container is healthy.
 			 */
 			Healthcheck: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The test to perform. Possible values are:
 					 *
@@ -33905,7 +33906,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 	 * image's filesystem.
 	 */
 	GraphDriver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the storage driver.
 			 */
@@ -33923,7 +33924,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 	 * Information about the image's RootFS, including the layer IDs.
 	 */
 	RootFS: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Type: v.pipe(v.string(), v.trim()),
 			Layers: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 		}),
@@ -33933,7 +33934,7 @@ export const imageInspectCommandResponseSchema = v.strictObject({
 	 * is local to the daemon, and not part of the image itself.
 	 */
 	Metadata: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Date and time at which the image was last tagged in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -33952,7 +33953,7 @@ export const imageInspectCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
 export const inputImageHistoryCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Id: v.string(),
 		Created: v.bigint(),
 		CreatedBy: v.string(),
@@ -33962,7 +33963,7 @@ export const inputImageHistoryCommandResponseSchema = v.array(
 	}),
 );
 export const imageHistoryCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Id: v.pipe(v.string(), v.trim()),
 		Created: v.union([
 			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -34018,7 +34019,7 @@ export const imageTagCommandQuerySchema = v.strictObject({
 	tag: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputImageDeleteCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The image ID of an image that was untagged
 		 */
@@ -34030,7 +34031,7 @@ export const inputImageDeleteCommandResponseSchema = v.array(
 	}),
 );
 export const imageDeleteCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The image ID of an image that was untagged
 		 */
@@ -34056,7 +34057,7 @@ export const imageDeleteCommandQuerySchema = v.strictObject({
 	noprune: v.exactOptional(v.boolean()),
 });
 export const inputImageSearchCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		description: v.optional(v.string()),
 		is_official: v.optional(v.boolean()),
 		is_automated: v.optional(v.boolean()),
@@ -34065,7 +34066,7 @@ export const inputImageSearchCommandResponseSchema = v.array(
 	}),
 );
 export const imageSearchCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		description: v.exactOptional(v.pipe(v.string(), v.trim())),
 		is_official: v.exactOptional(v.boolean()),
 		is_automated: v.exactOptional(v.boolean()),
@@ -34093,13 +34094,13 @@ export const imageSearchCommandQuerySchema = v.strictObject({
 	),
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputImagePruneCommandResponseSchema = v.strictObject({
+export const inputImagePruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Images that were deleted
 	 */
 	ImagesDeleted: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The image ID of an image that was untagged
 				 */
@@ -34116,13 +34117,13 @@ export const inputImagePruneCommandResponseSchema = v.strictObject({
 	 */
 	SpaceReclaimed: v.optional(v.bigint()),
 });
-export const imagePruneCommandResponseSchema = v.strictObject({
+export const imagePruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Images that were deleted
 	 */
 	ImagesDeleted: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The image ID of an image that was untagged
 				 */
@@ -34151,19 +34152,19 @@ export const inputImagePruneCommandQuerySchema = v.strictObject({
 export const imagePruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSystemAuthCommandBodySchema = v.strictObject({
+export const inputSystemAuthCommandBodySchema = v.looseObject({
 	username: v.optional(v.string()),
 	password: v.optional(v.string()),
 	email: v.optional(v.string()),
 	serveraddress: v.optional(v.string()),
 });
-export const systemAuthCommandBodySchema = v.strictObject({
+export const systemAuthCommandBodySchema = v.looseObject({
 	username: v.exactOptional(v.pipe(v.string(), v.trim())),
 	password: v.exactOptional(v.pipe(v.string(), v.trim())),
 	email: v.exactOptional(v.pipe(v.string(), v.trim())),
 	serveraddress: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSystemAuthCommandResponseSchema = v.strictObject({
+export const inputSystemAuthCommandResponseSchema = v.looseObject({
 	/**
 	 * The status of the authentication
 	 */
@@ -34173,7 +34174,7 @@ export const inputSystemAuthCommandResponseSchema = v.strictObject({
 	 */
 	IdentityToken: v.optional(v.string()),
 });
-export const systemAuthCommandResponseSchema = v.strictObject({
+export const systemAuthCommandResponseSchema = v.looseObject({
 	/**
 	 * The status of the authentication
 	 */
@@ -34183,7 +34184,7 @@ export const systemAuthCommandResponseSchema = v.strictObject({
 	 */
 	IdentityToken: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSystemInfoCommandResponseSchema = v.strictObject({
+export const inputSystemInfoCommandResponseSchema = v.looseObject({
 	/**
 	 * Unique identifier of the daemon.
 	 *
@@ -34251,7 +34252,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 * > if there is no resource using the plugin.
 	 */
 	Plugins: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Names of available volume-drivers, and network-driver plugins.
 			 */
@@ -34430,7 +34431,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 */
 	RegistryConfig: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * List of IP ranges to which nondistributable artifacts can be pushed,
 				 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
@@ -34510,7 +34511,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 					v.record(
 						v.string(),
 						v.nullable(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the registry, such as "docker.io".
 								 */
@@ -34557,15 +34558,15 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 */
 	GenericResources: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.string()),
 					}),
 				),
 				DiscreteResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.bigint()),
 					}),
@@ -34645,7 +34646,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	Runtimes: v.optional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name and, optional, path, of the OCI executable binary.
 				 *
@@ -34670,7 +34671,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 * Represents generic information about swarm.
 	 */
 	Swarm: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Unique identifier of for this node in the swarm.
 			 */
@@ -34694,7 +34695,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 			RemoteManagers: v.optional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Unique identifier of for this node in the swarm.
 							 */
@@ -34721,7 +34722,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 			 */
 			Cluster: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the swarm.
 						 */
@@ -34739,7 +34740,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.optional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -34757,7 +34758,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 						 * User modifiable swarm configuration.
 						 */
 						Spec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the swarm.
 								 */
@@ -34771,7 +34772,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 								 */
 								Orchestration: v.optional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The number of historic tasks to keep per instance or node. If
 											 * negative, never remove completed or failed tasks.
@@ -34784,7 +34785,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 								 * Raft configuration.
 								 */
 								Raft: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The number of log entries between snapshots.
 										 */
@@ -34828,7 +34829,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 								 */
 								Dispatcher: v.optional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The delay for an agent to send a heartbeat to the dispatcher.
 											 */
@@ -34841,7 +34842,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 								 */
 								CAConfig: v.optional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The duration node certificates are issued for.
 											 */
@@ -34852,7 +34853,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 											 */
 											ExternalCAs: v.optional(
 												v.array(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Protocol for communication with the external CA (currently
 														 * only `cfssl` is supported).
@@ -34901,7 +34902,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 								 * Parameters related to encryption-at-rest.
 								 */
 								EncryptionConfig: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * If set, generate a key and use it to lock data stored on the
 										 * managers.
@@ -34913,7 +34914,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 								 * Defaults for creating tasks in this cluster.
 								 */
 								TaskDefaults: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The log driver to use for tasks created in the orchestrator if
 										 * unspecified by a service.
@@ -34922,7 +34923,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 										 * to use their previously configured log driver until recreated.
 										 */
 										LogDriver: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The log driver to use as a default for new tasks.
 												 */
@@ -34943,7 +34944,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 						 * CA certificate.
 						 */
 						TLSInfo: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The root CA certificate(s) that are used to validate leaf TLS
 								 * certificates.
@@ -35016,7 +35017,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	ContainerdCommit: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -35033,7 +35034,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	RuncCommit: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -35050,7 +35051,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	InitCommit: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -35087,7 +35088,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 */
 	DefaultAddressPools: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The network address in CIDR format
 				 */
@@ -35107,7 +35108,7 @@ export const inputSystemInfoCommandResponseSchema = v.strictObject({
 	 */
 	Warnings: v.optional(v.array(v.string())),
 });
-export const systemInfoCommandResponseSchema = v.strictObject({
+export const systemInfoCommandResponseSchema = v.looseObject({
 	/**
 	 * Unique identifier of the daemon.
 	 *
@@ -35175,7 +35176,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 * > if there is no resource using the plugin.
 	 */
 	Plugins: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Names of available volume-drivers, and network-driver plugins.
 			 */
@@ -35360,7 +35361,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 */
 	RegistryConfig: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * List of IP ranges to which nondistributable artifacts can be pushed,
 				 * using the CIDR syntax [RFC 4632](https://tools.ietf.org/html/4632).
@@ -35444,7 +35445,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 					v.record(
 						v.string(),
 						v.nullable(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the registry, such as "docker.io".
 								 */
@@ -35491,15 +35492,15 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 */
 	GenericResources: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
 				),
 				DiscreteResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
@@ -35585,7 +35586,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	Runtimes: v.exactOptional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name and, optional, path, of the OCI executable binary.
 				 *
@@ -35612,7 +35613,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 * Represents generic information about swarm.
 	 */
 	Swarm: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Unique identifier of for this node in the swarm.
 			 */
@@ -35636,7 +35637,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 			RemoteManagers: v.exactOptional(
 				v.nullable(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Unique identifier of for this node in the swarm.
 							 */
@@ -35663,7 +35664,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 			 */
 			Cluster: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the swarm.
 						 */
@@ -35681,7 +35682,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -35699,7 +35700,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 						 * User modifiable swarm configuration.
 						 */
 						Spec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of the swarm.
 								 */
@@ -35715,7 +35716,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 								 */
 								Orchestration: v.exactOptional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The number of historic tasks to keep per instance or node. If
 											 * negative, never remove completed or failed tasks.
@@ -35744,7 +35745,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 								 * Raft configuration.
 								 */
 								Raft: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The number of log entries between snapshots.
 										 */
@@ -35792,7 +35793,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 								 */
 								Dispatcher: v.exactOptional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The delay for an agent to send a heartbeat to the dispatcher.
 											 */
@@ -35821,7 +35822,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 								 */
 								CAConfig: v.exactOptional(
 									v.nullable(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The duration node certificates are issued for.
 											 */
@@ -35848,7 +35849,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 											 */
 											ExternalCAs: v.exactOptional(
 												v.array(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Protocol for communication with the external CA (currently
 														 * only `cfssl` is supported).
@@ -35908,7 +35909,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 								 * Parameters related to encryption-at-rest.
 								 */
 								EncryptionConfig: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * If set, generate a key and use it to lock data stored on the
 										 * managers.
@@ -35920,7 +35921,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 								 * Defaults for creating tasks in this cluster.
 								 */
 								TaskDefaults: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The log driver to use for tasks created in the orchestrator if
 										 * unspecified by a service.
@@ -35929,7 +35930,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 										 * to use their previously configured log driver until recreated.
 										 */
 										LogDriver: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The log driver to use as a default for new tasks.
 												 */
@@ -35952,7 +35953,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 						 * CA certificate.
 						 */
 						TLSInfo: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The root CA certificate(s) that are used to validate leaf TLS
 								 * certificates.
@@ -36031,7 +36032,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	ContainerdCommit: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -36048,7 +36049,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	RuncCommit: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -36065,7 +36066,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 * or `runC`.
 	 */
 	InitCommit: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Actual commit ID of external tool.
 			 */
@@ -36102,7 +36103,7 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 */
 	DefaultAddressPools: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The network address in CIDR format
 				 */
@@ -36122,9 +36123,9 @@ export const systemInfoCommandResponseSchema = v.strictObject({
 	 */
 	Warnings: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 });
-export const inputSystemVersionCommandResponseSchema = v.strictObject({
+export const inputSystemVersionCommandResponseSchema = v.looseObject({
 	Platform: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Name: v.string(),
 		}),
 	),
@@ -36133,7 +36134,7 @@ export const inputSystemVersionCommandResponseSchema = v.strictObject({
 	 */
 	Components: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the component
 				 */
@@ -36200,9 +36201,9 @@ export const inputSystemVersionCommandResponseSchema = v.strictObject({
 	 */
 	BuildTime: v.optional(v.string()),
 });
-export const systemVersionCommandResponseSchema = v.strictObject({
+export const systemVersionCommandResponseSchema = v.looseObject({
 	Platform: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Name: v.pipe(v.string(), v.trim()),
 		}),
 	),
@@ -36211,7 +36212,7 @@ export const systemVersionCommandResponseSchema = v.strictObject({
 	 */
 	Components: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the component
 				 */
@@ -36278,7 +36279,7 @@ export const systemVersionCommandResponseSchema = v.strictObject({
 	 */
 	BuildTime: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputImageCommitCommandBodySchema = v.strictObject({
+export const inputImageCommitCommandBodySchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 */
@@ -36337,7 +36338,7 @@ export const inputImageCommitCommandBodySchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -36425,7 +36426,7 @@ export const inputImageCommitCommandBodySchema = v.strictObject({
 	 */
 	Shell: v.optional(v.nullable(v.array(v.string()))),
 });
-export const imageCommitCommandBodySchema = v.strictObject({
+export const imageCommitCommandBodySchema = v.looseObject({
 	/**
 	 * The hostname to use for the container, as a valid RFC 1123 hostname.
 	 */
@@ -36484,7 +36485,7 @@ export const imageCommitCommandBodySchema = v.strictObject({
 	 * A test to perform to check that the container is healthy.
 	 */
 	Healthcheck: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The test to perform. Possible values are:
 			 *
@@ -36592,13 +36593,13 @@ export const imageCommitCommandBodySchema = v.strictObject({
 	 */
 	Shell: v.exactOptional(v.nullable(v.array(v.pipe(v.string(), v.trim())))),
 });
-export const inputImageCommitCommandResponseSchema = v.strictObject({
+export const inputImageCommitCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.string(),
 });
-export const imageCommitCommandResponseSchema = v.strictObject({
+export const imageCommitCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
@@ -36622,7 +36623,7 @@ export const imageCommitCommandQuerySchema = v.strictObject({
 	pause: v.exactOptional(v.boolean()),
 	changes: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSystemEventsCommandResponseSchema = v.strictObject({
+export const inputSystemEventsCommandResponseSchema = v.looseObject({
 	/**
 	 * The type of object emitting the event
 	 */
@@ -36650,7 +36651,7 @@ export const inputSystemEventsCommandResponseSchema = v.strictObject({
 	 * or a volume.
 	 */
 	Actor: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the object emitting the event
 			 */
@@ -36675,7 +36676,7 @@ export const inputSystemEventsCommandResponseSchema = v.strictObject({
 	 */
 	timeNano: v.optional(v.bigint()),
 });
-export const systemEventsCommandResponseSchema = v.strictObject({
+export const systemEventsCommandResponseSchema = v.looseObject({
 	/**
 	 * The type of object emitting the event
 	 */
@@ -36703,7 +36704,7 @@ export const systemEventsCommandResponseSchema = v.strictObject({
 	 * or a volume.
 	 */
 	Actor: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the object emitting the event
 			 */
@@ -36752,11 +36753,11 @@ export const systemEventsCommandQuerySchema = v.strictObject({
 	until: v.exactOptional(v.pipe(v.string(), v.trim())),
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
+export const inputSystemDataUsageCommandResponseSchema = v.looseObject({
 	LayersSize: v.optional(v.bigint()),
 	Images: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * ID is the content-addressable ID of an image.
 				 *
@@ -36841,7 +36842,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	Containers: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of this container
 				 */
@@ -36871,7 +36872,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 				 */
 				Ports: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Host IP address that the container's port is mapped to
 							 */
@@ -36909,7 +36910,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 				 */
 				Status: v.optional(v.string()),
 				HostConfig: v.optional(
-					v.strictObject({
+					v.looseObject({
 						NetworkMode: v.optional(v.string()),
 					}),
 				),
@@ -36917,17 +36918,17 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 				 * A summary of the container's network settings
 				 */
 				NetworkSettings: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Networks: v.optional(
 							v.record(
 								v.string(),
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 									 */
 									IPAMConfig: v.optional(
 										v.nullable(
-											v.strictObject({
+											v.looseObject({
 												IPv4Address: v.optional(v.string()),
 												IPv6Address: v.optional(v.string()),
 												LinkLocalIPs: v.optional(v.array(v.string())),
@@ -36986,7 +36987,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 				),
 				Mounts: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The mount type:
 							 *
@@ -37048,7 +37049,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	Volumes: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the volume.
 				 */
@@ -37090,7 +37091,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 				 * cluster volumes.
 				 */
 				ClusterVolume: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The Swarm ID of this volume. Because cluster volumes are Swarm
 						 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -37110,7 +37111,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.optional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -37120,7 +37121,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 						 * Cluster-specific options used to create the volume.
 						 */
 						Spec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Group defines the volume group of this volume. Volumes belonging to
 								 * the same group can be referred to by group name when creating
@@ -37134,7 +37135,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 								 * Defines how the volume is used by tasks.
 								 */
 								AccessMode: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The set of nodes this volume can be used on at one time.
 										 * - `single` The volume may only be scheduled to one node at a time.
@@ -37203,7 +37204,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 										 */
 										Secrets: v.optional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Key is the name of the key of the key-value pair passed to
 													 * the plugin.
@@ -37225,7 +37226,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 										 * fields mean, see the CSI specification.
 										 */
 										AccessibilityRequirements: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A list of required topologies, at least one of which the
 												 * volume must be accessible from.
@@ -37247,7 +37248,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 										 * empty, the plugin will decide the capacity.
 										 */
 										CapacityRange: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The volume must be at least this big. The value of 0
 												 * indicates an unspecified minimum
@@ -37279,7 +37280,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 						 * Information about the global status of the volume.
 						 */
 						Info: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The capacity of the volume in bytes. A value of 0 indicates that
 								 * the capacity is unknown.
@@ -37312,7 +37313,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 						 */
 						PublishStatus: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The ID of the Swarm node the volume is published on.
 									 */
@@ -37358,7 +37359,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 				 */
 				UsageData: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Amount of disk space used by the volume (in bytes). This information
 							 * is only available for volumes created with the `"local"` volume
@@ -37379,7 +37380,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	BuildCache: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Unique ID of the build cache record.
 				 */
@@ -37438,7 +37439,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.strictObject({
 		),
 	),
 });
-export const systemDataUsageCommandResponseSchema = v.strictObject({
+export const systemDataUsageCommandResponseSchema = v.looseObject({
 	LayersSize: v.exactOptional(
 		v.union([
 			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -37448,7 +37449,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	Images: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * ID is the content-addressable ID of an image.
 				 *
@@ -37547,7 +37548,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	Containers: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of this container
 				 */
@@ -37583,7 +37584,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 				 */
 				Ports: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Host IP address that the container's port is mapped to
 							 */
@@ -37635,7 +37636,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 				 */
 				Status: v.exactOptional(v.pipe(v.string(), v.trim())),
 				HostConfig: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						NetworkMode: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
 				),
@@ -37643,17 +37644,17 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 				 * A summary of the container's network settings
 				 */
 				NetworkSettings: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Networks: v.exactOptional(
 							v.record(
 								v.string(),
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 									 */
 									IPAMConfig: v.exactOptional(
 										v.nullable(
-											v.strictObject({
+											v.looseObject({
 												IPv4Address: v.exactOptional(
 													v.pipe(v.string(), v.trim()),
 												),
@@ -37730,7 +37731,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 				),
 				Mounts: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The mount type:
 							 *
@@ -37792,7 +37793,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	Volumes: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the volume.
 				 */
@@ -37834,7 +37835,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 				 * cluster volumes.
 				 */
 				ClusterVolume: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The Swarm ID of this volume. Because cluster volumes are Swarm
 						 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -37854,7 +37855,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -37864,7 +37865,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 						 * Cluster-specific options used to create the volume.
 						 */
 						Spec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Group defines the volume group of this volume. Volumes belonging to
 								 * the same group can be referred to by group name when creating
@@ -37878,7 +37879,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 								 * Defines how the volume is used by tasks.
 								 */
 								AccessMode: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The set of nodes this volume can be used on at one time.
 										 * - `single` The volume may only be scheduled to one node at a time.
@@ -37949,7 +37950,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 										 */
 										Secrets: v.exactOptional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Key is the name of the key of the key-value pair passed to
 													 * the plugin.
@@ -37971,7 +37972,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 										 * fields mean, see the CSI specification.
 										 */
 										AccessibilityRequirements: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A list of required topologies, at least one of which the
 												 * volume must be accessible from.
@@ -37997,7 +37998,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 										 * empty, the plugin will decide the capacity.
 										 */
 										CapacityRange: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The volume must be at least this big. The value of 0
 												 * indicates an unspecified minimum
@@ -38061,7 +38062,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 						 * Information about the global status of the volume.
 						 */
 						Info: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The capacity of the volume in bytes. A value of 0 indicates that
 								 * the capacity is unknown.
@@ -38102,7 +38103,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 						 */
 						PublishStatus: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The ID of the Swarm node the volume is published on.
 									 */
@@ -38150,7 +38151,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 				 */
 				UsageData: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Amount of disk space used by the volume (in bytes). This information
 							 * is only available for volumes created with the `"local"` volume
@@ -38179,7 +38180,7 @@ export const systemDataUsageCommandResponseSchema = v.strictObject({
 	),
 	BuildCache: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Unique ID of the build cache record.
 				 */
@@ -38268,7 +38269,7 @@ export const inputImageLoadCommandQuerySchema = v.strictObject({
 export const imageLoadCommandQuerySchema = v.strictObject({
 	quiet: v.exactOptional(v.boolean()),
 });
-export const inputContainerExecCommandBodySchema = v.strictObject({
+export const inputContainerExecCommandBodySchema = v.looseObject({
 	/**
 	 * Attach to `stdin` of the exec command.
 	 */
@@ -38326,7 +38327,7 @@ export const inputContainerExecCommandBodySchema = v.strictObject({
 	 */
 	WorkingDir: v.optional(v.string()),
 });
-export const containerExecCommandBodySchema = v.strictObject({
+export const containerExecCommandBodySchema = v.looseObject({
 	/**
 	 * Attach to `stdin` of the exec command.
 	 */
@@ -38384,13 +38385,13 @@ export const containerExecCommandBodySchema = v.strictObject({
 	 */
 	WorkingDir: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputContainerExecCommandResponseSchema = v.strictObject({
+export const inputContainerExecCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.string(),
 });
-export const containerExecCommandResponseSchema = v.strictObject({
+export const containerExecCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
@@ -38402,7 +38403,7 @@ export const inputContainerExecCommandParamsSchema = v.strictObject({
 export const containerExecCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputExecStartCommandBodySchema = v.strictObject({
+export const inputExecStartCommandBodySchema = v.looseObject({
 	/**
 	 * Detach from the command.
 	 */
@@ -38424,7 +38425,7 @@ export const inputExecStartCommandBodySchema = v.strictObject({
 		),
 	),
 });
-export const execStartCommandBodySchema = v.strictObject({
+export const execStartCommandBodySchema = v.looseObject({
 	/**
 	 * Detach from the command.
 	 */
@@ -38482,14 +38483,14 @@ export const execResizeCommandQuerySchema = v.strictObject({
 		v.pipe(v.number(), v.integer()),
 	]),
 });
-export const inputExecInspectCommandResponseSchema = v.strictObject({
+export const inputExecInspectCommandResponseSchema = v.looseObject({
 	CanRemove: v.optional(v.boolean()),
 	DetachKeys: v.optional(v.string()),
 	ID: v.optional(v.string()),
 	Running: v.optional(v.boolean()),
 	ExitCode: v.optional(v.pipe(v.number(), v.integer())),
 	ProcessConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			privileged: v.optional(v.boolean()),
 			user: v.optional(v.string()),
 			tty: v.optional(v.boolean()),
@@ -38506,14 +38507,14 @@ export const inputExecInspectCommandResponseSchema = v.strictObject({
 	 */
 	Pid: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const execInspectCommandResponseSchema = v.strictObject({
+export const execInspectCommandResponseSchema = v.looseObject({
 	CanRemove: v.exactOptional(v.boolean()),
 	DetachKeys: v.exactOptional(v.pipe(v.string(), v.trim())),
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Running: v.exactOptional(v.boolean()),
 	ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
 	ProcessConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			privileged: v.exactOptional(v.boolean()),
 			user: v.exactOptional(v.pipe(v.string(), v.trim())),
 			tty: v.exactOptional(v.boolean()),
@@ -38536,13 +38537,13 @@ export const inputExecInspectCommandParamsSchema = v.strictObject({
 export const execInspectCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputVolumeListCommandResponseSchema = v.strictObject({
+export const inputVolumeListCommandResponseSchema = v.looseObject({
 	/**
 	 * List of volumes
 	 */
 	Volumes: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the volume.
 				 */
@@ -38584,7 +38585,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 				 * cluster volumes.
 				 */
 				ClusterVolume: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The Swarm ID of this volume. Because cluster volumes are Swarm
 						 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -38604,7 +38605,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.optional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -38614,7 +38615,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 						 * Cluster-specific options used to create the volume.
 						 */
 						Spec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Group defines the volume group of this volume. Volumes belonging to
 								 * the same group can be referred to by group name when creating
@@ -38628,7 +38629,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 								 * Defines how the volume is used by tasks.
 								 */
 								AccessMode: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The set of nodes this volume can be used on at one time.
 										 * - `single` The volume may only be scheduled to one node at a time.
@@ -38697,7 +38698,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 										 */
 										Secrets: v.optional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Key is the name of the key of the key-value pair passed to
 													 * the plugin.
@@ -38719,7 +38720,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 										 * fields mean, see the CSI specification.
 										 */
 										AccessibilityRequirements: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A list of required topologies, at least one of which the
 												 * volume must be accessible from.
@@ -38741,7 +38742,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 										 * empty, the plugin will decide the capacity.
 										 */
 										CapacityRange: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The volume must be at least this big. The value of 0
 												 * indicates an unspecified minimum
@@ -38773,7 +38774,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 						 * Information about the global status of the volume.
 						 */
 						Info: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The capacity of the volume in bytes. A value of 0 indicates that
 								 * the capacity is unknown.
@@ -38806,7 +38807,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 						 */
 						PublishStatus: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The ID of the Swarm node the volume is published on.
 									 */
@@ -38852,7 +38853,7 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 				 */
 				UsageData: v.optional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Amount of disk space used by the volume (in bytes). This information
 							 * is only available for volumes created with the `"local"` volume
@@ -38876,13 +38877,13 @@ export const inputVolumeListCommandResponseSchema = v.strictObject({
 	 */
 	Warnings: v.optional(v.array(v.string())),
 });
-export const volumeListCommandResponseSchema = v.strictObject({
+export const volumeListCommandResponseSchema = v.looseObject({
 	/**
 	 * List of volumes
 	 */
 	Volumes: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the volume.
 				 */
@@ -38924,7 +38925,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 				 * cluster volumes.
 				 */
 				ClusterVolume: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The Swarm ID of this volume. Because cluster volumes are Swarm
 						 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -38944,7 +38945,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 						 * overwrite each other.
 						 */
 						Version: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 							}),
 						),
@@ -38954,7 +38955,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 						 * Cluster-specific options used to create the volume.
 						 */
 						Spec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Group defines the volume group of this volume. Volumes belonging to
 								 * the same group can be referred to by group name when creating
@@ -38968,7 +38969,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 								 * Defines how the volume is used by tasks.
 								 */
 								AccessMode: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The set of nodes this volume can be used on at one time.
 										 * - `single` The volume may only be scheduled to one node at a time.
@@ -39039,7 +39040,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 										 */
 										Secrets: v.exactOptional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Key is the name of the key of the key-value pair passed to
 													 * the plugin.
@@ -39061,7 +39062,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 										 * fields mean, see the CSI specification.
 										 */
 										AccessibilityRequirements: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A list of required topologies, at least one of which the
 												 * volume must be accessible from.
@@ -39087,7 +39088,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 										 * empty, the plugin will decide the capacity.
 										 */
 										CapacityRange: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The volume must be at least this big. The value of 0
 												 * indicates an unspecified minimum
@@ -39151,7 +39152,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 						 * Information about the global status of the volume.
 						 */
 						Info: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The capacity of the volume in bytes. A value of 0 indicates that
 								 * the capacity is unknown.
@@ -39192,7 +39193,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 						 */
 						PublishStatus: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The ID of the Swarm node the volume is published on.
 									 */
@@ -39240,7 +39241,7 @@ export const volumeListCommandResponseSchema = v.strictObject({
 				 */
 				UsageData: v.exactOptional(
 					v.nullable(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Amount of disk space used by the volume (in bytes). This information
 							 * is only available for volumes created with the `"local"` volume
@@ -39278,7 +39279,7 @@ export const inputVolumeListCommandQuerySchema = v.strictObject({
 export const volumeListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputVolumeCreateCommandBodySchema = v.strictObject({
+export const inputVolumeCreateCommandBodySchema = v.looseObject({
 	/**
 	 * The new volume's name. If not specified, Docker generates a name.
 	 */
@@ -39300,7 +39301,7 @@ export const inputVolumeCreateCommandBodySchema = v.strictObject({
 	 * Cluster-specific options used to create the volume.
 	 */
 	ClusterVolumeSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -39314,7 +39315,7 @@ export const inputVolumeCreateCommandBodySchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -39383,7 +39384,7 @@ export const inputVolumeCreateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -39405,7 +39406,7 @@ export const inputVolumeCreateCommandBodySchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -39423,7 +39424,7 @@ export const inputVolumeCreateCommandBodySchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -39450,7 +39451,7 @@ export const inputVolumeCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const volumeCreateCommandBodySchema = v.strictObject({
+export const volumeCreateCommandBodySchema = v.looseObject({
 	/**
 	 * The new volume's name. If not specified, Docker generates a name.
 	 */
@@ -39474,7 +39475,7 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 	 * Cluster-specific options used to create the volume.
 	 */
 	ClusterVolumeSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -39488,7 +39489,7 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -39557,7 +39558,7 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -39579,7 +39580,7 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -39601,7 +39602,7 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -39642,7 +39643,7 @@ export const volumeCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputVolumeCreateCommandResponseSchema = v.strictObject({
+export const inputVolumeCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * Name of the volume.
 	 */
@@ -39682,7 +39683,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 	 * cluster volumes.
 	 */
 	ClusterVolume: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The Swarm ID of this volume. Because cluster volumes are Swarm
 			 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -39702,7 +39703,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			Version: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.optional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -39712,7 +39713,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 			 * Cluster-specific options used to create the volume.
 			 */
 			Spec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Group defines the volume group of this volume. Volumes belonging to
 					 * the same group can be referred to by group name when creating
@@ -39726,7 +39727,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 					 * Defines how the volume is used by tasks.
 					 */
 					AccessMode: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The set of nodes this volume can be used on at one time.
 							 * - `single` The volume may only be scheduled to one node at a time.
@@ -39795,7 +39796,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 							 */
 							Secrets: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Key is the name of the key of the key-value pair passed to
 										 * the plugin.
@@ -39817,7 +39818,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 							 * fields mean, see the CSI specification.
 							 */
 							AccessibilityRequirements: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * A list of required topologies, at least one of which the
 									 * volume must be accessible from.
@@ -39839,7 +39840,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 							 * empty, the plugin will decide the capacity.
 							 */
 							CapacityRange: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The volume must be at least this big. The value of 0
 									 * indicates an unspecified minimum
@@ -39871,7 +39872,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 			 * Information about the global status of the volume.
 			 */
 			Info: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The capacity of the volume in bytes. A value of 0 indicates that
 					 * the capacity is unknown.
@@ -39904,7 +39905,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 			 */
 			PublishStatus: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the Swarm node the volume is published on.
 						 */
@@ -39950,7 +39951,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 	 */
 	UsageData: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Amount of disk space used by the volume (in bytes). This information
 				 * is only available for volumes created with the `"local"` volume
@@ -39967,7 +39968,7 @@ export const inputVolumeCreateCommandResponseSchema = v.strictObject({
 		),
 	),
 });
-export const volumeCreateCommandResponseSchema = v.strictObject({
+export const volumeCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * Name of the volume.
 	 */
@@ -40009,7 +40010,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 	 * cluster volumes.
 	 */
 	ClusterVolume: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The Swarm ID of this volume. Because cluster volumes are Swarm
 			 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -40029,7 +40030,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			Version: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -40039,7 +40040,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 			 * Cluster-specific options used to create the volume.
 			 */
 			Spec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Group defines the volume group of this volume. Volumes belonging to
 					 * the same group can be referred to by group name when creating
@@ -40053,7 +40054,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 					 * Defines how the volume is used by tasks.
 					 */
 					AccessMode: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The set of nodes this volume can be used on at one time.
 							 * - `single` The volume may only be scheduled to one node at a time.
@@ -40122,7 +40123,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 							 */
 							Secrets: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Key is the name of the key of the key-value pair passed to
 										 * the plugin.
@@ -40144,7 +40145,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 							 * fields mean, see the CSI specification.
 							 */
 							AccessibilityRequirements: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * A list of required topologies, at least one of which the
 									 * volume must be accessible from.
@@ -40166,7 +40167,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 							 * empty, the plugin will decide the capacity.
 							 */
 							CapacityRange: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The volume must be at least this big. The value of 0
 									 * indicates an unspecified minimum
@@ -40210,7 +40211,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 			 * Information about the global status of the volume.
 			 */
 			Info: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The capacity of the volume in bytes. A value of 0 indicates that
 					 * the capacity is unknown.
@@ -40251,7 +40252,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 			 */
 			PublishStatus: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the Swarm node the volume is published on.
 						 */
@@ -40299,7 +40300,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 	 */
 	UsageData: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Amount of disk space used by the volume (in bytes). This information
 				 * is only available for volumes created with the `"local"` volume
@@ -40324,7 +40325,7 @@ export const volumeCreateCommandResponseSchema = v.strictObject({
 		),
 	),
 });
-export const inputVolumeInspectCommandResponseSchema = v.strictObject({
+export const inputVolumeInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * Name of the volume.
 	 */
@@ -40364,7 +40365,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 	 * cluster volumes.
 	 */
 	ClusterVolume: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The Swarm ID of this volume. Because cluster volumes are Swarm
 			 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -40384,7 +40385,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			Version: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.optional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -40394,7 +40395,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 			 * Cluster-specific options used to create the volume.
 			 */
 			Spec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Group defines the volume group of this volume. Volumes belonging to
 					 * the same group can be referred to by group name when creating
@@ -40408,7 +40409,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 					 * Defines how the volume is used by tasks.
 					 */
 					AccessMode: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The set of nodes this volume can be used on at one time.
 							 * - `single` The volume may only be scheduled to one node at a time.
@@ -40477,7 +40478,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 							 */
 							Secrets: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Key is the name of the key of the key-value pair passed to
 										 * the plugin.
@@ -40499,7 +40500,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 							 * fields mean, see the CSI specification.
 							 */
 							AccessibilityRequirements: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * A list of required topologies, at least one of which the
 									 * volume must be accessible from.
@@ -40521,7 +40522,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 							 * empty, the plugin will decide the capacity.
 							 */
 							CapacityRange: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The volume must be at least this big. The value of 0
 									 * indicates an unspecified minimum
@@ -40553,7 +40554,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 			 * Information about the global status of the volume.
 			 */
 			Info: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The capacity of the volume in bytes. A value of 0 indicates that
 					 * the capacity is unknown.
@@ -40586,7 +40587,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 			 */
 			PublishStatus: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the Swarm node the volume is published on.
 						 */
@@ -40632,7 +40633,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 	 */
 	UsageData: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Amount of disk space used by the volume (in bytes). This information
 				 * is only available for volumes created with the `"local"` volume
@@ -40649,7 +40650,7 @@ export const inputVolumeInspectCommandResponseSchema = v.strictObject({
 		),
 	),
 });
-export const volumeInspectCommandResponseSchema = v.strictObject({
+export const volumeInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * Name of the volume.
 	 */
@@ -40691,7 +40692,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 	 * cluster volumes.
 	 */
 	ClusterVolume: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The Swarm ID of this volume. Because cluster volumes are Swarm
 			 * objects, they have an ID, unlike non-cluster volumes. This ID can
@@ -40711,7 +40712,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			Version: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -40721,7 +40722,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 			 * Cluster-specific options used to create the volume.
 			 */
 			Spec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Group defines the volume group of this volume. Volumes belonging to
 					 * the same group can be referred to by group name when creating
@@ -40735,7 +40736,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 					 * Defines how the volume is used by tasks.
 					 */
 					AccessMode: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The set of nodes this volume can be used on at one time.
 							 * - `single` The volume may only be scheduled to one node at a time.
@@ -40804,7 +40805,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 							 */
 							Secrets: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Key is the name of the key of the key-value pair passed to
 										 * the plugin.
@@ -40826,7 +40827,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 							 * fields mean, see the CSI specification.
 							 */
 							AccessibilityRequirements: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * A list of required topologies, at least one of which the
 									 * volume must be accessible from.
@@ -40848,7 +40849,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 							 * empty, the plugin will decide the capacity.
 							 */
 							CapacityRange: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The volume must be at least this big. The value of 0
 									 * indicates an unspecified minimum
@@ -40892,7 +40893,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 			 * Information about the global status of the volume.
 			 */
 			Info: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The capacity of the volume in bytes. A value of 0 indicates that
 					 * the capacity is unknown.
@@ -40933,7 +40934,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 			 */
 			PublishStatus: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the Swarm node the volume is published on.
 						 */
@@ -40981,7 +40982,7 @@ export const volumeInspectCommandResponseSchema = v.strictObject({
 	 */
 	UsageData: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Amount of disk space used by the volume (in bytes). This information
 				 * is only available for volumes created with the `"local"` volume
@@ -41012,12 +41013,12 @@ export const inputVolumeInspectCommandParamsSchema = v.strictObject({
 export const volumeInspectCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
-export const inputVolumeUpdateCommandBodySchema = v.strictObject({
+export const inputVolumeUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Cluster-specific options used to create the volume.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -41031,7 +41032,7 @@ export const inputVolumeUpdateCommandBodySchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -41100,7 +41101,7 @@ export const inputVolumeUpdateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -41122,7 +41123,7 @@ export const inputVolumeUpdateCommandBodySchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -41140,7 +41141,7 @@ export const inputVolumeUpdateCommandBodySchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -41167,12 +41168,12 @@ export const inputVolumeUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const volumeUpdateCommandBodySchema = v.strictObject({
+export const volumeUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Cluster-specific options used to create the volume.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Group defines the volume group of this volume. Volumes belonging to
 			 * the same group can be referred to by group name when creating
@@ -41186,7 +41187,7 @@ export const volumeUpdateCommandBodySchema = v.strictObject({
 			 * Defines how the volume is used by tasks.
 			 */
 			AccessMode: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The set of nodes this volume can be used on at one time.
 					 * - `single` The volume may only be scheduled to one node at a time.
@@ -41255,7 +41256,7 @@ export const volumeUpdateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Key is the name of the key of the key-value pair passed to
 								 * the plugin.
@@ -41277,7 +41278,7 @@ export const volumeUpdateCommandBodySchema = v.strictObject({
 					 * fields mean, see the CSI specification.
 					 */
 					AccessibilityRequirements: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * A list of required topologies, at least one of which the
 							 * volume must be accessible from.
@@ -41299,7 +41300,7 @@ export const volumeUpdateCommandBodySchema = v.strictObject({
 					 * empty, the plugin will decide the capacity.
 					 */
 					CapacityRange: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The volume must be at least this big. The value of 0
 							 * indicates an unspecified minimum
@@ -41368,7 +41369,7 @@ export const inputVolumeDeleteCommandQuerySchema = v.strictObject({
 export const volumeDeleteCommandQuerySchema = v.strictObject({
 	force: v.exactOptional(v.boolean()),
 });
-export const inputVolumePruneCommandResponseSchema = v.strictObject({
+export const inputVolumePruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Volumes that were deleted
 	 */
@@ -41378,7 +41379,7 @@ export const inputVolumePruneCommandResponseSchema = v.strictObject({
 	 */
 	SpaceReclaimed: v.optional(v.bigint()),
 });
-export const volumePruneCommandResponseSchema = v.strictObject({
+export const volumePruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Volumes that were deleted
 	 */
@@ -41401,7 +41402,7 @@ export const volumePruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputNetworkListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Name of the network.
 		 */
@@ -41430,7 +41431,7 @@ export const inputNetworkListCommandResponseSchema = v.array(
 		 */
 		EnableIPv6: v.optional(v.boolean()),
 		IPAM: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the IPAM driver to use.
 				 */
@@ -41445,7 +41446,7 @@ export const inputNetworkListCommandResponseSchema = v.array(
 				 */
 				Config: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							Subnet: v.optional(v.string()),
 							IPRange: v.optional(v.string()),
 							Gateway: v.optional(v.string()),
@@ -41478,7 +41479,7 @@ export const inputNetworkListCommandResponseSchema = v.array(
 		 * this network.
 		 */
 		ConfigFrom: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The name of the config-only network that provides the network's
 				 * configuration. The specified network must be an existing config-only
@@ -41500,7 +41501,7 @@ export const inputNetworkListCommandResponseSchema = v.array(
 		Containers: v.optional(
 			v.record(
 				v.string(),
-				v.strictObject({
+				v.looseObject({
 					Name: v.optional(v.string()),
 					EndpointID: v.optional(v.string()),
 					MacAddress: v.optional(v.string()),
@@ -41524,7 +41525,7 @@ export const inputNetworkListCommandResponseSchema = v.array(
 		Peers: v.optional(
 			v.nullable(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * ID of the peer-node in the Swarm cluster.
 						 */
@@ -41540,7 +41541,7 @@ export const inputNetworkListCommandResponseSchema = v.array(
 	}),
 );
 export const networkListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Name of the network.
 		 */
@@ -41569,7 +41570,7 @@ export const networkListCommandResponseSchema = v.array(
 		 */
 		EnableIPv6: v.exactOptional(v.boolean()),
 		IPAM: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the IPAM driver to use.
 				 */
@@ -41584,7 +41585,7 @@ export const networkListCommandResponseSchema = v.array(
 				 */
 				Config: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							Subnet: v.exactOptional(v.pipe(v.string(), v.trim())),
 							IPRange: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Gateway: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -41621,7 +41622,7 @@ export const networkListCommandResponseSchema = v.array(
 		 * this network.
 		 */
 		ConfigFrom: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The name of the config-only network that provides the network's
 				 * configuration. The specified network must be an existing config-only
@@ -41643,7 +41644,7 @@ export const networkListCommandResponseSchema = v.array(
 		Containers: v.exactOptional(
 			v.record(
 				v.string(),
-				v.strictObject({
+				v.looseObject({
 					Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					EndpointID: v.exactOptional(v.pipe(v.string(), v.trim())),
 					MacAddress: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -41669,7 +41670,7 @@ export const networkListCommandResponseSchema = v.array(
 		Peers: v.exactOptional(
 			v.nullable(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * ID of the peer-node in the Swarm cluster.
 						 */
@@ -41690,7 +41691,7 @@ export const inputNetworkListCommandQuerySchema = v.strictObject({
 export const networkListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputNetworkInspectCommandResponseSchema = v.strictObject({
+export const inputNetworkInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * Name of the network.
 	 */
@@ -41719,7 +41720,7 @@ export const inputNetworkInspectCommandResponseSchema = v.strictObject({
 	 */
 	EnableIPv6: v.optional(v.boolean()),
 	IPAM: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the IPAM driver to use.
 			 */
@@ -41734,7 +41735,7 @@ export const inputNetworkInspectCommandResponseSchema = v.strictObject({
 			 */
 			Config: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Subnet: v.optional(v.string()),
 						IPRange: v.optional(v.string()),
 						Gateway: v.optional(v.string()),
@@ -41767,7 +41768,7 @@ export const inputNetworkInspectCommandResponseSchema = v.strictObject({
 	 * this network.
 	 */
 	ConfigFrom: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the config-only network that provides the network's
 			 * configuration. The specified network must be an existing config-only
@@ -41789,7 +41790,7 @@ export const inputNetworkInspectCommandResponseSchema = v.strictObject({
 	Containers: v.optional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				Name: v.optional(v.string()),
 				EndpointID: v.optional(v.string()),
 				MacAddress: v.optional(v.string()),
@@ -41813,7 +41814,7 @@ export const inputNetworkInspectCommandResponseSchema = v.strictObject({
 	Peers: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the peer-node in the Swarm cluster.
 					 */
@@ -41827,7 +41828,7 @@ export const inputNetworkInspectCommandResponseSchema = v.strictObject({
 		),
 	),
 });
-export const networkInspectCommandResponseSchema = v.strictObject({
+export const networkInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * Name of the network.
 	 */
@@ -41856,7 +41857,7 @@ export const networkInspectCommandResponseSchema = v.strictObject({
 	 */
 	EnableIPv6: v.exactOptional(v.boolean()),
 	IPAM: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the IPAM driver to use.
 			 */
@@ -41871,7 +41872,7 @@ export const networkInspectCommandResponseSchema = v.strictObject({
 			 */
 			Config: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Subnet: v.exactOptional(v.pipe(v.string(), v.trim())),
 						IPRange: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Gateway: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -41908,7 +41909,7 @@ export const networkInspectCommandResponseSchema = v.strictObject({
 	 * this network.
 	 */
 	ConfigFrom: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the config-only network that provides the network's
 			 * configuration. The specified network must be an existing config-only
@@ -41930,7 +41931,7 @@ export const networkInspectCommandResponseSchema = v.strictObject({
 	Containers: v.exactOptional(
 		v.record(
 			v.string(),
-			v.strictObject({
+			v.looseObject({
 				Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 				EndpointID: v.exactOptional(v.pipe(v.string(), v.trim())),
 				MacAddress: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -41954,7 +41955,7 @@ export const networkInspectCommandResponseSchema = v.strictObject({
 	Peers: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the peer-node in the Swarm cluster.
 					 */
@@ -41988,7 +41989,7 @@ export const inputNetworkDeleteCommandParamsSchema = v.strictObject({
 export const networkDeleteCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputNetworkCreateCommandBodySchema = v.strictObject({
+export const inputNetworkCreateCommandBodySchema = v.looseObject({
 	/**
 	 * The network's name.
 	 */
@@ -42038,7 +42039,7 @@ export const inputNetworkCreateCommandBodySchema = v.strictObject({
 	 * this network.
 	 */
 	ConfigFrom: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the config-only network that provides the network's
 			 * configuration. The specified network must be an existing config-only
@@ -42048,7 +42049,7 @@ export const inputNetworkCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 	IPAM: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the IPAM driver to use.
 			 */
@@ -42063,7 +42064,7 @@ export const inputNetworkCreateCommandBodySchema = v.strictObject({
 			 */
 			Config: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Subnet: v.optional(v.string()),
 						IPRange: v.optional(v.string()),
 						Gateway: v.optional(v.string()),
@@ -42090,7 +42091,7 @@ export const inputNetworkCreateCommandBodySchema = v.strictObject({
 	 */
 	Labels: v.optional(v.record(v.string(), v.string())),
 });
-export const networkCreateCommandBodySchema = v.strictObject({
+export const networkCreateCommandBodySchema = v.looseObject({
 	/**
 	 * The network's name.
 	 */
@@ -42140,7 +42141,7 @@ export const networkCreateCommandBodySchema = v.strictObject({
 	 * this network.
 	 */
 	ConfigFrom: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the config-only network that provides the network's
 			 * configuration. The specified network must be an existing config-only
@@ -42150,7 +42151,7 @@ export const networkCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 	IPAM: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the IPAM driver to use.
 			 */
@@ -42165,7 +42166,7 @@ export const networkCreateCommandBodySchema = v.strictObject({
 			 */
 			Config: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Subnet: v.exactOptional(v.pipe(v.string(), v.trim())),
 						IPRange: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Gateway: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -42196,21 +42197,21 @@ export const networkCreateCommandBodySchema = v.strictObject({
 	 */
 	Labels: v.exactOptional(v.record(v.string(), v.pipe(v.string(), v.trim()))),
 });
-export const inputNetworkCreateCommandResponseSchema = v.strictObject({
+export const inputNetworkCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created network.
 	 */
 	Id: v.optional(v.string()),
 	Warning: v.optional(v.string()),
 });
-export const networkCreateCommandResponseSchema = v.strictObject({
+export const networkCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created network.
 	 */
 	Id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Warning: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputNetworkConnectCommandBodySchema = v.strictObject({
+export const inputNetworkConnectCommandBodySchema = v.looseObject({
 	/**
 	 * The ID or name of the container to connect to the network.
 	 */
@@ -42219,13 +42220,13 @@ export const inputNetworkConnectCommandBodySchema = v.strictObject({
 	 * Configuration for a network endpoint.
 	 */
 	EndpointConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 			 */
 			IPAMConfig: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						IPv4Address: v.optional(v.string()),
 						IPv6Address: v.optional(v.string()),
 						LinkLocalIPs: v.optional(v.array(v.string())),
@@ -42278,7 +42279,7 @@ export const inputNetworkConnectCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const networkConnectCommandBodySchema = v.strictObject({
+export const networkConnectCommandBodySchema = v.looseObject({
 	/**
 	 * The ID or name of the container to connect to the network.
 	 */
@@ -42287,13 +42288,13 @@ export const networkConnectCommandBodySchema = v.strictObject({
 	 * Configuration for a network endpoint.
 	 */
 	EndpointConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * EndpointIPAMConfig represents an endpoint's IPAM configuration.
 			 */
 			IPAMConfig: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						IPv4Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 						IPv6Address: v.exactOptional(v.pipe(v.string(), v.trim())),
 						LinkLocalIPs: v.exactOptional(
@@ -42362,7 +42363,7 @@ export const inputNetworkConnectCommandParamsSchema = v.strictObject({
 export const networkConnectCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputNetworkDisconnectCommandBodySchema = v.strictObject({
+export const inputNetworkDisconnectCommandBodySchema = v.looseObject({
 	/**
 	 * The ID or name of the container to disconnect from the network.
 	 */
@@ -42372,7 +42373,7 @@ export const inputNetworkDisconnectCommandBodySchema = v.strictObject({
 	 */
 	Force: v.optional(v.boolean()),
 });
-export const networkDisconnectCommandBodySchema = v.strictObject({
+export const networkDisconnectCommandBodySchema = v.looseObject({
 	/**
 	 * The ID or name of the container to disconnect from the network.
 	 */
@@ -42388,13 +42389,13 @@ export const inputNetworkDisconnectCommandParamsSchema = v.strictObject({
 export const networkDisconnectCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputNetworkPruneCommandResponseSchema = v.strictObject({
+export const inputNetworkPruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Networks that were deleted
 	 */
 	NetworksDeleted: v.optional(v.array(v.string())),
 });
-export const networkPruneCommandResponseSchema = v.strictObject({
+export const networkPruneCommandResponseSchema = v.looseObject({
 	/**
 	 * Networks that were deleted
 	 */
@@ -42407,7 +42408,7 @@ export const networkPruneCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputPluginListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Id: v.optional(v.string()),
 		Name: v.string(),
 		/**
@@ -42418,9 +42419,9 @@ export const inputPluginListCommandResponseSchema = v.array(
 		/**
 		 * Settings that can be modified by users.
 		 */
-		Settings: v.strictObject({
+		Settings: v.looseObject({
 			Mounts: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
@@ -42433,7 +42434,7 @@ export const inputPluginListCommandResponseSchema = v.array(
 			Env: v.array(v.string()),
 			Args: v.array(v.string()),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
@@ -42448,7 +42449,7 @@ export const inputPluginListCommandResponseSchema = v.array(
 		/**
 		 * The config of a plugin.
 		 */
-		Config: v.strictObject({
+		Config: v.looseObject({
 			/**
 			 * Docker Version used to create the plugin
 			 */
@@ -42458,9 +42459,9 @@ export const inputPluginListCommandResponseSchema = v.array(
 			/**
 			 * The interface between Docker and the plugin
 			 */
-			Interface: v.strictObject({
+			Interface: v.looseObject({
 				Types: v.array(
-					v.strictObject({
+					v.looseObject({
 						Prefix: v.string(),
 						Capability: v.string(),
 						Version: v.string(),
@@ -42475,19 +42476,19 @@ export const inputPluginListCommandResponseSchema = v.array(
 			Entrypoint: v.array(v.string()),
 			WorkDir: v.string(),
 			User: v.optional(
-				v.strictObject({
+				v.looseObject({
 					UID: v.optional(v.pipe(v.number(), v.integer())),
 					GID: v.optional(v.pipe(v.number(), v.integer())),
 				}),
 			),
-			Network: v.strictObject({
+			Network: v.looseObject({
 				Type: v.string(),
 			}),
-			Linux: v.strictObject({
+			Linux: v.looseObject({
 				Capabilities: v.array(v.string()),
 				AllowAllDevices: v.boolean(),
 				Devices: v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.string(),
 						Description: v.string(),
 						Settable: v.array(v.string()),
@@ -42499,7 +42500,7 @@ export const inputPluginListCommandResponseSchema = v.array(
 			IpcHost: v.boolean(),
 			PidHost: v.boolean(),
 			Mounts: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
@@ -42510,21 +42511,21 @@ export const inputPluginListCommandResponseSchema = v.array(
 				}),
 			),
 			Env: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
 					Value: v.string(),
 				}),
 			),
-			Args: v.strictObject({
+			Args: v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
 				Value: v.array(v.string()),
 			}),
 			rootfs: v.optional(
-				v.strictObject({
+				v.looseObject({
 					type: v.optional(v.string()),
 					diff_ids: v.optional(v.array(v.string())),
 				}),
@@ -42533,7 +42534,7 @@ export const inputPluginListCommandResponseSchema = v.array(
 	}),
 );
 export const pluginListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Id: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Name: v.pipe(v.string(), v.trim()),
 		/**
@@ -42544,9 +42545,9 @@ export const pluginListCommandResponseSchema = v.array(
 		/**
 		 * Settings that can be modified by users.
 		 */
-		Settings: v.strictObject({
+		Settings: v.looseObject({
 			Mounts: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42559,7 +42560,7 @@ export const pluginListCommandResponseSchema = v.array(
 			Env: v.array(v.pipe(v.string(), v.trim())),
 			Args: v.array(v.pipe(v.string(), v.trim())),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42574,7 +42575,7 @@ export const pluginListCommandResponseSchema = v.array(
 		/**
 		 * The config of a plugin.
 		 */
-		Config: v.strictObject({
+		Config: v.looseObject({
 			/**
 			 * Docker Version used to create the plugin
 			 */
@@ -42584,9 +42585,9 @@ export const pluginListCommandResponseSchema = v.array(
 			/**
 			 * The interface between Docker and the plugin
 			 */
-			Interface: v.strictObject({
+			Interface: v.looseObject({
 				Types: v.array(
-					v.strictObject({
+					v.looseObject({
 						Prefix: v.pipe(v.string(), v.trim()),
 						Capability: v.pipe(v.string(), v.trim()),
 						Version: v.pipe(v.string(), v.trim()),
@@ -42603,19 +42604,19 @@ export const pluginListCommandResponseSchema = v.array(
 			Entrypoint: v.array(v.pipe(v.string(), v.trim())),
 			WorkDir: v.pipe(v.string(), v.trim()),
 			User: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					UID: v.exactOptional(v.pipe(v.number(), v.integer())),
 					GID: v.exactOptional(v.pipe(v.number(), v.integer())),
 				}),
 			),
-			Network: v.strictObject({
+			Network: v.looseObject({
 				Type: v.pipe(v.string(), v.trim()),
 			}),
-			Linux: v.strictObject({
+			Linux: v.looseObject({
 				Capabilities: v.array(v.pipe(v.string(), v.trim())),
 				AllowAllDevices: v.boolean(),
 				Devices: v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.pipe(v.string(), v.trim()),
 						Description: v.pipe(v.string(), v.trim()),
 						Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42627,7 +42628,7 @@ export const pluginListCommandResponseSchema = v.array(
 			IpcHost: v.boolean(),
 			PidHost: v.boolean(),
 			Mounts: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42638,21 +42639,21 @@ export const pluginListCommandResponseSchema = v.array(
 				}),
 			),
 			Env: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
 					Value: v.pipe(v.string(), v.trim()),
 				}),
 			),
-			Args: v.strictObject({
+			Args: v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
 				Value: v.array(v.pipe(v.string(), v.trim())),
 			}),
 			rootfs: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					type: v.exactOptional(v.pipe(v.string(), v.trim())),
 					diff_ids: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 				}),
@@ -42667,14 +42668,14 @@ export const pluginListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputGetPluginPrivilegesCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Name: v.optional(v.string()),
 		Description: v.optional(v.string()),
 		Value: v.optional(v.array(v.string())),
 	}),
 );
 export const getPluginPrivilegesCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -42687,14 +42688,14 @@ export const getPluginPrivilegesCommandQuerySchema = v.strictObject({
 	remote: v.pipe(v.string(), v.trim()),
 });
 export const inputPluginPullCommandBodySchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Name: v.optional(v.string()),
 		Description: v.optional(v.string()),
 		Value: v.optional(v.array(v.string())),
 	}),
 );
 export const pluginPullCommandBodySchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -42714,7 +42715,7 @@ export const inputPluginPullCommandHeaderSchema = v.object({
 export const pluginPullCommandHeaderSchema = v.object({
 	"x-registry-auth": v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputPluginInspectCommandResponseSchema = v.strictObject({
+export const inputPluginInspectCommandResponseSchema = v.looseObject({
 	Id: v.optional(v.string()),
 	Name: v.string(),
 	/**
@@ -42725,9 +42726,9 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 	/**
 	 * Settings that can be modified by users.
 	 */
-	Settings: v.strictObject({
+	Settings: v.looseObject({
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -42740,7 +42741,7 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 		Env: v.array(v.string()),
 		Args: v.array(v.string()),
 		Devices: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -42755,7 +42756,7 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 	/**
 	 * The config of a plugin.
 	 */
-	Config: v.strictObject({
+	Config: v.looseObject({
 		/**
 		 * Docker Version used to create the plugin
 		 */
@@ -42765,9 +42766,9 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 		/**
 		 * The interface between Docker and the plugin
 		 */
-		Interface: v.strictObject({
+		Interface: v.looseObject({
 			Types: v.array(
-				v.strictObject({
+				v.looseObject({
 					Prefix: v.string(),
 					Capability: v.string(),
 					Version: v.string(),
@@ -42782,19 +42783,19 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 		Entrypoint: v.array(v.string()),
 		WorkDir: v.string(),
 		User: v.optional(
-			v.strictObject({
+			v.looseObject({
 				UID: v.optional(v.pipe(v.number(), v.integer())),
 				GID: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
-		Network: v.strictObject({
+		Network: v.looseObject({
 			Type: v.string(),
 		}),
-		Linux: v.strictObject({
+		Linux: v.looseObject({
 			Capabilities: v.array(v.string()),
 			AllowAllDevices: v.boolean(),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
@@ -42806,7 +42807,7 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 		IpcHost: v.boolean(),
 		PidHost: v.boolean(),
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -42817,28 +42818,28 @@ export const inputPluginInspectCommandResponseSchema = v.strictObject({
 			}),
 		),
 		Env: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
 				Value: v.string(),
 			}),
 		),
-		Args: v.strictObject({
+		Args: v.looseObject({
 			Name: v.string(),
 			Description: v.string(),
 			Settable: v.array(v.string()),
 			Value: v.array(v.string()),
 		}),
 		rootfs: v.optional(
-			v.strictObject({
+			v.looseObject({
 				type: v.optional(v.string()),
 				diff_ids: v.optional(v.array(v.string())),
 			}),
 		),
 	}),
 });
-export const pluginInspectCommandResponseSchema = v.strictObject({
+export const pluginInspectCommandResponseSchema = v.looseObject({
 	Id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Name: v.pipe(v.string(), v.trim()),
 	/**
@@ -42849,9 +42850,9 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 	/**
 	 * Settings that can be modified by users.
 	 */
-	Settings: v.strictObject({
+	Settings: v.looseObject({
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42864,7 +42865,7 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 		Env: v.array(v.pipe(v.string(), v.trim())),
 		Args: v.array(v.pipe(v.string(), v.trim())),
 		Devices: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42879,7 +42880,7 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 	/**
 	 * The config of a plugin.
 	 */
-	Config: v.strictObject({
+	Config: v.looseObject({
 		/**
 		 * Docker Version used to create the plugin
 		 */
@@ -42889,9 +42890,9 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 		/**
 		 * The interface between Docker and the plugin
 		 */
-		Interface: v.strictObject({
+		Interface: v.looseObject({
 			Types: v.array(
-				v.strictObject({
+				v.looseObject({
 					Prefix: v.pipe(v.string(), v.trim()),
 					Capability: v.pipe(v.string(), v.trim()),
 					Version: v.pipe(v.string(), v.trim()),
@@ -42906,19 +42907,19 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 		Entrypoint: v.array(v.pipe(v.string(), v.trim())),
 		WorkDir: v.pipe(v.string(), v.trim()),
 		User: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				UID: v.exactOptional(v.pipe(v.number(), v.integer())),
 				GID: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
-		Network: v.strictObject({
+		Network: v.looseObject({
 			Type: v.pipe(v.string(), v.trim()),
 		}),
-		Linux: v.strictObject({
+		Linux: v.looseObject({
 			Capabilities: v.array(v.pipe(v.string(), v.trim())),
 			AllowAllDevices: v.boolean(),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42930,7 +42931,7 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 		IpcHost: v.boolean(),
 		PidHost: v.boolean(),
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -42941,21 +42942,21 @@ export const pluginInspectCommandResponseSchema = v.strictObject({
 			}),
 		),
 		Env: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
 				Value: v.pipe(v.string(), v.trim()),
 			}),
 		),
-		Args: v.strictObject({
+		Args: v.looseObject({
 			Name: v.pipe(v.string(), v.trim()),
 			Description: v.pipe(v.string(), v.trim()),
 			Settable: v.array(v.pipe(v.string(), v.trim())),
 			Value: v.array(v.pipe(v.string(), v.trim())),
 		}),
 		rootfs: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				type: v.exactOptional(v.pipe(v.string(), v.trim())),
 				diff_ids: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 			}),
@@ -42968,7 +42969,7 @@ export const inputPluginInspectCommandParamsSchema = v.strictObject({
 export const pluginInspectCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
-export const inputPluginDeleteCommandResponseSchema = v.strictObject({
+export const inputPluginDeleteCommandResponseSchema = v.looseObject({
 	Id: v.optional(v.string()),
 	Name: v.string(),
 	/**
@@ -42979,9 +42980,9 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 	/**
 	 * Settings that can be modified by users.
 	 */
-	Settings: v.strictObject({
+	Settings: v.looseObject({
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -42994,7 +42995,7 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 		Env: v.array(v.string()),
 		Args: v.array(v.string()),
 		Devices: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -43009,7 +43010,7 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 	/**
 	 * The config of a plugin.
 	 */
-	Config: v.strictObject({
+	Config: v.looseObject({
 		/**
 		 * Docker Version used to create the plugin
 		 */
@@ -43019,9 +43020,9 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 		/**
 		 * The interface between Docker and the plugin
 		 */
-		Interface: v.strictObject({
+		Interface: v.looseObject({
 			Types: v.array(
-				v.strictObject({
+				v.looseObject({
 					Prefix: v.string(),
 					Capability: v.string(),
 					Version: v.string(),
@@ -43036,19 +43037,19 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 		Entrypoint: v.array(v.string()),
 		WorkDir: v.string(),
 		User: v.optional(
-			v.strictObject({
+			v.looseObject({
 				UID: v.optional(v.pipe(v.number(), v.integer())),
 				GID: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
-		Network: v.strictObject({
+		Network: v.looseObject({
 			Type: v.string(),
 		}),
-		Linux: v.strictObject({
+		Linux: v.looseObject({
 			Capabilities: v.array(v.string()),
 			AllowAllDevices: v.boolean(),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.string(),
 					Description: v.string(),
 					Settable: v.array(v.string()),
@@ -43060,7 +43061,7 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 		IpcHost: v.boolean(),
 		PidHost: v.boolean(),
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
@@ -43071,28 +43072,28 @@ export const inputPluginDeleteCommandResponseSchema = v.strictObject({
 			}),
 		),
 		Env: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.string(),
 				Description: v.string(),
 				Settable: v.array(v.string()),
 				Value: v.string(),
 			}),
 		),
-		Args: v.strictObject({
+		Args: v.looseObject({
 			Name: v.string(),
 			Description: v.string(),
 			Settable: v.array(v.string()),
 			Value: v.array(v.string()),
 		}),
 		rootfs: v.optional(
-			v.strictObject({
+			v.looseObject({
 				type: v.optional(v.string()),
 				diff_ids: v.optional(v.array(v.string())),
 			}),
 		),
 	}),
 });
-export const pluginDeleteCommandResponseSchema = v.strictObject({
+export const pluginDeleteCommandResponseSchema = v.looseObject({
 	Id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Name: v.pipe(v.string(), v.trim()),
 	/**
@@ -43103,9 +43104,9 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 	/**
 	 * Settings that can be modified by users.
 	 */
-	Settings: v.strictObject({
+	Settings: v.looseObject({
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -43118,7 +43119,7 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 		Env: v.array(v.pipe(v.string(), v.trim())),
 		Args: v.array(v.pipe(v.string(), v.trim())),
 		Devices: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -43133,7 +43134,7 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 	/**
 	 * The config of a plugin.
 	 */
-	Config: v.strictObject({
+	Config: v.looseObject({
 		/**
 		 * Docker Version used to create the plugin
 		 */
@@ -43143,9 +43144,9 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 		/**
 		 * The interface between Docker and the plugin
 		 */
-		Interface: v.strictObject({
+		Interface: v.looseObject({
 			Types: v.array(
-				v.strictObject({
+				v.looseObject({
 					Prefix: v.pipe(v.string(), v.trim()),
 					Capability: v.pipe(v.string(), v.trim()),
 					Version: v.pipe(v.string(), v.trim()),
@@ -43160,19 +43161,19 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 		Entrypoint: v.array(v.pipe(v.string(), v.trim())),
 		WorkDir: v.pipe(v.string(), v.trim()),
 		User: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				UID: v.exactOptional(v.pipe(v.number(), v.integer())),
 				GID: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
-		Network: v.strictObject({
+		Network: v.looseObject({
 			Type: v.pipe(v.string(), v.trim()),
 		}),
-		Linux: v.strictObject({
+		Linux: v.looseObject({
 			Capabilities: v.array(v.pipe(v.string(), v.trim())),
 			AllowAllDevices: v.boolean(),
 			Devices: v.array(
-				v.strictObject({
+				v.looseObject({
 					Name: v.pipe(v.string(), v.trim()),
 					Description: v.pipe(v.string(), v.trim()),
 					Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -43184,7 +43185,7 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 		IpcHost: v.boolean(),
 		PidHost: v.boolean(),
 		Mounts: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
@@ -43195,21 +43196,21 @@ export const pluginDeleteCommandResponseSchema = v.strictObject({
 			}),
 		),
 		Env: v.array(
-			v.strictObject({
+			v.looseObject({
 				Name: v.pipe(v.string(), v.trim()),
 				Description: v.pipe(v.string(), v.trim()),
 				Settable: v.array(v.pipe(v.string(), v.trim())),
 				Value: v.pipe(v.string(), v.trim()),
 			}),
 		),
-		Args: v.strictObject({
+		Args: v.looseObject({
 			Name: v.pipe(v.string(), v.trim()),
 			Description: v.pipe(v.string(), v.trim()),
 			Settable: v.array(v.pipe(v.string(), v.trim())),
 			Value: v.array(v.pipe(v.string(), v.trim())),
 		}),
 		rootfs: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				type: v.exactOptional(v.pipe(v.string(), v.trim())),
 				diff_ids: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
 			}),
@@ -43263,14 +43264,14 @@ export const pluginDisableCommandQuerySchema = v.strictObject({
 	force: v.exactOptional(v.boolean()),
 });
 export const inputPluginUpgradeCommandBodySchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Name: v.optional(v.string()),
 		Description: v.optional(v.string()),
 		Value: v.optional(v.array(v.string())),
 	}),
 );
 export const pluginUpgradeCommandBodySchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -43315,7 +43316,7 @@ export const pluginSetCommandParamsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
 export const inputNodeListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.optional(v.string()),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -43330,7 +43331,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -43345,7 +43346,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 		 */
 		UpdatedAt: v.optional(v.string()),
 		Spec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name for the node.
 				 */
@@ -43369,13 +43370,13 @@ export const inputNodeListCommandResponseSchema = v.array(
 		 * agent.
 		 */
 		Description: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Hostname: v.optional(v.string()),
 				/**
 				 * Platform represents the platform (Arch/OS).
 				 */
 				Platform: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Architecture represents the hardware architecture (for example,
 						 * `x86_64`).
@@ -43392,7 +43393,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 				 * requested by a task.
 				 */
 				Resources: v.optional(
-					v.strictObject({
+					v.looseObject({
 						NanoCPUs: v.optional(v.bigint()),
 						MemoryBytes: v.optional(v.bigint()),
 						/**
@@ -43401,15 +43402,15 @@ export const inputNodeListCommandResponseSchema = v.array(
 						 */
 						GenericResources: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									NamedResourceSpec: v.optional(
-										v.strictObject({
+										v.looseObject({
 											Kind: v.optional(v.string()),
 											Value: v.optional(v.string()),
 										}),
 									),
 									DiscreteResourceSpec: v.optional(
-										v.strictObject({
+										v.looseObject({
 											Kind: v.optional(v.string()),
 											Value: v.optional(v.bigint()),
 										}),
@@ -43423,12 +43424,12 @@ export const inputNodeListCommandResponseSchema = v.array(
 				 * EngineDescription provides information about an engine.
 				 */
 				Engine: v.optional(
-					v.strictObject({
+					v.looseObject({
 						EngineVersion: v.optional(v.string()),
 						Labels: v.optional(v.record(v.string(), v.string())),
 						Plugins: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Type: v.optional(v.string()),
 									Name: v.optional(v.string()),
 								}),
@@ -43441,7 +43442,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 				 * CA certificate.
 				 */
 				TLSInfo: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The root CA certificate(s) that are used to validate leaf TLS
 						 * certificates.
@@ -43465,7 +43466,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 		 * It provides the current status of the node, as seen by the manager.
 		 */
 		Status: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * NodeState represents the state of a node.
 				 */
@@ -43487,7 +43488,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 		 */
 		ManagerStatus: v.optional(
 			v.nullable(
-				v.strictObject({
+				v.looseObject({
 					Leader: v.optional(v.boolean()),
 					/**
 					 * Reachability represents the reachability of a node.
@@ -43505,7 +43506,7 @@ export const inputNodeListCommandResponseSchema = v.array(
 	}),
 );
 export const nodeListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -43520,7 +43521,7 @@ export const nodeListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -43535,7 +43536,7 @@ export const nodeListCommandResponseSchema = v.array(
 		 */
 		UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Spec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name for the node.
 				 */
@@ -43561,13 +43562,13 @@ export const nodeListCommandResponseSchema = v.array(
 		 * agent.
 		 */
 		Description: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Hostname: v.exactOptional(v.pipe(v.string(), v.trim())),
 				/**
 				 * Platform represents the platform (Arch/OS).
 				 */
 				Platform: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Architecture represents the hardware architecture (for example,
 						 * `x86_64`).
@@ -43584,7 +43585,7 @@ export const nodeListCommandResponseSchema = v.array(
 				 * requested by a task.
 				 */
 				Resources: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						NanoCPUs: v.exactOptional(
 							v.union([
 								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -43605,15 +43606,15 @@ export const nodeListCommandResponseSchema = v.array(
 						 */
 						GenericResources: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									NamedResourceSpec: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 											Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 										}),
 									),
 									DiscreteResourceSpec: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 											Value: v.exactOptional(
 												v.union([
@@ -43643,14 +43644,14 @@ export const nodeListCommandResponseSchema = v.array(
 				 * EngineDescription provides information about an engine.
 				 */
 				Engine: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						EngineVersion: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Labels: v.exactOptional(
 							v.record(v.string(), v.pipe(v.string(), v.trim())),
 						),
 						Plugins: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Type: v.exactOptional(v.pipe(v.string(), v.trim())),
 									Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								}),
@@ -43663,7 +43664,7 @@ export const nodeListCommandResponseSchema = v.array(
 				 * CA certificate.
 				 */
 				TLSInfo: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The root CA certificate(s) that are used to validate leaf TLS
 						 * certificates.
@@ -43687,7 +43688,7 @@ export const nodeListCommandResponseSchema = v.array(
 		 * It provides the current status of the node, as seen by the manager.
 		 */
 		Status: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * NodeState represents the state of a node.
 				 */
@@ -43709,7 +43710,7 @@ export const nodeListCommandResponseSchema = v.array(
 		 */
 		ManagerStatus: v.exactOptional(
 			v.nullable(
-				v.strictObject({
+				v.looseObject({
 					Leader: v.exactOptional(v.boolean()),
 					/**
 					 * Reachability represents the reachability of a node.
@@ -43732,7 +43733,7 @@ export const inputNodeListCommandQuerySchema = v.strictObject({
 export const nodeListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputNodeInspectCommandResponseSchema = v.strictObject({
+export const inputNodeInspectCommandResponseSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -43747,7 +43748,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -43762,7 +43763,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 	 */
 	UpdatedAt: v.optional(v.string()),
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name for the node.
 			 */
@@ -43786,13 +43787,13 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 	 * agent.
 	 */
 	Description: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Hostname: v.optional(v.string()),
 			/**
 			 * Platform represents the platform (Arch/OS).
 			 */
 			Platform: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Architecture represents the hardware architecture (for example,
 					 * `x86_64`).
@@ -43809,7 +43810,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 			 * requested by a task.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.optional(v.bigint()),
 					MemoryBytes: v.optional(v.bigint()),
 					/**
@@ -43818,15 +43819,15 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 					 */
 					GenericResources: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								NamedResourceSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.optional(v.string()),
 										Value: v.optional(v.string()),
 									}),
 								),
 								DiscreteResourceSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.optional(v.string()),
 										Value: v.optional(v.bigint()),
 									}),
@@ -43840,12 +43841,12 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 			 * EngineDescription provides information about an engine.
 			 */
 			Engine: v.optional(
-				v.strictObject({
+				v.looseObject({
 					EngineVersion: v.optional(v.string()),
 					Labels: v.optional(v.record(v.string(), v.string())),
 					Plugins: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Type: v.optional(v.string()),
 								Name: v.optional(v.string()),
 							}),
@@ -43858,7 +43859,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 			 * CA certificate.
 			 */
 			TLSInfo: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The root CA certificate(s) that are used to validate leaf TLS
 					 * certificates.
@@ -43882,7 +43883,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 	 * It provides the current status of the node, as seen by the manager.
 	 */
 	Status: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * NodeState represents the state of a node.
 			 */
@@ -43904,7 +43905,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 	 */
 	ManagerStatus: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				Leader: v.optional(v.boolean()),
 				/**
 				 * Reachability represents the reachability of a node.
@@ -43920,7 +43921,7 @@ export const inputNodeInspectCommandResponseSchema = v.strictObject({
 		),
 	),
 });
-export const nodeInspectCommandResponseSchema = v.strictObject({
+export const nodeInspectCommandResponseSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -43935,7 +43936,7 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -43950,7 +43951,7 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 	 */
 	UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name for the node.
 			 */
@@ -43976,13 +43977,13 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 	 * agent.
 	 */
 	Description: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Hostname: v.exactOptional(v.pipe(v.string(), v.trim())),
 			/**
 			 * Platform represents the platform (Arch/OS).
 			 */
 			Platform: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Architecture represents the hardware architecture (for example,
 					 * `x86_64`).
@@ -43999,7 +44000,7 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 			 * requested by a task.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -44020,15 +44021,15 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 					 */
 					GenericResources: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								NamedResourceSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 									}),
 								),
 								DiscreteResourceSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(
 											v.union([
@@ -44058,14 +44059,14 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 			 * EngineDescription provides information about an engine.
 			 */
 			Engine: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					EngineVersion: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Labels: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
 					),
 					Plugins: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Type: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 							}),
@@ -44078,7 +44079,7 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 			 * CA certificate.
 			 */
 			TLSInfo: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The root CA certificate(s) that are used to validate leaf TLS
 					 * certificates.
@@ -44102,7 +44103,7 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 	 * It provides the current status of the node, as seen by the manager.
 	 */
 	Status: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * NodeState represents the state of a node.
 			 */
@@ -44124,7 +44125,7 @@ export const nodeInspectCommandResponseSchema = v.strictObject({
 	 */
 	ManagerStatus: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				Leader: v.exactOptional(v.boolean()),
 				/**
 				 * Reachability represents the reachability of a node.
@@ -44158,7 +44159,7 @@ export const inputNodeDeleteCommandQuerySchema = v.strictObject({
 export const nodeDeleteCommandQuerySchema = v.strictObject({
 	force: v.exactOptional(v.boolean()),
 });
-export const inputNodeUpdateCommandBodySchema = v.strictObject({
+export const inputNodeUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Name for the node.
 	 */
@@ -44176,7 +44177,7 @@ export const inputNodeUpdateCommandBodySchema = v.strictObject({
 	 */
 	Availability: v.optional(v.picklist(["active", "pause", "drain"])),
 });
-export const nodeUpdateCommandBodySchema = v.strictObject({
+export const nodeUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Name for the node.
 	 */
@@ -44210,7 +44211,7 @@ export const nodeUpdateCommandQuerySchema = v.strictObject({
 		v.bigint(),
 	]),
 });
-export const inputSwarmInspectCommandResponseSchema = v.strictObject({
+export const inputSwarmInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the swarm.
 	 */
@@ -44228,7 +44229,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -44246,7 +44247,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 	 * User modifiable swarm configuration.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the swarm.
 			 */
@@ -44260,7 +44261,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 			 */
 			Orchestration: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of historic tasks to keep per instance or node. If
 						 * negative, never remove completed or failed tasks.
@@ -44273,7 +44274,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 			 * Raft configuration.
 			 */
 			Raft: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The number of log entries between snapshots.
 					 */
@@ -44313,7 +44314,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 			 */
 			Dispatcher: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The delay for an agent to send a heartbeat to the dispatcher.
 						 */
@@ -44326,7 +44327,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 			 */
 			CAConfig: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The duration node certificates are issued for.
 						 */
@@ -44337,7 +44338,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 						 */
 						ExternalCAs: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Protocol for communication with the external CA (currently
 									 * only `cfssl` is supported).
@@ -44384,7 +44385,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 			 * Parameters related to encryption-at-rest.
 			 */
 			EncryptionConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * If set, generate a key and use it to lock data stored on the
 					 * managers.
@@ -44396,7 +44397,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 			 * Defaults for creating tasks in this cluster.
 			 */
 			TaskDefaults: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use for tasks created in the orchestrator if
 					 * unspecified by a service.
@@ -44405,7 +44406,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 					 * to use their previously configured log driver until recreated.
 					 */
 					LogDriver: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The log driver to use as a default for new tasks.
 							 */
@@ -44426,7 +44427,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 	 * CA certificate.
 	 */
 	TLSInfo: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The root CA certificate(s) that are used to validate leaf TLS
 			 * certificates.
@@ -44466,7 +44467,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 	 * JoinTokens contains the tokens workers and managers need to join the swarm.
 	 */
 	JoinTokens: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The token workers can use to join the swarm.
 			 */
@@ -44478,7 +44479,7 @@ export const inputSwarmInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const swarmInspectCommandResponseSchema = v.strictObject({
+export const swarmInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the swarm.
 	 */
@@ -44496,7 +44497,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -44514,7 +44515,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 	 * User modifiable swarm configuration.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the swarm.
 			 */
@@ -44530,7 +44531,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 			 */
 			Orchestration: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of historic tasks to keep per instance or node. If
 						 * negative, never remove completed or failed tasks.
@@ -44549,7 +44550,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 			 * Raft configuration.
 			 */
 			Raft: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The number of log entries between snapshots.
 					 */
@@ -44589,7 +44590,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 			 */
 			Dispatcher: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The delay for an agent to send a heartbeat to the dispatcher.
 						 */
@@ -44608,7 +44609,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 			 */
 			CAConfig: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The duration node certificates are issued for.
 						 */
@@ -44625,7 +44626,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 						 */
 						ExternalCAs: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Protocol for communication with the external CA (currently
 									 * only `cfssl` is supported).
@@ -44674,7 +44675,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 			 * Parameters related to encryption-at-rest.
 			 */
 			EncryptionConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * If set, generate a key and use it to lock data stored on the
 					 * managers.
@@ -44686,7 +44687,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 			 * Defaults for creating tasks in this cluster.
 			 */
 			TaskDefaults: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use for tasks created in the orchestrator if
 					 * unspecified by a service.
@@ -44695,7 +44696,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 					 * to use their previously configured log driver until recreated.
 					 */
 					LogDriver: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The log driver to use as a default for new tasks.
 							 */
@@ -44718,7 +44719,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 	 * CA certificate.
 	 */
 	TLSInfo: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The root CA certificate(s) that are used to validate leaf TLS
 			 * certificates.
@@ -44758,7 +44759,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 	 * JoinTokens contains the tokens workers and managers need to join the swarm.
 	 */
 	JoinTokens: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The token workers can use to join the swarm.
 			 */
@@ -44770,7 +44771,7 @@ export const swarmInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const inputSwarmInitCommandBodySchema = v.strictObject({
+export const inputSwarmInitCommandBodySchema = v.looseObject({
 	/**
 	 * Listen address used for inter-manager communication, as well
 	 * as determining the networking interface used for the VXLAN
@@ -44826,7 +44827,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 	 * User modifiable swarm configuration.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the swarm.
 			 */
@@ -44840,7 +44841,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 			 */
 			Orchestration: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of historic tasks to keep per instance or node. If
 						 * negative, never remove completed or failed tasks.
@@ -44853,7 +44854,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 			 * Raft configuration.
 			 */
 			Raft: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The number of log entries between snapshots.
 					 */
@@ -44893,7 +44894,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 			 */
 			Dispatcher: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The delay for an agent to send a heartbeat to the dispatcher.
 						 */
@@ -44906,7 +44907,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 			 */
 			CAConfig: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The duration node certificates are issued for.
 						 */
@@ -44917,7 +44918,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 						 */
 						ExternalCAs: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Protocol for communication with the external CA (currently
 									 * only `cfssl` is supported).
@@ -44964,7 +44965,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 			 * Parameters related to encryption-at-rest.
 			 */
 			EncryptionConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * If set, generate a key and use it to lock data stored on the
 					 * managers.
@@ -44976,7 +44977,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 			 * Defaults for creating tasks in this cluster.
 			 */
 			TaskDefaults: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use for tasks created in the orchestrator if
 					 * unspecified by a service.
@@ -44985,7 +44986,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 					 * to use their previously configured log driver until recreated.
 					 */
 					LogDriver: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The log driver to use as a default for new tasks.
 							 */
@@ -45002,7 +45003,7 @@ export const inputSwarmInitCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const swarmInitCommandBodySchema = v.strictObject({
+export const swarmInitCommandBodySchema = v.looseObject({
 	/**
 	 * Listen address used for inter-manager communication, as well
 	 * as determining the networking interface used for the VXLAN
@@ -45058,7 +45059,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 	 * User modifiable swarm configuration.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the swarm.
 			 */
@@ -45074,7 +45075,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 			 */
 			Orchestration: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The number of historic tasks to keep per instance or node. If
 						 * negative, never remove completed or failed tasks.
@@ -45093,7 +45094,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 			 * Raft configuration.
 			 */
 			Raft: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The number of log entries between snapshots.
 					 */
@@ -45133,7 +45134,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 			 */
 			Dispatcher: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The delay for an agent to send a heartbeat to the dispatcher.
 						 */
@@ -45152,7 +45153,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 			 */
 			CAConfig: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The duration node certificates are issued for.
 						 */
@@ -45169,7 +45170,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 						 */
 						ExternalCAs: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Protocol for communication with the external CA (currently
 									 * only `cfssl` is supported).
@@ -45218,7 +45219,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 			 * Parameters related to encryption-at-rest.
 			 */
 			EncryptionConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * If set, generate a key and use it to lock data stored on the
 					 * managers.
@@ -45230,7 +45231,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 			 * Defaults for creating tasks in this cluster.
 			 */
 			TaskDefaults: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use for tasks created in the orchestrator if
 					 * unspecified by a service.
@@ -45239,7 +45240,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 					 * to use their previously configured log driver until recreated.
 					 */
 					LogDriver: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The log driver to use as a default for new tasks.
 							 */
@@ -45260,7 +45261,7 @@ export const swarmInitCommandBodySchema = v.strictObject({
 });
 export const inputSwarmInitCommandResponseSchema = v.string();
 export const swarmInitCommandResponseSchema = v.pipe(v.string(), v.trim());
-export const inputSwarmJoinCommandBodySchema = v.strictObject({
+export const inputSwarmJoinCommandBodySchema = v.looseObject({
 	/**
 	 * Listen address used for inter-manager communication if the node
 	 * gets promoted to manager, as well as determining the networking
@@ -45298,7 +45299,7 @@ export const inputSwarmJoinCommandBodySchema = v.strictObject({
 	 */
 	JoinToken: v.optional(v.string()),
 });
-export const swarmJoinCommandBodySchema = v.strictObject({
+export const swarmJoinCommandBodySchema = v.looseObject({
 	/**
 	 * Listen address used for inter-manager communication if the node
 	 * gets promoted to manager, as well as determining the networking
@@ -45342,7 +45343,7 @@ export const inputSwarmLeaveCommandQuerySchema = v.strictObject({
 export const swarmLeaveCommandQuerySchema = v.strictObject({
 	force: v.exactOptional(v.boolean()),
 });
-export const inputSwarmUpdateCommandBodySchema = v.strictObject({
+export const inputSwarmUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Name of the swarm.
 	 */
@@ -45356,7 +45357,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 	 */
 	Orchestration: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The number of historic tasks to keep per instance or node. If
 				 * negative, never remove completed or failed tasks.
@@ -45369,7 +45370,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 	 * Raft configuration.
 	 */
 	Raft: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of log entries between snapshots.
 			 */
@@ -45407,7 +45408,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 	 */
 	Dispatcher: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The delay for an agent to send a heartbeat to the dispatcher.
 				 */
@@ -45420,7 +45421,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 	 */
 	CAConfig: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The duration node certificates are issued for.
 				 */
@@ -45431,7 +45432,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 				 */
 				ExternalCAs: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Protocol for communication with the external CA (currently
 							 * only `cfssl` is supported).
@@ -45478,7 +45479,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 	 * Parameters related to encryption-at-rest.
 	 */
 	EncryptionConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * If set, generate a key and use it to lock data stored on the
 			 * managers.
@@ -45490,7 +45491,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 	 * Defaults for creating tasks in this cluster.
 	 */
 	TaskDefaults: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The log driver to use for tasks created in the orchestrator if
 			 * unspecified by a service.
@@ -45499,7 +45500,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 			 * to use their previously configured log driver until recreated.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use as a default for new tasks.
 					 */
@@ -45514,7 +45515,7 @@ export const inputSwarmUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const swarmUpdateCommandBodySchema = v.strictObject({
+export const swarmUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Name of the swarm.
 	 */
@@ -45528,7 +45529,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 	 */
 	Orchestration: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The number of historic tasks to keep per instance or node. If
 				 * negative, never remove completed or failed tasks.
@@ -45547,7 +45548,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 	 * Raft configuration.
 	 */
 	Raft: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of log entries between snapshots.
 			 */
@@ -45587,7 +45588,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 	 */
 	Dispatcher: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The delay for an agent to send a heartbeat to the dispatcher.
 				 */
@@ -45606,7 +45607,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 	 */
 	CAConfig: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The duration node certificates are issued for.
 				 */
@@ -45623,7 +45624,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 				 */
 				ExternalCAs: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Protocol for communication with the external CA (currently
 							 * only `cfssl` is supported).
@@ -45672,7 +45673,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 	 * Parameters related to encryption-at-rest.
 	 */
 	EncryptionConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * If set, generate a key and use it to lock data stored on the
 			 * managers.
@@ -45684,7 +45685,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 	 * Defaults for creating tasks in this cluster.
 	 */
 	TaskDefaults: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The log driver to use for tasks created in the orchestrator if
 			 * unspecified by a service.
@@ -45693,7 +45694,7 @@ export const swarmUpdateCommandBodySchema = v.strictObject({
 			 * to use their previously configured log driver until recreated.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The log driver to use as a default for new tasks.
 					 */
@@ -45726,32 +45727,32 @@ export const swarmUpdateCommandQuerySchema = v.strictObject({
 	rotateManagerToken: v.exactOptional(v.boolean()),
 	rotateManagerUnlockKey: v.exactOptional(v.boolean()),
 });
-export const inputSwarmUnlockkeyCommandResponseSchema = v.strictObject({
+export const inputSwarmUnlockkeyCommandResponseSchema = v.looseObject({
 	/**
 	 * The swarm's unlock key.
 	 */
 	UnlockKey: v.optional(v.string()),
 });
-export const swarmUnlockkeyCommandResponseSchema = v.strictObject({
+export const swarmUnlockkeyCommandResponseSchema = v.looseObject({
 	/**
 	 * The swarm's unlock key.
 	 */
 	UnlockKey: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSwarmUnlockCommandBodySchema = v.strictObject({
+export const inputSwarmUnlockCommandBodySchema = v.looseObject({
 	/**
 	 * The swarm's unlock key.
 	 */
 	UnlockKey: v.optional(v.string()),
 });
-export const swarmUnlockCommandBodySchema = v.strictObject({
+export const swarmUnlockCommandBodySchema = v.looseObject({
 	/**
 	 * The swarm's unlock key.
 	 */
 	UnlockKey: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputServiceListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.optional(v.string()),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -45766,7 +45767,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -45776,7 +45777,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 		 * User modifiable configuration for a service.
 		 */
 		Spec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the service.
 				 */
@@ -45789,7 +45790,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 * User modifiable task configuration.
 				 */
 				TaskTemplate: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Plugin spec for the service.  *(Experimental release only.)*
 						 *
@@ -45801,7 +45802,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * > field is set to `attachment`.
 						 */
 						PluginSpec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The name or 'alias' to use for the plugin.
 								 */
@@ -45816,7 +45817,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								Disabled: v.optional(v.boolean()),
 								PluginPrivilege: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											Name: v.optional(v.string()),
 											Description: v.optional(v.string()),
 											Value: v.optional(v.array(v.string())),
@@ -45836,7 +45837,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * > field is set to `attachment`.
 						 */
 						ContainerSpec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The image name to use for the container
 								 */
@@ -45878,12 +45879,12 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 * Security options for the container
 								 */
 								Privileges: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * CredentialSpec for managed service account (Windows only)
 										 */
 										CredentialSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Load credential spec from a Swarm Config with the given ID.
 												 * The specified config must also be present in the Configs
@@ -45931,7 +45932,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 										 * SELinux labels of the container
 										 */
 										SELinuxContext: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Disable SELinux
 												 */
@@ -45974,7 +45975,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 */
 								Mounts: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Container path.
 											 */
@@ -46019,7 +46020,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 											 * Optional configuration for the `bind` type.
 											 */
 											BindOptions: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 													 */
@@ -46047,7 +46048,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 											 * Optional configuration for the `volume` type.
 											 */
 											VolumeOptions: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Populate volume with data from the target.
 													 */
@@ -46060,7 +46061,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 													 * Map of driver specific options
 													 */
 													DriverConfig: v.optional(
-														v.strictObject({
+														v.looseObject({
 															/**
 															 * Name of the driver to use to create the volume.
 															 */
@@ -46079,7 +46080,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 											 * Optional configuration for the `tmpfs` type.
 											 */
 											TmpfsOptions: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * The size for the tmpfs mount in bytes.
 													 */
@@ -46106,7 +46107,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 * A test to perform to check that the container is healthy.
 								 */
 								HealthCheck: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The test to perform. Possible values are:
 										 *
@@ -46154,7 +46155,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 * file (`resolv.conf`).
 								 */
 								DNSConfig: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The IP addresses of the name servers.
 										 */
@@ -46176,12 +46177,12 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 */
 								Secrets: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * File represents a specific target that is backed by a file.
 											 */
 											File: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Name represents the final filename in the filesystem.
 													 */
@@ -46220,7 +46221,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 */
 								Configs: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * File represents a specific target that is backed by a file.
 											 *
@@ -46229,7 +46230,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 											 */
 											File: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Name represents the final filename in the filesystem.
 													 */
@@ -46311,7 +46312,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 */
 								Ulimits: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Name of ulimit
 											 */
@@ -46341,7 +46342,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * > field is set to `attachment`.
 						 */
 						NetworkAttachmentSpec: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * ID of the container represented by this task
 								 */
@@ -46353,12 +46354,12 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * as part of the service.
 						 */
 						Resources: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * An object describing a limit on resources which can be requested by a task.
 								 */
 								Limits: v.optional(
-									v.strictObject({
+									v.looseObject({
 										NanoCPUs: v.optional(v.bigint()),
 										MemoryBytes: v.optional(v.bigint()),
 										/**
@@ -46372,7 +46373,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 * requested by a task.
 								 */
 								Reservations: v.optional(
-									v.strictObject({
+									v.looseObject({
 										NanoCPUs: v.optional(v.bigint()),
 										MemoryBytes: v.optional(v.bigint()),
 										/**
@@ -46381,15 +46382,15 @@ export const inputServiceListCommandResponseSchema = v.array(
 										 */
 										GenericResources: v.optional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													NamedResourceSpec: v.optional(
-														v.strictObject({
+														v.looseObject({
 															Kind: v.optional(v.string()),
 															Value: v.optional(v.string()),
 														}),
 													),
 													DiscreteResourceSpec: v.optional(
-														v.strictObject({
+														v.looseObject({
 															Kind: v.optional(v.string()),
 															Value: v.optional(v.bigint()),
 														}),
@@ -46406,7 +46407,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * created as part of this service.
 						 */
 						RestartPolicy: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Condition for restart.
 								 */
@@ -46430,7 +46431,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 							}),
 						),
 						Placement: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * An array of constraint expressions to limit the set of nodes where
 								 * a task can be scheduled. Constraint expressions can either use a
@@ -46467,9 +46468,9 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 */
 								Preferences: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											Spread: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * label descriptor, such as `engine.labels.az`.
 													 */
@@ -46492,7 +46493,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								 */
 								Platforms: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Architecture represents the hardware architecture (for example,
 											 * `x86_64`).
@@ -46521,7 +46522,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 */
 						Networks: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The target network for attachment. Must be a network name or ID.
 									 */
@@ -46543,7 +46544,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * falling back to the engine default if not specified.
 						 */
 						LogDriver: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Options: v.optional(v.record(v.string(), v.string())),
 							}),
@@ -46554,9 +46555,9 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 * Scheduling mode for the service.
 				 */
 				Mode: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Replicated: v.optional(
-							v.strictObject({
+							v.looseObject({
 								Replicas: v.optional(v.bigint()),
 							}),
 						),
@@ -46566,7 +46567,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * to a completed state.
 						 */
 						ReplicatedJob: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The maximum number of replicas to run simultaneously.
 								 */
@@ -46589,7 +46590,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 * Specification for the update strategy of the service.
 				 */
 				UpdateConfig: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Maximum number of tasks to be updated in one iteration (0 means
 						 * unlimited parallelism).
@@ -46629,7 +46630,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 * Specification for the rollback strategy of the service.
 				 */
 				RollbackConfig: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Maximum number of tasks to be rolled back in one iteration (0 means
 						 * unlimited parallelism).
@@ -46668,7 +46669,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 */
 				Networks: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The target network for attachment. Must be a network name or ID.
 							 */
@@ -46688,7 +46689,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 * Properties that can be configured to access and load balance a service.
 				 */
 				EndpointSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The mode of resolution to use for internal load balancing between tasks.
 						 */
@@ -46699,7 +46700,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 */
 						Ports: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Name: v.optional(v.string()),
 									Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 									/**
@@ -46733,12 +46734,12 @@ export const inputServiceListCommandResponseSchema = v.array(
 			}),
 		),
 		Endpoint: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Properties that can be configured to access and load balance a service.
 				 */
 				Spec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The mode of resolution to use for internal load balancing between tasks.
 						 */
@@ -46749,7 +46750,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 */
 						Ports: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Name: v.optional(v.string()),
 									Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 									/**
@@ -46782,7 +46783,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				),
 				Ports: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							Name: v.optional(v.string()),
 							Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 							/**
@@ -46813,7 +46814,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				),
 				VirtualIPs: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							NetworkID: v.optional(v.string()),
 							Addr: v.optional(v.string()),
 						}),
@@ -46825,7 +46826,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 		 * The status of a service update.
 		 */
 		UpdateStatus: v.optional(
-			v.strictObject({
+			v.looseObject({
 				State: v.optional(v.picklist(["updating", "paused", "completed"])),
 				StartedAt: v.optional(v.string()),
 				CompletedAt: v.optional(v.string()),
@@ -46837,7 +46838,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 		 * part of a ServiceList operation.
 		 */
 		ServiceStatus: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The number of tasks for the service currently in the Running state.
 				 */
@@ -46866,7 +46867,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 		 * does not need to be sent with an update request.
 		 */
 		JobStatus: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The version number of the object such as node, service, etc. This is needed
 				 * to avoid conflicting writes. The client must send the version number along
@@ -46880,7 +46881,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 				 * overwrite each other.
 				 */
 				JobIteration: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Index: v.optional(v.pipe(v.number(), v.integer())),
 					}),
 				),
@@ -46894,7 +46895,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 	}),
 );
 export const serviceListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -46909,7 +46910,7 @@ export const serviceListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -46919,7 +46920,7 @@ export const serviceListCommandResponseSchema = v.array(
 		 * User modifiable configuration for a service.
 		 */
 		Spec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Name of the service.
 				 */
@@ -46934,7 +46935,7 @@ export const serviceListCommandResponseSchema = v.array(
 				 * User modifiable task configuration.
 				 */
 				TaskTemplate: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Plugin spec for the service.  *(Experimental release only.)*
 						 *
@@ -46946,7 +46947,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * > field is set to `attachment`.
 						 */
 						PluginSpec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The name or 'alias' to use for the plugin.
 								 */
@@ -46961,7 +46962,7 @@ export const serviceListCommandResponseSchema = v.array(
 								Disabled: v.exactOptional(v.boolean()),
 								PluginPrivilege: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 											Description: v.exactOptional(
 												v.pipe(v.string(), v.trim()),
@@ -46985,7 +46986,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * > field is set to `attachment`.
 						 */
 						ContainerSpec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The image name to use for the container
 								 */
@@ -47029,12 +47030,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 * Security options for the container
 								 */
 								Privileges: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * CredentialSpec for managed service account (Windows only)
 										 */
 										CredentialSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Load credential spec from a Swarm Config with the given ID.
 												 * The specified config must also be present in the Configs
@@ -47082,7 +47083,7 @@ export const serviceListCommandResponseSchema = v.array(
 										 * SELinux labels of the container
 										 */
 										SELinuxContext: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Disable SELinux
 												 */
@@ -47125,7 +47126,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Mounts: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Container path.
 											 */
@@ -47172,7 +47173,7 @@ export const serviceListCommandResponseSchema = v.array(
 											 * Optional configuration for the `bind` type.
 											 */
 											BindOptions: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 													 */
@@ -47200,7 +47201,7 @@ export const serviceListCommandResponseSchema = v.array(
 											 * Optional configuration for the `volume` type.
 											 */
 											VolumeOptions: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Populate volume with data from the target.
 													 */
@@ -47215,7 +47216,7 @@ export const serviceListCommandResponseSchema = v.array(
 													 * Map of driver specific options
 													 */
 													DriverConfig: v.exactOptional(
-														v.strictObject({
+														v.looseObject({
 															/**
 															 * Name of the driver to use to create the volume.
 															 */
@@ -47239,7 +47240,7 @@ export const serviceListCommandResponseSchema = v.array(
 											 * Optional configuration for the `tmpfs` type.
 											 */
 											TmpfsOptions: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * The size for the tmpfs mount in bytes.
 													 */
@@ -47290,7 +47291,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 * A test to perform to check that the container is healthy.
 								 */
 								HealthCheck: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The test to perform. Possible values are:
 										 *
@@ -47388,7 +47389,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 * file (`resolv.conf`).
 								 */
 								DNSConfig: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The IP addresses of the name servers.
 										 */
@@ -47416,12 +47417,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Secrets: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * File represents a specific target that is backed by a file.
 											 */
 											File: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Name represents the final filename in the filesystem.
 													 */
@@ -47462,7 +47463,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Configs: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * File represents a specific target that is backed by a file.
 											 *
@@ -47471,7 +47472,7 @@ export const serviceListCommandResponseSchema = v.array(
 											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 											 */
 											File: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Name represents the final filename in the filesystem.
 													 */
@@ -47563,7 +47564,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Ulimits: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Name of ulimit
 											 */
@@ -47593,7 +47594,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * > field is set to `attachment`.
 						 */
 						NetworkAttachmentSpec: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * ID of the container represented by this task
 								 */
@@ -47605,12 +47606,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 * as part of the service.
 						 */
 						Resources: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * An object describing a limit on resources which can be requested by a task.
 								 */
 								Limits: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										NanoCPUs: v.exactOptional(
 											v.union([
 												v.pipe(
@@ -47672,7 +47673,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 * requested by a task.
 								 */
 								Reservations: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										NanoCPUs: v.exactOptional(
 											v.union([
 												v.pipe(
@@ -47713,9 +47714,9 @@ export const serviceListCommandResponseSchema = v.array(
 										 */
 										GenericResources: v.exactOptional(
 											v.array(
-												v.strictObject({
+												v.looseObject({
 													NamedResourceSpec: v.exactOptional(
-														v.strictObject({
+														v.looseObject({
 															Kind: v.exactOptional(
 																v.pipe(v.string(), v.trim()),
 															),
@@ -47725,7 +47726,7 @@ export const serviceListCommandResponseSchema = v.array(
 														}),
 													),
 													DiscreteResourceSpec: v.exactOptional(
-														v.strictObject({
+														v.looseObject({
 															Kind: v.exactOptional(
 																v.pipe(v.string(), v.trim()),
 															),
@@ -47760,7 +47761,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * created as part of this service.
 						 */
 						RestartPolicy: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Condition for restart.
 								 */
@@ -47802,7 +47803,7 @@ export const serviceListCommandResponseSchema = v.array(
 							}),
 						),
 						Placement: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * An array of constraint expressions to limit the set of nodes where
 								 * a task can be scheduled. Constraint expressions can either use a
@@ -47841,9 +47842,9 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Preferences: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											Spread: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * label descriptor, such as `engine.labels.az`.
 													 */
@@ -47874,7 +47875,7 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Platforms: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Architecture represents the hardware architecture (for example,
 											 * `x86_64`).
@@ -47905,7 +47906,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Networks: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The target network for attachment. Must be a network name or ID.
 									 */
@@ -47931,7 +47932,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * falling back to the engine default if not specified.
 						 */
 						LogDriver: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Options: v.exactOptional(
 									v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -47944,9 +47945,9 @@ export const serviceListCommandResponseSchema = v.array(
 				 * Scheduling mode for the service.
 				 */
 				Mode: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Replicated: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								Replicas: v.exactOptional(
 									v.union([
 										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -47962,7 +47963,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * to a completed state.
 						 */
 						ReplicatedJob: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The maximum number of replicas to run simultaneously.
 								 */
@@ -47997,7 +47998,7 @@ export const serviceListCommandResponseSchema = v.array(
 				 * Specification for the update strategy of the service.
 				 */
 				UpdateConfig: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Maximum number of tasks to be updated in one iteration (0 means
 						 * unlimited parallelism).
@@ -48055,7 +48056,7 @@ export const serviceListCommandResponseSchema = v.array(
 				 * Specification for the rollback strategy of the service.
 				 */
 				RollbackConfig: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Maximum number of tasks to be rolled back in one iteration (0 means
 						 * unlimited parallelism).
@@ -48112,7 +48113,7 @@ export const serviceListCommandResponseSchema = v.array(
 				 */
 				Networks: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The target network for attachment. Must be a network name or ID.
 							 */
@@ -48134,7 +48135,7 @@ export const serviceListCommandResponseSchema = v.array(
 				 * Properties that can be configured to access and load balance a service.
 				 */
 				EndpointSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The mode of resolution to use for internal load balancing between tasks.
 						 */
@@ -48145,7 +48146,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Ports: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 									Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 									/**
@@ -48181,12 +48182,12 @@ export const serviceListCommandResponseSchema = v.array(
 			}),
 		),
 		Endpoint: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Properties that can be configured to access and load balance a service.
 				 */
 				Spec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The mode of resolution to use for internal load balancing between tasks.
 						 */
@@ -48197,7 +48198,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Ports: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 									Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 									/**
@@ -48232,7 +48233,7 @@ export const serviceListCommandResponseSchema = v.array(
 				),
 				Ports: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 							/**
@@ -48263,7 +48264,7 @@ export const serviceListCommandResponseSchema = v.array(
 				),
 				VirtualIPs: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							NetworkID: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Addr: v.exactOptional(v.pipe(v.string(), v.trim())),
 						}),
@@ -48275,7 +48276,7 @@ export const serviceListCommandResponseSchema = v.array(
 		 * The status of a service update.
 		 */
 		UpdateStatus: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				State: v.exactOptional(v.picklist(["updating", "paused", "completed"])),
 				StartedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 				CompletedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -48287,7 +48288,7 @@ export const serviceListCommandResponseSchema = v.array(
 		 * part of a ServiceList operation.
 		 */
 		ServiceStatus: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The number of tasks for the service currently in the Running state.
 				 */
@@ -48316,7 +48317,7 @@ export const serviceListCommandResponseSchema = v.array(
 		 * does not need to be sent with an update request.
 		 */
 		JobStatus: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The version number of the object such as node, service, etc. This is needed
 				 * to avoid conflicting writes. The client must send the version number along
@@ -48330,7 +48331,7 @@ export const serviceListCommandResponseSchema = v.array(
 				 * overwrite each other.
 				 */
 				JobIteration: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 					}),
 				),
@@ -48351,7 +48352,7 @@ export const serviceListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 	status: v.exactOptional(v.boolean()),
 });
-export const inputServiceCreateCommandBodySchema = v.strictObject({
+export const inputServiceCreateCommandBodySchema = v.looseObject({
 	/**
 	 * Name of the service.
 	 */
@@ -48364,7 +48365,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	TaskTemplate: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -48376,7 +48377,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -48391,7 +48392,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					Disabled: v.optional(v.boolean()),
 					PluginPrivilege: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Description: v.optional(v.string()),
 								Value: v.optional(v.array(v.string())),
@@ -48411,7 +48412,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -48453,12 +48454,12 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -48506,7 +48507,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -48549,7 +48550,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 */
 					Mounts: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -48588,7 +48589,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -48616,7 +48617,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -48629,7 +48630,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -48646,7 +48647,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -48673,7 +48674,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -48721,7 +48722,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -48743,12 +48744,12 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -48787,7 +48788,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 */
 					Configs: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -48796,7 +48797,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -48878,7 +48879,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 */
 					Ulimits: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -48908,7 +48909,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -48920,12 +48921,12 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -48939,7 +48940,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -48948,15 +48949,15 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 							 */
 							GenericResources: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.string()),
 											}),
 										),
 										DiscreteResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.bigint()),
 											}),
@@ -48973,7 +48974,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -48995,7 +48996,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 				}),
 			),
 			Placement: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -49032,9 +49033,9 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 */
 					Preferences: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -49057,7 +49058,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 					 */
 					Platforms: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -49086,7 +49087,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -49108,7 +49109,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.optional(v.string()),
 					Options: v.optional(v.record(v.string(), v.string())),
 				}),
@@ -49119,9 +49120,9 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 	 * Scheduling mode for the service.
 	 */
 	Mode: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Replicated: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Replicas: v.optional(v.bigint()),
 				}),
 			),
@@ -49131,7 +49132,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 * to a completed state.
 			 */
 			ReplicatedJob: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The maximum number of replicas to run simultaneously.
 					 */
@@ -49154,7 +49155,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 	 * Specification for the update strategy of the service.
 	 */
 	UpdateConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be updated in one iteration (0 means
 			 * unlimited parallelism).
@@ -49192,7 +49193,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 	 * Specification for the rollback strategy of the service.
 	 */
 	RollbackConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be rolled back in one iteration (0 means
 			 * unlimited parallelism).
@@ -49231,7 +49232,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 	 */
 	Networks: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -49251,7 +49252,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 	 * Properties that can be configured to access and load balance a service.
 	 */
 	EndpointSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The mode of resolution to use for internal load balancing between tasks.
 			 */
@@ -49262,7 +49263,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 			 */
 			Ports: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -49294,7 +49295,7 @@ export const inputServiceCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const serviceCreateCommandBodySchema = v.strictObject({
+export const serviceCreateCommandBodySchema = v.looseObject({
 	/**
 	 * Name of the service.
 	 */
@@ -49307,7 +49308,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	TaskTemplate: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -49319,7 +49320,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -49334,7 +49335,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					Disabled: v.exactOptional(v.boolean()),
 					PluginPrivilege: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -49354,7 +49355,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -49398,12 +49399,12 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -49451,7 +49452,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -49494,7 +49495,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 */
 					Mounts: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -49533,7 +49534,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -49561,7 +49562,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -49576,7 +49577,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -49595,7 +49596,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -49644,7 +49645,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -49710,7 +49711,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -49734,12 +49735,12 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -49778,7 +49779,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 */
 					Configs: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -49787,7 +49788,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -49873,7 +49874,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 */
 					Ulimits: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -49903,7 +49904,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -49915,12 +49916,12 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -49952,7 +49953,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -49973,15 +49974,15 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 							 */
 							GenericResources: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 											}),
 										),
 										DiscreteResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(
 													v.union([
@@ -50014,7 +50015,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -50054,7 +50055,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 				}),
 			),
 			Placement: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -50091,9 +50092,9 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 */
 					Preferences: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -50124,7 +50125,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 					 */
 					Platforms: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -50153,7 +50154,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -50177,7 +50178,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Options: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -50190,9 +50191,9 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 	 * Scheduling mode for the service.
 	 */
 	Mode: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Replicated: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Replicas: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -50208,7 +50209,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 * to a completed state.
 			 */
 			ReplicatedJob: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The maximum number of replicas to run simultaneously.
 					 */
@@ -50243,7 +50244,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 	 * Specification for the update strategy of the service.
 	 */
 	UpdateConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be updated in one iteration (0 means
 			 * unlimited parallelism).
@@ -50301,7 +50302,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 	 * Specification for the rollback strategy of the service.
 	 */
 	RollbackConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be rolled back in one iteration (0 means
 			 * unlimited parallelism).
@@ -50358,7 +50359,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 	 */
 	Networks: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -50380,7 +50381,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 	 * Properties that can be configured to access and load balance a service.
 	 */
 	EndpointSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The mode of resolution to use for internal load balancing between tasks.
 			 */
@@ -50391,7 +50392,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 			 */
 			Ports: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -50423,7 +50424,7 @@ export const serviceCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputServiceCreateCommandResponseSchema = v.strictObject({
+export const inputServiceCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created service.
 	 */
@@ -50433,7 +50434,7 @@ export const inputServiceCreateCommandResponseSchema = v.strictObject({
 	 */
 	Warning: v.optional(v.string()),
 });
-export const serviceCreateCommandResponseSchema = v.strictObject({
+export const serviceCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the created service.
 	 */
@@ -50449,7 +50450,7 @@ export const inputServiceCreateCommandHeaderSchema = v.object({
 export const serviceCreateCommandHeaderSchema = v.object({
 	"x-registry-auth": v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputServiceInspectCommandResponseSchema = v.strictObject({
+export const inputServiceInspectCommandResponseSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -50464,7 +50465,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -50474,7 +50475,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 	 * User modifiable configuration for a service.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the service.
 			 */
@@ -50487,7 +50488,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 * User modifiable task configuration.
 			 */
 			TaskTemplate: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Plugin spec for the service.  *(Experimental release only.)*
 					 *
@@ -50499,7 +50500,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					PluginSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The name or 'alias' to use for the plugin.
 							 */
@@ -50514,7 +50515,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							Disabled: v.optional(v.boolean()),
 							PluginPrivilege: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Name: v.optional(v.string()),
 										Description: v.optional(v.string()),
 										Value: v.optional(v.array(v.string())),
@@ -50534,7 +50535,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					ContainerSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The image name to use for the container
 							 */
@@ -50576,12 +50577,12 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 * Security options for the container
 							 */
 							Privileges: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * CredentialSpec for managed service account (Windows only)
 									 */
 									CredentialSpec: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Load credential spec from a Swarm Config with the given ID.
 											 * The specified config must also be present in the Configs
@@ -50629,7 +50630,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 									 * SELinux labels of the container
 									 */
 									SELinuxContext: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Disable SELinux
 											 */
@@ -50672,7 +50673,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Mounts: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Container path.
 										 */
@@ -50717,7 +50718,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 										 * Optional configuration for the `bind` type.
 										 */
 										BindOptions: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 												 */
@@ -50745,7 +50746,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 										 * Optional configuration for the `volume` type.
 										 */
 										VolumeOptions: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Populate volume with data from the target.
 												 */
@@ -50758,7 +50759,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 												 * Map of driver specific options
 												 */
 												DriverConfig: v.optional(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Name of the driver to use to create the volume.
 														 */
@@ -50777,7 +50778,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 										 * Optional configuration for the `tmpfs` type.
 										 */
 										TmpfsOptions: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The size for the tmpfs mount in bytes.
 												 */
@@ -50804,7 +50805,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 * A test to perform to check that the container is healthy.
 							 */
 							HealthCheck: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The test to perform. Possible values are:
 									 *
@@ -50852,7 +50853,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 * file (`resolv.conf`).
 							 */
 							DNSConfig: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The IP addresses of the name servers.
 									 */
@@ -50874,12 +50875,12 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Secrets: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 */
 										File: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -50918,7 +50919,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Configs: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 *
@@ -50927,7 +50928,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 										 */
 										File: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -51009,7 +51010,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Ulimits: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of ulimit
 										 */
@@ -51039,7 +51040,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					NetworkAttachmentSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * ID of the container represented by this task
 							 */
@@ -51051,12 +51052,12 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * as part of the service.
 					 */
 					Resources: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An object describing a limit on resources which can be requested by a task.
 							 */
 							Limits: v.optional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.optional(v.bigint()),
 									MemoryBytes: v.optional(v.bigint()),
 									/**
@@ -51070,7 +51071,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 * requested by a task.
 							 */
 							Reservations: v.optional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.optional(v.bigint()),
 									MemoryBytes: v.optional(v.bigint()),
 									/**
@@ -51079,15 +51080,15 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 									 */
 									GenericResources: v.optional(
 										v.array(
-											v.strictObject({
+											v.looseObject({
 												NamedResourceSpec: v.optional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.optional(v.string()),
 														Value: v.optional(v.string()),
 													}),
 												),
 												DiscreteResourceSpec: v.optional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.optional(v.string()),
 														Value: v.optional(v.bigint()),
 													}),
@@ -51104,7 +51105,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * created as part of this service.
 					 */
 					RestartPolicy: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Condition for restart.
 							 */
@@ -51126,7 +51127,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 						}),
 					),
 					Placement: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An array of constraint expressions to limit the set of nodes where
 							 * a task can be scheduled. Constraint expressions can either use a
@@ -51163,9 +51164,9 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Preferences: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Spread: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * label descriptor, such as `engine.labels.az`.
 												 */
@@ -51188,7 +51189,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Platforms: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Architecture represents the hardware architecture (for example,
 										 * `x86_64`).
@@ -51217,7 +51218,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 */
 					Networks: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The target network for attachment. Must be a network name or ID.
 								 */
@@ -51239,7 +51240,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * falling back to the engine default if not specified.
 					 */
 					LogDriver: v.optional(
-						v.strictObject({
+						v.looseObject({
 							Name: v.optional(v.string()),
 							Options: v.optional(v.record(v.string(), v.string())),
 						}),
@@ -51250,9 +51251,9 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 * Scheduling mode for the service.
 			 */
 			Mode: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Replicated: v.optional(
-						v.strictObject({
+						v.looseObject({
 							Replicas: v.optional(v.bigint()),
 						}),
 					),
@@ -51262,7 +51263,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 * to a completed state.
 					 */
 					ReplicatedJob: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The maximum number of replicas to run simultaneously.
 							 */
@@ -51285,7 +51286,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 * Specification for the update strategy of the service.
 			 */
 			UpdateConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be updated in one iteration (0 means
 					 * unlimited parallelism).
@@ -51325,7 +51326,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 * Specification for the rollback strategy of the service.
 			 */
 			RollbackConfig: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be rolled back in one iteration (0 means
 					 * unlimited parallelism).
@@ -51364,7 +51365,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -51384,7 +51385,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			EndpointSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -51395,7 +51396,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 */
 					Ports: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -51429,12 +51430,12 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 	Endpoint: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			Spec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -51445,7 +51446,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 					 */
 					Ports: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -51478,7 +51479,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			),
 			Ports: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -51509,7 +51510,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			),
 			VirtualIPs: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						NetworkID: v.optional(v.string()),
 						Addr: v.optional(v.string()),
 					}),
@@ -51521,7 +51522,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 	 * The status of a service update.
 	 */
 	UpdateStatus: v.optional(
-		v.strictObject({
+		v.looseObject({
 			State: v.optional(v.picklist(["updating", "paused", "completed"])),
 			StartedAt: v.optional(v.string()),
 			CompletedAt: v.optional(v.string()),
@@ -51533,7 +51534,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 	 * part of a ServiceList operation.
 	 */
 	ServiceStatus: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of tasks for the service currently in the Running state.
 			 */
@@ -51562,7 +51563,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 	 * does not need to be sent with an update request.
 	 */
 	JobStatus: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The version number of the object such as node, service, etc. This is needed
 			 * to avoid conflicting writes. The client must send the version number along
@@ -51576,7 +51577,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			JobIteration: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.optional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -51588,7 +51589,7 @@ export const inputServiceInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const serviceInspectCommandResponseSchema = v.strictObject({
+export const serviceInspectCommandResponseSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -51603,7 +51604,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -51613,7 +51614,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 	 * User modifiable configuration for a service.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the service.
 			 */
@@ -51628,7 +51629,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 * User modifiable task configuration.
 			 */
 			TaskTemplate: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Plugin spec for the service.  *(Experimental release only.)*
 					 *
@@ -51640,7 +51641,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					PluginSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The name or 'alias' to use for the plugin.
 							 */
@@ -51655,7 +51656,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							Disabled: v.exactOptional(v.boolean()),
 							PluginPrivilege: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 										Value: v.exactOptional(
@@ -51677,7 +51678,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					ContainerSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The image name to use for the container
 							 */
@@ -51721,12 +51722,12 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 * Security options for the container
 							 */
 							Privileges: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * CredentialSpec for managed service account (Windows only)
 									 */
 									CredentialSpec: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Load credential spec from a Swarm Config with the given ID.
 											 * The specified config must also be present in the Configs
@@ -51774,7 +51775,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 									 * SELinux labels of the container
 									 */
 									SELinuxContext: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Disable SELinux
 											 */
@@ -51817,7 +51818,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Mounts: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Container path.
 										 */
@@ -51862,7 +51863,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 										 * Optional configuration for the `bind` type.
 										 */
 										BindOptions: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 												 */
@@ -51890,7 +51891,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 										 * Optional configuration for the `volume` type.
 										 */
 										VolumeOptions: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Populate volume with data from the target.
 												 */
@@ -51905,7 +51906,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 												 * Map of driver specific options
 												 */
 												DriverConfig: v.exactOptional(
-													v.strictObject({
+													v.looseObject({
 														/**
 														 * Name of the driver to use to create the volume.
 														 */
@@ -51927,7 +51928,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 										 * Optional configuration for the `tmpfs` type.
 										 */
 										TmpfsOptions: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * The size for the tmpfs mount in bytes.
 												 */
@@ -51976,7 +51977,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 * A test to perform to check that the container is healthy.
 							 */
 							HealthCheck: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The test to perform. Possible values are:
 									 *
@@ -52042,7 +52043,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 * file (`resolv.conf`).
 							 */
 							DNSConfig: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * The IP addresses of the name servers.
 									 */
@@ -52070,12 +52071,12 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Secrets: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 */
 										File: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -52114,7 +52115,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Configs: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * File represents a specific target that is backed by a file.
 										 *
@@ -52123,7 +52124,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 										 */
 										File: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name represents the final filename in the filesystem.
 												 */
@@ -52211,7 +52212,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Ulimits: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name of ulimit
 										 */
@@ -52241,7 +52242,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * > field is set to `attachment`.
 					 */
 					NetworkAttachmentSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * ID of the container represented by this task
 							 */
@@ -52253,12 +52254,12 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * as part of the service.
 					 */
 					Resources: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An object describing a limit on resources which can be requested by a task.
 							 */
 							Limits: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
 											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -52290,7 +52291,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 * requested by a task.
 							 */
 							Reservations: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
 											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -52311,9 +52312,9 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 									 */
 									GenericResources: v.exactOptional(
 										v.array(
-											v.strictObject({
+											v.looseObject({
 												NamedResourceSpec: v.exactOptional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 														Value: v.exactOptional(
 															v.pipe(v.string(), v.trim()),
@@ -52321,7 +52322,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 													}),
 												),
 												DiscreteResourceSpec: v.exactOptional(
-													v.strictObject({
+													v.looseObject({
 														Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 														Value: v.exactOptional(
 															v.union([
@@ -52354,7 +52355,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * created as part of this service.
 					 */
 					RestartPolicy: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Condition for restart.
 							 */
@@ -52396,7 +52397,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 						}),
 					),
 					Placement: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * An array of constraint expressions to limit the set of nodes where
 							 * a task can be scheduled. Constraint expressions can either use a
@@ -52435,9 +52436,9 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Preferences: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										Spread: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * label descriptor, such as `engine.labels.az`.
 												 */
@@ -52468,7 +52469,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 							 */
 							Platforms: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Architecture represents the hardware architecture (for example,
 										 * `x86_64`).
@@ -52497,7 +52498,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 */
 					Networks: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The target network for attachment. Must be a network name or ID.
 								 */
@@ -52521,7 +52522,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * falling back to the engine default if not specified.
 					 */
 					LogDriver: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Options: v.exactOptional(
 								v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -52534,9 +52535,9 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 * Scheduling mode for the service.
 			 */
 			Mode: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Replicated: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							Replicas: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -52552,7 +52553,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 * to a completed state.
 					 */
 					ReplicatedJob: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The maximum number of replicas to run simultaneously.
 							 */
@@ -52587,7 +52588,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 * Specification for the update strategy of the service.
 			 */
 			UpdateConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be updated in one iteration (0 means
 					 * unlimited parallelism).
@@ -52645,7 +52646,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 * Specification for the rollback strategy of the service.
 			 */
 			RollbackConfig: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Maximum number of tasks to be rolled back in one iteration (0 means
 					 * unlimited parallelism).
@@ -52702,7 +52703,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -52724,7 +52725,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			EndpointSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -52735,7 +52736,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 */
 					Ports: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -52769,12 +52770,12 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 	Endpoint: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Properties that can be configured to access and load balance a service.
 			 */
 			Spec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The mode of resolution to use for internal load balancing between tasks.
 					 */
@@ -52785,7 +52786,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 					 */
 					Ports: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 								/**
@@ -52818,7 +52819,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			),
 			Ports: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -52849,7 +52850,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			),
 			VirtualIPs: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						NetworkID: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Addr: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
@@ -52861,7 +52862,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 	 * The status of a service update.
 	 */
 	UpdateStatus: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			State: v.exactOptional(v.picklist(["updating", "paused", "completed"])),
 			StartedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 			CompletedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -52873,7 +52874,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 	 * part of a ServiceList operation.
 	 */
 	ServiceStatus: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The number of tasks for the service currently in the Running state.
 			 */
@@ -52902,7 +52903,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 	 * does not need to be sent with an update request.
 	 */
 	JobStatus: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The version number of the object such as node, service, etc. This is needed
 			 * to avoid conflicting writes. The client must send the version number along
@@ -52916,7 +52917,7 @@ export const serviceInspectCommandResponseSchema = v.strictObject({
 			 * overwrite each other.
 			 */
 			JobIteration: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 				}),
 			),
@@ -52946,7 +52947,7 @@ export const inputServiceDeleteCommandParamsSchema = v.strictObject({
 export const serviceDeleteCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputServiceUpdateCommandBodySchema = v.strictObject({
+export const inputServiceUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Name of the service.
 	 */
@@ -52959,7 +52960,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	TaskTemplate: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -52971,7 +52972,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -52986,7 +52987,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					Disabled: v.optional(v.boolean()),
 					PluginPrivilege: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Description: v.optional(v.string()),
 								Value: v.optional(v.array(v.string())),
@@ -53006,7 +53007,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -53048,12 +53049,12 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -53101,7 +53102,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -53144,7 +53145,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Mounts: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -53183,7 +53184,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -53211,7 +53212,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -53224,7 +53225,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -53241,7 +53242,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -53268,7 +53269,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -53316,7 +53317,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -53338,12 +53339,12 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -53382,7 +53383,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Configs: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -53391,7 +53392,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -53473,7 +53474,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Ulimits: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -53503,7 +53504,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -53515,12 +53516,12 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -53534,7 +53535,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -53543,15 +53544,15 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 							 */
 							GenericResources: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.string()),
 											}),
 										),
 										DiscreteResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.bigint()),
 											}),
@@ -53568,7 +53569,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -53590,7 +53591,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 				}),
 			),
 			Placement: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -53627,9 +53628,9 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Preferences: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -53652,7 +53653,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Platforms: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -53681,7 +53682,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -53703,7 +53704,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.optional(v.string()),
 					Options: v.optional(v.record(v.string(), v.string())),
 				}),
@@ -53714,9 +53715,9 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 	 * Scheduling mode for the service.
 	 */
 	Mode: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Replicated: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Replicas: v.optional(v.bigint()),
 				}),
 			),
@@ -53726,7 +53727,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 * to a completed state.
 			 */
 			ReplicatedJob: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The maximum number of replicas to run simultaneously.
 					 */
@@ -53749,7 +53750,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 	 * Specification for the update strategy of the service.
 	 */
 	UpdateConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be updated in one iteration (0 means
 			 * unlimited parallelism).
@@ -53787,7 +53788,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 	 * Specification for the rollback strategy of the service.
 	 */
 	RollbackConfig: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be rolled back in one iteration (0 means
 			 * unlimited parallelism).
@@ -53826,7 +53827,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 	 */
 	Networks: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -53846,7 +53847,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 	 * Properties that can be configured to access and load balance a service.
 	 */
 	EndpointSpec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The mode of resolution to use for internal load balancing between tasks.
 			 */
@@ -53857,7 +53858,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 			 */
 			Ports: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Protocol: v.optional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -53889,7 +53890,7 @@ export const inputServiceUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const serviceUpdateCommandBodySchema = v.strictObject({
+export const serviceUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * Name of the service.
 	 */
@@ -53902,7 +53903,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	TaskTemplate: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -53914,7 +53915,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -53929,7 +53930,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					Disabled: v.exactOptional(v.boolean()),
 					PluginPrivilege: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -53949,7 +53950,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -53993,12 +53994,12 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -54046,7 +54047,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -54089,7 +54090,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Mounts: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -54128,7 +54129,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -54156,7 +54157,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -54171,7 +54172,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -54190,7 +54191,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -54239,7 +54240,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -54305,7 +54306,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -54329,12 +54330,12 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -54373,7 +54374,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Configs: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -54382,7 +54383,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -54468,7 +54469,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Ulimits: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -54498,7 +54499,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -54510,12 +54511,12 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -54547,7 +54548,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -54568,15 +54569,15 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 							 */
 							GenericResources: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 											}),
 										),
 										DiscreteResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(
 													v.union([
@@ -54609,7 +54610,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -54649,7 +54650,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 				}),
 			),
 			Placement: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -54686,9 +54687,9 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Preferences: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -54719,7 +54720,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 					 */
 					Platforms: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -54748,7 +54749,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -54772,7 +54773,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Options: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -54785,9 +54786,9 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 	 * Scheduling mode for the service.
 	 */
 	Mode: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Replicated: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Replicas: v.exactOptional(
 						v.union([
 							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -54803,7 +54804,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 * to a completed state.
 			 */
 			ReplicatedJob: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The maximum number of replicas to run simultaneously.
 					 */
@@ -54838,7 +54839,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 	 * Specification for the update strategy of the service.
 	 */
 	UpdateConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be updated in one iteration (0 means
 			 * unlimited parallelism).
@@ -54896,7 +54897,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 	 * Specification for the rollback strategy of the service.
 	 */
 	RollbackConfig: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Maximum number of tasks to be rolled back in one iteration (0 means
 			 * unlimited parallelism).
@@ -54953,7 +54954,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 	 */
 	Networks: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The target network for attachment. Must be a network name or ID.
 				 */
@@ -54975,7 +54976,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 	 * Properties that can be configured to access and load balance a service.
 	 */
 	EndpointSpec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The mode of resolution to use for internal load balancing between tasks.
 			 */
@@ -54986,7 +54987,7 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 			 */
 			Ports: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Protocol: v.exactOptional(v.picklist(["tcp", "udp", "sctp"])),
 						/**
@@ -55018,13 +55019,13 @@ export const serviceUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputServiceUpdateCommandResponseSchema = v.strictObject({
+export const inputServiceUpdateCommandResponseSchema = v.looseObject({
 	/**
 	 * Optional warning messages
 	 */
 	Warnings: v.optional(v.array(v.string())),
 });
-export const serviceUpdateCommandResponseSchema = v.strictObject({
+export const serviceUpdateCommandResponseSchema = v.looseObject({
 	/**
 	 * Optional warning messages
 	 */
@@ -55095,7 +55096,7 @@ export const serviceLogsCommandQuerySchema = v.strictObject({
 	tail: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputTaskListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of the task.
 		 */
@@ -55113,7 +55114,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -55131,7 +55132,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 		 * User modifiable task configuration.
 		 */
 		Spec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Plugin spec for the service.  *(Experimental release only.)*
 				 *
@@ -55143,7 +55144,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 * > field is set to `attachment`.
 				 */
 				PluginSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The name or 'alias' to use for the plugin.
 						 */
@@ -55158,7 +55159,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						Disabled: v.optional(v.boolean()),
 						PluginPrivilege: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Name: v.optional(v.string()),
 									Description: v.optional(v.string()),
 									Value: v.optional(v.array(v.string())),
@@ -55178,7 +55179,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 * > field is set to `attachment`.
 				 */
 				ContainerSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The image name to use for the container
 						 */
@@ -55220,12 +55221,12 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 * Security options for the container
 						 */
 						Privileges: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * CredentialSpec for managed service account (Windows only)
 								 */
 								CredentialSpec: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Load credential spec from a Swarm Config with the given ID.
 										 * The specified config must also be present in the Configs
@@ -55273,7 +55274,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 								 * SELinux labels of the container
 								 */
 								SELinuxContext: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Disable SELinux
 										 */
@@ -55316,7 +55317,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 */
 						Mounts: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Container path.
 									 */
@@ -55355,7 +55356,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 									 * Optional configuration for the `bind` type.
 									 */
 									BindOptions: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 											 */
@@ -55383,7 +55384,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 									 * Optional configuration for the `volume` type.
 									 */
 									VolumeOptions: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Populate volume with data from the target.
 											 */
@@ -55396,7 +55397,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 											 * Map of driver specific options
 											 */
 											DriverConfig: v.optional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Name of the driver to use to create the volume.
 													 */
@@ -55413,7 +55414,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 									 * Optional configuration for the `tmpfs` type.
 									 */
 									TmpfsOptions: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The size for the tmpfs mount in bytes.
 											 */
@@ -55440,7 +55441,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 * A test to perform to check that the container is healthy.
 						 */
 						HealthCheck: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The test to perform. Possible values are:
 								 *
@@ -55488,7 +55489,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 * file (`resolv.conf`).
 						 */
 						DNSConfig: v.optional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The IP addresses of the name servers.
 								 */
@@ -55510,12 +55511,12 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 */
 						Secrets: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * File represents a specific target that is backed by a file.
 									 */
 									File: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Name represents the final filename in the filesystem.
 											 */
@@ -55554,7 +55555,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 */
 						Configs: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * File represents a specific target that is backed by a file.
 									 *
@@ -55563,7 +55564,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 									 */
 									File: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Name represents the final filename in the filesystem.
 											 */
@@ -55645,7 +55646,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 */
 						Ulimits: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Name of ulimit
 									 */
@@ -55675,7 +55676,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 * > field is set to `attachment`.
 				 */
 				NetworkAttachmentSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * ID of the container represented by this task
 						 */
@@ -55687,12 +55688,12 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 * as part of the service.
 				 */
 				Resources: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * An object describing a limit on resources which can be requested by a task.
 						 */
 						Limits: v.optional(
-							v.strictObject({
+							v.looseObject({
 								NanoCPUs: v.optional(v.bigint()),
 								MemoryBytes: v.optional(v.bigint()),
 								/**
@@ -55706,7 +55707,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 * requested by a task.
 						 */
 						Reservations: v.optional(
-							v.strictObject({
+							v.looseObject({
 								NanoCPUs: v.optional(v.bigint()),
 								MemoryBytes: v.optional(v.bigint()),
 								/**
@@ -55715,15 +55716,15 @@ export const inputTaskListCommandResponseSchema = v.array(
 								 */
 								GenericResources: v.optional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											NamedResourceSpec: v.optional(
-												v.strictObject({
+												v.looseObject({
 													Kind: v.optional(v.string()),
 													Value: v.optional(v.string()),
 												}),
 											),
 											DiscreteResourceSpec: v.optional(
-												v.strictObject({
+												v.looseObject({
 													Kind: v.optional(v.string()),
 													Value: v.optional(v.bigint()),
 												}),
@@ -55740,7 +55741,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 * created as part of this service.
 				 */
 				RestartPolicy: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Condition for restart.
 						 */
@@ -55762,7 +55763,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 					}),
 				),
 				Placement: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * An array of constraint expressions to limit the set of nodes where
 						 * a task can be scheduled. Constraint expressions can either use a
@@ -55799,9 +55800,9 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 */
 						Preferences: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Spread: v.optional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * label descriptor, such as `engine.labels.az`.
 											 */
@@ -55824,7 +55825,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 						 */
 						Platforms: v.optional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Architecture represents the hardware architecture (for example,
 									 * `x86_64`).
@@ -55853,7 +55854,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 */
 				Networks: v.optional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The target network for attachment. Must be a network name or ID.
 							 */
@@ -55875,7 +55876,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				 * falling back to the engine default if not specified.
 				 */
 				LogDriver: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Name: v.optional(v.string()),
 						Options: v.optional(v.record(v.string(), v.string())),
 					}),
@@ -55897,15 +55898,15 @@ export const inputTaskListCommandResponseSchema = v.array(
 		 */
 		AssignedGenericResources: v.optional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					NamedResourceSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							Kind: v.optional(v.string()),
 							Value: v.optional(v.string()),
 						}),
 					),
 					DiscreteResourceSpec: v.optional(
-						v.strictObject({
+						v.looseObject({
 							Kind: v.optional(v.string()),
 							Value: v.optional(v.bigint()),
 						}),
@@ -55914,7 +55915,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 			),
 		),
 		Status: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Timestamp: v.optional(v.string()),
 				State: v.optional(
 					v.picklist([
@@ -55938,7 +55939,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 				Message: v.optional(v.string()),
 				Err: v.optional(v.string()),
 				ContainerStatus: v.optional(
-					v.strictObject({
+					v.looseObject({
 						ContainerID: v.optional(v.string()),
 						PID: v.optional(v.pipe(v.number(), v.integer())),
 						ExitCode: v.optional(v.pipe(v.number(), v.integer())),
@@ -55978,14 +55979,14 @@ export const inputTaskListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		JobIteration: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
 	}),
 );
 export const taskListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of the task.
 		 */
@@ -56003,7 +56004,7 @@ export const taskListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -56021,7 +56022,7 @@ export const taskListCommandResponseSchema = v.array(
 		 * User modifiable task configuration.
 		 */
 		Spec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * Plugin spec for the service.  *(Experimental release only.)*
 				 *
@@ -56033,7 +56034,7 @@ export const taskListCommandResponseSchema = v.array(
 				 * > field is set to `attachment`.
 				 */
 				PluginSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The name or 'alias' to use for the plugin.
 						 */
@@ -56048,7 +56049,7 @@ export const taskListCommandResponseSchema = v.array(
 						Disabled: v.exactOptional(v.boolean()),
 						PluginPrivilege: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 									Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 									Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -56068,7 +56069,7 @@ export const taskListCommandResponseSchema = v.array(
 				 * > field is set to `attachment`.
 				 */
 				ContainerSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The image name to use for the container
 						 */
@@ -56112,12 +56113,12 @@ export const taskListCommandResponseSchema = v.array(
 						 * Security options for the container
 						 */
 						Privileges: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * CredentialSpec for managed service account (Windows only)
 								 */
 								CredentialSpec: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Load credential spec from a Swarm Config with the given ID.
 										 * The specified config must also be present in the Configs
@@ -56165,7 +56166,7 @@ export const taskListCommandResponseSchema = v.array(
 								 * SELinux labels of the container
 								 */
 								SELinuxContext: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Disable SELinux
 										 */
@@ -56208,7 +56209,7 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Mounts: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Container path.
 									 */
@@ -56247,7 +56248,7 @@ export const taskListCommandResponseSchema = v.array(
 									 * Optional configuration for the `bind` type.
 									 */
 									BindOptions: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 											 */
@@ -56275,7 +56276,7 @@ export const taskListCommandResponseSchema = v.array(
 									 * Optional configuration for the `volume` type.
 									 */
 									VolumeOptions: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Populate volume with data from the target.
 											 */
@@ -56290,7 +56291,7 @@ export const taskListCommandResponseSchema = v.array(
 											 * Map of driver specific options
 											 */
 											DriverConfig: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													/**
 													 * Name of the driver to use to create the volume.
 													 */
@@ -56309,7 +56310,7 @@ export const taskListCommandResponseSchema = v.array(
 									 * Optional configuration for the `tmpfs` type.
 									 */
 									TmpfsOptions: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * The size for the tmpfs mount in bytes.
 											 */
@@ -56358,7 +56359,7 @@ export const taskListCommandResponseSchema = v.array(
 						 * A test to perform to check that the container is healthy.
 						 */
 						HealthCheck: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The test to perform. Possible values are:
 								 *
@@ -56424,7 +56425,7 @@ export const taskListCommandResponseSchema = v.array(
 						 * file (`resolv.conf`).
 						 */
 						DNSConfig: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * The IP addresses of the name servers.
 								 */
@@ -56448,12 +56449,12 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Secrets: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * File represents a specific target that is backed by a file.
 									 */
 									File: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Name represents the final filename in the filesystem.
 											 */
@@ -56492,7 +56493,7 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Configs: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * File represents a specific target that is backed by a file.
 									 *
@@ -56501,7 +56502,7 @@ export const taskListCommandResponseSchema = v.array(
 									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 									 */
 									File: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * Name represents the final filename in the filesystem.
 											 */
@@ -56589,7 +56590,7 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Ulimits: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Name of ulimit
 									 */
@@ -56619,7 +56620,7 @@ export const taskListCommandResponseSchema = v.array(
 				 * > field is set to `attachment`.
 				 */
 				NetworkAttachmentSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * ID of the container represented by this task
 						 */
@@ -56631,12 +56632,12 @@ export const taskListCommandResponseSchema = v.array(
 				 * as part of the service.
 				 */
 				Resources: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * An object describing a limit on resources which can be requested by a task.
 						 */
 						Limits: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								NanoCPUs: v.exactOptional(
 									v.union([
 										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -56668,7 +56669,7 @@ export const taskListCommandResponseSchema = v.array(
 						 * requested by a task.
 						 */
 						Reservations: v.exactOptional(
-							v.strictObject({
+							v.looseObject({
 								NanoCPUs: v.exactOptional(
 									v.union([
 										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -56689,15 +56690,15 @@ export const taskListCommandResponseSchema = v.array(
 								 */
 								GenericResources: v.exactOptional(
 									v.array(
-										v.strictObject({
+										v.looseObject({
 											NamedResourceSpec: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 													Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 												}),
 											),
 											DiscreteResourceSpec: v.exactOptional(
-												v.strictObject({
+												v.looseObject({
 													Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 													Value: v.exactOptional(
 														v.union([
@@ -56730,7 +56731,7 @@ export const taskListCommandResponseSchema = v.array(
 				 * created as part of this service.
 				 */
 				RestartPolicy: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Condition for restart.
 						 */
@@ -56772,7 +56773,7 @@ export const taskListCommandResponseSchema = v.array(
 					}),
 				),
 				Placement: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * An array of constraint expressions to limit the set of nodes where
 						 * a task can be scheduled. Constraint expressions can either use a
@@ -56809,9 +56810,9 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Preferences: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									Spread: v.exactOptional(
-										v.strictObject({
+										v.looseObject({
 											/**
 											 * label descriptor, such as `engine.labels.az`.
 											 */
@@ -56842,7 +56843,7 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Platforms: v.exactOptional(
 							v.array(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Architecture represents the hardware architecture (for example,
 									 * `x86_64`).
@@ -56871,7 +56872,7 @@ export const taskListCommandResponseSchema = v.array(
 				 */
 				Networks: v.exactOptional(
 					v.array(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The target network for attachment. Must be a network name or ID.
 							 */
@@ -56895,7 +56896,7 @@ export const taskListCommandResponseSchema = v.array(
 				 * falling back to the engine default if not specified.
 				 */
 				LogDriver: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Options: v.exactOptional(
 							v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -56919,15 +56920,15 @@ export const taskListCommandResponseSchema = v.array(
 		 */
 		AssignedGenericResources: v.exactOptional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					NamedResourceSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 						}),
 					),
 					DiscreteResourceSpec: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Value: v.exactOptional(
 								v.union([
@@ -56942,7 +56943,7 @@ export const taskListCommandResponseSchema = v.array(
 			),
 		),
 		Status: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Timestamp: v.exactOptional(v.pipe(v.string(), v.trim())),
 				State: v.exactOptional(
 					v.picklist([
@@ -56966,7 +56967,7 @@ export const taskListCommandResponseSchema = v.array(
 				Message: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Err: v.exactOptional(v.pipe(v.string(), v.trim())),
 				ContainerStatus: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						ContainerID: v.exactOptional(v.pipe(v.string(), v.trim())),
 						PID: v.exactOptional(v.pipe(v.number(), v.integer())),
 						ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
@@ -57006,7 +57007,7 @@ export const taskListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		JobIteration: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
@@ -57018,7 +57019,7 @@ export const inputTaskListCommandQuerySchema = v.strictObject({
 export const taskListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputTaskInspectCommandResponseSchema = v.strictObject({
+export const inputTaskInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the task.
 	 */
@@ -57036,7 +57037,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -57054,7 +57055,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -57066,7 +57067,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -57081,7 +57082,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					Disabled: v.optional(v.boolean()),
 					PluginPrivilege: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.optional(v.string()),
 								Description: v.optional(v.string()),
 								Value: v.optional(v.array(v.string())),
@@ -57101,7 +57102,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -57143,12 +57144,12 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -57196,7 +57197,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.optional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -57239,7 +57240,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Mounts: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -57278,7 +57279,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -57306,7 +57307,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -57319,7 +57320,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.optional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -57336,7 +57337,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -57363,7 +57364,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -57411,7 +57412,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -57433,12 +57434,12 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Secrets: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -57477,7 +57478,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Configs: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -57486,7 +57487,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -57568,7 +57569,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Ulimits: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -57598,7 +57599,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -57610,12 +57611,12 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -57629,7 +57630,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.optional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.optional(v.bigint()),
 							MemoryBytes: v.optional(v.bigint()),
 							/**
@@ -57638,15 +57639,15 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 							 */
 							GenericResources: v.optional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.string()),
 											}),
 										),
 										DiscreteResourceSpec: v.optional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.optional(v.string()),
 												Value: v.optional(v.bigint()),
 											}),
@@ -57663,7 +57664,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -57685,7 +57686,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 				}),
 			),
 			Placement: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -57722,9 +57723,9 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Preferences: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.optional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -57747,7 +57748,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Platforms: v.optional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -57776,7 +57777,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 */
 			Networks: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -57798,7 +57799,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.optional(v.string()),
 					Options: v.optional(v.record(v.string(), v.string())),
 				}),
@@ -57820,15 +57821,15 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 	 */
 	AssignedGenericResources: v.optional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.string()),
 					}),
 				),
 				DiscreteResourceSpec: v.optional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.optional(v.string()),
 						Value: v.optional(v.bigint()),
 					}),
@@ -57837,7 +57838,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 		),
 	),
 	Status: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Timestamp: v.optional(v.string()),
 			State: v.optional(
 				v.picklist([
@@ -57861,7 +57862,7 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 			Message: v.optional(v.string()),
 			Err: v.optional(v.string()),
 			ContainerStatus: v.optional(
-				v.strictObject({
+				v.looseObject({
 					ContainerID: v.optional(v.string()),
 					PID: v.optional(v.pipe(v.number(), v.integer())),
 					ExitCode: v.optional(v.pipe(v.number(), v.integer())),
@@ -57901,12 +57902,12 @@ export const inputTaskInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	JobIteration: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 });
-export const taskInspectCommandResponseSchema = v.strictObject({
+export const taskInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * The ID of the task.
 	 */
@@ -57924,7 +57925,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -57942,7 +57943,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 	 * User modifiable task configuration.
 	 */
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Plugin spec for the service.  *(Experimental release only.)*
 			 *
@@ -57954,7 +57955,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			PluginSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The name or 'alias' to use for the plugin.
 					 */
@@ -57969,7 +57970,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					Disabled: v.exactOptional(v.boolean()),
 					PluginPrivilege: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Description: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
@@ -57989,7 +57990,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			ContainerSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The image name to use for the container
 					 */
@@ -58033,12 +58034,12 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 * Security options for the container
 					 */
 					Privileges: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * CredentialSpec for managed service account (Windows only)
 							 */
 							CredentialSpec: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Load credential spec from a Swarm Config with the given ID.
 									 * The specified config must also be present in the Configs
@@ -58086,7 +58087,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 							 * SELinux labels of the container
 							 */
 							SELinuxContext: v.exactOptional(
-								v.strictObject({
+								v.looseObject({
 									/**
 									 * Disable SELinux
 									 */
@@ -58129,7 +58130,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Mounts: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Container path.
 								 */
@@ -58168,7 +58169,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 								 * Optional configuration for the `bind` type.
 								 */
 								BindOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * A propagation mode with the value `[r]private`, `[r]shared`, or `[r]slave`.
 										 */
@@ -58196,7 +58197,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 								 * Optional configuration for the `volume` type.
 								 */
 								VolumeOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Populate volume with data from the target.
 										 */
@@ -58211,7 +58212,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 										 * Map of driver specific options
 										 */
 										DriverConfig: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												/**
 												 * Name of the driver to use to create the volume.
 												 */
@@ -58230,7 +58231,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 								 * Optional configuration for the `tmpfs` type.
 								 */
 								TmpfsOptions: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * The size for the tmpfs mount in bytes.
 										 */
@@ -58279,7 +58280,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 * A test to perform to check that the container is healthy.
 					 */
 					HealthCheck: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The test to perform. Possible values are:
 							 *
@@ -58345,7 +58346,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 * file (`resolv.conf`).
 					 */
 					DNSConfig: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * The IP addresses of the name servers.
 							 */
@@ -58369,12 +58370,12 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Secrets: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -58413,7 +58414,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Configs: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * File represents a specific target that is backed by a file.
 								 *
@@ -58422,7 +58423,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually exclusive
 								 */
 								File: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * Name represents the final filename in the filesystem.
 										 */
@@ -58508,7 +58509,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Ulimits: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Name of ulimit
 								 */
@@ -58538,7 +58539,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 * > field is set to `attachment`.
 			 */
 			NetworkAttachmentSpec: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * ID of the container represented by this task
 					 */
@@ -58550,12 +58551,12 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 * as part of the service.
 			 */
 			Resources: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An object describing a limit on resources which can be requested by a task.
 					 */
 					Limits: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -58587,7 +58588,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 * requested by a task.
 					 */
 					Reservations: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
 									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
@@ -58608,15 +58609,15 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 							 */
 							GenericResources: v.exactOptional(
 								v.array(
-									v.strictObject({
+									v.looseObject({
 										NamedResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 											}),
 										),
 										DiscreteResourceSpec: v.exactOptional(
-											v.strictObject({
+											v.looseObject({
 												Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 												Value: v.exactOptional(
 													v.union([
@@ -58649,7 +58650,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 * created as part of this service.
 			 */
 			RestartPolicy: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Condition for restart.
 					 */
@@ -58689,7 +58690,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 				}),
 			),
 			Placement: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * An array of constraint expressions to limit the set of nodes where
 					 * a task can be scheduled. Constraint expressions can either use a
@@ -58726,9 +58727,9 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Preferences: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								Spread: v.exactOptional(
-									v.strictObject({
+									v.looseObject({
 										/**
 										 * label descriptor, such as `engine.labels.az`.
 										 */
@@ -58759,7 +58760,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 					 */
 					Platforms: v.exactOptional(
 						v.array(
-							v.strictObject({
+							v.looseObject({
 								/**
 								 * Architecture represents the hardware architecture (for example,
 								 * `x86_64`).
@@ -58788,7 +58789,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 */
 			Networks: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The target network for attachment. Must be a network name or ID.
 						 */
@@ -58812,7 +58813,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			 * falling back to the engine default if not specified.
 			 */
 			LogDriver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					Name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					Options: v.exactOptional(
 						v.record(v.string(), v.pipe(v.string(), v.trim())),
@@ -58836,15 +58837,15 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 	 */
 	AssignedGenericResources: v.exactOptional(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				NamedResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(v.pipe(v.string(), v.trim())),
 					}),
 				),
 				DiscreteResourceSpec: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
@@ -58859,7 +58860,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 		),
 	),
 	Status: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Timestamp: v.exactOptional(v.pipe(v.string(), v.trim())),
 			State: v.exactOptional(
 				v.picklist([
@@ -58883,7 +58884,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 			Message: v.exactOptional(v.pipe(v.string(), v.trim())),
 			Err: v.exactOptional(v.pipe(v.string(), v.trim())),
 			ContainerStatus: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					ContainerID: v.exactOptional(v.pipe(v.string(), v.trim())),
 					PID: v.exactOptional(v.pipe(v.number(), v.integer())),
 					ExitCode: v.exactOptional(v.pipe(v.number(), v.integer())),
@@ -58923,7 +58924,7 @@ export const taskInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	JobIteration: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
@@ -58969,7 +58970,7 @@ export const taskLogsCommandQuerySchema = v.strictObject({
 	tail: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 export const inputSecretListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.optional(v.string()),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -58984,14 +58985,14 @@ export const inputSecretListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
 		CreatedAt: v.optional(v.string()),
 		UpdatedAt: v.optional(v.string()),
 		Spec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * User-defined name of the secret.
 				 */
@@ -59013,7 +59014,7 @@ export const inputSecretListCommandResponseSchema = v.array(
 				 * Driver represents a driver (network, logging, secrets).
 				 */
 				Driver: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the driver.
 						 */
@@ -59028,7 +59029,7 @@ export const inputSecretListCommandResponseSchema = v.array(
 				 * Driver represents a driver (network, logging, secrets).
 				 */
 				Templating: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the driver.
 						 */
@@ -59044,7 +59045,7 @@ export const inputSecretListCommandResponseSchema = v.array(
 	}),
 );
 export const secretListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -59059,14 +59060,14 @@ export const secretListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
 		CreatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 		UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Spec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * User-defined name of the secret.
 				 */
@@ -59090,7 +59091,7 @@ export const secretListCommandResponseSchema = v.array(
 				 * Driver represents a driver (network, logging, secrets).
 				 */
 				Driver: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the driver.
 						 */
@@ -59107,7 +59108,7 @@ export const secretListCommandResponseSchema = v.array(
 				 * Driver represents a driver (network, logging, secrets).
 				 */
 				Templating: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the driver.
 						 */
@@ -59130,7 +59131,7 @@ export const inputSecretListCommandQuerySchema = v.strictObject({
 export const secretListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputSecretCreateCommandBodySchema = v.strictObject({
+export const inputSecretCreateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the secret.
 	 */
@@ -59152,7 +59153,7 @@ export const inputSecretCreateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Driver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59167,7 +59168,7 @@ export const inputSecretCreateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59179,7 +59180,7 @@ export const inputSecretCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const secretCreateCommandBodySchema = v.strictObject({
+export const secretCreateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the secret.
 	 */
@@ -59201,7 +59202,7 @@ export const secretCreateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Driver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59218,7 +59219,7 @@ export const secretCreateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59232,19 +59233,19 @@ export const secretCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputSecretCreateCommandResponseSchema = v.strictObject({
+export const inputSecretCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.string(),
 });
-export const secretCreateCommandResponseSchema = v.strictObject({
+export const secretCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.pipe(v.string(), v.trim()),
 });
-export const inputSecretInspectCommandResponseSchema = v.strictObject({
+export const inputSecretInspectCommandResponseSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -59259,14 +59260,14 @@ export const inputSecretInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.optional(v.string()),
 	UpdatedAt: v.optional(v.string()),
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the secret.
 			 */
@@ -59288,7 +59289,7 @@ export const inputSecretInspectCommandResponseSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Driver: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -59303,7 +59304,7 @@ export const inputSecretInspectCommandResponseSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -59317,7 +59318,7 @@ export const inputSecretInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const secretInspectCommandResponseSchema = v.strictObject({
+export const secretInspectCommandResponseSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -59332,14 +59333,14 @@ export const secretInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the secret.
 			 */
@@ -59363,7 +59364,7 @@ export const secretInspectCommandResponseSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Driver: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -59380,7 +59381,7 @@ export const secretInspectCommandResponseSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -59408,7 +59409,7 @@ export const inputSecretDeleteCommandParamsSchema = v.strictObject({
 export const secretDeleteCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputSecretUpdateCommandBodySchema = v.strictObject({
+export const inputSecretUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the secret.
 	 */
@@ -59430,7 +59431,7 @@ export const inputSecretUpdateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Driver: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59445,7 +59446,7 @@ export const inputSecretUpdateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59457,7 +59458,7 @@ export const inputSecretUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const secretUpdateCommandBodySchema = v.strictObject({
+export const secretUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the secret.
 	 */
@@ -59479,7 +59480,7 @@ export const secretUpdateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Driver: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59496,7 +59497,7 @@ export const secretUpdateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59527,7 +59528,7 @@ export const secretUpdateCommandQuerySchema = v.strictObject({
 	]),
 });
 export const inputConfigListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.optional(v.string()),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -59542,14 +59543,14 @@ export const inputConfigListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.optional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.optional(v.pipe(v.number(), v.integer())),
 			}),
 		),
 		CreatedAt: v.optional(v.string()),
 		UpdatedAt: v.optional(v.string()),
 		Spec: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * User-defined name of the config.
 				 */
@@ -59568,7 +59569,7 @@ export const inputConfigListCommandResponseSchema = v.array(
 				 * Driver represents a driver (network, logging, secrets).
 				 */
 				Templating: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the driver.
 						 */
@@ -59584,7 +59585,7 @@ export const inputConfigListCommandResponseSchema = v.array(
 	}),
 );
 export const configListCommandResponseSchema = v.array(
-	v.strictObject({
+	v.looseObject({
 		ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 		/**
 		 * The version number of the object such as node, service, etc. This is needed
@@ -59599,14 +59600,14 @@ export const configListCommandResponseSchema = v.array(
 		 * overwrite each other.
 		 */
 		Version: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 			}),
 		),
 		CreatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 		UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 		Spec: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * User-defined name of the config.
 				 */
@@ -59627,7 +59628,7 @@ export const configListCommandResponseSchema = v.array(
 				 * Driver represents a driver (network, logging, secrets).
 				 */
 				Templating: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Name of the driver.
 						 */
@@ -59650,7 +59651,7 @@ export const inputConfigListCommandQuerySchema = v.strictObject({
 export const configListCommandQuerySchema = v.strictObject({
 	filters: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputConfigCreateCommandBodySchema = v.strictObject({
+export const inputConfigCreateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the config.
 	 */
@@ -59669,7 +59670,7 @@ export const inputConfigCreateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59681,7 +59682,7 @@ export const inputConfigCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const configCreateCommandBodySchema = v.strictObject({
+export const configCreateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the config.
 	 */
@@ -59700,7 +59701,7 @@ export const configCreateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59714,19 +59715,19 @@ export const configCreateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const inputConfigCreateCommandResponseSchema = v.strictObject({
+export const inputConfigCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.string(),
 });
-export const configCreateCommandResponseSchema = v.strictObject({
+export const configCreateCommandResponseSchema = v.looseObject({
 	/**
 	 * The id of the newly created object.
 	 */
 	Id: v.pipe(v.string(), v.trim()),
 });
-export const inputConfigInspectCommandResponseSchema = v.strictObject({
+export const inputConfigInspectCommandResponseSchema = v.looseObject({
 	ID: v.optional(v.string()),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -59741,14 +59742,14 @@ export const inputConfigInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.optional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.optional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.optional(v.string()),
 	UpdatedAt: v.optional(v.string()),
 	Spec: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the config.
 			 */
@@ -59767,7 +59768,7 @@ export const inputConfigInspectCommandResponseSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -59781,7 +59782,7 @@ export const inputConfigInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const configInspectCommandResponseSchema = v.strictObject({
+export const configInspectCommandResponseSchema = v.looseObject({
 	ID: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The version number of the object such as node, service, etc. This is needed
@@ -59796,14 +59797,14 @@ export const configInspectCommandResponseSchema = v.strictObject({
 	 * overwrite each other.
 	 */
 	Version: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			Index: v.exactOptional(v.pipe(v.number(), v.integer())),
 		}),
 	),
 	CreatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	UpdatedAt: v.exactOptional(v.pipe(v.string(), v.trim())),
 	Spec: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * User-defined name of the config.
 			 */
@@ -59824,7 +59825,7 @@ export const configInspectCommandResponseSchema = v.strictObject({
 			 * Driver represents a driver (network, logging, secrets).
 			 */
 			Templating: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Name of the driver.
 					 */
@@ -59852,7 +59853,7 @@ export const inputConfigDeleteCommandParamsSchema = v.strictObject({
 export const configDeleteCommandParamsSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputConfigUpdateCommandBodySchema = v.strictObject({
+export const inputConfigUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the config.
 	 */
@@ -59871,7 +59872,7 @@ export const inputConfigUpdateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59883,7 +59884,7 @@ export const inputConfigUpdateCommandBodySchema = v.strictObject({
 		}),
 	),
 });
-export const configUpdateCommandBodySchema = v.strictObject({
+export const configUpdateCommandBodySchema = v.looseObject({
 	/**
 	 * User-defined name of the config.
 	 */
@@ -59902,7 +59903,7 @@ export const configUpdateCommandBodySchema = v.strictObject({
 	 * Driver represents a driver (network, logging, secrets).
 	 */
 	Templating: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Name of the driver.
 			 */
@@ -59932,13 +59933,13 @@ export const configUpdateCommandQuerySchema = v.strictObject({
 		v.bigint(),
 	]),
 });
-export const inputDistributionInspectCommandResponseSchema = v.strictObject({
+export const inputDistributionInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * A descriptor struct containing digest, media type, and size, as defined in
 	 * the [OCI Content Descriptors
 	 * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
 	 */
-	Descriptor: v.strictObject({
+	Descriptor: v.looseObject({
 		/**
 		 * The media type of the object this schema refers to.
 		 */
@@ -59956,7 +59957,7 @@ export const inputDistributionInspectCommandResponseSchema = v.strictObject({
 	 * An array containing all platforms supported by the image.
 	 */
 	Platforms: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The CPU architecture, for example `amd64` or `ppc64`.
 			 */
@@ -59983,13 +59984,13 @@ export const inputDistributionInspectCommandResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const distributionInspectCommandResponseSchema = v.strictObject({
+export const distributionInspectCommandResponseSchema = v.looseObject({
 	/**
 	 * A descriptor struct containing digest, media type, and size, as defined in
 	 * the [OCI Content Descriptors
 	 * Specification](https://github.com/opencontainers/image-spec/blob/v1.0.1/descriptor.md).
 	 */
-	Descriptor: v.strictObject({
+	Descriptor: v.looseObject({
 		/**
 		 * The media type of the object this schema refers to.
 		 */
@@ -60013,7 +60014,7 @@ export const distributionInspectCommandResponseSchema = v.strictObject({
 	 * An array containing all platforms supported by the image.
 	 */
 	Platforms: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The CPU architecture, for example `amd64` or `ppc64`.
 			 */
