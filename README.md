@@ -30,6 +30,37 @@ A client that never serves requests can skip `hono` and
 `@hono/standard-validator` by leaving `hono.ts` out of its build. A client that
 never validates responses can skip `valibot` the same way.
 
+## Query strings on the server
+
+Generated `hono.ts` validates the query exactly as Hono parsed it. It decodes
+nothing, so these encodings reach the schema in a shape the schema rejects:
+
+| sent          | Hono gives the validator | schema wants        |
+| ------------- | ------------------------ | ------------------- |
+| `?tags=cat`   | `"cat"`                  | an array            |
+| `?tags=a,b`   | `"a,b"`                  | `["a", "b"]`        |
+| `?tags=a%20b` | `"a b"`                  | `["a", "b"]`        |
+| `?tags=a      | b`                       | `"a                 | b"` | `["a", "b"]` |
+| `?at[gt]=1`   | key `"at[gt]"`           | `{ at: { gt: 1 } }` |
+
+A single value for a repeated-key array is the common one, and it is what a
+client sends for a one-item array.
+
+A rejected query throws `PublicValidationError`, so the status a caller sees
+is whatever its own error handler returns for that error.
+
+A consumer whose clients send any of these decodes the query before the
+generated middleware validates it, or supplies its own middleware in place of
+the generated one. The per-operation query spec is exported for that purpose,
+carrying the `style` and `explode` each parameter declares:
+
+```ts
+import { listPetsQueryParams } from "./generated/hono.ts";
+```
+
+The client half is already handled: `@block65/rest-client` encodes each
+parameter from the `queryStyles` the generated command carries.
+
 ## Linting generated output
 
 The generated JSDoc is transcribed from the OpenAPI document, so the prose is

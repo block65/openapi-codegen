@@ -5,6 +5,7 @@ import type { oas31 } from "openapi3-ts";
 import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 import { listauditlogs } from "./fixtures/openai/hono.ts";
+import { findPets } from "./fixtures/petstore/hono.ts";
 
 // Runs a real query string through the generated middleware and back out
 async function validatedQuery(
@@ -30,6 +31,39 @@ test("an absent object query parameter does not materialise", async () => {
 			limit: 5,
 		},
 	);
+});
+
+// The README documents this boundary. Generated middleware validates the
+// query as Hono parsed it, so these reach the schema in a shape it rejects
+// The emitted hook throws PublicValidationError, so a caller's own error
+// handler decides the status. A bare app has none and answers 500
+test("a single value for an array parameter is rejected", async () => {
+	const res = await appFor(findPets).request("/target?tags=cat");
+
+	expect(res.status).toBe(500);
+});
+
+test("joined values for an array parameter are rejected", async () => {
+	const searches = ["tags=a,b", "tags=a%20b", "tags=a%7Cb"];
+
+	const results = await Promise.all(
+		searches.map(async (search) => {
+			const res = await appFor(findPets).request(`/target?${search}`);
+
+			return { search, status: res.status };
+		}),
+	);
+
+	expect(results).toStrictEqual(
+		searches.map((search) => ({ search, status: 500 })),
+	);
+});
+
+// The repeated key is the encoding the generated client sends for an array
+test("repeated keys for an array parameter are accepted", async () => {
+	await expect(
+		validatedQuery(findPets, "tags=cat&tags=dog"),
+	).resolves.toStrictEqual({ tags: ["cat", "dog"] });
 });
 
 // Mounts the middleware on a Hono app, with an untyped handler reading it
@@ -159,6 +193,21 @@ test("a style rest-client cannot encode stops generation", async () => {
 			},
 		]),
 	).rejects.toThrow("which rest-client does not encode");
+});
+
+// A scalar carries no spec, so the n/a check has to read its encoding
+test("a scalar in an n/a style and explode stops generation", async () => {
+	await expect(
+		generateFor([
+			{
+				name: "id",
+				in: "query",
+				style: "spaceDelimited",
+				explode: true,
+				schema: { type: "string" },
+			},
+		]),
+	).rejects.toThrow("which OpenAPI marks n/a and leaves undefined");
 });
 
 const rangeSchema: oas31.SchemaObject = {

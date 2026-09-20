@@ -58,6 +58,14 @@ export function createHonoFile(
 	// sValidator returns a 400 JSON body on a failed validation. The hook throws
 	// first, so a caller's error handler keeps seeing PublicValidationError
 	file.addFunction({
+		leadingTrivia: [
+			"// The query arrives here as Hono parsed it, and nothing below decodes\n",
+			"// it. A lone value for a repeated-key array stays a string, comma,\n",
+			"// space and pipe joined values stay joined, and a deepObject key stays\n",
+			"// bracketed, so each of those fails validation. A caller sending them\n",
+			"// decodes the query before this middleware or replaces it, reading the\n",
+			"// style and explode from the query spec each operation exports below.\n",
+		],
 		name: "validate",
 		typeParameters: [
 			{ name: "TSchema", constraint: "StandardSchema" },
