@@ -122,20 +122,25 @@ function recordType(value: string | WriterFunction) {
 
 // LiteralUnion keeps known values in completion and accepts any other string
 function literalUnionType(
-	schemaItems: (
+	maybeSchemaObjects: (
 		| oas31.SchemaObject
 		| oas30.SchemaObject
 		| oas31.ReferenceObject
 	)[],
 ) {
-	const objects = schemaItems.filter(isNotReferenceObject);
+	const schemaObjects = maybeSchemaObjects.filter((obj) =>
+		isNotReferenceObject(obj),
+	);
 
-	if (objects.length !== schemaItems.length || objects.length < 2) {
+	if (
+		schemaObjects.length !== maybeSchemaObjects.length ||
+		schemaObjects.length < 2
+	) {
 		return;
 	}
 
-	const bare = objects.filter((schema) => !schema.enum);
-	const enums = objects.filter((schema) => schema.enum);
+	const bare = schemaObjects.filter((schema) => !schema.enum);
+	const enums = schemaObjects.filter((schema) => schema.enum);
 	const [base] = bare;
 
 	if (bare.length !== 1 || enums.length === 0 || base?.type !== "string") {
@@ -430,7 +435,7 @@ export function schemaToType(
 
 		const intersect = "allOf" in schemaObject;
 
-		const filteredTypes = types.filter(isNotNullOrUndefined);
+		const filteredTypes = types.filter((value) => isNotNullOrUndefined(value));
 		const hasNullType = types.some((t) => t === "null");
 		const isNullable = schemaTypeIsNull(schemaObject);
 
@@ -687,16 +692,18 @@ export function registerTypesFromSchema(
 
 		const intersect = "allOf" in schemaObject;
 
-		const typeAliases = schemaItems.filter(isReferenceObject).map((s) => {
-			const alias = typesAndInterfaces.get(s.$ref);
-			if (!alias) {
-				throw new Error(`ref used before available: ${s.$ref}`);
-			}
-			return alias;
-		});
+		const typeAliases = schemaItems
+			.filter((value) => isReferenceObject(value))
+			.map((s) => {
+				const alias = typesAndInterfaces.get(s.$ref);
+				if (!alias) {
+					throw new Error(`ref used before available: ${s.$ref}`);
+				}
+				return alias;
+			});
 
 		const objectTypesFromNonRefSchemas = schemaItems
-			.filter(isNotReferenceObject)
+			.filter((value) => isNotReferenceObject(value))
 			.filter((schema) => schema.type === "object")
 			.map((subSchemaObject) =>
 				Writers.objectType({
@@ -711,10 +718,10 @@ export function registerTypesFromSchema(
 					),
 				}),
 			)
-			.filter(isNotNullOrUndefined);
+			.filter((value) => isNotNullOrUndefined(value));
 
 		const nonObjectTypesFromNonRefSchemas = schemaItems
-			.filter(isNotReferenceObject)
+			.filter((value) => isNotReferenceObject(value))
 			.filter((schema) => schema.type !== "object")
 			.map((subSchemaObject) =>
 				schemaToType(
@@ -724,7 +731,7 @@ export function registerTypesFromSchema(
 					subSchemaObject,
 				),
 			)
-			.filter(isNotNullOrUndefined);
+			.filter((value) => isNotNullOrUndefined(value));
 
 		// concat and dedupe
 		const typeArgs = [
@@ -738,7 +745,7 @@ export function registerTypesFromSchema(
 							? `Readonly<${t.type}>`
 							: t.type,
 					)
-					.filter(isNotNullOrUndefined),
+					.filter((value) => isNotNullOrUndefined(value)),
 			]),
 		];
 

@@ -28,31 +28,37 @@ export function getDependents(
 	obj: oas31.ReferenceObject | oas31.SchemaObject,
 ): string[] {
 	if (isReferenceObject(obj)) {
-		return [getDependency(obj)].filter(strOnly);
+		return [getDependency(obj)].filter((value) => strOnly(value));
 	}
 
 	if ("properties" in obj) {
 		const properties = Object.values(obj.properties);
 
-		return properties.flatMap(getDependents).filter(strOnly);
+		return properties
+			.flatMap((value) => getDependents(value))
+			.filter((value) => strOnly(value));
 	}
 
-	if ("items" in obj) {
-		if (isReferenceObject(obj.items)) {
-			return [getDependency(obj.items)].filter(strOnly);
-		}
+	if ("items" in obj && isReferenceObject(obj.items)) {
+		return [getDependency(obj.items)].filter((value) => strOnly(value));
 	}
 
 	if ("anyOf" in obj) {
-		return obj.anyOf.flatMap(getDependents).filter(strOnly);
+		return obj.anyOf
+			.flatMap((value) => getDependents(value))
+			.filter((value) => strOnly(value));
 	}
 
 	if ("allOf" in obj) {
-		return obj.allOf.flatMap(getDependents).filter(strOnly);
+		return obj.allOf
+			.flatMap((value) => getDependents(value))
+			.filter((value) => strOnly(value));
 	}
 
 	if ("oneOf" in obj) {
-		return obj.oneOf.flatMap(getDependents).filter(strOnly);
+		return obj.oneOf
+			.flatMap((value) => getDependents(value))
+			.filter((value) => strOnly(value));
 	}
 
 	return [];
@@ -88,7 +94,6 @@ export function iife<T>(fn: () => T): T {
  * passes a closed object type
  */
 export function typedEntries<T extends object>(obj: T) {
-	// TYPESAFETY: this is the etire point of the function
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- Object.entries widens every key to string, and restoring what T declares is the whole purpose here
 	return Object.entries(obj) as [keyof T, T[keyof T]][];
 }

@@ -43,7 +43,7 @@ describe("Petstore", () => {
 			tags: ["tag1", "tag2"],
 		});
 
-		const result = await petStoreClient.json(command).catch((err) => err);
+		const result = await petStoreClient.json(command).catch((error) => error);
 
 		expect(result).toBeTruthy();
 	});
