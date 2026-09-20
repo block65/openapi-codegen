@@ -20,7 +20,7 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && obj !== undefined;
 }
 
-function strOnly(x: string | undefined): x is string {
+function isString(x: string | undefined): x is string {
 	return typeof x === "string";
 }
 
@@ -28,7 +28,7 @@ export function getDependents(
 	obj: oas31.ReferenceObject | oas31.SchemaObject,
 ): string[] {
 	if (isReferenceObject(obj)) {
-		return [getDependency(obj)].filter((value) => strOnly(value));
+		return [getDependency(obj)].filter((value) => isString(value));
 	}
 
 	if ("properties" in obj) {
@@ -36,29 +36,29 @@ export function getDependents(
 
 		return properties
 			.flatMap((value) => getDependents(value))
-			.filter((value) => strOnly(value));
+			.filter((value) => isString(value));
 	}
 
 	if ("items" in obj && isReferenceObject(obj.items)) {
-		return [getDependency(obj.items)].filter((value) => strOnly(value));
+		return [getDependency(obj.items)].filter((value) => isString(value));
 	}
 
 	if ("anyOf" in obj) {
 		return obj.anyOf
 			.flatMap((value) => getDependents(value))
-			.filter((value) => strOnly(value));
+			.filter((value) => isString(value));
 	}
 
 	if ("allOf" in obj) {
 		return obj.allOf
 			.flatMap((value) => getDependents(value))
-			.filter((value) => strOnly(value));
+			.filter((value) => isString(value));
 	}
 
 	if ("oneOf" in obj) {
 		return obj.oneOf
 			.flatMap((value) => getDependents(value))
-			.filter((value) => strOnly(value));
+			.filter((value) => isString(value));
 	}
 
 	return [];

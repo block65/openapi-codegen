@@ -197,6 +197,38 @@ test("the shipped lint override names every file the generator emits", async () 
 	expect(emitted).toStrictEqual([...generatedFiles].toSorted());
 });
 
+// An empty schema permits any value, so the keys outside `properties` are
+// unconstrained and the object is loose
+test("additionalProperties chooses the object schema", async () => {
+	const cases = [
+		[{}, "v.looseObject("],
+		[{ type: "string" }, "v.objectWithRest("],
+		[false, "v.strictObject("],
+		[true, "v.looseObject("],
+	] as const;
+
+	const emitted = await Promise.all(
+		cases.map(async ([additionalProperties]) => {
+			const result = await processOpenApiDocument(
+				"/tmp/additional-properties",
+				docWithSchema("Open", {
+					type: "object",
+					properties: { a: { type: "string" } },
+					additionalProperties,
+				}),
+			);
+
+			const text = result.valibotFile.getText();
+
+			return text.slice(text.indexOf("export const openSchema"), -1);
+		}),
+	);
+
+	for (const [index, [, expected]] of cases.entries()) {
+		expect(emitted[index]).toContain(expected);
+	}
+});
+
 function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	return {
 		openapi: "3.1.0",
