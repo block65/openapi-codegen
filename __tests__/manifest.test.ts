@@ -52,8 +52,8 @@ test("the manifest records the emitter revision", async () => {
 	expect(manifest["#generator"]).toMatch(/^[0-9a-f]{32}$/u);
 });
 
-// A file whose recorded revision still matches is left alone, which is what
-// makes the emitter revision the thing that forces a rewrite
+// A file keeps its contents when its recorded revision matches, so the
+// emitter revision is what forces a rewrite
 test("a matching emitter revision leaves an unchanged file alone", async () => {
 	const { input, outputDir } = await buildOnce();
 	const target = path.join(outputDir, "main.ts");
@@ -64,8 +64,8 @@ test("a matching emitter revision leaves an unchanged file alone", async () => {
 	await expect(readFile(target, "utf8")).resolves.toBe("// edited by hand\n");
 });
 
-// The failure this guards: a run that overlaps an edit stamps a manifest newer
-// than the emitter, and mtime then reports the output as current
+// Guards a run that overlaps an edit, which stamps a manifest newer than
+// the emitter and leaves mtime reporting the output as current
 test("a stale emitter revision rewrites every file", async () => {
 	const { input, outputDir } = await buildOnce();
 	const target = path.join(outputDir, "main.ts");

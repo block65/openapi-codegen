@@ -33,10 +33,9 @@ test("an absent object query parameter does not materialise", async () => {
 	);
 });
 
-// The README documents this boundary. Generated middleware validates the
-// query as Hono parsed it, so these reach the schema in a shape it rejects
-// The emitted hook throws PublicValidationError, so a caller's own error
-// handler decides the status. A bare app has none and answers 500
+// Generated middleware validates the query as Hono parsed it, so the
+// encodings below reach the schema in a shape it turns down. The hook
+// throws PublicValidationError, and a bare app returns 500 for it
 test("a single value for an array parameter is rejected", async () => {
 	const res = await appFor(findPets).request("/target?tags=cat");
 
@@ -59,7 +58,7 @@ test("joined values for an array parameter are rejected", async () => {
 	);
 });
 
-// The repeated key is the encoding the generated client sends for an array
+// A generated client sends an array as a repeated key
 test("repeated keys for an array parameter are accepted", async () => {
 	await expect(
 		validatedQuery(findPets, "tags=cat&tags=dog"),
@@ -89,9 +88,6 @@ type TestParameter =
 			content: oas31.ParameterObject["content"];
 	  };
 
-// The parameter shapes below appear in no fixture, so each case builds a
-// document of its own
-// Returns the emitted commands module, for assertions about the command class
 async function commandsFor(parameters: readonly TestParameter[]) {
 	const result = await processOpenApiDocument(
 		path.join(import.meta.dirname, ".generated"),
@@ -126,7 +122,7 @@ function documentFor(
 }
 
 async function generateFor(parameters: readonly TestParameter[]) {
-	// The emitted files stay in memory, so this path only names them
+	// This path names the emitted files, which stay in memory
 	const outputDir = path.join(import.meta.dirname, ".generated");
 
 	await processOpenApiDocument(outputDir, documentFor(parameters));
@@ -181,7 +177,7 @@ test("the default encoding is left out of queryStyles", async () => {
 	expect(commands).not.toContain("queryStyles");
 });
 
-// rest-client encodes these four and nothing else
+// rest-client encodes only these four
 test("a style rest-client cannot encode stops generation", async () => {
 	await expect(
 		generateFor([
@@ -195,7 +191,8 @@ test("a style rest-client cannot encode stops generation", async () => {
 	).rejects.toThrow("which rest-client does not encode");
 });
 
-// A scalar carries no spec, so the n/a check has to read its encoding
+// queryParameterSpec covers arrays and objects, so a scalar reaches the
+// n/a check through its encoding
 test("a scalar in an n/a style and explode stops generation", async () => {
 	await expect(
 		generateFor([

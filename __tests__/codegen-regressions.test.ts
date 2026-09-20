@@ -155,7 +155,7 @@ test("AllInputs union carries every command that takes an input", async () => {
 
 	expect(commandNames.length).toBeGreaterThan(0);
 
-	// a command with no parameters and no body gets an input of `never`
+	// a command declaring only responses gets an input of `never`
 	const hasNeverInput = (name: string) =>
 		typesText.includes(`export type ${name}Input = never;`);
 
@@ -165,8 +165,8 @@ test("AllInputs union carries every command that takes an input", async () => {
 
 	expect(missing).toEqual([]);
 
-	// `never` adds nothing to the union, and the three empty paths above are
-	// the only commands that carry it
+	// `never` adds nothing to the union, and the three empty paths above put
+	// it on these three commands
 	const emptyCommands = commandNames.filter((name) => hasNeverInput(name));
 
 	expect(emptyCommands.toSorted()).toEqual([
@@ -182,8 +182,8 @@ test("AllInputs union carries every command that takes an input", async () => {
 	expect(carried).toEqual([]);
 });
 
-// The shipped lint override is scoped to `generatedFiles`, so a new emitted
-// module that is missing from that list would lint unscoped at every consumer
+// `generatedFiles` limits the shipped lint override, so an emitted module
+// absent from that list would lint unscoped at every consumer
 test("the shipped lint override names every file the generator emits", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/generated-file-set",

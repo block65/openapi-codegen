@@ -34,11 +34,6 @@ function numericLiteral(value: number) {
 	return [integer.replaceAll(/\B(?=(\d{3})+$)/gu, "_"), ...fraction].join(".");
 }
 
-// Only a document that says additionalProperties false gets a strict object
-function objectCall(schema: { additionalProperties?: unknown }) {
-	return schema.additionalProperties === false ? "strictObject" : "looseObject";
-}
-
 // A bigint literal takes an integer, and a document may declare any number
 function bigintLiteral(value: number) {
 	return Number.isInteger(value)
@@ -68,8 +63,8 @@ function vcall(
 		| Primitive
 		| (string | WriterFunction | Primitive)[]
 	)[]
-): WriterFunction {
-	return (writer) => {
+) {
+	return (writer: CodeBlockWriter) => {
 		writer.write(`v.${name}(`);
 		args.forEach((arg, index) => {
 			if (typeof arg === "function") {
@@ -537,59 +532,66 @@ function schemaToValidator(
 		if (allOfMembers) {
 			return maybeNullable(
 				maybePipe(
-					vcall(objectCall(schema), (writer: CodeBlockWriter) => {
-						writer.writeLine("{");
-						writer.indent(() => {
-							allOfMembers.forEach((member) => {
-								if ("$ref" in member) {
-									const resolved = resolveRef(validators, member.$ref, mode);
+					// only a document that says additionalProperties false gets a
+					// strict object
+					vcall(
+						schema.additionalProperties === false
+							? "strictObject"
+							: "looseObject",
+						(writer: CodeBlockWriter) => {
+							writer.writeLine("{");
+							writer.indent(() => {
+								allOfMembers.forEach((member) => {
+									if ("$ref" in member) {
+										const resolved = resolveRef(validators, member.$ref, mode);
+										writer.write("...");
+
+										if (typeof resolved === "function") {
+											resolved(writer);
+										} else {
+											writer.write(resolved);
+										}
+
+										writer.writeLine(".entries,");
+
+										return;
+									}
+
+									const isObjectShape =
+										member.type === "object" ||
+										(member.properties !== undefined &&
+											member.type === undefined);
+
+									if (isObjectShape) {
+										writeStrictObjectEntries(
+											writer,
+											validators,
+											member.properties ?? {},
+											new Set(member.required),
+											mode,
+										);
+
+										return;
+									}
+
+									// Nested combinators and unusual shapes recurse, spreading the
+									// result's entries. Valid as long as the recursion yields an
+									// object-like schema, and GIGO otherwise
+									const validator = schemaToValidator(validators, member, mode);
 									writer.write("...");
 
-									if (typeof resolved === "function") {
-										resolved(writer);
+									if (typeof validator === "function") {
+										validator(writer);
 									} else {
-										writer.write(resolved);
+										writer.write(validator);
 									}
 
 									writer.writeLine(".entries,");
-
-									return;
-								}
-
-								const isObjectShape =
-									member.type === "object" ||
-									(member.properties !== undefined &&
-										member.type === undefined);
-
-								if (isObjectShape) {
-									writeStrictObjectEntries(
-										writer,
-										validators,
-										member.properties ?? {},
-										new Set(member.required),
-										mode,
-									);
-
-									return;
-								}
-
-								// Nested combinators and unusual shapes recurse, spreading the
-								// result's entries. Valid as long as the recursion yields an
-								// object-like schema, and GIGO otherwise
-								const validator = schemaToValidator(validators, member, mode);
-								writer.write("...");
-
-								if (typeof validator === "function") {
-									validator(writer);
-								} else {
-									writer.write(validator);
-								}
-
-								writer.writeLine(".entries,");
+								});
 							});
-						});
-						writer.write("}");
-					}),
+							writer.write("}");
+						},
+					),
 					...minMaxProperties(schema),
 				),
 				isNullable,

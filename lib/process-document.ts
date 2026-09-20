@@ -64,11 +64,6 @@ function isQueryStyle(style: string): style is QueryParamSpec["style"] {
 	return Object.hasOwn(queryStyles, style);
 }
 
-// OAS 3.2 added this location, so the 3.0 union this generator reads omits it
-function isQuerystringLocation(location: string) {
-	return location === "querystring";
-}
-
 // Resolves the OAS 3.2 §4.12.6 style and explode defaults for a parameter
 function queryParameterEncoding(parameter: oas30.ParameterObject) {
 	// OpenAPI defaults `style` to `form`, and `explode` to true for `form` and
@@ -87,9 +82,13 @@ function queryParameterEncoding(parameter: oas30.ParameterObject) {
 	};
 }
 
-function queryParameterSpec(
-	parameter: oas30.ParameterObject,
-): QueryParamSpec | undefined {
+// OAS 3.2 added this location, which the 3.0 union omits
+// oxlint-disable-next-line block65/no-single-use-function -- the widened parameter is what lets the one call site compare against a location the 3.0 union omits
+function isQuerystringLocation(location: string) {
+	return location === "querystring";
+}
+
+function queryParameterSpec(parameter: oas30.ParameterObject) {
 	const schema: oas30.SchemaObject =
 		parameter.schema !== undefined && !("$ref" in parameter.schema)
 			? parameter.schema
@@ -97,7 +96,12 @@ function queryParameterSpec(
 	const { style, explode } = queryParameterEncoding(parameter);
 
 	if (schema.type === "array") {
-		return { name: parameter.name, type: "array", style, explode };
+		return {
+			name: parameter.name,
+			type: "array",
+			style,
+			explode,
+		} satisfies QueryParamSpec;
 	}
 
 	if (schema.type === "object" || schema.properties) {
@@ -107,15 +111,14 @@ function queryParameterSpec(
 			style,
 			explode,
 			members: Object.keys(schema.properties ?? {}),
-		};
+		} satisfies QueryParamSpec;
 	}
 
 	// a scalar arrives as the string it was sent as, under every style
-	return undefined;
+	return;
 }
 
-// OAS 3.2 §4.12.6 marks these n/a, and rest-client exports nothing for them
-// Applies to every query parameter, including the scalars that carry no spec
+// OAS 3.2 §4.12.6 marks these n/a, for every type of query parameter
 function assertSupportedEncoding(
 	operationId: string,
 	name: string,
@@ -413,6 +416,7 @@ export async function processOpenApiDocument(
 	const schemaGraph = Object.entries(schema.components?.schemas || {}).flatMap(
 		([schemaName, schemaObject]) => {
 			const deps = getDependents(schemaObject);
+			// oxlint-disable-next-line block65/no-explicit-return-type -- inference widens the pair to string[], and toposort takes a mutable tuple
 			return deps.map((dep): [string, string] => [
 				`#/components/schemas/${schemaName}`,
 				dep,
@@ -1046,7 +1050,7 @@ export async function processOpenApiDocument(
 							: `UndefinedOnPartialDeep<${inputTypeName}>`;
 					})();
 
-					// a never member adds nothing to the union
+					// `A | never` is `A`, so the member is left out
 					if (inputTypeNode !== neverKeyword) {
 						inputTypeArgs.add(inputTypeArg);
 						inputTypeNames.add(inputType.getName());

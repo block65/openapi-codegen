@@ -42,28 +42,21 @@ async function readManifest(manifestPath: string) {
 		}
 
 		// a hand-edited manifest degrades to a rewrite of every file, the same
-		// as an absent one, so entries that are not a revision string are
-		// dropped
-		const manifest: Record<string, string> = {};
-
-		for (const [file, revision] of Object.entries(parsed)) {
-			if (typeof revision === "string") {
-				manifest[file] = revision;
-			}
-		}
-
-		return manifest;
+		// as an absent one, so each entry is kept when it holds a revision
+		return Object.fromEntries(
+			Object.entries(parsed).filter(
+				(entry): entry is [string, string] => typeof entry[1] === "string",
+			),
+		);
 	} catch {
 		return {};
 	}
 }
 
-// Holds the emitter revision beside the file revisions, under a key no file
-// can take
+// Holds the emitter revision under a key that no file name can take
 const GENERATOR_KEY = "#generator";
 
-// A manifest written by an older emitter must not hold back an update, and
-// mtime cannot say so when a run overlaps an edit
+// Forces an update when an older emitter wrote the manifest
 async function generatorRevision() {
 	const lib = import.meta.dirname;
 	const root = path.join(lib, "..");
@@ -172,13 +165,10 @@ export async function build(
 		}),
 	);
 
-	const next = new Map<string, string>([
-		[GENERATOR_KEY, generator],
-		...revisions.map(({ name, rev }): [string, string] => [name, rev]),
-	]);
+	const next = {
+		[GENERATOR_KEY]: generator,
+		...Object.fromEntries(revisions.map(({ name, rev }) => [name, rev])),
+	};
 
-	await writeFile(
-		manifestPath,
-		`${JSON.stringify(Object.fromEntries(next), undefined, "\t")}\n`,
-	);
+	await writeFile(manifestPath, `${JSON.stringify(next, undefined, "\t")}\n`);
 }
