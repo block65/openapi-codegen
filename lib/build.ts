@@ -27,8 +27,8 @@ function isOpenApiDocument(value: unknown): value is oas31.OpenAPIObject {
 // Records emitter output so a file reformatted on disk still compares equal
 const MANIFEST = ".openapi-codegen-manifest.json";
 
-async function readManifest(path: string) {
-	const text = await readFile(path, "utf8").catch(() => {});
+async function readManifest(manifestPath: string) {
+	const text = await readFile(manifestPath, "utf8").catch(() => {});
 
 	if (text === undefined) {
 		return {};
@@ -66,6 +66,7 @@ const GENERATOR_KEY = "#generator";
 // mtime cannot say so when a run overlaps an edit
 async function generatorRevision() {
 	const lib = import.meta.dirname;
+	const root = path.join(lib, "..");
 	const entries = await readdir(lib);
 	const sources = entries
 		.filter((name) => name.endsWith(".ts"))
@@ -74,13 +75,20 @@ async function generatorRevision() {
 
 	sources.push(path.join(lib, "..", "bin", "index.ts"));
 
+	// keyed by the path inside the package, so a second checkout and CI agree
+	// on the revision
+	const files = await Promise.all(
+		sources.map(async (source) => ({
+			name: path.relative(root, source),
+			contents: await readFile(source),
+		})),
+	);
+
 	const hash = createHash("sha256");
 
-	for (const source of sources) {
-		const contents = await readFile(source);
-
-		hash.update(source);
-		hash.update(contents);
+	for (const file of files) {
+		hash.update(file.name);
+		hash.update(file.contents);
 	}
 
 	return hash.digest("hex").slice(0, 32);
