@@ -16,6 +16,9 @@
 	],
 	"type": "module",
 	"sideEffects": false,
+	"exports": {
+		"./oxlint": "./lib/oxlint.ts"
+	},
 	"scripts": {
 		"preversion": "just check"
 	},
@@ -32,7 +35,7 @@
 		"@block65/rest-client": "^14.2.0",
 		"@block65/shared-config": "^0.3.1",
 		"@block65/tsconfig": "^0.3.1",
-		"@standard-schema/spec": "^1.1.0",
+		"@hono/standard-validator": "^0.4.0",
 		"@types/node": "^26.6.1",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
@@ -51,10 +54,10 @@
 	},
 	"peerDependencies": {
 		"@block65/rest-client": "^14.2.0",
-		"@standard-schema/spec": "^1.1.0",
-		"hono": "^4.12.23",
-		"type-fest": "^5.9.0",
-		"valibot": "^1.4.1"
+		"@hono/standard-validator": "^0.4.0",
+		"hono": "^4.13.8",
+		"type-fest": "^5.10.0",
+		"valibot": "^1.5.0"
 	},
 	"engines": {
 		"node": ">=26.0.0"

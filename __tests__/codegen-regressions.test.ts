@@ -1,5 +1,7 @@
+import path from "node:path";
 import type { oas31 } from "openapi3-ts";
 import { assert, expect, test } from "vitest";
+import { generatedFiles } from "../lib/oxlint.ts";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
 const respOk = {
@@ -88,7 +90,7 @@ test("optional query params do not carry `| undefined` in their property type", 
 	expect(queryBlock).not.toContain("undefined");
 });
 
-test("AllInputs union includes every command's Input (no silent drops)", async () => {
+test("AllInputs union carries every command that takes an input", async () => {
 	const schema: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
@@ -138,6 +140,7 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 	const mainText = result.mainFile.getText();
 	const commandsText = result.commandsFile.getText();
+	const typesText = result.typesFile.getText();
 
 	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0];
 	assert.isDefined(allInputsBlock, "AllInputs");
@@ -151,10 +154,47 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	});
 
 	expect(commandNames.length).toBeGreaterThan(0);
-	const missing = commandNames.filter(
-		(name) => !allInputsBlock.includes(`${name}Input`),
-	);
+
+	// a command with no parameters and no body gets an input of `never`
+	const hasNeverInput = (name: string) =>
+		typesText.includes(`export type ${name}Input = never;`);
+
+	const missing = commandNames
+		.filter((name) => !hasNeverInput(name))
+		.filter((name) => !allInputsBlock.includes(`${name}Input`));
+
 	expect(missing).toEqual([]);
+
+	// `never` adds nothing to the union, and the three empty paths above are
+	// the only commands that carry it
+	const emptyCommands = commandNames.filter((name) => hasNeverInput(name));
+
+	expect(emptyCommands.toSorted()).toEqual([
+		"AlphaCommand",
+		"BetaCommand",
+		"GammaCommand",
+	]);
+
+	const carried = emptyCommands.filter((name) =>
+		allInputsBlock.includes(`${name}Input`),
+	);
+
+	expect(carried).toEqual([]);
+});
+
+// The shipped lint override is scoped to `generatedFiles`, so a new emitted
+// module that is missing from that list would lint unscoped at every consumer
+test("the shipped lint override names every file the generator emits", async () => {
+	const result = await processOpenApiDocument(
+		"/tmp/generated-file-set",
+		docWithSchema("Thing", { type: "object", properties: {} }),
+	);
+
+	const emitted = Object.values(result)
+		.map((file) => path.basename(file.getFilePath()))
+		.toSorted();
+
+	expect(emitted).toStrictEqual([...generatedFiles].toSorted());
 });
 
 function docWithSchema(name: string, schema: oas31.SchemaObject) {
