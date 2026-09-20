@@ -196,7 +196,7 @@ function temporalHintSchema(format: string | undefined) {
 	return type ? `v.custom<${type}>(() => true)` : undefined;
 }
 
-function stringNeedsCoercion(schema: oas30.SchemaObject | oas31.SchemaObject) {
+function shouldCoerceString(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	return (
 		!schema.enum &&
 		!schema.pattern &&
@@ -212,11 +212,11 @@ function propertiesNeedCoercion(
 	const hasOptional = Object.keys(properties).some((k) => !required.has(k));
 
 	return (
-		hasOptional || Object.values(properties).some((s) => schemaNeedsCoercion(s))
+		hasOptional || Object.values(properties).some((s) => shouldCoerceSchema(s))
 	);
 }
 
-function schemaNeedsCoercion(
+function shouldCoerceSchema(
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 ): boolean {
 	if ("$ref" in schema || "const" in schema) {
@@ -227,7 +227,7 @@ function schemaNeedsCoercion(
 		return true;
 	}
 
-	if (schema.type === "string" && stringNeedsCoercion(schema)) {
+	if (schema.type === "string" && shouldCoerceString(schema)) {
 		return true;
 	}
 
@@ -236,12 +236,12 @@ function schemaNeedsCoercion(
 	}
 
 	if (schema.items && !("$ref" in schema.items)) {
-		return schemaNeedsCoercion(schema.items);
+		return shouldCoerceSchema(schema.items);
 	}
 
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
 
-	return combinator ? combinator.some((s) => schemaNeedsCoercion(s)) : false;
+	return combinator ? combinator.some((s) => shouldCoerceSchema(s)) : false;
 }
 
 function resolveRef(
@@ -618,13 +618,18 @@ function schemaToValidator(
 		const props = schema.properties ?? {};
 
 		// `additionalProperties` names the schema every key outside `properties`
-		// has to satisfy, so those keys are part of the contract and a
-		// strictObject would reject them. `true` allows any key, and an absent
-		// keyword leaves the generator strict
-		const rest =
+		// has to satisfy, so those keys are part of the contract. `true` and an
+		// empty schema allow any key, and so does an absent keyword
+		const restSchema =
 			typeof schema.additionalProperties === "object" &&
 			schema.additionalProperties !== null
-				? schemaToValidator(validators, schema.additionalProperties, mode)
+				? schema.additionalProperties
+				: undefined;
+		const restAllowsAnything =
+			restSchema !== undefined && Object.keys(restSchema).length === 0;
+		const rest =
+			restSchema && !restAllowsAnything
+				? schemaToValidator(validators, restSchema, mode)
 				: undefined;
 		const allowsAnyKey = schema.additionalProperties !== false;
 
@@ -757,7 +762,7 @@ export function registerValidatorFromSchema(
 	// lacks coercion concerns and the difference would be optional versus
 	// exactOptional, which are equivalent on JSON-parsed data
 	if (!inputOnly) {
-		if (schemaNeedsCoercion(schemaObject)) {
+		if (shouldCoerceSchema(schemaObject)) {
 			valibotFile.addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
