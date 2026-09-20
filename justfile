@@ -6,6 +6,10 @@ typecheck:
 lint:
 	pnpm exec oxlint
 
+# annotates the changed lines in a pull request
+lint-ci:
+	pnpm exec oxlint --format=github
+
 fmt:
 	pnpm exec oxfmt
 
@@ -15,6 +19,5 @@ fmt-check:
 test:
 	pnpm exec vitest run
 
-# reported, not gated: the generator's queryStyles literal leaves two TS2416s
 typecheck-fixtures:
-	-pnpm exec tsc -p __tests__/tsconfig.json
+	pnpm exec tsc -p __tests__/tsconfig.json
