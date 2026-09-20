@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import path from "node:path";
 import camelcase from "camelcase";
 import type { oas30, oas31 } from "openapi3-ts";
 import {
@@ -20,6 +20,42 @@ type ValidatorEntry = {
 	input: string;
 	wire: string;
 };
+
+// oxlint groups integer digits in threes once a literal reaches five digits
+function numericLiteral(value: number) {
+	const text = String(value);
+	const [integer = "", ...fraction] = text.split(".");
+	const digits = integer.replace("-", "");
+
+	if (digits.length < 5 || /\D/u.test(digits)) {
+		return text;
+	}
+
+	return [integer.replaceAll(/\B(?=(\d{3})+$)/gu, "_"), ...fraction].join(".");
+}
+
+// Only a document that says additionalProperties false gets a strict object
+function objectCall(schema: { additionalProperties?: unknown }) {
+	return schema.additionalProperties === false ? "strictObject" : "looseObject";
+}
+
+// A bigint literal takes an integer, and a document may declare any number
+function bigintLiteral(value: number) {
+	return Number.isInteger(value)
+		? `${numericLiteral(value)}n`
+		: `BigInt(${value})`;
+}
+
+// oxlint requires String.raw where a pattern escapes a backslash
+function regexSource(pattern: string) {
+	const rawUnsafe = /`|\$\{|\\$/u;
+
+	if (pattern.includes("\\") && !rawUnsafe.test(pattern)) {
+		return `String.raw\`${pattern}\``;
+	}
+
+	return JSON.stringify(pattern);
+}
 
 /**
  * Helper to generate v.name(...args) using ts-morph Writers
@@ -87,12 +123,12 @@ function maybePipe(
 
 function minMaxProperties(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	return [
-		schema.minProperties !== undefined
-			? vcall("minEntries", schema.minProperties)
-			: undefined,
-		schema.maxProperties !== undefined
-			? vcall("maxEntries", schema.maxProperties)
-			: undefined,
+		schema.minProperties === undefined
+			? undefined
+			: vcall("minEntries", schema.minProperties),
+		schema.maxProperties === undefined
+			? undefined
+			: vcall("maxEntries", schema.maxProperties),
 	];
 }
 
@@ -172,7 +208,7 @@ function propertiesNeedCoercion(
 	schema: oas30.SchemaObject | oas31.SchemaObject,
 ) {
 	const properties = schema.properties ?? {};
-	const required = new Set(schema.required ?? []);
+	const required = new Set(schema.required);
 	const hasOptional = Object.keys(properties).some((k) => !required.has(k));
 
 	return (
@@ -391,17 +427,17 @@ function schemaToValidator(
 				schema.format === "uuid" ? vcall("uuid") : undefined,
 				temporalRegexConstraint(schema.format),
 
-				schema.minLength !== undefined
-					? vcall("minLength", schema.minLength)
-					: undefined,
-				schema.maxLength !== undefined
-					? vcall("maxLength", schema.maxLength)
-					: undefined,
+				schema.minLength === undefined
+					? undefined
+					: vcall("minLength", numericLiteral(schema.minLength)),
+				schema.maxLength === undefined
+					? undefined
+					: vcall("maxLength", numericLiteral(schema.maxLength)),
 				schema.pattern
-					? vcall("regex", `new RegExp(${JSON.stringify(schema.pattern)})`)
+					? vcall("regex", `new RegExp(${regexSource(schema.pattern)})`)
 					: undefined,
 				// A hint set by the `x-typescript-hint` extension wins over the format
-				!typescriptHint ? temporalHintSchema(schema.format) : undefined,
+				typescriptHint ? undefined : temporalHintSchema(schema.format),
 				typescriptHintSchema,
 			),
 			isNullable,
@@ -411,12 +447,12 @@ function schemaToValidator(
 	if (schema.type === "integer" && schema.format === "int64") {
 		const baseValidator = maybePipe(
 			vcall("bigint"),
-			schema.minimum !== undefined
-				? vcall("minValue", `BigInt(${schema.minimum})`)
-				: undefined,
-			schema.maximum !== undefined
-				? vcall("maxValue", `BigInt(${schema.maximum})`)
-				: undefined,
+			schema.minimum === undefined
+				? undefined
+				: vcall("minValue", bigintLiteral(schema.minimum)),
+			schema.maximum === undefined
+				? undefined
+				: vcall("maxValue", bigintLiteral(schema.maximum)),
 			typescriptHintSchema,
 		);
 
@@ -453,12 +489,12 @@ function schemaToValidator(
 			maybePipe(
 				vcall("number"),
 				isInteger ? vcall("integer") : undefined,
-				schema.minimum !== undefined
-					? vcall("minValue", schema.minimum)
-					: undefined,
-				schema.maximum !== undefined
-					? vcall("maxValue", schema.maximum)
-					: undefined,
+				schema.minimum === undefined
+					? undefined
+					: vcall("minValue", numericLiteral(schema.minimum)),
+				schema.maximum === undefined
+					? undefined
+					: vcall("maxValue", numericLiteral(schema.maximum)),
 				typescriptHintSchema,
 			),
 			isNullable,
@@ -477,12 +513,12 @@ function schemaToValidator(
 		return maybeNullable(
 			maybePipe(
 				vcall("array", items),
-				schema.minItems !== undefined
-					? vcall("minLength", schema.minItems)
-					: undefined,
-				schema.maxItems !== undefined
-					? vcall("maxLength", schema.maxItems)
-					: undefined,
+				schema.minItems === undefined
+					? undefined
+					: vcall("minLength", numericLiteral(schema.minItems)),
+				schema.maxItems === undefined
+					? undefined
+					: vcall("maxLength", numericLiteral(schema.maxItems)),
 			),
 			isNullable,
 		);
@@ -501,7 +537,7 @@ function schemaToValidator(
 		if (allOfMembers) {
 			return maybeNullable(
 				maybePipe(
-					vcall("strictObject", (writer: CodeBlockWriter) => {
+					vcall(objectCall(schema), (writer: CodeBlockWriter) => {
 						writer.writeLine("{");
 						writer.indent(() => {
 							allOfMembers.forEach((member) => {
@@ -530,7 +566,7 @@ function schemaToValidator(
 										writer,
 										validators,
 										member.properties ?? {},
-										new Set(member.required ?? []),
+										new Set(member.required),
 										mode,
 									);
 
@@ -590,7 +626,7 @@ function schemaToValidator(
 			schema.additionalProperties !== null
 				? schemaToValidator(validators, schema.additionalProperties, mode)
 				: undefined;
-		const allowsAnyKey = schema.additionalProperties === true;
+		const allowsAnyKey = schema.additionalProperties !== false;
 
 		if (Object.keys(props).length === 0) {
 			return maybeNullable(
@@ -602,7 +638,7 @@ function schemaToValidator(
 			);
 		}
 
-		const requiredProps = new Set(schema.required ?? []);
+		const requiredProps = new Set(schema.required);
 
 		const entries = (writer: CodeBlockWriter) => {
 			writer.writeLine("{");
@@ -637,9 +673,13 @@ function schemaToValidator(
 }
 
 export function createValibotFile(project: Project, outputDir: string) {
-	const file = project.createSourceFile(join(outputDir, "valibot.ts"), "", {
-		overwrite: true,
-	});
+	const file = project.createSourceFile(
+		path.join(outputDir, "valibot.ts"),
+		"",
+		{
+			overwrite: true,
+		},
+	);
 
 	// Valibot import
 	file.addImportDeclaration({
@@ -690,7 +730,7 @@ export function registerValidatorFromSchema(
 								? [
 										{
 											tagName: "example",
-											text: JSON.stringify(schemaObject.example, null, 2),
+											text: JSON.stringify(schemaObject.example, undefined, 2),
 										},
 									]
 								: []),
@@ -766,9 +806,9 @@ function asHttpParamValidator(
 		!schemaIsNullable(schema)
 	) {
 		const properties = schema.properties;
-		const requiredProps = new Set(schema.required ?? []);
+		const requiredProps = new Set(schema.required);
 
-		return vcall("strictObject", (writer: CodeBlockWriter) => {
+		return vcall("looseObject", (writer: CodeBlockWriter) => {
 			writer.writeLine("{");
 			writer.indent(() => {
 				writeStrictObjectEntries(

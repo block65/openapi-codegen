@@ -91,6 +91,7 @@ test("const values", async () => {
 						const: true,
 					},
 					NullConst: {
+						// oxlint-disable-next-line unicorn/no-null -- the document under test declares a JSON null constant, which is the shape this exercises
 						const: null,
 					},
 				},
