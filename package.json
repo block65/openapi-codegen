@@ -36,7 +36,7 @@
 		"@block65/shared-config": "^0.3.1",
 		"@block65/tsconfig": "^0.3.1",
 		"@hono/standard-validator": "^0.4.0",
-		"@types/node": "^26.6.1",
+		"@types/node": "^26.6.2",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
 		"hono": "^4.13.8",
