@@ -917,15 +917,17 @@ export async function processOpenApiDocument(
 								})
 							: undefined;
 
+					const inputTypeNode = createIntersection(
+						wrappedJsonBodyType?.getName() ||
+							jsonBodyType?.getName() ||
+							nonJsonBodyType?.getName(),
+						paramsType?.getName(),
+						queryType?.getName(),
+					);
+
 					const inputType = typesFile.addTypeAlias({
 						name: pascalCase(commandClassDeclaration.getName() || "", "Input"),
-						type: createIntersection(
-							wrappedJsonBodyType?.getName() ||
-								jsonBodyType?.getName() ||
-								nonJsonBodyType?.getName(),
-							paramsType?.getName(),
-							queryType?.getName(),
-						),
+						type: inputTypeNode,
 						isExported: true,
 					});
 					ensureImport(inputType);
@@ -1006,7 +1008,8 @@ export async function processOpenApiDocument(
 							: `UndefinedOnPartialDeep<${inputTypeName}>`;
 					})();
 
-					if (inputType) {
+					// a never member adds nothing to the union
+					if (inputTypeNode !== neverKeyword) {
 						inputTypeArgs.add(inputTypeArg);
 						inputTypeNames.add(inputType.getName());
 					}
