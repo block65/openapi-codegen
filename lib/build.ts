@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import type { oas31 } from "openapi3-ts";
 import {
 	type CodegenOptions,
@@ -13,6 +13,16 @@ const BANNER = `/**
  *
  * Do not edit directly
  */`;
+
+// A JSON import is typed `any`, so the document is checked before it is used
+function isOpenApiDocument(value: unknown): value is oas31.OpenAPIObject {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"openapi" in value &&
+		typeof value.openapi === "string"
+	);
+}
 
 // Records emitter output so a file reformatted on disk still compares equal
 const MANIFEST = ".openapi-codegen-manifest.json";
@@ -27,15 +37,53 @@ async function readManifest(path: string) {
 	try {
 		const parsed: unknown = JSON.parse(text);
 
-		// TYPESAFETY: `writeManifest` below writes this file, storing a string
-		// revision per path. A hand-edited file degrades to a rewrite of every
-		// file, the same as an absent manifest
-		return typeof parsed === "object" && parsed !== null
-			? (parsed as Record<string, string>)
-			: {};
+		if (typeof parsed !== "object" || parsed === null) {
+			return {};
+		}
+
+		// a hand-edited manifest degrades to a rewrite of every file, the same
+		// as an absent one, so entries that are not a revision string are
+		// dropped
+		const manifest: Record<string, string> = {};
+
+		for (const [file, revision] of Object.entries(parsed)) {
+			if (typeof revision === "string") {
+				manifest[file] = revision;
+			}
+		}
+
+		return manifest;
 	} catch {
 		return {};
 	}
+}
+
+// Holds the emitter revision beside the file revisions, under a key no file
+// can take
+const GENERATOR_KEY = "#generator";
+
+// A manifest written by an older emitter must not hold back an update, and
+// mtime cannot say so when a run overlaps an edit
+async function generatorRevision() {
+	const lib = import.meta.dirname;
+	const entries = await readdir(lib);
+	const sources = entries
+		.filter((name) => name.endsWith(".ts"))
+		.toSorted()
+		.map((name) => path.join(lib, name));
+
+	sources.push(path.join(lib, "..", "bin", "index.ts"));
+
+	const hash = createHash("sha256");
+
+	for (const source of sources) {
+		const contents = await readFile(source);
+
+		hash.update(source);
+		hash.update(contents);
+	}
+
+	return hash.digest("hex").slice(0, 32);
 }
 
 export async function build(
@@ -44,11 +92,20 @@ export async function build(
 	tags?: string[],
 	options?: CodegenOptions,
 ) {
-	// TYPESAFETY: a JSON import is typed `any`, and `$RefParser` validates the
-	// document before the generator reads it
-	const apischema = (await import(inputFile, {
+	const imported: unknown = await import(inputFile, {
 		with: { type: "json" },
-	})) as { default: oas31.OpenAPIObject };
+	});
+
+	const apischema =
+		typeof imported === "object" && imported !== null && "default" in imported
+			? imported.default
+			: undefined;
+
+	if (!isOpenApiDocument(apischema)) {
+		throw new Error(
+			`${inputFile} has no OpenAPI document as its default export`,
+		);
+	}
 
 	const {
 		commandsFile,
@@ -58,7 +115,7 @@ export async function build(
 		valibotFile,
 		honoFile,
 		enumsFile,
-	} = await processOpenApiDocument(outputDir, apischema.default, tags, options);
+	} = await processOpenApiDocument(outputDir, apischema, tags, options);
 
 	const files = [
 		commandsFile,
@@ -74,17 +131,21 @@ export async function build(
 
 	await mkdir(outputDir, { recursive: true });
 
-	const manifestPath = join(outputDir, MANIFEST);
-	const previous = await readManifest(manifestPath);
+	const manifestPath = path.join(outputDir, MANIFEST);
+	const stored = await readManifest(manifestPath);
+	const generator = await generatorRevision();
+	const previous = stored[GENERATOR_KEY] === generator ? stored : {};
 	const revisions = await Promise.all(
 		files.map(async (file) => {
 			try {
 				file.formatText();
-			} catch (err) {
-				console.warn(err);
+			} catch (error) {
+				console.warn(error);
 			}
 
-			const contents = `${BANNER}\n${file.getFullText()}`;
+			// the blank line detaches the banner from the first import, which
+			// oxfmt would otherwise move with that import when it sorts them
+			const contents = `${BANNER}\n\n${file.getFullText()}`;
 			const name = file.getBaseName();
 			const rev = createHash("sha256")
 				.update(contents)
@@ -103,10 +164,13 @@ export async function build(
 		}),
 	);
 
-	const next = new Map(revisions.map(({ name, rev }) => [name, rev]));
+	const next = new Map<string, string>([
+		[GENERATOR_KEY, generator],
+		...revisions.map(({ name, rev }): [string, string] => [name, rev]),
+	]);
 
 	await writeFile(
 		manifestPath,
-		`${JSON.stringify(Object.fromEntries(next), null, "\t")}\n`,
+		`${JSON.stringify(Object.fromEntries(next), undefined, "\t")}\n`,
 	);
 }
