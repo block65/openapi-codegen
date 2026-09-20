@@ -1,6 +1,5 @@
-import { join } from "node:path";
+import nodePath from "node:path";
 import { $RefParser } from "@apidevtools/json-schema-ref-parser";
-import type { QueryParamSpec } from "@block65/rest-client";
 import type { oas30, oas31 } from "openapi3-ts";
 import toposort from "toposort";
 import {
@@ -21,6 +20,8 @@ import {
 	addSchemaImportsToHonoFile,
 	createHonoFile,
 	createHonoMiddleware,
+	type QueryParamSpec,
+	queryStyles,
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
@@ -29,6 +30,7 @@ import {
 	getDependents,
 	iife,
 	pascalCase,
+	typedEntries,
 	wordWrap,
 } from "./utils.ts";
 import {
@@ -56,14 +58,6 @@ type OperationMiddlewareInfo = {
 		header?: string;
 	};
 	queryParams: QueryParamSpec[];
-};
-
-// keyed by the union, so a style added or dropped fails here
-const queryStyles: Record<QueryParamSpec["style"], true> = {
-	form: true,
-	spaceDelimited: true,
-	pipeDelimited: true,
-	deepObject: true,
 };
 
 function isQueryStyle(style: string): style is QueryParamSpec["style"] {
@@ -120,37 +114,47 @@ function queryParameterSpec(
 	return undefined;
 }
 
-// Warns on style and explode combinations that OAS 3.2 §4.12.6 marks n/a
-function warnOnUndefinedCombination(operationId: string, spec: QueryParamSpec) {
+// OAS 3.2 §4.12.6 marks these n/a, and rest-client exports nothing for them
+function assertSupportedCombination(operationId: string, spec: QueryParamSpec) {
 	const undefinedCombination =
 		(spec.style === "spaceDelimited" || spec.style === "pipeDelimited") &&
 		spec.explode;
 
 	if (undefinedCombination) {
-		console.warn(
+		throw new Error(
 			`${operationId}: query parameter "${spec.name}" combines \`style: ${spec.style}\` with \`explode: true\`, which OpenAPI marks n/a and leaves undefined. Set \`explode: false\`, or use \`style: form\`.`,
 		);
 	}
 
 	if (spec.style === "deepObject" && spec.type === "array") {
-		console.warn(
+		throw new Error(
 			`${operationId}: query parameter "${spec.name}" is an array with \`style: deepObject\`, which OpenAPI marks n/a and leaves undefined. Use \`style: form\`.`,
 		);
 	}
 }
 
-// Warns when an object query parameter omits style and falls back to form
-function warnOnUnderspecifiedQuery(
+// Rejects an encoding the generator cannot emit, warns on a risky one
+function checkQueryParameters(
 	operationId: string,
 	parameters: oas30.ParameterObject[],
 ) {
 	const seen = new Map<string, string>();
 
 	for (const parameter of parameters) {
+		if (parameter.style !== undefined && !isQueryStyle(parameter.style)) {
+			throw new Error(
+				`${operationId}: query parameter "${parameter.name}" declares \`style: ${parameter.style}\`, which rest-client does not encode. Use one of ${typedEntries(
+					queryStyles,
+				)
+					.map(([style]) => style)
+					.join(", ")}.`,
+			);
+		}
+
 		const spec = queryParameterSpec(parameter);
 
 		if (spec) {
-			warnOnUndefinedCombination(operationId, spec);
+			assertSupportedCombination(operationId, spec);
 		}
 
 		if (spec?.type !== "object") {
@@ -178,6 +182,16 @@ function warnOnUnderspecifiedQuery(
 }
 
 const neverKeyword = "never" as const;
+
+// A resolved $ref is typed unknown, and every parameter declares name and in
+function isParameterObject(value: unknown): value is oas30.ParameterObject {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"in" in value &&
+		"name" in value
+	);
+}
 
 const unspecifiedKeyword = "unknown" as const;
 function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
@@ -218,7 +232,7 @@ export async function processOpenApiDocument(
 	const project = new Project();
 
 	const commandsFile = project.createSourceFile(
-		join(outputDir, "commands.ts"),
+		nodePath.join(outputDir, "commands.ts"),
 		"",
 		{
 			overwrite: true,
@@ -230,7 +244,7 @@ export async function processOpenApiDocument(
 	// `./commands` to it in dev. The base command module imports zero
 	// schemas, so prod bundles stay small
 	const commandsValidatedFile = project.createSourceFile(
-		join(outputDir, "commands-validated.ts"),
+		nodePath.join(outputDir, "commands-validated.ts"),
 		"",
 		{
 			overwrite: true,
@@ -238,7 +252,7 @@ export async function processOpenApiDocument(
 	);
 
 	const typesFile = project.createSourceFile(
-		join(outputDir, "types.ts"),
+		nodePath.join(outputDir, "types.ts"),
 		"",
 
 		{
@@ -246,14 +260,22 @@ export async function processOpenApiDocument(
 		},
 	);
 
-	const mainFile = project.createSourceFile(join(outputDir, "main.ts"), "", {
-		overwrite: true,
-	});
+	const mainFile = project.createSourceFile(
+		nodePath.join(outputDir, "main.ts"),
+		"",
+		{
+			overwrite: true,
+		},
+	);
 
 	// Enums file for runtime enum values
-	const enumsFile = project.createSourceFile(join(outputDir, "enums.ts"), "", {
-		overwrite: true,
-	});
+	const enumsFile = project.createSourceFile(
+		nodePath.join(outputDir, "enums.ts"),
+		"",
+		{
+			overwrite: true,
+		},
+	);
 
 	// Validators file for Valibot schemas
 	const valibotFile = createValibotFile(project, outputDir);
@@ -309,7 +331,7 @@ export async function processOpenApiDocument(
 			{ name: "...values", type: "string[]" },
 		],
 		statements:
-			"return String.raw({ raw: strings }, ...values.map(encodeURIComponent));",
+			"return String.raw({ raw: strings }, ...values.map((value) => encodeURIComponent(value)));",
 	});
 
 	commandsFile.addImportDeclaration({
@@ -542,12 +564,14 @@ export async function processOpenApiDocument(
 						...(operationObject.parameters || []),
 						...(pathItemObject.parameters || []),
 					]) {
-						// TYPESAFETY: `$RefParser.resolve` types every target as
-						// `unknown`, and this pointer came from a parameter list, so the
-						// document declares it as a parameter
-						const resolvedParameter = (
-							"$ref" in parameter ? refs.get(parameter.$ref) : parameter
-						) as oas30.ParameterObject;
+						const resolvedParameter: unknown =
+							"$ref" in parameter ? refs.get(parameter.$ref) : parameter;
+
+						if (!isParameterObject(resolvedParameter)) {
+							throw new Error(
+								`${operationObject.operationId}: ${"$ref" in parameter ? parameter.$ref : "a parameter"} does not resolve to a parameter object`,
+							);
+						}
 
 						if (resolvedParameter.in === "path") {
 							pathParameters.push(resolvedParameter);
@@ -581,13 +605,12 @@ export async function processOpenApiDocument(
 						}
 
 						// OpenAPI 3.2's `in: "querystring"` hands over the whole query
-						// string as one content-typed value, which this generator lacks a
-						// way to express. A warning is all that is left, since a valid
-						// document would otherwise generate an operation with its query
-						// silently dropped
+						// string as one content-typed value. The generator expresses a
+						// query as named parameters, so generating this operation would
+						// drop its query in silence
 						if (isQuerystringLocation(resolvedParameter.in)) {
-							console.warn(
-								`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support — the operation is generated with no query at all. Declare the members as \`in: query\` parameters instead.`,
+							throw new Error(
+								`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support. Declare the members as \`in: query\` parameters instead.`,
 							);
 						}
 					}
@@ -609,28 +632,33 @@ export async function processOpenApiDocument(
 						}
 					}
 
-					// Entries here mark where the document departs from OpenAPI's
-					// default. An absent entry means that default, and never a
-					// generator's guess
-					const styledQueryParameters = queryParameters.filter((parameter) => {
-						const { style, explode } = queryParameterEncoding(parameter);
-						return style !== "form" || !explode;
-					});
+					// rest-client reads form with explode as the default, so only a
+					// departure from it is listed
+					const queryStyleEntries = queryParameters
+						.map(
+							(parameter) =>
+								[parameter.name, queryParameterEncoding(parameter)] as const,
+						)
+						.filter(
+							([, encoding]) => encoding.style !== "form" || !encoding.explode,
+						);
 
-					if (styledQueryParameters.length > 0) {
+					if (queryStyleEntries.length > 0) {
 						commandClassDeclaration.addProperty({
 							name: "queryStyles",
 							hasOverrideKeyword: true,
 							scope: Scope.Public,
-							initializer: JSON.stringify(
-								Object.fromEntries(
-									styledQueryParameters.map((parameter) => {
-										const { style, explode } =
-											queryParameterEncoding(parameter);
-										return [parameter.name, { style, explode }];
-									}),
-								),
-							),
+							initializer: (writer) => {
+								writer.write("{");
+								writer.indent(() => {
+									for (const [name, encoding] of queryStyleEntries) {
+										writer.writeLine(
+											`${JSON.stringify(name)}: { style: ${JSON.stringify(encoding.style)}, explode: ${encoding.explode} },`,
+										);
+									}
+								});
+								writer.write("} as const");
+							},
 						});
 					}
 
@@ -874,7 +902,7 @@ export async function processOpenApiDocument(
 									}),
 									isExported: true,
 								})
-							: null;
+							: undefined;
 
 					const bodyType =
 						(jsonBodyType &&
@@ -975,10 +1003,7 @@ export async function processOpenApiDocument(
 					const middlewareExportName = castToValidJsIdentifier(
 						operationObject.operationId.replace(/Command$/i, ""),
 					);
-					warnOnUnderspecifiedQuery(
-						operationObject.operationId,
-						queryParameters,
-					);
+					checkQueryParameters(operationObject.operationId, queryParameters);
 
 					allOperations.push({
 						exportName: middlewareExportName,
@@ -1237,11 +1262,11 @@ export async function processOpenApiDocument(
 
 						const queryParameterNames = queryParameters
 							.map((q) => q.name)
-							.map(castToValidJsIdentifier);
+							.map((name) => castToValidJsIdentifier(name));
 
 						const pathParameterNames = pathParameters
 							.map((q) => q.name)
-							.map(castToValidJsIdentifier);
+							.map((name) => castToValidJsIdentifier(name));
 
 						const paramsToDestructure = [
 							...pathParameterNames,
