@@ -1,8 +1,8 @@
 import path from "node:path";
 import * as oxlint from "oxlint";
 
-// Every module the generator writes. `defineOverrides` scopes the rules below
-// to these, and a test holds this list to what a run actually emits
+// Every module the generator writes. `defineOverrides` limits the rules
+// below to these, and a test compares this list with what a run emits
 export const generatedFiles = [
 	"commands.ts",
 	"commands-validated.ts",
@@ -23,8 +23,8 @@ export function defineOverrides<T extends oxlint.OxlintOverride>(
 			{
 				files: generatedFiles.map((name) => path.join(root, name)),
 
-				// the generated code carries comments from the spec file, and their
-				// content is the document author's to answer for
+				// the generated comments come from the spec file, so their content
+				// is the document author's
 				rules: {
 					"block65/no-jsdoc-on-statement": "off",
 					"block65/no-bare-block-comment": "off",
@@ -51,6 +51,10 @@ export function defineOverrides<T extends oxlint.OxlintOverride>(
 					"block65/max-comment-lines": "off",
 					"block65/require-comment-blank-line": "off",
 					"unicorn-unported/comment-content": "off",
+
+					// a query parameter named `t` or `q` is the document's wire
+					// contract, so the generated code destructures that name
+					"block65/no-single-character-declaration": "off",
 					"unicorn/max-nested-calls": "off",
 				},
 			},
