@@ -115,17 +115,21 @@ function queryParameterSpec(
 }
 
 // OAS 3.2 §4.12.6 marks these n/a, and rest-client exports nothing for them
-function assertSupportedCombination(operationId: string, spec: QueryParamSpec) {
-	const undefinedCombination =
-		(spec.style === "spaceDelimited" || spec.style === "pipeDelimited") &&
-		spec.explode;
-
-	if (undefinedCombination) {
+// Applies to every query parameter, including the scalars that carry no spec
+function assertSupportedEncoding(
+	operationId: string,
+	name: string,
+	style: QueryParamSpec["style"],
+	explode: boolean,
+) {
+	if ((style === "spaceDelimited" || style === "pipeDelimited") && explode) {
 		throw new Error(
-			`${operationId}: query parameter "${spec.name}" combines \`style: ${spec.style}\` with \`explode: true\`, which OpenAPI marks n/a and leaves undefined. Set \`explode: false\`, or use \`style: form\`.`,
+			`${operationId}: query parameter "${name}" combines \`style: ${style}\` with \`explode: true\`, which OpenAPI marks n/a and leaves undefined. Set \`explode: false\`, or use \`style: form\`.`,
 		);
 	}
+}
 
+function assertSupportedCombination(operationId: string, spec: QueryParamSpec) {
 	if (spec.style === "deepObject" && spec.type === "array") {
 		throw new Error(
 			`${operationId}: query parameter "${spec.name}" is an array with \`style: deepObject\`, which OpenAPI marks n/a and leaves undefined. Use \`style: form\`.`,
@@ -150,6 +154,15 @@ function checkQueryParameters(
 					.join(", ")}.`,
 			);
 		}
+
+		const encoding = queryParameterEncoding(parameter);
+
+		assertSupportedEncoding(
+			operationId,
+			parameter.name,
+			encoding.style,
+			encoding.explode,
+		);
 
 		const spec = queryParameterSpec(parameter);
 
