@@ -33,7 +33,7 @@ import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } fr
  * @example encodePath\`/users/\${userId}\` // "/users/foo%2Fbar"
  */
 function encodePath(strings: TemplateStringsArray, ...values: string[]) {
-    return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+    return String.raw({ raw: strings }, ...values.map((value) => encodeURIComponent(value)));
 }
 
 /**
@@ -62,23 +62,31 @@ export class UploadDataCommand extends commands.UploadDataCommand {
 `;
 
 exports[`header parameters > hono 1`] = `
-"import { validator } from "hono/validator";
-import type { StandardSchemaV1 } from "@standard-schema/spec";
+"import { sValidator } from "@hono/standard-validator";
+import type { ValidationTargets } from "hono";
 import { PublicValidationError } from "@block65/rest-client";
 import { uploadDataCommandParamsSchema } from "./valibot.js";
 
-async function standardParse<TSchema extends StandardSchemaV1>(schema: TSchema, value: unknown) {
+type StandardSchema = Parameters<typeof sValidator>[1];
 
-          const result = await schema["~standard"].validate(value);
-          if (result.issues) {
-            throw PublicValidationError.fromIssues(result.issues);
-          }
-          return result.value;
+// The query arrives here as Hono parsed it, and nothing below decodes
+// it. A lone value for a repeated-key array stays a string, comma,
+// space and pipe joined values stay joined, and a deepObject key stays
+// bracketed, so each of those fails validation. A caller sending them
+// decodes the query before this middleware or replaces it, reading the
+// style and explode from the query spec each operation exports below.
+function validate<TSchema extends StandardSchema, TTarget extends keyof ValidationTargets>(target: TTarget, schema: TSchema) {
+
+          return sValidator(target, schema, (result) => {
+            if (!result.success) {
+              throw PublicValidationError.fromIssues(result.error);
+            }
+          });
         
 }
 
 export const uploadData = [
-        validator("param", (value) => standardParse(uploadDataCommandParamsSchema, value)),
+        validate("param", uploadDataCommandParamsSchema),
     ] as const;
 "
 `;
@@ -161,16 +169,16 @@ exports[`query and header integer params coerce strings to numbers > valibot 1`]
 
 export const inputDummySchema = v.string();
 export const dummySchema = v.pipe(v.string(), v.trim());
-export const inputExpireTimeSchema = v.pipe(v.bigint(), v.minValue(BigInt(0)));
-export const expireTimeSchema = v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]);
+export const inputExpireTimeSchema = v.pipe(v.bigint(), v.minValue(0n));
+export const expireTimeSchema = v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.bigint(), v.minValue(0n))]);
 export const inputListFilesCommandResponseSchema = inputDummySchema;
 export const listFilesCommandResponseSchema = dummySchema;
 export const inputListFilesCommandQuerySchema = v.strictObject({
-        "exp": v.pipe(v.bigint(), v.minValue(BigInt(0))),
+        "exp": v.pipe(v.bigint(), v.minValue(0n)),
         "limit": v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
     });
 export const listFilesCommandQuerySchema = v.strictObject({
-        "exp": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(BigInt(0)))), v.pipe(v.bigint(), v.minValue(BigInt(0)))]),
+        "exp": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.bigint(), v.minValue(0n))]),
         "limit": v.exactOptional(v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))]))
     });
 export const inputListFilesCommandHeaderSchema = v.object({

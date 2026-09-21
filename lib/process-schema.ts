@@ -24,11 +24,8 @@ function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
 	return withNull && type !== "null" ? Writers.unionType(type, "null") : type;
 }
 
-// RFC 3339 temporal `format`s as template-literal TypeScript types, so the
-// digit shape is visible in the type (strictly narrower than `string`). These
-// are shape hints — the runtime valibot schema does the real RFC 3339
-// validation. Kept in lock-step with valibot's `temporalTypeHint`
-function temporalStringType(format: string | undefined): string | undefined {
+// Template-literal type per RFC 3339 temporal format, mirrored in valibot
+function temporalStringType(format: string | undefined) {
 	switch (format) {
 		case "date":
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
@@ -43,14 +40,14 @@ function temporalStringType(format: string | undefined): string | undefined {
 			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 			return "`P${string}`";
 		default:
-			return undefined;
+			return;
 	}
 }
 
-// int64 carries values beyond Number.MAX_SAFE_INTEGER, so it maps to `bigint`
-// as the domain type and `${bigint}` on the wire (query/header/path/body values
-// arrive as strings). Every other integer/number stays `number` / `${number}`
-function numericType(isInt64: boolean, stringish: boolean | undefined): string {
+// int64 maps to bigint, and every other integer or number maps to number
+function numericType(isInt64: boolean, stringish: boolean | undefined) {
+	// int64 reaches past Number.MAX_SAFE_INTEGER, and query, header, path and
+	// body values arrive as strings, hence the `${bigint}` wire form
 	if (isInt64) {
 		// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
 		return stringish ? "`${bigint}`" : "bigint";
@@ -71,9 +68,7 @@ function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	);
 }
 
-// `unknown` swallows a union, `never` adds nothing to one, and the same
-// constituent twice is still one type. Only string members can be compared:
-// a writer's text is not available until it runs
+// Drops `unknown`, `never` and duplicate string members from a union
 function collapseUnion(types: (string | WriterFunction)[]) {
 	const seen = new Set<string>();
 	const deduped = types.filter((type) => {
@@ -111,7 +106,7 @@ function maybeUnion(...types: (string | WriterFunction)[]) {
 		: Writers.unionType(first, second, ...rest);
 }
 
-function recordType(value: string | WriterFunction): WriterFunction {
+function recordType(value: string | WriterFunction) {
 	return (writer: CodeBlockWriter) => {
 		writer.write("Record<string | number, ");
 
@@ -125,33 +120,35 @@ function recordType(value: string | WriterFunction): WriterFunction {
 	};
 }
 
-// OpenAPI spells "one of these known values, or any other string" as an anyOf
-// of the bare type and an enum of it. TypeScript collapses that union to the
-// bare type, so the known values disappear from completion. LiteralUnion keeps
-// them offered without narrowing what the property accepts
+// LiteralUnion keeps known values in completion and accepts any other string
 function literalUnionType(
-	schemaItems: (
+	maybeSchemaObjects: (
 		| oas31.SchemaObject
 		| oas30.SchemaObject
 		| oas31.ReferenceObject
 	)[],
-): string | undefined {
-	const objects = schemaItems.filter(isNotReferenceObject);
+) {
+	const schemaObjects = maybeSchemaObjects.filter((obj) =>
+		isNotReferenceObject(obj),
+	);
 
-	if (objects.length !== schemaItems.length || objects.length < 2) {
-		return undefined;
+	if (
+		schemaObjects.length !== maybeSchemaObjects.length ||
+		schemaObjects.length < 2
+	) {
+		return;
 	}
 
-	const bare = objects.filter((schema) => !schema.enum);
-	const enums = objects.filter((schema) => schema.enum);
+	const bare = schemaObjects.filter((schema) => !schema.enum);
+	const enums = schemaObjects.filter((schema) => schema.enum);
 	const [base] = bare;
 
 	if (bare.length !== 1 || enums.length === 0 || base?.type !== "string") {
-		return undefined;
+		return;
 	}
 
 	if (!enums.every((schema) => schema.type === "string")) {
-		return undefined;
+		return;
 	}
 
 	const values = [
@@ -201,7 +198,6 @@ export function schemaToType(
 		const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
 		if (!existingSchema) {
-			// throw new Error(`ref used before available: ${schemaObject.$ref}`);
 			console.warn("ref used before available: schema=%j", schemaObject);
 
 			return {
@@ -218,27 +214,25 @@ export function schemaToType(
 
 		// Propagate JSDoc from the referenced type to the property
 		const refDocs = existingSchema.getJsDocs();
-		const docs: OptionalKind<JSDocStructure>[] = refDocs.flatMap((jsDoc) => {
-			const description = jsDoc.getDescription();
-			const tags = jsDoc
-				.getTags()
-				.map((tag) => {
-					const text = tag.getCommentText();
-					return text ? { tagName: tag.getTagName(), text } : undefined;
-				})
-				.filter((tag): tag is { tagName: string; text: string } => !!tag);
+		const docs: OptionalKind<JSDocStructure>[] = refDocs
+			.map((jsDoc) => {
+				const description = jsDoc.getDescription();
+				const tags = jsDoc
+					.getTags()
+					.map((tag) => {
+						const text = tag.getCommentText();
+						return text ? { tagName: tag.getTagName(), text } : undefined;
+					})
+					.filter((tag): tag is { tagName: string; text: string } => !!tag);
 
-			if (!description && tags.length === 0) {
-				return [];
-			}
+				if (tags.length > 0) {
+					return description ? { description, tags } : { tags };
+				}
 
-			return [
-				{
-					...(description && { description }),
-					...(tags.length > 0 && { tags }),
-				},
-			];
-		});
+				return description ? { description } : {};
+			})
+			// an empty JSDoc block maps to {}
+			.filter((doc) => Object.keys(doc).length > 0);
 
 		return {
 			name,
@@ -439,12 +433,12 @@ export function schemaToType(
 
 		const intersect = "allOf" in schemaObject;
 
-		const filteredTypes = types.filter(isNotNullOrUndefined);
+		const filteredTypes = types.filter((value) => isNotNullOrUndefined(value));
 		const hasNullType = types.some((t) => t === "null");
 		const isNullable = schemaTypeIsNull(schemaObject);
 
 		if (intersect) {
-			// For allOf: intersect non-null types, wrap in union with null if nullable
+			// For allOf, intersect the non-null types and add null when nullable
 			const nonNullTypes = filteredTypes.filter((t) => t !== "null");
 			const intersectionType = maybeIntersection(...nonNullTypes);
 
@@ -458,7 +452,7 @@ export function schemaToType(
 			};
 		}
 
-		// For oneOf/anyOf: union all types (include null if present or if nullable)
+		// For oneOf and anyOf, union every type, adding null when nullable
 		return {
 			name,
 			hasQuestionToken,
@@ -470,8 +464,8 @@ export function schemaToType(
 		};
 	}
 
-	// A document often leaves `type` off a schema that plainly describes an
-	// object, so the keys that only an object can carry stand in for it
+	// A document often omits `type` from a schema that plainly describes an
+	// object, so keys unique to objects stand in for it
 	const describesObject =
 		schemaObject.type === "object" ||
 		(schemaObject.type === undefined &&
@@ -521,8 +515,8 @@ export function schemaToType(
 			typeof schemaObject.additionalProperties === "object" &&
 			schemaObject.additionalProperties !== null
 		) {
-			// The parent is empty because the value schema keys off nothing in it:
-			// a record value is always present, so it never takes a question token
+			// A record value is always present, so it stays required and the
+			// parent contributes an empty set of keys
 			const value = schemaToType(
 				typesAndInterfaces,
 				{},
@@ -696,16 +690,18 @@ export function registerTypesFromSchema(
 
 		const intersect = "allOf" in schemaObject;
 
-		const typeAliases = schemaItems.filter(isReferenceObject).map((s) => {
-			const alias = typesAndInterfaces.get(s.$ref);
-			if (!alias) {
-				throw new Error(`ref used before available: ${s.$ref}`);
-			}
-			return alias;
-		});
+		const typeAliases = schemaItems
+			.filter((value) => isReferenceObject(value))
+			.map((s) => {
+				const alias = typesAndInterfaces.get(s.$ref);
+				if (!alias) {
+					throw new Error(`ref used before available: ${s.$ref}`);
+				}
+				return alias;
+			});
 
 		const objectTypesFromNonRefSchemas = schemaItems
-			.filter(isNotReferenceObject)
+			.filter((value) => isNotReferenceObject(value))
 			.filter((schema) => schema.type === "object")
 			.map((subSchemaObject) =>
 				Writers.objectType({
@@ -720,10 +716,10 @@ export function registerTypesFromSchema(
 					),
 				}),
 			)
-			.filter(isNotNullOrUndefined);
+			.filter((value) => isNotNullOrUndefined(value));
 
 		const nonObjectTypesFromNonRefSchemas = schemaItems
-			.filter(isNotReferenceObject)
+			.filter((value) => isNotReferenceObject(value))
 			.filter((schema) => schema.type !== "object")
 			.map((subSchemaObject) =>
 				schemaToType(
@@ -733,7 +729,7 @@ export function registerTypesFromSchema(
 					subSchemaObject,
 				),
 			)
-			.filter(isNotNullOrUndefined);
+			.filter((value) => isNotNullOrUndefined(value));
 
 		// concat and dedupe
 		const typeArgs = [
@@ -742,12 +738,12 @@ export function registerTypesFromSchema(
 				...objectTypesFromNonRefSchemas,
 				...nonObjectTypesFromNonRefSchemas
 					.map((t) =>
-						// a writer's text is not available here, so it cannot be wrapped
+						// a writer's text is unavailable here, so wrapping applies to strings
 						t.isReadonly && typeof t.type === "string"
 							? `Readonly<${t.type}>`
 							: t.type,
 					)
-					.filter(isNotNullOrUndefined),
+					.filter((value) => isNotNullOrUndefined(value)),
 			]),
 		];
 
@@ -768,7 +764,7 @@ export function registerTypesFromSchema(
 		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
 	}
 
-	// deal with type arrays (OpenAPI 3.1: type: ["string", "null"])
+	// deal with type arrays, added in OpenAPI 3.1
 	else if (Array.isArray(schemaObject.type)) {
 		const prop = schemaToType(typesAndInterfaces, {}, schemaName, schemaObject);
 
@@ -812,10 +808,9 @@ export function registerTypesFromSchema(
 		const newIf = typesFile.addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
-			// The same walk an inline schema takes, so a named schema and an
+			// Reuses the walk an inline schema takes, so a named schema and an
 			// inline one of the same shape agree. It also spells the value type
-			// in TypeScript: the JSON Schema name for it is not always one, and
-			// `integer` is not
+			// in TypeScript, since JSON Schema names such as `integer` differ
 			type:
 				schemaToType(typesAndInterfaces, {}, schemaName, schemaObject).type ??
 				"Record<string | number, Jsonifiable>",
@@ -840,33 +835,14 @@ export function registerTypesFromSchema(
 				]
 			: [];
 
-		// bonus enum interface for the same set of strings
-		// handy for looping over the enum values
-		// const enumDeclaration = typesFile.addEnum({
-		//   name: pascalCase(schemaName, 'Enum'),
-		//   isExported: true,
-		//   members: schemaObject.enum.map((e: unknown) => ({
-		//     name: typeof e === 'string' ? pascalCase(e) : String(e),
-		//     value: String(e),
-		//   })),
-		// });
-
 		const stringUnion = typesFile.addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
-			type: maybeUnion(
-				// enumDeclaration.getName()
-				...schemaObject.enum.map((e) => JSON.stringify(e)),
-			),
+			type: maybeUnion(...schemaObject.enum.map((e) => JSON.stringify(e))),
 			docs,
 		});
 
 		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, stringUnion);
-
-		// typesAndInterfaces.set(
-		//   `#/components/schemas/${enumDeclaration.getName()}`,
-		//   enumDeclaration,
-		// );
 	}
 
 	// deal with non-enum strings
@@ -979,7 +955,5 @@ export function registerTypesFromSchema(
 			`unsupported ${schemaObject.type} schema object: %j`,
 			schemaObject,
 		);
-
-		// throw new Error(`unsupported type "${schemaObject.type}"`);
 	}
 }

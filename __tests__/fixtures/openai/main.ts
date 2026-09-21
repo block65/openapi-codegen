@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,
@@ -101,7 +102,6 @@ import type {
 	ListInvitesCommandInput,
 	ListMessagesCommandInput,
 	ListMessagesResponse,
-	ListModelsCommandInput,
 	ListModelsResponse,
 	ListPaginatedFineTuningJobsCommandInput,
 	ListPaginatedFineTuningJobsResponse,
@@ -238,7 +238,6 @@ type AllInputs =
 	| UndefinedOnPartialDeep<ListFineTuningJobCheckpointsCommandInput>
 	| UndefinedOnPartialDeep<ListInvitesCommandInput>
 	| UndefinedOnPartialDeep<ListMessagesCommandInput>
-	| UndefinedOnPartialDeep<ListModelsCommandInput>
 	| UndefinedOnPartialDeep<ListPaginatedFineTuningJobsCommandInput>
 	| UndefinedOnPartialDeep<ListProjectApiKeysCommandInput>
 	| UndefinedOnPartialDeep<ListProjectsCommandInput>

@@ -1,5 +1,7 @@
+import path from "node:path";
 import type { oas31 } from "openapi3-ts";
-import { expect, test } from "vitest";
+import { assert, expect, test } from "vitest";
+import { generatedFiles } from "../lib/oxlint.ts";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
 const respOk = {
@@ -78,16 +80,17 @@ test("optional query params do not carry `| undefined` in their property type", 
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 	const typesText = result.typesFile.getText();
-	const queryBlock =
-		typesText.match(/export type ListFilesCommandQuery = \{[\s\S]*?\};/)?.[0] ??
-		"";
+	const queryBlock = typesText.match(
+		/export type ListFilesCommandQuery = \{[\s\S]*?\};/,
+	)?.[0];
+	assert.isDefined(queryBlock, "ListFilesCommandQuery");
 
 	expect(queryBlock).toContain("purpose?: string");
 	expect(queryBlock).toContain("limit?: `${number}`");
 	expect(queryBlock).not.toContain("undefined");
 });
 
-test("AllInputs union includes every command's Input (no silent drops)", async () => {
+test("AllInputs union carries every command that takes an input", async () => {
 	const schema: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
@@ -137,24 +140,96 @@ test("AllInputs union includes every command's Input (no silent drops)", async (
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 	const mainText = result.mainFile.getText();
 	const commandsText = result.commandsFile.getText();
+	const typesText = result.typesFile.getText();
 
-	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0] ?? "";
+	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0];
+	assert.isDefined(allInputsBlock, "AllInputs");
 
 	const commandNames = [
 		...commandsText.matchAll(/^export class (\w+Command) extends Command</gm),
-	].map((m) => m[1] ?? "");
+	].map(([, name]) => {
+		assert.isDefined(name, "command name");
+
+		return name;
+	});
 
 	expect(commandNames.length).toBeGreaterThan(0);
-	const missing = commandNames.filter(
-		(name) => !allInputsBlock.includes(`${name}Input`),
-	);
+
+	// a command declaring only responses gets an input of `never`
+	const hasNeverInput = (name: string) =>
+		typesText.includes(`export type ${name}Input = never;`);
+
+	const missing = commandNames
+		.filter((name) => !hasNeverInput(name))
+		.filter((name) => !allInputsBlock.includes(`${name}Input`));
+
 	expect(missing).toEqual([]);
+
+	// `never` adds nothing to the union, and the three empty paths above put
+	// it on these three commands
+	const emptyCommands = commandNames.filter((name) => hasNeverInput(name));
+
+	expect(emptyCommands.toSorted()).toEqual([
+		"AlphaCommand",
+		"BetaCommand",
+		"GammaCommand",
+	]);
+
+	const carried = emptyCommands.filter((name) =>
+		allInputsBlock.includes(`${name}Input`),
+	);
+
+	expect(carried).toEqual([]);
 });
 
-function docWithSchema(
-	name: string,
-	schema: oas31.SchemaObject,
-): oas31.OpenAPIObject {
+// `generatedFiles` limits the shipped lint override, so an emitted module
+// absent from that list would lint unscoped at every consumer
+test("the shipped lint override names every file the generator emits", async () => {
+	const result = await processOpenApiDocument(
+		"/tmp/generated-file-set",
+		docWithSchema("Thing", { type: "object", properties: {} }),
+	);
+
+	const emitted = Object.values(result)
+		.map((file) => path.basename(file.getFilePath()))
+		.toSorted();
+
+	expect(emitted).toStrictEqual([...generatedFiles].toSorted());
+});
+
+// An empty schema permits any value, so the keys outside `properties` are
+// unconstrained and the object is loose
+test("additionalProperties chooses the object schema", async () => {
+	const cases = [
+		[{}, "v.looseObject("],
+		[{ type: "string" }, "v.objectWithRest("],
+		[false, "v.strictObject("],
+		[true, "v.looseObject("],
+	] as const;
+
+	const emitted = await Promise.all(
+		cases.map(async ([additionalProperties]) => {
+			const result = await processOpenApiDocument(
+				"/tmp/additional-properties",
+				docWithSchema("Open", {
+					type: "object",
+					properties: { a: { type: "string" } },
+					additionalProperties,
+				}),
+			);
+
+			const text = result.valibotFile.getText();
+
+			return text.slice(text.indexOf("export const openSchema"), -1);
+		}),
+	);
+
+	for (const [index, [, expected]] of cases.entries()) {
+		expect(emitted[index]).toContain(expected);
+	}
+});
+
+function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	return {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
@@ -335,11 +410,11 @@ test("an array request body with parameters stays readable as both", async () =>
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const inputBlock =
-		result.typesFile
-			.getTypeAlias("PluginPullCommandInput")
-			?.getTypeNode()
-			?.getText() ?? "";
+	const inputBlock = result.typesFile
+		.getTypeAlias("PluginPullCommandInput")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(inputBlock, "PluginPullCommandInput");
 
 	expect(inputBlock).toContain("PluginPullCommandBodyWrapper");
 	expect(result.commandsFile.getText()).toMatch(
@@ -390,11 +465,11 @@ test("nested query param members get the same stringish treatment as top-level o
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const queryBlock =
-		result.typesFile
-			.getTypeAlias("SearchCommandQuery")
-			?.getTypeNode()
-			?.getText() ?? "";
+	const queryBlock = result.typesFile
+		.getTypeAlias("SearchCommandQuery")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(queryBlock, "SearchCommandQuery");
 
 	expect(queryBlock).toMatch(/limit\?: `\$\{number\}`/);
 	expect(queryBlock).toMatch(/"age"\?: `\$\{number\}`/);
@@ -441,11 +516,11 @@ test("json request body members keep their real JSON types, nested included", as
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const bodyBlock =
-		result.typesFile
-			.getTypeAlias("CreateContainerCommandJsonBody")
-			?.getTypeNode()
-			?.getText() ?? "";
+	const bodyBlock = result.typesFile
+		.getTypeAlias("CreateContainerCommandJsonBody")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(bodyBlock, "CreateContainerCommandJsonBody");
 
 	expect(bodyBlock).toMatch(/"tty"\?: boolean/);
 	expect(bodyBlock).toMatch(/"retries"\?: number/);
@@ -502,14 +577,14 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const queryBlock =
-		result.typesFile
-			.getTypeAlias("ListThingsCommandQuery")
-			?.getTypeNode()
-			?.getText() ?? "";
+	const queryBlock = result.typesFile
+		.getTypeAlias("ListThingsCommandQuery")
+		?.getTypeNode()
+		?.getText();
+	assert.isDefined(queryBlock, "ListThingsCommandQuery");
 
-	// The composition branch has to forward the codegen options the same way the
-	// array and object branches do, or a oneOf collapses back to the JSON types
+	// Composition has to forward the codegen options the same way the array
+	// and object branches do, or a oneOf collapses back to the JSON types
 	expect(queryBlock).toContain("`${number}`");
 	expect(queryBlock).toContain('"true" | "false"');
 	expect(queryBlock).not.toMatch(/size\?: number/);

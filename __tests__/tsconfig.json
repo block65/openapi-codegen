@@ -1,8 +1,5 @@
 {
 	"extends": "../tsconfig.json",
-	"compilerOptions": {
-		"composite": false
-	},
-	"include": ["../lib", "../bin", "."],
-	"exclude": ["node_modules"]
+
+	"include": ["../bin", "../lib", "."]
 }

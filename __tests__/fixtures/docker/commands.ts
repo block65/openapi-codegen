@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
@@ -247,7 +248,10 @@ import type {
  * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
  */
 function encodePath(strings: TemplateStringsArray, ...values: string[]) {
-	return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+	return String.raw(
+		{ raw: strings },
+		...values.map((value) => encodeURIComponent(value)),
+	);
 }
 
 /**
@@ -1093,7 +1097,9 @@ export class ImageCreateCommand extends Command<
 	ImageCreateCommandHeader
 > {
 	public override method = "post" as const;
-	public override queryStyles = { changes: { style: "form", explode: false } };
+	public override queryStyles = {
+		changes: { style: "form", explode: false },
+	} as const;
 
 	constructor(
 		input: UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
@@ -1514,7 +1520,9 @@ export class ImageGetAllCommand extends Command<
 	ImageGetAllCommandQuery
 > {
 	public override method = "get" as const;
-	public override queryStyles = { names: { style: "form", explode: false } };
+	public override queryStyles = {
+		names: { style: "form", explode: false },
+	} as const;
 
 	constructor(input?: UndefinedOnPartialDeep<ImageGetAllCommandInput>) {
 		const { names } = input ?? {};

@@ -35,13 +35,7 @@ describe("Petstore", () => {
 			fetcher: createIsomorphicNativeFetcher({
 				retry: { retries: 0 },
 				fetch: (input, init) =>
-					undiciFetch(
-						// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
-						// import undici@8 directly — Request.headers.keys() iterator types diverge.
-						// Fix: remove when @types/node ships undici-types@8
-						input,
-						{ ...init, dispatcher: mockAgent },
-					),
+					undiciFetch(input, { ...init, dispatcher: mockAgent }),
 			}),
 		});
 		const command = new FindPetsCommand({
@@ -49,7 +43,7 @@ describe("Petstore", () => {
 			tags: ["tag1", "tag2"],
 		});
 
-		const result = await petStoreClient.json(command).catch((err) => err);
+		const result = await petStoreClient.json(command).catch((error) => error);
 
 		expect(result).toBeTruthy();
 	});

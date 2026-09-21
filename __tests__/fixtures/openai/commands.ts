@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
@@ -189,7 +190,10 @@ import type {
  * @example encodePath`/users/${userId}` // "/users/foo%2Fbar"
  */
 function encodePath(strings: TemplateStringsArray, ...values: string[]) {
-	return String.raw({ raw: strings }, ...values.map(encodeURIComponent));
+	return String.raw(
+		{ raw: strings },
+		...values.map((value) => encodeURIComponent(value)),
+	);
 }
 
 /**

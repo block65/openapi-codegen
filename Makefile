@@ -1,74 +1,44 @@
+# Codegen only. Task running is in the justfile, so bare `make` regenerates.
+#
+# A fixture is built from a document by this generator, so both are
+# prerequisites: editing a document rebuilds that fixture, editing the
+# generator rebuilds all of them. lib/build.ts rewrites the manifest on every
+# run, which makes it a dependable stamp for the whole output directory.
 
-SRCS = $(wildcard lib/**)
+CODEGEN := bin/index.ts $(wildcard lib/*.ts)
+FIXTURES := __tests__/fixtures
+MANIFEST := .openapi-codegen-manifest.json
+DOCUMENTS := petstore test1 openai docker
+STAMPS := $(DOCUMENTS:%=$(FIXTURES)/%/$(MANIFEST))
 
-all: typecheck
+.DEFAULT_GOAL := fixtures
 
-.PHONY: deps
-deps: node_modules
-
-.PHONY: distclean
-distclean:
-	rm -rf node_modules
-
-.PHONY: typecheck
-typecheck: node_modules tsconfig.json $(SRCS)
-	pnpm exec tsc
-
-# The generated fixtures under __tests__/fixtures are typechecked on their own
-# tsconfig, and reported rather than gated: one known error survives there (an
-# OpenAI `deepObject` query parameter) whose fix belongs in @block65/rest-client
-.PHONY: typecheck-fixtures
-typecheck-fixtures: node_modules __tests__/tsconfig.json
-	-pnpm exec tsc -p __tests__/tsconfig.json
-
-.PHONY: test
-test: node_modules typecheck typecheck-fixtures
-	pnpm exec vitest run
-
-node_modules: package.json
-	pnpm install
+# a half-written document would otherwise satisfy the rule that produced it
+.DELETE_ON_ERROR:
 
 .PHONY: fixtures
-fixtures:
-	$(MAKE) petstore test1 openai docker
+fixtures: $(STAMPS)
 
-.PHONY: petstore
-petstore:  __tests__/fixtures/petstore.json
+$(FIXTURES)/%/$(MANIFEST): $(FIXTURES)/%.json $(CODEGEN) | node_modules
 	node --enable-source-maps bin/index.ts \
 		-i $< \
-		-o __tests__/fixtures/petstore
-	pnpm exec oxfmt --write __tests__/fixtures/petstore
+		-o $(@D)
+	pnpm exec oxfmt --write $(@D)
 
-.PHONY: test1
-test1:  __tests__/fixtures/test1.json
-	node --enable-source-maps bin/index.ts \
-		-i $< \
-		-o __tests__/fixtures/test1
-	pnpm exec oxfmt --write __tests__/fixtures/test1
-
-
-__tests__/fixtures/openai.json: __tests__/fixtures/openai.yaml
+# the generator reads json, and openai publishes yaml
+$(FIXTURES)/openai.json: $(FIXTURES)/openai.yaml | node_modules
 	mkdir -p $(@D)
 	pnpm exec js-yaml $< > $@
 
-__tests__/fixtures/openai.yaml:
+$(FIXTURES)/openai.yaml:
 	curl https://raw.githubusercontent.com/openai/openai-openapi/refs/heads/master/openapi.yaml --output $@
 
-.PHONY: openai
-openai: __tests__/fixtures/openai.json
-	node --enable-source-maps bin/index.ts \
-		-i $< \
-		-o __tests__/fixtures/openai
-	pnpm exec oxfmt --write __tests__/fixtures/openai
+# `make petstore` reads better than the stamp path
+.PHONY: $(DOCUMENTS)
+$(DOCUMENTS): %: $(FIXTURES)/%/$(MANIFEST)
 
-.PHONY: docker
-docker: __tests__/fixtures/docker.json
-	node --enable-source-maps bin/index.ts \
-		-i $< \
-		-o __tests__/fixtures/docker
-	pnpm exec oxfmt --write __tests__/fixtures/docker
-
-.PHONY: pretty
-pretty: node_modules
-	pnpm exec oxlint --fix . || true
-	pnpm exec oxfmt --write .
+# pnpm leaves the directory alone when it has nothing to do, so the touch is
+# what stops every invocation reinstalling
+node_modules: package.json pnpm-lock.yaml
+	pnpm install
+	touch node_modules

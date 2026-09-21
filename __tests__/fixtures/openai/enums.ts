@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 /** The role of the author of a message */
 export const chatCompletionRole = [
 	"system",

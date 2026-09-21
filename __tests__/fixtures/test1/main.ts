@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,
@@ -26,7 +27,6 @@ import type {
 	GetPaymentMethodFromStripeCommandInput,
 	ImportBillingDataCommandInput,
 	LinkBillingAccountCommandInput,
-	ListBillingAccountsCommandInput,
 	ListBillingSubscriptionsCommandInput,
 	ListPaymentMethodsCommandInput,
 	LongRunningOperation,
@@ -56,7 +56,6 @@ type AllInputs =
 	| UndefinedOnPartialDeep<GetPaymentMethodCommandInput>
 	| UndefinedOnPartialDeep<GetPaymentMethodFromStripeCommandInput>
 	| UndefinedOnPartialDeep<LinkBillingAccountCommandInput>
-	| UndefinedOnPartialDeep<ListBillingAccountsCommandInput>
 	| UndefinedOnPartialDeep<ListBillingSubscriptionsCommandInput>
 	| UndefinedOnPartialDeep<ListPaymentMethodsCommandInput>
 	| UndefinedOnPartialDeep<UpdateBillingAccountCommandInput>

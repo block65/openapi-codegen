@@ -3,14 +3,15 @@
  *
  * Do not edit directly
  */
+
 import * as v from "valibot";
 
-export const inputDeleteModelResponseSchema = v.strictObject({
+export const inputDeleteModelResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.string(),
 });
-export const deleteModelResponseSchema = v.strictObject({
+export const deleteModelResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 	object: v.pipe(v.string(), v.trim()),
@@ -24,7 +25,7 @@ export const inputChatCompletionRoleSchema = v.picklist([
 	"function",
 ]);
 export const chatCompletionRoleSchema = inputChatCompletionRoleSchema;
-export const inputChatCompletionTokenLogprobSchema = v.strictObject({
+export const inputChatCompletionTokenLogprobSchema = v.looseObject({
 	/**
 	 * The token.
 	 */
@@ -49,7 +50,7 @@ export const inputChatCompletionTokenLogprobSchema = v.strictObject({
 	 * `top_logprobs` returned.
 	 */
 	top_logprobs: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The token.
 			 */
@@ -71,7 +72,7 @@ export const inputChatCompletionTokenLogprobSchema = v.strictObject({
 		}),
 	),
 });
-export const chatCompletionTokenLogprobSchema = v.strictObject({
+export const chatCompletionTokenLogprobSchema = v.looseObject({
 	/**
 	 * The token.
 	 */
@@ -96,7 +97,7 @@ export const chatCompletionTokenLogprobSchema = v.strictObject({
 	 * `top_logprobs` returned.
 	 */
 	top_logprobs: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The token.
 			 */
@@ -122,7 +123,7 @@ export const chatCompletionTokenLogprobSchema = v.strictObject({
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export const inputCreateChatCompletionStreamResponseSchema = v.strictObject({
+export const inputCreateChatCompletionStreamResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the chat completion. Each chunk has the same ID.
 	 */
@@ -133,14 +134,14 @@ export const inputCreateChatCompletionStreamResponseSchema = v.strictObject({
 	 * last chunk if you set `stream_options: {"include_usage": true}`.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			delta: v.unknown(),
 			/**
 			 * Log probability information for the choice.
 			 */
 			logprobs: v.optional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of message content tokens with log probability information.
 						 */
@@ -209,7 +210,7 @@ export const inputCreateChatCompletionStreamResponseSchema = v.strictObject({
 	 * contains the token usage statistics for the entire request.
 	 */
 	usage: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Number of tokens in the generated completion.
 			 */
@@ -225,7 +226,7 @@ export const inputCreateChatCompletionStreamResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const createChatCompletionStreamResponseSchema = v.strictObject({
+export const createChatCompletionStreamResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the chat completion. Each chunk has the same ID.
 	 */
@@ -236,14 +237,14 @@ export const createChatCompletionStreamResponseSchema = v.strictObject({
 	 * last chunk if you set `stream_options: {"include_usage": true}`.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			delta: v.unknown(),
 			/**
 			 * Log probability information for the choice.
 			 */
 			logprobs: v.exactOptional(
 				v.nullable(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of message content tokens with log probability information.
 						 */
@@ -312,7 +313,7 @@ export const createChatCompletionStreamResponseSchema = v.strictObject({
 	 * contains the token usage statistics for the entire request.
 	 */
 	usage: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Number of tokens in the generated completion.
 			 */
@@ -338,7 +339,7 @@ export const inputCreateChatCompletionImageResponseSchema = v.record(
 );
 export const createChatCompletionImageResponseSchema =
 	inputCreateChatCompletionImageResponseSchema;
-export const inputCreateImageRequestSchema = v.strictObject({
+export const inputCreateImageRequestSchema = v.looseObject({
 	/**
 	 * A text description of the desired image(s). The maximum length is 1000
 	 * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
@@ -393,7 +394,7 @@ export const inputCreateImageRequestSchema = v.strictObject({
 	 */
 	user: v.optional(v.string()),
 });
-export const createImageRequestSchema = v.strictObject({
+export const createImageRequestSchema = v.looseObject({
 	/**
 	 * A text description of the desired image(s). The maximum length is 1000
 	 * characters for `dall-e-2` and 4000 characters for `dall-e-3`.
@@ -453,7 +454,7 @@ export const createImageRequestSchema = v.strictObject({
 	 */
 	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputCreateImageEditRequestSchema = v.strictObject({
+export const inputCreateImageEditRequestSchema = v.looseObject({
 	/**
 	 * The image to edit. Must be a valid PNG file, less than 4MB, and square. If
 	 * mask is not provided, image must have transparency, which will be used as
@@ -502,7 +503,7 @@ export const inputCreateImageEditRequestSchema = v.strictObject({
 	 */
 	user: v.optional(v.string()),
 });
-export const createImageEditRequestSchema = v.strictObject({
+export const createImageEditRequestSchema = v.looseObject({
 	/**
 	 * The image to edit. Must be a valid PNG file, less than 4MB, and square. If
 	 * mask is not provided, image must have transparency, which will be used as
@@ -555,7 +556,7 @@ export const createImageEditRequestSchema = v.strictObject({
 	 */
 	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputCreateImageVariationRequestSchema = v.strictObject({
+export const inputCreateImageVariationRequestSchema = v.looseObject({
 	/**
 	 * The image to use as the basis for the variation(s). Must be a valid PNG
 	 * file, less than 4MB, and square.
@@ -593,7 +594,7 @@ export const inputCreateImageVariationRequestSchema = v.strictObject({
 	 */
 	user: v.optional(v.string()),
 });
-export const createImageVariationRequestSchema = v.strictObject({
+export const createImageVariationRequestSchema = v.looseObject({
 	/**
 	 * The image to use as the basis for the variation(s). Must be a valid PNG
 	 * file, less than 4MB, and square.
@@ -635,7 +636,7 @@ export const createImageVariationRequestSchema = v.strictObject({
 	 */
 	user: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputCreateModerationRequestSchema = v.strictObject({
+export const inputCreateModerationRequestSchema = v.looseObject({
 	/**
 	 * Input (or inputs) to classify. Can be a single string, an array of strings,
 	 * or
@@ -646,7 +647,7 @@ export const inputCreateModerationRequestSchema = v.strictObject({
 		v.array(v.string()),
 		v.array(
 			v.union([
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Always `image_url`.
 					 */
@@ -654,14 +655,14 @@ export const inputCreateModerationRequestSchema = v.strictObject({
 					/**
 					 * Contains either an image URL or a data URL for a base64 encoded image.
 					 */
-					image_url: v.strictObject({
+					image_url: v.looseObject({
 						/**
 						 * Either a URL of the image or the base64 encoded image data.
 						 */
 						url: v.string(),
 					}),
 				}),
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Always `text`.
 					 */
@@ -691,7 +692,7 @@ export const inputCreateModerationRequestSchema = v.strictObject({
 		]),
 	),
 });
-export const createModerationRequestSchema = v.strictObject({
+export const createModerationRequestSchema = v.looseObject({
 	/**
 	 * Input (or inputs) to classify. Can be a single string, an array of strings,
 	 * or
@@ -702,7 +703,7 @@ export const createModerationRequestSchema = v.strictObject({
 		v.array(v.pipe(v.string(), v.trim())),
 		v.array(
 			v.union([
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Always `image_url`.
 					 */
@@ -710,14 +711,14 @@ export const createModerationRequestSchema = v.strictObject({
 					/**
 					 * Contains either an image URL or a data URL for a base64 encoded image.
 					 */
-					image_url: v.strictObject({
+					image_url: v.looseObject({
 						/**
 						 * Either a URL of the image or the base64 encoded image data.
 						 */
 						url: v.pipe(v.string(), v.trim()),
 					}),
 				}),
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * Always `text`.
 					 */
@@ -748,7 +749,7 @@ export const createModerationRequestSchema = v.strictObject({
 	),
 });
 /** Represents if a given text input is potentially harmful. */
-export const inputCreateModerationResponseSchema = v.strictObject({
+export const inputCreateModerationResponseSchema = v.looseObject({
 	/**
 	 * The unique identifier for the moderation request.
 	 */
@@ -761,7 +762,7 @@ export const inputCreateModerationResponseSchema = v.strictObject({
 	 * A list of moderation objects.
 	 */
 	results: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Whether any of the below categories are flagged.
 			 */
@@ -769,7 +770,7 @@ export const inputCreateModerationResponseSchema = v.strictObject({
 			/**
 			 * A list of the categories, and whether they are flagged or not.
 			 */
-			categories: v.strictObject({
+			categories: v.looseObject({
 				/**
 				 * Content that expresses, incites, or promotes hate based on race, gender,
 				 * ethnicity, religion, nationality, sexual orientation, disability status, or
@@ -845,7 +846,7 @@ export const inputCreateModerationResponseSchema = v.strictObject({
 			/**
 			 * A list of the categories along with their scores as predicted by model.
 			 */
-			category_scores: v.strictObject({
+			category_scores: v.looseObject({
 				/**
 				 * The score for the category 'hate'.
 				 */
@@ -903,7 +904,7 @@ export const inputCreateModerationResponseSchema = v.strictObject({
 			 * A list of the categories along with the input type(s) that the score
 			 * applies to.
 			 */
-			category_applied_input_types: v.strictObject({
+			category_applied_input_types: v.looseObject({
 				/**
 				 * The applied input type(s) for the category 'hate'.
 				 */
@@ -960,7 +961,7 @@ export const inputCreateModerationResponseSchema = v.strictObject({
 		}),
 	),
 });
-export const createModerationResponseSchema = v.strictObject({
+export const createModerationResponseSchema = v.looseObject({
 	/**
 	 * The unique identifier for the moderation request.
 	 */
@@ -973,7 +974,7 @@ export const createModerationResponseSchema = v.strictObject({
 	 * A list of moderation objects.
 	 */
 	results: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Whether any of the below categories are flagged.
 			 */
@@ -981,7 +982,7 @@ export const createModerationResponseSchema = v.strictObject({
 			/**
 			 * A list of the categories, and whether they are flagged or not.
 			 */
-			categories: v.strictObject({
+			categories: v.looseObject({
 				/**
 				 * Content that expresses, incites, or promotes hate based on race, gender,
 				 * ethnicity, religion, nationality, sexual orientation, disability status, or
@@ -1057,7 +1058,7 @@ export const createModerationResponseSchema = v.strictObject({
 			/**
 			 * A list of the categories along with their scores as predicted by model.
 			 */
-			category_scores: v.strictObject({
+			category_scores: v.looseObject({
 				/**
 				 * The score for the category 'hate'.
 				 */
@@ -1115,7 +1116,7 @@ export const createModerationResponseSchema = v.strictObject({
 			 * A list of the categories along with the input type(s) that the score
 			 * applies to.
 			 */
-			category_applied_input_types: v.strictObject({
+			category_applied_input_types: v.looseObject({
 				/**
 				 * The applied input type(s) for the category 'hate'.
 				 */
@@ -1188,12 +1189,12 @@ export const inputCreateFileRequestSchema = v.strictObject({
 	purpose: v.picklist(["assistants", "batch", "fine-tune", "vision"]),
 });
 export const createFileRequestSchema = inputCreateFileRequestSchema;
-export const inputDeleteFileResponseSchema = v.strictObject({
+export const inputDeleteFileResponseSchema = v.looseObject({
 	id: v.string(),
 	object: v.picklist(["file"]),
 	deleted: v.boolean(),
 });
-export const deleteFileResponseSchema = v.strictObject({
+export const deleteFileResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	object: v.picklist(["file"]),
 	deleted: v.boolean(),
@@ -1277,7 +1278,7 @@ export const completeUploadRequestSchema = v.strictObject({
 });
 export const inputCancelUploadRequestSchema = v.record(v.string(), v.unknown());
 export const cancelUploadRequestSchema = inputCancelUploadRequestSchema;
-export const inputCreateFineTuningJobRequestSchema = v.strictObject({
+export const inputCreateFineTuningJobRequestSchema = v.looseObject({
 	/**
 	 * The name of the model to fine-tune. You can select one of the
 	 * [supported
@@ -1307,7 +1308,7 @@ export const inputCreateFineTuningJobRequestSchema = v.strictObject({
 	 * The hyperparameters used for the fine-tuning job.
 	 */
 	hyperparameters: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Number of examples in each batch. A larger batch size means that model
 			 * parameters
@@ -1370,7 +1371,7 @@ export const inputCreateFineTuningJobRequestSchema = v.strictObject({
 	integrations: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The type of integration to enable. Currently, only "wandb" (Weights and
 					 * Biases) is supported.
@@ -1384,7 +1385,7 @@ export const inputCreateFineTuningJobRequestSchema = v.strictObject({
 					 * to your run, and set a default entity (team, username, etc) to be
 					 * associated with your run.
 					 */
-					wandb: v.strictObject({
+					wandb: v.looseObject({
 						/**
 						 * The name of the project that the new run will be created under.
 						 */
@@ -1421,11 +1422,11 @@ export const inputCreateFineTuningJobRequestSchema = v.strictObject({
 	 */
 	seed: v.optional(
 		v.nullable(
-			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647)),
+			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2_147_483_647)),
 		),
 	),
 });
-export const createFineTuningJobRequestSchema = v.strictObject({
+export const createFineTuningJobRequestSchema = v.looseObject({
 	/**
 	 * The name of the model to fine-tune. You can select one of the
 	 * [supported
@@ -1455,7 +1456,7 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 	 * The hyperparameters used for the fine-tuning job.
 	 */
 	hyperparameters: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Number of examples in each batch. A larger batch size means that model
 			 * parameters
@@ -1518,7 +1519,7 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 	integrations: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The type of integration to enable. Currently, only "wandb" (Weights and
 					 * Biases) is supported.
@@ -1532,7 +1533,7 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 					 * to your run, and set a default entity (team, username, etc) to be
 					 * associated with your run.
 					 */
-					wandb: v.strictObject({
+					wandb: v.looseObject({
 						/**
 						 * The name of the project that the new run will be created under.
 						 */
@@ -1569,7 +1570,7 @@ export const createFineTuningJobRequestSchema = v.strictObject({
 	 */
 	seed: v.exactOptional(
 		v.nullable(
-			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2147483647)),
+			v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2_147_483_647)),
 		),
 	),
 });
@@ -1691,22 +1692,22 @@ export const createEmbeddingRequestSchema = v.strictObject({
  * Represents a transcription response returned by model, based on the
  * provided input.
  */
-export const inputCreateTranscriptionResponseJsonSchema = v.strictObject({
+export const inputCreateTranscriptionResponseJsonSchema = v.looseObject({
 	/**
 	 * The transcribed text.
 	 */
 	text: v.string(),
 });
-export const createTranscriptionResponseJsonSchema = v.strictObject({
+export const createTranscriptionResponseJsonSchema = v.looseObject({
 	/**
 	 * The transcribed text.
 	 */
 	text: v.pipe(v.string(), v.trim()),
 });
-export const inputCreateTranslationResponseJsonSchema = v.strictObject({
+export const inputCreateTranslationResponseJsonSchema = v.looseObject({
 	text: v.string(),
 });
-export const createTranslationResponseJsonSchema = v.strictObject({
+export const createTranslationResponseJsonSchema = v.looseObject({
 	text: v.pipe(v.string(), v.trim()),
 });
 export const inputCreateSpeechRequestSchema = v.strictObject({
@@ -1774,7 +1775,7 @@ export const createSpeechRequestSchema = v.strictObject({
  * The upload Part represents a chunk of bytes we can add to an Upload object.
  * @title UploadPart
  */
-export const inputUploadPartSchema = v.strictObject({
+export const inputUploadPartSchema = v.looseObject({
 	/**
 	 * The upload Part unique identifier, which can be referenced in API
 	 * endpoints.
@@ -1793,7 +1794,7 @@ export const inputUploadPartSchema = v.strictObject({
 	 */
 	object: v.picklist(["upload.part"]),
 });
-export const uploadPartSchema = v.strictObject({
+export const uploadPartSchema = v.looseObject({
 	/**
 	 * The upload Part unique identifier, which can be referenced in API
 	 * endpoints.
@@ -1812,7 +1813,7 @@ export const uploadPartSchema = v.strictObject({
 	 */
 	object: v.picklist(["upload.part"]),
 });
-export const inputFineTuningIntegrationSchema = v.strictObject({
+export const inputFineTuningIntegrationSchema = v.looseObject({
 	/**
 	 * The type of the integration being enabled for the fine-tuning job
 	 */
@@ -1825,7 +1826,7 @@ export const inputFineTuningIntegrationSchema = v.strictObject({
 	 * to your run, and set a default entity (team, username, etc) to be
 	 * associated with your run.
 	 */
-	wandb: v.strictObject({
+	wandb: v.looseObject({
 		/**
 		 * The name of the project that the new run will be created under.
 		 */
@@ -1851,7 +1852,7 @@ export const inputFineTuningIntegrationSchema = v.strictObject({
 		tags: v.optional(v.array(v.string())),
 	}),
 });
-export const fineTuningIntegrationSchema = v.strictObject({
+export const fineTuningIntegrationSchema = v.looseObject({
 	/**
 	 * The type of the integration being enabled for the fine-tuning job
 	 */
@@ -1864,7 +1865,7 @@ export const fineTuningIntegrationSchema = v.strictObject({
 	 * to your run, and set a default entity (team, username, etc) to be
 	 * associated with your run.
 	 */
-	wandb: v.strictObject({
+	wandb: v.looseObject({
 		/**
 		 * The name of the project that the new run will be created under.
 		 */
@@ -1894,7 +1895,7 @@ export const fineTuningIntegrationSchema = v.strictObject({
  * The per-line training example of a fine-tuning input file for completions
  * models
  */
-export const inputFinetuneCompletionRequestInputSchema = v.strictObject({
+export const inputFinetuneCompletionRequestInputSchema = v.looseObject({
 	/**
 	 * The input prompt for this training example.
 	 */
@@ -1904,7 +1905,7 @@ export const inputFinetuneCompletionRequestInputSchema = v.strictObject({
 	 */
 	completion: v.optional(v.string()),
 });
-export const finetuneCompletionRequestInputSchema = v.strictObject({
+export const finetuneCompletionRequestInputSchema = v.looseObject({
 	/**
 	 * The input prompt for this training example.
 	 */
@@ -1914,24 +1915,24 @@ export const finetuneCompletionRequestInputSchema = v.strictObject({
 	 */
 	completion: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputDeleteAssistantResponseSchema = v.strictObject({
+export const inputDeleteAssistantResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["assistant.deleted"]),
 });
-export const deleteAssistantResponseSchema = v.strictObject({
+export const deleteAssistantResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 	object: v.picklist(["assistant.deleted"]),
 });
-export const inputAssistantToolsCodeSchema = v.strictObject({
+export const inputAssistantToolsCodeSchema = v.looseObject({
 	/**
 	 * The type of tool being defined: `code_interpreter`
 	 */
 	type: v.picklist(["code_interpreter"]),
 });
 export const assistantToolsCodeSchema = inputAssistantToolsCodeSchema;
-export const inputAssistantToolsFileSearchTypeOnlySchema = v.strictObject({
+export const inputAssistantToolsFileSearchTypeOnlySchema = v.looseObject({
 	/**
 	 * The type of tool being defined: `file_search`
 	 */
@@ -1962,7 +1963,7 @@ export const inputSubmitToolOutputsRunRequestSchema = v.strictObject({
 	 * A list of tools for which the outputs are being submitted.
 	 */
 	tool_outputs: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the tool call in the `required_action` object within the run
 			 * object the output is being submitted for.
@@ -1986,7 +1987,7 @@ export const submitToolOutputsRunRequestSchema = v.strictObject({
 	 * A list of tools for which the outputs are being submitted.
 	 */
 	tool_outputs: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the tool call in the `required_action` object within the run
 			 * object the output is being submitted for.
@@ -2014,9 +2015,9 @@ export const inputModifyThreadRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -2026,7 +2027,7 @@ export const inputModifyThreadRequestSchema = v.strictObject({
 					}),
 				),
 				file_search: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The [vector store](/docs/api-reference/vector-stores/object) attached to
 						 * this thread. There can be a maximum of 1 vector store attached to the
@@ -2057,9 +2058,9 @@ export const modifyThreadRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -2071,7 +2072,7 @@ export const modifyThreadRequestSchema = v.strictObject({
 					}),
 				),
 				file_search: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The [vector store](/docs/api-reference/vector-stores/object) attached to
 						 * this thread. There can be a maximum of 1 vector store attached to the
@@ -2093,12 +2094,12 @@ export const modifyThreadRequestSchema = v.strictObject({
 	 */
 	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const inputDeleteThreadResponseSchema = v.strictObject({
+export const inputDeleteThreadResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["thread.deleted"]),
 });
-export const deleteThreadResponseSchema = v.strictObject({
+export const deleteThreadResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 	object: v.picklist(["thread.deleted"]),
@@ -2121,12 +2122,12 @@ export const modifyMessageRequestSchema = v.strictObject({
 	 */
 	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const inputDeleteMessageResponseSchema = v.strictObject({
+export const inputDeleteMessageResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["thread.message.deleted"]),
 });
-export const deleteMessageResponseSchema = v.strictObject({
+export const deleteMessageResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 	object: v.picklist(["thread.message.deleted"]),
@@ -2136,12 +2137,12 @@ export const deleteMessageResponseSchema = v.strictObject({
  * message.
  * @title Image file
  */
-export const inputMessageContentImageFileObjectSchema = v.strictObject({
+export const inputMessageContentImageFileObjectSchema = v.looseObject({
 	/**
 	 * Always `image_file`.
 	 */
 	type: v.picklist(["image_file"]),
-	image_file: v.strictObject({
+	image_file: v.looseObject({
 		/**
 		 * The [File](/docs/api-reference/files) ID of the image in the message
 		 * content. Set `purpose="vision"` when uploading the File if you need to
@@ -2155,12 +2156,12 @@ export const inputMessageContentImageFileObjectSchema = v.strictObject({
 		detail: v.optional(v.picklist(["auto", "low", "high"])),
 	}),
 });
-export const messageContentImageFileObjectSchema = v.strictObject({
+export const messageContentImageFileObjectSchema = v.looseObject({
 	/**
 	 * Always `image_file`.
 	 */
 	type: v.picklist(["image_file"]),
-	image_file: v.strictObject({
+	image_file: v.looseObject({
 		/**
 		 * The [File](/docs/api-reference/files) ID of the image in the message
 		 * content. Set `purpose="vision"` when uploading the File if you need to
@@ -2179,7 +2180,7 @@ export const messageContentImageFileObjectSchema = v.strictObject({
  * message.
  * @title Image file
  */
-export const inputMessageDeltaContentImageFileObjectSchema = v.strictObject({
+export const inputMessageDeltaContentImageFileObjectSchema = v.looseObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2189,7 +2190,7 @@ export const inputMessageDeltaContentImageFileObjectSchema = v.strictObject({
 	 */
 	type: v.picklist(["image_file"]),
 	image_file: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The [File](/docs/api-reference/files) ID of the image in the message
 			 * content. Set `purpose="vision"` when uploading the File if you need to
@@ -2204,7 +2205,7 @@ export const inputMessageDeltaContentImageFileObjectSchema = v.strictObject({
 		}),
 	),
 });
-export const messageDeltaContentImageFileObjectSchema = v.strictObject({
+export const messageDeltaContentImageFileObjectSchema = v.looseObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2214,7 +2215,7 @@ export const messageDeltaContentImageFileObjectSchema = v.strictObject({
 	 */
 	type: v.picklist(["image_file"]),
 	image_file: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The [File](/docs/api-reference/files) ID of the image in the message
 			 * content. Set `purpose="vision"` when uploading the File if you need to
@@ -2233,12 +2234,12 @@ export const messageDeltaContentImageFileObjectSchema = v.strictObject({
  * References an image URL in the content of a message.
  * @title Image URL
  */
-export const inputMessageContentImageUrlObjectSchema = v.strictObject({
+export const inputMessageContentImageUrlObjectSchema = v.looseObject({
 	/**
 	 * The type of the content part.
 	 */
 	type: v.picklist(["image_url"]),
-	image_url: v.strictObject({
+	image_url: v.looseObject({
 		/**
 		 * The external URL of the image, must be a supported image types: jpeg, jpg,
 		 * png, gif, webp.
@@ -2251,12 +2252,12 @@ export const inputMessageContentImageUrlObjectSchema = v.strictObject({
 		detail: v.optional(v.picklist(["auto", "low", "high"])),
 	}),
 });
-export const messageContentImageUrlObjectSchema = v.strictObject({
+export const messageContentImageUrlObjectSchema = v.looseObject({
 	/**
 	 * The type of the content part.
 	 */
 	type: v.picklist(["image_url"]),
-	image_url: v.strictObject({
+	image_url: v.looseObject({
 		/**
 		 * The external URL of the image, must be a supported image types: jpeg, jpg,
 		 * png, gif, webp.
@@ -2273,7 +2274,7 @@ export const messageContentImageUrlObjectSchema = v.strictObject({
  * References an image URL in the content of a message.
  * @title Image URL
  */
-export const inputMessageDeltaContentImageUrlObjectSchema = v.strictObject({
+export const inputMessageDeltaContentImageUrlObjectSchema = v.looseObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2283,7 +2284,7 @@ export const inputMessageDeltaContentImageUrlObjectSchema = v.strictObject({
 	 */
 	type: v.picklist(["image_url"]),
 	image_url: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
 			 * webp.
@@ -2297,7 +2298,7 @@ export const inputMessageDeltaContentImageUrlObjectSchema = v.strictObject({
 		}),
 	),
 });
-export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
+export const messageDeltaContentImageUrlObjectSchema = v.looseObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2307,7 +2308,7 @@ export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
 	 */
 	type: v.picklist(["image_url"]),
 	image_url: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
 			 * webp.
@@ -2325,12 +2326,12 @@ export const messageDeltaContentImageUrlObjectSchema = v.strictObject({
  * The text content that is part of a message.
  * @title Text
  */
-export const inputMessageContentTextObjectSchema = v.strictObject({
+export const inputMessageContentTextObjectSchema = v.looseObject({
 	/**
 	 * Always `text`.
 	 */
 	type: v.picklist(["text"]),
-	text: v.strictObject({
+	text: v.looseObject({
 		/**
 		 * The data that makes up the text.
 		 */
@@ -2338,12 +2339,12 @@ export const inputMessageContentTextObjectSchema = v.strictObject({
 		annotations: v.array(v.union([v.unknown(), v.unknown()])),
 	}),
 });
-export const messageContentTextObjectSchema = v.strictObject({
+export const messageContentTextObjectSchema = v.looseObject({
 	/**
 	 * Always `text`.
 	 */
 	type: v.picklist(["text"]),
-	text: v.strictObject({
+	text: v.looseObject({
 		/**
 		 * The data that makes up the text.
 		 */
@@ -2355,14 +2356,14 @@ export const messageContentTextObjectSchema = v.strictObject({
  * The refusal content generated by the assistant.
  * @title Refusal
  */
-export const inputMessageContentRefusalObjectSchema = v.strictObject({
+export const inputMessageContentRefusalObjectSchema = v.looseObject({
 	/**
 	 * Always `refusal`.
 	 */
 	type: v.picklist(["refusal"]),
 	refusal: v.string(),
 });
-export const messageContentRefusalObjectSchema = v.strictObject({
+export const messageContentRefusalObjectSchema = v.looseObject({
 	/**
 	 * Always `refusal`.
 	 */
@@ -2373,7 +2374,7 @@ export const messageContentRefusalObjectSchema = v.strictObject({
  * The text content that is part of a message.
  * @title Text
  */
-export const inputMessageRequestContentTextObjectSchema = v.strictObject({
+export const inputMessageRequestContentTextObjectSchema = v.looseObject({
 	/**
 	 * Always `text`.
 	 */
@@ -2383,7 +2384,7 @@ export const inputMessageRequestContentTextObjectSchema = v.strictObject({
 	 */
 	text: v.string(),
 });
-export const messageRequestContentTextObjectSchema = v.strictObject({
+export const messageRequestContentTextObjectSchema = v.looseObject({
 	/**
 	 * Always `text`.
 	 */
@@ -2400,7 +2401,7 @@ export const messageRequestContentTextObjectSchema = v.strictObject({
  * @title File citation
  */
 export const inputMessageContentTextAnnotationsFileCitationObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Always `file_citation`.
 		 */
@@ -2409,7 +2410,7 @@ export const inputMessageContentTextAnnotationsFileCitationObjectSchema =
 		 * The text in the message content that needs to be replaced.
 		 */
 		text: v.string(),
-		file_citation: v.strictObject({
+		file_citation: v.looseObject({
 			/**
 			 * The ID of the specific File the citation is from.
 			 */
@@ -2419,7 +2420,7 @@ export const inputMessageContentTextAnnotationsFileCitationObjectSchema =
 		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	});
 export const messageContentTextAnnotationsFileCitationObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Always `file_citation`.
 		 */
@@ -2428,7 +2429,7 @@ export const messageContentTextAnnotationsFileCitationObjectSchema =
 		 * The text in the message content that needs to be replaced.
 		 */
 		text: v.pipe(v.string(), v.trim()),
-		file_citation: v.strictObject({
+		file_citation: v.looseObject({
 			/**
 			 * The ID of the specific File the citation is from.
 			 */
@@ -2443,7 +2444,7 @@ export const messageContentTextAnnotationsFileCitationObjectSchema =
  * @title File path
  */
 export const inputMessageContentTextAnnotationsFilePathObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Always `file_path`.
 		 */
@@ -2452,7 +2453,7 @@ export const inputMessageContentTextAnnotationsFilePathObjectSchema =
 		 * The text in the message content that needs to be replaced.
 		 */
 		text: v.string(),
-		file_path: v.strictObject({
+		file_path: v.looseObject({
 			/**
 			 * The ID of the file that was generated.
 			 */
@@ -2461,31 +2462,29 @@ export const inputMessageContentTextAnnotationsFilePathObjectSchema =
 		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
 		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	});
-export const messageContentTextAnnotationsFilePathObjectSchema = v.strictObject(
-	{
+export const messageContentTextAnnotationsFilePathObjectSchema = v.looseObject({
+	/**
+	 * Always `file_path`.
+	 */
+	type: v.picklist(["file_path"]),
+	/**
+	 * The text in the message content that needs to be replaced.
+	 */
+	text: v.pipe(v.string(), v.trim()),
+	file_path: v.looseObject({
 		/**
-		 * Always `file_path`.
+		 * The ID of the file that was generated.
 		 */
-		type: v.picklist(["file_path"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.pipe(v.string(), v.trim()),
-		file_path: v.strictObject({
-			/**
-			 * The ID of the file that was generated.
-			 */
-			file_id: v.pipe(v.string(), v.trim()),
-		}),
-		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	},
-);
+		file_id: v.pipe(v.string(), v.trim()),
+	}),
+	start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+});
 /**
  * The text content that is part of a message.
  * @title Text
  */
-export const inputMessageDeltaContentTextObjectSchema = v.strictObject({
+export const inputMessageDeltaContentTextObjectSchema = v.looseObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2495,7 +2494,7 @@ export const inputMessageDeltaContentTextObjectSchema = v.strictObject({
 	 */
 	type: v.picklist(["text"]),
 	text: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The data that makes up the text.
 			 */
@@ -2504,7 +2503,7 @@ export const inputMessageDeltaContentTextObjectSchema = v.strictObject({
 		}),
 	),
 });
-export const messageDeltaContentTextObjectSchema = v.strictObject({
+export const messageDeltaContentTextObjectSchema = v.looseObject({
 	/**
 	 * The index of the content part in the message.
 	 */
@@ -2514,7 +2513,7 @@ export const messageDeltaContentTextObjectSchema = v.strictObject({
 	 */
 	type: v.picklist(["text"]),
 	text: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The data that makes up the text.
 			 */
@@ -2529,7 +2528,7 @@ export const messageDeltaContentTextObjectSchema = v.strictObject({
  * The refusal content that is part of a message.
  * @title Refusal
  */
-export const inputMessageDeltaContentRefusalObjectSchema = v.strictObject({
+export const inputMessageDeltaContentRefusalObjectSchema = v.looseObject({
 	/**
 	 * The index of the refusal part in the message.
 	 */
@@ -2540,7 +2539,7 @@ export const inputMessageDeltaContentRefusalObjectSchema = v.strictObject({
 	type: v.picklist(["refusal"]),
 	refusal: v.optional(v.string()),
 });
-export const messageDeltaContentRefusalObjectSchema = v.strictObject({
+export const messageDeltaContentRefusalObjectSchema = v.looseObject({
 	/**
 	 * The index of the refusal part in the message.
 	 */
@@ -2558,7 +2557,7 @@ export const messageDeltaContentRefusalObjectSchema = v.strictObject({
  * @title File citation
  */
 export const inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the annotation in the text content part.
 		 */
@@ -2572,7 +2571,7 @@ export const inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
 		 */
 		text: v.optional(v.string()),
 		file_citation: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the specific File the citation is from.
 				 */
@@ -2587,7 +2586,7 @@ export const inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
 		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 	});
 export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the annotation in the text content part.
 		 */
@@ -2601,7 +2600,7 @@ export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
 		 */
 		text: v.exactOptional(v.pipe(v.string(), v.trim())),
 		file_citation: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the specific File the citation is from.
 				 */
@@ -2623,7 +2622,7 @@ export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
  * @title File path
  */
 export const inputMessageDeltaContentTextAnnotationsFilePathObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the annotation in the text content part.
 		 */
@@ -2637,7 +2636,7 @@ export const inputMessageDeltaContentTextAnnotationsFilePathObjectSchema =
 		 */
 		text: v.optional(v.string()),
 		file_path: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the file that was generated.
 				 */
@@ -2648,7 +2647,7 @@ export const inputMessageDeltaContentTextAnnotationsFilePathObjectSchema =
 		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
 	});
 export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the annotation in the text content part.
 		 */
@@ -2662,7 +2661,7 @@ export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
 		 */
 		text: v.exactOptional(v.pipe(v.string(), v.trim())),
 		file_path: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the file that was generated.
 				 */
@@ -2678,7 +2677,7 @@ export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
  * Details of the Code Interpreter tool call the run step was involved in.
  * @title Code Interpreter tool call
  */
-export const inputRunStepDetailsToolCallsCodeObjectSchema = v.strictObject({
+export const inputRunStepDetailsToolCallsCodeObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call.
 	 */
@@ -2691,7 +2690,7 @@ export const inputRunStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 	/**
 	 * The Code Interpreter tool call definition.
 	 */
-	code_interpreter: v.strictObject({
+	code_interpreter: v.looseObject({
 		/**
 		 * The input to the Code Interpreter tool call.
 		 */
@@ -2704,7 +2703,7 @@ export const inputRunStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 		outputs: v.array(v.union([v.unknown(), v.unknown()])),
 	}),
 });
-export const runStepDetailsToolCallsCodeObjectSchema = v.strictObject({
+export const runStepDetailsToolCallsCodeObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call.
 	 */
@@ -2717,7 +2716,7 @@ export const runStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 	/**
 	 * The Code Interpreter tool call definition.
 	 */
-	code_interpreter: v.strictObject({
+	code_interpreter: v.looseObject({
 		/**
 		 * The input to the Code Interpreter tool call.
 		 */
@@ -2735,7 +2734,7 @@ export const runStepDetailsToolCallsCodeObjectSchema = v.strictObject({
  * @title Code interpreter tool call
  */
 export const inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the tool call in the tool calls array.
 		 */
@@ -2753,7 +2752,7 @@ export const inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
 		 * The Code Interpreter tool call definition.
 		 */
 		code_interpreter: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The input to the Code Interpreter tool call.
 				 */
@@ -2767,7 +2766,7 @@ export const inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
 			}),
 		),
 	});
-export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.strictObject({
+export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.looseObject({
 	/**
 	 * The index of the tool call in the tool calls array.
 	 */
@@ -2785,7 +2784,7 @@ export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.strictObject({
 	 * The Code Interpreter tool call definition.
 	 */
 	code_interpreter: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The input to the Code Interpreter tool call.
 			 */
@@ -2804,7 +2803,7 @@ export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.strictObject({
  * @title Code Interpreter log output
  */
 export const inputRunStepDetailsToolCallsCodeOutputLogsObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Always `logs`.
 		 */
@@ -2814,24 +2813,22 @@ export const inputRunStepDetailsToolCallsCodeOutputLogsObjectSchema =
 		 */
 		logs: v.string(),
 	});
-export const runStepDetailsToolCallsCodeOutputLogsObjectSchema = v.strictObject(
-	{
-		/**
-		 * Always `logs`.
-		 */
-		type: v.picklist(["logs"]),
-		/**
-		 * The text output from the Code Interpreter tool call.
-		 */
-		logs: v.pipe(v.string(), v.trim()),
-	},
-);
+export const runStepDetailsToolCallsCodeOutputLogsObjectSchema = v.looseObject({
+	/**
+	 * Always `logs`.
+	 */
+	type: v.picklist(["logs"]),
+	/**
+	 * The text output from the Code Interpreter tool call.
+	 */
+	logs: v.pipe(v.string(), v.trim()),
+});
 /**
  * Text output from the Code Interpreter tool call as part of a run step.
  * @title Code interpreter log output
  */
 export const inputRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the output in the outputs array.
 		 */
@@ -2846,7 +2843,7 @@ export const inputRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
 		logs: v.optional(v.string()),
 	});
 export const runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the output in the outputs array.
 		 */
@@ -2861,33 +2858,34 @@ export const runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
 		logs: v.exactOptional(v.pipe(v.string(), v.trim())),
 	});
 export const inputRunStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Always `image`.
 		 */
 		type: v.picklist(["image"]),
-		image: v.strictObject({
+		image: v.looseObject({
 			/**
 			 * The [file](/docs/api-reference/files) ID of the image.
 			 */
 			file_id: v.string(),
 		}),
 	});
-export const runStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.strictObject({
+export const runStepDetailsToolCallsCodeOutputImageObjectSchema = v.looseObject(
+	{
 		/**
 		 * Always `image`.
 		 */
 		type: v.picklist(["image"]),
-		image: v.strictObject({
+		image: v.looseObject({
 			/**
 			 * The [file](/docs/api-reference/files) ID of the image.
 			 */
 			file_id: v.pipe(v.string(), v.trim()),
 		}),
-	});
+	},
+);
 export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the output in the outputs array.
 		 */
@@ -2897,7 +2895,7 @@ export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 		 */
 		type: v.picklist(["image"]),
 		image: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The [file](/docs/api-reference/files) ID of the image.
 				 */
@@ -2906,7 +2904,7 @@ export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 		),
 	});
 export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the output in the outputs array.
 		 */
@@ -2916,7 +2914,7 @@ export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 		 */
 		type: v.picklist(["image"]),
 		image: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The [file](/docs/api-reference/files) ID of the image.
 				 */
@@ -2925,7 +2923,7 @@ export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 		),
 	});
 export const inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the tool call in the tool calls array.
 		 */
@@ -2945,7 +2943,7 @@ export const inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		file_search: v.record(v.string(), v.unknown()),
 	});
 export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the tool call in the tool calls array.
 		 */
@@ -2964,7 +2962,7 @@ export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		 */
 		file_search: v.record(v.string(), v.unknown()),
 	});
-export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
+export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call object.
 	 */
@@ -2977,7 +2975,7 @@ export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
 	/**
 	 * The definition of the function that was called.
 	 */
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function.
 		 */
@@ -2993,7 +2991,7 @@ export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
 		output: v.nullable(v.string()),
 	}),
 });
-export const runStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
+export const runStepDetailsToolCallsFunctionObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call object.
 	 */
@@ -3006,7 +3004,7 @@ export const runStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
 	/**
 	 * The definition of the function that was called.
 	 */
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function.
 		 */
@@ -3023,7 +3021,7 @@ export const runStepDetailsToolCallsFunctionObjectSchema = v.strictObject({
 	}),
 });
 export const inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the tool call in the tool calls array.
 		 */
@@ -3041,7 +3039,7 @@ export const inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 		 * The definition of the function that was called.
 		 */
 		function: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The name of the function.
 				 */
@@ -3059,7 +3057,7 @@ export const inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 		),
 	});
 export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The index of the tool call in the tool calls array.
 		 */
@@ -3077,7 +3075,7 @@ export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 		 * The definition of the function that was called.
 		 */
 		function: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The name of the function.
 				 */
@@ -3094,22 +3092,22 @@ export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
 			}),
 		),
 	});
-export const inputDeleteVectorStoreResponseSchema = v.strictObject({
+export const inputDeleteVectorStoreResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.deleted"]),
 });
-export const deleteVectorStoreResponseSchema = v.strictObject({
+export const deleteVectorStoreResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.deleted"]),
 });
-export const inputDeleteVectorStoreFileResponseSchema = v.strictObject({
+export const inputDeleteVectorStoreFileResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.file.deleted"]),
 });
-export const deleteVectorStoreFileResponseSchema = v.strictObject({
+export const deleteVectorStoreFileResponseSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 	object: v.picklist(["vector_store.file.deleted"]),
@@ -3118,7 +3116,7 @@ export const deleteVectorStoreFileResponseSchema = v.strictObject({
  * A batch of files attached to a vector store.
  * @title Vector store file batch
  */
-export const inputVectorStoreFileBatchObjectSchema = v.strictObject({
+export const inputVectorStoreFileBatchObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -3142,7 +3140,7 @@ export const inputVectorStoreFileBatchObjectSchema = v.strictObject({
 	 * `in_progress`, `completed`, `cancelled` or `failed`.
 	 */
 	status: v.picklist(["in_progress", "completed", "cancelled", "failed"]),
-	file_counts: v.strictObject({
+	file_counts: v.looseObject({
 		/**
 		 * The number of files that are currently being processed.
 		 */
@@ -3165,7 +3163,7 @@ export const inputVectorStoreFileBatchObjectSchema = v.strictObject({
 		total: v.pipe(v.number(), v.integer()),
 	}),
 });
-export const vectorStoreFileBatchObjectSchema = v.strictObject({
+export const vectorStoreFileBatchObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -3189,7 +3187,7 @@ export const vectorStoreFileBatchObjectSchema = v.strictObject({
 	 * `in_progress`, `completed`, `cancelled` or `failed`.
 	 */
 	status: v.picklist(["in_progress", "completed", "cancelled", "failed"]),
-	file_counts: v.strictObject({
+	file_counts: v.looseObject({
 		/**
 		 * The number of files that are currently being processed.
 		 */
@@ -3213,7 +3211,7 @@ export const vectorStoreFileBatchObjectSchema = v.strictObject({
 	}),
 });
 /** The per-line object of the batch input file */
-export const inputBatchRequestInputSchema = v.strictObject({
+export const inputBatchRequestInputSchema = v.looseObject({
 	/**
 	 * A developer-provided per-request id that will be used to match outputs to
 	 * inputs. Must be unique for each request in a batch.
@@ -3231,7 +3229,7 @@ export const inputBatchRequestInputSchema = v.strictObject({
 	 */
 	url: v.optional(v.string()),
 });
-export const batchRequestInputSchema = v.strictObject({
+export const batchRequestInputSchema = v.looseObject({
 	/**
 	 * A developer-provided per-request id that will be used to match outputs to
 	 * inputs. Must be unique for each request in a batch.
@@ -3250,7 +3248,7 @@ export const batchRequestInputSchema = v.strictObject({
 	url: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The per-line object of the batch output and error files */
-export const inputBatchRequestOutputSchema = v.strictObject({
+export const inputBatchRequestOutputSchema = v.looseObject({
 	id: v.optional(v.string()),
 	/**
 	 * A developer-provided per-request id that will be used to match outputs to
@@ -3259,7 +3257,7 @@ export const inputBatchRequestOutputSchema = v.strictObject({
 	custom_id: v.optional(v.string()),
 	response: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The HTTP status code of the response
 				 */
@@ -3282,7 +3280,7 @@ export const inputBatchRequestOutputSchema = v.strictObject({
 	 */
 	error: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * A machine-readable error code.
 				 */
@@ -3295,7 +3293,7 @@ export const inputBatchRequestOutputSchema = v.strictObject({
 		),
 	),
 });
-export const batchRequestOutputSchema = v.strictObject({
+export const batchRequestOutputSchema = v.looseObject({
 	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * A developer-provided per-request id that will be used to match outputs to
@@ -3304,7 +3302,7 @@ export const batchRequestOutputSchema = v.strictObject({
 	custom_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	response: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The HTTP status code of the response
 				 */
@@ -3327,7 +3325,7 @@ export const batchRequestOutputSchema = v.strictObject({
 	 */
 	error: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * A machine-readable error code.
 				 */
@@ -3340,7 +3338,7 @@ export const batchRequestOutputSchema = v.strictObject({
 		),
 	),
 });
-export const inputInviteRequestSchema = v.strictObject({
+export const inputInviteRequestSchema = v.looseObject({
 	/**
 	 * Send an email to this address
 	 */
@@ -3350,7 +3348,7 @@ export const inputInviteRequestSchema = v.strictObject({
 	 */
 	role: v.picklist(["reader", "owner"]),
 });
-export const inviteRequestSchema = v.strictObject({
+export const inviteRequestSchema = v.looseObject({
 	/**
 	 * Send an email to this address
 	 */
@@ -3360,7 +3358,7 @@ export const inviteRequestSchema = v.strictObject({
 	 */
 	role: v.picklist(["reader", "owner"]),
 });
-export const inputInviteDeleteResponseSchema = v.strictObject({
+export const inputInviteDeleteResponseSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.invite.deleted`
 	 */
@@ -3368,7 +3366,7 @@ export const inputInviteDeleteResponseSchema = v.strictObject({
 	id: v.string(),
 	deleted: v.boolean(),
 });
-export const inviteDeleteResponseSchema = v.strictObject({
+export const inviteDeleteResponseSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.invite.deleted`
 	 */
@@ -3376,24 +3374,24 @@ export const inviteDeleteResponseSchema = v.strictObject({
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const inputUserRoleUpdateRequestSchema = v.strictObject({
+export const inputUserRoleUpdateRequestSchema = v.looseObject({
 	/**
 	 * `owner` or `reader`
 	 */
 	role: v.picklist(["owner", "reader"]),
 });
 export const userRoleUpdateRequestSchema = inputUserRoleUpdateRequestSchema;
-export const inputUserDeleteResponseSchema = v.strictObject({
+export const inputUserDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.user.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
 });
-export const userDeleteResponseSchema = v.strictObject({
+export const userDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.user.deleted"]),
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const inputProjectCreateRequestSchema = v.strictObject({
+export const inputProjectCreateRequestSchema = v.looseObject({
 	/**
 	 * The friendly name of the project, this name appears in reports.
 	 */
@@ -3410,7 +3408,7 @@ export const inputProjectCreateRequestSchema = v.strictObject({
 	 */
 	business_website: v.optional(v.string()),
 });
-export const projectCreateRequestSchema = v.strictObject({
+export const projectCreateRequestSchema = v.looseObject({
 	/**
 	 * The friendly name of the project, this name appears in reports.
 	 */
@@ -3427,7 +3425,7 @@ export const projectCreateRequestSchema = v.strictObject({
 	 */
 	business_website: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputProjectUpdateRequestSchema = v.strictObject({
+export const inputProjectUpdateRequestSchema = v.looseObject({
 	/**
 	 * The updated name of the project, this name appears in reports.
 	 */
@@ -3444,7 +3442,7 @@ export const inputProjectUpdateRequestSchema = v.strictObject({
 	 */
 	business_website: v.optional(v.string()),
 });
-export const projectUpdateRequestSchema = v.strictObject({
+export const projectUpdateRequestSchema = v.looseObject({
 	/**
 	 * The updated name of the project, this name appears in reports.
 	 */
@@ -3461,15 +3459,15 @@ export const projectUpdateRequestSchema = v.strictObject({
 	 */
 	business_website: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputDefaultProjectErrorResponseSchema = v.strictObject({
+export const inputDefaultProjectErrorResponseSchema = v.looseObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.string(),
 });
-export const defaultProjectErrorResponseSchema = v.strictObject({
+export const defaultProjectErrorResponseSchema = v.looseObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.pipe(v.string(), v.trim()),
 });
-export const inputProjectUserCreateRequestSchema = v.strictObject({
+export const inputProjectUserCreateRequestSchema = v.looseObject({
 	/**
 	 * The ID of the user.
 	 */
@@ -3479,7 +3477,7 @@ export const inputProjectUserCreateRequestSchema = v.strictObject({
 	 */
 	role: v.picklist(["owner", "member"]),
 });
-export const projectUserCreateRequestSchema = v.strictObject({
+export const projectUserCreateRequestSchema = v.looseObject({
 	/**
 	 * The ID of the user.
 	 */
@@ -3489,7 +3487,7 @@ export const projectUserCreateRequestSchema = v.strictObject({
 	 */
 	role: v.picklist(["owner", "member"]),
 });
-export const inputProjectUserUpdateRequestSchema = v.strictObject({
+export const inputProjectUserUpdateRequestSchema = v.looseObject({
 	/**
 	 * `owner` or `member`
 	 */
@@ -3497,50 +3495,50 @@ export const inputProjectUserUpdateRequestSchema = v.strictObject({
 });
 export const projectUserUpdateRequestSchema =
 	inputProjectUserUpdateRequestSchema;
-export const inputProjectUserDeleteResponseSchema = v.strictObject({
+export const inputProjectUserDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.user.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
 });
-export const projectUserDeleteResponseSchema = v.strictObject({
+export const projectUserDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.user.deleted"]),
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const inputProjectServiceAccountCreateRequestSchema = v.strictObject({
+export const inputProjectServiceAccountCreateRequestSchema = v.looseObject({
 	/**
 	 * The name of the service account being created.
 	 */
 	name: v.string(),
 });
-export const projectServiceAccountCreateRequestSchema = v.strictObject({
+export const projectServiceAccountCreateRequestSchema = v.looseObject({
 	/**
 	 * The name of the service account being created.
 	 */
 	name: v.pipe(v.string(), v.trim()),
 });
-export const inputProjectServiceAccountDeleteResponseSchema = v.strictObject({
+export const inputProjectServiceAccountDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.service_account.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
 });
-export const projectServiceAccountDeleteResponseSchema = v.strictObject({
+export const projectServiceAccountDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.service_account.deleted"]),
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
-export const inputProjectApiKeyDeleteResponseSchema = v.strictObject({
+export const inputProjectApiKeyDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.api_key.deleted"]),
 	id: v.string(),
 	deleted: v.boolean(),
 });
-export const projectApiKeyDeleteResponseSchema = v.strictObject({
+export const projectApiKeyDeleteResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.api_key.deleted"]),
 	id: v.pipe(v.string(), v.trim()),
 	deleted: v.boolean(),
 });
 /** Represents an individual service account in a project. */
-export const inputProjectServiceAccountSchema = v.strictObject({
+export const inputProjectServiceAccountSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.project.service_account`
 	 */
@@ -3562,7 +3560,7 @@ export const inputProjectServiceAccountSchema = v.strictObject({
 	 */
 	created_at: v.pipe(v.number(), v.integer()),
 });
-export const projectServiceAccountSchema = v.strictObject({
+export const projectServiceAccountSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.project.service_account`
 	 */
@@ -3585,7 +3583,7 @@ export const projectServiceAccountSchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 });
 /** Represents an individual user in a project. */
-export const inputProjectUserSchema = v.strictObject({
+export const inputProjectUserSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.project.user`
 	 */
@@ -3611,7 +3609,7 @@ export const inputProjectUserSchema = v.strictObject({
 	 */
 	added_at: v.pipe(v.number(), v.integer()),
 });
-export const projectUserSchema = v.strictObject({
+export const projectUserSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.project.user`
 	 */
@@ -3638,7 +3636,7 @@ export const projectUserSchema = v.strictObject({
 	added_at: v.pipe(v.number(), v.integer()),
 });
 /** Represents an individual API key in a project. */
-export const inputProjectApiKeySchema = v.strictObject({
+export const inputProjectApiKeySchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.project.api_key`
 	 */
@@ -3659,7 +3657,7 @@ export const inputProjectApiKeySchema = v.strictObject({
 	 * The identifier, which can be referenced in API endpoints
 	 */
 	id: v.string(),
-	owner: v.strictObject({
+	owner: v.looseObject({
 		/**
 		 * `user` or `service_account`
 		 */
@@ -3668,7 +3666,7 @@ export const inputProjectApiKeySchema = v.strictObject({
 		service_account: v.optional(inputProjectServiceAccountSchema),
 	}),
 });
-export const projectApiKeySchema = v.strictObject({
+export const projectApiKeySchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.project.api_key`
 	 */
@@ -3689,7 +3687,7 @@ export const projectApiKeySchema = v.strictObject({
 	 * The identifier, which can be referenced in API endpoints
 	 */
 	id: v.pipe(v.string(), v.trim()),
-	owner: v.strictObject({
+	owner: v.looseObject({
 		/**
 		 * `user` or `service_account`
 		 */
@@ -3698,21 +3696,21 @@ export const projectApiKeySchema = v.strictObject({
 		service_account: v.exactOptional(projectServiceAccountSchema),
 	}),
 });
-export const inputProjectApiKeyListResponseSchema = v.strictObject({
+export const inputProjectApiKeyListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(inputProjectApiKeySchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const projectApiKeyListResponseSchema = v.strictObject({
+export const projectApiKeyListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(projectApiKeySchema),
 	first_id: v.pipe(v.string(), v.trim()),
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const inputProjectServiceAccountApiKeySchema = v.strictObject({
+export const inputProjectServiceAccountApiKeySchema = v.looseObject({
 	/**
 	 * The object type, which is always
 	 * `organization.project.service_account.api_key`
@@ -3723,7 +3721,7 @@ export const inputProjectServiceAccountApiKeySchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 	id: v.string(),
 });
-export const projectServiceAccountApiKeySchema = v.strictObject({
+export const projectServiceAccountApiKeySchema = v.looseObject({
 	/**
 	 * The object type, which is always
 	 * `organization.project.service_account.api_key`
@@ -3734,7 +3732,7 @@ export const projectServiceAccountApiKeySchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 	id: v.pipe(v.string(), v.trim()),
 });
-export const inputProjectServiceAccountCreateResponseSchema = v.strictObject({
+export const inputProjectServiceAccountCreateResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.service_account"]),
 	id: v.string(),
 	name: v.string(),
@@ -3745,7 +3743,7 @@ export const inputProjectServiceAccountCreateResponseSchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 	api_key: inputProjectServiceAccountApiKeySchema,
 });
-export const projectServiceAccountCreateResponseSchema = v.strictObject({
+export const projectServiceAccountCreateResponseSchema = v.looseObject({
 	object: v.picklist(["organization.project.service_account"]),
 	id: v.pipe(v.string(), v.trim()),
 	name: v.pipe(v.string(), v.trim()),
@@ -3756,28 +3754,28 @@ export const projectServiceAccountCreateResponseSchema = v.strictObject({
 	created_at: v.pipe(v.number(), v.integer()),
 	api_key: projectServiceAccountApiKeySchema,
 });
-export const inputProjectServiceAccountListResponseSchema = v.strictObject({
+export const inputProjectServiceAccountListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(inputProjectServiceAccountSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const projectServiceAccountListResponseSchema = v.strictObject({
+export const projectServiceAccountListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(projectServiceAccountSchema),
 	first_id: v.pipe(v.string(), v.trim()),
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const inputProjectUserListResponseSchema = v.strictObject({
+export const inputProjectUserListResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputProjectUserSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const projectUserListResponseSchema = v.strictObject({
+export const projectUserListResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(projectUserSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -3785,7 +3783,7 @@ export const projectUserListResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Represents an individual project. */
-export const inputProjectSchema = v.strictObject({
+export const inputProjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints
 	 */
@@ -3822,7 +3820,7 @@ export const inputProjectSchema = v.strictObject({
 	 */
 	business_website: v.optional(v.string()),
 });
-export const projectSchema = v.strictObject({
+export const projectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints
 	 */
@@ -3859,14 +3857,14 @@ export const projectSchema = v.strictObject({
 	 */
 	business_website: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputProjectListResponseSchema = v.strictObject({
+export const inputProjectListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(inputProjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const projectListResponseSchema = v.strictObject({
+export const projectListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(projectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -3874,7 +3872,7 @@ export const projectListResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Represents an individual `user` within an organization. */
-export const inputUserSchema = v.strictObject({
+export const inputUserSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.user`
 	 */
@@ -3900,7 +3898,7 @@ export const inputUserSchema = v.strictObject({
 	 */
 	added_at: v.pipe(v.number(), v.integer()),
 });
-export const userSchema = v.strictObject({
+export const userSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.user`
 	 */
@@ -3926,14 +3924,14 @@ export const userSchema = v.strictObject({
 	 */
 	added_at: v.pipe(v.number(), v.integer()),
 });
-export const inputUserListResponseSchema = v.strictObject({
+export const inputUserListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(inputUserSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const userListResponseSchema = v.strictObject({
+export const userListResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(userSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -3941,7 +3939,7 @@ export const userListResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Represents an individual `invite` to the organization. */
-export const inputInviteSchema = v.strictObject({
+export const inputInviteSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.invite`
 	 */
@@ -3975,7 +3973,7 @@ export const inputInviteSchema = v.strictObject({
 	 */
 	accepted_at: v.optional(v.pipe(v.number(), v.integer())),
 });
-export const inviteSchema = v.strictObject({
+export const inviteSchema = v.looseObject({
 	/**
 	 * The object type, which is always `organization.invite`
 	 */
@@ -4009,7 +4007,7 @@ export const inviteSchema = v.strictObject({
 	 */
 	accepted_at: v.exactOptional(v.pipe(v.number(), v.integer())),
 });
-export const inputInviteListResponseSchema = v.strictObject({
+export const inputInviteListResponseSchema = v.looseObject({
 	/**
 	 * The object type, which is always `list`
 	 */
@@ -4029,7 +4027,7 @@ export const inputInviteListResponseSchema = v.strictObject({
 	 */
 	has_more: v.optional(v.boolean()),
 });
-export const inviteListResponseSchema = v.strictObject({
+export const inviteListResponseSchema = v.looseObject({
 	/**
 	 * The object type, which is always `list`
 	 */
@@ -4050,20 +4048,20 @@ export const inviteListResponseSchema = v.strictObject({
 	has_more: v.exactOptional(v.boolean()),
 });
 /** The service account that performed the audit logged action. */
-export const inputAuditLogActorServiceAccountSchema = v.strictObject({
+export const inputAuditLogActorServiceAccountSchema = v.looseObject({
 	/**
 	 * The service account id.
 	 */
 	id: v.optional(v.string()),
 });
-export const auditLogActorServiceAccountSchema = v.strictObject({
+export const auditLogActorServiceAccountSchema = v.looseObject({
 	/**
 	 * The service account id.
 	 */
 	id: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The user who performed the audit logged action. */
-export const inputAuditLogActorUserSchema = v.strictObject({
+export const inputAuditLogActorUserSchema = v.looseObject({
 	/**
 	 * The user id.
 	 */
@@ -4073,7 +4071,7 @@ export const inputAuditLogActorUserSchema = v.strictObject({
 	 */
 	email: v.optional(v.string()),
 });
-export const auditLogActorUserSchema = v.strictObject({
+export const auditLogActorUserSchema = v.looseObject({
 	/**
 	 * The user id.
 	 */
@@ -4084,7 +4082,7 @@ export const auditLogActorUserSchema = v.strictObject({
 	email: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The API Key used to perform the audit logged action. */
-export const inputAuditLogActorApiKeySchema = v.strictObject({
+export const inputAuditLogActorApiKeySchema = v.looseObject({
 	/**
 	 * The tracking id of the API key.
 	 */
@@ -4096,7 +4094,7 @@ export const inputAuditLogActorApiKeySchema = v.strictObject({
 	user: v.optional(inputAuditLogActorUserSchema),
 	service_account: v.optional(inputAuditLogActorServiceAccountSchema),
 });
-export const auditLogActorApiKeySchema = v.strictObject({
+export const auditLogActorApiKeySchema = v.looseObject({
 	/**
 	 * The tracking id of the API key.
 	 */
@@ -4109,14 +4107,14 @@ export const auditLogActorApiKeySchema = v.strictObject({
 	service_account: v.exactOptional(auditLogActorServiceAccountSchema),
 });
 /** The session in which the audit logged action was performed. */
-export const inputAuditLogActorSessionSchema = v.strictObject({
+export const inputAuditLogActorSessionSchema = v.looseObject({
 	user: v.optional(inputAuditLogActorUserSchema),
 	/**
 	 * The IP address from which the action was performed.
 	 */
 	ip_address: v.optional(v.string()),
 });
-export const auditLogActorSessionSchema = v.strictObject({
+export const auditLogActorSessionSchema = v.looseObject({
 	user: v.exactOptional(auditLogActorUserSchema),
 	/**
 	 * The IP address from which the action was performed.
@@ -4124,7 +4122,7 @@ export const auditLogActorSessionSchema = v.strictObject({
 	ip_address: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
 /** The actor who performed the audit logged action. */
-export const inputAuditLogActorSchema = v.strictObject({
+export const inputAuditLogActorSchema = v.looseObject({
 	/**
 	 * The type of actor. Is either `session` or `api_key`.
 	 */
@@ -4132,7 +4130,7 @@ export const inputAuditLogActorSchema = v.strictObject({
 	session: v.optional(inputAuditLogActorSessionSchema),
 	api_key: v.optional(inputAuditLogActorApiKeySchema),
 });
-export const auditLogActorSchema = v.strictObject({
+export const auditLogActorSchema = v.looseObject({
 	/**
 	 * The type of actor. Is either `session` or `api_key`.
 	 */
@@ -4165,7 +4163,7 @@ export const inputAuditLogEventTypeSchema = v.picklist([
 ]);
 export const auditLogEventTypeSchema = inputAuditLogEventTypeSchema;
 /** A log of a user action or configuration change within this organization. */
-export const inputAuditLogSchema = v.strictObject({
+export const inputAuditLogSchema = v.looseObject({
 	/**
 	 * The ID of this log.
 	 */
@@ -4180,7 +4178,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * projects.
 	 */
 	project: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4196,7 +4194,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"api_key.created": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
@@ -4205,7 +4203,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to create the API key.
 			 */
 			data: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
@@ -4218,7 +4216,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"api_key.updated": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
@@ -4227,7 +4225,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to update the API key.
 			 */
 			changes_requested: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
@@ -4240,7 +4238,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"api_key.deleted": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
@@ -4251,7 +4249,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"invite.sent": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the invite.
 			 */
@@ -4260,7 +4258,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to create the invite.
 			 */
 			data: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The email invited to the organization.
 					 */
@@ -4277,7 +4275,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"invite.accepted": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the invite.
 			 */
@@ -4288,7 +4286,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"invite.deleted": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the invite.
 			 */
@@ -4299,7 +4297,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"login.failed": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The error code of the failure.
 			 */
@@ -4314,7 +4312,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"logout.failed": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The error code of the failure.
 			 */
@@ -4329,7 +4327,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"organization.updated": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The organization ID.
 			 */
@@ -4338,7 +4336,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to update the organization settings.
 			 */
 			changes_requested: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The organization title.
 					 */
@@ -4352,7 +4350,7 @@ export const inputAuditLogSchema = v.strictObject({
 					 */
 					name: v.optional(v.string()),
 					settings: v.optional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Visibility of the threads page which shows messages created with the
 							 * Assistants API and Playground. One of `ANY_ROLE`, `OWNERS`, or `NONE`.
@@ -4373,7 +4371,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"project.created": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4382,7 +4380,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to create the project.
 			 */
 			data: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The project name.
 					 */
@@ -4399,7 +4397,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"project.updated": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4408,7 +4406,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to update the project.
 			 */
 			changes_requested: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The title of the project as seen on the dashboard.
 					 */
@@ -4421,7 +4419,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"project.archived": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4432,7 +4430,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"service_account.created": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The service account ID.
 			 */
@@ -4441,7 +4439,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to create the service account.
 			 */
 			data: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
@@ -4454,7 +4452,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"service_account.updated": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The service account ID.
 			 */
@@ -4463,7 +4461,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to updated the service account.
 			 */
 			changes_requested: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
@@ -4476,7 +4474,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"service_account.deleted": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The service account ID.
 			 */
@@ -4487,7 +4485,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"user.added": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The user ID.
 			 */
@@ -4496,7 +4494,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to add the user to the project.
 			 */
 			data: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
@@ -4509,7 +4507,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"user.updated": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4518,7 +4516,7 @@ export const inputAuditLogSchema = v.strictObject({
 			 * The payload used to update the user.
 			 */
 			changes_requested: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
@@ -4531,7 +4529,7 @@ export const inputAuditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"user.deleted": v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The user ID.
 			 */
@@ -4539,7 +4537,7 @@ export const inputAuditLogSchema = v.strictObject({
 		}),
 	),
 });
-export const auditLogSchema = v.strictObject({
+export const auditLogSchema = v.looseObject({
 	/**
 	 * The ID of this log.
 	 */
@@ -4554,7 +4552,7 @@ export const auditLogSchema = v.strictObject({
 	 * projects.
 	 */
 	project: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4570,7 +4568,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"api_key.created": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
@@ -4579,7 +4577,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to create the API key.
 			 */
 			data: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
@@ -4592,7 +4590,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"api_key.updated": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
@@ -4601,7 +4599,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to update the API key.
 			 */
 			changes_requested: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of scopes allowed for the API key, e.g. `["api.model.request"]`
 					 */
@@ -4614,7 +4612,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"api_key.deleted": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The tracking ID of the API key.
 			 */
@@ -4625,7 +4623,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"invite.sent": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the invite.
 			 */
@@ -4634,7 +4632,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to create the invite.
 			 */
 			data: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The email invited to the organization.
 					 */
@@ -4651,7 +4649,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"invite.accepted": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the invite.
 			 */
@@ -4662,7 +4660,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"invite.deleted": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The ID of the invite.
 			 */
@@ -4673,7 +4671,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"login.failed": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The error code of the failure.
 			 */
@@ -4688,7 +4686,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"logout.failed": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The error code of the failure.
 			 */
@@ -4703,7 +4701,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"organization.updated": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The organization ID.
 			 */
@@ -4712,7 +4710,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to update the organization settings.
 			 */
 			changes_requested: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The organization title.
 					 */
@@ -4726,7 +4724,7 @@ export const auditLogSchema = v.strictObject({
 					 */
 					name: v.exactOptional(v.pipe(v.string(), v.trim())),
 					settings: v.exactOptional(
-						v.strictObject({
+						v.looseObject({
 							/**
 							 * Visibility of the threads page which shows messages created with the
 							 * Assistants API and Playground. One of `ANY_ROLE`, `OWNERS`, or `NONE`.
@@ -4751,7 +4749,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"project.created": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4760,7 +4758,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to create the project.
 			 */
 			data: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The project name.
 					 */
@@ -4777,7 +4775,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"project.updated": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4786,7 +4784,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to update the project.
 			 */
 			changes_requested: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The title of the project as seen on the dashboard.
 					 */
@@ -4799,7 +4797,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"project.archived": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4810,7 +4808,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"service_account.created": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The service account ID.
 			 */
@@ -4819,7 +4817,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to create the service account.
 			 */
 			data: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
@@ -4832,7 +4830,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"service_account.updated": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The service account ID.
 			 */
@@ -4841,7 +4839,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to updated the service account.
 			 */
 			changes_requested: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the service account. Is either `owner` or `member`.
 					 */
@@ -4854,7 +4852,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"service_account.deleted": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The service account ID.
 			 */
@@ -4865,7 +4863,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"user.added": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The user ID.
 			 */
@@ -4874,7 +4872,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to add the user to the project.
 			 */
 			data: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
@@ -4887,7 +4885,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"user.updated": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The project ID.
 			 */
@@ -4896,7 +4894,7 @@ export const auditLogSchema = v.strictObject({
 			 * The payload used to update the user.
 			 */
 			changes_requested: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The role of the user. Is either `owner` or `member`.
 					 */
@@ -4909,7 +4907,7 @@ export const auditLogSchema = v.strictObject({
 	 * The details for events with this `type`.
 	 */
 	"user.deleted": v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The user ID.
 			 */
@@ -4917,21 +4915,21 @@ export const auditLogSchema = v.strictObject({
 		}),
 	),
 });
-export const inputListAuditLogsResponseSchema = v.strictObject({
+export const inputListAuditLogsResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(inputAuditLogSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listAuditLogsResponseSchema = v.strictObject({
+export const listAuditLogsResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(auditLogSchema),
 	first_id: v.pipe(v.string(), v.trim()),
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const inputBatchSchema = v.strictObject({
+export const inputBatchSchema = v.looseObject({
 	id: v.string(),
 	/**
 	 * The object type, which is always `batch`.
@@ -4942,14 +4940,14 @@ export const inputBatchSchema = v.strictObject({
 	 */
 	endpoint: v.string(),
 	errors: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The object type, which is always `list`.
 			 */
 			object: v.optional(v.string()),
 			data: v.optional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * An error code identifying the error type.
 						 */
@@ -5041,7 +5039,7 @@ export const inputBatchSchema = v.strictObject({
 	 * The request counts for different statuses within the batch.
 	 */
 	request_counts: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Total number of requests in the batch.
 			 */
@@ -5064,7 +5062,7 @@ export const inputBatchSchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const batchSchema = v.strictObject({
+export const batchSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	/**
 	 * The object type, which is always `batch`.
@@ -5075,14 +5073,14 @@ export const batchSchema = v.strictObject({
 	 */
 	endpoint: v.pipe(v.string(), v.trim()),
 	errors: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The object type, which is always `list`.
 			 */
 			object: v.exactOptional(v.pipe(v.string(), v.trim())),
 			data: v.exactOptional(
 				v.array(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * An error code identifying the error type.
 						 */
@@ -5174,7 +5172,7 @@ export const batchSchema = v.strictObject({
 	 * The request counts for different statuses within the batch.
 	 */
 	request_counts: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Total number of requests in the batch.
 			 */
@@ -5197,14 +5195,14 @@ export const batchSchema = v.strictObject({
 	 */
 	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
 });
-export const inputListBatchesResponseSchema = v.strictObject({
+export const inputListBatchesResponseSchema = v.looseObject({
 	data: v.array(inputBatchSchema),
 	first_id: v.optional(v.string()),
 	last_id: v.optional(v.string()),
 	has_more: v.boolean(),
 	object: v.picklist(["list"]),
 });
-export const listBatchesResponseSchema = v.strictObject({
+export const listBatchesResponseSchema = v.looseObject({
 	data: v.array(batchSchema),
 	first_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	last_id: v.exactOptional(v.pipe(v.string(), v.trim())),
@@ -5216,7 +5214,7 @@ export const listBatchesResponseSchema = v.strictObject({
  * streaming.
  * @title Message delta object
  */
-export const inputMessageDeltaObjectSchema = v.strictObject({
+export const inputMessageDeltaObjectSchema = v.looseObject({
 	/**
 	 * The identifier of the message, which can be referenced in API endpoints.
 	 */
@@ -5228,7 +5226,7 @@ export const inputMessageDeltaObjectSchema = v.strictObject({
 	/**
 	 * The delta containing the fields that have changed on the Message.
 	 */
-	delta: v.strictObject({
+	delta: v.looseObject({
 		/**
 		 * The entity that produced the message. One of `user` or `assistant`.
 		 */
@@ -5248,7 +5246,7 @@ export const inputMessageDeltaObjectSchema = v.strictObject({
 		),
 	}),
 });
-export const messageDeltaObjectSchema = v.strictObject({
+export const messageDeltaObjectSchema = v.looseObject({
 	/**
 	 * The identifier of the message, which can be referenced in API endpoints.
 	 */
@@ -5260,7 +5258,7 @@ export const messageDeltaObjectSchema = v.strictObject({
 	/**
 	 * The delta containing the fields that have changed on the Message.
 	 */
-	delta: v.strictObject({
+	delta: v.looseObject({
 		/**
 		 * The entity that produced the message. One of `user` or `assistant`.
 		 */
@@ -5281,18 +5279,18 @@ export const messageDeltaObjectSchema = v.strictObject({
 	}),
 });
 /** Occurs when a stream ends. */
-export const inputDoneEventSchema = v.strictObject({
+export const inputDoneEventSchema = v.looseObject({
 	event: v.picklist(["done"]),
 	data: v.picklist(["[DONE]"]),
 });
 export const doneEventSchema = inputDoneEventSchema;
-export const inputErrorSchema = v.strictObject({
+export const inputErrorSchema = v.looseObject({
 	code: v.nullable(v.string()),
 	message: v.string(),
 	param: v.nullable(v.string()),
 	type: v.string(),
 });
-export const errorSchema = v.strictObject({
+export const errorSchema = v.looseObject({
 	code: v.nullable(v.pipe(v.string(), v.trim())),
 	message: v.pipe(v.string(), v.trim()),
 	param: v.nullable(v.pipe(v.string(), v.trim())),
@@ -5302,7 +5300,7 @@ export const errorSchema = v.strictObject({
  * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
  * can happen due to an internal server error or a timeout.
  */
-export const inputErrorEventSchema = v.strictObject({
+export const inputErrorEventSchema = v.looseObject({
 	event: v.picklist(["error"]),
 	data: inputErrorSchema,
 });
@@ -5311,7 +5309,7 @@ export const errorEventSchema = inputErrorEventSchema;
  * Represents a message within a [thread](/docs/api-reference/threads).
  * @title The message object
  */
-export const inputMessageObjectSchema = v.strictObject({
+export const inputMessageObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -5337,7 +5335,7 @@ export const inputMessageObjectSchema = v.strictObject({
 	 * On an incomplete message, details about why the message is incomplete.
 	 */
 	incomplete_details: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the message is incomplete.
 			 */
@@ -5390,7 +5388,7 @@ export const inputMessageObjectSchema = v.strictObject({
 	 */
 	attachments: v.nullable(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the file to attach to the message.
 				 */
@@ -5417,7 +5415,7 @@ export const inputMessageObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const messageObjectSchema = v.strictObject({
+export const messageObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -5443,7 +5441,7 @@ export const messageObjectSchema = v.strictObject({
 	 * On an incomplete message, details about why the message is incomplete.
 	 */
 	incomplete_details: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the message is incomplete.
 			 */
@@ -5496,7 +5494,7 @@ export const messageObjectSchema = v.strictObject({
 	 */
 	attachments: v.nullable(
 		v.array(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the file to attach to the message.
 				 */
@@ -5524,23 +5522,23 @@ export const messageObjectSchema = v.strictObject({
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
 export const inputMessageStreamEventSchema = v.union([
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.message.created"]),
 		data: inputMessageObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.message.in_progress"]),
 		data: inputMessageObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.message.delta"]),
 		data: inputMessageDeltaObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.message.completed"]),
 		data: inputMessageObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.message.incomplete"]),
 		data: inputMessageObjectSchema,
 	}),
@@ -5550,29 +5548,27 @@ export const messageStreamEventSchema = inputMessageStreamEventSchema;
  * Details of the tool call.
  * @title Tool calls
  */
-export const inputRunStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject(
-	{
-		/**
-		 * Always `tool_calls`.
-		 */
-		type: v.picklist(["tool_calls"]),
-		/**
-		 * An array of tool calls the run step was involved in. These can be
-		 * associated with one of three types of tools: `code_interpreter`,
-		 * `file_search`, or `function`.
-		 */
-		tool_calls: v.optional(
-			v.array(
-				v.union([
-					inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema,
-					inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema,
-					inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema,
-				]),
-			),
+export const inputRunStepDeltaStepDetailsToolCallsObjectSchema = v.looseObject({
+	/**
+	 * Always `tool_calls`.
+	 */
+	type: v.picklist(["tool_calls"]),
+	/**
+	 * An array of tool calls the run step was involved in. These can be
+	 * associated with one of three types of tools: `code_interpreter`,
+	 * `file_search`, or `function`.
+	 */
+	tool_calls: v.optional(
+		v.array(
+			v.union([
+				inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema,
+				inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema,
+				inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema,
+			]),
 		),
-	},
-);
-export const runStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject({
+	),
+});
+export const runStepDeltaStepDetailsToolCallsObjectSchema = v.looseObject({
 	/**
 	 * Always `tool_calls`.
 	 */
@@ -5597,13 +5593,13 @@ export const runStepDeltaStepDetailsToolCallsObjectSchema = v.strictObject({
  * @title Message creation
  */
 export const inputRunStepDeltaStepDetailsMessageCreationObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Always `message_creation`.
 		 */
 		type: v.picklist(["message_creation"]),
 		message_creation: v.optional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the message that was created by this run step.
 				 */
@@ -5611,27 +5607,28 @@ export const inputRunStepDeltaStepDetailsMessageCreationObjectSchema =
 			}),
 		),
 	});
-export const runStepDeltaStepDetailsMessageCreationObjectSchema =
-	v.strictObject({
+export const runStepDeltaStepDetailsMessageCreationObjectSchema = v.looseObject(
+	{
 		/**
 		 * Always `message_creation`.
 		 */
 		type: v.picklist(["message_creation"]),
 		message_creation: v.exactOptional(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The ID of the message that was created by this run step.
 				 */
 				message_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 			}),
 		),
-	});
+	},
+);
 /**
  * Represents a run step delta i.e. any changed fields on a run step during
  * streaming.
  * @title Run step delta object
  */
-export const inputRunStepDeltaObjectSchema = v.strictObject({
+export const inputRunStepDeltaObjectSchema = v.looseObject({
 	/**
 	 * The identifier of the run step, which can be referenced in API endpoints.
 	 */
@@ -5643,7 +5640,7 @@ export const inputRunStepDeltaObjectSchema = v.strictObject({
 	/**
 	 * The delta containing the fields that have changed on the run step.
 	 */
-	delta: v.strictObject({
+	delta: v.looseObject({
 		/**
 		 * The details of the run step.
 		 */
@@ -5655,7 +5652,7 @@ export const inputRunStepDeltaObjectSchema = v.strictObject({
 		),
 	}),
 });
-export const runStepDeltaObjectSchema = v.strictObject({
+export const runStepDeltaObjectSchema = v.looseObject({
 	/**
 	 * The identifier of the run step, which can be referenced in API endpoints.
 	 */
@@ -5667,7 +5664,7 @@ export const runStepDeltaObjectSchema = v.strictObject({
 	/**
 	 * The delta containing the fields that have changed on the run step.
 	 */
-	delta: v.strictObject({
+	delta: v.looseObject({
 		/**
 		 * The details of the run step.
 		 */
@@ -5684,7 +5681,7 @@ export const runStepDeltaObjectSchema = v.strictObject({
  * the run step's status is `in_progress`.
  */
 export const inputRunStepCompletionUsageSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Number of completion tokens used over the course of the run step.
 		 */
@@ -5704,7 +5701,7 @@ export const runStepCompletionUsageSchema = inputRunStepCompletionUsageSchema;
  * Details of the tool call.
  * @title Tool calls
  */
-export const inputRunStepDetailsToolCallsObjectSchema = v.strictObject({
+export const inputRunStepDetailsToolCallsObjectSchema = v.looseObject({
 	/**
 	 * Always `tool_calls`.
 	 */
@@ -5728,24 +5725,24 @@ export const runStepDetailsToolCallsObjectSchema =
  * Details of the message creation by the run step.
  * @title Message creation
  */
-export const inputRunStepDetailsMessageCreationObjectSchema = v.strictObject({
+export const inputRunStepDetailsMessageCreationObjectSchema = v.looseObject({
 	/**
 	 * Always `message_creation`.
 	 */
 	type: v.picklist(["message_creation"]),
-	message_creation: v.strictObject({
+	message_creation: v.looseObject({
 		/**
 		 * The ID of the message that was created by this run step.
 		 */
 		message_id: v.string(),
 	}),
 });
-export const runStepDetailsMessageCreationObjectSchema = v.strictObject({
+export const runStepDetailsMessageCreationObjectSchema = v.looseObject({
 	/**
 	 * Always `message_creation`.
 	 */
 	type: v.picklist(["message_creation"]),
-	message_creation: v.strictObject({
+	message_creation: v.looseObject({
 		/**
 		 * The ID of the message that was created by this run step.
 		 */
@@ -5756,7 +5753,7 @@ export const runStepDetailsMessageCreationObjectSchema = v.strictObject({
  * Represents a step in execution of a run.
  * @title Run steps
  */
-export const inputRunStepObjectSchema = v.strictObject({
+export const inputRunStepObjectSchema = v.looseObject({
 	/**
 	 * The identifier of the run step, which can be referenced in API endpoints.
 	 */
@@ -5811,7 +5808,7 @@ export const inputRunStepObjectSchema = v.strictObject({
 	 * no errors.
 	 */
 	last_error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * One of `server_error` or `rate_limit_exceeded`.
 			 */
@@ -5848,7 +5845,7 @@ export const inputRunStepObjectSchema = v.strictObject({
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 	usage: inputRunStepCompletionUsageSchema,
 });
-export const runStepObjectSchema = v.strictObject({
+export const runStepObjectSchema = v.looseObject({
 	/**
 	 * The identifier of the run step, which can be referenced in API endpoints.
 	 */
@@ -5903,7 +5900,7 @@ export const runStepObjectSchema = v.strictObject({
 	 * no errors.
 	 */
 	last_error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * One of `server_error` or `rate_limit_exceeded`.
 			 */
@@ -5941,31 +5938,31 @@ export const runStepObjectSchema = v.strictObject({
 	usage: runStepCompletionUsageSchema,
 });
 export const inputRunStepStreamEventSchema = v.union([
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.created"]),
 		data: inputRunStepObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.in_progress"]),
 		data: inputRunStepObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.delta"]),
 		data: inputRunStepDeltaObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.completed"]),
 		data: inputRunStepObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.failed"]),
 		data: inputRunStepObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.cancelled"]),
 		data: inputRunStepObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.step.expired"]),
 		data: inputRunStepObjectSchema,
 	}),
@@ -5978,12 +5975,12 @@ export const inputResponseFormatJsonSchemaSchemaSchema = v.record(
 );
 export const responseFormatJsonSchemaSchemaSchema =
 	inputResponseFormatJsonSchemaSchemaSchema;
-export const inputResponseFormatJsonSchemaSchema = v.strictObject({
+export const inputResponseFormatJsonSchemaSchema = v.looseObject({
 	/**
 	 * The type of response format being defined: `json_schema`
 	 */
 	type: v.picklist(["json_schema"]),
-	json_schema: v.strictObject({
+	json_schema: v.looseObject({
 		/**
 		 * A description of what the response format is for, used by the model to
 		 * determine how to respond in the format.
@@ -6005,12 +6002,12 @@ export const inputResponseFormatJsonSchemaSchema = v.strictObject({
 		strict: v.optional(v.nullable(v.boolean())),
 	}),
 });
-export const responseFormatJsonSchemaSchema = v.strictObject({
+export const responseFormatJsonSchemaSchema = v.looseObject({
 	/**
 	 * The type of response format being defined: `json_schema`
 	 */
 	type: v.picklist(["json_schema"]),
-	json_schema: v.strictObject({
+	json_schema: v.looseObject({
 		/**
 		 * A description of what the response format is for, used by the model to
 		 * determine how to respond in the format.
@@ -6032,7 +6029,7 @@ export const responseFormatJsonSchemaSchema = v.strictObject({
 		strict: v.exactOptional(v.nullable(v.boolean())),
 	}),
 });
-export const inputResponseFormatJsonObjectSchema = v.strictObject({
+export const inputResponseFormatJsonObjectSchema = v.looseObject({
 	/**
 	 * The type of response format being defined: `json_object`
 	 */
@@ -6040,7 +6037,7 @@ export const inputResponseFormatJsonObjectSchema = v.strictObject({
 });
 export const responseFormatJsonObjectSchema =
 	inputResponseFormatJsonObjectSchema;
-export const inputResponseFormatTextSchema = v.strictObject({
+export const inputResponseFormatTextSchema = v.looseObject({
 	/**
 	 * The type of response format being defined: `text`
 	 */
@@ -6088,13 +6085,13 @@ export const parallelToolCallsSchema = inputParallelToolCallsSchema;
  * Specifies a tool the model should use. Use to force the model to call a
  * specific tool.
  */
-export const inputAssistantsNamedToolChoiceSchema = v.strictObject({
+export const inputAssistantsNamedToolChoiceSchema = v.looseObject({
 	/**
 	 * The type of the tool. If type is `function`, the function name must be set
 	 */
 	type: v.picklist(["function", "code_interpreter", "file_search"]),
 	function: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the function to call.
 			 */
@@ -6102,13 +6099,13 @@ export const inputAssistantsNamedToolChoiceSchema = v.strictObject({
 		}),
 	),
 });
-export const assistantsNamedToolChoiceSchema = v.strictObject({
+export const assistantsNamedToolChoiceSchema = v.looseObject({
 	/**
 	 * The type of the tool. If type is `function`, the function name must be set
 	 */
 	type: v.picklist(["function", "code_interpreter", "file_search"]),
 	function: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the function to call.
 			 */
@@ -6139,7 +6136,7 @@ export const assistantsApiToolChoiceOptionSchema =
  * control the intial context window of the run.
  * @title Thread Truncation Controls
  */
-export const inputTruncationObjectSchema = v.strictObject({
+export const inputTruncationObjectSchema = v.looseObject({
 	/**
 	 * The truncation strategy to use for the thread. The default is `auto`. If
 	 * set to `last_messages`, the thread will be truncated to the n most recent
@@ -6156,7 +6153,7 @@ export const inputTruncationObjectSchema = v.strictObject({
 		v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1))),
 	),
 });
-export const truncationObjectSchema = v.strictObject({
+export const truncationObjectSchema = v.looseObject({
 	/**
 	 * The truncation strategy to use for the thread. The default is `auto`. If
 	 * set to `last_messages`, the thread will be truncated to the n most recent
@@ -6178,7 +6175,7 @@ export const truncationObjectSchema = v.strictObject({
  * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
  */
 export const inputRunCompletionUsageSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Number of completion tokens used over the course of the run.
 		 */
@@ -6195,7 +6192,7 @@ export const inputRunCompletionUsageSchema = v.nullable(
 );
 export const runCompletionUsageSchema = inputRunCompletionUsageSchema;
 /** Tool call objects */
-export const inputRunToolCallObjectSchema = v.strictObject({
+export const inputRunToolCallObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call. This ID must be referenced when you submit the
 	 * tool outputs in using the [Submit tool outputs to
@@ -6210,7 +6207,7 @@ export const inputRunToolCallObjectSchema = v.strictObject({
 	/**
 	 * The function definition.
 	 */
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function.
 		 */
@@ -6221,7 +6218,7 @@ export const inputRunToolCallObjectSchema = v.strictObject({
 		arguments: v.string(),
 	}),
 });
-export const runToolCallObjectSchema = v.strictObject({
+export const runToolCallObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call. This ID must be referenced when you submit the
 	 * tool outputs in using the [Submit tool outputs to
@@ -6236,7 +6233,7 @@ export const runToolCallObjectSchema = v.strictObject({
 	/**
 	 * The function definition.
 	 */
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function.
 		 */
@@ -6251,7 +6248,7 @@ export const runToolCallObjectSchema = v.strictObject({
  * Represents an execution run on a [thread](/docs/api-reference/threads).
  * @title A run on a thread
  */
-export const inputRunObjectSchema = v.strictObject({
+export const inputRunObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6295,7 +6292,7 @@ export const inputRunObjectSchema = v.strictObject({
 	 * action is required.
 	 */
 	required_action: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * For now, this is always `submit_tool_outputs`.
 			 */
@@ -6303,7 +6300,7 @@ export const inputRunObjectSchema = v.strictObject({
 			/**
 			 * Details on the tool outputs needed for this run to continue.
 			 */
-			submit_tool_outputs: v.strictObject({
+			submit_tool_outputs: v.looseObject({
 				/**
 				 * A list of the relevant tool calls.
 				 */
@@ -6316,7 +6313,7 @@ export const inputRunObjectSchema = v.strictObject({
 	 * errors.
 	 */
 	last_error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
 			 */
@@ -6356,7 +6353,7 @@ export const inputRunObjectSchema = v.strictObject({
 	 * incomplete.
 	 */
 	incomplete_details: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason why the run is incomplete. This will point to which specific
 			 * token limit was reached over the course of the run.
@@ -6419,7 +6416,7 @@ export const inputRunObjectSchema = v.strictObject({
 	parallel_tool_calls: inputParallelToolCallsSchema,
 	response_format: inputAssistantsApiResponseFormatOptionSchema,
 });
-export const runObjectSchema = v.strictObject({
+export const runObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6463,7 +6460,7 @@ export const runObjectSchema = v.strictObject({
 	 * action is required.
 	 */
 	required_action: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * For now, this is always `submit_tool_outputs`.
 			 */
@@ -6471,7 +6468,7 @@ export const runObjectSchema = v.strictObject({
 			/**
 			 * Details on the tool outputs needed for this run to continue.
 			 */
-			submit_tool_outputs: v.strictObject({
+			submit_tool_outputs: v.looseObject({
 				/**
 				 * A list of the relevant tool calls.
 				 */
@@ -6484,7 +6481,7 @@ export const runObjectSchema = v.strictObject({
 	 * errors.
 	 */
 	last_error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
 			 */
@@ -6524,7 +6521,7 @@ export const runObjectSchema = v.strictObject({
 	 * incomplete.
 	 */
 	incomplete_details: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason why the run is incomplete. This will point to which specific
 			 * token limit was reached over the course of the run.
@@ -6588,43 +6585,43 @@ export const runObjectSchema = v.strictObject({
 	response_format: assistantsApiResponseFormatOptionSchema,
 });
 export const inputRunStreamEventSchema = v.union([
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.created"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.queued"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.in_progress"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.requires_action"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.completed"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.incomplete"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.failed"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.cancelling"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.cancelled"]),
 		data: inputRunObjectSchema,
 	}),
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.run.expired"]),
 		data: inputRunObjectSchema,
 	}),
@@ -6634,7 +6631,7 @@ export const runStreamEventSchema = inputRunStreamEventSchema;
  * Represents a thread that contains [messages](/docs/api-reference/messages).
  * @title Thread
  */
-export const inputThreadObjectSchema = v.strictObject({
+export const inputThreadObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6654,9 +6651,9 @@ export const inputThreadObjectSchema = v.strictObject({
 	 * `file_search` tool requires a list of vector store IDs.
 	 */
 	tool_resources: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			code_interpreter: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of [file](/docs/api-reference/files) IDs made available to the
 					 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -6666,7 +6663,7 @@ export const inputThreadObjectSchema = v.strictObject({
 				}),
 			),
 			file_search: v.optional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The [vector store](/docs/api-reference/vector-stores/object) attached to
 					 * this thread. There can be a maximum of 1 vector store attached to the
@@ -6687,7 +6684,7 @@ export const inputThreadObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const threadObjectSchema = v.strictObject({
+export const threadObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6707,9 +6704,9 @@ export const threadObjectSchema = v.strictObject({
 	 * `file_search` tool requires a list of vector store IDs.
 	 */
 	tool_resources: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			code_interpreter: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of [file](/docs/api-reference/files) IDs made available to the
 					 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -6721,7 +6718,7 @@ export const threadObjectSchema = v.strictObject({
 				}),
 			),
 			file_search: v.exactOptional(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The [vector store](/docs/api-reference/vector-stores/object) attached to
 					 * this thread. There can be a maximum of 1 vector store attached to the
@@ -6743,7 +6740,7 @@ export const threadObjectSchema = v.strictObject({
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
 export const inputThreadStreamEventSchema = v.union([
-	v.strictObject({
+	v.looseObject({
 		event: v.picklist(["thread.created"]),
 		data: inputThreadObjectSchema,
 	}),
@@ -6886,7 +6883,7 @@ export const staticChunkingStrategyResponseParamSchema =
  * A list of files attached to a vector store.
  * @title Vector store files
  */
-export const inputVectorStoreFileObjectSchema = v.strictObject({
+export const inputVectorStoreFileObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6920,7 +6917,7 @@ export const inputVectorStoreFileObjectSchema = v.strictObject({
 	 * there are no errors.
 	 */
 	last_error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * One of `server_error` or `rate_limit_exceeded`.
 			 */
@@ -6941,7 +6938,7 @@ export const inputVectorStoreFileObjectSchema = v.strictObject({
 		]),
 	),
 });
-export const vectorStoreFileObjectSchema = v.strictObject({
+export const vectorStoreFileObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -6975,7 +6972,7 @@ export const vectorStoreFileObjectSchema = v.strictObject({
 	 * there are no errors.
 	 */
 	last_error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * One of `server_error` or `rate_limit_exceeded`.
 			 */
@@ -6996,14 +6993,14 @@ export const vectorStoreFileObjectSchema = v.strictObject({
 		]),
 	),
 });
-export const inputListVectorStoreFilesResponseSchema = v.strictObject({
+export const inputListVectorStoreFilesResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputVectorStoreFileObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listVectorStoreFilesResponseSchema = v.strictObject({
+export const listVectorStoreFilesResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(vectorStoreFileObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -7030,7 +7027,7 @@ export const createVectorStoreFileRequestSchema = v.strictObject({
  * The expiration policy for a vector store.
  * @title Vector store expiration policy
  */
-export const inputVectorStoreExpirationAfterSchema = v.strictObject({
+export const inputVectorStoreExpirationAfterSchema = v.looseObject({
 	/**
 	 * Anchor timestamp after which the expiration policy applies. Supported
 	 * anchors: `last_active_at`.
@@ -7048,7 +7045,7 @@ export const vectorStoreExpirationAfterSchema =
  * `file_search` tool.
  * @title Vector store
  */
-export const inputVectorStoreObjectSchema = v.strictObject({
+export const inputVectorStoreObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -7069,7 +7066,7 @@ export const inputVectorStoreObjectSchema = v.strictObject({
 	 * The total number of bytes used by the files in the vector store.
 	 */
 	usage_bytes: v.pipe(v.number(), v.integer()),
-	file_counts: v.strictObject({
+	file_counts: v.looseObject({
 		/**
 		 * The number of files that are currently being processed.
 		 */
@@ -7114,7 +7111,7 @@ export const inputVectorStoreObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const vectorStoreObjectSchema = v.strictObject({
+export const vectorStoreObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -7135,7 +7132,7 @@ export const vectorStoreObjectSchema = v.strictObject({
 	 * The total number of bytes used by the files in the vector store.
 	 */
 	usage_bytes: v.pipe(v.number(), v.integer()),
-	file_counts: v.strictObject({
+	file_counts: v.looseObject({
 		/**
 		 * The number of files that are currently being processed.
 		 */
@@ -7180,14 +7177,14 @@ export const vectorStoreObjectSchema = v.strictObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const inputListVectorStoresResponseSchema = v.strictObject({
+export const inputListVectorStoresResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputVectorStoreObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listVectorStoresResponseSchema = v.strictObject({
+export const listVectorStoresResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(vectorStoreObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -7287,7 +7284,7 @@ export const createVectorStoreRequestSchema = v.strictObject({
  * @title File search tool call result
  */
 export const inputRunStepDetailsToolCallsFileSearchResultObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of the file that result was found in.
 		 */
@@ -7307,7 +7304,7 @@ export const inputRunStepDetailsToolCallsFileSearchResultObjectSchema =
 		 */
 		content: v.optional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The type of the content.
 					 */
@@ -7321,7 +7318,7 @@ export const inputRunStepDetailsToolCallsFileSearchResultObjectSchema =
 		),
 	});
 export const runStepDetailsToolCallsFileSearchResultObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ID of the file that result was found in.
 		 */
@@ -7341,7 +7338,7 @@ export const runStepDetailsToolCallsFileSearchResultObjectSchema =
 		 */
 		content: v.exactOptional(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The type of the content.
 					 */
@@ -7359,7 +7356,7 @@ export const runStepDetailsToolCallsFileSearchResultObjectSchema =
  * @title File search tool call ranking options
  */
 export const inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The ranker used for the file search.
 		 */
@@ -7372,8 +7369,8 @@ export const inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
 	});
 export const runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
 	inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema;
-export const inputRunStepDetailsToolCallsFileSearchObjectSchema =
-	v.strictObject({
+export const inputRunStepDetailsToolCallsFileSearchObjectSchema = v.looseObject(
+	{
 		/**
 		 * The ID of the tool call object.
 		 */
@@ -7386,7 +7383,7 @@ export const inputRunStepDetailsToolCallsFileSearchObjectSchema =
 		/**
 		 * For now, this is always going to be an empty object.
 		 */
-		file_search: v.strictObject({
+		file_search: v.looseObject({
 			ranking_options: v.optional(
 				inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
 			),
@@ -7397,8 +7394,9 @@ export const inputRunStepDetailsToolCallsFileSearchObjectSchema =
 				v.array(inputRunStepDetailsToolCallsFileSearchResultObjectSchema),
 			),
 		}),
-	});
-export const runStepDetailsToolCallsFileSearchObjectSchema = v.strictObject({
+	},
+);
+export const runStepDetailsToolCallsFileSearchObjectSchema = v.looseObject({
 	/**
 	 * The ID of the tool call object.
 	 */
@@ -7411,7 +7409,7 @@ export const runStepDetailsToolCallsFileSearchObjectSchema = v.strictObject({
 	/**
 	 * For now, this is always going to be an empty object.
 	 */
-	file_search: v.strictObject({
+	file_search: v.looseObject({
 		ranking_options: v.exactOptional(
 			runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
 		),
@@ -7423,42 +7421,42 @@ export const runStepDetailsToolCallsFileSearchObjectSchema = v.strictObject({
 		),
 	}),
 });
-export const inputListRunStepsResponseSchema = v.strictObject({
+export const inputListRunStepsResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputRunStepObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listRunStepsResponseSchema = v.strictObject({
+export const listRunStepsResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(runStepObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const inputListMessagesResponseSchema = v.strictObject({
+export const inputListMessagesResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputMessageObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listMessagesResponseSchema = v.strictObject({
+export const listMessagesResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(messageObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
 });
-export const inputListThreadsResponseSchema = v.strictObject({
+export const inputListThreadsResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputThreadObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listThreadsResponseSchema = v.strictObject({
+export const listThreadsResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(threadObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -7495,7 +7493,7 @@ export const inputCreateMessageRequestSchema = v.strictObject({
 	attachments: v.optional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The ID of the file to attach to the message.
 					 */
@@ -7553,7 +7551,7 @@ export const createMessageRequestSchema = v.strictObject({
 	attachments: v.exactOptional(
 		v.nullable(
 			v.array(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * The ID of the file to attach to the message.
 					 */
@@ -7595,9 +7593,9 @@ export const inputCreateThreadRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -7637,9 +7635,9 @@ export const createThreadRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -7740,9 +7738,9 @@ export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -7752,7 +7750,7 @@ export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 					}),
 				),
 				file_search: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
@@ -7894,9 +7892,9 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -7908,7 +7906,7 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 					}),
 				),
 				file_search: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
@@ -7979,14 +7977,14 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 	parallel_tool_calls: v.exactOptional(parallelToolCallsSchema),
 	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
 });
-export const inputListRunsResponseSchema = v.strictObject({
+export const inputListRunsResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputRunObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listRunsResponseSchema = v.strictObject({
+export const listRunsResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(runObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -8271,7 +8269,7 @@ export const createRunRequestSchema = v.strictObject({
  */
 export const inputFunctionParametersSchema = v.record(v.string(), v.unknown());
 export const functionParametersSchema = inputFunctionParametersSchema;
-export const inputFunctionObjectSchema = v.strictObject({
+export const inputFunctionObjectSchema = v.looseObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
@@ -8292,7 +8290,7 @@ export const inputFunctionObjectSchema = v.strictObject({
 	 */
 	strict: v.optional(v.nullable(v.boolean())),
 });
-export const functionObjectSchema = v.strictObject({
+export const functionObjectSchema = v.looseObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
@@ -8313,7 +8311,7 @@ export const functionObjectSchema = v.strictObject({
 	 */
 	strict: v.exactOptional(v.nullable(v.boolean())),
 });
-export const inputAssistantToolsFunctionSchema = v.strictObject({
+export const inputAssistantToolsFunctionSchema = v.looseObject({
 	/**
 	 * The type of tool being defined: `function`
 	 */
@@ -8330,7 +8328,7 @@ export const assistantToolsFunctionSchema = inputAssistantToolsFunctionSchema;
  * for more information.
  * @title File search tool call ranking options
  */
-export const inputFileSearchRankingOptionsSchema = v.strictObject({
+export const inputFileSearchRankingOptionsSchema = v.looseObject({
 	/**
 	 * The ranker to use for the file search. If not specified will use the `auto`
 	 * ranker.
@@ -8342,7 +8340,7 @@ export const inputFileSearchRankingOptionsSchema = v.strictObject({
 	 */
 	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
 });
-export const fileSearchRankingOptionsSchema = v.strictObject({
+export const fileSearchRankingOptionsSchema = v.looseObject({
 	/**
 	 * The ranker to use for the file search. If not specified will use the `auto`
 	 * ranker.
@@ -8354,7 +8352,7 @@ export const fileSearchRankingOptionsSchema = v.strictObject({
 	 */
 	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
 });
-export const inputAssistantToolsFileSearchSchema = v.strictObject({
+export const inputAssistantToolsFileSearchSchema = v.looseObject({
 	/**
 	 * The type of tool being defined: `file_search`
 	 */
@@ -8363,7 +8361,7 @@ export const inputAssistantToolsFileSearchSchema = v.strictObject({
 	 * Overrides for the file search tool.
 	 */
 	file_search: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The maximum number of results the file search tool should output. The
 			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
@@ -8381,7 +8379,7 @@ export const inputAssistantToolsFileSearchSchema = v.strictObject({
 		}),
 	),
 });
-export const assistantToolsFileSearchSchema = v.strictObject({
+export const assistantToolsFileSearchSchema = v.looseObject({
 	/**
 	 * The type of tool being defined: `file_search`
 	 */
@@ -8390,7 +8388,7 @@ export const assistantToolsFileSearchSchema = v.strictObject({
 	 * Overrides for the file search tool.
 	 */
 	file_search: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The maximum number of results the file search tool should output. The
 			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
@@ -8412,7 +8410,7 @@ export const assistantToolsFileSearchSchema = v.strictObject({
  * Represents an `assistant` that can call the model and use tools.
  * @title Assistant
  */
-export const inputAssistantObjectSchema = v.strictObject({
+export const inputAssistantObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -8444,7 +8442,7 @@ export const inputAssistantObjectSchema = v.strictObject({
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.nullable(v.pipe(v.string(), v.maxLength(256000))),
+	instructions: v.nullable(v.pipe(v.string(), v.maxLength(256_000))),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -8468,9 +8466,9 @@ export const inputAssistantObjectSchema = v.strictObject({
 	 */
 	tool_resources: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter`` tool. There can be a maximum of 20 files associated
@@ -8480,7 +8478,7 @@ export const inputAssistantObjectSchema = v.strictObject({
 					}),
 				),
 				file_search: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
@@ -8522,7 +8520,7 @@ export const inputAssistantObjectSchema = v.strictObject({
 	),
 	response_format: v.optional(inputAssistantsApiResponseFormatOptionSchema),
 });
-export const assistantObjectSchema = v.strictObject({
+export const assistantObjectSchema = v.looseObject({
 	/**
 	 * The identifier, which can be referenced in API endpoints.
 	 */
@@ -8554,7 +8552,7 @@ export const assistantObjectSchema = v.strictObject({
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256000))),
+	instructions: v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256_000))),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -8578,9 +8576,9 @@ export const assistantObjectSchema = v.strictObject({
 	 */
 	tool_resources: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter`` tool. There can be a maximum of 20 files associated
@@ -8592,7 +8590,7 @@ export const assistantObjectSchema = v.strictObject({
 					}),
 				),
 				file_search: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * The ID of the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
@@ -8634,14 +8632,14 @@ export const assistantObjectSchema = v.strictObject({
 	),
 	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
 });
-export const inputListAssistantsResponseSchema = v.strictObject({
+export const inputListAssistantsResponseSchema = v.looseObject({
 	object: v.string(),
 	data: v.array(inputAssistantObjectSchema),
 	first_id: v.string(),
 	last_id: v.string(),
 	has_more: v.boolean(),
 });
-export const listAssistantsResponseSchema = v.strictObject({
+export const listAssistantsResponseSchema = v.looseObject({
 	object: v.pipe(v.string(), v.trim()),
 	data: v.array(assistantObjectSchema),
 	first_id: v.pipe(v.string(), v.trim()),
@@ -8668,7 +8666,9 @@ export const inputModifyAssistantRequestSchema = v.strictObject({
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(256000)))),
+	instructions: v.optional(
+		v.nullable(v.pipe(v.string(), v.maxLength(256_000))),
+	),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -8694,9 +8694,9 @@ export const inputModifyAssistantRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Overrides the list of [file](/docs/api-reference/files) IDs made available
 						 * to the `code_interpreter` tool. There can be a maximum of 20 files
@@ -8706,7 +8706,7 @@ export const inputModifyAssistantRequestSchema = v.strictObject({
 					}),
 				),
 				file_search: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Overrides the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
@@ -8773,7 +8773,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 	 * 256,000 characters.
 	 */
 	instructions: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256000))),
+		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256_000))),
 	),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
@@ -8800,9 +8800,9 @@ export const modifyAssistantRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Overrides the list of [file](/docs/api-reference/files) IDs made available
 						 * to the `code_interpreter` tool. There can be a maximum of 20 files
@@ -8814,7 +8814,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 					}),
 				),
 				file_search: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * Overrides the [vector store](/docs/api-reference/vector-stores/object)
 						 * attached to this assistant. There can be a maximum of 1 vector store
@@ -8904,7 +8904,9 @@ export const inputCreateAssistantRequestSchema = v.strictObject({
 	 * The system instructions that the assistant uses. The maximum length is
 	 * 256,000 characters.
 	 */
-	instructions: v.optional(v.nullable(v.pipe(v.string(), v.maxLength(256000)))),
+	instructions: v.optional(
+		v.nullable(v.pipe(v.string(), v.maxLength(256_000))),
+	),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -8930,9 +8932,9 @@ export const inputCreateAssistantRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.optional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -9031,7 +9033,7 @@ export const createAssistantRequestSchema = v.strictObject({
 	 * 256,000 characters.
 	 */
 	instructions: v.exactOptional(
-		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256000))),
+		v.nullable(v.pipe(v.string(), v.trim(), v.maxLength(256_000))),
 	),
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
@@ -9058,9 +9060,9 @@ export const createAssistantRequestSchema = v.strictObject({
 	 */
 	tool_resources: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				code_interpreter: v.exactOptional(
-					v.strictObject({
+					v.looseObject({
 						/**
 						 * A list of [file](/docs/api-reference/files) IDs made available to the
 						 * `code_interpreter` tool. There can be a maximum of 20 files associated with
@@ -9108,7 +9110,7 @@ export const createAssistantRequestSchema = v.strictObject({
 	),
 	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
 });
-export const inputChatCompletionFunctionsSchema = v.strictObject({
+export const inputChatCompletionFunctionsSchema = v.looseObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
@@ -9121,7 +9123,7 @@ export const inputChatCompletionFunctionsSchema = v.strictObject({
 	name: v.string(),
 	parameters: v.optional(inputFunctionParametersSchema),
 });
-export const chatCompletionFunctionsSchema = v.strictObject({
+export const chatCompletionFunctionsSchema = v.looseObject({
 	/**
 	 * A description of what the function does, used by the model to choose when
 	 * and how to call the function.
@@ -9134,7 +9136,7 @@ export const chatCompletionFunctionsSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 	parameters: v.exactOptional(functionParametersSchema),
 });
-export const inputChatCompletionToolSchema = v.strictObject({
+export const inputChatCompletionToolSchema = v.looseObject({
 	/**
 	 * The type of the tool. Currently, only `function` is supported.
 	 */
@@ -9143,7 +9145,7 @@ export const inputChatCompletionToolSchema = v.strictObject({
 });
 export const chatCompletionToolSchema = inputChatCompletionToolSchema;
 /** The per-line training example of a fine-tuning input file for chat models */
-export const inputFinetuneChatRequestInputSchema = v.strictObject({
+export const inputFinetuneChatRequestInputSchema = v.looseObject({
 	messages: v.optional(
 		v.pipe(
 			v.array(
@@ -9174,7 +9176,7 @@ export const inputFinetuneChatRequestInputSchema = v.strictObject({
 		),
 	),
 });
-export const finetuneChatRequestInputSchema = v.strictObject({
+export const finetuneChatRequestInputSchema = v.looseObject({
 	messages: v.exactOptional(
 		v.pipe(
 			v.array(
@@ -9209,7 +9211,7 @@ export const finetuneChatRequestInputSchema = v.strictObject({
  * The `File` object represents a document that has been uploaded to OpenAI.
  * @title OpenAIFile
  */
-export const inputOpenAiFileSchema = v.strictObject({
+export const inputOpenAiFileSchema = v.looseObject({
 	/**
 	 * The file identifier, which can be referenced in the API endpoints.
 	 */
@@ -9255,7 +9257,7 @@ export const inputOpenAiFileSchema = v.strictObject({
 	 */
 	status_details: v.optional(v.string()),
 });
-export const openAiFileSchema = v.strictObject({
+export const openAiFileSchema = v.looseObject({
 	/**
 	 * The file identifier, which can be referenced in the API endpoints.
 	 */
@@ -9305,7 +9307,7 @@ export const openAiFileSchema = v.strictObject({
  * The Upload object can accept byte chunks in the form of Parts.
  * @title Upload
  */
-export const inputUploadSchema = v.strictObject({
+export const inputUploadSchema = v.looseObject({
 	/**
 	 * The Upload unique identifier, which can be referenced in API endpoints.
 	 */
@@ -9342,7 +9344,7 @@ export const inputUploadSchema = v.strictObject({
 	object: v.optional(v.picklist(["upload"])),
 	file: v.optional(inputOpenAiFileSchema),
 });
-export const uploadSchema = v.strictObject({
+export const uploadSchema = v.looseObject({
 	/**
 	 * The Upload unique identifier, which can be referenced in API endpoints.
 	 */
@@ -9379,7 +9381,7 @@ export const uploadSchema = v.strictObject({
 	object: v.exactOptional(v.picklist(["upload"])),
 	file: v.exactOptional(openAiFileSchema),
 });
-export const inputTranscriptionSegmentSchema = v.strictObject({
+export const inputTranscriptionSegmentSchema = v.looseObject({
 	/**
 	 * Unique identifier of the segment.
 	 */
@@ -9424,7 +9426,7 @@ export const inputTranscriptionSegmentSchema = v.strictObject({
 	 */
 	no_speech_prob: v.number(),
 });
-export const transcriptionSegmentSchema = v.strictObject({
+export const transcriptionSegmentSchema = v.looseObject({
 	/**
 	 * Unique identifier of the segment.
 	 */
@@ -9469,7 +9471,7 @@ export const transcriptionSegmentSchema = v.strictObject({
 	 */
 	no_speech_prob: v.number(),
 });
-export const inputCreateTranslationResponseVerboseJsonSchema = v.strictObject({
+export const inputCreateTranslationResponseVerboseJsonSchema = v.looseObject({
 	/**
 	 * The language of the output translation (always `english`).
 	 */
@@ -9487,7 +9489,7 @@ export const inputCreateTranslationResponseVerboseJsonSchema = v.strictObject({
 	 */
 	segments: v.optional(v.array(inputTranscriptionSegmentSchema)),
 });
-export const createTranslationResponseVerboseJsonSchema = v.strictObject({
+export const createTranslationResponseVerboseJsonSchema = v.looseObject({
 	/**
 	 * The language of the output translation (always `english`).
 	 */
@@ -9571,7 +9573,7 @@ export const createTranslationRequestSchema = v.strictObject({
 	 */
 	temperature: v.exactOptional(v.number()),
 });
-export const inputTranscriptionWordSchema = v.strictObject({
+export const inputTranscriptionWordSchema = v.looseObject({
 	/**
 	 * The text content of the word.
 	 */
@@ -9585,7 +9587,7 @@ export const inputTranscriptionWordSchema = v.strictObject({
 	 */
 	end: v.number(),
 });
-export const transcriptionWordSchema = v.strictObject({
+export const transcriptionWordSchema = v.looseObject({
 	/**
 	 * The text content of the word.
 	 */
@@ -9603,31 +9605,29 @@ export const transcriptionWordSchema = v.strictObject({
  * Represents a verbose json transcription response returned by model, based
  * on the provided input.
  */
-export const inputCreateTranscriptionResponseVerboseJsonSchema = v.strictObject(
-	{
-		/**
-		 * The language of the input audio.
-		 */
-		language: v.string(),
-		/**
-		 * The duration of the input audio.
-		 */
-		duration: v.string(),
-		/**
-		 * The transcribed text.
-		 */
-		text: v.string(),
-		/**
-		 * Extracted words and their corresponding timestamps.
-		 */
-		words: v.optional(v.array(inputTranscriptionWordSchema)),
-		/**
-		 * Segments of the transcribed text and their corresponding details.
-		 */
-		segments: v.optional(v.array(inputTranscriptionSegmentSchema)),
-	},
-);
-export const createTranscriptionResponseVerboseJsonSchema = v.strictObject({
+export const inputCreateTranscriptionResponseVerboseJsonSchema = v.looseObject({
+	/**
+	 * The language of the input audio.
+	 */
+	language: v.string(),
+	/**
+	 * The duration of the input audio.
+	 */
+	duration: v.string(),
+	/**
+	 * The transcribed text.
+	 */
+	text: v.string(),
+	/**
+	 * Extracted words and their corresponding timestamps.
+	 */
+	words: v.optional(v.array(inputTranscriptionWordSchema)),
+	/**
+	 * Segments of the transcribed text and their corresponding details.
+	 */
+	segments: v.optional(v.array(inputTranscriptionSegmentSchema)),
+});
+export const createTranscriptionResponseVerboseJsonSchema = v.looseObject({
 	/**
 	 * The language of the input audio.
 	 */
@@ -9736,7 +9736,7 @@ export const createTranscriptionRequestSchema = v.strictObject({
 	),
 });
 /** Represents an embedding vector returned by embedding endpoint. */
-export const inputEmbeddingSchema = v.strictObject({
+export const inputEmbeddingSchema = v.looseObject({
 	/**
 	 * The index of the embedding in the list of embeddings.
 	 */
@@ -9753,7 +9753,7 @@ export const inputEmbeddingSchema = v.strictObject({
 	object: v.picklist(["embedding"]),
 });
 export const embeddingSchema = inputEmbeddingSchema;
-export const inputCreateEmbeddingResponseSchema = v.strictObject({
+export const inputCreateEmbeddingResponseSchema = v.looseObject({
 	/**
 	 * The list of embeddings generated by the model.
 	 */
@@ -9769,7 +9769,7 @@ export const inputCreateEmbeddingResponseSchema = v.strictObject({
 	/**
 	 * The usage information for the request.
 	 */
-	usage: v.strictObject({
+	usage: v.looseObject({
 		/**
 		 * The number of tokens used by the prompt.
 		 */
@@ -9780,7 +9780,7 @@ export const inputCreateEmbeddingResponseSchema = v.strictObject({
 		total_tokens: v.pipe(v.number(), v.integer()),
 	}),
 });
-export const createEmbeddingResponseSchema = v.strictObject({
+export const createEmbeddingResponseSchema = v.looseObject({
 	/**
 	 * The list of embeddings generated by the model.
 	 */
@@ -9796,7 +9796,7 @@ export const createEmbeddingResponseSchema = v.strictObject({
 	/**
 	 * The usage information for the request.
 	 */
-	usage: v.strictObject({
+	usage: v.looseObject({
 		/**
 		 * The number of tokens used by the prompt.
 		 */
@@ -9812,7 +9812,7 @@ export const createEmbeddingResponseSchema = v.strictObject({
  * fine-tuning job that is ready to use.
  * @title FineTuningJobCheckpoint
  */
-export const inputFineTuningJobCheckpointSchema = v.strictObject({
+export const inputFineTuningJobCheckpointSchema = v.looseObject({
 	/**
 	 * The checkpoint identifier, which can be referenced in the API endpoints.
 	 */
@@ -9832,7 +9832,7 @@ export const inputFineTuningJobCheckpointSchema = v.strictObject({
 	/**
 	 * Metrics at the step number during the fine-tuning job.
 	 */
-	metrics: v.strictObject({
+	metrics: v.looseObject({
 		step: v.optional(v.number()),
 		train_loss: v.optional(v.number()),
 		train_mean_token_accuracy: v.optional(v.number()),
@@ -9850,7 +9850,7 @@ export const inputFineTuningJobCheckpointSchema = v.strictObject({
 	 */
 	object: v.picklist(["fine_tuning.job.checkpoint"]),
 });
-export const fineTuningJobCheckpointSchema = v.strictObject({
+export const fineTuningJobCheckpointSchema = v.looseObject({
 	/**
 	 * The checkpoint identifier, which can be referenced in the API endpoints.
 	 */
@@ -9870,7 +9870,7 @@ export const fineTuningJobCheckpointSchema = v.strictObject({
 	/**
 	 * Metrics at the step number during the fine-tuning job.
 	 */
-	metrics: v.strictObject({
+	metrics: v.looseObject({
 		step: v.exactOptional(v.number()),
 		train_loss: v.exactOptional(v.number()),
 		train_mean_token_accuracy: v.exactOptional(v.number()),
@@ -9888,14 +9888,14 @@ export const fineTuningJobCheckpointSchema = v.strictObject({
 	 */
 	object: v.picklist(["fine_tuning.job.checkpoint"]),
 });
-export const inputListFineTuningJobCheckpointsResponseSchema = v.strictObject({
+export const inputListFineTuningJobCheckpointsResponseSchema = v.looseObject({
 	data: v.array(inputFineTuningJobCheckpointSchema),
 	object: v.picklist(["list"]),
 	first_id: v.optional(v.nullable(v.string())),
 	last_id: v.optional(v.nullable(v.string())),
 	has_more: v.boolean(),
 });
-export const listFineTuningJobCheckpointsResponseSchema = v.strictObject({
+export const listFineTuningJobCheckpointsResponseSchema = v.looseObject({
 	data: v.array(fineTuningJobCheckpointSchema),
 	object: v.picklist(["list"]),
 	first_id: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
@@ -9903,33 +9903,33 @@ export const listFineTuningJobCheckpointsResponseSchema = v.strictObject({
 	has_more: v.boolean(),
 });
 /** Fine-tuning job event object */
-export const inputFineTuningJobEventSchema = v.strictObject({
+export const inputFineTuningJobEventSchema = v.looseObject({
 	id: v.string(),
 	created_at: v.pipe(v.number(), v.integer()),
 	level: v.picklist(["info", "warn", "error"]),
 	message: v.string(),
 	object: v.picklist(["fine_tuning.job.event"]),
 });
-export const fineTuningJobEventSchema = v.strictObject({
+export const fineTuningJobEventSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
 	created_at: v.pipe(v.number(), v.integer()),
 	level: v.picklist(["info", "warn", "error"]),
 	message: v.pipe(v.string(), v.trim()),
 	object: v.picklist(["fine_tuning.job.event"]),
 });
-export const inputListFineTuningJobEventsResponseSchema = v.strictObject({
+export const inputListFineTuningJobEventsResponseSchema = v.looseObject({
 	data: v.array(inputFineTuningJobEventSchema),
 	object: v.picklist(["list"]),
 });
 export const listFineTuningJobEventsResponseSchema =
 	inputListFineTuningJobEventsResponseSchema;
-export const inputListFilesResponseSchema = v.strictObject({
+export const inputListFilesResponseSchema = v.looseObject({
 	data: v.array(inputOpenAiFileSchema),
 	object: v.picklist(["list"]),
 });
 export const listFilesResponseSchema = inputListFilesResponseSchema;
 /** Represents the url or the content of an image generated by the OpenAI API. */
-export const inputImageSchema = v.strictObject({
+export const inputImageSchema = v.looseObject({
 	/**
 	 * The base64-encoded JSON of the generated image, if `response_format` is
 	 * `b64_json`.
@@ -9945,7 +9945,7 @@ export const inputImageSchema = v.strictObject({
 	 */
 	revised_prompt: v.optional(v.string()),
 });
-export const imageSchema = v.strictObject({
+export const imageSchema = v.looseObject({
 	/**
 	 * The base64-encoded JSON of the generated image, if `response_format` is
 	 * `b64_json`.
@@ -9961,7 +9961,7 @@ export const imageSchema = v.strictObject({
 	 */
 	revised_prompt: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputImagesResponseSchema = v.strictObject({
+export const inputImagesResponseSchema = v.looseObject({
 	created: v.pipe(v.number(), v.integer()),
 	data: v.array(inputImageSchema),
 });
@@ -9971,7 +9971,7 @@ export const imagesResponseSchema = inputImagesResponseSchema;
  * created through the API.
  * @title FineTuningJob
  */
-export const inputFineTuningJobSchema = v.strictObject({
+export const inputFineTuningJobSchema = v.looseObject({
 	/**
 	 * The object identifier, which can be referenced in the API endpoints.
 	 */
@@ -9985,7 +9985,7 @@ export const inputFineTuningJobSchema = v.strictObject({
 	 * on the cause of the failure.
 	 */
 	error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * A machine-readable error code.
 			 */
@@ -10016,7 +10016,7 @@ export const inputFineTuningJobSchema = v.strictObject({
 	 * The hyperparameters used for the fine-tuning job. See the [fine-tuning
 	 * guide](/docs/guides/fine-tuning) for more details.
 	 */
-	hyperparameters: v.strictObject({
+	hyperparameters: v.looseObject({
 		/**
 		 * The number of epochs to train the model for. An epoch refers to one full
 		 * cycle through the training dataset.
@@ -10096,7 +10096,7 @@ export const inputFineTuningJobSchema = v.strictObject({
 	 */
 	estimated_finish: v.optional(v.nullable(v.pipe(v.number(), v.integer()))),
 });
-export const fineTuningJobSchema = v.strictObject({
+export const fineTuningJobSchema = v.looseObject({
 	/**
 	 * The object identifier, which can be referenced in the API endpoints.
 	 */
@@ -10110,7 +10110,7 @@ export const fineTuningJobSchema = v.strictObject({
 	 * on the cause of the failure.
 	 */
 	error: v.nullable(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * A machine-readable error code.
 			 */
@@ -10141,7 +10141,7 @@ export const fineTuningJobSchema = v.strictObject({
 	 * The hyperparameters used for the fine-tuning job. See the [fine-tuning
 	 * guide](/docs/guides/fine-tuning) for more details.
 	 */
-	hyperparameters: v.strictObject({
+	hyperparameters: v.looseObject({
 		/**
 		 * The number of epochs to train the model for. An epoch refers to one full
 		 * cycle through the training dataset.
@@ -10220,7 +10220,7 @@ export const fineTuningJobSchema = v.strictObject({
 		v.nullable(v.pipe(v.number(), v.integer())),
 	),
 });
-export const inputListPaginatedFineTuningJobsResponseSchema = v.strictObject({
+export const inputListPaginatedFineTuningJobsResponseSchema = v.looseObject({
 	data: v.array(inputFineTuningJobSchema),
 	has_more: v.boolean(),
 	object: v.picklist(["list"]),
@@ -10228,7 +10228,7 @@ export const inputListPaginatedFineTuningJobsResponseSchema = v.strictObject({
 export const listPaginatedFineTuningJobsResponseSchema =
 	inputListPaginatedFineTuningJobsResponseSchema;
 /** Usage statistics for the completion request. */
-export const inputCompletionUsageSchema = v.strictObject({
+export const inputCompletionUsageSchema = v.looseObject({
 	/**
 	 * Number of tokens in the generated completion.
 	 */
@@ -10245,7 +10245,7 @@ export const inputCompletionUsageSchema = v.strictObject({
 	 * Breakdown of tokens used in a completion.
 	 */
 	completion_tokens_details: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Tokens generated by the model for reasoning.
 			 */
@@ -10253,7 +10253,7 @@ export const inputCompletionUsageSchema = v.strictObject({
 		}),
 	),
 });
-export const completionUsageSchema = v.strictObject({
+export const completionUsageSchema = v.looseObject({
 	/**
 	 * Number of tokens in the generated completion.
 	 */
@@ -10270,7 +10270,7 @@ export const completionUsageSchema = v.strictObject({
 	 * Breakdown of tokens used in a completion.
 	 */
 	completion_tokens_details: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Tokens generated by the model for reasoning.
 			 */
@@ -10282,7 +10282,7 @@ export const completionUsageSchema = v.strictObject({
  * Represents a chat completion response returned by model, based on the
  * provided input.
  */
-export const inputCreateChatCompletionFunctionResponseSchema = v.strictObject({
+export const inputCreateChatCompletionFunctionResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the chat completion.
 	 */
@@ -10292,7 +10292,7 @@ export const inputCreateChatCompletionFunctionResponseSchema = v.strictObject({
 	 * than 1.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the model stopped generating tokens. This will be `stop` if the
 			 * model hit a natural stop point or a provided stop sequence, `length` if the
@@ -10335,7 +10335,7 @@ export const inputCreateChatCompletionFunctionResponseSchema = v.strictObject({
 	object: v.picklist(["chat.completion"]),
 	usage: v.optional(inputCompletionUsageSchema),
 });
-export const createChatCompletionFunctionResponseSchema = v.strictObject({
+export const createChatCompletionFunctionResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the chat completion.
 	 */
@@ -10345,7 +10345,7 @@ export const createChatCompletionFunctionResponseSchema = v.strictObject({
 	 * than 1.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the model stopped generating tokens. This will be `stop` if the
 			 * model hit a natural stop point or a provided stop sequence, `length` if the
@@ -10392,7 +10392,7 @@ export const createChatCompletionFunctionResponseSchema = v.strictObject({
  * Represents a chat completion response returned by model, based on the
  * provided input.
  */
-export const inputCreateChatCompletionResponseSchema = v.strictObject({
+export const inputCreateChatCompletionResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the chat completion.
 	 */
@@ -10402,7 +10402,7 @@ export const inputCreateChatCompletionResponseSchema = v.strictObject({
 	 * than 1.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the model stopped generating tokens. This will be `stop` if the
 			 * model hit a natural stop point or a provided stop sequence,
@@ -10429,7 +10429,7 @@ export const inputCreateChatCompletionResponseSchema = v.strictObject({
 			 * Log probability information for the choice.
 			 */
 			logprobs: v.nullable(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of message content tokens with log probability information.
 					 */
@@ -10469,7 +10469,7 @@ export const inputCreateChatCompletionResponseSchema = v.strictObject({
 	object: v.picklist(["chat.completion"]),
 	usage: v.optional(inputCompletionUsageSchema),
 });
-export const createChatCompletionResponseSchema = v.strictObject({
+export const createChatCompletionResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the chat completion.
 	 */
@@ -10479,7 +10479,7 @@ export const createChatCompletionResponseSchema = v.strictObject({
 	 * than 1.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the model stopped generating tokens. This will be `stop` if the
 			 * model hit a natural stop point or a provided stop sequence,
@@ -10506,7 +10506,7 @@ export const createChatCompletionResponseSchema = v.strictObject({
 			 * Log probability information for the choice.
 			 */
 			logprobs: v.nullable(
-				v.strictObject({
+				v.looseObject({
 					/**
 					 * A list of message content tokens with log probability information.
 					 */
@@ -10550,13 +10550,13 @@ export const createChatCompletionResponseSchema = v.strictObject({
  * Specifying a particular function via `{"name": "my_function"}` forces the
  * model to call that function.
  */
-export const inputChatCompletionFunctionCallOptionSchema = v.strictObject({
+export const inputChatCompletionFunctionCallOptionSchema = v.looseObject({
 	/**
 	 * The name of the function to call.
 	 */
 	name: v.string(),
 });
-export const chatCompletionFunctionCallOptionSchema = v.strictObject({
+export const chatCompletionFunctionCallOptionSchema = v.looseObject({
 	/**
 	 * The name of the function to call.
 	 */
@@ -10566,24 +10566,24 @@ export const chatCompletionFunctionCallOptionSchema = v.strictObject({
  * Specifies a tool the model should use. Use to force the model to call a
  * specific function.
  */
-export const inputChatCompletionNamedToolChoiceSchema = v.strictObject({
+export const inputChatCompletionNamedToolChoiceSchema = v.looseObject({
 	/**
 	 * The type of the tool. Currently, only `function` is supported.
 	 */
 	type: v.picklist(["function"]),
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function to call.
 		 */
 		name: v.string(),
 	}),
 });
-export const chatCompletionNamedToolChoiceSchema = v.strictObject({
+export const chatCompletionNamedToolChoiceSchema = v.looseObject({
 	/**
 	 * The type of the tool. Currently, only `function` is supported.
 	 */
 	type: v.picklist(["function"]),
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function to call.
 		 */
@@ -10611,7 +10611,7 @@ export const chatCompletionToolChoiceOptionSchema =
 	inputChatCompletionToolChoiceOptionSchema;
 /** Options for streaming response. Only set this when you set `stream: true`. */
 export const inputChatCompletionStreamOptionsSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * If set, an additional chunk will be streamed before the `data: [DONE]`
 		 * message. The `usage` field on this chunk shows the token usage statistics
@@ -10623,7 +10623,7 @@ export const inputChatCompletionStreamOptionsSchema = v.nullable(
 	}),
 );
 export const chatCompletionStreamOptionsSchema = v.nullable(
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * If set, an additional chunk will be streamed before the `data: [DONE]`
 		 * message. The `usage` field on this chunk shows the token usage statistics
@@ -10634,7 +10634,7 @@ export const chatCompletionStreamOptionsSchema = v.nullable(
 		include_usage: v.exactOptional(v.boolean()),
 	}),
 );
-export const inputChatCompletionRequestFunctionMessageSchema = v.strictObject({
+export const inputChatCompletionRequestFunctionMessageSchema = v.looseObject({
 	/**
 	 * The role of the messages author, in this case `function`.
 	 */
@@ -10648,7 +10648,7 @@ export const inputChatCompletionRequestFunctionMessageSchema = v.strictObject({
 	 */
 	name: v.string(),
 });
-export const chatCompletionRequestFunctionMessageSchema = v.strictObject({
+export const chatCompletionRequestFunctionMessageSchema = v.looseObject({
 	/**
 	 * The role of the messages author, in this case `function`.
 	 */
@@ -10663,7 +10663,7 @@ export const chatCompletionRequestFunctionMessageSchema = v.strictObject({
 	name: v.pipe(v.string(), v.trim()),
 });
 export const inputChatCompletionRequestMessageContentPartTextSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The type of the content part.
 		 */
@@ -10673,24 +10673,22 @@ export const inputChatCompletionRequestMessageContentPartTextSchema =
 		 */
 		text: v.string(),
 	});
-export const chatCompletionRequestMessageContentPartTextSchema = v.strictObject(
-	{
-		/**
-		 * The type of the content part.
-		 */
-		type: v.picklist(["text"]),
-		/**
-		 * The text content.
-		 */
-		text: v.pipe(v.string(), v.trim()),
-	},
-);
+export const chatCompletionRequestMessageContentPartTextSchema = v.looseObject({
+	/**
+	 * The type of the content part.
+	 */
+	type: v.picklist(["text"]),
+	/**
+	 * The text content.
+	 */
+	text: v.pipe(v.string(), v.trim()),
+});
 export const inputChatCompletionRequestToolMessageContentPartSchema = v.union([
 	inputChatCompletionRequestMessageContentPartTextSchema,
 ]);
 export const chatCompletionRequestToolMessageContentPartSchema =
 	inputChatCompletionRequestToolMessageContentPartSchema;
-export const inputChatCompletionRequestToolMessageSchema = v.strictObject({
+export const inputChatCompletionRequestToolMessageSchema = v.looseObject({
 	/**
 	 * The role of the messages author, in this case `tool`.
 	 */
@@ -10710,7 +10708,7 @@ export const inputChatCompletionRequestToolMessageSchema = v.strictObject({
 	 */
 	tool_call_id: v.string(),
 });
-export const chatCompletionRequestToolMessageSchema = v.strictObject({
+export const chatCompletionRequestToolMessageSchema = v.looseObject({
 	/**
 	 * The role of the messages author, in this case `tool`.
 	 */
@@ -10730,7 +10728,7 @@ export const chatCompletionRequestToolMessageSchema = v.strictObject({
 	 */
 	tool_call_id: v.pipe(v.string(), v.trim()),
 });
-export const inputChatCompletionMessageToolCallSchema = v.strictObject({
+export const inputChatCompletionMessageToolCallSchema = v.looseObject({
 	/**
 	 * The ID of the tool call.
 	 */
@@ -10742,7 +10740,7 @@ export const inputChatCompletionMessageToolCallSchema = v.strictObject({
 	/**
 	 * The function that the model called.
 	 */
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function to call.
 		 */
@@ -10756,7 +10754,7 @@ export const inputChatCompletionMessageToolCallSchema = v.strictObject({
 		arguments: v.string(),
 	}),
 });
-export const chatCompletionMessageToolCallSchema = v.strictObject({
+export const chatCompletionMessageToolCallSchema = v.looseObject({
 	/**
 	 * The ID of the tool call.
 	 */
@@ -10768,7 +10766,7 @@ export const chatCompletionMessageToolCallSchema = v.strictObject({
 	/**
 	 * The function that the model called.
 	 */
-	function: v.strictObject({
+	function: v.looseObject({
 		/**
 		 * The name of the function to call.
 		 */
@@ -10789,7 +10787,7 @@ export const inputChatCompletionMessageToolCallsSchema = v.array(
 export const chatCompletionMessageToolCallsSchema =
 	inputChatCompletionMessageToolCallsSchema;
 export const inputChatCompletionRequestMessageContentPartRefusalSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The type of the content part.
 		 */
@@ -10800,7 +10798,7 @@ export const inputChatCompletionRequestMessageContentPartRefusalSchema =
 		refusal: v.string(),
 	});
 export const chatCompletionRequestMessageContentPartRefusalSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The type of the content part.
 		 */
@@ -10817,7 +10815,7 @@ export const inputChatCompletionRequestAssistantMessageContentPartSchema =
 	]);
 export const chatCompletionRequestAssistantMessageContentPartSchema =
 	inputChatCompletionRequestAssistantMessageContentPartSchema;
-export const inputChatCompletionRequestAssistantMessageSchema = v.strictObject({
+export const inputChatCompletionRequestAssistantMessageSchema = v.looseObject({
 	/**
 	 * The contents of the assistant message. Required unless `tool_calls` or
 	 * `function_call` is specified.
@@ -10853,7 +10851,7 @@ export const inputChatCompletionRequestAssistantMessageSchema = v.strictObject({
 	 */
 	function_call: v.optional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The arguments to call the function with, as generated by the model in JSON
 				 * format. Note that the model does not always generate valid JSON, and may
@@ -10869,7 +10867,7 @@ export const inputChatCompletionRequestAssistantMessageSchema = v.strictObject({
 		),
 	),
 });
-export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
+export const chatCompletionRequestAssistantMessageSchema = v.looseObject({
 	/**
 	 * The contents of the assistant message. Required unless `tool_calls` or
 	 * `function_call` is specified.
@@ -10905,7 +10903,7 @@ export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
 	 */
 	function_call: v.exactOptional(
 		v.nullable(
-			v.strictObject({
+			v.looseObject({
 				/**
 				 * The arguments to call the function with, as generated by the model in JSON
 				 * format. Note that the model does not always generate valid JSON, and may
@@ -10922,12 +10920,12 @@ export const chatCompletionRequestAssistantMessageSchema = v.strictObject({
 	),
 });
 export const inputChatCompletionRequestMessageContentPartImageSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * The type of the content part.
 		 */
 		type: v.picklist(["image_url"]),
-		image_url: v.strictObject({
+		image_url: v.looseObject({
 			/**
 			 * Either a URL of the image or the base64 encoded image data.
 			 */
@@ -10939,13 +10937,13 @@ export const inputChatCompletionRequestMessageContentPartImageSchema =
 			detail: v.optional(v.picklist(["auto", "low", "high"])),
 		}),
 	});
-export const chatCompletionRequestMessageContentPartImageSchema =
-	v.strictObject({
+export const chatCompletionRequestMessageContentPartImageSchema = v.looseObject(
+	{
 		/**
 		 * The type of the content part.
 		 */
 		type: v.picklist(["image_url"]),
-		image_url: v.strictObject({
+		image_url: v.looseObject({
 			/**
 			 * Either a URL of the image or the base64 encoded image data.
 			 */
@@ -10956,14 +10954,15 @@ export const chatCompletionRequestMessageContentPartImageSchema =
 			 */
 			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
 		}),
-	});
+	},
+);
 export const inputChatCompletionRequestUserMessageContentPartSchema = v.union([
 	inputChatCompletionRequestMessageContentPartTextSchema,
 	inputChatCompletionRequestMessageContentPartImageSchema,
 ]);
 export const chatCompletionRequestUserMessageContentPartSchema =
 	inputChatCompletionRequestUserMessageContentPartSchema;
-export const inputChatCompletionRequestUserMessageSchema = v.strictObject({
+export const inputChatCompletionRequestUserMessageSchema = v.looseObject({
 	/**
 	 * The contents of the user message.
 	 */
@@ -10984,7 +10983,7 @@ export const inputChatCompletionRequestUserMessageSchema = v.strictObject({
 	 */
 	name: v.optional(v.string()),
 });
-export const chatCompletionRequestUserMessageSchema = v.strictObject({
+export const chatCompletionRequestUserMessageSchema = v.looseObject({
 	/**
 	 * The contents of the user message.
 	 */
@@ -11010,7 +11009,7 @@ export const inputChatCompletionRequestSystemMessageContentPartSchema = v.union(
 );
 export const chatCompletionRequestSystemMessageContentPartSchema =
 	inputChatCompletionRequestSystemMessageContentPartSchema;
-export const inputChatCompletionRequestSystemMessageSchema = v.strictObject({
+export const inputChatCompletionRequestSystemMessageSchema = v.looseObject({
 	/**
 	 * The contents of the system message.
 	 */
@@ -11031,7 +11030,7 @@ export const inputChatCompletionRequestSystemMessageSchema = v.strictObject({
 	 */
 	name: v.optional(v.string()),
 });
-export const chatCompletionRequestSystemMessageSchema = v.strictObject({
+export const chatCompletionRequestSystemMessageSchema = v.looseObject({
 	/**
 	 * The contents of the system message.
 	 */
@@ -11061,7 +11060,7 @@ export const inputChatCompletionRequestMessageSchema = v.union([
 ]);
 export const chatCompletionRequestMessageSchema =
 	inputChatCompletionRequestMessageSchema;
-export const inputCreateChatCompletionRequestSchema = v.strictObject({
+export const inputCreateChatCompletionRequestSchema = v.looseObject({
 	/**
 	 * A list of messages comprising the conversation so far. [Example Python
 	 * code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
@@ -11226,8 +11225,8 @@ export const inputCreateChatCompletionRequestSchema = v.strictObject({
 			v.pipe(
 				v.number(),
 				v.integer(),
-				v.minValue(-9223372036854776000),
-				v.maxValue(9223372036854776000),
+				v.minValue(-9_223_372_036_854_776_000),
+				v.maxValue(9_223_372_036_854_776_000),
 			),
 		),
 	),
@@ -11339,7 +11338,7 @@ export const inputCreateChatCompletionRequestSchema = v.strictObject({
 		),
 	),
 });
-export const createChatCompletionRequestSchema = v.strictObject({
+export const createChatCompletionRequestSchema = v.looseObject({
 	/**
 	 * A list of messages comprising the conversation so far. [Example Python
 	 * code](https://cookbook.openai.com/examples/how_to_format_inputs_to_chatgpt_models).
@@ -11501,8 +11500,8 @@ export const createChatCompletionRequestSchema = v.strictObject({
 			v.pipe(
 				v.number(),
 				v.integer(),
-				v.minValue(-9223372036854776000),
-				v.maxValue(9223372036854776000),
+				v.minValue(-9_223_372_036_854_776_000),
+				v.maxValue(9_223_372_036_854_776_000),
 			),
 		),
 	),
@@ -11618,7 +11617,7 @@ export const createChatCompletionRequestSchema = v.strictObject({
 		),
 	),
 });
-export const inputChatCompletionMessageToolCallChunkSchema = v.strictObject({
+export const inputChatCompletionMessageToolCallChunkSchema = v.looseObject({
 	index: v.pipe(v.number(), v.integer()),
 	/**
 	 * The ID of the tool call.
@@ -11629,7 +11628,7 @@ export const inputChatCompletionMessageToolCallChunkSchema = v.strictObject({
 	 */
 	type: v.optional(v.picklist(["function"])),
 	function: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the function to call.
 			 */
@@ -11644,7 +11643,7 @@ export const inputChatCompletionMessageToolCallChunkSchema = v.strictObject({
 		}),
 	),
 });
-export const chatCompletionMessageToolCallChunkSchema = v.strictObject({
+export const chatCompletionMessageToolCallChunkSchema = v.looseObject({
 	index: v.pipe(v.number(), v.integer()),
 	/**
 	 * The ID of the tool call.
@@ -11655,7 +11654,7 @@ export const chatCompletionMessageToolCallChunkSchema = v.strictObject({
 	 */
 	type: v.exactOptional(v.picklist(["function"])),
 	function: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The name of the function to call.
 			 */
@@ -11671,7 +11670,7 @@ export const chatCompletionMessageToolCallChunkSchema = v.strictObject({
 	),
 });
 /** A chat completion delta generated by streamed model responses. */
-export const inputChatCompletionStreamResponseDeltaSchema = v.strictObject({
+export const inputChatCompletionStreamResponseDeltaSchema = v.looseObject({
 	/**
 	 * The contents of the chunk message.
 	 */
@@ -11681,7 +11680,7 @@ export const inputChatCompletionStreamResponseDeltaSchema = v.strictObject({
 	 * function that should be called, as generated by the model.
 	 */
 	function_call: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
 			 * format. Note that the model does not always generate valid JSON, and may
@@ -11707,7 +11706,7 @@ export const inputChatCompletionStreamResponseDeltaSchema = v.strictObject({
 	 */
 	refusal: v.optional(v.nullable(v.string())),
 });
-export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
+export const chatCompletionStreamResponseDeltaSchema = v.looseObject({
 	/**
 	 * The contents of the chunk message.
 	 */
@@ -11717,7 +11716,7 @@ export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
 	 * function that should be called, as generated by the model.
 	 */
 	function_call: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
 			 * format. Note that the model does not always generate valid JSON, and may
@@ -11744,7 +11743,7 @@ export const chatCompletionStreamResponseDeltaSchema = v.strictObject({
 	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
 });
 /** A chat completion message generated by the model. */
-export const inputChatCompletionResponseMessageSchema = v.strictObject({
+export const inputChatCompletionResponseMessageSchema = v.looseObject({
 	/**
 	 * The contents of the message.
 	 */
@@ -11763,7 +11762,7 @@ export const inputChatCompletionResponseMessageSchema = v.strictObject({
 	 * function that should be called, as generated by the model.
 	 */
 	function_call: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
 			 * format. Note that the model does not always generate valid JSON, and may
@@ -11778,7 +11777,7 @@ export const inputChatCompletionResponseMessageSchema = v.strictObject({
 		}),
 	),
 });
-export const chatCompletionResponseMessageSchema = v.strictObject({
+export const chatCompletionResponseMessageSchema = v.looseObject({
 	/**
 	 * The contents of the message.
 	 */
@@ -11797,7 +11796,7 @@ export const chatCompletionResponseMessageSchema = v.strictObject({
 	 * function that should be called, as generated by the model.
 	 */
 	function_call: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The arguments to call the function with, as generated by the model in JSON
 			 * format. Note that the model does not always generate valid JSON, and may
@@ -11813,7 +11812,7 @@ export const chatCompletionResponseMessageSchema = v.strictObject({
 	),
 });
 export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Controls whether the assistant message is trained against (0 or 1)
 		 */
@@ -11821,7 +11820,7 @@ export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
 		...inputChatCompletionRequestAssistantMessageSchema.entries,
 	});
 export const fineTuneChatCompletionRequestAssistantMessageSchema =
-	v.strictObject({
+	v.looseObject({
 		/**
 		 * Controls whether the assistant message is trained against (0 or 1)
 		 */
@@ -11833,7 +11832,7 @@ export const fineTuneChatCompletionRequestAssistantMessageSchema =
  * non-streamed response objects share the same shape (unlike the chat
  * endpoint).
  */
-export const inputCreateCompletionResponseSchema = v.strictObject({
+export const inputCreateCompletionResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the completion.
 	 */
@@ -11842,7 +11841,7 @@ export const inputCreateCompletionResponseSchema = v.strictObject({
 	 * The list of completion choices the model generated for the input prompt.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the model stopped generating tokens. This will be `stop` if the
 			 * model hit a natural stop point or a provided stop sequence,
@@ -11854,7 +11853,7 @@ export const inputCreateCompletionResponseSchema = v.strictObject({
 			finish_reason: v.picklist(["stop", "length", "content_filter"]),
 			index: v.pipe(v.number(), v.integer()),
 			logprobs: v.nullable(
-				v.strictObject({
+				v.looseObject({
 					text_offset: v.optional(v.array(v.pipe(v.number(), v.integer()))),
 					token_logprobs: v.optional(v.array(v.number())),
 					tokens: v.optional(v.array(v.string())),
@@ -11886,7 +11885,7 @@ export const inputCreateCompletionResponseSchema = v.strictObject({
 	object: v.picklist(["text_completion"]),
 	usage: v.optional(inputCompletionUsageSchema),
 });
-export const createCompletionResponseSchema = v.strictObject({
+export const createCompletionResponseSchema = v.looseObject({
 	/**
 	 * A unique identifier for the completion.
 	 */
@@ -11895,7 +11894,7 @@ export const createCompletionResponseSchema = v.strictObject({
 	 * The list of completion choices the model generated for the input prompt.
 	 */
 	choices: v.array(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * The reason the model stopped generating tokens. This will be `stop` if the
 			 * model hit a natural stop point or a provided stop sequence,
@@ -11907,7 +11906,7 @@ export const createCompletionResponseSchema = v.strictObject({
 			finish_reason: v.picklist(["stop", "length", "content_filter"]),
 			index: v.pipe(v.number(), v.integer()),
 			logprobs: v.nullable(
-				v.strictObject({
+				v.looseObject({
 					text_offset: v.exactOptional(
 						v.array(v.pipe(v.number(), v.integer())),
 					),
@@ -11943,7 +11942,7 @@ export const createCompletionResponseSchema = v.strictObject({
 	object: v.picklist(["text_completion"]),
 	usage: v.exactOptional(completionUsageSchema),
 });
-export const inputCreateCompletionRequestSchema = v.strictObject({
+export const inputCreateCompletionRequestSchema = v.looseObject({
 	/**
 	 * ID of the model to use. You can use the [List
 	 * models](/docs/api-reference/models/list) API to see all of your available
@@ -12080,8 +12079,8 @@ export const inputCreateCompletionRequestSchema = v.strictObject({
 			v.pipe(
 				v.number(),
 				v.integer(),
-				v.minValue(-9223372036854776000),
-				v.maxValue(9223372036854776000),
+				v.minValue(-9_223_372_036_854_776_000),
+				v.maxValue(9_223_372_036_854_776_000),
 			),
 		),
 	),
@@ -12141,7 +12140,7 @@ export const inputCreateCompletionRequestSchema = v.strictObject({
 	 */
 	user: v.optional(v.string()),
 });
-export const createCompletionRequestSchema = v.strictObject({
+export const createCompletionRequestSchema = v.looseObject({
 	/**
 	 * ID of the model to use. You can use the [List
 	 * models](/docs/api-reference/models/list) API to see all of your available
@@ -12278,8 +12277,8 @@ export const createCompletionRequestSchema = v.strictObject({
 			v.pipe(
 				v.number(),
 				v.integer(),
-				v.minValue(-9223372036854776000),
-				v.maxValue(9223372036854776000),
+				v.minValue(-9_223_372_036_854_776_000),
+				v.maxValue(9_223_372_036_854_776_000),
 			),
 		),
 	),
@@ -12347,7 +12346,7 @@ export const createCompletionRequestSchema = v.strictObject({
  * Describes an OpenAI model offering that can be used with the API.
  * @title Model
  */
-export const inputModelSchema = v.strictObject({
+export const inputModelSchema = v.looseObject({
 	/**
 	 * The model identifier, which can be referenced in the API endpoints.
 	 */
@@ -12365,7 +12364,7 @@ export const inputModelSchema = v.strictObject({
 	 */
 	owned_by: v.string(),
 });
-export const modelSchema = v.strictObject({
+export const modelSchema = v.looseObject({
 	/**
 	 * The model identifier, which can be referenced in the API endpoints.
 	 */
@@ -12383,12 +12382,12 @@ export const modelSchema = v.strictObject({
 	 */
 	owned_by: v.pipe(v.string(), v.trim()),
 });
-export const inputListModelsResponseSchema = v.strictObject({
+export const inputListModelsResponseSchema = v.looseObject({
 	object: v.picklist(["list"]),
 	data: v.array(inputModelSchema),
 });
 export const listModelsResponseSchema = inputListModelsResponseSchema;
-export const inputErrorResponseSchema = v.strictObject({
+export const inputErrorResponseSchema = v.looseObject({
 	error: inputErrorSchema,
 });
 export const errorResponseSchema = inputErrorResponseSchema;
@@ -13216,7 +13215,7 @@ export const listFilesInVectorStoreBatchCommandQuerySchema = v.strictObject({
 		v.picklist(["in_progress", "completed", "failed", "cancelled"]),
 	),
 });
-export const inputCreateBatchCommandBodySchema = v.strictObject({
+export const inputCreateBatchCommandBodySchema = v.looseObject({
 	/**
 	 * The ID of an uploaded file that contains requests for the new batch.
 	 *
@@ -13250,7 +13249,7 @@ export const inputCreateBatchCommandBodySchema = v.strictObject({
 	 */
 	metadata: v.optional(v.nullable(v.record(v.string(), v.string()))),
 });
-export const createBatchCommandBodySchema = v.strictObject({
+export const createBatchCommandBodySchema = v.looseObject({
 	/**
 	 * The ID of an uploaded file that contains requests for the new batch.
 	 *
@@ -13330,7 +13329,7 @@ export const inputListAuditLogsCommandResponseSchema =
 export const listAuditLogsCommandResponseSchema = listAuditLogsResponseSchema;
 export const inputListAuditLogsCommandQuerySchema = v.strictObject({
 	effective_at: v.optional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Return only events whose `effective_at` (Unix seconds) is greater than this
 			 * value.
@@ -13364,7 +13363,7 @@ export const inputListAuditLogsCommandQuerySchema = v.strictObject({
 });
 export const listAuditLogsCommandQuerySchema = v.strictObject({
 	effective_at: v.exactOptional(
-		v.strictObject({
+		v.looseObject({
 			/**
 			 * Return only events whose `effective_at` (Unix seconds) is greater than this
 			 * value.

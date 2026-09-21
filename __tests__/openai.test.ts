@@ -30,13 +30,7 @@ describe("OpenAI", () => {
 			fetcher: createIsomorphicNativeFetcher({
 				retry: { retries: 0 },
 				fetch: (input, init) =>
-					undiciFetch(
-						// @ts-expect-error @types/node resolves fetch types via undici-types@7, but we
-						// import undici@8 directly — Request.headers.keys() iterator types diverge.
-						// Fix: remove when @types/node ships undici-types@8
-						input,
-						{ ...init, dispatcher: mockAgent },
-					),
+					undiciFetch(input, { ...init, dispatcher: mockAgent }),
 			}),
 		});
 

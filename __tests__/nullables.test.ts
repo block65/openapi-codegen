@@ -91,6 +91,7 @@ test("const values", async () => {
 						const: true,
 					},
 					NullConst: {
+						// oxlint-disable-next-line unicorn/no-null -- the document under test declares a JSON null constant, which is the shape this exercises
 						const: null,
 					},
 				},
@@ -139,7 +140,7 @@ test("RFC 3339 temporal formats", async () => {
 	expect(valibot.match(/v\.regex\(/g)?.length).toBe(8);
 	expect(valibot.match(/v\.custom</g)?.length).toBe(8);
 
-	// The hint type matches the generated TS type (date shown)
+	// hint type matches the generated TS type, shown here for date
 	expect(valibot).toContain(
 		"v.custom<`${number}-${number}-${number}`>(() => true)",
 	);
@@ -152,14 +153,14 @@ test("enums short-circuit type constraints (picklist only)", async () => {
 		paths: {},
 		components: {
 			schemas: {
-				// integer enum with a range constraint: must NOT emit minValue/integer
+				// integer enum with a range constraint, which skips minValue and integer
 				IntegerEnum: {
 					type: "integer",
 					enum: [0, 1, 2],
 					minimum: 0,
 					maximum: 9,
 				},
-				// string enum carrying minLength/format: must NOT emit minLength/regex
+				// string enum with minLength and format, which skips minLength and regex
 				StringEnum: {
 					type: "string",
 					format: "email",
@@ -355,7 +356,9 @@ test("header parameters", async () => {
 
 	expect(result.typesFile.getText()).toMatchSnapshot("types");
 	expect(result.commandsFile.getText()).toMatchSnapshot("commands");
-	expect(result.commandsValidatedFile.getText()).toMatchSnapshot("commands-validated");
+	expect(result.commandsValidatedFile.getText()).toMatchSnapshot(
+		"commands-validated",
+	);
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
 	expect(result.honoFile.getText()).toMatchSnapshot("hono");
 });

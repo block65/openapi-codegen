@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { join } from "node:path";
+import path from "node:path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { build } from "../lib/build.ts";
@@ -22,7 +22,7 @@ const cliArgs = await yargs(hideBin(process.argv))
 				alias: "t",
 				type: "array",
 				description: "tags",
-				coerce(arg: string[] | string): string[] {
+				coerce(arg: string[] | string) {
 					return Array.isArray(arg) ? arg : [arg];
 				},
 			})
@@ -35,9 +35,11 @@ const cliArgs = await yargs(hideBin(process.argv))
 	})
 	.help().argv;
 
+const tags = Array.isArray(cliArgs.tags) ? cliArgs.tags.map(String) : undefined;
+
 await build(
-	join(process.cwd(), String(cliArgs.i)),
-	join(process.cwd(), String(cliArgs.o)),
-	cliArgs.t as Array<string>,
+	path.join(process.cwd(), String(cliArgs.i)),
+	path.join(process.cwd(), String(cliArgs.o)),
+	tags,
 	{ inputOnly: Boolean(cliArgs.inputOnly) },
 );

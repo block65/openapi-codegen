@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import type { UndefinedOnPartialDeep } from "type-fest";
 
 export type Error = {

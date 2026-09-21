@@ -1,4 +1,4 @@
-import { join } from "node:path";
+import nodePath from "node:path";
 import { $RefParser } from "@apidevtools/json-schema-ref-parser";
 import type { oas30, oas31 } from "openapi3-ts";
 import toposort from "toposort";
@@ -21,6 +21,7 @@ import {
 	createHonoFile,
 	createHonoMiddleware,
 	type QueryParamSpec,
+	queryStyles,
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
@@ -29,6 +30,7 @@ import {
 	getDependents,
 	iife,
 	pascalCase,
+	typedEntries,
 	wordWrap,
 } from "./utils.ts";
 import {
@@ -39,9 +41,9 @@ import {
 
 export type CodegenOptions = {
 	/**
-	 * Emit only `input*` variants (TS-side schemas: `v.optional`, no wire
-	 * coercion). Skips the `*Schema` (wire) variants used by hono middleware
-	 * and response parsing. For non-HTTP / in-memory-only consumers.
+	 * Emit only `input*` variants, which use `v.optional` and skip wire
+	 * coercion. Suits consumers that stay in memory and never reach hono
+	 * middleware or response parsing
 	 */
 	inputOnly?: boolean;
 };
@@ -58,17 +60,19 @@ type OperationMiddlewareInfo = {
 	queryParams: QueryParamSpec[];
 };
 
-// A query parameter's `style` and `explode` decide how it is written into a
-// query string and, therefore, how it has to be read back out. Both sides of
-// the generated code work from this table (OAS 3.2 §4.12.6), so neither has to
-// guess.
-//
-// OpenAPI's defaults are `form` and, for `form` only, `explode: true`;
-// `explode` defaults to false for every other style. 3.2 drops `explode` from
-// `deepObject` altogether — the table's cell for it reads n/a — so it is
-// normalised here rather than recorded, and both sides ignore it
+function isQueryStyle(style: string): style is QueryParamSpec["style"] {
+	return Object.hasOwn(queryStyles, style);
+}
+
+// Resolves the OAS 3.2 §4.12.6 style and explode defaults for a parameter
 function queryParameterEncoding(parameter: oas30.ParameterObject) {
-	const style = (parameter.style ?? "form") as QueryParamSpec["style"];
+	// OpenAPI defaults `style` to `form`, and `explode` to true for `form` and
+	// false elsewhere. OAS 3.2 marks `explode` n/a for `deepObject`, so it is
+	// normalised to true here and both sides of the generated code ignore it
+	const style =
+		parameter.style !== undefined && isQueryStyle(parameter.style)
+			? parameter.style
+			: "form";
 
 	return {
 		style,
@@ -78,14 +82,26 @@ function queryParameterEncoding(parameter: oas30.ParameterObject) {
 	};
 }
 
-function queryParameterSpec(
-	parameter: oas30.ParameterObject,
-): QueryParamSpec | undefined {
-	const schema = (parameter.schema ?? {}) as oas30.SchemaObject;
+// OAS 3.2 added this location, which the 3.0 union omits
+// oxlint-disable-next-line block65/no-single-use-function -- the widened parameter is what lets the one call site compare against a location the 3.0 union omits
+function isQuerystringLocation(location: string) {
+	return location === "querystring";
+}
+
+function queryParameterSpec(parameter: oas30.ParameterObject) {
+	const schema: oas30.SchemaObject =
+		parameter.schema !== undefined && !("$ref" in parameter.schema)
+			? parameter.schema
+			: {};
 	const { style, explode } = queryParameterEncoding(parameter);
 
 	if (schema.type === "array") {
-		return { name: parameter.name, type: "array", style, explode };
+		return {
+			name: parameter.name,
+			type: "array",
+			style,
+			explode,
+		} satisfies QueryParamSpec;
 	}
 
 	if (schema.type === "object" || schema.properties) {
@@ -95,52 +111,66 @@ function queryParameterSpec(
 			style,
 			explode,
 			members: Object.keys(schema.properties ?? {}),
-		};
+		} satisfies QueryParamSpec;
 	}
 
-	// a scalar arrives as the string it was sent as, whatever its style
-	return undefined;
+	// a scalar arrives as the string it was sent as, under every style
+	return;
 }
 
-// The Style Examples table (OAS 3.2 §4.12.6) marks some style/explode/type
-// combinations n/a and says their behaviour is undefined. Both sides of the
-// generated code would still produce *something* for them, so the document is
-// told off here rather than the disagreement being discovered in production
-function warnOnUndefinedCombination(operationId: string, spec: QueryParamSpec) {
-	const undefinedCombination =
-		(spec.style === "spaceDelimited" || spec.style === "pipeDelimited") &&
-		spec.explode;
-
-	if (undefinedCombination) {
-		console.warn(
-			`${operationId}: query parameter "${spec.name}" combines \`style: ${spec.style}\` with \`explode: true\`, which OpenAPI marks n/a and leaves undefined. Set \`explode: false\`, or use \`style: form\`.`,
+// OAS 3.2 §4.12.6 marks these n/a, for every type of query parameter
+function assertSupportedEncoding(
+	operationId: string,
+	name: string,
+	style: QueryParamSpec["style"],
+	explode: boolean,
+) {
+	if ((style === "spaceDelimited" || style === "pipeDelimited") && explode) {
+		throw new Error(
+			`${operationId}: query parameter "${name}" combines \`style: ${style}\` with \`explode: true\`, which OpenAPI marks n/a and leaves undefined. Set \`explode: false\`, or use \`style: form\`.`,
 		);
 	}
+}
 
+function assertSupportedCombination(operationId: string, spec: QueryParamSpec) {
 	if (spec.style === "deepObject" && spec.type === "array") {
-		console.warn(
+		throw new Error(
 			`${operationId}: query parameter "${spec.name}" is an array with \`style: deepObject\`, which OpenAPI marks n/a and leaves undefined. Use \`style: form\`.`,
 		);
 	}
 }
 
-// An object-valued query parameter whose document states no style gets
-// OpenAPI's default of form/explode, which drops the parent name. That is
-// nearly always an oversight rather than a decision — it makes two such
-// parameters sharing a member name indistinguishable, and it is not what the
-// servers these documents describe tend to expect — so it is called out where
-// someone can still fix the document
-function warnOnUnderspecifiedQuery(
+// Rejects an encoding the generator cannot emit, warns on a risky one
+function checkQueryParameters(
 	operationId: string,
 	parameters: oas30.ParameterObject[],
 ) {
 	const seen = new Map<string, string>();
 
 	for (const parameter of parameters) {
+		if (parameter.style !== undefined && !isQueryStyle(parameter.style)) {
+			throw new Error(
+				`${operationId}: query parameter "${parameter.name}" declares \`style: ${parameter.style}\`, which rest-client does not encode. Use one of ${typedEntries(
+					queryStyles,
+				)
+					.map(([style]) => style)
+					.join(", ")}.`,
+			);
+		}
+
+		const encoding = queryParameterEncoding(parameter);
+
+		assertSupportedEncoding(
+			operationId,
+			parameter.name,
+			encoding.style,
+			encoding.explode,
+		);
+
 		const spec = queryParameterSpec(parameter);
 
 		if (spec) {
-			warnOnUndefinedCombination(operationId, spec);
+			assertSupportedCombination(operationId, spec);
 		}
 
 		if (spec?.type !== "object") {
@@ -169,16 +199,22 @@ function warnOnUnderspecifiedQuery(
 
 const neverKeyword = "never" as const;
 
+// A resolved $ref is typed unknown, and every parameter declares name and in
+function isParameterObject(value: unknown): value is oas30.ParameterObject {
+	return (
+		typeof value === "object" &&
+		value !== null &&
+		"in" in value &&
+		"name" in value
+	);
+}
+
 const unspecifiedKeyword = "unknown" as const;
 function isUnspecifiedKeyword(type: TypeAliasDeclaration) {
 	return type?.getTypeNode()?.getKindName() === unspecifiedKeyword;
 }
 
 const emptyKeyword = "undefined" as const;
-
-// function isEmptyKeyword(type: TypeAliasDeclaration) {
-//   return type?.getTypeNode()?.getKindName() === emptyKeyword;
-// }
 
 // the union/intersect helpers keep TypeScript happy due to ts-morph typings
 function createIntersection(...types: (string | undefined)[]) {
@@ -212,19 +248,19 @@ export async function processOpenApiDocument(
 	const project = new Project();
 
 	const commandsFile = project.createSourceFile(
-		join(outputDir, "commands.ts"),
+		nodePath.join(outputDir, "commands.ts"),
 		"",
 		{
 			overwrite: true,
 		},
 	);
 
-	// Parallel file: subclasses that attach `static responseSchema`. Consumers
-	// import from this file (or alias `./commands` → `./commands-validated` in
-	// dev) to opt into runtime response validation. Lean `commands.ts` carries
-	// zero schema imports, so prod bundles stay small
+	// Subclasses that attach `static responseSchema`. Consumers import from
+	// this module to opt into runtime response validation, or alias
+	// `./commands` to it in dev. The base command module imports zero
+	// schemas, so prod bundles stay small
 	const commandsValidatedFile = project.createSourceFile(
-		join(outputDir, "commands-validated.ts"),
+		nodePath.join(outputDir, "commands-validated.ts"),
 		"",
 		{
 			overwrite: true,
@@ -232,7 +268,7 @@ export async function processOpenApiDocument(
 	);
 
 	const typesFile = project.createSourceFile(
-		join(outputDir, "types.ts"),
+		nodePath.join(outputDir, "types.ts"),
 		"",
 
 		{
@@ -240,14 +276,22 @@ export async function processOpenApiDocument(
 		},
 	);
 
-	const mainFile = project.createSourceFile(join(outputDir, "main.ts"), "", {
-		overwrite: true,
-	});
+	const mainFile = project.createSourceFile(
+		nodePath.join(outputDir, "main.ts"),
+		"",
+		{
+			overwrite: true,
+		},
+	);
 
 	// Enums file for runtime enum values
-	const enumsFile = project.createSourceFile(join(outputDir, "enums.ts"), "", {
-		overwrite: true,
-	});
+	const enumsFile = project.createSourceFile(
+		nodePath.join(outputDir, "enums.ts"),
+		"",
+		{
+			overwrite: true,
+		},
+	);
 
 	// Validators file for Valibot schemas
 	const valibotFile = createValibotFile(project, outputDir);
@@ -262,13 +306,13 @@ export async function processOpenApiDocument(
 		InterfaceDeclaration | TypeAliasDeclaration | string
 	>();
 
-	// The exact Input type-arg expressions used in `Command<I, …>` per
-	// operation. The client's `<AllInputs, …>` union is built from these so
-	// commands from other generated clients fail the constraint on `.json()`
+	// Input type-arg expressions used in `Command<I, …>` per operation. The
+	// client's `<AllInputs, …>` union is built from these so commands from
+	// other generated clients fail the constraint on `.json()`
 	const inputTypeArgs = new Set<string>();
 
-	// Bare type names referenced by `inputTypeArgs` expressions — collected at
-	// the source so we don't have to re-extract them from wrapped strings
+	// Bare type names referenced by `inputTypeArgs` expressions, collected at
+	// the source where they are still separate from the wrapped strings
 	const inputTypeNames = new Set<string>();
 
 	const refs = await $RefParser.resolve(schema);
@@ -303,7 +347,7 @@ export async function processOpenApiDocument(
 			{ name: "...values", type: "string[]" },
 		],
 		statements:
-			"return String.raw({ raw: strings }, ...values.map(encodeURIComponent));",
+			"return String.raw({ raw: strings }, ...values.map((value) => encodeURIComponent(value)));",
 	});
 
 	commandsFile.addImportDeclaration({
@@ -325,9 +369,9 @@ export async function processOpenApiDocument(
 
 	const valibotModuleSpecifier = `./${valibotFile.getBaseNameWithoutExtension()}.js`;
 
-	// Commands with a response schema → emit a subclass in commands-validated.ts.
-	// Commands without one → re-export the base. Both keep the same exported name
-	// so consumers can swap files (or alias) without changing import sites
+	// Commands with a response schema get a subclass in the validated module.
+	// The rest re-export the base. Both keep the same exported name so
+	// consumers can swap modules and leave import sites alone
 	const validatedSubclasses: { commandName: string; responseSchema: string }[] =
 		[];
 	const validatedReExports: string[] = [];
@@ -372,6 +416,7 @@ export async function processOpenApiDocument(
 	const schemaGraph = Object.entries(schema.components?.schemas || {}).flatMap(
 		([schemaName, schemaObject]) => {
 			const deps = getDependents(schemaObject);
+			// oxlint-disable-next-line block65/no-explicit-return-type -- inference widens the pair to string[], and toposort takes a mutable tuple
 			return deps.map((dep): [string, string] => [
 				`#/components/schemas/${schemaName}`,
 				dep,
@@ -536,21 +581,17 @@ export async function processOpenApiDocument(
 						...(operationObject.parameters || []),
 						...(pathItemObject.parameters || []),
 					]) {
-						const resolvedParameter = (
-							"$ref" in parameter ? refs.get(parameter.$ref) : parameter
-						) as oas30.ParameterObject;
+						const resolvedParameter: unknown =
+							"$ref" in parameter ? refs.get(parameter.$ref) : parameter;
+
+						if (!isParameterObject(resolvedParameter)) {
+							throw new Error(
+								`${operationObject.operationId}: ${"$ref" in parameter ? parameter.$ref : "a parameter"} does not resolve to a parameter object`,
+							);
+						}
 
 						if (resolvedParameter.in === "path") {
 							pathParameters.push(resolvedParameter);
-
-							// jsdoc.addTag({
-							//   tagName: 'param',
-							//   text: wordWrap(
-							//     `${parameterName} {String} ${
-							//       resolvedParameter.description || ''
-							//     }`,
-							//   ).trim(),
-							// });
 						}
 
 						if (
@@ -581,13 +622,12 @@ export async function processOpenApiDocument(
 						}
 
 						// OpenAPI 3.2's `in: "querystring"` hands over the whole query
-						// string as one content-typed value, which this generator has no
-						// way to express. Without this it matches no branch at all and the
-						// operation quietly loses its query entirely, from a document that
-						// is perfectly valid
-						if (resolvedParameter.in === ("querystring" as string)) {
-							console.warn(
-								`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support — the operation is generated with no query at all. Declare the members as \`in: query\` parameters instead.`,
+						// string as one content-typed value. The generator expresses a
+						// query as named parameters, so generating this operation would
+						// drop its query in silence
+						if (isQuerystringLocation(resolvedParameter.in)) {
+							throw new Error(
+								`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support. Declare the members as \`in: query\` parameters instead.`,
 							);
 						}
 					}
@@ -609,28 +649,33 @@ export async function processOpenApiDocument(
 						}
 					}
 
-					// Only where the document departs from OpenAPI's default does the
-					// client need telling; an absent entry means that default rather
-					// than a generator's guess
-					const styledQueryParameters = queryParameters.filter((parameter) => {
-						const { style, explode } = queryParameterEncoding(parameter);
-						return style !== "form" || !explode;
-					});
+					// rest-client reads form with explode as the default, so only a
+					// departure from it is listed
+					const queryStyleEntries = queryParameters
+						.map(
+							(parameter) =>
+								[parameter.name, queryParameterEncoding(parameter)] as const,
+						)
+						.filter(
+							([, encoding]) => encoding.style !== "form" || !encoding.explode,
+						);
 
-					if (styledQueryParameters.length > 0) {
+					if (queryStyleEntries.length > 0) {
 						commandClassDeclaration.addProperty({
 							name: "queryStyles",
 							hasOverrideKeyword: true,
 							scope: Scope.Public,
-							initializer: JSON.stringify(
-								Object.fromEntries(
-									styledQueryParameters.map((parameter) => {
-										const { style, explode } =
-											queryParameterEncoding(parameter);
-										return [parameter.name, { style, explode }];
-									}),
-								),
-							),
+							initializer: (writer) => {
+								writer.write("{");
+								writer.indent(() => {
+									for (const [name, encoding] of queryStyleEntries) {
+										writer.writeLine(
+											`${JSON.stringify(name)}: { style: ${JSON.stringify(encoding.style)}, explode: ${encoding.explode} },`,
+										);
+									}
+								});
+								writer.write("} as const");
+							},
 						});
 					}
 
@@ -767,13 +812,6 @@ export async function processOpenApiDocument(
 							pascalCase(operationObject.operationId || "", "JsonBody"),
 						);
 
-						// if (!requestBodySchema) {
-						//   return {
-						//     name,
-						//     hasQuestionToken: !requestBodyObjectJson.schema.required,
-						//   };
-						// }
-
 						const type = schemaToType(
 							typesAndInterfaces,
 							jsonRequestBodyObject.schema.required
@@ -791,10 +829,6 @@ export async function processOpenApiDocument(
 							type:
 								typeof type.type === "function" ? type.type : String(type.type),
 						});
-
-						// console.warn("Couldn't find a body type for", requestBodyObjectJson.schema);
-
-						// return undefined;
 					});
 
 					const nonJsonBodyEntries = requestBodyObject?.content
@@ -835,19 +869,6 @@ export async function processOpenApiDocument(
 																type: "NonNullable<RequestInit['body']>",
 															});
 
-															// nonJsonBody.addJsDoc({
-															//   description: `The body of the request, encoded as ${contentType}`,
-															//   tags: [
-															//     {
-															//       tagName: 'param',
-															//       text: wordWrap(
-															//         `body {${nonJsonBody.getName()}} ${mediaTypeObj.schema?.description || ''
-															//         }`,
-															//       ).trim(),
-															//     },
-															//   ],
-															// });
-
 															return nonJsonBody.getName();
 														},
 													),
@@ -857,18 +878,6 @@ export async function processOpenApiDocument(
 									}),
 								})
 							: undefined;
-
-					// ensureImport(bodyType);
-
-					// const paramsParamName = 'parameters';
-					// if (bodyType) {
-					//   jsdoc.addTag({
-					//     tagName: 'param',
-					//     text: wordWrap(
-					//       `${paramsParamName}.body {${bodyType.getName()}} ${maybeJsDocDescription()}`,
-					//     ).trim(),
-					//   });
-					// }
 
 					const paramsType =
 						pathParameters.length > 0
@@ -910,7 +919,7 @@ export async function processOpenApiDocument(
 									}),
 									isExported: true,
 								})
-							: null;
+							: undefined;
 
 					const bodyType =
 						(jsonBodyType &&
@@ -928,9 +937,9 @@ export async function processOpenApiDocument(
 						ensureImport(bodyType);
 					}
 
-					// An array body cannot be intersected with the parameters and still
-					// be read as either: the array wins and the parameters vanish. It
-					// goes under `body`, the same way a non-JSON body already does
+					// An array body intersected with the parameters reads as the array
+					// alone, and the parameters vanish. It goes under `body`, the same
+					// way a non-JSON body already does
 					const jsonBodySchema = jsonRequestBodyObject?.schema;
 					const jsonBodyIsArray =
 						!!jsonBodySchema &&
@@ -953,15 +962,17 @@ export async function processOpenApiDocument(
 								})
 							: undefined;
 
+					const inputTypeNode = createIntersection(
+						wrappedJsonBodyType?.getName() ||
+							jsonBodyType?.getName() ||
+							nonJsonBodyType?.getName(),
+						paramsType?.getName(),
+						queryType?.getName(),
+					);
+
 					const inputType = typesFile.addTypeAlias({
 						name: pascalCase(commandClassDeclaration.getName() || "", "Input"),
-						type: createIntersection(
-							wrappedJsonBodyType?.getName() ||
-								jsonBodyType?.getName() ||
-								nonJsonBodyType?.getName(),
-							paramsType?.getName(),
-							queryType?.getName(),
-						),
+						type: inputTypeNode,
 						isExported: true,
 					});
 					ensureImport(inputType);
@@ -986,7 +997,7 @@ export async function processOpenApiDocument(
 						return response.content?.["application/json"]?.schema;
 					});
 
-					// Hook: Generate Valibot validator for operation input
+					// Generate the valibot validator for the operation input
 					const operationSchemas = createValidatorForOperationInput(
 						validators,
 						valibotFile,
@@ -1009,10 +1020,7 @@ export async function processOpenApiDocument(
 					const middlewareExportName = castToValidJsIdentifier(
 						operationObject.operationId.replace(/Command$/i, ""),
 					);
-					warnOnUnderspecifiedQuery(
-						operationObject.operationId,
-						queryParameters,
-					);
+					checkQueryParameters(operationObject.operationId, queryParameters);
 
 					allOperations.push({
 						exportName: middlewareExportName,
@@ -1024,16 +1032,13 @@ export async function processOpenApiDocument(
 							.filter((spec) => spec !== undefined),
 					});
 
-					// CommandInput — widen optional fields with `| undefined` at the
-					// serialization boundary. Outbound payloads are about to be
-					// JSON.stringified (which drops `undefined`), so callers can pass
-					// `{ field: undefined }` even under exactOptionalPropertyTypes.
-					// For non-JSON bodies (octet-stream, multipart, …) the `body`
-					// field carries a BodyInit class instance (Blob, URLSearchParams,
-					// ReadableStream, …). UndefinedOnPartialDeep traverses class
-					// instances and mangles them, so split the input: widen everything
-					// except `body`, then re-intersect the raw body field
-					const inputTypeArg = ((): string => {
+					// Widen optional fields with `| undefined` at the serialization
+					// boundary. Outbound payloads are JSON.stringified, which drops
+					// `undefined`, so callers can pass `{ field: undefined }` even
+					// under exactOptionalPropertyTypes. A non-JSON `body` field holds
+					// a BodyInit class instance, which UndefinedOnPartialDeep would
+					// mangle, so widen everything else and re-intersect `body`
+					const inputTypeArg = (() => {
 						if (!inputType) {
 							return unspecifiedKeyword;
 						}
@@ -1045,36 +1050,13 @@ export async function processOpenApiDocument(
 							: `UndefinedOnPartialDeep<${inputTypeName}>`;
 					})();
 
-					if (inputType) {
+					// `A | never` is `A`, so the member is left out
+					if (inputTypeNode !== neverKeyword) {
 						inputTypeArgs.add(inputTypeArg);
 						inputTypeNames.add(inputType.getName());
 					}
 
 					commandClassDeclaration.getExtends()?.addTypeArgument(inputTypeArg);
-
-					// if (queryType && !isVoidKeyword(queryType)) {
-					//   ctor.addParameter({
-					//     name: 'query',
-					//     type: queryType.getName(),
-					//   });
-					// }
-
-					// for (const queryParam of queryParameters) {
-					//   const queryParameterName = camelcase(queryParam.name);
-
-					//   jsdoc.addTag({
-					//     tagName: 'param',
-					//     text: wordWrap(
-					//       `${paramsParamName}.query.${queryParameterName}${
-					//         queryParam.required ? '' : '?'
-					//       } {String} ${maybeJsDocDescription(
-					//         queryParam.deprecated && 'DEPRECATED',
-					//         queryParam.description,
-					//         String(queryParam.example || ''),
-					//       )}`,
-					//     ).trim(),
-					//   });
-					// }
 
 					// this is just like a 204 response
 					let hasOutputType = false;
@@ -1092,10 +1074,10 @@ export async function processOpenApiDocument(
 					for (const [statusCode, response] of Object.entries({
 						...operationObject.responses,
 					}).filter(([s]) => s.startsWith("2"))) {
-						// The output is one type argument, so the first usable 2xx
-						// response settles it. Without this an operation documenting both
-						// a 200 and a 204 adds a second argument, which lands in the
-						// query slot and is not a query type
+						// Output is one type argument, so the first usable 2xx response
+						// settles it. An operation documenting both a 200 and a 204 would
+						// otherwise add a second argument, which lands in the query slot
+						// and is not a query type
 						if (hasOutputType) {
 							break;
 						}
@@ -1156,10 +1138,10 @@ export async function processOpenApiDocument(
 								?.addTypeArgument(outputTypeName);
 							hasOutputType = true;
 
-							// Handler-return alias for `c.json(...)` on the server side:
-							// about to be JSON.stringified (drops `undefined`), so the
-							// optional fields can carry `undefined`. Mirrors the `input*`
-							// prefix used for the lax variant in valibot.ts
+							// Handler-return alias for `c.json(...)` on the server side.
+							// The value is JSON.stringified, which drops `undefined`, so
+							// optional fields may hold `undefined`. Mirrors the `input*`
+							// prefix used for the lax variant in the valibot module
 							typesFile.addTypeAlias({
 								name: pascalCase(
 									"Input",
@@ -1169,11 +1151,6 @@ export async function processOpenApiDocument(
 								type: `UndefinedOnPartialDeep<${outputTypeName}>`,
 								isExported: true,
 							});
-
-							// jsdoc.addTag({
-							//   tagName: 'returns',
-							//   text: `{${retVal}} HTTP ${statusCode}`,
-							// });
 						} else if (jsonResponse.schema) {
 							const outputType = schemaToType(
 								typesAndInterfaces,
@@ -1220,13 +1197,12 @@ export async function processOpenApiDocument(
 							?.addTypeArgument(unspecifiedKeyword);
 					}
 
-					// Defer static schema attachment to commands-validated.ts. The lean
-					// commands.ts file carries no schema imports — body/param/query
-					// schemas aren't read by rest-client anyway (hono.ts imports
-					// directly from valibot.ts for server middleware), and the response
-					// schema lives on the validated subclass.
-					// Wire variant is what rest-client + hono consume; falls back to
-					// the input variant under --input-only
+					// Static schema attachment is deferred to the validated module, so
+					// the base command module imports zero schemas. rest-client reads
+					// the response schema from the validated subclass, and the server
+					// middleware imports body, param and query schemas directly. The
+					// wire variant is what rest-client and hono consume, falling back
+					// to the input variant under --input-only
 					const wireSchemas = options?.inputOnly
 						? operationSchemas.input
 						: operationSchemas.wire;
@@ -1303,11 +1279,11 @@ export async function processOpenApiDocument(
 
 						const queryParameterNames = queryParameters
 							.map((q) => q.name)
-							.map(castToValidJsIdentifier);
+							.map((name) => castToValidJsIdentifier(name));
 
 						const pathParameterNames = pathParameters
 							.map((q) => q.name)
-							.map(castToValidJsIdentifier);
+							.map((name) => castToValidJsIdentifier(name));
 
 						const paramsToDestructure = [
 							...pathParameterNames,
@@ -1451,15 +1427,15 @@ export async function processOpenApiDocument(
 		],
 	});
 
-	// Re-export the runtime error consumers need for `instanceof` narrowing so
-	// they don't have to add a direct @block65/rest-client dependency just for it
+	// Re-export the runtime error consumers need for `instanceof` narrowing,
+	// sparing them a direct @block65/rest-client dependency for it alone
 	mainFile.addExportDeclaration({
 		moduleSpecifier: "@block65/rest-client",
 		namedExports: ["ResponseValidationError"],
 	});
 
-	// Cross-client guard: commands from another generated client fail the
-	// `<AllInputs, AllOutputs>` constraint on `.json()`
+	// Commands from another generated client fail the `<AllInputs, AllOutputs>`
+	// constraint on `.json()`, which guards against mixing clients
 	const outputUnionMembers = [...outputTypes]
 		.map((t) => (typeof t === "string" ? t : t.getName()))
 		.filter((name): name is string => !!name && name !== unspecifiedKeyword);
@@ -1521,12 +1497,6 @@ export async function processOpenApiDocument(
 		}')`,
 	});
 
-	// const fetcherParam = ctor.addParameter({
-	//   name: 'fetcher',
-	//   // type: fetcherMethodType,
-	//   initializer: `${fetcherName}()`,
-	// });
-
 	const configParam = ctor.addParameter({
 		name: "config",
 		type: configType,
@@ -1542,24 +1512,19 @@ export async function processOpenApiDocument(
 
 	// type narrowing
 	if (Node.isCallExpression(callExpr)) {
-		callExpr?.addArguments([
-			baseUrl.getName(),
-			// fetcherParam.getName()
-			configParam.getName(),
-		]);
+		callExpr?.addArguments([baseUrl.getName(), configParam.getName()]);
 	}
 
-	// Build commands-validated.ts: subclasses attach `static responseSchema`,
-	// commands with no response schema are re-exported unchanged so the file
-	// keeps export parity with commands.ts (alias-safe)
+	// Build the validated module. Subclasses attach `static responseSchema`,
+	// and commands lacking one are re-exported unchanged so the module keeps
+	// export parity with the base and stays alias-safe
 	const commandsModuleSpecifier = `./${commandsFile.getBaseNameWithoutExtension()}.js`;
 
 	if (validatedSubclasses.length > 0) {
 		// Namespace imports keep the generated file compact and stable across
-		// regenerations: adding or removing a single command leaves the import
+		// regenerations. Adding or removing a single command leaves the import
 		// list alone. Modern bundlers tree-shake namespace imports correctly
-		// when source modules are side-effect-free (which valibot.ts and
-		// commands.ts both are)
+		// when the source modules are pure, which holds for both
 		const commandsNs = "commands";
 		const schemasNs = "schemas";
 
@@ -1605,11 +1570,7 @@ export async function processOpenApiDocument(
 	valibotFile.fixUnusedIdentifiers();
 
 	// Generate hono file
-	const honoFile = createHonoFile(
-		project,
-		outputDir,
-		allOperations.some((op) => op.schemas.query),
-	);
+	const honoFile = createHonoFile(project, outputDir);
 
 	// Collect all schema names needed
 	const schemaImports = new Set<string>();
@@ -1622,7 +1583,7 @@ export async function processOpenApiDocument(
 		}
 	}
 
-	// Add imports from valibot.ts
+	// Add the schema imports
 	addSchemaImportsToHonoFile(honoFile, [...schemaImports]);
 
 	// Generate middleware exports for each operation
@@ -1632,9 +1593,9 @@ export async function processOpenApiDocument(
 
 	honoFile.fixUnusedIdentifiers();
 
-	// `Command` defaults its output to `unknown`, so spelling it out says
-	// nothing. Only a trailing one can go: an earlier argument still holds the
-	// position of whatever follows it
+	// `Command` defaults its output to `unknown`, so an explicit `unknown`
+	// repeats the default. A trailing argument can go, while an earlier one
+	// holds the position of the arguments after it
 	for (const commandClass of commandsFile.getClasses()) {
 		const base = commandClass.getExtends();
 		const typeArguments = base?.getTypeArguments() ?? [];

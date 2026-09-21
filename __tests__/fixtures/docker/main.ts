@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 import {
 	RestServiceClient,
 	type RestServiceClientConfig,
@@ -132,15 +133,12 @@ import type {
 	ServiceLogsCommandInput,
 	ServiceUpdateCommandInput,
 	ServiceUpdateCommandOutput,
-	SessionCommandInput,
 	SwarmInitCommandInput,
 	SwarmInitCommandOutput,
-	SwarmInspectCommandInput,
 	SwarmInspectCommandOutput,
 	SwarmJoinCommandInput,
 	SwarmLeaveCommandInput,
 	SwarmUnlockCommandInput,
-	SwarmUnlockkeyCommandInput,
 	SwarmUnlockkeyCommandOutput,
 	SwarmUpdateCommandInput,
 	SystemAuthCommandInput,
@@ -149,11 +147,7 @@ import type {
 	SystemDataUsageCommandOutput,
 	SystemEventsCommandInput,
 	SystemEventsCommandOutput,
-	SystemInfoCommandInput,
 	SystemInfoCommandOutput,
-	SystemPingCommandInput,
-	SystemPingHeadCommandInput,
-	SystemVersionCommandInput,
 	SystemVersionCommandOutput,
 	TaskInspectCommandInput,
 	TaskInspectCommandOutput,
@@ -263,21 +257,14 @@ type AllInputs =
 	| UndefinedOnPartialDeep<ServiceListCommandInput>
 	| UndefinedOnPartialDeep<ServiceLogsCommandInput>
 	| UndefinedOnPartialDeep<ServiceUpdateCommandInput>
-	| UndefinedOnPartialDeep<SessionCommandInput>
 	| UndefinedOnPartialDeep<SwarmInitCommandInput>
-	| UndefinedOnPartialDeep<SwarmInspectCommandInput>
 	| UndefinedOnPartialDeep<SwarmJoinCommandInput>
 	| UndefinedOnPartialDeep<SwarmLeaveCommandInput>
 	| UndefinedOnPartialDeep<SwarmUnlockCommandInput>
-	| UndefinedOnPartialDeep<SwarmUnlockkeyCommandInput>
 	| UndefinedOnPartialDeep<SwarmUpdateCommandInput>
 	| UndefinedOnPartialDeep<SystemAuthCommandInput>
 	| UndefinedOnPartialDeep<SystemDataUsageCommandInput>
 	| UndefinedOnPartialDeep<SystemEventsCommandInput>
-	| UndefinedOnPartialDeep<SystemInfoCommandInput>
-	| UndefinedOnPartialDeep<SystemPingCommandInput>
-	| UndefinedOnPartialDeep<SystemPingHeadCommandInput>
-	| UndefinedOnPartialDeep<SystemVersionCommandInput>
 	| UndefinedOnPartialDeep<TaskInspectCommandInput>
 	| UndefinedOnPartialDeep<TaskListCommandInput>
 	| UndefinedOnPartialDeep<TaskLogsCommandInput>

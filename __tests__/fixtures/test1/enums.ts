@@ -3,6 +3,7 @@
  *
  * Do not edit directly
  */
+
 export const nullableStatus = ["active", "paused", "cancelled"] as const;
 export const accountTier = ["free", "pro", "enterprise"] as const;
 export const billingSubscriptionStatus = ["active", "inactive"] as const;
