@@ -225,12 +225,13 @@ export function schemaToType(
 					})
 					.filter((tag): tag is { tagName: string; text: string } => !!tag);
 
-				return {
-					...(description && { description }),
-					...(tags.length > 0 && { tags }),
-				};
+				if (tags.length > 0) {
+					return description ? { description, tags } : { tags };
+				}
+
+				return description ? { description } : {};
 			})
-			// a JSDoc block with neither a description nor a tag maps to {}
+			// an empty JSDoc block maps to {}
 			.filter((doc) => Object.keys(doc).length > 0);
 
 		return {

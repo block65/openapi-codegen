@@ -11,7 +11,7 @@ import {
 } from "ts-morph";
 import type { Primitive } from "type-fest";
 import type * as v from "valibot";
-import { wordWrap } from "./utils.ts";
+import { typedEntries, wordWrap } from "./utils.ts";
 
 // input uses `v.optional` and skips coercion, wire uses `v.exactOptional`
 type SchemaMode = "input" | "wire";
@@ -892,6 +892,16 @@ function asHttpParamValidator(
 	return schemaToValidator(validatorSchemas, schema, "wire");
 }
 
+type SchemaNamePair = { inputName: string; wireName: string };
+
+type OperationSchemaNames = {
+	json?: string;
+	response?: string;
+	param?: string;
+	query?: string;
+	header?: string;
+};
+
 /**
  * Creates validator schemas for operation input (body, params, query) in the
  * valibot file. Returns the schema names for use in middleware generation
@@ -908,37 +918,7 @@ export function createValidatorForOperationInput(
 		header: oas30.ParameterObject[];
 	},
 	inputOnly?: boolean,
-): {
-	input: {
-		json?: string;
-		response?: string;
-		param?: string;
-		query?: string;
-		header?: string;
-	};
-	wire: {
-		json?: string;
-		response?: string;
-		param?: string;
-		query?: string;
-		header?: string;
-	};
-} {
-	const inputResult: {
-		json?: string;
-		response?: string;
-		param?: string;
-		query?: string;
-		header?: string;
-	} = {};
-	const wireResult: {
-		json?: string;
-		response?: string;
-		param?: string;
-		query?: string;
-		header?: string;
-	} = {};
-
+): { input: OperationSchemaNames; wire: OperationSchemaNames } {
 	const emitSchemaPair = (
 		segment: "body" | "response",
 		schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
@@ -973,35 +953,13 @@ export function createValidatorForOperationInput(
 		return { inputName, wireName };
 	};
 
-	// 1. Generate the JSON Body Schema
-	if (input.body) {
-		const { inputName, wireName } = emitSchemaPair("body", input.body);
-		inputResult.json = inputName;
-		wireResult.json = wireName;
-	}
-
-	// 1b. Generate the Response Schema (mirrors body — accepts inline or $ref)
-	if (input.response) {
-		const { inputName, wireName } = emitSchemaPair("response", input.response);
-		inputResult.response = inputName;
-		wireResult.response = wireName;
-	}
-
-	// 2. Helper for Params/Query (Strict Objects)
+	// Params/Query (Strict Objects)
 	const addParams = (
 		type: "params" | "query",
 		list: oas30.ParameterObject[],
 	) => {
-		if (list.length === 0) {
-			return;
-		}
-
-		const schemaKey = type === "params" ? "param" : "query";
-
 		const inputName = camelcase(["input", commandName, type, "schema"]);
 		const wireName = camelcase([commandName, type, "schema"]);
-		inputResult[schemaKey] = inputName;
-		wireResult[schemaKey] = wireName;
 
 		const isHttpParam = type === "query";
 
@@ -1052,17 +1010,14 @@ export function createValidatorForOperationInput(
 				],
 			});
 		}
+
+		return { inputName, wireName };
 	};
 
-	addParams("params", input.params);
-	addParams("query", input.query);
-
-	// 3. Header schema (non-strict to allow extra HTTP headers)
-	if (input.header.length > 0) {
+	// Header schema (non-strict to allow extra HTTP headers)
+	const addHeader = () => {
 		const inputName = camelcase(["input", commandName, "header", "schema"]);
 		const wireName = camelcase([commandName, "header", "schema"]);
-		inputResult.header = inputName;
-		wireResult.header = wireName;
 
 		const buildPropertyMap = (mode: SchemaMode) =>
 			Object.fromEntries(
@@ -1111,7 +1066,30 @@ export function createValidatorForOperationInput(
 				],
 			});
 		}
-	}
 
-	return { input: inputResult, wire: wireResult };
+		return { inputName, wireName };
+	};
+
+	const named = typedEntries({
+		json: input.body ? emitSchemaPair("body", input.body) : undefined,
+		response: input.response
+			? emitSchemaPair("response", input.response)
+			: undefined,
+		param:
+			input.params.length > 0 ? addParams("params", input.params) : undefined,
+		query: input.query.length > 0 ? addParams("query", input.query) : undefined,
+		header: input.header.length > 0 ? addHeader() : undefined,
+	}).filter(
+		(entry): entry is [keyof OperationSchemaNames, SchemaNamePair] =>
+			entry[1] !== undefined,
+	);
+
+	return {
+		input: Object.fromEntries(
+			named.map(([key, names]) => [key, names.inputName]),
+		),
+		wire: Object.fromEntries(
+			named.map(([key, names]) => [key, names.wireName]),
+		),
+	};
 }
