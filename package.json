@@ -33,7 +33,7 @@
 	"devDependencies": {
 		"@block65/custom-error": "^14.1.0",
 		"@block65/rest-client": "^14.2.0",
-		"@block65/shared-config": "^0.3.1",
+		"@block65/shared-config": "^0.4.0",
 		"@block65/tsconfig": "^0.3.1",
 		"@hono/standard-validator": "^0.4.0",
 		"@types/node": "^26.6.2",
@@ -44,7 +44,7 @@
 		"openapi3-ts": "^4.6.1",
 		"oxfmt": "^0.68.0",
 		"oxlint": "^1.83.0",
-		"oxlint-tsgolint": "^7.0.2001",
+		"oxlint-tsgolint": "^7.0.2002",
 		"type-fest": "^5.10.0",
 		"typescript": "^7.0.2",
 		"undici": "^8.10.2",
