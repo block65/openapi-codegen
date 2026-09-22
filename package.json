@@ -32,7 +32,7 @@
 	},
 	"devDependencies": {
 		"@block65/custom-error": "^14.1.0",
-		"@block65/rest-client": "^14.2.0",
+		"@block65/rest-client": "^15.0.0",
 		"@block65/shared-config": "^0.4.0",
 		"@block65/tsconfig": "^0.3.1",
 		"@hono/standard-validator": "^0.4.0",
@@ -53,7 +53,7 @@
 		"vitest": "^5.0.1"
 	},
 	"peerDependencies": {
-		"@block65/rest-client": "^14.2.0",
+		"@block65/rest-client": "^15.0.0",
 		"@hono/standard-validator": "^0.4.0",
 		"hono": "^4.13.8",
 		"type-fest": "^5.10.0",
