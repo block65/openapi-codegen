@@ -300,6 +300,379 @@ function writeStrictObjectEntries(
 	});
 }
 
+type AnySchema = oas30.SchemaObject | oas31.SchemaObject;
+
+// Narrows the inferred output to the `x-typescript-hint` type
+function extensionHintSchema(schema: AnySchema) {
+	const typescriptHint =
+		"x-typescript-hint" in schema &&
+		typeof schema["x-typescript-hint"] === "string"
+			? schema["x-typescript-hint"]
+			: undefined;
+
+	return typescriptHint ? `v.custom<${typescriptHint}>(() => true)` : undefined;
+}
+
+function enumValidator(values: unknown[], isNullable: boolean) {
+	// Enums short-circuit every type-specific constraint. Valid values are
+	// exactly the enum members, under any declared type, format or minLength.
+	// Layering string() or minLength() on top yields a misleading error about
+	// the wrong contract, so emit a bare picklist
+	const hasNull = values.some((value) => value === null);
+	const members = values.filter((value) => value !== null);
+	const [first, ...rest] = members;
+
+	if (first === undefined) {
+		return vcall("null");
+	}
+
+	// `picklist` only accepts string | number | bigint members
+	const picklistable = members.every(
+		(value) => typeof value === "string" || typeof value === "number",
+	);
+
+	if (picklistable) {
+		return maybeNullable(
+			vcall(
+				"picklist",
+				members.map((value) => JSON.stringify(value)),
+			),
+			isNullable || hasNull,
+		);
+	}
+
+	// Boolean and other literals use `literal()` instead, or a `union` of
+	// them when there is more than one
+	const base =
+		rest.length === 0
+			? vcall("literal", JSON.stringify(first))
+			: vcall(
+					"union",
+					members.map((value) => vcall("literal", JSON.stringify(value))),
+				);
+
+	return maybeNullable(base, isNullable || hasNull);
+}
+
+// Handle type arrays, added in OpenAPI 3.1
+function typeArrayValidator(
+	validators: Map<string, ValidatorEntry>,
+	schema: AnySchema,
+	types: oas31.SchemaObjectType[],
+	mode: SchemaMode,
+	isNullable: boolean,
+) {
+	const nonNullTypes = types.filter((t) => t !== "null");
+	const [singleType] = nonNullTypes;
+
+	if (nonNullTypes.length === 1 && singleType) {
+		return maybeNullable(
+			schemaToValidator(
+				validators,
+				{
+					...schema,
+					type: singleType,
+				} satisfies typeof schema,
+				mode,
+			),
+			isNullable,
+		);
+	}
+
+	const variants = nonNullTypes.map((t) =>
+		schemaToValidator(
+			validators,
+			{
+				...schema,
+				type: t,
+			} satisfies typeof schema,
+			mode,
+		),
+	);
+
+	return maybeNullable(
+		variants.length > 0 ? vcall("union", variants) : vcall("unknown"),
+		isNullable,
+	);
+}
+
+function stringValidator(
+	schema: AnySchema,
+	mode: SchemaMode,
+	isNullable: boolean,
+	typescriptHintSchema: string | undefined,
+) {
+	const shouldTrim =
+		mode === "wire" &&
+		!schema.pattern &&
+		(!schema.format || !noTrimFormats.has(schema.format));
+
+	return maybeNullable(
+		maybePipe(
+			vcall("string"),
+			shouldTrim ? vcall("trim") : undefined,
+			schema.format === "email" ? vcall("email") : undefined,
+			schema.format === "uuid" ? vcall("uuid") : undefined,
+			temporalRegexConstraint(schema.format),
+
+			schema.minLength === undefined
+				? undefined
+				: vcall("minLength", numericLiteral(schema.minLength)),
+			schema.maxLength === undefined
+				? undefined
+				: vcall("maxLength", numericLiteral(schema.maxLength)),
+			schema.pattern
+				? vcall("regex", `new RegExp(${regexSource(schema.pattern)})`)
+				: undefined,
+			// A hint set by the `x-typescript-hint` extension wins over the format
+			typescriptHintSchema ? undefined : temporalHintSchema(schema.format),
+			typescriptHintSchema,
+		),
+		isNullable,
+	);
+}
+
+function int64Validator(
+	schema: AnySchema,
+	mode: SchemaMode,
+	isNullable: boolean,
+	typescriptHintSchema: string | undefined,
+) {
+	const baseValidator = maybePipe(
+		vcall("bigint"),
+		schema.minimum === undefined
+			? undefined
+			: vcall("minValue", bigintLiteral(schema.minimum)),
+		schema.maximum === undefined
+			? undefined
+			: vcall("maxValue", bigintLiteral(schema.maximum)),
+		typescriptHintSchema,
+	);
+
+	if (mode === "input") {
+		return maybeNullable(baseValidator, isNullable);
+	}
+
+	return maybeNullable(
+		vcall("union", [
+			vcall(
+				"pipe",
+				vcall("string"),
+				vcall("decimal"),
+				vcall("toBigint"),
+				baseValidator,
+			),
+			vcall(
+				"pipe",
+				vcall("number"),
+				vcall("integer"),
+				vcall("toBigint"),
+				baseValidator,
+			),
+			baseValidator,
+		]),
+		isNullable,
+	);
+}
+
+function numberValidator(
+	schema: AnySchema,
+	isNullable: boolean,
+	typescriptHintSchema: string | undefined,
+) {
+	const isInteger = schema.type === "integer";
+
+	return maybeNullable(
+		maybePipe(
+			vcall("number"),
+			isInteger ? vcall("integer") : undefined,
+			schema.minimum === undefined
+				? undefined
+				: vcall("minValue", numericLiteral(schema.minimum)),
+			schema.maximum === undefined
+				? undefined
+				: vcall("maxValue", numericLiteral(schema.maximum)),
+			typescriptHintSchema,
+		),
+		isNullable,
+	);
+}
+
+function writeSpreadEntries(
+	writer: CodeBlockWriter,
+	validator: WriterFunction | string,
+) {
+	writer.write("...");
+
+	if (typeof validator === "function") {
+		validator(writer);
+	} else {
+		writer.write(validator);
+	}
+
+	writer.writeLine(".entries,");
+}
+
+function writeAllOfMember(
+	writer: CodeBlockWriter,
+	validators: Map<string, ValidatorEntry>,
+	member: AnySchemaOrRef,
+	mode: SchemaMode,
+) {
+	if ("$ref" in member) {
+		writeSpreadEntries(writer, resolveRef(validators, member.$ref, mode));
+
+		return;
+	}
+
+	const isObjectShape =
+		member.type === "object" ||
+		(member.properties !== undefined && member.type === undefined);
+
+	if (isObjectShape) {
+		writeStrictObjectEntries(
+			writer,
+			validators,
+			member.properties ?? {},
+			new Set(member.required),
+			mode,
+		);
+
+		return;
+	}
+
+	// Nested combinators and unusual shapes recurse, spreading the
+	// result's entries. Valid as long as the recursion yields an
+	// object-like schema, and GIGO otherwise
+	writeSpreadEntries(writer, schemaToValidator(validators, member, mode));
+}
+
+function allOfObjectValidator(
+	validators: Map<string, ValidatorEntry>,
+	schema: AnySchema,
+	allOfMembers: AnySchemaOrRef[],
+	mode: SchemaMode,
+	isNullable: boolean,
+) {
+	// allOf of object schemas composes into a single v.strictObject. Inline
+	// object members contribute their properties directly, and $ref members
+	// are spread via `<refName>.entries`. v.intersect of strictObjects is
+	// unsatisfiable when member property sets differ, because each
+	// strictObject independently rejects keys the others contribute
+	return maybeNullable(
+		maybePipe(
+			// only a document that says additionalProperties false gets a
+			// strict object
+			vcall(
+				schema.additionalProperties === false ? "strictObject" : "looseObject",
+				(writer: CodeBlockWriter) => {
+					writer.writeLine("{");
+					writer.indent(() => {
+						allOfMembers.forEach((member) => {
+							writeAllOfMember(writer, validators, member, mode);
+						});
+					});
+					writer.write("}");
+				},
+			),
+			...minMaxProperties(schema),
+		),
+		isNullable,
+	);
+}
+
+function combinatorValidator(
+	validators: Map<string, ValidatorEntry>,
+	schema: AnySchema,
+	combinator: AnySchemaOrRef[],
+	mode: SchemaMode,
+	isNullable: boolean,
+) {
+	const allOfMembers = schema.allOf;
+
+	if (allOfMembers) {
+		return allOfObjectValidator(
+			validators,
+			schema,
+			allOfMembers,
+			mode,
+			isNullable,
+		);
+	}
+
+	const variants = combinator.map((s) =>
+		schemaToValidator(validators, s, mode),
+	);
+
+	if (schema.oneOf && schema.discriminator?.propertyName) {
+		return maybeNullable(
+			vcall(
+				"variant",
+				JSON.stringify(schema.discriminator.propertyName),
+				variants,
+			),
+			isNullable,
+		);
+	}
+
+	return maybeNullable(vcall("union", variants), isNullable);
+}
+
+function objectValidator(
+	validators: Map<string, ValidatorEntry>,
+	schema: AnySchema,
+	mode: SchemaMode,
+	isNullable: boolean,
+) {
+	const props = schema.properties ?? {};
+
+	// `additionalProperties` names the schema every key outside `properties`
+	// has to satisfy, so those keys are part of the contract. `true` and an
+	// empty schema allow any key, and so does an absent keyword
+	const restSchema =
+		typeof schema.additionalProperties === "object" &&
+		schema.additionalProperties !== null
+			? schema.additionalProperties
+			: undefined;
+	const restAllowsAnything =
+		restSchema !== undefined && Object.keys(restSchema).length === 0;
+	const rest =
+		restSchema && !restAllowsAnything
+			? schemaToValidator(validators, restSchema, mode)
+			: undefined;
+	const allowsAnyKey = schema.additionalProperties !== false;
+
+	if (Object.keys(props).length === 0) {
+		return maybeNullable(
+			maybePipe(
+				vcall("record", vcall("string"), rest ?? vcall("unknown")),
+				...minMaxProperties(schema),
+			),
+			isNullable,
+		);
+	}
+
+	const requiredProps = new Set(schema.required);
+
+	const entries = (writer: CodeBlockWriter) => {
+		writer.writeLine("{");
+		writer.indent(() => {
+			writeStrictObjectEntries(writer, validators, props, requiredProps, mode);
+		});
+		writer.write("}");
+	};
+
+	return maybeNullable(
+		maybePipe(
+			rest
+				? vcall("objectWithRest", entries, rest)
+				: vcall(allowsAnyKey ? "looseObject" : "strictObject", entries),
+			...minMaxProperties(schema),
+		),
+		isNullable,
+	);
+}
+
 function schemaToValidator(
 	validators: Map<string, ValidatorEntry>,
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
@@ -310,16 +683,7 @@ function schemaToValidator(
 	}
 
 	const isNullable = schemaIsNullable(schema);
-
-	const typescriptHint =
-		"x-typescript-hint" in schema &&
-		typeof schema["x-typescript-hint"] === "string"
-			? schema["x-typescript-hint"]
-			: undefined;
-
-	const typescriptHintSchema = typescriptHint
-		? `v.custom<${typescriptHint}>(() => true)`
-		: undefined;
+	const typescriptHintSchema = extensionHintSchema(schema);
 
 	// Handle const values, added in OpenAPI 3.1
 	if ("const" in schema) {
@@ -331,169 +695,30 @@ function schemaToValidator(
 				);
 	}
 
-	// Enums short-circuit every type-specific constraint. Valid values are
-	// exactly the enum members, under any declared type, format or minLength.
-	// Layering string() or minLength() on top yields a misleading error about
-	// the wrong contract, so emit a bare picklist
 	if (schema.enum) {
-		const hasNull = schema.enum.some((value) => value === null);
-		const members = schema.enum.filter((value) => value !== null);
-		const [first, ...rest] = members;
-
-		if (first === undefined) {
-			return vcall("null");
-		}
-
-		// `picklist` only accepts string | number | bigint members
-		const picklistable = members.every(
-			(value) => typeof value === "string" || typeof value === "number",
-		);
-
-		if (picklistable) {
-			return maybeNullable(
-				vcall(
-					"picklist",
-					members.map((value) => JSON.stringify(value)),
-				),
-				isNullable || hasNull,
-			);
-		}
-
-		// Boolean and other literals use `literal()` instead, or a `union` of
-		// them when there is more than one
-		const base =
-			rest.length === 0
-				? vcall("literal", JSON.stringify(first))
-				: vcall(
-						"union",
-						members.map((value) => vcall("literal", JSON.stringify(value))),
-					);
-
-		return maybeNullable(base, isNullable || hasNull);
+		return enumValidator(schema.enum, isNullable);
 	}
 
-	// Handle type arrays, added in OpenAPI 3.1
 	if (Array.isArray(schema.type)) {
-		const nonNullTypes = schema.type.filter((t) => t !== "null");
-		const [singleType] = nonNullTypes;
-
-		if (nonNullTypes.length === 1 && singleType) {
-			return maybeNullable(
-				schemaToValidator(
-					validators,
-					{
-						...schema,
-						type: singleType,
-					} satisfies typeof schema,
-					mode,
-				),
-				isNullable,
-			);
-		}
-
-		const variants = nonNullTypes.map((t) =>
-			schemaToValidator(
-				validators,
-				{
-					...schema,
-					type: t,
-				} satisfies typeof schema,
-				mode,
-			),
-		);
-
-		return maybeNullable(
-			variants.length > 0 ? vcall("union", variants) : vcall("unknown"),
+		return typeArrayValidator(
+			validators,
+			schema,
+			schema.type,
+			mode,
 			isNullable,
 		);
 	}
 
 	if (schema.type === "string") {
-		const shouldTrim =
-			mode === "wire" &&
-			!schema.pattern &&
-			(!schema.format || !noTrimFormats.has(schema.format));
-
-		return maybeNullable(
-			maybePipe(
-				vcall("string"),
-				shouldTrim ? vcall("trim") : undefined,
-				schema.format === "email" ? vcall("email") : undefined,
-				schema.format === "uuid" ? vcall("uuid") : undefined,
-				temporalRegexConstraint(schema.format),
-
-				schema.minLength === undefined
-					? undefined
-					: vcall("minLength", numericLiteral(schema.minLength)),
-				schema.maxLength === undefined
-					? undefined
-					: vcall("maxLength", numericLiteral(schema.maxLength)),
-				schema.pattern
-					? vcall("regex", `new RegExp(${regexSource(schema.pattern)})`)
-					: undefined,
-				// A hint set by the `x-typescript-hint` extension wins over the format
-				typescriptHint ? undefined : temporalHintSchema(schema.format),
-				typescriptHintSchema,
-			),
-			isNullable,
-		);
+		return stringValidator(schema, mode, isNullable, typescriptHintSchema);
 	}
 
 	if (schema.type === "integer" && schema.format === "int64") {
-		const baseValidator = maybePipe(
-			vcall("bigint"),
-			schema.minimum === undefined
-				? undefined
-				: vcall("minValue", bigintLiteral(schema.minimum)),
-			schema.maximum === undefined
-				? undefined
-				: vcall("maxValue", bigintLiteral(schema.maximum)),
-			typescriptHintSchema,
-		);
-
-		if (mode === "input") {
-			return maybeNullable(baseValidator, isNullable);
-		}
-
-		return maybeNullable(
-			vcall("union", [
-				vcall(
-					"pipe",
-					vcall("string"),
-					vcall("decimal"),
-					vcall("toBigint"),
-					baseValidator,
-				),
-				vcall(
-					"pipe",
-					vcall("number"),
-					vcall("integer"),
-					vcall("toBigint"),
-					baseValidator,
-				),
-				baseValidator,
-			]),
-			isNullable,
-		);
+		return int64Validator(schema, mode, isNullable, typescriptHintSchema);
 	}
 
 	if (schema.type === "number" || schema.type === "integer") {
-		const isInteger = schema.type === "integer";
-
-		return maybeNullable(
-			maybePipe(
-				vcall("number"),
-				isInteger ? vcall("integer") : undefined,
-				schema.minimum === undefined
-					? undefined
-					: vcall("minValue", numericLiteral(schema.minimum)),
-				schema.maximum === undefined
-					? undefined
-					: vcall("maxValue", numericLiteral(schema.maximum)),
-				typescriptHintSchema,
-			),
-			isNullable,
-		);
+		return numberValidator(schema, isNullable, typescriptHintSchema);
 	}
 
 	if (schema.type === "boolean") {
@@ -522,161 +747,20 @@ function schemaToValidator(
 	const combinator = schema.oneOf || schema.anyOf || schema.allOf;
 
 	if (combinator) {
-		// allOf of object schemas composes into a single v.strictObject. Inline
-		// object members contribute their properties directly, and $ref members
-		// are spread via `<refName>.entries`. v.intersect of strictObjects is
-		// unsatisfiable when member property sets differ, because each
-		// strictObject independently rejects keys the others contribute
-		const allOfMembers = schema.allOf;
-
-		if (allOfMembers) {
-			return maybeNullable(
-				maybePipe(
-					// only a document that says additionalProperties false gets a
-					// strict object
-					vcall(
-						schema.additionalProperties === false
-							? "strictObject"
-							: "looseObject",
-						(writer: CodeBlockWriter) => {
-							writer.writeLine("{");
-							writer.indent(() => {
-								allOfMembers.forEach((member) => {
-									if ("$ref" in member) {
-										const resolved = resolveRef(validators, member.$ref, mode);
-										writer.write("...");
-
-										if (typeof resolved === "function") {
-											resolved(writer);
-										} else {
-											writer.write(resolved);
-										}
-
-										writer.writeLine(".entries,");
-
-										return;
-									}
-
-									const isObjectShape =
-										member.type === "object" ||
-										(member.properties !== undefined &&
-											member.type === undefined);
-
-									if (isObjectShape) {
-										writeStrictObjectEntries(
-											writer,
-											validators,
-											member.properties ?? {},
-											new Set(member.required),
-											mode,
-										);
-
-										return;
-									}
-
-									// Nested combinators and unusual shapes recurse, spreading the
-									// result's entries. Valid as long as the recursion yields an
-									// object-like schema, and GIGO otherwise
-									const validator = schemaToValidator(validators, member, mode);
-									writer.write("...");
-
-									if (typeof validator === "function") {
-										validator(writer);
-									} else {
-										writer.write(validator);
-									}
-
-									writer.writeLine(".entries,");
-								});
-							});
-							writer.write("}");
-						},
-					),
-					...minMaxProperties(schema),
-				),
-				isNullable,
-			);
-		}
-
-		const variants = combinator.map((s) =>
-			schemaToValidator(validators, s, mode),
-		);
-
-		if (schema.oneOf && schema.discriminator?.propertyName) {
-			return maybeNullable(
-				vcall(
-					"variant",
-					JSON.stringify(schema.discriminator.propertyName),
-					variants,
-				),
-				isNullable,
-			);
-		}
-
-		return maybeNullable(vcall("union", variants), isNullable);
-	}
-
-	if (schema.type === "object" || schema.properties || !schema.type) {
-		const props = schema.properties ?? {};
-
-		// `additionalProperties` names the schema every key outside `properties`
-		// has to satisfy, so those keys are part of the contract. `true` and an
-		// empty schema allow any key, and so does an absent keyword
-		const restSchema =
-			typeof schema.additionalProperties === "object" &&
-			schema.additionalProperties !== null
-				? schema.additionalProperties
-				: undefined;
-		const restAllowsAnything =
-			restSchema !== undefined && Object.keys(restSchema).length === 0;
-		const rest =
-			restSchema && !restAllowsAnything
-				? schemaToValidator(validators, restSchema, mode)
-				: undefined;
-		const allowsAnyKey = schema.additionalProperties !== false;
-
-		if (Object.keys(props).length === 0) {
-			return maybeNullable(
-				maybePipe(
-					vcall("record", vcall("string"), rest ?? vcall("unknown")),
-					...minMaxProperties(schema),
-				),
-				isNullable,
-			);
-		}
-
-		const requiredProps = new Set(schema.required);
-
-		const entries = (writer: CodeBlockWriter) => {
-			writer.writeLine("{");
-			writer.indent(() => {
-				writeStrictObjectEntries(
-					writer,
-					validators,
-					props,
-					requiredProps,
-					mode,
-				);
-			});
-			writer.write("}");
-		};
-
-		return maybeNullable(
-			maybePipe(
-				rest
-					? vcall("objectWithRest", entries, rest)
-					: vcall(allowsAnyKey ? "looseObject" : "strictObject", entries),
-				...minMaxProperties(schema),
-			),
+		return combinatorValidator(
+			validators,
+			schema,
+			combinator,
+			mode,
 			isNullable,
 		);
 	}
 
-	if (schema.type === "null") {
-		return vcall("null");
+	if (schema.type === "object" || schema.properties || !schema.type) {
+		return objectValidator(validators, schema, mode, isNullable);
 	}
 
-	return vcall("unknown");
+	return schema.type === "null" ? vcall("null") : vcall("unknown");
 }
 
 export function createValibotFile(project: Project, outputDir: string) {
@@ -902,6 +986,126 @@ type OperationSchemaNames = {
 	header?: string;
 };
 
+type OperationTarget = {
+	validatorSchemas: Map<string, ValidatorEntry>;
+	valibotFile: SourceFile;
+	commandName: string;
+	inputOnly: boolean | undefined;
+};
+
+// Emits the input schema and, unless input-only, the wire schema of a segment
+function emitNamePair(
+	target: OperationTarget,
+	segment: string,
+	initializer: (mode: SchemaMode) => WriterFunction | string,
+): SchemaNamePair {
+	const { valibotFile, commandName, inputOnly } = target;
+	const inputName = camelcase(["input", commandName, segment, "schema"]);
+	const wireName = camelcase([commandName, segment, "schema"]);
+
+	valibotFile.addVariableStatement({
+		isExported: true,
+		declarationKind: VariableDeclarationKind.Const,
+		declarations: [
+			{
+				name: inputName,
+				initializer: initializer("input"),
+			},
+		],
+	});
+
+	if (!inputOnly) {
+		valibotFile.addVariableStatement({
+			isExported: true,
+			declarationKind: VariableDeclarationKind.Const,
+			declarations: [
+				{
+					name: wireName,
+					initializer: initializer("wire"),
+				},
+			],
+		});
+	}
+
+	return { inputName, wireName };
+}
+
+function emitSchemaPair(
+	target: OperationTarget,
+	segment: "body" | "response",
+	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+) {
+	return emitNamePair(target, segment, (mode) =>
+		schemaToValidator(target.validatorSchemas, schema, mode),
+	);
+}
+
+function parameterPropertyMap(
+	validatorSchemas: Map<string, ValidatorEntry>,
+	list: oas30.ParameterObject[],
+	mode: SchemaMode,
+	isHttpParam: boolean,
+	toKey: (name: string) => string,
+) {
+	return Object.fromEntries(
+		list.map((p) => {
+			const paramSchema = p.schema ?? { type: "string" as const };
+			const optionalWrapper = mode === "input" ? "optional" : "exactOptional";
+			const validator =
+				mode === "wire" && isHttpParam
+					? asHttpParamValidator(validatorSchemas, paramSchema)
+					: schemaToValidator(validatorSchemas, paramSchema, mode);
+
+			return [
+				JSON.stringify(toKey(p.name)),
+				p.required ? validator : vcall(optionalWrapper, validator),
+			];
+		}),
+	);
+}
+
+// Params/Query (Strict Objects)
+function addParams(
+	target: OperationTarget,
+	type: "params" | "query",
+	list: oas30.ParameterObject[],
+) {
+	const isHttpParam = type === "query";
+
+	return emitNamePair(target, type, (mode) =>
+		vcall(
+			"strictObject",
+			Writers.object(
+				parameterPropertyMap(
+					target.validatorSchemas,
+					list,
+					mode,
+					isHttpParam,
+					(name) => name,
+				),
+			),
+		),
+	);
+}
+
+// Header schema (non-strict to allow extra HTTP headers)
+function addHeader(target: OperationTarget, list: oas30.ParameterObject[]) {
+	return emitNamePair(target, "header", (mode) =>
+		vcall(
+			"object",
+			Writers.object(
+				parameterPropertyMap(
+					target.validatorSchemas,
+					list,
+					mode,
+					true,
+					(name) => name.toLowerCase(),
+				),
+			),
+		),
+	);
+}
+
 /**
  * Creates validator schemas for operation input (body, params, query) in the
  * valibot file. Returns the schema names for use in middleware generation
@@ -919,166 +1123,23 @@ export function createValidatorForOperationInput(
 	},
 	inputOnly?: boolean,
 ): { input: OperationSchemaNames; wire: OperationSchemaNames } {
-	const emitSchemaPair = (
-		segment: "body" | "response",
-		schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
-	) => {
-		const inputName = camelcase(["input", commandName, segment, "schema"]);
-		const wireName = camelcase([commandName, segment, "schema"]);
-
-		valibotFile.addVariableStatement({
-			isExported: true,
-			declarationKind: VariableDeclarationKind.Const,
-			declarations: [
-				{
-					name: inputName,
-					initializer: schemaToValidator(validatorSchemas, schema, "input"),
-				},
-			],
-		});
-
-		if (!inputOnly) {
-			valibotFile.addVariableStatement({
-				isExported: true,
-				declarationKind: VariableDeclarationKind.Const,
-				declarations: [
-					{
-						name: wireName,
-						initializer: schemaToValidator(validatorSchemas, schema, "wire"),
-					},
-				],
-			});
-		}
-
-		return { inputName, wireName };
-	};
-
-	// Params/Query (Strict Objects)
-	const addParams = (
-		type: "params" | "query",
-		list: oas30.ParameterObject[],
-	) => {
-		const inputName = camelcase(["input", commandName, type, "schema"]);
-		const wireName = camelcase([commandName, type, "schema"]);
-
-		const isHttpParam = type === "query";
-
-		const buildPropertyMap = (mode: SchemaMode) =>
-			Object.fromEntries(
-				list.map((p) => {
-					const paramSchema = p.schema ?? { type: "string" as const };
-					const optionalWrapper =
-						mode === "input" ? "optional" : "exactOptional";
-					const validator =
-						mode === "wire" && isHttpParam
-							? asHttpParamValidator(validatorSchemas, paramSchema)
-							: schemaToValidator(validatorSchemas, paramSchema, mode);
-
-					return [
-						JSON.stringify(p.name),
-						p.required ? validator : vcall(optionalWrapper, validator),
-					];
-				}),
-			);
-
-		valibotFile.addVariableStatement({
-			isExported: true,
-			declarationKind: VariableDeclarationKind.Const,
-			declarations: [
-				{
-					name: inputName,
-					initializer: vcall(
-						"strictObject",
-						Writers.object(buildPropertyMap("input")),
-					),
-				},
-			],
-		});
-
-		if (!inputOnly) {
-			valibotFile.addVariableStatement({
-				isExported: true,
-				declarationKind: VariableDeclarationKind.Const,
-				declarations: [
-					{
-						name: wireName,
-						initializer: vcall(
-							"strictObject",
-							Writers.object(buildPropertyMap("wire")),
-						),
-					},
-				],
-			});
-		}
-
-		return { inputName, wireName };
-	};
-
-	// Header schema (non-strict to allow extra HTTP headers)
-	const addHeader = () => {
-		const inputName = camelcase(["input", commandName, "header", "schema"]);
-		const wireName = camelcase([commandName, "header", "schema"]);
-
-		const buildPropertyMap = (mode: SchemaMode) =>
-			Object.fromEntries(
-				input.header.map((p) => {
-					const paramSchema = p.schema ?? { type: "string" as const };
-					const optionalWrapper =
-						mode === "input" ? "optional" : "exactOptional";
-					const validator =
-						mode === "wire"
-							? asHttpParamValidator(validatorSchemas, paramSchema)
-							: schemaToValidator(validatorSchemas, paramSchema, mode);
-
-					return [
-						JSON.stringify(p.name.toLowerCase()),
-						p.required ? validator : vcall(optionalWrapper, validator),
-					];
-				}),
-			);
-
-		valibotFile.addVariableStatement({
-			isExported: true,
-			declarationKind: VariableDeclarationKind.Const,
-			declarations: [
-				{
-					name: inputName,
-					initializer: vcall(
-						"object",
-						Writers.object(buildPropertyMap("input")),
-					),
-				},
-			],
-		});
-
-		if (!inputOnly) {
-			valibotFile.addVariableStatement({
-				isExported: true,
-				declarationKind: VariableDeclarationKind.Const,
-				declarations: [
-					{
-						name: wireName,
-						initializer: vcall(
-							"object",
-							Writers.object(buildPropertyMap("wire")),
-						),
-					},
-				],
-			});
-		}
-
-		return { inputName, wireName };
-	};
+	const target = { validatorSchemas, valibotFile, commandName, inputOnly };
 
 	const named = typedEntries({
-		json: input.body ? emitSchemaPair("body", input.body) : undefined,
+		json: input.body ? emitSchemaPair(target, "body", input.body) : undefined,
 		response: input.response
-			? emitSchemaPair("response", input.response)
+			? emitSchemaPair(target, "response", input.response)
 			: undefined,
 		param:
-			input.params.length > 0 ? addParams("params", input.params) : undefined,
-		query: input.query.length > 0 ? addParams("query", input.query) : undefined,
-		header: input.header.length > 0 ? addHeader() : undefined,
+			input.params.length > 0
+				? addParams(target, "params", input.params)
+				: undefined,
+		query:
+			input.query.length > 0
+				? addParams(target, "query", input.query)
+				: undefined,
+		header:
+			input.header.length > 0 ? addHeader(target, input.header) : undefined,
 	}).filter(
 		(entry): entry is [keyof OperationSchemaNames, SchemaNamePair] =>
 			entry[1] !== undefined,
