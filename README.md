@@ -58,8 +58,11 @@ carrying the `style` and `explode` each parameter declares:
 import { listPetsQueryParams } from "./generated/hono.ts";
 ```
 
-The client half is already handled: `@block65/rest-client` encodes each
-parameter from the `queryStyles` the generated command carries.
+The client half is already handled: a generated command names the
+`@block65/rest-client` serializer for the style its document states, and
+inherits `formExplodeSerializer` — form with explode, the OpenAPI default —
+when it names none. One serializer covers a whole operation, so an operation
+whose query parameters need two of them stops generation.
 
 ## Linting generated output
 

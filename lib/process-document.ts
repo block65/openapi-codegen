@@ -652,37 +652,104 @@ function collectParameters(
 	return parameters;
 }
 
-function addQueryStyles(
-	commandClass: ClassDeclaration,
+// rest-client exports one serializer per OAS 3.2 §4.12.6 query style
+const defaultSerializer = "formExplodeSerializer";
+
+const serializers = {
+	form: "formJoinSerializer",
+	spaceDelimited: "spaceDelimitedSerializer",
+	pipeDelimited: "pipeDelimitedSerializer",
+	deepObject: "deepObjectSerializer",
+} as const satisfies Record<QueryParamSpec["style"], string>;
+
+function serializerFor(spec: QueryParamSpec) {
+	return spec.style === "form" && spec.explode
+		? defaultSerializer
+		: serializers[spec.style];
+}
+
+// deepObject brackets an object and writes an array as form with explode
+function serializersWriting(spec: QueryParamSpec) {
+	const named = serializerFor(spec);
+
+	return named === defaultSerializer && spec.type === "array"
+		? [defaultSerializer, serializers.deepObject]
+		: [named];
+}
+
+// A command names one serializer for its whole query
+function querySerializerFor(
+	operationId: string,
 	queryParameters: oas30.ParameterObject[],
 ) {
-	// rest-client reads form with explode as the default, so only a
-	// departure from it is listed
-	const queryStyleEntries = queryParameters
-		.map(
-			(parameter) =>
-				[parameter.name, queryParameterEncoding(parameter)] as const,
-		)
-		.filter(([, encoding]) => encoding.style !== "form" || !encoding.explode);
+	// every serializer writes a scalar alike, so arrays and objects choose
+	const specs = queryParameters
+		.map((parameter) => queryParameterSpec(parameter))
+		.filter((spec) => spec !== undefined);
 
-	if (queryStyleEntries.length > 0) {
-		commandClass.addProperty({
-			name: "queryStyles",
-			hasOverrideKeyword: true,
-			scope: Scope.Public,
-			initializer: (writer) => {
-				writer.write("{");
-				writer.indent(() => {
-					for (const [name, encoding] of queryStyleEntries) {
-						writer.writeLine(
-							`${JSON.stringify(name)}: { style: ${JSON.stringify(encoding.style)}, explode: ${encoding.explode} },`,
-						);
-					}
-				});
-				writer.write("} as const");
-			},
-		});
+	let agreed: string[] = [defaultSerializer, ...Object.values(serializers)];
+
+	for (const spec of specs) {
+		const writing = serializersWriting(spec);
+
+		agreed = agreed.filter((name) => writing.includes(name));
 	}
+
+	if (agreed.length === 0) {
+		const written = specs
+			.map((spec) => {
+				const label =
+					spec.style === "form" ? `form, explode: ${spec.explode}` : spec.style;
+
+				return `"${spec.name}" (${label})`;
+			})
+			.join(", ");
+
+		throw new Error(
+			`${operationId}: query parameters ${written} are written by different serializers, and a command names one for its whole query. Declare one style across the operation's query parameters.`,
+		);
+	}
+
+	// a command inherits form with explode, which leaves it to name nothing
+	return agreed.includes(defaultSerializer) ? undefined : agreed[0];
+}
+
+function importSerializer(commandsFile: SourceFile, name: string) {
+	const restClientImport = commandsFile.getImportDeclarationOrThrow(
+		(declaration) =>
+			declaration.getModuleSpecifier().getLiteralValue() ===
+			"@block65/rest-client",
+	);
+
+	const alreadyImported = restClientImport
+		.getNamedImports()
+		.some((namedImport) => namedImport.getName() === name);
+
+	if (!alreadyImported) {
+		restClientImport.addNamedImport(name);
+	}
+}
+
+function addQuerySerializer(
+	commandsFile: SourceFile,
+	commandClass: ClassDeclaration,
+	operationId: string,
+	queryParameters: oas30.ParameterObject[],
+) {
+	const serializer = querySerializerFor(operationId, queryParameters);
+
+	if (!serializer) {
+		return;
+	}
+
+	importSerializer(commandsFile, serializer);
+
+	commandClass.addProperty({
+		name: "querySerializer",
+		hasOverrideKeyword: true,
+		scope: Scope.Public,
+		initializer: serializer,
+	});
 }
 
 function parameterProperty(
@@ -1542,7 +1609,12 @@ function processOperation(
 		operationObject,
 	);
 
-	addQueryStyles(command.commandClass, queryParameters);
+	addQuerySerializer(
+		documentCtx.commandsFile,
+		command.commandClass,
+		operationObject.operationId,
+		queryParameters,
+	);
 
 	const queryType = addQueryType(documentCtx, command, queryParameters);
 	const headerType = addHeaderType(documentCtx, command, headerParameters);

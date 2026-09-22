@@ -1,11 +1,10 @@
-import path from "node:path";
 import { Hono } from "hono";
 import type { MiddlewareHandler } from "hono";
 import type { oas31 } from "openapi3-ts";
 import { expect, test } from "vitest";
-import { processOpenApiDocument } from "../lib/process-document.ts";
 import { listauditlogs } from "./fixtures/openai/hono.ts";
 import { findPets } from "./fixtures/petstore/hono.ts";
+import { generateFor, type TestParameter } from "./generate.ts";
 
 // Runs a real query string through the generated middleware and back out
 async function validatedQuery(
@@ -79,55 +78,6 @@ function appFor(middleware: readonly MiddlewareHandler[]) {
 	return app;
 }
 
-// OAS 3.2 added `in: "querystring"`, which the 3.1 types predate
-type TestParameter =
-	| oas31.ParameterObject
-	| {
-			name: string;
-			in: "querystring";
-			content: oas31.ParameterObject["content"];
-	  };
-
-async function commandsFor(parameters: readonly TestParameter[]) {
-	const result = await processOpenApiDocument(
-		path.join(import.meta.dirname, ".generated"),
-		documentFor(parameters),
-	);
-
-	return result.commandsFile.getText();
-}
-
-function documentFor(
-	parameters: readonly TestParameter[],
-): oas31.OpenAPIObject {
-	return {
-		openapi: "3.1.0",
-		info: { title: "Test", version: "1.0.0" },
-		paths: {
-			"/things": {
-				get: {
-					operationId: "listThingsCommand",
-					// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- TestParameter widens the 3.1 union by the one 3.2 location these tests exercise, and processOpenApiDocument takes a 3.1 document
-					parameters: parameters as oas31.ParameterObject[],
-					responses: {
-						"200": {
-							description: "OK",
-							content: { "application/json": { schema: { type: "string" } } },
-						},
-					},
-				},
-			},
-		},
-	};
-}
-
-async function generateFor(parameters: readonly TestParameter[]) {
-	// This path names the emitted files, which stay in memory
-	const outputDir = path.join(import.meta.dirname, ".generated");
-
-	await processOpenApiDocument(outputDir, documentFor(parameters));
-}
-
 // Collects what the generator says while it walks a document
 async function warningsFrom(parameters: readonly TestParameter[]) {
 	const warnings: string[] = [];
@@ -142,40 +92,6 @@ async function warningsFrom(parameters: readonly TestParameter[]) {
 
 	return warnings.join("\n");
 }
-
-// rest-client's QueryParameterStyle union is these four, and its
-// appendSearchParams reads form with explode as the default
-test("a departure from the default encoding is listed in queryStyles", async () => {
-	const commands = await commandsFor([
-		{
-			name: "names",
-			in: "query",
-			style: "pipeDelimited",
-			explode: false,
-			schema: { type: "array", items: { type: "string" } },
-		},
-	]);
-
-	expect(commands).toContain("public override queryStyles");
-	expect(commands).toContain(
-		'"names": { style: "pipeDelimited", explode: false }',
-	);
-});
-
-// An unlisted parameter takes rest-client's default, so listing it is noise
-test("the default encoding is left out of queryStyles", async () => {
-	const commands = await commandsFor([
-		{
-			name: "tags",
-			in: "query",
-			style: "form",
-			explode: true,
-			schema: { type: "array", items: { type: "string" } },
-		},
-	]);
-
-	expect(commands).not.toContain("queryStyles");
-});
 
 // rest-client encodes only these four
 test("a style rest-client cannot encode stops generation", async () => {

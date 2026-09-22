@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`sortQuery orders the generated query in the URL > findPets 1`] = `"https://example.com/api/pets?limit=10&tags=cat&tags=dog"`;
+
+exports[`sortQuery orders the generated query in the URL > imageCreate 1`] = `"https://example.com/v1.43/images/create?changes=ENV%20a%3D1,ENV%20b%3D2&fromImage=alpine&platform=linux%2Famd64&tag=latest"`;
+
+exports[`the generated query reaches the URL in document order > findPets 1`] = `"https://example.com/api/pets?tags=cat&tags=dog&limit=10"`;
+
+exports[`the generated query reaches the URL in document order > imageCreate 1`] = `"https://example.com/v1.43/images/create?fromImage=alpine&tag=latest&changes=ENV%20a%3D1,ENV%20b%3D2&platform=linux%2Famd64"`;
+
+exports[`the source of a command that names a serializer 1`] = `
+"import { Command, stripUndefined, deepObjectSerializer } from "@block65/rest-client";
+
+export class ListThingsCommand extends Command<UndefinedOnPartialDeep<ListThingsCommandInput>, ListThingsCommandOutput, ListThingsCommandQuery> {
+    public override method = "get" as const;
+    public override querySerializer = deepObjectSerializer;
+
+    constructor(input?: UndefinedOnPartialDeep<ListThingsCommandInput>) {
+        const {limit, filter } = input ?? {};
+        super("/things", undefined, stripUndefined({limit, filter}));
+    }
+}"
+`;
+
+exports[`the source of a command that names none 1`] = `
+"import { Command, stripUndefined } from "@block65/rest-client";
+
+export class ListThingsCommand extends Command<UndefinedOnPartialDeep<ListThingsCommandInput>, ListThingsCommandOutput, ListThingsCommandQuery> {
+    public override method = "get" as const;
+
+    constructor(input?: UndefinedOnPartialDeep<ListThingsCommandInput>) {
+        const {limit, tags } = input ?? {};
+        super("/things", undefined, stripUndefined({limit, tags}));
+    }
+}"
+`;
