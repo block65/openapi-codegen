@@ -603,6 +603,18 @@ function combinatorValidator(
 	const variants = combinator.map((s) =>
 		schemaToValidator(validators, s, mode),
 	);
+	const [only, second] = variants;
+
+	// a one-member combinator is that member. `v.union` of one option only
+	// wraps its issues, and an empty list would fail every input where the
+	// document constrains nothing
+	if (only === undefined) {
+		return maybeNullable(vcall("unknown"), isNullable);
+	}
+
+	if (second === undefined) {
+		return maybeNullable(only, isNullable);
+	}
 
 	if (schema.oneOf && schema.discriminator?.propertyName) {
 		return maybeNullable(

@@ -4,7 +4,12 @@
  * Do not edit directly
  */
 
-import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
+import {
+	Command,
+	stripUndefined,
+	jsonStringify,
+	formJoinSerializer,
+} from "@block65/rest-client";
 import type { Except, UndefinedOnPartialDeep } from "type-fest";
 import type {
 	ContainerListCommandQuery,
@@ -1097,9 +1102,7 @@ export class ImageCreateCommand extends Command<
 	ImageCreateCommandHeader
 > {
 	public override method = "post" as const;
-	public override queryStyles = {
-		changes: { style: "form", explode: false },
-	} as const;
+	public override querySerializer = formJoinSerializer;
 
 	constructor(
 		input: UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
@@ -1520,9 +1523,7 @@ export class ImageGetAllCommand extends Command<
 	ImageGetAllCommandQuery
 > {
 	public override method = "get" as const;
-	public override queryStyles = {
-		names: { style: "form", explode: false },
-	} as const;
+	public override querySerializer = formJoinSerializer;
 
 	constructor(input?: UndefinedOnPartialDeep<ImageGetAllCommandInput>) {
 		const { names } = input ?? {};

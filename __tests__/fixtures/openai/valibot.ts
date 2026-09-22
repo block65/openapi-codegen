@@ -1376,7 +1376,7 @@ export const inputCreateFineTuningJobRequestSchema = v.looseObject({
 					 * The type of integration to enable. Currently, only "wandb" (Weights and
 					 * Biases) is supported.
 					 */
-					type: v.union([v.picklist(["wandb"])]),
+					type: v.picklist(["wandb"]),
 					/**
 					 * The settings for your integration with Weights and Biases. This payload
 					 * specifies the project that
@@ -1524,7 +1524,7 @@ export const createFineTuningJobRequestSchema = v.looseObject({
 					 * The type of integration to enable. Currently, only "wandb" (Weights and
 					 * Biases) is supported.
 					 */
-					type: v.union([v.picklist(["wandb"])]),
+					type: v.picklist(["wandb"]),
 					/**
 					 * The settings for your integration with Weights and Biases. This payload
 					 * specifies the project that
@@ -6739,12 +6739,10 @@ export const threadObjectSchema = v.looseObject({
 	 */
 	metadata: v.nullable(v.record(v.string(), v.unknown())),
 });
-export const inputThreadStreamEventSchema = v.union([
-	v.looseObject({
-		event: v.picklist(["thread.created"]),
-		data: inputThreadObjectSchema,
-	}),
-]);
+export const inputThreadStreamEventSchema = v.looseObject({
+	event: v.picklist(["thread.created"]),
+	data: inputThreadObjectSchema,
+});
 export const threadStreamEventSchema = inputThreadStreamEventSchema;
 /**
  * Represents an event emitted when streaming a Run.
@@ -8653,7 +8651,7 @@ export const inputModifyAssistantRequestSchema = v.strictObject({
 	 * models, or see our [Model overview](/docs/models/overview) for descriptions
 	 * of them.
 	 */
-	model: v.optional(v.union([v.string()])),
+	model: v.optional(v.string()),
 	/**
 	 * The name of the assistant. The maximum length is 256 characters.
 	 */
@@ -8755,7 +8753,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 	 * models, or see our [Model overview](/docs/models/overview) for descriptions
 	 * of them.
 	 */
-	model: v.exactOptional(v.union([v.pipe(v.string(), v.trim())])),
+	model: v.exactOptional(v.pipe(v.string(), v.trim())),
 	/**
 	 * The name of the assistant. The maximum length is 256 characters.
 	 */
@@ -10080,10 +10078,7 @@ export const inputFineTuningJobSchema = v.looseObject({
 	 */
 	integrations: v.optional(
 		v.nullable(
-			v.pipe(
-				v.array(v.union([inputFineTuningIntegrationSchema])),
-				v.maxLength(5),
-			),
+			v.pipe(v.array(inputFineTuningIntegrationSchema), v.maxLength(5)),
 		),
 	),
 	/**
@@ -10204,9 +10199,7 @@ export const fineTuningJobSchema = v.looseObject({
 	 * A list of integrations to enable for this fine-tuning job.
 	 */
 	integrations: v.exactOptional(
-		v.nullable(
-			v.pipe(v.array(v.union([fineTuningIntegrationSchema])), v.maxLength(5)),
-		),
+		v.nullable(v.pipe(v.array(fineTuningIntegrationSchema), v.maxLength(5))),
 	),
 	/**
 	 * The seed used for the fine-tuning job.
@@ -10683,9 +10676,8 @@ export const chatCompletionRequestMessageContentPartTextSchema = v.looseObject({
 	 */
 	text: v.pipe(v.string(), v.trim()),
 });
-export const inputChatCompletionRequestToolMessageContentPartSchema = v.union([
-	inputChatCompletionRequestMessageContentPartTextSchema,
-]);
+export const inputChatCompletionRequestToolMessageContentPartSchema =
+	inputChatCompletionRequestMessageContentPartTextSchema;
 export const chatCompletionRequestToolMessageContentPartSchema =
 	inputChatCompletionRequestToolMessageContentPartSchema;
 export const inputChatCompletionRequestToolMessageSchema = v.looseObject({
@@ -11004,9 +10996,8 @@ export const chatCompletionRequestUserMessageSchema = v.looseObject({
 	 */
 	name: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputChatCompletionRequestSystemMessageContentPartSchema = v.union(
-	[inputChatCompletionRequestMessageContentPartTextSchema],
-);
+export const inputChatCompletionRequestSystemMessageContentPartSchema =
+	inputChatCompletionRequestMessageContentPartTextSchema;
 export const chatCompletionRequestSystemMessageContentPartSchema =
 	inputChatCompletionRequestSystemMessageContentPartSchema;
 export const inputChatCompletionRequestSystemMessageSchema = v.looseObject({

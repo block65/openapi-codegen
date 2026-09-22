@@ -75,6 +75,7 @@ test("a stale emitter revision rewrites every file", async () => {
 	await writeFile(target, "// edited by hand\n");
 	await writeFile(
 		manifestPath,
+		// oxlint-disable-next-line block65/snake-case-wire-keys -- the manifest's own key, read back by this generator
 		JSON.stringify({ ...manifest, "#generator": "0".repeat(32) }),
 	);
 

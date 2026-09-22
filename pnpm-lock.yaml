@@ -193,8 +193,8 @@ importers:
         specifier: ^14.1.0
         version: 14.1.0
       '@block65/rest-client':
-        specifier: ^14.2.0
-        version: 14.2.0(valibot@1.5.0(typescript@7.0.2))
+        specifier: ^15.0.0
+        version: 15.0.0(valibot@1.5.0(typescript@7.0.2))
       '@block65/shared-config':
         specifier: ^0.4.0
         version: 0.4.0(@block65/oxlint-tsgolint@7.0.200200)(@block65/oxlint@1.83.0(@block65/oxlint-tsgolint@7.0.200200))(eslint@10.11.0)(oxfmt@0.68.0)
@@ -308,8 +308,8 @@ packages:
       vite-plus:
         optional: true
 
-  '@block65/rest-client@14.2.0':
-    resolution: {integrity: sha512-dh6wcX8N4bocowE23VwNAWCRyLiyJGoS7A79iJR6RAjVjKCM7dbBIwlFWtUDuOWZkRLVgDIN5oE8Oa/fC8y5lA==}
+  '@block65/rest-client@15.0.0':
+    resolution: {integrity: sha512-ol95B6hendclv9l3epvcKmtXrJI3/UgxY25rIm65+6d0HU6x6MBKjTD9MR7Oh1P9eXOq2AJh0JeUuESZtlDb0Q==}
     peerDependencies:
       valibot: ^1.5.0
     peerDependenciesMeta:
@@ -1657,7 +1657,7 @@ snapshots:
       '@block65/oxlint-binding-linux-x64-gnu': 1.83.0
       oxlint-tsgolint: '@block65/oxlint-tsgolint@7.0.200200'
 
-  '@block65/rest-client@14.2.0(valibot@1.5.0(typescript@7.0.2))':
+  '@block65/rest-client@15.0.0(valibot@1.5.0(typescript@7.0.2))':
     dependencies:
       '@block65/custom-error': 14.1.0
       '@standard-schema/spec': 1.1.0

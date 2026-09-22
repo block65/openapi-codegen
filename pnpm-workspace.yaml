@@ -7,7 +7,7 @@ minimumReleaseAgeExclude:
   - "@block65/oxlint-tsgolint@7.0.200200"
   - "@block65/oxlint@1.83.0"
   - "@block65/oxlint-plugin@0.10.0"
-  - "@block65/rest-client@14.2.0"
+  - "@block65/rest-client@15.0.0"
   - "@block65/shared-config@0.4.0"
 
 overrides:

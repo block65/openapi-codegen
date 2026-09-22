@@ -56,6 +56,19 @@ export function defineOverrides<T extends oxlint.OxlintOverride>(
 					// contract, so the generated code destructures that name
 					"block65/no-single-character-declaration": "off",
 					"unicorn/max-nested-calls": "off",
+
+					// property spelling is the document's wire contract too
+					"block65/snake-case-wire-keys": "off",
+
+					// an object schema is open unless the document sets
+					// `additionalProperties: false`, so `looseObject` accepts the
+					// unnamed keys a peer may send
+					"block65/prefer-strict-object": "off",
+
+					// input schemas face TS callers, who may pass an explicit
+					// `undefined` for an absent member. The wire schemas use
+					// `exactOptional`
+					"block65/prefer-exact-optional": "off",
 				},
 			},
 		],
