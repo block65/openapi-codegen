@@ -229,6 +229,38 @@ test("additionalProperties chooses the object schema", async () => {
 	}
 });
 
+// A one-member `anyOf` or `oneOf` is that member. `v.union` of one option
+// only wraps its issues, and the block65 valibot rules reject it
+test("a single-member combinator emits the member alone", async () => {
+	const cases: [oas31.SchemaObject, string][] = [
+		[{ anyOf: [{ type: "string" }] }, "v.string()"],
+		[{ oneOf: [{ type: "string" }] }, "v.string()"],
+		[
+			{ oneOf: [{ type: "string" }, { type: "number" }] },
+			"v.union([v.string(), v.number()])",
+		],
+	];
+
+	const emitted = await Promise.all(
+		cases.map(async ([schema]) => {
+			const result = await processOpenApiDocument(
+				"/tmp/single-member-combinator",
+				docWithSchema("Only", schema),
+			);
+
+			const text = result.valibotFile.getText();
+
+			return text.slice(text.indexOf("export const inputOnlySchema"), -1);
+		}),
+	);
+
+	for (const [index, [, expected]] of cases.entries()) {
+		expect(emitted[index]).toContain(
+			`export const inputOnlySchema = ${expected};`,
+		);
+	}
+});
+
 function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	return {
 		openapi: "3.1.0",
