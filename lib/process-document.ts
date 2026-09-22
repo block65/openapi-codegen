@@ -243,27 +243,28 @@ function createUnion(...types: (string | undefined)[]) {
 	);
 }
 
-type NamedType = InterfaceDeclaration | TypeAliasDeclaration;
+type NamedDeclaration = InterfaceDeclaration | TypeAliasDeclaration;
 
 type DeprecationDocs = (OptionalKind<JSDocStructure> | string)[];
 
-type OperationParameters = {
+type OperationParameterObjects = {
 	path: oas30.ParameterObject[];
 	query: oas30.ParameterObject[];
 	header: oas30.ParameterObject[];
 };
 
-// One operation's record, built before its class takes type arguments
-type OperationShape = {
+type OperationContext = {
 	commandName: string;
 	commandClass: ClassDeclaration;
 	deprecationDocs: DeprecationDocs;
-	parameters: OperationParameters;
+	queryParameters: oas30.ParameterObject[];
 	queryType: TypeAliasDeclaration | undefined;
+	headerParameters: oas30.ParameterObject[];
 	headerType: TypeAliasDeclaration | undefined;
-	paramsType: TypeAliasDeclaration | undefined;
+	pathParameters: oas30.ParameterObject[];
+	pathType: TypeAliasDeclaration | undefined;
 	jsonRequestBodyObject: oas31.MediaTypeObject | undefined;
-	jsonBodyType: NamedType | undefined;
+	jsonBodyType: NamedDeclaration | undefined;
 	nonJsonBodyType: TypeAliasDeclaration | undefined;
 	wrapJsonBody: boolean;
 	inputType: TypeAliasDeclaration;
@@ -304,14 +305,13 @@ function createOutputFiles(project: Project, outputDir: string) {
 
 type OutputFiles = ReturnType<typeof createOutputFiles>;
 
-// Output files, the resolved document, and what every operation adds to
 type DocumentContext = OutputFiles & {
 	refs: $Refs;
 	typesImportDecl: ImportDeclaration;
-	typesAndInterfaces: Map<string, NamedType>;
+	typesAndInterfaces: Map<string, NamedDeclaration>;
 	validators: Map<string, { input: string; wire: string }>;
 	allOperations: OperationMiddlewareInfo[];
-	outputTypes: Set<NamedType | string>;
+	outputTypes: Set<NamedDeclaration | string>;
 	inputTypeArgs: Set<string>;
 	inputTypeNames: Set<string>;
 	validatedSubclasses: { commandName: string; responseSchema: string }[];
@@ -392,7 +392,7 @@ function addModulePreambles({ commandsFile, typesFile }: OutputFiles) {
 
 function ensureTypeImport(
 	typesImportDecl: ImportDeclaration,
-	type: NamedType | undefined,
+	type: NamedDeclaration | undefined,
 ) {
 	if (
 		type &&
@@ -479,26 +479,26 @@ function addEnumValues(
 }
 
 function registerComponentSchemas(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	schema: oas31.OpenAPIObject,
 ) {
 	for (const [schemaName, schemaObject] of sortedComponentSchemas(schema)) {
 		registerTypesFromSchema(
-			ctx.typesAndInterfaces,
-			ctx.typesFile,
+			documentCtx.typesAndInterfaces,
+			documentCtx.typesFile,
 			schemaName,
 			schemaObject,
 		);
 
 		registerValidatorFromSchema(
-			ctx.validators,
-			ctx.valibotFile,
+			documentCtx.validators,
+			documentCtx.valibotFile,
 			schemaName,
 			schemaObject,
-			ctx.inputOnly,
+			documentCtx.inputOnly,
 		);
 
-		addEnumValues(ctx.enumsFile, schemaName, schemaObject);
+		addEnumValues(documentCtx.enumsFile, schemaName, schemaObject);
 	}
 }
 
@@ -563,7 +563,7 @@ function declareCommandClass(
 	return { commandName, commandClass, deprecationDocs };
 }
 
-// Resolve $ref schemas so the valibot coercion pipeline can inspect the type
+// valibot coercion inspects the schema, so a $ref has to go first
 function withResolvedSchema(refs: $Refs, parameter: oas30.ParameterObject) {
 	const resolvedSchema =
 		parameter.schema && "$ref" in parameter.schema
@@ -643,7 +643,7 @@ function collectParameters(
 		}
 	}
 
-	const parameters: OperationParameters = {
+	const parameters: OperationParameterObjects = {
 		path: pathParameters,
 		query: queryParameters,
 		header: headerParameters,
@@ -685,9 +685,8 @@ function addQueryStyles(
 	}
 }
 
-// What a query or header parameter becomes on its object type
 function parameterProperty(
-	typesAndInterfaces: Map<string, NamedType>,
+	typesAndInterfaces: Map<string, NamedDeclaration>,
 	parameter: oas30.ParameterObject,
 	name: string,
 	propertyName: string,
@@ -728,16 +727,16 @@ function parameterProperty(
 }
 
 function addQueryType(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	{
 		commandClass,
 		deprecationDocs,
-	}: OperationShape | ReturnType<typeof declareCommandClass>,
+	}: OperationContext | ReturnType<typeof declareCommandClass>,
 	queryParameters: oas30.ParameterObject[],
 ) {
 	const queryType =
 		queryParameters.length > 0
-			? ctx.typesFile.addTypeAlias({
+			? documentCtx.typesFile.addTypeAlias({
 					name: pascalCase(commandClass.getName() || "INVALID", "Query"),
 					docs: deprecationDocs,
 					isExported: true,
@@ -745,25 +744,30 @@ function addQueryType(
 						properties: queryParameters.map((qp) => {
 							const name = castToValidJsIdentifier(qp.name);
 
-							return parameterProperty(ctx.typesAndInterfaces, qp, name, name);
+							return parameterProperty(
+								documentCtx.typesAndInterfaces,
+								qp,
+								name,
+								name,
+							);
 						}),
 					}),
 				})
 			: undefined;
 
-	ensureTypeImport(ctx.typesImportDecl, queryType);
+	ensureTypeImport(documentCtx.typesImportDecl, queryType);
 
 	return queryType;
 }
 
 function addHeaderType(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	{ commandClass, deprecationDocs }: ReturnType<typeof declareCommandClass>,
 	headerParameters: oas30.ParameterObject[],
 ) {
 	const headerType =
 		headerParameters.length > 0
-			? ctx.typesFile.addTypeAlias({
+			? documentCtx.typesFile.addTypeAlias({
 					name: pascalCase(commandClass.getName() || "INVALID", "Header"),
 					docs: deprecationDocs,
 					isExported: true,
@@ -772,7 +776,7 @@ function addHeaderType(
 							const name = hp.name.toLowerCase();
 
 							return parameterProperty(
-								ctx.typesAndInterfaces,
+								documentCtx.typesAndInterfaces,
 								hp,
 								name,
 								JSON.stringify(name),
@@ -782,13 +786,13 @@ function addHeaderType(
 				})
 			: undefined;
 
-	ensureTypeImport(ctx.typesImportDecl, headerType);
+	ensureTypeImport(documentCtx.typesImportDecl, headerType);
 
 	return headerType;
 }
 
 function jsonBodyTypeOf(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	deprecationDocs: DeprecationDocs,
 	operationId: string,
 	jsonRequestBodyObject: oas31.MediaTypeObject | undefined,
@@ -798,7 +802,9 @@ function jsonBodyTypeOf(
 	}
 
 	if ("$ref" in jsonRequestBodyObject.schema) {
-		return ctx.typesAndInterfaces.get(jsonRequestBodyObject.schema.$ref);
+		return documentCtx.typesAndInterfaces.get(
+			jsonRequestBodyObject.schema.$ref,
+		);
 	}
 
 	if (
@@ -806,7 +812,9 @@ function jsonBodyTypeOf(
 		"items" in jsonRequestBodyObject.schema &&
 		"$ref" in jsonRequestBodyObject.schema.items
 	) {
-		return ctx.typesAndInterfaces.get(jsonRequestBodyObject.schema.items.$ref);
+		return documentCtx.typesAndInterfaces.get(
+			jsonRequestBodyObject.schema.items.$ref,
+		);
 	}
 
 	// Named for the media type because only an application/json
@@ -814,7 +822,7 @@ function jsonBodyTypeOf(
 	const name = castToValidJsIdentifier(pascalCase(operationId, "JsonBody"));
 
 	const type = schemaToType(
-		ctx.typesAndInterfaces,
+		documentCtx.typesAndInterfaces,
 		jsonRequestBodyObject.schema.required
 			? {
 					required: [name],
@@ -824,7 +832,7 @@ function jsonBodyTypeOf(
 		jsonRequestBodyObject.schema,
 	);
 
-	return ctx.typesFile.addTypeAlias({
+	return documentCtx.typesFile.addTypeAlias({
 		name,
 		docs: deprecationDocs,
 		type: typeof type.type === "function" ? type.type : String(type.type),
@@ -832,7 +840,7 @@ function jsonBodyTypeOf(
 }
 
 function resolveBodyTypes(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	{ commandClass, deprecationDocs }: ReturnType<typeof declareCommandClass>,
 	operationObject: OperationWithId,
 ) {
@@ -844,7 +852,7 @@ function resolveBodyTypes(
 	const jsonRequestBodyObject = requestBodyObject?.content["application/json"];
 
 	const jsonBodyType = jsonBodyTypeOf(
-		ctx,
+		documentCtx,
 		deprecationDocs,
 		operationObject.operationId,
 		jsonRequestBodyObject,
@@ -865,7 +873,7 @@ function resolveBodyTypes(
 
 	const nonJsonBodyType =
 		!jsonBodyType && nonJsonBodyEntries.length > 0
-			? ctx.typesFile.addTypeAlias({
+			? documentCtx.typesFile.addTypeAlias({
 					docs: deprecationDocs,
 					name: pascalCase(
 						`${commandClass.getName() || "INVALID"} Body NonJson`,
@@ -877,7 +885,7 @@ function resolveBodyTypes(
 								name: nonJsonBodyPropName,
 								type: createUnion(
 									...nonJsonBodyEntries.map(([contentType, _mediaTypeObj]) => {
-										const nonJsonBody = ctx.typesFile.addTypeAlias({
+										const nonJsonBody = documentCtx.typesFile.addTypeAlias({
 											name: pascalCase(
 												`${commandClass.getName() || "INVALID"} Body ${contentType}`,
 											),
@@ -897,12 +905,12 @@ function resolveBodyTypes(
 }
 
 function addParamsType(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	{ commandClass, deprecationDocs }: ReturnType<typeof declareCommandClass>,
 	pathParameters: oas30.ParameterObject[],
 ) {
 	return pathParameters.length > 0
-		? ctx.typesFile.addTypeAlias({
+		? documentCtx.typesFile.addTypeAlias({
 				name: pascalCase(`${commandClass.getName() || "INVALID"}Params`),
 				docs: deprecationDocs,
 				type: Writers.objectType({
@@ -910,7 +918,7 @@ function addParamsType(
 						const name = castToValidJsIdentifier(p.name);
 
 						const type = schemaToType(
-							ctx.typesAndInterfaces,
+							documentCtx.typesAndInterfaces,
 							p.required
 								? {
 										required: [name],
@@ -942,7 +950,7 @@ function addParamsType(
 }
 
 function addInputType(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	{ commandClass }: ReturnType<typeof declareCommandClass>,
 	{
 		jsonRequestBodyObject,
@@ -954,7 +962,7 @@ function addInputType(
 ) {
 	const bodyType =
 		(jsonBodyType &&
-			ctx.typesFile.addTypeAlias({
+			documentCtx.typesFile.addTypeAlias({
 				name: pascalCase(commandClass.getName() || "", "Body"),
 				type: jsonBodyType.getName(),
 				isExported: true,
@@ -962,7 +970,7 @@ function addInputType(
 		nonJsonBodyType;
 
 	if (bodyType) {
-		ensureTypeImport(ctx.typesImportDecl, bodyType);
+		ensureTypeImport(documentCtx.typesImportDecl, bodyType);
 	}
 
 	// An array body intersected with the parameters reads as the array
@@ -977,7 +985,7 @@ function addInputType(
 
 	const wrappedJsonBodyType =
 		wrapJsonBody && jsonBodyType
-			? ctx.typesFile.addTypeAlias({
+			? documentCtx.typesFile.addTypeAlias({
 					name: pascalCase(commandClass.getName() || "", "BodyWrapper"),
 					type: Writers.objectType({
 						properties: [{ name: inputBodyName, type: jsonBodyType.getName() }],
@@ -993,12 +1001,12 @@ function addInputType(
 		queryType?.getName(),
 	);
 
-	const inputType = ctx.typesFile.addTypeAlias({
+	const inputType = documentCtx.typesFile.addTypeAlias({
 		name: pascalCase(commandClass.getName() || "", "Input"),
 		type: inputTypeNode,
 		isExported: true,
 	});
-	ensureTypeImport(ctx.typesImportDecl, inputType);
+	ensureTypeImport(documentCtx.typesImportDecl, inputType);
 
 	return { inputType, inputTypeNode, wrapJsonBody };
 }
@@ -1025,15 +1033,21 @@ function firstJsonResponseSchema(operationObject: OperationWithId) {
 
 // Generate the valibot validator for the operation input
 function registerOperationValidators(
-	ctx: DocumentContext,
-	{ commandName, parameters, jsonRequestBodyObject }: OperationShape,
+	documentCtx: DocumentContext,
+	{
+		commandName,
+		queryParameters,
+		headerParameters,
+		pathParameters,
+		jsonRequestBodyObject,
+	}: OperationContext,
 	operationObject: OperationWithId,
 ) {
 	const responseSchema = firstJsonResponseSchema(operationObject);
 
 	const operationSchemas = createValidatorForOperationInput(
-		ctx.validators,
-		ctx.valibotFile,
+		documentCtx.validators,
+		documentCtx.valibotFile,
 		commandName,
 		{
 			...(jsonRequestBodyObject?.schema && {
@@ -1042,29 +1056,28 @@ function registerOperationValidators(
 			...(responseSchema && {
 				response: responseSchema,
 			}),
-			params: parameters.path,
-			query: parameters.query,
-			header: parameters.header,
+			params: pathParameters,
+			query: queryParameters,
+			header: headerParameters,
 		},
-		ctx.inputOnly,
+		documentCtx.inputOnly,
 	);
 
 	// Track operation for middleware generation (use coerced schemas)
 	const middlewareExportName = castToValidJsIdentifier(
 		operationObject.operationId.replace(/Command$/i, ""),
 	);
-	checkQueryParameters(operationObject.operationId, parameters.query);
+	checkQueryParameters(operationObject.operationId, queryParameters);
 
-	// rest-client and hono consume the wire variant, or the input variant
-	// under --input-only
-	const wireSchemas = ctx.inputOnly
+	// Consumers read one variant, so --input-only substitutes it here
+	const wireSchemas = documentCtx.inputOnly
 		? operationSchemas.input
 		: operationSchemas.wire;
 
-	ctx.allOperations.push({
+	documentCtx.allOperations.push({
 		exportName: middlewareExportName,
 		schemas: wireSchemas,
-		queryParams: parameters.query
+		queryParams: queryParameters
 			.map((parameter) => queryParameterSpec(parameter))
 			.filter((spec) => spec !== undefined),
 	});
@@ -1085,37 +1098,37 @@ function widenedInputType(inputTypeName: string, hasNonJsonBody: boolean) {
 }
 
 function addInputTypeArgument(
-	ctx: DocumentContext,
-	{ commandClass, inputType, inputTypeNode, nonJsonBodyType }: OperationShape,
+	documentCtx: DocumentContext,
+	{ commandClass, inputType, inputTypeNode, nonJsonBodyType }: OperationContext,
 ) {
 	const inputTypeArg = widenedInputType(inputType.getName(), !!nonJsonBodyType);
 
 	// `A | never` is `A`, so the member is left out
 	if (inputTypeNode !== neverKeyword) {
-		ctx.inputTypeArgs.add(inputTypeArg);
-		ctx.inputTypeNames.add(inputType.getName());
+		documentCtx.inputTypeArgs.add(inputTypeArg);
+		documentCtx.inputTypeNames.add(inputType.getName());
 	}
 
 	commandClass.getExtends()?.addTypeArgument(inputTypeArg);
 }
 
 function addReferencedOutput(
-	ctx: DocumentContext,
-	{ commandClass }: OperationShape,
+	documentCtx: DocumentContext,
+	{ commandClass }: OperationContext,
 	outputRef: string,
 	isArray: boolean,
 ) {
-	const outputType = ctx.typesAndInterfaces.get(outputRef);
+	const outputType = documentCtx.typesAndInterfaces.get(outputRef);
 
 	if (outputType) {
-		ctx.outputTypes.add(outputType);
-		ensureTypeImport(ctx.typesImportDecl, outputType);
+		documentCtx.outputTypes.add(outputType);
+		ensureTypeImport(documentCtx.typesImportDecl, outputType);
 	}
 
 	const outputTypeName = `${outputType?.getName()}${isArray ? "[]" : ""}`;
 
 	if (isArray) {
-		ctx.outputTypes.add(outputTypeName);
+		documentCtx.outputTypes.add(outputTypeName);
 	}
 
 	commandClass.getExtends()?.addTypeArgument(outputTypeName);
@@ -1124,7 +1137,7 @@ function addReferencedOutput(
 	// The value is JSON.stringified, which drops `undefined`, so
 	// optional fields may hold `undefined`. Mirrors the `input*`
 	// prefix used for the lax variant in the valibot module
-	ctx.typesFile.addTypeAlias({
+	documentCtx.typesFile.addTypeAlias({
 		name: pascalCase("Input", commandClass.getName() || "INVALID", "Response"),
 		type: `UndefinedOnPartialDeep<${outputTypeName}>`,
 		isExported: true,
@@ -1132,13 +1145,18 @@ function addReferencedOutput(
 }
 
 function addInlineOutput(
-	ctx: DocumentContext,
-	{ commandClass }: OperationShape,
+	documentCtx: DocumentContext,
+	{ commandClass }: OperationContext,
 	schema: oas31.SchemaObject | oas31.ReferenceObject,
 ) {
-	const outputType = schemaToType(ctx.typesAndInterfaces, {}, "", schema);
+	const outputType = schemaToType(
+		documentCtx.typesAndInterfaces,
+		{},
+		"",
+		schema,
+	);
 
-	const responseTypeAlias = ctx.typesFile.addTypeAlias({
+	const responseTypeAlias = documentCtx.typesFile.addTypeAlias({
 		name: pascalCase(commandClass.getName() || "INVALID", "Output"),
 		type:
 			typeof outputType.type === "function"
@@ -1147,12 +1165,12 @@ function addInlineOutput(
 		isExported: true,
 	});
 
-	ensureTypeImport(ctx.typesImportDecl, responseTypeAlias);
+	ensureTypeImport(documentCtx.typesImportDecl, responseTypeAlias);
 
 	commandClass.getExtends()?.addTypeArgument(responseTypeAlias.getName());
-	ctx.outputTypes.add(responseTypeAlias);
+	documentCtx.outputTypes.add(responseTypeAlias);
 
-	ctx.typesFile.addTypeAlias({
+	documentCtx.typesFile.addTypeAlias({
 		name: pascalCase("Input", commandClass.getName() || "INVALID", "Response"),
 		type: `UndefinedOnPartialDeep<${responseTypeAlias.getName()}>`,
 		isExported: true,
@@ -1177,11 +1195,11 @@ function jsonOutputRef(jsonResponse: oas31.MediaTypeObject) {
 }
 
 function addOutputTypeArgument(
-	ctx: DocumentContext,
-	shape: OperationShape,
+	documentCtx: DocumentContext,
+	operationCtx: OperationContext,
 	operationObject: OperationWithId,
 ) {
-	const { commandClass } = shape;
+	const { commandClass } = operationCtx;
 
 	// this is just like a 204 response
 	let hasOutputType = false;
@@ -1209,7 +1227,7 @@ function addOutputTypeArgument(
 		if (statusCode === "204") {
 			commandClass.getExtends()?.addTypeArgument(emptyKeyword);
 
-			ctx.outputTypes.add(emptyKeyword);
+			documentCtx.outputTypes.add(emptyKeyword);
 			hasOutputType = true;
 			break;
 		}
@@ -1228,10 +1246,15 @@ function addOutputTypeArgument(
 		const outputRef = jsonOutputRef(jsonResponse);
 
 		if (outputRef) {
-			addReferencedOutput(ctx, shape, outputRef.ref, outputRef.isArray);
+			addReferencedOutput(
+				documentCtx,
+				operationCtx,
+				outputRef.ref,
+				outputRef.isArray,
+			);
 			hasOutputType = true;
 		} else if (jsonResponse.schema) {
-			addInlineOutput(ctx, shape, jsonResponse.schema);
+			addInlineOutput(documentCtx, operationCtx, jsonResponse.schema);
 			hasOutputType = true;
 		}
 	}
@@ -1242,7 +1265,7 @@ function addOutputTypeArgument(
 }
 
 function registerValidatedCommand(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	commandName: string,
 	wireSchemas: { response?: string },
 ) {
@@ -1251,12 +1274,12 @@ function registerValidatedCommand(
 	// the response schema from the validated subclass, and the server
 	// middleware imports body, param and query schemas directly
 	if (wireSchemas.response) {
-		ctx.validatedSubclasses.push({
+		documentCtx.validatedSubclasses.push({
 			commandName,
 			responseSchema: wireSchemas.response,
 		});
 	} else {
-		ctx.validatedReExports.push(commandName);
+		documentCtx.validatedReExports.push(commandName);
 	}
 }
 
@@ -1264,7 +1287,7 @@ function addQueryAndHeaderTypeArguments({
 	commandClass,
 	queryType,
 	headerType,
-}: OperationShape) {
+}: OperationContext) {
 	// query
 	if (queryType) {
 		commandClass.getExtends()?.addTypeArgument(queryType.getName());
@@ -1283,13 +1306,15 @@ function addQueryAndHeaderTypeArguments({
 
 function constructorInputs(
 	{
-		parameters,
+		queryParameters,
 		queryType,
-		paramsType,
+		headerParameters,
 		headerType,
+		pathParameters,
+		pathType,
 		jsonBodyType,
 		nonJsonBodyType,
-	}: OperationShape,
+	}: OperationContext,
 	path: string,
 ) {
 	const hasPathParams = path.includes("{");
@@ -1304,28 +1329,26 @@ function constructorInputs(
 	const hasQuery =
 		!!queryType &&
 		!isUnspecifiedKeyword(queryType) &&
-		parameters.query.length > 0;
+		queryParameters.length > 0;
 
 	const hasParams =
-		!!paramsType &&
-		!isUnspecifiedKeyword(paramsType) &&
-		parameters.path.length > 0;
+		!!pathType && !isUnspecifiedKeyword(pathType) && pathParameters.length > 0;
 
-	const hasHeaders = !!headerType && parameters.header.length > 0;
+	const hasHeaders = !!headerType && headerParameters.length > 0;
 
 	const allInputOptional =
 		!hasParams &&
 		!hasJsonBody &&
 		!hasNonJsonBody &&
-		parameters.query.every((qp) => !qp.required);
+		queryParameters.every((qp) => !qp.required);
 
-	const allHeadersOptional = parameters.header.every((hp) => !hp.required);
+	const allHeadersOptional = headerParameters.every((hp) => !hp.required);
 
-	const queryParameterNames = parameters.query
+	const queryParameterNames = queryParameters
 		.map((q) => q.name)
 		.map((name) => castToValidJsIdentifier(name));
 
-	const pathParameterNames = parameters.path
+	const pathParameterNames = pathParameters
 		.map((q) => q.name)
 		.map((name) => castToValidJsIdentifier(name));
 
@@ -1430,7 +1453,7 @@ function superArguments({
 }
 
 function addInputConstructor(
-	{ commandClass, inputType, headerType, wrapJsonBody }: OperationShape,
+	{ commandClass, inputType, headerType, wrapJsonBody }: OperationContext,
 	inputs: ConstructorInputs,
 ) {
 	const { hasNonJsonBody, hasHeaders, allInputOptional, allHeadersOptional } =
@@ -1483,67 +1506,77 @@ function addInputConstructor(
 	}
 }
 
-function addCommandConstructor(shape: OperationShape, path: string) {
-	const inputs = constructorInputs(shape, path);
+function addCommandConstructor(operationCtx: OperationContext, path: string) {
+	const inputs = constructorInputs(operationCtx, path);
 	const { hasNonJsonBody, hasJsonBody, hasQuery, hasParams, hasHeaders } =
 		inputs;
 
 	if (hasNonJsonBody || hasJsonBody || hasQuery || hasParams || hasHeaders) {
-		addInputConstructor(shape, inputs);
+		addInputConstructor(operationCtx, inputs);
 	} else {
-		const ctor = shape.commandClass.addConstructor();
+		const ctor = operationCtx.commandClass.addConstructor();
 		ctor.addStatements([`super(${inputs.pathname});`]);
 	}
 }
 
 function processOperation(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	path: string,
 	pathItemObject: oas31.PathItemObject,
 	method: string,
 	operationObject: OperationWithId,
 ) {
 	const command = declareCommandClass(
-		ctx.commandsFile,
+		documentCtx.commandsFile,
 		method,
 		operationObject,
 	);
-	const parameters = collectParameters(
-		ctx.refs,
+	const {
+		path: pathParameters,
+		query: queryParameters,
+		header: headerParameters,
+	} = collectParameters(
+		documentCtx.refs,
 		path,
 		pathItemObject,
 		operationObject,
 	);
 
-	addQueryStyles(command.commandClass, parameters.query);
+	addQueryStyles(command.commandClass, queryParameters);
 
-	const queryType = addQueryType(ctx, command, parameters.query);
-	const headerType = addHeaderType(ctx, command, parameters.header);
-	const body = resolveBodyTypes(ctx, command, operationObject);
-	const paramsType = addParamsType(ctx, command, parameters.path);
-	const input = addInputType(ctx, command, body, paramsType, queryType);
+	const queryType = addQueryType(documentCtx, command, queryParameters);
+	const headerType = addHeaderType(documentCtx, command, headerParameters);
+	const body = resolveBodyTypes(documentCtx, command, operationObject);
+	const pathType = addParamsType(documentCtx, command, pathParameters);
+	const input = addInputType(documentCtx, command, body, pathType, queryType);
 
-	const shape: OperationShape = {
+	const operationCtx: OperationContext = {
 		...command,
-		parameters,
+		queryParameters,
 		queryType,
+		headerParameters,
 		headerType,
-		paramsType,
+		pathParameters,
+		pathType,
 		...body,
 		...input,
 	};
 
-	const wireSchemas = registerOperationValidators(ctx, shape, operationObject);
+	const wireSchemas = registerOperationValidators(
+		documentCtx,
+		operationCtx,
+		operationObject,
+	);
 
-	addInputTypeArgument(ctx, shape);
-	addOutputTypeArgument(ctx, shape, operationObject);
-	registerValidatedCommand(ctx, shape.commandName, wireSchemas);
-	addQueryAndHeaderTypeArguments(shape);
-	addCommandConstructor(shape, path);
+	addInputTypeArgument(documentCtx, operationCtx);
+	addOutputTypeArgument(documentCtx, operationCtx, operationObject);
+	registerValidatedCommand(documentCtx, operationCtx.commandName, wireSchemas);
+	addQueryAndHeaderTypeArguments(operationCtx);
+	addCommandConstructor(operationCtx, path);
 }
 
 function emitOperations(
-	ctx: DocumentContext,
+	documentCtx: DocumentContext,
 	schema: oas31.OpenAPIObject,
 	tags: string[] | undefined,
 ) {
@@ -1562,7 +1595,13 @@ function emitOperations(
 					typeof operationObject === "object" &&
 					hasOperationId(operationObject)
 				) {
-					processOperation(ctx, path, pathItemObject, method, operationObject);
+					processOperation(
+						documentCtx,
+						path,
+						pathItemObject,
+						method,
+						operationObject,
+					);
 				}
 			}
 		}
@@ -1603,9 +1642,12 @@ function addClientConstructor(
 	}
 }
 
-function emitClientModule(ctx: DocumentContext, schema: oas31.OpenAPIObject) {
+function emitClientModule(
+	documentCtx: DocumentContext,
+	schema: oas31.OpenAPIObject,
+) {
 	const { mainFile, typesFile, outputTypes, inputTypeArgs, inputTypeNames } =
-		ctx;
+		documentCtx;
 
 	const serviceClientClassName = "RestServiceClient";
 	const fetcherName = "createIsomorphicNativeFetcher";
@@ -1798,7 +1840,7 @@ export async function processOpenApiDocument(
 	const refs = await $RefParser.resolve(schema);
 	const typesImportDecl = addModulePreambles(files);
 
-	const ctx: DocumentContext = {
+	const documentCtx: DocumentContext = {
 		...files,
 		refs,
 		typesImportDecl,
@@ -1813,10 +1855,10 @@ export async function processOpenApiDocument(
 		inputOnly: options?.inputOnly,
 	};
 
-	registerComponentSchemas(ctx, schema);
-	emitOperations(ctx, schema, tags);
-	emitClientModule(ctx, schema);
-	emitValidatedModule(ctx);
+	registerComponentSchemas(documentCtx, schema);
+	emitOperations(documentCtx, schema, tags);
+	emitClientModule(documentCtx, schema);
+	emitValidatedModule(documentCtx);
 
 	files.mainFile.organizeImports();
 
@@ -1826,7 +1868,11 @@ export async function processOpenApiDocument(
 	files.commandsValidatedFile.fixUnusedIdentifiers();
 	files.valibotFile.fixUnusedIdentifiers();
 
-	const honoFile = emitHonoModule(project, outputDir, ctx.allOperations);
+	const honoFile = emitHonoModule(
+		project,
+		outputDir,
+		documentCtx.allOperations,
+	);
 
 	trimDefaultOutputArguments(files.commandsFile);
 
