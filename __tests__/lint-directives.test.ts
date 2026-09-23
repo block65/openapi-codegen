@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { expect, test } from "vitest";
@@ -69,6 +69,25 @@ test("an open object schema stays a lint error", async () => {
 
 	expect(valibot).toContain("v.looseObject(");
 	expect(valibot).not.toContain("prefer-strict-object");
+});
+
+// Plugin 0.11.0 deleted the rule, so a directive naming it would be dead
+test("no fixture directive names snake-case-wire-keys", async () => {
+	const fixtures = path.join(import.meta.dirname, "fixtures");
+	const entries = await readdir(fixtures, { recursive: true });
+	const modules = entries.filter((entry) => entry.endsWith(".ts"));
+	const directives = await Promise.all(
+		modules.map(async (entry) => {
+			const text = await readFile(path.join(fixtures, entry), "utf8");
+
+			const directive = text.match(/^\/\/ oxlint-disable .*$/mu);
+
+			return directive ? [directive[0]] : [];
+		}),
+	).then((found) => found.flat());
+
+	expect(directives).not.toHaveLength(0);
+	expect(directives.join("\n")).not.toContain("snake-case-wire-keys");
 });
 
 test("output outside any oxlint project gets no directive", async () => {

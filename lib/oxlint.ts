@@ -38,9 +38,6 @@ const exemptRules = [
 	"block65/no-single-character-declaration",
 	"unicorn/max-nested-calls",
 
-	// property spelling is the document's wire contract too
-	"block65/snake-case-wire-keys",
-
 	// input schemas face TS callers, who may pass an explicit `undefined` for
 	// an absent member. The wire schemas use `exactOptional`
 	"block65/prefer-exact-optional",
