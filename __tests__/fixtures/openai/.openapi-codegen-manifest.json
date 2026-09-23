@@ -1,10 +1,10 @@
 {
-	"#generator": "f10ee8e03ef830e8e7dca0614c0076e5",
-	"commands.ts": "7d2187eb106fc582735b22176033ea28",
-	"types.ts": "e2ca3f6a2e1e1a382f4d11f187b341df",
+	"#generator": "25c3995293e37099b578d8abd616d258",
+	"commands.ts": "82d7434078d4f7ba525c36db35c4c33b",
+	"types.ts": "605fb801d1203d2e523cbcb63cb8d0e6",
 	"main.ts": "5ba91c2efb44e3e5c5bd1e1a1b90bb51",
-	"valibot.ts": "1ce0f05f51117be27a3719d479c82790",
-	"hono.ts": "f5768dde31ada252b89074452fe2f549",
+	"valibot.ts": "9d670c8ddc0f9bb81a5dd1a80efd5eee",
+	"hono.ts": "54130437a23164b228769eb3ec967e4e",
 	"commands-validated.ts": "e4929484f6a64b784ff7b03327f58a3a",
-	"enums.ts": "350bddfda5b5eb357bbf6cff60f1808f"
+	"enums.ts": "87a5ccd7e57cc937104b2d256e8d67b1"
 }

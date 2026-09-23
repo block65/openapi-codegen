@@ -6,9 +6,12 @@ export default defineConfig({
 
 	overrides: [
 		{
-			// the fixture documents are third-party specs that leave objects open,
-			// and a consumer closes theirs with `additionalProperties: false`
-			files: ["__tests__/fixtures/**"],
+			// third-party documents that leave their objects open
+			files: [
+				"__tests__/fixtures/docker/valibot.ts",
+				"__tests__/fixtures/openai/valibot.ts",
+				"__tests__/fixtures/petstore/valibot.ts",
+			],
 			rules: { "block65/prefer-strict-object": "off" },
 		},
 	],
