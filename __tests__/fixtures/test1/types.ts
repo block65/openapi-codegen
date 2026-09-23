@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/no-narrative-comment
+
 import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
 
 export type PromoCode = string;

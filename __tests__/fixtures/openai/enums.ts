@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/no-comment-punctuation, block65/no-narrative-comment, block65/no-trailing-comment-punctuation
+
 /** The role of the author of a message */
 export const chatCompletionRole = [
 	"system",

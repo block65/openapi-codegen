@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/no-narrative-comment, block65/prefer-exact-optional, block65/prefer-strict-object, block65/snake-case-wire-keys
+
 import * as v from "valibot";
 
 export const inputPromoCodeSchema = v.pipe(
