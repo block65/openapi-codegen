@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { oas31 } from "openapi3-ts";
+import { firedExemptions } from "./oxlint.ts";
 import {
 	type CodegenOptions,
 	processOpenApiDocument,
@@ -157,11 +158,32 @@ export async function build(
 				.then(() => true)
 				.catch(() => false);
 
-			if (previous[name] !== rev || !present) {
+			const changed = previous[name] !== rev || !present;
+
+			if (changed) {
 				await writeFile(file.getFilePath(), contents);
 			}
 
-			return { name, rev };
+			return { name, rev, changed, path: file.getFilePath(), contents };
+		}),
+	);
+
+	// the directives follow from the lint of what was just written, so an
+	// unchanged file keeps the ones it has
+	const written = revisions.filter(({ changed }) => changed);
+	const fired = await firedExemptions(written.map((file) => file.path));
+
+	await Promise.all(
+		written.map(async (file) => {
+			const rules = fired.get(file.path);
+
+			if (rules) {
+				const directive = `// oxlint-disable ${[...rules].toSorted().join(", ")}`;
+				await writeFile(
+					file.path,
+					file.contents.replace(BANNER, `${BANNER}\n\n${directive}`),
+				);
+			}
 		}),
 	);
 

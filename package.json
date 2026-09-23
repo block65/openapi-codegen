@@ -16,9 +16,6 @@
 	],
 	"type": "module",
 	"sideEffects": false,
-	"exports": {
-		"./oxlint": "./lib/oxlint.ts"
-	},
 	"scripts": {
 		"preversion": "just check"
 	},
