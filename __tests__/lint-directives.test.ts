@@ -29,7 +29,6 @@ const document = {
 			Thing: {
 				type: "object",
 				properties: { name: { type: "string" } },
-				required: ["name"],
 			},
 		},
 	},
@@ -55,8 +54,21 @@ test("a file names the exempt rules that fire in it", async () => {
 
 	await rm(dir, { recursive: true });
 
-	expect(valibot).toContain("// oxlint-disable block65/prefer-strict-object\n");
+	expect(valibot).toContain(
+		"// oxlint-disable block65/prefer-exact-optional\n",
+	);
 	expect(main).not.toContain("oxlint-disable");
+});
+
+// An open object can let a peer's unnamed keys through, so its error reaches
+// the consumer
+test("an open object schema stays a lint error", async () => {
+	const { dir, valibot } = await buildIn(import.meta.dirname);
+
+	await rm(dir, { recursive: true });
+
+	expect(valibot).toContain("v.looseObject(");
+	expect(valibot).not.toContain("prefer-strict-object");
 });
 
 test("output outside any oxlint project gets no directive", async () => {

@@ -41,11 +41,6 @@ const exemptRules = [
 	// property spelling is the document's wire contract too
 	"block65/snake-case-wire-keys",
 
-	// an object schema is open unless the document sets
-	// `additionalProperties: false`, so `looseObject` accepts the unnamed keys
-	// a peer may send
-	"block65/prefer-strict-object",
-
 	// input schemas face TS callers, who may pass an explicit `undefined` for
 	// an absent member. The wire schemas use `exactOptional`
 	"block65/prefer-exact-optional",

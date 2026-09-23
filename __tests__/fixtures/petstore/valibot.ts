@@ -4,7 +4,7 @@
  * Do not edit directly
  */
 
-// oxlint-disable block65/prefer-exact-optional, block65/prefer-strict-object
+// oxlint-disable block65/prefer-exact-optional
 
 import * as v from "valibot";
 
