@@ -1,7 +1,5 @@
-import path from "node:path";
 import type { oas31 } from "openapi3-ts";
 import { assert, expect, test } from "vitest";
-import { generatedFiles } from "../lib/oxlint.ts";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
 const respOk = {
@@ -180,21 +178,6 @@ test("AllInputs union carries every command that takes an input", async () => {
 	);
 
 	expect(carried).toEqual([]);
-});
-
-// `generatedFiles` limits the shipped lint override, so an emitted module
-// absent from that list would lint unscoped at every consumer
-test("the shipped lint override names every file the generator emits", async () => {
-	const result = await processOpenApiDocument(
-		"/tmp/generated-file-set",
-		docWithSchema("Thing", { type: "object", properties: {} }),
-	);
-
-	const emitted = Object.values(result)
-		.map((file) => path.basename(file.getFilePath()))
-		.toSorted();
-
-	expect(emitted).toStrictEqual([...generatedFiles].toSorted());
 });
 
 // An empty schema permits any value, so the keys outside `properties` are

@@ -67,20 +67,30 @@ whose query parameters need two of them stops generation.
 ## Linting generated output
 
 The generated JSDoc is transcribed from the OpenAPI document, so the prose is
-the document author's and the comment rules judge it unfairly. The package
-ships an override for that, scoped to wherever the output lives:
+the document author's and the comment rules judge it unfairly. Query parameter
+names, schema nesting and the optionality of inputs are the document's contract
+too.
+
+After writing, the generator runs your project's own oxlint over the output,
+with your config. Each file gets a directive that turns off only the rules on
+that exemption list which fired in it:
 
 ```ts
-import { defineConfig } from "@block65/shared-config/oxlint";
-import * as codegen from "@block65/openapi-codegen/oxlint";
-
-export default defineConfig({
-	overrides: [...codegen.defineOverrides("src/generated/*")],
-});
+// oxlint-disable block65/no-narrative-comment, block65/prefer-exact-optional
 ```
 
-It turns off comment rules only. Anything else the generated output trips is a
-bug in the generator, so report it rather than adding it to the override.
+An object schema the document leaves open is never exempt: it stays a lint
+error until the document sets `additionalProperties: false`. A header schema is
+the exception, because a request carries headers the document does not name.
+Where the rule fires on one, the generator brackets that declaration with a
+disable and enable naming the reason.
+
+No lint config is needed for generated code. Anything else the output trips is
+a bug in the generator, so report it rather than turning the rule off.
+
+Every run relints every file, so the directives follow your current lint
+config. Without oxlint in the project, or with a config that fails to load,
+the files get no directive.
 
 ## Object strictness comes from the document
 

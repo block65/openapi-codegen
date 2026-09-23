@@ -197,3 +197,11 @@ test("an in: querystring parameter stops generation", async () => {
 		]),
 	).rejects.toThrow("uses `in: querystring`");
 });
+
+test("an in: cookie parameter stops generation", async () => {
+	await expect(
+		generateFor([
+			{ name: "session", in: "cookie", schema: { type: "string" } },
+		]),
+	).rejects.toThrow('parameter "session" uses `in: cookie`');
+});

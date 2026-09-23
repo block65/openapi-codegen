@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/declaration-comments, block65/no-comment-history, block65/no-narrative-comment, block65/no-trailing-comment-punctuation
+
 import { PublicValidationError } from "@block65/rest-client";
 import { sValidator } from "@hono/standard-validator";
 import type { ValidationTargets } from "hono";

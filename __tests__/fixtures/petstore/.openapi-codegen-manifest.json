@@ -1,9 +1,9 @@
 {
-	"#generator": "d9c25059b8f56e84cd41d51232262509",
-	"commands.ts": "608af748764e3adf1fd212532dfabd10",
+	"#generator": "25c3995293e37099b578d8abd616d258",
+	"commands.ts": "69c6a9f2924568fc08fd489508c9df34",
 	"types.ts": "ea65c3e67352d4e22b97af80085727b4",
 	"main.ts": "64edb526dcbcbd345e631ccff959f11d",
-	"valibot.ts": "e33769c41dc720ddafa6a22cd1c09dc2",
-	"hono.ts": "cea6c9d1b1305028c67d24cddfaa4f30",
+	"valibot.ts": "2383058357d21e704546455f4e073d67",
+	"hono.ts": "be7061d9a002b7d6f42bbdfc53727ec7",
 	"commands-validated.ts": "90b52a2210f1b9cc0e123225210fe74a"
 }

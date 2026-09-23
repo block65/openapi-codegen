@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { oas31 } from "openapi3-ts";
+import { firedExemptions, withDirectives } from "./oxlint.ts";
 import {
 	type CodegenOptions,
 	processOpenApiDocument,
@@ -136,7 +137,11 @@ export async function build(
 	const stored = await readManifest(manifestPath);
 	const generator = await generatorRevision();
 	const previous = stored[GENERATOR_KEY] === generator ? stored : {};
-	const revisions = await Promise.all(
+
+	// Every file is linted as emitted, so its directives follow the current
+	// lint config. A file that ends up at its recorded revision gets back the
+	// bytes it had on disk
+	const emitted = await Promise.all(
 		files.map(async (file) => {
 			try {
 				file.formatText();
@@ -147,18 +152,34 @@ export async function build(
 			// the blank line detaches the banner from the first import, which
 			// oxfmt would otherwise move with that import when it sorts them
 			const contents = `${BANNER}\n\n${file.getFullText()}`;
-			const name = file.getBaseName();
-			const rev = createHash("sha256")
-				.update(contents)
-				.digest("hex")
-				.slice(0, 32);
+			const original = await readFile(file.getFilePath(), "utf8").catch(
+				() => {},
+			);
 
-			const present = await readFile(file.getFilePath(), "utf8")
-				.then(() => true)
-				.catch(() => false);
+			await writeFile(file.getFilePath(), contents);
 
-			if (previous[name] !== rev || !present) {
-				await writeFile(file.getFilePath(), contents);
+			return {
+				name: file.getBaseName(),
+				path: file.getFilePath(),
+				contents,
+				original,
+			};
+		}),
+	);
+
+	const fired = await firedExemptions(emitted.map((file) => file.path));
+
+	const revisions = await Promise.all(
+		emitted.map(async ({ name, path: filePath, contents, original }) => {
+			const found = fired.get(filePath);
+			const final = found ? withDirectives(contents, BANNER, found) : contents;
+			const rev = createHash("sha256").update(final).digest("hex").slice(0, 32);
+
+			const kept =
+				original !== undefined && previous[name] === rev ? original : final;
+
+			if (kept !== contents) {
+				await writeFile(filePath, kept);
 			}
 
 			return { name, rev };

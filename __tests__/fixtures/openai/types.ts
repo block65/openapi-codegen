@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-comment-list, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-hedging-comment, block65/no-jargon-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, unicorn-unported/comment-content
+
 import type {
 	Jsonifiable,
 	LiteralUnion,

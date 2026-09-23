@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/prefer-exact-optional
+
 import * as v from "valibot";
 
 export const inputErrorSchema = v.looseObject({

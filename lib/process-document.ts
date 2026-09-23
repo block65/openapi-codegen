@@ -626,6 +626,14 @@ function collectParameters(
 				`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: querystring\`, which this generator does not support. Declare the members as \`in: query\` parameters instead.`,
 			);
 		}
+
+		// no command or validator reads a cookie, so generating this
+		// operation would drop the parameter in silence
+		if (resolvedParameter.in === "cookie") {
+			throw new Error(
+				`${operationObject.operationId}: parameter "${resolvedParameter.name}" uses \`in: cookie\`, which this generator does not support.`,
+			);
+		}
 	}
 
 	// Extract path parameters from URL pattern that weren't declared this

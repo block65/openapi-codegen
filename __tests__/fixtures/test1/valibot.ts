@@ -4,6 +4,8 @@
  * Do not edit directly
  */
 
+// oxlint-disable block65/no-narrative-comment, block65/prefer-exact-optional
+
 import * as v from "valibot";
 
 export const inputPromoCodeSchema = v.pipe(
@@ -112,7 +114,7 @@ export const inputBillingSubscriptionIdentifiersSchema = v.strictObject({
 });
 export const billingSubscriptionIdentifiersSchema =
 	inputBillingSubscriptionIdentifiersSchema;
-export const inputBillingSubscriptionSchema = v.looseObject({
+export const inputBillingSubscriptionSchema = v.strictObject({
 	...inputBillingSubscriptionIdentifiersSchema.entries,
 	accountId: v.optional(inputIdSchema),
 	planSku: inputPlanSkuSchema,
@@ -123,7 +125,7 @@ export const inputBillingSubscriptionSchema = v.looseObject({
 	createdTime: inputDateTimeSchema,
 	updatedTime: v.optional(inputDateTimeSchema),
 });
-export const billingSubscriptionSchema = v.looseObject({
+export const billingSubscriptionSchema = v.strictObject({
 	...billingSubscriptionIdentifiersSchema.entries,
 	accountId: v.exactOptional(idSchema),
 	planSku: planSkuSchema,
@@ -140,7 +142,7 @@ export const inputBillingSubscriptionsSchema = v.array(
 export const billingSubscriptionsSchema = inputBillingSubscriptionsSchema;
 export const inputUuidSchema = v.pipe(v.string(), v.uuid());
 export const uuidSchema = inputUuidSchema;
-export const inputLongRunningOperationFailSchema = v.looseObject({
+export const inputLongRunningOperationFailSchema = v.strictObject({
 	operationId: inputUuidSchema,
 	done: v.literal(true),
 	result: v.strictObject({
@@ -247,14 +249,14 @@ export const inputPaymentMethodIdentifiersSchema = v.strictObject({
 });
 export const paymentMethodIdentifiersSchema =
 	inputPaymentMethodIdentifiersSchema;
-export const inputPaymentMethodSchema = v.looseObject({
+export const inputPaymentMethodSchema = v.strictObject({
 	...inputPaymentMethodIdentifiersSchema.entries,
 	label: inputNameSchema,
 	expireTime: inputDateTimeSchema,
 	humanId: inputStringU8Schema,
 	brand: v.optional(inputPaymentMethodBrandSchema),
 });
-export const paymentMethodSchema = v.looseObject({
+export const paymentMethodSchema = v.strictObject({
 	...paymentMethodIdentifiersSchema.entries,
 	label: nameSchema,
 	expireTime: dateTimeSchema,
@@ -403,7 +405,7 @@ export const inputBillingAccountIdentifiersSchema = v.strictObject({
 });
 export const billingAccountIdentifiersSchema =
 	inputBillingAccountIdentifiersSchema;
-export const inputBillingAccountSchema = v.looseObject({
+export const inputBillingAccountSchema = v.strictObject({
 	...inputBillingAccountIdentifiersSchema.entries,
 	name: inputNameSchema,
 	email: inputEmailSchema,
@@ -419,7 +421,7 @@ export const inputBillingAccountSchema = v.looseObject({
 	timeZone: v.optional(inputTimeZoneSchema),
 	defaultPaymentMethodId: v.optional(inputIdSchema),
 });
-export const billingAccountSchema = v.looseObject({
+export const billingAccountSchema = v.strictObject({
 	...billingAccountIdentifiersSchema.entries,
 	name: nameSchema,
 	email: emailSchema,
@@ -508,6 +510,7 @@ export const inputImportBillingDataCommandParamsSchema = v.strictObject({
 export const importBillingDataCommandParamsSchema = v.strictObject({
 	billingAccountId: idSchema,
 });
+// oxlint-disable block65/prefer-strict-object -- a request carries headers the document does not name; stripping them is the point
 export const inputImportBillingDataCommandHeaderSchema = v.object({
 	"content-type": v.picklist([
 		"application/json",
@@ -517,6 +520,8 @@ export const inputImportBillingDataCommandHeaderSchema = v.object({
 	"content-length": v.bigint(),
 	"x-idempotency-key": v.optional(v.pipe(v.string(), v.uuid())),
 });
+// oxlint-enable block65/prefer-strict-object
+// oxlint-disable block65/prefer-strict-object -- a request carries headers the document does not name; stripping them is the point
 export const importBillingDataCommandHeaderSchema = v.object({
 	"content-type": v.picklist([
 		"application/json",
@@ -530,6 +535,7 @@ export const importBillingDataCommandHeaderSchema = v.object({
 	]),
 	"x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid())),
 });
+// oxlint-enable block65/prefer-strict-object
 export const inputGetOperationCommandResponseSchema =
 	inputLongRunningOperationSchema;
 export const getOperationCommandResponseSchema = longRunningOperationSchema;
