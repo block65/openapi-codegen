@@ -55,6 +55,8 @@ const exemptByCode = new Map(
 	}),
 );
 
+type Fired = { rules: Set<string>; openObjects: number[] };
+
 // Found upward from the output, so the directives match the consumer's config
 async function findOxlint(from: string): Promise<string | undefined> {
 	const bin = path.join(from, "node_modules", ".bin", "oxlint");
@@ -73,9 +75,13 @@ async function findOxlint(from: string): Promise<string | undefined> {
 	return parent === from ? undefined : findOxlint(parent);
 }
 
-function isReport(
-	value: unknown,
-): value is { diagnostics: { code: string; filename: string }[] } {
+function isReport(value: unknown): value is {
+	diagnostics: {
+		code: string;
+		filename: string;
+		labels: { span: { line: number } }[];
+	}[];
+} {
 	return (
 		typeof value === "object" &&
 		value !== null &&
@@ -99,7 +105,7 @@ function parseReport(stdout: string) {
  * empty without oxlint, or when its config fails to load
  */
 export async function firedExemptions(files: string[]) {
-	const fired = new Map<string, Set<string>>();
+	const fired = new Map<string, Fired>();
 
 	const [first] = files;
 	const root = first && (await findOxlint(path.dirname(first)));
@@ -130,16 +136,78 @@ export async function firedExemptions(files: string[]) {
 		return fired;
 	}
 
-	for (const { code, filename } of report.diagnostics) {
+	for (const { code, filename, labels } of report.diagnostics) {
 		const rule = exemptByCode.get(code);
+		const file = path.join(root, filename);
+		const entry = fired.get(file) ?? { rules: new Set(), openObjects: [] };
 
 		if (rule) {
-			const file = path.join(root, filename);
-			const rules = fired.get(file) ?? new Set();
-			rules.add(rule);
-			fired.set(file, rules);
+			entry.rules.add(rule);
 		}
+
+		if (code === "block65(prefer-strict-object)") {
+			entry.openObjects.push(...labels.map((label) => label.span.line));
+		}
+
+		fired.set(file, entry);
 	}
 
 	return fired;
+}
+
+const headerReason =
+	"a request carries headers the document does not name; stripping them is the point";
+
+// `line` counts from one, and the span it returns from zero
+function headerDeclaration(lines: string[], line: number) {
+	const start = lines.findLastIndex(
+		(text, index) => index < line && text.startsWith("export "),
+	);
+	const first = lines[start];
+
+	if (first === undefined || !/^export const \w+HeaderSchema\b/u.test(first)) {
+		return;
+	}
+
+	const end = first.endsWith(";")
+		? start
+		: lines.findIndex((text, index) => index > start && /^\S/u.test(text));
+
+	return end === -1 ? undefined : { start, end };
+}
+
+/**
+ * Prefixes the file with its exempt rules, and brackets each header schema the
+ * strict-object rule fires on. An open object anywhere else stays an error
+ */
+export function withDirectives(contents: string, banner: string, fired: Fired) {
+	const lines = contents.split("\n");
+	const spans = new Map(
+		fired.openObjects
+			.map((line) => headerDeclaration(lines, line))
+			.filter((span) => span !== undefined)
+			.map((span) => [span.start, span]),
+	);
+
+	// bottom up, so an insertion leaves the earlier line numbers alone
+	for (const { start, end } of [...spans.values()].toSorted(
+		(a, b) => b.start - a.start,
+	)) {
+		lines.splice(end + 1, 0, "// oxlint-enable block65/prefer-strict-object");
+		lines.splice(
+			start,
+			0,
+			`// oxlint-disable block65/prefer-strict-object -- ${headerReason}`,
+		);
+	}
+
+	const text = lines.join("\n");
+
+	if (fired.rules.size === 0) {
+		return text;
+	}
+
+	const directive = `// oxlint-disable ${[...fired.rules].toSorted().join(", ")}`;
+
+	return text.replace(banner, `${banner}\n\n${directive}`);
 }

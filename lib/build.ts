@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { oas31 } from "openapi3-ts";
-import { firedExemptions } from "./oxlint.ts";
+import { firedExemptions, withDirectives } from "./oxlint.ts";
 import {
 	type CodegenOptions,
 	processOpenApiDocument,
@@ -137,7 +137,11 @@ export async function build(
 	const stored = await readManifest(manifestPath);
 	const generator = await generatorRevision();
 	const previous = stored[GENERATOR_KEY] === generator ? stored : {};
-	const revisions = await Promise.all(
+
+	// Every file is linted as emitted, so its directives follow the current
+	// lint config. A file that ends up at its recorded revision gets back the
+	// bytes it had on disk
+	const emitted = await Promise.all(
 		files.map(async (file) => {
 			try {
 				file.formatText();
@@ -148,42 +152,37 @@ export async function build(
 			// the blank line detaches the banner from the first import, which
 			// oxfmt would otherwise move with that import when it sorts them
 			const contents = `${BANNER}\n\n${file.getFullText()}`;
-			const name = file.getBaseName();
-			const rev = createHash("sha256")
-				.update(contents)
-				.digest("hex")
-				.slice(0, 32);
+			const original = await readFile(file.getFilePath(), "utf8").catch(
+				() => {},
+			);
 
-			const present = await readFile(file.getFilePath(), "utf8")
-				.then(() => true)
-				.catch(() => false);
+			await writeFile(file.getFilePath(), contents);
 
-			const changed = previous[name] !== rev || !present;
-
-			if (changed) {
-				await writeFile(file.getFilePath(), contents);
-			}
-
-			return { name, rev, changed, path: file.getFilePath(), contents };
+			return {
+				name: file.getBaseName(),
+				path: file.getFilePath(),
+				contents,
+				original,
+			};
 		}),
 	);
 
-	// the directives follow from the lint of what was just written, so an
-	// unchanged file keeps the ones it has
-	const written = revisions.filter(({ changed }) => changed);
-	const fired = await firedExemptions(written.map((file) => file.path));
+	const fired = await firedExemptions(emitted.map((file) => file.path));
 
-	await Promise.all(
-		written.map(async (file) => {
-			const rules = fired.get(file.path);
+	const revisions = await Promise.all(
+		emitted.map(async ({ name, path: filePath, contents, original }) => {
+			const found = fired.get(filePath);
+			const final = found ? withDirectives(contents, BANNER, found) : contents;
+			const rev = createHash("sha256").update(final).digest("hex").slice(0, 32);
 
-			if (rules) {
-				const directive = `// oxlint-disable ${[...rules].toSorted().join(", ")}`;
-				await writeFile(
-					file.path,
-					file.contents.replace(BANNER, `${BANNER}\n\n${directive}`),
-				);
+			const kept =
+				original !== undefined && previous[name] === rev ? original : final;
+
+			if (kept !== contents) {
+				await writeFile(filePath, kept);
 			}
+
+			return { name, rev };
 		}),
 	);
 
