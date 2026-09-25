@@ -269,7 +269,7 @@ function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	};
 }
 
-test("additionalProperties types the record value instead of widening to unknown", async () => {
+test("additionalProperties is a string-keyed record of the value type", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/whatever",
 		docWithSchema("Labels", {
@@ -278,8 +278,9 @@ test("additionalProperties types the record value instead of widening to unknown
 		}),
 	);
 
+	// JSON object keys are always strings
 	expect(result.typesFile.getText()).toContain(
-		"Record<string | number, string>",
+		"export type Labels = Record<string, string>;",
 	);
 	expect(result.valibotFile.getText()).toContain(
 		"v.record(v.string(), v.string())",
@@ -323,7 +324,7 @@ test("an empty properties bag is a record, not an empty object type", async () =
 
 	const typesText = result.typesFile.getText();
 
-	expect(typesText).toContain("Record<string | number, Jsonifiable>");
+	expect(typesText).toContain("Record<string, Jsonifiable>");
 	expect(typesText).not.toMatch(/=\s*\{\};/);
 });
 
