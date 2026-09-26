@@ -91,10 +91,7 @@ export type CreateChatCompletionStreamResponse = {
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export type CreateChatCompletionImageResponse = Record<
-	string | number,
-	Jsonifiable
->;
+export type CreateChatCompletionImageResponse = Record<string, Jsonifiable>;
 export type CreateImageRequest = {
 	/**
 	 * A text description of the desired image(s). The maximum length is 1000
@@ -386,7 +383,7 @@ export type CompleteUploadRequest = {
 	part_ids: readonly string[];
 	md5?: string;
 };
-export type CancelUploadRequest = Record<string | number, Jsonifiable>;
+export type CancelUploadRequest = Record<string, Jsonifiable>;
 export type CreateFineTuningJobRequest = {
 	/**
 	 * The name of the model to fine-tune. You can select one of the
@@ -613,7 +610,7 @@ export type AssistantToolsFileSearchTypeOnly = {
 	type: "file_search";
 };
 export type ModifyRunRequest = {
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type SubmitToolOutputsRunRequest = {
 	tool_outputs: readonly {
@@ -637,7 +634,7 @@ export type ModifyThreadRequest = {
 			vector_store_ids?: readonly string[];
 		};
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type DeleteThreadResponse = {
 	id: string;
@@ -645,7 +642,7 @@ export type DeleteThreadResponse = {
 	object: "thread.deleted";
 };
 export type ModifyMessageRequest = {
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type DeleteMessageResponse = {
 	id: string;
@@ -936,7 +933,7 @@ export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
 	 * @enum file_search
 	 */
 	type: "file_search";
-	file_search: Record<string | number, Jsonifiable>;
+	file_search: Record<string, Jsonifiable>;
 };
 export type RunStepDetailsToolCallsFunctionObject = {
 	id: string;
@@ -1019,7 +1016,7 @@ export type BatchRequestOutput = {
 	response?: {
 		status_code?: number;
 		request_id?: string;
-		body?: Record<string | number, Jsonifiable>;
+		body?: Record<string, Jsonifiable>;
 	};
 	error?: {
 		code?: string;
@@ -1511,7 +1508,7 @@ export type Batch = {
 		completed: number;
 		failed: number;
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type ListBatchesResponse = {
 	data: readonly Batch[];
@@ -1611,7 +1608,7 @@ export type MessageObject = {
 		file_id?: string;
 		tools?: readonly (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
 	}[];
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, Jsonifiable>;
 };
 export type MessageStreamEvent =
 	| {
@@ -1754,7 +1751,7 @@ export type RunStepObject = {
 	cancelled_at: number | null;
 	failed_at: number | null;
 	completed_at: number | null;
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, Jsonifiable>;
 	/**
 	 * Usage statistics related to the run step. This value will be `null` while
 	 * the run step's status is `in_progress`.
@@ -1801,10 +1798,7 @@ export type RunStepStreamEvent =
 			data: RunStepObject;
 	  };
 /** The schema for the response format, described as a JSON Schema object. */
-export type ResponseFormatJsonSchemaSchema = Record<
-	string | number,
-	Jsonifiable
->;
+export type ResponseFormatJsonSchemaSchema = Record<string, Jsonifiable>;
 export type ResponseFormatJsonSchema = {
 	/**
 	 * The type of response format being defined: `json_schema`
@@ -2002,7 +1996,7 @@ export type RunObject = {
 	 * @default
 	 */
 	tools: readonly AssistantToolsCode[];
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, Jsonifiable>;
 	/**
 	 * Usage statistics related to the run. This value will be `null` if the run
 	 * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
@@ -2134,7 +2128,7 @@ export type ThreadObject = {
 			vector_store_ids?: readonly string[];
 		};
 	};
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, Jsonifiable>;
 };
 export type ThreadStreamEvent = {
 	event: "thread.created";
@@ -2322,7 +2316,7 @@ export type VectorStoreObject = {
 	expires_after?: VectorStoreExpirationAfter;
 	expires_at?: number | null;
 	last_active_at: number | null;
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, Jsonifiable>;
 };
 export type ListVectorStoresResponse = {
 	object: string;
@@ -2335,7 +2329,7 @@ export type UpdateVectorStoreRequest = {
 	name?: string;
 	/** The expiration policy for a vector store. */
 	expires_after?: VectorStoreExpirationAfter;
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type CreateVectorStoreRequest = {
 	file_ids?: readonly string[];
@@ -2345,7 +2339,7 @@ export type CreateVectorStoreRequest = {
 	chunking_strategy?:
 		| AutoChunkingStrategyRequestParam
 		| StaticChunkingStrategyRequestParam;
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 /** A result instance of the file search. */
 export type RunStepDetailsToolCallsFileSearchResultObject = {
@@ -2427,7 +2421,7 @@ export type CreateMessageRequest = {
 		file_id?: string;
 		tools?: readonly (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
 	}[];
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type CreateThreadRequest = {
 	messages?: readonly CreateMessageRequest[];
@@ -2443,7 +2437,7 @@ export type CreateThreadRequest = {
 		};
 		file_search?: unknown;
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 };
 export type CreateThreadAndRunRequest = {
 	assistant_id: string;
@@ -2497,7 +2491,7 @@ export type CreateThreadAndRunRequest = {
 			vector_store_ids?: readonly string[];
 		};
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2614,7 +2608,7 @@ export type CreateRunRequest = {
 	additional_instructions?: string;
 	additional_messages?: readonly CreateMessageRequest[];
 	tools?: readonly AssistantToolsCode[];
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2693,7 +2687,7 @@ export type CreateRunRequest = {
  *
  * Omitting `parameters` defines a function with an empty parameter list.
  */
-export type FunctionParameters = Record<string | number, Jsonifiable>;
+export type FunctionParameters = Record<string, Jsonifiable>;
 export type FunctionObject = {
 	description?: string;
 	name: string;
@@ -2790,7 +2784,7 @@ export type AssistantObject = {
 			vector_store_ids?: readonly string[];
 		};
 	};
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, Jsonifiable>;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2871,7 +2865,7 @@ export type ModifyAssistantRequest = {
 			vector_store_ids?: readonly string[];
 		};
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2975,7 +2969,7 @@ export type CreateAssistantRequest = {
 		};
 		file_search?: unknown;
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, Jsonifiable>;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -3638,7 +3632,7 @@ export type CreateChatCompletionRequest = {
 		string
 	>;
 	frequency_penalty?: number | null;
-	logit_bias?: Record<string | number, number>;
+	logit_bias?: Record<string, number>;
 	logprobs?: boolean | null;
 	top_logprobs?: number | null;
 	/**
@@ -3850,7 +3844,7 @@ export type CreateCompletionResponse = {
 			text_offset?: readonly number[];
 			token_logprobs?: readonly number[];
 			tokens?: readonly string[];
-			top_logprobs?: readonly Record<string | number, number>[];
+			top_logprobs?: readonly Record<string, number>[];
 		};
 		text: string;
 	}[];
@@ -3900,7 +3894,7 @@ export type CreateCompletionRequest = {
 	best_of?: number | null;
 	echo?: boolean | null;
 	frequency_penalty?: number | null;
-	logit_bias?: Record<string | number, number>;
+	logit_bias?: Record<string, number>;
 	logprobs?: number | null;
 	/**
 	 * The maximum number of [tokens](/tokenizer) that can be generated in the
@@ -4482,7 +4476,7 @@ type CreateBatchJsonBody = {
 	 * @enum 24h
 	 */
 	completion_window: "24h";
-	metadata?: Record<string | number, string>;
+	metadata?: Record<string, string>;
 };
 export type CreateBatchCommandBody = CreateBatchJsonBody;
 export type CreateBatchCommandInput = CreateBatchJsonBody;
