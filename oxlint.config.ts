@@ -1,6 +1,9 @@
 import { defineConfig } from "@block65/shared-config/oxlint";
 
 export default defineConfig({
+	// generated code under test, compared byte for byte
+	ignorePatterns: ["__tests__/__snapshots__/**"],
+
 	// a consumer's config enables the valibot group, so the fixtures lint under it
 	groups: { vitest: "on", valibot: "on" },
 
