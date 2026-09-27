@@ -145,8 +145,8 @@ export async function build(
 		files.map(async (file) => {
 			try {
 				file.formatText();
-			} catch (error) {
-				console.warn(error);
+			} catch (err) {
+				console.warn(err);
 			}
 
 			// the blank line detaches the banner from the first import, which

@@ -122,9 +122,9 @@ export async function firedExemptions(files: string[]) {
 		{ cwd: root, maxBuffer: 1024 * 1024 * 1024 },
 	).then(
 		(result) => result.stdout,
-		(error: unknown) =>
-			typeof error === "object" && error !== null && "stdout" in error
-				? String(error.stdout)
+		(err: unknown) =>
+			typeof err === "object" && err !== null && "stdout" in err
+				? String(err.stdout)
 				: "",
 	);
 

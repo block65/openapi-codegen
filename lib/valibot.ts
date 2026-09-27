@@ -53,9 +53,7 @@ function regexSource(pattern: string) {
 	return JSON.stringify(pattern);
 }
 
-/**
- * Helper to generate v.name(...args) using ts-morph Writers
- */
+// an argument can be text or a writer, so a nested call writes in place
 function vcall(
 	name: { [k in keyof typeof v]: k extends string ? k : never }[keyof typeof v],
 	...args: (
@@ -937,7 +935,7 @@ export function registerValidatorFromSchema(
 	}
 }
 
-/** Coerces HTTP param strings to native values, leaving other types alone */
+// Coerces HTTP param strings to native values, leaving other types alone
 function asHttpParamValidator(
 	validatorSchemas: Map<string, ValidatorEntry>,
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
