@@ -245,9 +245,12 @@ function resolveRef(
 	mode: SchemaMode,
 ) {
 	const entry = validators.get(ref);
+
+	// components register in dependency order, so a miss is a codegen bug
 	if (!entry) {
-		return vcall("unknown");
+		throw new Error(`ref used before available: ${ref}`);
 	}
+
 	return mode === "input" ? entry.input : entry.wire;
 }
 

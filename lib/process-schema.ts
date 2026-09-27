@@ -230,22 +230,9 @@ function refType(
 ) {
 	const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
+	// components register in dependency order, so a miss is a codegen bug
 	if (!existingSchema) {
-		console.warn("ref used before available: schema=%j", schemaObject);
-
-		const property: Pick<
-			OptionalKind<PropertySignatureStructure>,
-			"type" | "docs"
-		> = {
-			type: "never",
-			docs: [
-				{
-					description: `WARN: $ref used before available - schema=${JSON.stringify(schemaObject)}`,
-				},
-			],
-		};
-
-		return property;
+		throw new Error(`ref used before available: ${schemaObject.$ref}`);
 	}
 
 	const docs = refPropertyDocs(existingSchema);
