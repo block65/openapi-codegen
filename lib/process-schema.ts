@@ -67,6 +67,17 @@ function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	);
 }
 
+// valibot wraps every nullable schema in v.nullable, so the type admits null
+function withNullable<T extends { type: string | WriterFunction }>(
+	schema: oas30.SchemaObject | oas31.SchemaObject,
+	result: T,
+) {
+	return {
+		...result,
+		type: maybeWithNullUnion(result.type, schemaTypeIsNull(schema)),
+	};
+}
+
 // Drops `unknown`, `never` and duplicate string members from a union
 function collapseUnion(types: (string | WriterFunction)[]) {
 	const seen = new Set<string>();
@@ -401,30 +412,46 @@ function combinatorType(
 		}
 	}
 
+	// a member's `nullable` joins the combinator's own null below, so the
+	// member types stay free of it
+	const nullableMembers = schemaItems.filter(
+		(schema) =>
+			!isReferenceObject(schema) && "nullable" in schema && schema.nullable,
+	);
+
 	const types = schemaItems
 		.map((schema) =>
 			schemaToType(
 				typesAndInterfaces,
 				parentSchema,
 				propertyName,
-				schema,
+				nullableMembers.includes(schema)
+					? { ...schema, nullable: false }
+					: schema,
 				options,
 			),
 		)
 		.map((t) => t.type);
 
 	const [onlyType] = types;
+	const intersect = "allOf" in schemaObject;
+
+	// an intersection admits null when every member does
+	const membersNullable = intersect
+		? nullableMembers.length === schemaItems.length
+		: nullableMembers.length > 0;
 
 	// only one type, so just return that type
 	if (types.length === 1 && onlyType !== undefined) {
-		return onlyType;
+		return maybeWithNullUnion(
+			onlyType,
+			membersNullable || schemaTypeIsNull(schemaObject),
+		);
 	}
-
-	const intersect = "allOf" in schemaObject;
 
 	const filteredTypes = types.filter((value) => isNotNullOrUndefined(value));
 	const hasNullType = types.some((t) => t === "null");
-	const isNullable = schemaTypeIsNull(schemaObject);
+	const isNullable = membersNullable || schemaTypeIsNull(schemaObject);
 
 	if (intersect) {
 		// For allOf, intersect the non-null types and add null when nullable
@@ -527,11 +554,7 @@ function stringType(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
 
 	const temporal = temporalStringType(schemaObject.format);
 
-	if (temporal) {
-		return maybeWithNullUnion(temporal, schemaTypeIsNull(schemaObject));
-	}
-
-	return "string";
+	return temporal ?? "string";
 }
 
 function schemaObjectType(
@@ -562,7 +585,10 @@ function schemaObjectType(
 	}
 
 	if (schemaObject.type === "array") {
-		return arrayType(typesAndInterfaces, propertyName, schemaObject, options);
+		return withNullable(
+			schemaObject,
+			arrayType(typesAndInterfaces, propertyName, schemaObject, options),
+		);
 	}
 
 	if (
@@ -582,7 +608,10 @@ function schemaObjectType(
 	}
 
 	if (isObjectSchema(schemaObject)) {
-		return objectType(typesAndInterfaces, propertyName, schemaObject, options);
+		return withNullable(
+			schemaObject,
+			objectType(typesAndInterfaces, propertyName, schemaObject, options),
+		);
 	}
 
 	if (schemaObject.type === "integer" || schemaObject.type === "number") {
@@ -606,7 +635,7 @@ function schemaObjectType(
 	}
 
 	if (schemaObject.type === "string") {
-		return { type: stringType(schemaObject) };
+		return withNullable(schemaObject, { type: stringType(schemaObject) });
 	}
 
 	// empty schemaObject

@@ -70,6 +70,64 @@ test("top-level type array with null", async () => {
 	]);
 });
 
+test("3.0 nullable objects, arrays, strings and combinator members admit null", async () => {
+	const result = await processOpenApiDocument("/tmp/like-you-know-whatever", {
+		openapi: "3.0.3",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				Base: {
+					type: "object",
+					properties: { id: { type: "string" } },
+				},
+				Nullables: {
+					type: "object",
+					required: [
+						"object",
+						"array",
+						"string",
+						"stringEnum",
+						"unionMember",
+						"intersectionMember",
+					],
+					properties: {
+						object: {
+							type: "object",
+							properties: { id: { type: "string" } },
+							nullable: true,
+						},
+						array: { type: "array", items: { type: "string" }, nullable: true },
+						string: { type: "string", nullable: true },
+						stringEnum: { type: "string", enum: ["a", "b"], nullable: true },
+						// one nullable member makes the union nullable, once
+						unionMember: {
+							nullable: true,
+							oneOf: [
+								{ type: "string", nullable: true },
+								{ type: "array", items: { type: "string" } },
+							],
+						},
+						// an intersection needs every member nullable to admit null
+						intersectionMember: {
+							allOf: [
+								{ $ref: "#/components/schemas/Base" },
+								{
+									type: "object",
+									properties: { name: { type: "string" } },
+									nullable: true,
+								},
+							],
+						},
+					},
+				},
+			},
+		},
+	} as oas31.OpenAPIObject);
+
+	await expectGenerated([result.typesFile, result.valibotFile]);
+});
+
 test("const values", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/like-you-know-whatever",

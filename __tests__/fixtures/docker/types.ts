@@ -302,7 +302,7 @@ export type Health = {
 	 * @example 0
 	 */
 	FailingStreak?: number;
-	Log?: readonly {
+	Log?: readonly ({
 		/**
 		 * Date and time at which this check started in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -326,8 +326,8 @@ export type Health = {
 		 */
 		ExitCode?: number;
 		Output?: string;
-	}[];
-};
+	} | null)[];
+} | null;
 /**
  * HealthcheckResult stores information about a single run of a healthcheck
  * probe
@@ -356,7 +356,7 @@ export type HealthcheckResult = {
 	 */
 	ExitCode?: number;
 	Output?: string;
-};
+} | null;
 /** Container configuration that depends on the host we are running on */
 export type HostConfig = {
 	CpuShares?: number;
@@ -456,18 +456,19 @@ export type HostConfig = {
 	 */
 	PortBindings?: Record<
 		string,
-		readonly {
-			/**
-			 * Host IP address that the container's port is mapped to.
-			 * @example 127.0.0.1
-			 */
-			HostIp?: string;
-			/**
-			 * Host port number that the container's port is mapped to.
-			 * @example 4443
-			 */
-			HostPort?: string;
-		}[]
+		| readonly {
+				/**
+				 * Host IP address that the container's port is mapped to.
+				 * @example 127.0.0.1
+				 */
+				HostIp?: string;
+				/**
+				 * Host port number that the container's port is mapped to.
+				 * @example 4443
+				 */
+				HostPort?: string;
+		  }[]
+		| null
 	>;
 	RestartPolicy?: {
 		/**
@@ -534,7 +535,7 @@ export type HostConfig = {
 			Mode?: number;
 		};
 	}[];
-	ConsoleSize?: readonly number[];
+	ConsoleSize?: readonly number[] | null;
 	Annotations?: Record<string, string>;
 	CapAdd?: readonly string[];
 	CapDrop?: readonly string[];
@@ -619,7 +620,7 @@ export type ContainerConfig = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -669,12 +670,12 @@ export type ContainerConfig = {
 	 */
 	Entrypoint?: readonly string[];
 	NetworkDisabled?: boolean | null;
-	MacAddress?: string;
+	MacAddress?: string | null;
 	/**
 	 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 	 * @example
 	 */
-	OnBuild?: readonly string[];
+	OnBuild?: readonly string[] | null;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -684,13 +685,13 @@ export type ContainerConfig = {
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
 	 */
-	StopSignal?: string;
+	StopSignal?: string | null;
 	StopTimeout?: number | null;
 	/**
 	 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 	 * @example /bin/sh,-c
 	 */
-	Shell?: readonly string[];
+	Shell?: readonly string[] | null;
 };
 /**
  * Configuration of the image. These fields are used as defaults
@@ -753,7 +754,7 @@ export type ImageConfig = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 	 *
@@ -852,12 +853,12 @@ export type ImageConfig = {
 	 * > **Note**: this field is always omitted and must not be used.
 	 * @example
 	 */
-	MacAddress?: string;
+	MacAddress?: string | null;
 	/**
 	 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 	 * @example
 	 */
-	OnBuild?: readonly string[];
+	OnBuild?: readonly string[] | null;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -867,13 +868,13 @@ export type ImageConfig = {
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
 	 */
-	StopSignal?: string;
+	StopSignal?: string | null;
 	StopTimeout?: number | null;
 	/**
 	 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 	 * @example /bin/sh,-c
 	 */
-	Shell?: readonly string[];
+	Shell?: readonly string[] | null;
 };
 /**
  * NetworkingConfig represents the container's networking configuration for
@@ -889,7 +890,7 @@ export type NetworkingConfig = {
 				IPv4Address?: string;
 				IPv6Address?: string;
 				LinkLocalIPs?: readonly string[];
-			};
+			} | null;
 			Links?: readonly string[];
 			Aliases?: readonly string[];
 			/**
@@ -942,7 +943,7 @@ export type NetworkingConfig = {
 			 * are passed directly to the driver and are driver specific.
 			 * @example [object Object]
 			 */
-			DriverOpts?: Record<string, string>;
+			DriverOpts?: Record<string, string> | null;
 		}
 	>;
 };
@@ -985,32 +986,37 @@ export type NetworkSettings = {
 	 */
 	Ports?: Record<
 		string,
-		readonly {
-			/**
-			 * Host IP address that the container's port is mapped to.
-			 * @example 127.0.0.1
-			 */
-			HostIp?: string;
-			/**
-			 * Host port number that the container's port is mapped to.
-			 * @example 4443
-			 */
-			HostPort?: string;
-		}[]
+		| readonly {
+				/**
+				 * Host IP address that the container's port is mapped to.
+				 * @example 127.0.0.1
+				 */
+				HostIp?: string;
+				/**
+				 * Host port number that the container's port is mapped to.
+				 * @example 4443
+				 */
+				HostPort?: string;
+		  }[]
+		| null
 	>;
 	/**
 	 * SandboxKey identifies the sandbox
 	 * @example /var/run/docker/netns/8ab54b426c38
 	 */
 	SandboxKey?: string;
-	SecondaryIPAddresses?: readonly {
-		Addr?: string;
-		PrefixLen?: number;
-	}[];
-	SecondaryIPv6Addresses?: readonly {
-		Addr?: string;
-		PrefixLen?: number;
-	}[];
+	SecondaryIPAddresses?:
+		| readonly {
+				Addr?: string;
+				PrefixLen?: number;
+		  }[]
+		| null;
+	SecondaryIPv6Addresses?:
+		| readonly {
+				Addr?: string;
+				PrefixLen?: number;
+		  }[]
+		| null;
 	/**
 	 * EndpointID uniquely represents a service endpoint in a Sandbox.
 	 *
@@ -1122,7 +1128,7 @@ export type NetworkSettings = {
 				IPv4Address?: string;
 				IPv6Address?: string;
 				LinkLocalIPs?: readonly string[];
-			};
+			} | null;
 			Links?: readonly string[];
 			Aliases?: readonly string[];
 			/**
@@ -1175,7 +1181,7 @@ export type NetworkSettings = {
 			 * are passed directly to the driver and are driver specific.
 			 * @example [object Object]
 			 */
-			DriverOpts?: Record<string, string>;
+			DriverOpts?: Record<string, string> | null;
 		}
 	>;
 };
@@ -1195,18 +1201,19 @@ export type Address = {
  */
 export type PortMap = Record<
 	string,
-	readonly {
-		/**
-		 * Host IP address that the container's port is mapped to.
-		 * @example 127.0.0.1
-		 */
-		HostIp?: string;
-		/**
-		 * Host port number that the container's port is mapped to.
-		 * @example 4443
-		 */
-		HostPort?: string;
-	}[]
+	| readonly {
+			/**
+			 * Host IP address that the container's port is mapped to.
+			 * @example 127.0.0.1
+			 */
+			HostIp?: string;
+			/**
+			 * Host port number that the container's port is mapped to.
+			 * @example 4443
+			 */
+			HostPort?: string;
+	  }[]
+	| null
 >;
 /**
  * PortBinding represents a binding between a host IP address and a host
@@ -1355,7 +1362,7 @@ export type ImageInspect = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -1405,12 +1412,12 @@ export type ImageInspect = {
 		 */
 		Entrypoint?: readonly string[];
 		NetworkDisabled?: boolean | null;
-		MacAddress?: string;
+		MacAddress?: string | null;
 		/**
 		 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 		 * @example
 		 */
-		OnBuild?: readonly string[];
+		OnBuild?: readonly string[] | null;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -1420,13 +1427,13 @@ export type ImageInspect = {
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
 		 */
-		StopSignal?: string;
+		StopSignal?: string | null;
 		StopTimeout?: number | null;
 		/**
 		 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 		 * @example /bin/sh,-c
 		 */
-		Shell?: readonly string[];
+		Shell?: readonly string[] | null;
 	};
 	/**
 	 * The version of Docker that was used to build the image.
@@ -1503,7 +1510,7 @@ export type ImageInspect = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 		/**
 		 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 		 *
@@ -1602,12 +1609,12 @@ export type ImageInspect = {
 		 * > **Note**: this field is always omitted and must not be used.
 		 * @example
 		 */
-		MacAddress?: string;
+		MacAddress?: string | null;
 		/**
 		 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 		 * @example
 		 */
-		OnBuild?: readonly string[];
+		OnBuild?: readonly string[] | null;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -1617,13 +1624,13 @@ export type ImageInspect = {
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
 		 */
-		StopSignal?: string;
+		StopSignal?: string | null;
 		StopTimeout?: number | null;
 		/**
 		 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 		 * @example /bin/sh,-c
 		 */
-		Shell?: readonly string[];
+		Shell?: readonly string[] | null;
 	};
 	/**
 	 * Hardware CPU architecture that the image runs on.
@@ -1634,7 +1641,7 @@ export type ImageInspect = {
 	 * CPU architecture variant (presently ARM-only).
 	 * @example v7
 	 */
-	Variant?: string;
+	Variant?: string | null;
 	/**
 	 * Operating System the image is built to run on.
 	 * @example linux
@@ -1645,7 +1652,7 @@ export type ImageInspect = {
 	 * for Windows).
 	 * @example
 	 */
-	OsVersion?: string;
+	OsVersion?: string | null;
 	/**
 	 * Total size of the image including all layers it is composed of.
 	 * @example 1239828
@@ -1692,7 +1699,7 @@ export type ImageInspect = {
 		 * and omitted otherwise.
 		 * @example 2022-02-28T14:40:02.623929178Z
 		 */
-		LastTagTime?: string;
+		LastTagTime?: string | null;
 	};
 };
 export type ImageSummary = {
@@ -1951,7 +1958,7 @@ export type Volume = {
 		 * @default -1
 		 */
 		RefCount: bigint;
-	};
+	} | null;
 };
 /** Volume configuration */
 export type VolumeCreateOptions = {
@@ -2183,7 +2190,7 @@ export type VolumeListResponse = {
 			 * @default -1
 			 */
 			RefCount: bigint;
-		};
+		} | null;
 	}[];
 	/**
 	 * Warnings that occurred when fetching the list of volumes.
@@ -2295,18 +2302,20 @@ export type Network = {
 	 * @example [object Object]
 	 */
 	Labels?: Record<string, string>;
-	Peers?: readonly {
-		/**
-		 * ID of the peer-node in the Swarm cluster.
-		 * @example 6869d7c1732b
-		 */
-		Name?: string;
-		/**
-		 * IP-address of the peer-node in the Swarm cluster.
-		 * @example 10.133.77.91
-		 */
-		IP?: string;
-	}[];
+	Peers?:
+		| readonly {
+				/**
+				 * ID of the peer-node in the Swarm cluster.
+				 * @example 6869d7c1732b
+				 */
+				Name?: string;
+				/**
+				 * IP-address of the peer-node in the Swarm cluster.
+				 * @example 10.133.77.91
+				 */
+				IP?: string;
+		  }[]
+		| null;
 };
 /**
  * The config-only network source to provide the configuration for
@@ -2401,12 +2410,12 @@ export type BuildCache = {
 	 * > **Deprecated**: This field is deprecated, and omitted if empty.
 	 * @example
 	 */
-	Parent?: string;
+	Parent?: string | null;
 	/**
 	 * List of parent build cache record IDs.
 	 * @example hw53o5aio51xtltp5xjp8v7fx
 	 */
-	Parents?: readonly string[];
+	Parents?: readonly string[] | null;
 	/**
 	 * Cache record type.
 	 * @enum internal,frontend,source.local,source.git.checkout,exec.cachemount,regular
@@ -2450,7 +2459,7 @@ export type BuildCache = {
 	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 	 * @example 2017-08-09T07:09:37.632105588Z
 	 */
-	LastUsedAt?: string;
+	LastUsedAt?: string | null;
 	UsageCount?: number;
 };
 /** Image ID or Digest */
@@ -2502,7 +2511,7 @@ export type EndpointSettings = {
 		IPv4Address?: string;
 		IPv6Address?: string;
 		LinkLocalIPs?: readonly string[];
-	};
+	} | null;
 	Links?: readonly string[];
 	Aliases?: readonly string[];
 	/**
@@ -2555,14 +2564,14 @@ export type EndpointSettings = {
 	 * are passed directly to the driver and are driver specific.
 	 * @example [object Object]
 	 */
-	DriverOpts?: Record<string, string>;
+	DriverOpts?: Record<string, string> | null;
 };
 /** EndpointIPAMConfig represents an endpoint's IPAM configuration. */
 export type EndpointIpamConfig = {
 	IPv4Address?: string;
 	IPv6Address?: string;
 	LinkLocalIPs?: readonly string[];
-};
+} | null;
 export type PluginMount = {
 	Name: string;
 	Description: string;
@@ -2855,7 +2864,7 @@ export type Node = {
 		 * @example 10.0.0.46:2377
 		 */
 		Addr?: string;
-	};
+	} | null;
 };
 /**
  * NodeDescription encapsulates the properties of the Node as reported by the
@@ -2986,7 +2995,7 @@ export type ManagerStatus = {
 	 * @example 10.0.0.46:2377
 	 */
 	Addr?: string;
-};
+} | null;
 /** Reachability represents the reachability of a node. */
 export type Reachability = "unknown" | "unreachable" | "reachable";
 /** User modifiable swarm configuration. */
@@ -3008,7 +3017,7 @@ export type SwarmSpec = {
 		 * @example 10
 		 */
 		TaskHistoryRetentionLimit?: bigint;
-	};
+	} | null;
 	Raft?: {
 		/**
 		 * The number of log entries between snapshots.
@@ -3048,7 +3057,7 @@ export type SwarmSpec = {
 		 * @example 5000000000
 		 */
 		HeartbeatPeriod?: bigint;
-	};
+	} | null;
 	CAConfig?: {
 		/**
 		 * The duration node certificates are issued for.
@@ -3070,7 +3079,7 @@ export type SwarmSpec = {
 		SigningCACert?: string;
 		SigningCAKey?: string;
 		ForceRotate?: number;
-	};
+	} | null;
 	EncryptionConfig?: {
 		/**
 		 * If set, generate a key and use it to lock data stored on the
@@ -3138,7 +3147,7 @@ export type ClusterInfo = {
 			 * @example 10
 			 */
 			TaskHistoryRetentionLimit?: bigint;
-		};
+		} | null;
 		Raft?: {
 			/**
 			 * The number of log entries between snapshots.
@@ -3178,7 +3187,7 @@ export type ClusterInfo = {
 			 * @example 5000000000
 			 */
 			HeartbeatPeriod?: bigint;
-		};
+		} | null;
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
@@ -3200,7 +3209,7 @@ export type ClusterInfo = {
 			SigningCACert?: string;
 			SigningCAKey?: string;
 			ForceRotate?: number;
-		};
+		} | null;
 		EncryptionConfig?: {
 			/**
 			 * If set, generate a key and use it to lock data stored on the
@@ -3254,7 +3263,7 @@ export type ClusterInfo = {
 	 * @example 24
 	 */
 	SubnetSize?: number;
-};
+} | null;
 /** JoinTokens contains the tokens workers and managers need to join the swarm. */
 export type JoinTokens = {
 	/**
@@ -3307,7 +3316,7 @@ export type Swarm = {
 			 * @example 10
 			 */
 			TaskHistoryRetentionLimit?: bigint;
-		};
+		} | null;
 		Raft?: {
 			/**
 			 * The number of log entries between snapshots.
@@ -3347,7 +3356,7 @@ export type Swarm = {
 			 * @example 5000000000
 			 */
 			HeartbeatPeriod?: bigint;
-		};
+		} | null;
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
@@ -3369,7 +3378,7 @@ export type Swarm = {
 			SigningCACert?: string;
 			SigningCAKey?: string;
 			ForceRotate?: number;
-		};
+		} | null;
 		EncryptionConfig?: {
 			/**
 			 * If set, generate a key and use it to lock data stored on the
@@ -5060,7 +5069,7 @@ export type ContainerSummary = {
 					IPv4Address?: string;
 					IPv6Address?: string;
 					LinkLocalIPs?: readonly string[];
-				};
+				} | null;
 				Links?: readonly string[];
 				Aliases?: readonly string[];
 				/**
@@ -5113,7 +5122,7 @@ export type ContainerSummary = {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string, string>;
+				DriverOpts?: Record<string, string> | null;
 			}
 		>;
 	};
@@ -5419,7 +5428,7 @@ export type ContainerState = {
 		 * @example 0
 		 */
 		FailingStreak?: number;
-		Log?: readonly {
+		Log?: readonly ({
 			/**
 			 * Date and time at which this check started in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -5443,9 +5452,9 @@ export type ContainerState = {
 			 */
 			ExitCode?: number;
 			Output?: string;
-		}[];
-	};
-};
+		} | null)[];
+	} | null;
+} | null;
 /** OK response to ContainerCreate operation */
 export type ContainerCreateResponse = {
 	/**
@@ -5486,7 +5495,7 @@ export type SystemVersion = {
 		 * @example 19.03.12
 		 */
 		Version: string;
-		Details?: Record<string, Jsonifiable>;
+		Details?: Record<string, Jsonifiable> | null;
 	}[];
 	/**
 	 * The version of the daemon
@@ -5925,7 +5934,7 @@ export type SystemInfo = {
 				 * @example true
 				 */
 				Official?: boolean;
-			}
+			} | null
 		>;
 		/**
 		 * List of registry URLs that act as a mirror for the official
@@ -5933,7 +5942,7 @@ export type SystemInfo = {
 		 * @example https://hub-mirror.corp.example.com:5000/,https://[2001:db8:a0b:12f0::1]/
 		 */
 		Mirrors?: readonly string[];
-	};
+	} | null;
 	/**
 	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 	 * String resources (e.g, `GPU=UUID1`).
@@ -6041,7 +6050,7 @@ export type SystemInfo = {
 			 * List of command-line arguments to pass to the runtime when invoked.
 			 * @example --debug,--systemd-cgroup=false
 			 */
-			runtimeArgs?: readonly string[];
+			runtimeArgs?: readonly string[] | null;
 		}
 	>;
 	/**
@@ -6082,10 +6091,12 @@ export type SystemInfo = {
 		 * List of ID's and addresses of other managers in the swarm.
 		 * @example [object Object],[object Object],[object Object]
 		 */
-		RemoteManagers?: readonly {
-			NodeID?: string;
-			Addr?: string;
-		}[];
+		RemoteManagers?:
+			| readonly {
+					NodeID?: string;
+					Addr?: string;
+			  }[]
+			| null;
 		/**
 		 * Total number of nodes in the swarm.
 		 * @example 4
@@ -6135,7 +6146,7 @@ export type SystemInfo = {
 					 * @example 10
 					 */
 					TaskHistoryRetentionLimit?: bigint;
-				};
+				} | null;
 				Raft?: {
 					/**
 					 * The number of log entries between snapshots.
@@ -6175,7 +6186,7 @@ export type SystemInfo = {
 					 * @example 5000000000
 					 */
 					HeartbeatPeriod?: bigint;
-				};
+				} | null;
 				CAConfig?: {
 					/**
 					 * The duration node certificates are issued for.
@@ -6197,7 +6208,7 @@ export type SystemInfo = {
 					SigningCACert?: string;
 					SigningCAKey?: string;
 					ForceRotate?: number;
-				};
+				} | null;
 				EncryptionConfig?: {
 					/**
 					 * If set, generate a key and use it to lock data stored on the
@@ -6251,7 +6262,7 @@ export type SystemInfo = {
 			 * @example 24
 			 */
 			SubnetSize?: number;
-		};
+		} | null;
 	};
 	/**
 	 * Indicates if live restore is enabled.
@@ -6501,7 +6512,7 @@ export type RegistryServiceConfig = {
 			 * @example true
 			 */
 			Official?: boolean;
-		}
+		} | null
 	>;
 	/**
 	 * List of registry URLs that act as a mirror for the official
@@ -6509,7 +6520,7 @@ export type RegistryServiceConfig = {
 	 * @example https://hub-mirror.corp.example.com:5000/,https://[2001:db8:a0b:12f0::1]/
 	 */
 	Mirrors?: readonly string[];
-};
+} | null;
 /** IndexInfo contains information about a registry. */
 export type IndexInfo = {
 	/**
@@ -6544,7 +6555,7 @@ export type IndexInfo = {
 	 * @example true
 	 */
 	Official?: boolean;
-};
+} | null;
 /**
  * Runtime describes an [OCI
  * compliant](https://github.com/opencontainers/runtime-spec)
@@ -6567,7 +6578,7 @@ export type Runtime = {
 	 * List of command-line arguments to pass to the runtime when invoked.
 	 * @example --debug,--systemd-cgroup=false
 	 */
-	runtimeArgs?: readonly string[];
+	runtimeArgs?: readonly string[] | null;
 };
 /**
  * Commit holds the Git-commit (SHA1) that a binary was built from, as
@@ -6611,10 +6622,12 @@ export type SwarmInfo = {
 	 * List of ID's and addresses of other managers in the swarm.
 	 * @example [object Object],[object Object],[object Object]
 	 */
-	RemoteManagers?: readonly {
-		NodeID?: string;
-		Addr?: string;
-	}[];
+	RemoteManagers?:
+		| readonly {
+				NodeID?: string;
+				Addr?: string;
+		  }[]
+		| null;
 	/**
 	 * Total number of nodes in the swarm.
 	 * @example 4
@@ -6664,7 +6677,7 @@ export type SwarmInfo = {
 				 * @example 10
 				 */
 				TaskHistoryRetentionLimit?: bigint;
-			};
+			} | null;
 			Raft?: {
 				/**
 				 * The number of log entries between snapshots.
@@ -6704,7 +6717,7 @@ export type SwarmInfo = {
 				 * @example 5000000000
 				 */
 				HeartbeatPeriod?: bigint;
-			};
+			} | null;
 			CAConfig?: {
 				/**
 				 * The duration node certificates are issued for.
@@ -6726,7 +6739,7 @@ export type SwarmInfo = {
 				SigningCACert?: string;
 				SigningCAKey?: string;
 				ForceRotate?: number;
-			};
+			} | null;
 			EncryptionConfig?: {
 				/**
 				 * If set, generate a key and use it to lock data stored on the
@@ -6780,7 +6793,7 @@ export type SwarmInfo = {
 		 * @example 24
 		 */
 		SubnetSize?: number;
-	};
+	} | null;
 };
 /** Current local status of this node. */
 export type LocalNodeState =
@@ -7166,7 +7179,7 @@ export type ContainerListCommandOutput = readonly {
 					IPv4Address?: string;
 					IPv6Address?: string;
 					LinkLocalIPs?: readonly string[];
-				};
+				} | null;
 				Links?: readonly string[];
 				Aliases?: readonly string[];
 				/**
@@ -7219,7 +7232,7 @@ export type ContainerListCommandOutput = readonly {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string, string>;
+				DriverOpts?: Record<string, string> | null;
 			}
 		>;
 	};
@@ -7317,7 +7330,7 @@ type ContainerCreateJsonBody = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -7367,12 +7380,12 @@ type ContainerCreateJsonBody = {
 	 */
 	Entrypoint?: readonly string[];
 	NetworkDisabled?: boolean | null;
-	MacAddress?: string;
+	MacAddress?: string | null;
 	/**
 	 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 	 * @example
 	 */
-	OnBuild?: readonly string[];
+	OnBuild?: readonly string[] | null;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -7382,13 +7395,13 @@ type ContainerCreateJsonBody = {
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
 	 */
-	StopSignal?: string;
+	StopSignal?: string | null;
 	StopTimeout?: number | null;
 	/**
 	 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 	 * @example /bin/sh,-c
 	 */
-	Shell?: readonly string[];
+	Shell?: readonly string[] | null;
 } & {
 	HostConfig?: {
 		CpuShares?: number;
@@ -7488,18 +7501,19 @@ type ContainerCreateJsonBody = {
 		 */
 		PortBindings?: Record<
 			string,
-			readonly {
-				/**
-				 * Host IP address that the container's port is mapped to.
-				 * @example 127.0.0.1
-				 */
-				HostIp?: string;
-				/**
-				 * Host port number that the container's port is mapped to.
-				 * @example 4443
-				 */
-				HostPort?: string;
-			}[]
+			| readonly {
+					/**
+					 * Host IP address that the container's port is mapped to.
+					 * @example 127.0.0.1
+					 */
+					HostIp?: string;
+					/**
+					 * Host port number that the container's port is mapped to.
+					 * @example 4443
+					 */
+					HostPort?: string;
+			  }[]
+			| null
 		>;
 		RestartPolicy?: {
 			/**
@@ -7566,7 +7580,7 @@ type ContainerCreateJsonBody = {
 				Mode?: number;
 			};
 		}[];
-		ConsoleSize?: readonly number[];
+		ConsoleSize?: readonly number[] | null;
 		Annotations?: Record<string, string>;
 		CapAdd?: readonly string[];
 		CapDrop?: readonly string[];
@@ -7631,7 +7645,7 @@ type ContainerCreateJsonBody = {
 					IPv4Address?: string;
 					IPv6Address?: string;
 					LinkLocalIPs?: readonly string[];
-				};
+				} | null;
 				Links?: readonly string[];
 				Aliases?: readonly string[];
 				/**
@@ -7684,7 +7698,7 @@ type ContainerCreateJsonBody = {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string, string>;
+				DriverOpts?: Record<string, string> | null;
 			}
 		>;
 	};
@@ -7806,7 +7820,7 @@ export type ContainerInspectCommandOutput = {
 			 * @example 0
 			 */
 			FailingStreak?: number;
-			Log?: readonly {
+			Log?: readonly ({
 				/**
 				 * Date and time at which this check started in
 				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -7830,9 +7844,9 @@ export type ContainerInspectCommandOutput = {
 				 */
 				ExitCode?: number;
 				Output?: string;
-			}[];
-		};
-	};
+			} | null)[];
+		} | null;
+	} | null;
 	Image?: string;
 	ResolvConfPath?: string;
 	HostnamePath?: string;
@@ -7845,7 +7859,7 @@ export type ContainerInspectCommandOutput = {
 	MountLabel?: string;
 	ProcessLabel?: string;
 	AppArmorProfile?: string;
-	ExecIDs?: readonly string[];
+	ExecIDs?: readonly string[] | null;
 	HostConfig?: {
 		CpuShares?: number;
 		Memory?: bigint;
@@ -7944,18 +7958,19 @@ export type ContainerInspectCommandOutput = {
 		 */
 		PortBindings?: Record<
 			string,
-			readonly {
-				/**
-				 * Host IP address that the container's port is mapped to.
-				 * @example 127.0.0.1
-				 */
-				HostIp?: string;
-				/**
-				 * Host port number that the container's port is mapped to.
-				 * @example 4443
-				 */
-				HostPort?: string;
-			}[]
+			| readonly {
+					/**
+					 * Host IP address that the container's port is mapped to.
+					 * @example 127.0.0.1
+					 */
+					HostIp?: string;
+					/**
+					 * Host port number that the container's port is mapped to.
+					 * @example 4443
+					 */
+					HostPort?: string;
+			  }[]
+			| null
 		>;
 		RestartPolicy?: {
 			/**
@@ -8022,7 +8037,7 @@ export type ContainerInspectCommandOutput = {
 				Mode?: number;
 			};
 		}[];
-		ConsoleSize?: readonly number[];
+		ConsoleSize?: readonly number[] | null;
 		Annotations?: Record<string, string>;
 		CapAdd?: readonly string[];
 		CapDrop?: readonly string[];
@@ -8176,7 +8191,7 @@ export type ContainerInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -8226,12 +8241,12 @@ export type ContainerInspectCommandOutput = {
 		 */
 		Entrypoint?: readonly string[];
 		NetworkDisabled?: boolean | null;
-		MacAddress?: string;
+		MacAddress?: string | null;
 		/**
 		 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 		 * @example
 		 */
-		OnBuild?: readonly string[];
+		OnBuild?: readonly string[] | null;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -8241,13 +8256,13 @@ export type ContainerInspectCommandOutput = {
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
 		 */
-		StopSignal?: string;
+		StopSignal?: string | null;
 		StopTimeout?: number | null;
 		/**
 		 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 		 * @example /bin/sh,-c
 		 */
-		Shell?: readonly string[];
+		Shell?: readonly string[] | null;
 	};
 	NetworkSettings?: {
 		/**
@@ -8287,32 +8302,37 @@ export type ContainerInspectCommandOutput = {
 		 */
 		Ports?: Record<
 			string,
-			readonly {
-				/**
-				 * Host IP address that the container's port is mapped to.
-				 * @example 127.0.0.1
-				 */
-				HostIp?: string;
-				/**
-				 * Host port number that the container's port is mapped to.
-				 * @example 4443
-				 */
-				HostPort?: string;
-			}[]
+			| readonly {
+					/**
+					 * Host IP address that the container's port is mapped to.
+					 * @example 127.0.0.1
+					 */
+					HostIp?: string;
+					/**
+					 * Host port number that the container's port is mapped to.
+					 * @example 4443
+					 */
+					HostPort?: string;
+			  }[]
+			| null
 		>;
 		/**
 		 * SandboxKey identifies the sandbox
 		 * @example /var/run/docker/netns/8ab54b426c38
 		 */
 		SandboxKey?: string;
-		SecondaryIPAddresses?: readonly {
-			Addr?: string;
-			PrefixLen?: number;
-		}[];
-		SecondaryIPv6Addresses?: readonly {
-			Addr?: string;
-			PrefixLen?: number;
-		}[];
+		SecondaryIPAddresses?:
+			| readonly {
+					Addr?: string;
+					PrefixLen?: number;
+			  }[]
+			| null;
+		SecondaryIPv6Addresses?:
+			| readonly {
+					Addr?: string;
+					PrefixLen?: number;
+			  }[]
+			| null;
 		/**
 		 * EndpointID uniquely represents a service endpoint in a Sandbox.
 		 *
@@ -8424,7 +8444,7 @@ export type ContainerInspectCommandOutput = {
 					IPv4Address?: string;
 					IPv6Address?: string;
 					LinkLocalIPs?: readonly string[];
-				};
+				} | null;
 				Links?: readonly string[];
 				Aliases?: readonly string[];
 				/**
@@ -8477,7 +8497,7 @@ export type ContainerInspectCommandOutput = {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string, string>;
+				DriverOpts?: Record<string, string> | null;
 			}
 		>;
 	};
@@ -9069,7 +9089,7 @@ export type ImageInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -9119,12 +9139,12 @@ export type ImageInspectCommandOutput = {
 		 */
 		Entrypoint?: readonly string[];
 		NetworkDisabled?: boolean | null;
-		MacAddress?: string;
+		MacAddress?: string | null;
 		/**
 		 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 		 * @example
 		 */
-		OnBuild?: readonly string[];
+		OnBuild?: readonly string[] | null;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -9134,13 +9154,13 @@ export type ImageInspectCommandOutput = {
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
 		 */
-		StopSignal?: string;
+		StopSignal?: string | null;
 		StopTimeout?: number | null;
 		/**
 		 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 		 * @example /bin/sh,-c
 		 */
-		Shell?: readonly string[];
+		Shell?: readonly string[] | null;
 	};
 	/**
 	 * The version of Docker that was used to build the image.
@@ -9217,7 +9237,7 @@ export type ImageInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 		/**
 		 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 		 *
@@ -9316,12 +9336,12 @@ export type ImageInspectCommandOutput = {
 		 * > **Note**: this field is always omitted and must not be used.
 		 * @example
 		 */
-		MacAddress?: string;
+		MacAddress?: string | null;
 		/**
 		 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 		 * @example
 		 */
-		OnBuild?: readonly string[];
+		OnBuild?: readonly string[] | null;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -9331,13 +9351,13 @@ export type ImageInspectCommandOutput = {
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
 		 */
-		StopSignal?: string;
+		StopSignal?: string | null;
 		StopTimeout?: number | null;
 		/**
 		 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 		 * @example /bin/sh,-c
 		 */
-		Shell?: readonly string[];
+		Shell?: readonly string[] | null;
 	};
 	/**
 	 * Hardware CPU architecture that the image runs on.
@@ -9348,7 +9368,7 @@ export type ImageInspectCommandOutput = {
 	 * CPU architecture variant (presently ARM-only).
 	 * @example v7
 	 */
-	Variant?: string;
+	Variant?: string | null;
 	/**
 	 * Operating System the image is built to run on.
 	 * @example linux
@@ -9359,7 +9379,7 @@ export type ImageInspectCommandOutput = {
 	 * for Windows).
 	 * @example
 	 */
-	OsVersion?: string;
+	OsVersion?: string | null;
 	/**
 	 * Total size of the image including all layers it is composed of.
 	 * @example 1239828
@@ -9406,7 +9426,7 @@ export type ImageInspectCommandOutput = {
 		 * and omitted otherwise.
 		 * @example 2022-02-28T14:40:02.623929178Z
 		 */
-		LastTagTime?: string;
+		LastTagTime?: string | null;
 	};
 };
 export type InputImageInspectCommandResponse =
@@ -9883,7 +9903,7 @@ export type SystemInfoCommandOutput = {
 				 * @example true
 				 */
 				Official?: boolean;
-			}
+			} | null
 		>;
 		/**
 		 * List of registry URLs that act as a mirror for the official
@@ -9891,7 +9911,7 @@ export type SystemInfoCommandOutput = {
 		 * @example https://hub-mirror.corp.example.com:5000/,https://[2001:db8:a0b:12f0::1]/
 		 */
 		Mirrors?: readonly string[];
-	};
+	} | null;
 	/**
 	 * User-defined resources can be either Integer resources (e.g, `SSD=3`) or
 	 * String resources (e.g, `GPU=UUID1`).
@@ -9999,7 +10019,7 @@ export type SystemInfoCommandOutput = {
 			 * List of command-line arguments to pass to the runtime when invoked.
 			 * @example --debug,--systemd-cgroup=false
 			 */
-			runtimeArgs?: readonly string[];
+			runtimeArgs?: readonly string[] | null;
 		}
 	>;
 	/**
@@ -10040,10 +10060,12 @@ export type SystemInfoCommandOutput = {
 		 * List of ID's and addresses of other managers in the swarm.
 		 * @example [object Object],[object Object],[object Object]
 		 */
-		RemoteManagers?: readonly {
-			NodeID?: string;
-			Addr?: string;
-		}[];
+		RemoteManagers?:
+			| readonly {
+					NodeID?: string;
+					Addr?: string;
+			  }[]
+			| null;
 		/**
 		 * Total number of nodes in the swarm.
 		 * @example 4
@@ -10093,7 +10115,7 @@ export type SystemInfoCommandOutput = {
 					 * @example 10
 					 */
 					TaskHistoryRetentionLimit?: bigint;
-				};
+				} | null;
 				Raft?: {
 					/**
 					 * The number of log entries between snapshots.
@@ -10133,7 +10155,7 @@ export type SystemInfoCommandOutput = {
 					 * @example 5000000000
 					 */
 					HeartbeatPeriod?: bigint;
-				};
+				} | null;
 				CAConfig?: {
 					/**
 					 * The duration node certificates are issued for.
@@ -10155,7 +10177,7 @@ export type SystemInfoCommandOutput = {
 					SigningCACert?: string;
 					SigningCAKey?: string;
 					ForceRotate?: number;
-				};
+				} | null;
 				EncryptionConfig?: {
 					/**
 					 * If set, generate a key and use it to lock data stored on the
@@ -10209,7 +10231,7 @@ export type SystemInfoCommandOutput = {
 			 * @example 24
 			 */
 			SubnetSize?: number;
-		};
+		} | null;
 	};
 	/**
 	 * Indicates if live restore is enabled.
@@ -10333,7 +10355,7 @@ export type SystemVersionCommandOutput = {
 		 * @example 19.03.12
 		 */
 		Version: string;
-		Details?: Record<string, Jsonifiable>;
+		Details?: Record<string, Jsonifiable> | null;
 	}[];
 	/**
 	 * The version of the daemon
@@ -10429,7 +10451,7 @@ type ImageCommitJsonBody = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -10479,12 +10501,12 @@ type ImageCommitJsonBody = {
 	 */
 	Entrypoint?: readonly string[];
 	NetworkDisabled?: boolean | null;
-	MacAddress?: string;
+	MacAddress?: string | null;
 	/**
 	 * `ONBUILD` metadata that were defined in the image's `Dockerfile`.
 	 * @example
 	 */
-	OnBuild?: readonly string[];
+	OnBuild?: readonly string[] | null;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -10494,13 +10516,13 @@ type ImageCommitJsonBody = {
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
 	 */
-	StopSignal?: string;
+	StopSignal?: string | null;
 	StopTimeout?: number | null;
 	/**
 	 * Shell for when `RUN`, `CMD`, and `ENTRYPOINT` uses a shell.
 	 * @example /bin/sh,-c
 	 */
-	Shell?: readonly string[];
+	Shell?: readonly string[] | null;
 };
 export type ImageCommitCommandBody = ImageCommitJsonBody;
 export type ImageCommitCommandInput = ImageCommitJsonBody &
@@ -10696,7 +10718,7 @@ export type SystemDataUsageCommandOutput = {
 						IPv4Address?: string;
 						IPv6Address?: string;
 						LinkLocalIPs?: readonly string[];
-					};
+					} | null;
 					Links?: readonly string[];
 					Aliases?: readonly string[];
 					/**
@@ -10749,7 +10771,7 @@ export type SystemDataUsageCommandOutput = {
 					 * are passed directly to the driver and are driver specific.
 					 * @example [object Object]
 					 */
-					DriverOpts?: Record<string, string>;
+					DriverOpts?: Record<string, string> | null;
 				}
 			>;
 		};
@@ -10968,7 +10990,7 @@ export type SystemDataUsageCommandOutput = {
 			 * @default -1
 			 */
 			RefCount: bigint;
-		};
+		} | null;
 	}[];
 	BuildCache?: readonly {
 		/**
@@ -10982,12 +11004,12 @@ export type SystemDataUsageCommandOutput = {
 		 * > **Deprecated**: This field is deprecated, and omitted if empty.
 		 * @example
 		 */
-		Parent?: string;
+		Parent?: string | null;
 		/**
 		 * List of parent build cache record IDs.
 		 * @example hw53o5aio51xtltp5xjp8v7fx
 		 */
-		Parents?: readonly string[];
+		Parents?: readonly string[] | null;
 		/**
 		 * Cache record type.
 		 * @enum internal,frontend,source.local,source.git.checkout,exec.cachemount,regular
@@ -11031,7 +11053,7 @@ export type SystemDataUsageCommandOutput = {
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 		 * @example 2017-08-09T07:09:37.632105588Z
 		 */
-		LastUsedAt?: string;
+		LastUsedAt?: string | null;
 		UsageCount?: number;
 	}[];
 };
@@ -11058,7 +11080,7 @@ type ContainerExecJsonBody = {
 	AttachStdin?: boolean;
 	AttachStdout?: boolean;
 	AttachStderr?: boolean;
-	ConsoleSize?: readonly number[];
+	ConsoleSize?: readonly number[] | null;
 	DetachKeys?: string;
 	Tty?: boolean;
 	Env?: readonly string[];
@@ -11081,7 +11103,7 @@ export type InputContainerExecCommandResponse =
 type ExecStartJsonBody = {
 	Detach?: boolean;
 	Tty?: boolean;
-	ConsoleSize?: readonly number[];
+	ConsoleSize?: readonly number[] | null;
 };
 export type ExecStartCommandParams = {
 	id: string;
@@ -11279,7 +11301,7 @@ export type VolumeListCommandOutput = {
 			 * @default -1
 			 */
 			RefCount: bigint;
-		};
+		} | null;
 	}[];
 	/**
 	 * Warnings that occurred when fetching the list of volumes.
@@ -11518,7 +11540,7 @@ export type VolumeCreateCommandOutput = {
 		 * @default -1
 		 */
 		RefCount: bigint;
-	};
+	} | null;
 };
 export type InputVolumeCreateCommandResponse =
 	UndefinedOnPartialDeep<VolumeCreateCommandOutput>;
@@ -11678,7 +11700,7 @@ export type VolumeInspectCommandOutput = {
 		 * @default -1
 		 */
 		RefCount: bigint;
-	};
+	} | null;
 };
 export type InputVolumeInspectCommandResponse =
 	UndefinedOnPartialDeep<VolumeInspectCommandOutput>;
@@ -11871,18 +11893,20 @@ export type NetworkListCommandOutput = readonly {
 	 * @example [object Object]
 	 */
 	Labels?: Record<string, string>;
-	Peers?: readonly {
-		/**
-		 * ID of the peer-node in the Swarm cluster.
-		 * @example 6869d7c1732b
-		 */
-		Name?: string;
-		/**
-		 * IP-address of the peer-node in the Swarm cluster.
-		 * @example 10.133.77.91
-		 */
-		IP?: string;
-	}[];
+	Peers?:
+		| readonly {
+				/**
+				 * ID of the peer-node in the Swarm cluster.
+				 * @example 6869d7c1732b
+				 */
+				Name?: string;
+				/**
+				 * IP-address of the peer-node in the Swarm cluster.
+				 * @example 10.133.77.91
+				 */
+				IP?: string;
+		  }[]
+		| null;
 }[];
 export type InputNetworkListCommandResponse =
 	UndefinedOnPartialDeep<NetworkListCommandOutput>;
@@ -11999,18 +12023,20 @@ export type NetworkInspectCommandOutput = {
 	 * @example [object Object]
 	 */
 	Labels?: Record<string, string>;
-	Peers?: readonly {
-		/**
-		 * ID of the peer-node in the Swarm cluster.
-		 * @example 6869d7c1732b
-		 */
-		Name?: string;
-		/**
-		 * IP-address of the peer-node in the Swarm cluster.
-		 * @example 10.133.77.91
-		 */
-		IP?: string;
-	}[];
+	Peers?:
+		| readonly {
+				/**
+				 * ID of the peer-node in the Swarm cluster.
+				 * @example 6869d7c1732b
+				 */
+				Name?: string;
+				/**
+				 * IP-address of the peer-node in the Swarm cluster.
+				 * @example 10.133.77.91
+				 */
+				IP?: string;
+		  }[]
+		| null;
 };
 export type InputNetworkInspectCommandResponse =
 	UndefinedOnPartialDeep<NetworkInspectCommandOutput>;
@@ -12122,7 +12148,7 @@ type NetworkConnectJsonBody = {
 			IPv4Address?: string;
 			IPv6Address?: string;
 			LinkLocalIPs?: readonly string[];
-		};
+		} | null;
 		Links?: readonly string[];
 		Aliases?: readonly string[];
 		/**
@@ -12175,7 +12201,7 @@ type NetworkConnectJsonBody = {
 		 * are passed directly to the driver and are driver specific.
 		 * @example [object Object]
 		 */
-		DriverOpts?: Record<string, string>;
+		DriverOpts?: Record<string, string> | null;
 	};
 };
 export type NetworkConnectCommandParams = {
@@ -12747,7 +12773,7 @@ export type NodeListCommandOutput = readonly {
 		 * @example 10.0.0.46:2377
 		 */
 		Addr?: string;
-	};
+	} | null;
 }[];
 export type InputNodeListCommandResponse =
 	UndefinedOnPartialDeep<NodeListCommandOutput>;
@@ -12872,7 +12898,7 @@ export type NodeInspectCommandOutput = {
 		 * @example 10.0.0.46:2377
 		 */
 		Addr?: string;
-	};
+	} | null;
 };
 export type InputNodeInspectCommandResponse =
 	UndefinedOnPartialDeep<NodeInspectCommandOutput>;
@@ -12954,7 +12980,7 @@ export type SwarmInspectCommandOutput = {
 			 * @example 10
 			 */
 			TaskHistoryRetentionLimit?: bigint;
-		};
+		} | null;
 		Raft?: {
 			/**
 			 * The number of log entries between snapshots.
@@ -12994,7 +13020,7 @@ export type SwarmInspectCommandOutput = {
 			 * @example 5000000000
 			 */
 			HeartbeatPeriod?: bigint;
-		};
+		} | null;
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
@@ -13016,7 +13042,7 @@ export type SwarmInspectCommandOutput = {
 			SigningCACert?: string;
 			SigningCAKey?: string;
 			ForceRotate?: number;
-		};
+		} | null;
 		EncryptionConfig?: {
 			/**
 			 * If set, generate a key and use it to lock data stored on the
@@ -13112,7 +13138,7 @@ type SwarmInitJsonBody = {
 			 * @example 10
 			 */
 			TaskHistoryRetentionLimit?: bigint;
-		};
+		} | null;
 		Raft?: {
 			/**
 			 * The number of log entries between snapshots.
@@ -13152,7 +13178,7 @@ type SwarmInitJsonBody = {
 			 * @example 5000000000
 			 */
 			HeartbeatPeriod?: bigint;
-		};
+		} | null;
 		CAConfig?: {
 			/**
 			 * The duration node certificates are issued for.
@@ -13174,7 +13200,7 @@ type SwarmInitJsonBody = {
 			SigningCACert?: string;
 			SigningCAKey?: string;
 			ForceRotate?: number;
-		};
+		} | null;
 		EncryptionConfig?: {
 			/**
 			 * If set, generate a key and use it to lock data stored on the
@@ -13242,7 +13268,7 @@ type SwarmUpdateJsonBody = {
 		 * @example 10
 		 */
 		TaskHistoryRetentionLimit?: bigint;
-	};
+	} | null;
 	Raft?: {
 		/**
 		 * The number of log entries between snapshots.
@@ -13282,7 +13308,7 @@ type SwarmUpdateJsonBody = {
 		 * @example 5000000000
 		 */
 		HeartbeatPeriod?: bigint;
-	};
+	} | null;
 	CAConfig?: {
 		/**
 		 * The duration node certificates are issued for.
@@ -13304,7 +13330,7 @@ type SwarmUpdateJsonBody = {
 		SigningCACert?: string;
 		SigningCAKey?: string;
 		ForceRotate?: number;
-	};
+	} | null;
 	EncryptionConfig?: {
 		/**
 		 * If set, generate a key and use it to lock data stored on the
