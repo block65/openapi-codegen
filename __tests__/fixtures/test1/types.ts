@@ -244,6 +244,16 @@ export type GetOperationCommandParams = {
 export type GetOperationCommandInput = GetOperationCommandParams;
 export type InputGetOperationCommandResponse =
 	UndefinedOnPartialDeep<LongRunningOperation>;
+export type StreamOperationEventsCommandParams = {
+	operationId: Uuid;
+};
+export type StreamOperationEventsCommandInput =
+	StreamOperationEventsCommandParams;
+export type StreamOperationEventsCommandOutput =
+	| LongRunningOperation
+	| {
+			sequence: number;
+	  };
 export type ListBillingAccountsCommandInput = never;
 export type InputListBillingAccountsCommandResponse =
 	UndefinedOnPartialDeep<BillingAccountList>;

@@ -1,6 +1,6 @@
 import nodePath from "node:path";
 import { $RefParser, type $Refs } from "@apidevtools/json-schema-ref-parser";
-import type { oas30, oas31 } from "openapi3-ts";
+import type { oas30, oas32 } from "openapi3-ts";
 import toposort from "toposort";
 import {
 	type ClassDeclaration,
@@ -29,10 +29,15 @@ import {
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
 import {
+	type ReferenceObject,
+	type SchemaNode,
+	type SchemaObject,
 	camelCase,
 	castToValidJsIdentifier,
 	getDependents,
 	iife,
+	isReferenceObject,
+	isSchemaObject,
 	pascalCase,
 	typedEntries,
 	wordWrap,
@@ -41,7 +46,7 @@ import {
 	createValibotFile,
 	createValidatorForOperationInput,
 	registerValidatorFromSchema,
-	removeUnusedJsonValueSchema,
+	addJsonValueSchemaWhenUsed,
 } from "./valibot.ts";
 
 export type CodegenOptions = {
@@ -264,7 +269,7 @@ type OperationContext = {
 	headerType: TypeAliasDeclaration | undefined;
 	pathParameters: oas30.ParameterObject[];
 	pathType: TypeAliasDeclaration | undefined;
-	jsonRequestBodyObject: oas31.MediaTypeObject | undefined;
+	jsonRequestBodyObject: oas32.MediaTypeObject | undefined;
 	jsonBodyType: NamedDeclaration | undefined;
 	nonJsonBodyType: TypeAliasDeclaration | undefined;
 	wrapJsonBody: boolean;
@@ -272,10 +277,87 @@ type OperationContext = {
 	inputTypeNode: string | WriterFunction;
 };
 
-type OperationWithId = oas31.OperationObject & { operationId: string };
+type OperationWithId = oas32.OperationObject & { operationId: string };
+
+type ValidatedSubclass = {
+	commandName: string;
+	field: "responseSchema" | "dataSchema";
+	schema: string;
+};
+
+type SequentialMedia = {
+	baseClass: string;
+
+	// the type rest-client's stream() yields for an output type
+	itemType: (output: string) => string;
+
+	// the item property holding the content, as SSE's `data`. Without it, the
+	// item is the content
+	contentProperty?: string;
+};
+
+// media types rest-client splits into items, when they have an itemSchema
+const sequentialMediaTypes: Readonly<Record<string, SequentialMedia>> = {
+	"text/event-stream": {
+		baseClass: "EventStreamCommand",
+		itemType: (output) => `ParsedStreamEvent<${output}>`,
+		contentProperty: "data",
+	},
+};
+
+// a $ref resolves to the object it names, which the document must hold
+function resolveObject<T extends object>(
+	refs: $Refs,
+	node: T | ReferenceObject,
+) {
+	if (!isReferenceObject(node)) {
+		return node;
+	}
+
+	const target = refs.get(node.$ref);
+
+	if (!target || typeof target !== "object" || Array.isArray(target)) {
+		throw new Error(`${node.$ref} does not resolve to an object`);
+	}
+
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- the $ref names an object of the kind its position holds
+	return target as T;
+}
+
+// OAS 3.2 lets a media type be a $ref, so a content map resolves before use
+function resolveContent(refs: $Refs, content: oas32.ContentObject | undefined) {
+	return Object.fromEntries(
+		Object.entries(content ?? {}).map(([mediaType, media]) => [
+			mediaType,
+			resolveObject(refs, media),
+		]),
+	);
+}
+
+type DataDecoding = {
+	// a rest-client DataTransformer export. Without one, rest-client's
+	// jsonDataTransformer applies
+	transformer?: string;
+
+	decodedSchema: (
+		content: SchemaObject,
+	) => oas32.SchemaObject | oas32.ReferenceObject | undefined;
+};
+
+// keyed by an item content's contentMediaType
+const dataDecodings: Readonly<Record<string, DataDecoding>> = {
+	"application/json": {
+		decodedSchema: (content) =>
+			"contentSchema" in content ? content.contentSchema : undefined,
+	},
+	"text/plain": {
+		transformer: "textDataTransformer",
+		decodedSchema: () => ({ type: "string" }),
+	},
+};
 
 function hasOperationId(
-	operationObject: oas31.OperationObject,
+	operationObject: oas32.OperationObject,
 ): operationObject is OperationWithId {
 	return "operationId" in operationObject;
 }
@@ -308,6 +390,7 @@ type OutputFiles = ReturnType<typeof createOutputFiles>;
 
 type DocumentContext = OutputFiles & {
 	refs: $Refs;
+	openapiVersion: string;
 	typesImportDecl: ImportDeclaration;
 	typesAndInterfaces: Map<string, NamedDeclaration>;
 	validators: Map<string, { input: string; wire: string }>;
@@ -315,7 +398,10 @@ type DocumentContext = OutputFiles & {
 	outputTypes: Set<NamedDeclaration | string>;
 	inputTypeArgs: Set<string>;
 	inputTypeNames: Set<string>;
-	validatedSubclasses: { commandName: string; responseSchema: string }[];
+	validatedSubclasses: ValidatedSubclass[];
+
+	// apart from outputTypes, as AllOutputs takes the item type, not the alias
+	sequentialOutputs: { output: string; item: string }[];
 	validatedReExports: string[];
 	inputOnly: boolean | undefined;
 };
@@ -329,6 +415,10 @@ function addModulePreambles({ commandsFile, typesFile }: OutputFiles) {
 		namedImports: [
 			// command classes
 			"Command",
+			...Object.values(sequentialMediaTypes).map(({ baseClass }) => baseClass),
+			...Object.values(dataDecodings)
+				.map(({ transformer }) => transformer)
+				.filter((transformer) => transformer !== undefined),
 			"stripUndefined",
 			"jsonStringify",
 		],
@@ -407,7 +497,7 @@ function ensureTypeImport(
 	}
 }
 
-function sortedComponentSchemas(schema: oas31.OpenAPIObject) {
+function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 	const schemas = Object.entries(schema.components?.schemas || {});
 
 	const schemaGraph = schemas.flatMap(([schemaName, schemaObject]) => {
@@ -432,10 +522,10 @@ function sortedComponentSchemas(schema: oas31.OpenAPIObject) {
 function addEnumValues(
 	enumsFile: SourceFile,
 	schemaName: string,
-	schemaObject: oas31.SchemaObject | oas31.ReferenceObject,
+	schemaObject: SchemaNode,
 ) {
 	if (
-		"$ref" in schemaObject ||
+		!isSchemaObject(schemaObject) ||
 		!("enum" in schemaObject) ||
 		!Array.isArray(schemaObject.enum)
 	) {
@@ -482,7 +572,7 @@ function addEnumValues(
 
 function registerComponentSchemas(
 	documentCtx: DocumentContext,
-	schema: oas31.OpenAPIObject,
+	schema: oas32.OpenAPIObject,
 ) {
 	for (const [schemaName, schemaObject] of sortedComponentSchemas(schema)) {
 		registerTypesFromSchema(
@@ -587,7 +677,7 @@ function withResolvedSchema(refs: $Refs, parameter: oas30.ParameterObject) {
 function collectParameters(
 	refs: $Refs,
 	path: string,
-	pathItemObject: oas31.PathItemObject,
+	pathItemObject: oas32.PathItemObject,
 	operationObject: OperationWithId,
 ) {
 	const pathParameters: oas30.ParameterObject[] = [];
@@ -672,7 +762,7 @@ const serializers = {
 	deepObject: "deepObjectSerializer",
 } as const satisfies Record<QueryParamSpec["style"], string>;
 
-function serializerFor(spec: QueryParamSpec) {
+function pickSerializer(spec: QueryParamSpec) {
 	return spec.style === "form" && spec.explode
 		? defaultSerializer
 		: serializers[spec.style];
@@ -680,7 +770,7 @@ function serializerFor(spec: QueryParamSpec) {
 
 // deepObject brackets an object and writes an array as form with explode
 function serializersWriting(spec: QueryParamSpec) {
-	const named = serializerFor(spec);
+	const named = pickSerializer(spec);
 
 	return named === defaultSerializer && spec.type === "array"
 		? [defaultSerializer, serializers.deepObject]
@@ -688,7 +778,7 @@ function serializersWriting(spec: QueryParamSpec) {
 }
 
 // A command names one serializer for its whole query
-function querySerializerFor(
+function chooseQuerySerializer(
 	operationId: string,
 	queryParameters: oas30.ParameterObject[],
 ) {
@@ -746,7 +836,7 @@ function addQuerySerializer(
 	operationId: string,
 	queryParameters: oas30.ParameterObject[],
 ) {
-	const serializer = querySerializerFor(operationId, queryParameters);
+	const serializer = chooseQuerySerializer(operationId, queryParameters);
 
 	if (!serializer) {
 		return;
@@ -872,26 +962,24 @@ function jsonBodyTypeOf(
 	documentCtx: DocumentContext,
 	deprecationDocs: DeprecationDocs,
 	operationId: string,
-	jsonRequestBodyObject: oas31.MediaTypeObject | undefined,
+	jsonRequestBodyObject: oas32.MediaTypeObject | undefined,
 ) {
-	if (!jsonRequestBodyObject?.schema) {
+	const schema = jsonRequestBodyObject?.schema;
+
+	if (schema === undefined) {
 		return;
 	}
 
-	if ("$ref" in jsonRequestBodyObject.schema) {
-		return documentCtx.typesAndInterfaces.get(
-			jsonRequestBodyObject.schema.$ref,
-		);
+	if (isReferenceObject(schema)) {
+		return documentCtx.typesAndInterfaces.get(schema.$ref);
 	}
 
 	if (
-		jsonRequestBodyObject.schema.type === "array" &&
-		"items" in jsonRequestBodyObject.schema &&
-		"$ref" in jsonRequestBodyObject.schema.items
+		isSchemaObject(schema) &&
+		schema.type === "array" &&
+		isReferenceObject(schema.items)
 	) {
-		return documentCtx.typesAndInterfaces.get(
-			jsonRequestBodyObject.schema.items.$ref,
-		);
+		return documentCtx.typesAndInterfaces.get(schema.items.$ref);
 	}
 
 	// Named for the media type because only an application/json
@@ -900,13 +988,13 @@ function jsonBodyTypeOf(
 
 	const type = schemaToType(
 		documentCtx.typesAndInterfaces,
-		jsonRequestBodyObject.schema.required
+		isSchemaObject(schema) && schema.required
 			? {
 					required: [name],
 				}
 			: {},
 		name,
-		jsonRequestBodyObject.schema,
+		schema,
 	);
 
 	return documentCtx.typesFile.addTypeAlias({
@@ -926,7 +1014,8 @@ function resolveBodyTypes(
 			? operationObject.requestBody
 			: undefined;
 
-	const jsonRequestBodyObject = requestBodyObject?.content["application/json"];
+	const content = resolveContent(documentCtx.refs, requestBodyObject?.content);
+	const jsonRequestBodyObject = content["application/json"];
 
 	const jsonBodyType = jsonBodyTypeOf(
 		documentCtx,
@@ -935,11 +1024,9 @@ function resolveBodyTypes(
 		jsonRequestBodyObject,
 	);
 
-	const nonJsonBodyEntries = requestBodyObject?.content
-		? Object.entries(requestBodyObject.content).filter(
-				([, o]) => o !== jsonRequestBodyObject,
-			)
-		: [];
+	const nonJsonBodyEntries = Object.entries(content).filter(
+		([, o]) => o !== jsonRequestBodyObject,
+	);
 
 	if (jsonBodyType && nonJsonBodyEntries.length > 0) {
 		console.warn(
@@ -1055,8 +1142,8 @@ function addInputType(
 	// way a non-JSON body already does
 	const jsonBodySchema = jsonRequestBodyObject?.schema;
 	const jsonBodyIsArray =
-		!!jsonBodySchema &&
-		!("$ref" in jsonBodySchema) &&
+		jsonBodySchema !== undefined &&
+		isSchemaObject(jsonBodySchema) &&
 		jsonBodySchema.type === "array";
 	const wrapJsonBody = jsonBodyIsArray && (!!paramsType || !!queryType);
 
@@ -1088,9 +1175,8 @@ function addInputType(
 	return { inputType, inputTypeNode, wrapJsonBody };
 }
 
-function firstJsonResponseSchema(operationObject: OperationWithId) {
-	// Resolve the first 2xx JSON response schema (inline or $ref) so the
-	// validator pipeline treats responses the same as request bodies
+// the first 2xx response with content, which settles the command's output
+function firstSuccessResponse(operationObject: OperationWithId) {
 	const firstSuccess = Object.entries(operationObject.responses ?? {}).find(
 		([s]) => s.startsWith("2"),
 	);
@@ -1105,7 +1191,18 @@ function firstJsonResponseSchema(operationObject: OperationWithId) {
 		return;
 	}
 
-	return response.content?.["application/json"]?.schema;
+	return response;
+}
+
+function firstJsonResponseSchema(
+	refs: $Refs,
+	operationObject: OperationWithId,
+) {
+	// Resolve the first 2xx JSON response schema (inline or $ref) so the
+	// validator pipeline treats responses the same as request bodies
+	return resolveContent(refs, firstSuccessResponse(operationObject)?.content)[
+		"application/json"
+	]?.schema;
 }
 
 // Generate the valibot validator for the operation input
@@ -1119,19 +1216,26 @@ function registerOperationValidators(
 		jsonRequestBodyObject,
 	}: OperationContext,
 	operationObject: OperationWithId,
+	sequential: SequentialContent | undefined,
 ) {
-	const responseSchema = firstJsonResponseSchema(operationObject);
+	const responseSchema = firstJsonResponseSchema(
+		documentCtx.refs,
+		operationObject,
+	);
 
 	const operationSchemas = createValidatorForOperationInput(
 		documentCtx.validators,
 		documentCtx.valibotFile,
 		commandName,
 		{
-			...(jsonRequestBodyObject?.schema && {
-				body: jsonRequestBodyObject?.schema,
+			...(jsonRequestBodyObject?.schema !== undefined && {
+				body: jsonRequestBodyObject.schema,
 			}),
-			...(responseSchema && {
+			...(responseSchema !== undefined && {
 				response: responseSchema,
+			}),
+			...(sequential && {
+				data: sequential.schema,
 			}),
 			params: pathParameters,
 			query: queryParameters,
@@ -1162,28 +1266,65 @@ function registerOperationValidators(
 	return wireSchemas;
 }
 
-function widenedInputType(inputTypeName: string, hasNonJsonBody: boolean) {
+// the parts of a non-JSON body command's input that the widening applies to
+function widenedInputParts({
+	nonJsonBodyType,
+	pathType,
+	queryType,
+}: Pick<OperationContext, "nonJsonBodyType" | "pathType" | "queryType">) {
+	return nonJsonBodyType
+		? [pathType, queryType].filter((part) => part !== undefined)
+		: [];
+}
+
+function widenedInputType({
+	inputType,
+	nonJsonBodyType,
+	pathType,
+	queryType,
+}: Pick<
+	OperationContext,
+	"inputType" | "nonJsonBodyType" | "pathType" | "queryType"
+>) {
 	// Widen optional fields with `| undefined` at the serialization
 	// boundary. Outbound payloads are JSON.stringified, which drops
 	// `undefined`, so callers can pass `{ field: undefined }` even
 	// under exactOptionalPropertyTypes. A non-JSON `body` field holds
 	// a BodyInit class instance, which UndefinedOnPartialDeep would
-	// mangle, so widen everything else and re-intersect `body`
-	return hasNonJsonBody
-		? `UndefinedOnPartialDeep<Except<${inputTypeName}, "body">> & Pick<${inputTypeName}, "body">`
-		: `UndefinedOnPartialDeep<${inputTypeName}>`;
+	// mangle, so only the parameters beside it are widened
+	if (!nonJsonBodyType) {
+		return `UndefinedOnPartialDeep<${inputType.getName()}>`;
+	}
+
+	const parts = widenedInputParts({ nonJsonBodyType, pathType, queryType });
+
+	return parts.length > 0
+		? `${nonJsonBodyType.getName()} & UndefinedOnPartialDeep<${parts.map((part) => part.getName()).join(" & ")}>`
+		: inputType.getName();
 }
 
 function addInputTypeArgument(
 	documentCtx: DocumentContext,
-	{ commandClass, inputType, inputTypeNode, nonJsonBodyType }: OperationContext,
+	operationCtx: OperationContext,
 ) {
-	const inputTypeArg = widenedInputType(inputType.getName(), !!nonJsonBodyType);
+	const { commandClass, inputType, inputTypeNode, nonJsonBodyType } =
+		operationCtx;
+	const inputTypeArg = widenedInputType(operationCtx);
+	const parts = widenedInputParts(operationCtx);
+
+	for (const part of parts) {
+		ensureTypeImport(documentCtx.typesImportDecl, part);
+	}
 
 	// `A | never` is `A`, so the member is left out
 	if (inputTypeNode !== neverKeyword) {
 		documentCtx.inputTypeArgs.add(inputTypeArg);
-		documentCtx.inputTypeNames.add(inputType.getName());
+
+		for (const name of parts.length > 0 && nonJsonBodyType
+			? [nonJsonBodyType, ...parts].map((part) => part.getName())
+			: [inputType.getName()]) {
+			documentCtx.inputTypeNames.add(name);
+		}
 	}
 
 	commandClass.getExtends()?.addTypeArgument(inputTypeArg);
@@ -1224,7 +1365,7 @@ function addReferencedOutput(
 function addInlineOutput(
 	documentCtx: DocumentContext,
 	{ commandClass }: OperationContext,
-	schema: oas31.SchemaObject | oas31.ReferenceObject,
+	schema: SchemaNode,
 ) {
 	const outputType = schemaToType(
 		documentCtx.typesAndInterfaces,
@@ -1254,44 +1395,213 @@ function addInlineOutput(
 	});
 }
 
-function jsonOutputRef(jsonResponse: oas31.MediaTypeObject) {
-	const arrayRef =
-		jsonResponse.schema &&
-		"items" in jsonResponse.schema &&
-		"$ref" in jsonResponse.schema.items &&
-		jsonResponse.schema.items.$ref;
+function resolveSchema(refs: $Refs, operationId: string, schema: SchemaNode) {
+	if (typeof schema === "boolean") {
+		throw new TypeError(
+			`${operationId}: a boolean item schema has no content to decode`,
+		);
+	}
 
-	const regularRef =
-		jsonResponse.schema &&
-		"$ref" in jsonResponse.schema &&
-		jsonResponse.schema.$ref;
+	return resolveObject(refs, schema);
+}
+
+// itemSchema arrived in OAS 3.2
+function canStateItemSchema(openapiVersion: string) {
+	const [major = 0, minor = 0] = openapiVersion.split(".").map(Number);
+
+	return major > 3 || (major === 3 && minor >= 2);
+}
+
+function sequentialContent(
+	refs: $Refs,
+	openapiVersion: string,
+	operationObject: OperationWithId,
+) {
+	const { operationId } = operationObject;
+	const responseContent = resolveContent(
+		refs,
+		firstSuccessResponse(operationObject)?.content,
+	);
+
+	if (responseContent["application/json"]) {
+		return;
+	}
+
+	const found = Object.entries(responseContent).find(
+		([mediaType, media]) =>
+			media.itemSchema && mediaType in sequentialMediaTypes,
+	);
+
+	const media = found && sequentialMediaTypes[found[0]];
+
+	if (!found?.[1].itemSchema || !media) {
+		return;
+	}
+
+	if (!canStateItemSchema(openapiVersion)) {
+		throw new Error(
+			`${operationId}: itemSchema is OAS 3.2, and the document declares openapi ${openapiVersion}`,
+		);
+	}
+
+	const { contentProperty } = media;
+	const itemSchema = resolveSchema(refs, operationId, found[1].itemSchema);
+	const variants = (itemSchema.oneOf ?? itemSchema.anyOf ?? [itemSchema]).map(
+		(variant) => resolveSchema(refs, operationId, variant),
+	);
+
+	const contents = variants.map((variant) => {
+		const content = contentProperty
+			? variant.properties?.[contentProperty]
+			: variant;
+
+		// a variant composed further, or content declared outside the variant,
+		// would otherwise pass as plain text
+		if (
+			!content ||
+			variant.allOf ||
+			(variant !== itemSchema && (variant.oneOf || variant.anyOf))
+		) {
+			throw new Error(
+				`${operationId}: each itemSchema variant needs its own ${contentProperty ?? "content"} schema`,
+			);
+		}
+
+		return resolveSchema(refs, operationId, content);
+	});
+
+	// an item content with no contentMediaType is a string, as SSE data is
+	const mediaTypes = new Set(
+		contents.map((content) =>
+			"contentMediaType" in content && content.contentMediaType
+				? content.contentMediaType
+				: "text/plain",
+		),
+	);
+
+	// dataTransformer is per command, so every variant shares one decoding
+	const [contentMediaType] = mediaTypes;
+	const decoding = contentMediaType && dataDecodings[contentMediaType];
+
+	if (mediaTypes.size !== 1 || !decoding) {
+		throw new Error(
+			`${operationId}: item content media types ${[...mediaTypes].join(", ")} need one decoding, from ${Object.keys(dataDecodings).join(", ")}`,
+		);
+	}
+
+	const decodedSchemas = contents.map((content) => {
+		const decoded = decoding.decodedSchema(content);
+
+		if (!decoded) {
+			throw new Error(
+				`${operationId}: item content of ${contentMediaType} needs a contentSchema`,
+			);
+		}
+
+		return decoded;
+	});
+
+	const schemas = [
+		...new Map(
+			decodedSchemas.map((schema) => [JSON.stringify(schema), schema]),
+		).values(),
+	];
+
+	return {
+		media,
+		decoding,
+		schema:
+			schemas.length === 1 && schemas[0] ? schemas[0] : { anyOf: schemas },
+	};
+}
+
+type SequentialContent = NonNullable<ReturnType<typeof sequentialContent>>;
+
+function addSequentialOutput(
+	documentCtx: DocumentContext,
+	{ commandClass }: OperationContext,
+	{ media, decoding, schema }: SequentialContent,
+) {
+	const outputType = schemaToType(
+		documentCtx.typesAndInterfaces,
+		{},
+		"",
+		schema,
+	);
+
+	const outputTypeAlias = documentCtx.typesFile.addTypeAlias({
+		name: pascalCase(commandClass.getName() || "INVALID", "Output"),
+		type: outputType.type ?? unspecifiedKeyword,
+		isExported: true,
+	});
+
+	ensureTypeImport(documentCtx.typesImportDecl, outputTypeAlias);
+
+	commandClass.getExtends()?.getExpression().replaceWithText(media.baseClass);
+	commandClass.getExtends()?.addTypeArgument(outputTypeAlias.getName());
+
+	documentCtx.sequentialOutputs.push({
+		output: outputTypeAlias.getName(),
+		item: media.itemType(outputTypeAlias.getName()),
+	});
+
+	if (decoding.transformer) {
+		commandClass.addProperty({
+			name: "dataTransformer",
+			scope: Scope.Public,
+			hasOverrideKeyword: true,
+			isReadonly: true,
+			initializer: decoding.transformer,
+		});
+	}
+}
+
+function jsonOutputRef({ schema }: oas32.MediaTypeObject) {
+	const arrayRef =
+		schema !== undefined &&
+		isSchemaObject(schema) &&
+		isReferenceObject(schema.items) &&
+		schema.items.$ref;
+
+	const regularRef = isReferenceObject(schema) && schema.$ref;
 
 	const outputRef = arrayRef || regularRef;
 
 	return outputRef ? { ref: outputRef, isArray: !!arrayRef } : undefined;
 }
 
+// rest-client resolves a bodiless success, a 204 included, with undefined
+function isBodiless(
+	statusCode: string,
+	res: oas32.ResponseObject | oas32.ReferenceObject,
+) {
+	return (
+		statusCode === "204" ||
+		(!("$ref" in res) && Object.keys(res.content ?? {}).length === 0)
+	);
+}
+
 function addOutputTypeArgument(
 	documentCtx: DocumentContext,
 	operationCtx: OperationContext,
 	operationObject: OperationWithId,
+	sequential: SequentialContent | undefined,
 ) {
 	const { commandClass } = operationCtx;
 
-	// this is just like a 204 response
 	let hasOutputType = false;
 
-	if (
-		!operationObject.responses ||
-		Object.keys(operationObject.responses).length === 0
-	) {
-		commandClass.getExtends()?.addTypeArgument(unspecifiedKeyword);
+	const successResponses = Object.entries({
+		...operationObject.responses,
+	}).filter(([s]) => s.startsWith("2"));
+
+	// with only failures documented, json() and send() only ever reject
+	if (successResponses.length === 0) {
+		commandClass.getExtends()?.addTypeArgument(neverKeyword);
 		hasOutputType = true;
 	}
 
-	for (const [statusCode, response] of Object.entries({
-		...operationObject.responses,
-	}).filter(([s]) => s.startsWith("2"))) {
+	for (const [statusCode, response] of successResponses) {
 		// Output is one type argument, so the first usable 2xx response
 		// settles it. An operation documenting both a 200 and a 204 would
 		// otherwise add a second argument, which lands in the query slot
@@ -1300,8 +1610,7 @@ function addOutputTypeArgument(
 			break;
 		}
 
-		// early out if response is 204
-		if (statusCode === "204") {
+		if (isBodiless(statusCode, response)) {
 			commandClass.getExtends()?.addTypeArgument(emptyKeyword);
 
 			documentCtx.outputTypes.add(emptyKeyword);
@@ -1314,9 +1623,16 @@ function addOutputTypeArgument(
 			break;
 		}
 
-		const jsonResponse = response.content?.["application/json"];
+		const jsonResponse = resolveContent(documentCtx.refs, response.content)[
+			"application/json"
+		];
 
 		if (!jsonResponse) {
+			if (sequential) {
+				addSequentialOutput(documentCtx, operationCtx, sequential);
+				hasOutputType = true;
+			}
+
 			break;
 		}
 
@@ -1344,17 +1660,19 @@ function addOutputTypeArgument(
 function registerValidatedCommand(
 	documentCtx: DocumentContext,
 	commandName: string,
-	wireSchemas: { response?: string },
+	wireSchemas: { response?: string; data?: string },
 ) {
-	// Static schema attachment is deferred to the validated module, so
-	// the base command module imports zero schemas. rest-client reads
-	// the response schema from the validated subclass, and the server
-	// middleware imports body, param and query schemas directly
-	if (wireSchemas.response) {
-		documentCtx.validatedSubclasses.push({
-			commandName,
-			responseSchema: wireSchemas.response,
-		});
+	// Lean commands import zero schemas. A validated subclass sets
+	// the field that rest-client's parse hooks read. The server middleware
+	// imports body, param and query schemas directly.
+	//
+	// sequentialContent skips a JSON response, so one of these is set at most
+	const [field, schema] = wireSchemas.data
+		? (["dataSchema", wireSchemas.data] as const)
+		: (["responseSchema", wireSchemas.response] as const);
+
+	if (schema) {
+		documentCtx.validatedSubclasses.push({ commandName, field, schema });
 	} else {
 		documentCtx.validatedReExports.push(commandName);
 	}
@@ -1530,18 +1848,18 @@ function superArguments({
 }
 
 function addInputConstructor(
-	{ commandClass, inputType, headerType, wrapJsonBody }: OperationContext,
+	operationCtx: OperationContext,
 	inputs: ConstructorInputs,
 ) {
-	const { hasNonJsonBody, hasHeaders, allInputOptional, allHeadersOptional } =
-		inputs;
+	const { commandClass, inputType, headerType, wrapJsonBody } = operationCtx;
+	const { hasHeaders, allInputOptional, allHeadersOptional } = inputs;
 
 	const ctor = commandClass.addConstructor();
 
 	if (!isUnspecifiedKeyword(inputType)) {
 		const cctorParam = ctor.addParameter({
 			name: "input",
-			type: widenedInputType(inputType.getName(), hasNonJsonBody),
+			type: widenedInputType(operationCtx),
 			...(allInputOptional && { hasQuestionToken: true }),
 		});
 
@@ -1599,7 +1917,7 @@ function addCommandConstructor(operationCtx: OperationContext, path: string) {
 function processOperation(
 	documentCtx: DocumentContext,
 	path: string,
-	pathItemObject: oas31.PathItemObject,
+	pathItemObject: oas32.PathItemObject,
 	method: string,
 	operationObject: OperationWithId,
 ) {
@@ -1644,14 +1962,21 @@ function processOperation(
 		...input,
 	};
 
+	const sequential = sequentialContent(
+		documentCtx.refs,
+		documentCtx.openapiVersion,
+		operationObject,
+	);
+
 	const wireSchemas = registerOperationValidators(
 		documentCtx,
 		operationCtx,
 		operationObject,
+		sequential,
 	);
 
 	addInputTypeArgument(documentCtx, operationCtx);
-	addOutputTypeArgument(documentCtx, operationCtx, operationObject);
+	addOutputTypeArgument(documentCtx, operationCtx, operationObject, sequential);
 	registerValidatedCommand(documentCtx, operationCtx.commandName, wireSchemas);
 	addQueryAndHeaderTypeArguments(operationCtx);
 	addCommandConstructor(operationCtx, path);
@@ -1659,17 +1984,17 @@ function processOperation(
 
 function emitOperations(
 	documentCtx: DocumentContext,
-	schema: oas31.OpenAPIObject,
+	schema: oas32.OpenAPIObject,
 	tags: string[] | undefined,
 ) {
-	for (const [path, pathItemObject] of Object.entries<oas31.PathItemObject>(
+	for (const [path, pathItemObject] of Object.entries<oas32.PathItemObject>(
 		schema.paths || {},
 	)) {
 		if (pathItemObject) {
 			for (const [method, operationObject] of Object.entries(pathItemObject)
 				// ensure op is an object
 				.filter(
-					(e): e is [string, oas31.OperationObject] => typeof e[1] === "object",
+					(e): e is [string, oas32.OperationObject] => typeof e[1] === "object",
 				)
 				// tags
 				.filter(([, o]) => !tags || o.tags?.some((t) => tags?.includes(t)))) {
@@ -1692,7 +2017,7 @@ function emitOperations(
 
 function addClientConstructor(
 	clientClassDeclaration: ClassDeclaration,
-	schema: oas31.OpenAPIObject,
+	schema: oas32.OpenAPIObject,
 	configType: string,
 ) {
 	const ctor = clientClassDeclaration.addConstructor();
@@ -1726,10 +2051,16 @@ function addClientConstructor(
 
 function emitClientModule(
 	documentCtx: DocumentContext,
-	schema: oas31.OpenAPIObject,
+	schema: oas32.OpenAPIObject,
 ) {
-	const { mainFile, typesFile, outputTypes, inputTypeArgs, inputTypeNames } =
-		documentCtx;
+	const {
+		mainFile,
+		typesFile,
+		outputTypes,
+		sequentialOutputs,
+		inputTypeArgs,
+		inputTypeNames,
+	} = documentCtx;
 
 	const serviceClientClassName = "RestServiceClient";
 	const fetcherName = "createIsomorphicNativeFetcher";
@@ -1744,6 +2075,9 @@ function emitClientModule(
 				name: configType,
 				isTypeOnly: true,
 			},
+			...(sequentialOutputs.length > 0
+				? [{ name: "ParsedStreamEvent", isTypeOnly: true }]
+				: []),
 		],
 	});
 
@@ -1755,10 +2089,14 @@ function emitClientModule(
 	});
 
 	// Commands from another generated client fail the `<AllInputs, AllOutputs>`
-	// constraint on `.json()`, which guards against mixing clients
-	const outputUnionMembers = [...outputTypes]
-		.map((t) => (typeof t === "string" ? t : t.getName()))
-		.filter((name): name is string => !!name && name !== unspecifiedKeyword);
+	// constraint on `.json()` and `.stream()`, which guards against mixing
+	// clients. stream() checks a sequential command's item type
+	const outputUnionMembers = [
+		...[...outputTypes]
+			.map((t) => (typeof t === "string" ? t : t.getName()))
+			.filter((name): name is string => !!name && name !== unspecifiedKeyword),
+		...sequentialOutputs.map(({ item }) => item),
+	];
 
 	const allInputs =
 		inputTypeArgs.size > 0
@@ -1783,7 +2121,11 @@ function emitClientModule(
 			.map((n) => n.replace(/\[\]$/, "")),
 	);
 
-	const importNames = new Set([...inputTypeNames, ...outputTypeNames]);
+	const importNames = new Set([
+		...inputTypeNames,
+		...outputTypeNames,
+		...sequentialOutputs.map(({ output }) => output),
+	]);
 
 	if (importNames.size > 0) {
 		mainFile.addImportDeclaration({
@@ -1817,9 +2159,9 @@ function emitValidatedModule({
 	validatedSubclasses,
 	validatedReExports,
 }: DocumentContext) {
-	// Build the validated module. Subclasses attach `static responseSchema`,
-	// and commands lacking one are re-exported unchanged so the module keeps
-	// export parity with the base and stays alias-safe
+	// Build the validated module. Subclasses set a schema field, and commands
+	// lacking a schema are re-exported unchanged so the module keeps export
+	// parity with the base and stays alias-safe
 	const commandsModuleSpecifier = `./${commandsFile.getBaseNameWithoutExtension()}.js`;
 
 	if (validatedSubclasses.length > 0) {
@@ -1840,16 +2182,18 @@ function emitValidatedModule({
 			namespaceImport: schemasNs,
 		});
 
-		for (const { commandName, responseSchema } of validatedSubclasses) {
+		for (const { commandName, field, schema } of validatedSubclasses) {
 			commandsValidatedFile.addClass({
 				name: commandName,
 				isExported: true,
 				extends: `${commandsNs}.${commandName}`,
 				properties: [
 					{
-						name: "responseSchema",
-						isStatic: true,
-						initializer: `${schemasNs}.${responseSchema}`,
+						name: field,
+						scope: Scope.Public,
+						hasOverrideKeyword: true,
+						isReadonly: true,
+						initializer: `${schemasNs}.${schema}`,
 					},
 				],
 			});
@@ -1913,7 +2257,7 @@ function trimDefaultOutputArguments(commandsFile: SourceFile) {
 
 export async function processOpenApiDocument(
 	outputDir: string,
-	schema: Simplify<oas31.OpenAPIObject>,
+	schema: Simplify<oas32.OpenAPIObject>,
 	tags?: string[],
 	options?: CodegenOptions,
 ) {
@@ -1925,6 +2269,7 @@ export async function processOpenApiDocument(
 	const documentCtx: DocumentContext = {
 		...files,
 		refs,
+		openapiVersion: schema.openapi,
 		typesImportDecl,
 		typesAndInterfaces: new Map(),
 		validators: new Map(),
@@ -1933,6 +2278,7 @@ export async function processOpenApiDocument(
 		inputTypeArgs: new Set(),
 		inputTypeNames: new Set(),
 		validatedSubclasses: [],
+		sequentialOutputs: [],
 		validatedReExports: [],
 		inputOnly: options?.inputOnly,
 	};
@@ -1948,7 +2294,7 @@ export async function processOpenApiDocument(
 	files.typesFile.fixUnusedIdentifiers();
 	files.commandsFile.fixUnusedIdentifiers();
 	files.commandsValidatedFile.fixUnusedIdentifiers();
-	removeUnusedJsonValueSchema(files.valibotFile);
+	addJsonValueSchemaWhenUsed(files.valibotFile);
 	files.valibotFile.fixUnusedIdentifiers();
 
 	const honoFile = emitHonoModule(

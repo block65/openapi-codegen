@@ -12,7 +12,7 @@ import {
 	jsonStringify,
 	formJoinSerializer,
 } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	ContainerListCommandQuery,
 	ContainerListCommandInput,
@@ -62,7 +62,8 @@ import type {
 	ContainerArchiveCommandQuery,
 	ContainerArchiveCommandInput,
 	PutContainerArchiveCommandQuery,
-	PutContainerArchiveCommandInput,
+	PutContainerArchiveCommandBodyNonJson,
+	PutContainerArchiveCommandParams,
 	ContainerArchiveInfoCommandQuery,
 	ContainerArchiveInfoCommandInput,
 	ContainerPruneCommandQuery,
@@ -73,13 +74,13 @@ import type {
 	ImageListCommandOutput,
 	ImageBuildCommandQuery,
 	ImageBuildCommandHeader,
-	ImageBuildCommandInput,
+	ImageBuildCommandBodyNonJson,
 	BuildPruneCommandQuery,
 	BuildPruneCommandInput,
 	BuildPruneCommandOutput,
 	ImageCreateCommandQuery,
 	ImageCreateCommandHeader,
-	ImageCreateCommandInput,
+	ImageCreateCommandBodyNonJson,
 	ImageInspectCommandInput,
 	ImageInspectCommandOutput,
 	ImageHistoryCommandInput,
@@ -119,7 +120,7 @@ import type {
 	ImageGetAllCommandQuery,
 	ImageGetAllCommandInput,
 	ImageLoadCommandQuery,
-	ImageLoadCommandInput,
+	ImageLoadCommandBodyNonJson,
 	ContainerExecCommandInput,
 	ContainerExecCommandOutput,
 	ExecStartCommandInput,
@@ -177,7 +178,7 @@ import type {
 	PluginUpgradeCommandHeader,
 	PluginUpgradeCommandInput,
 	PluginCreateCommandQuery,
-	PluginCreateCommandInput,
+	PluginCreateCommandBodyNonJson,
 	PluginPushCommandInput,
 	PluginSetCommandInput,
 	NodeListCommandQuery,
@@ -417,7 +418,8 @@ export class ContainerChangesCommand extends Command<
  * @summary Export a container
  */
 export class ContainerExportCommand extends Command<
-	UndefinedOnPartialDeep<ContainerExportCommandInput>
+	UndefinedOnPartialDeep<ContainerExportCommandInput>,
+	undefined
 > {
 	public override method = "get" as const;
 
@@ -484,7 +486,7 @@ export class ContainerStatsCommand extends Command<
  */
 export class ContainerResizeCommand extends Command<
 	UndefinedOnPartialDeep<ContainerResizeCommandInput>,
-	unknown,
+	undefined,
 	ContainerResizeCommandQuery
 > {
 	public override method = "post" as const;
@@ -771,7 +773,7 @@ export class ContainerUnpauseCommand extends Command<
  */
 export class ContainerAttachCommand extends Command<
 	UndefinedOnPartialDeep<ContainerAttachCommandInput>,
-	unknown,
+	undefined,
 	ContainerAttachCommandQuery
 > {
 	public override method = "post" as const;
@@ -793,7 +795,7 @@ export class ContainerAttachCommand extends Command<
  */
 export class ContainerAttachWebsocketCommand extends Command<
 	UndefinedOnPartialDeep<ContainerAttachWebsocketCommandInput>,
-	unknown,
+	undefined,
 	ContainerAttachWebsocketCommandQuery
 > {
 	public override method = "get" as const;
@@ -861,7 +863,7 @@ export class ContainerDeleteCommand extends Command<
  */
 export class ContainerArchiveCommand extends Command<
 	UndefinedOnPartialDeep<ContainerArchiveCommandInput>,
-	unknown,
+	undefined,
 	ContainerArchiveCommandQuery
 > {
 	public override method = "get" as const;
@@ -886,18 +888,20 @@ export class ContainerArchiveCommand extends Command<
  * @summary Extract an archive of files or folders to a directory in a container
  */
 export class PutContainerArchiveCommand extends Command<
-	UndefinedOnPartialDeep<Except<PutContainerArchiveCommandInput, "body">> &
-		Pick<PutContainerArchiveCommandInput, "body">,
-	unknown,
+	PutContainerArchiveCommandBodyNonJson &
+		UndefinedOnPartialDeep<
+			PutContainerArchiveCommandParams & PutContainerArchiveCommandQuery
+		>,
+	undefined,
 	PutContainerArchiveCommandQuery
 > {
 	public override method = "put" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<
-			Except<PutContainerArchiveCommandInput, "body">
-		> &
-			Pick<PutContainerArchiveCommandInput, "body">,
+		input: PutContainerArchiveCommandBodyNonJson &
+			UndefinedOnPartialDeep<
+				PutContainerArchiveCommandParams & PutContainerArchiveCommandQuery
+			>,
 	) {
 		const { id, path, noOverwriteDirNonDir, copyUIDGID, body } = input;
 		super(
@@ -917,7 +921,7 @@ export class PutContainerArchiveCommand extends Command<
  */
 export class ContainerArchiveInfoCommand extends Command<
 	UndefinedOnPartialDeep<ContainerArchiveInfoCommandInput>,
-	unknown,
+	undefined,
 	ContainerArchiveInfoCommandQuery
 > {
 	public override method = "head" as const;
@@ -993,17 +997,16 @@ export class ImageListCommand extends Command<
  * @summary Build an image
  */
 export class ImageBuildCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImageBuildCommandInput, "body">> &
-		Pick<ImageBuildCommandInput, "body">,
-	unknown,
+	ImageBuildCommandBodyNonJson & UndefinedOnPartialDeep<ImageBuildCommandQuery>,
+	undefined,
 	ImageBuildCommandQuery,
 	ImageBuildCommandHeader
 > {
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<ImageBuildCommandInput, "body">> &
-			Pick<ImageBuildCommandInput, "body">,
+		input: ImageBuildCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageBuildCommandQuery>,
 		headers?: ImageBuildCommandHeader,
 	) {
 		const {
@@ -1097,9 +1100,9 @@ export class BuildPruneCommand extends Command<
  * @summary Create an image
  */
 export class ImageCreateCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
-		Pick<ImageCreateCommandInput, "body">,
-	unknown,
+	ImageCreateCommandBodyNonJson &
+		UndefinedOnPartialDeep<ImageCreateCommandQuery>,
+	undefined,
 	ImageCreateCommandQuery,
 	ImageCreateCommandHeader
 > {
@@ -1107,8 +1110,8 @@ export class ImageCreateCommand extends Command<
 	public override querySerializer = formJoinSerializer;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
-			Pick<ImageCreateCommandInput, "body">,
+		input: ImageCreateCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageCreateCommandQuery>,
 		headers?: ImageCreateCommandHeader,
 	) {
 		const { fromImage, fromSrc, repo, tag, message, changes, platform, body } =
@@ -1177,7 +1180,7 @@ export class ImageHistoryCommand extends Command<
  */
 export class ImagePushCommand extends Command<
 	UndefinedOnPartialDeep<ImagePushCommandInput>,
-	unknown,
+	undefined,
 	ImagePushCommandQuery,
 	ImagePushCommandHeader
 > {
@@ -1204,7 +1207,7 @@ export class ImagePushCommand extends Command<
  */
 export class ImageTagCommand extends Command<
 	UndefinedOnPartialDeep<ImageTagCommandInput>,
-	unknown,
+	undefined,
 	ImageTagCommandQuery
 > {
 	public override method = "post" as const;
@@ -1542,16 +1545,15 @@ export class ImageGetAllCommand extends Command<
  * @summary Import images
  */
 export class ImageLoadCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImageLoadCommandInput, "body">> &
-		Pick<ImageLoadCommandInput, "body">,
-	unknown,
+	ImageLoadCommandBodyNonJson & UndefinedOnPartialDeep<ImageLoadCommandQuery>,
+	undefined,
 	ImageLoadCommandQuery
 > {
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<ImageLoadCommandInput, "body">> &
-			Pick<ImageLoadCommandInput, "body">,
+		input: ImageLoadCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageLoadCommandQuery>,
 	) {
 		const { quiet, body } = input;
 		super("/images/load", body, stripUndefined({ quiet }));
@@ -1583,7 +1585,8 @@ export class ContainerExecCommand extends Command<
  * @summary Start an exec instance
  */
 export class ExecStartCommand extends Command<
-	UndefinedOnPartialDeep<ExecStartCommandInput>
+	UndefinedOnPartialDeep<ExecStartCommandInput>,
+	undefined
 > {
 	public override method = "post" as const;
 
@@ -1601,7 +1604,7 @@ export class ExecStartCommand extends Command<
  */
 export class ExecResizeCommand extends Command<
 	UndefinedOnPartialDeep<ExecResizeCommandInput>,
-	unknown,
+	undefined,
 	ExecResizeCommandQuery
 > {
 	public override method = "post" as const;
@@ -1688,7 +1691,7 @@ export class VolumeInspectCommand extends Command<
  */
 export class VolumeUpdateCommand extends Command<
 	UndefinedOnPartialDeep<VolumeUpdateCommandInput>,
-	unknown,
+	undefined,
 	VolumeUpdateCommandQuery
 > {
 	public override method = "put" as const;
@@ -1824,7 +1827,8 @@ export class NetworkCreateCommand extends Command<
  * @summary Connect a container to a network
  */
 export class NetworkConnectCommand extends Command<
-	UndefinedOnPartialDeep<NetworkConnectCommandInput>
+	UndefinedOnPartialDeep<NetworkConnectCommandInput>,
+	undefined
 > {
 	public override method = "post" as const;
 
@@ -1840,7 +1844,8 @@ export class NetworkConnectCommand extends Command<
  * @summary Disconnect a container from a network
  */
 export class NetworkDisconnectCommand extends Command<
-	UndefinedOnPartialDeep<NetworkDisconnectCommandInput>
+	UndefinedOnPartialDeep<NetworkDisconnectCommandInput>,
+	undefined
 > {
 	public override method = "post" as const;
 
@@ -1975,7 +1980,7 @@ export class PluginDeleteCommand extends Command<
  */
 export class PluginEnableCommand extends Command<
 	UndefinedOnPartialDeep<PluginEnableCommandInput>,
-	unknown,
+	undefined,
 	PluginEnableCommandQuery
 > {
 	public override method = "post" as const;
@@ -1997,7 +2002,7 @@ export class PluginEnableCommand extends Command<
  */
 export class PluginDisableCommand extends Command<
 	UndefinedOnPartialDeep<PluginDisableCommandInput>,
-	unknown,
+	undefined,
 	PluginDisableCommandQuery
 > {
 	public override method = "post" as const;
@@ -2045,16 +2050,16 @@ export class PluginUpgradeCommand extends Command<
  * @summary Create a plugin
  */
 export class PluginCreateCommand extends Command<
-	UndefinedOnPartialDeep<Except<PluginCreateCommandInput, "body">> &
-		Pick<PluginCreateCommandInput, "body">,
+	PluginCreateCommandBodyNonJson &
+		UndefinedOnPartialDeep<PluginCreateCommandQuery>,
 	undefined,
 	PluginCreateCommandQuery
 > {
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<PluginCreateCommandInput, "body">> &
-			Pick<PluginCreateCommandInput, "body">,
+		input: PluginCreateCommandBodyNonJson &
+			UndefinedOnPartialDeep<PluginCreateCommandQuery>,
 	) {
 		const { name, body } = input;
 		super("/plugins/create", body, stripUndefined({ name }));
@@ -2067,7 +2072,8 @@ export class PluginCreateCommand extends Command<
  * @summary Push a plugin
  */
 export class PluginPushCommand extends Command<
-	UndefinedOnPartialDeep<PluginPushCommandInput>
+	UndefinedOnPartialDeep<PluginPushCommandInput>,
+	undefined
 > {
 	public override method = "post" as const;
 
@@ -2136,7 +2142,7 @@ export class NodeInspectCommand extends Command<
  */
 export class NodeDeleteCommand extends Command<
 	UndefinedOnPartialDeep<NodeDeleteCommandInput>,
-	unknown,
+	undefined,
 	NodeDeleteCommandQuery
 > {
 	public override method = "delete" as const;
@@ -2154,7 +2160,7 @@ export class NodeDeleteCommand extends Command<
  */
 export class NodeUpdateCommand extends Command<
 	UndefinedOnPartialDeep<NodeUpdateCommandInput>,
-	unknown,
+	undefined,
 	NodeUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2208,7 +2214,8 @@ export class SwarmInitCommand extends Command<
  * @summary Join an existing swarm
  */
 export class SwarmJoinCommand extends Command<
-	UndefinedOnPartialDeep<SwarmJoinCommandInput>
+	UndefinedOnPartialDeep<SwarmJoinCommandInput>,
+	undefined
 > {
 	public override method = "post" as const;
 
@@ -2225,7 +2232,7 @@ export class SwarmJoinCommand extends Command<
  */
 export class SwarmLeaveCommand extends Command<
 	UndefinedOnPartialDeep<SwarmLeaveCommandInput>,
-	unknown,
+	undefined,
 	SwarmLeaveCommandQuery
 > {
 	public override method = "post" as const;
@@ -2243,7 +2250,7 @@ export class SwarmLeaveCommand extends Command<
  */
 export class SwarmUpdateCommand extends Command<
 	UndefinedOnPartialDeep<SwarmUpdateCommandInput>,
-	unknown,
+	undefined,
 	SwarmUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2291,7 +2298,8 @@ export class SwarmUnlockkeyCommand extends Command<
  * @summary Unlock a locked manager
  */
 export class SwarmUnlockCommand extends Command<
-	UndefinedOnPartialDeep<SwarmUnlockCommandInput>
+	UndefinedOnPartialDeep<SwarmUnlockCommandInput>,
+	undefined
 > {
 	public override method = "post" as const;
 
@@ -2369,7 +2377,8 @@ export class ServiceInspectCommand extends Command<
  * @summary Delete a service
  */
 export class ServiceDeleteCommand extends Command<
-	UndefinedOnPartialDeep<ServiceDeleteCommandInput>
+	UndefinedOnPartialDeep<ServiceDeleteCommandInput>,
+	undefined
 > {
 	public override method = "delete" as const;
 
@@ -2587,7 +2596,7 @@ export class SecretDeleteCommand extends Command<
  */
 export class SecretUpdateCommand extends Command<
 	UndefinedOnPartialDeep<SecretUpdateCommandInput>,
-	unknown,
+	undefined,
 	SecretUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2678,7 +2687,7 @@ export class ConfigDeleteCommand extends Command<
  */
 export class ConfigUpdateCommand extends Command<
 	UndefinedOnPartialDeep<ConfigUpdateCommandInput>,
-	unknown,
+	undefined,
 	ConfigUpdateCommandQuery
 > {
 	public override method = "post" as const;
@@ -2739,7 +2748,8 @@ export class DistributionInspectCommand extends Command<
  * @summary Initialize interactive session
  */
 export class SessionCommand extends Command<
-	UndefinedOnPartialDeep<SessionCommandInput>
+	UndefinedOnPartialDeep<SessionCommandInput>,
+	never
 > {
 	public override method = "post" as const;
 

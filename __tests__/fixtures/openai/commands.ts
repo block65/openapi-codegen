@@ -7,7 +7,7 @@
 // oxlint-disable block65/max-comment-lines, block65/no-comment-punctuation, block65/no-narrative-comment, block65/no-trailing-comment-punctuation
 
 import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	CreateChatCompletionCommandInput,
 	CreateChatCompletionResponse,
@@ -36,7 +36,8 @@ import type {
 	DownloadFileCommandOutput,
 	CreateUploadCommandInput,
 	Upload,
-	AddUploadPartCommandInput,
+	AddUploadPartCommandBodyNonJson,
+	AddUploadPartCommandParams,
 	UploadPart,
 	CompleteUploadCommandInput,
 	CancelUploadCommandInput,
@@ -255,16 +256,12 @@ export class CreateImageCommand extends Command<
  * @summary Creates an edited or extended image given an original image and a prompt.
  */
 export class CreateImageEditCommand extends Command<
-	UndefinedOnPartialDeep<Except<CreateImageEditCommandInput, "body">> &
-		Pick<CreateImageEditCommandInput, "body">,
+	CreateImageEditCommandInput,
 	ImagesResponse
 > {
 	public override method = "post" as const;
 
-	constructor(
-		input: UndefinedOnPartialDeep<Except<CreateImageEditCommandInput, "body">> &
-			Pick<CreateImageEditCommandInput, "body">,
-	) {
+	constructor(input: CreateImageEditCommandInput) {
 		const { body } = input;
 		super("/images/edits", body);
 	}
@@ -276,18 +273,12 @@ export class CreateImageEditCommand extends Command<
  * @summary Creates a variation of a given image.
  */
 export class CreateImageVariationCommand extends Command<
-	UndefinedOnPartialDeep<Except<CreateImageVariationCommandInput, "body">> &
-		Pick<CreateImageVariationCommandInput, "body">,
+	CreateImageVariationCommandInput,
 	ImagesResponse
 > {
 	public override method = "post" as const;
 
-	constructor(
-		input: UndefinedOnPartialDeep<
-			Except<CreateImageVariationCommandInput, "body">
-		> &
-			Pick<CreateImageVariationCommandInput, "body">,
-	) {
+	constructor(input: CreateImageVariationCommandInput) {
 		const { body } = input;
 		super("/images/variations", body);
 	}
@@ -332,18 +323,12 @@ export class CreateSpeechCommand extends Command<
  * @summary Transcribes audio into the input language.
  */
 export class CreateTranscriptionCommand extends Command<
-	UndefinedOnPartialDeep<Except<CreateTranscriptionCommandInput, "body">> &
-		Pick<CreateTranscriptionCommandInput, "body">,
+	CreateTranscriptionCommandInput,
 	CreateTranscriptionCommandOutput
 > {
 	public override method = "post" as const;
 
-	constructor(
-		input: UndefinedOnPartialDeep<
-			Except<CreateTranscriptionCommandInput, "body">
-		> &
-			Pick<CreateTranscriptionCommandInput, "body">,
-	) {
+	constructor(input: CreateTranscriptionCommandInput) {
 		const { body } = input;
 		super("/audio/transcriptions", body);
 	}
@@ -355,18 +340,12 @@ export class CreateTranscriptionCommand extends Command<
  * @summary Translates audio into English.
  */
 export class CreateTranslationCommand extends Command<
-	UndefinedOnPartialDeep<Except<CreateTranslationCommandInput, "body">> &
-		Pick<CreateTranslationCommandInput, "body">,
+	CreateTranslationCommandInput,
 	CreateTranslationCommandOutput
 > {
 	public override method = "post" as const;
 
-	constructor(
-		input: UndefinedOnPartialDeep<
-			Except<CreateTranslationCommandInput, "body">
-		> &
-			Pick<CreateTranslationCommandInput, "body">,
-	) {
+	constructor(input: CreateTranslationCommandInput) {
 		const { body } = input;
 		super("/audio/translations", body);
 	}
@@ -414,16 +393,12 @@ export class ListFilesCommand extends Command<
  * storage limits.
  */
 export class CreateFileCommand extends Command<
-	UndefinedOnPartialDeep<Except<CreateFileCommandInput, "body">> &
-		Pick<CreateFileCommandInput, "body">,
+	CreateFileCommandInput,
 	OpenAiFile
 > {
 	public override method = "post" as const;
 
-	constructor(
-		input: UndefinedOnPartialDeep<Except<CreateFileCommandInput, "body">> &
-			Pick<CreateFileCommandInput, "body">,
-	) {
+	constructor(input: CreateFileCommandInput) {
 		const { body } = input;
 		super("/files", body);
 	}
@@ -528,15 +503,15 @@ export class CreateUploadCommand extends Command<
  * Upload](/docs/api-reference/uploads/complete).
  */
 export class AddUploadPartCommand extends Command<
-	UndefinedOnPartialDeep<Except<AddUploadPartCommandInput, "body">> &
-		Pick<AddUploadPartCommandInput, "body">,
+	AddUploadPartCommandBodyNonJson &
+		UndefinedOnPartialDeep<AddUploadPartCommandParams>,
 	UploadPart
 > {
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<AddUploadPartCommandInput, "body">> &
-			Pick<AddUploadPartCommandInput, "body">,
+		input: AddUploadPartCommandBodyNonJson &
+			UndefinedOnPartialDeep<AddUploadPartCommandParams>,
 	) {
 		const { upload_id, body } = input;
 		super(encodePath`/uploads/${upload_id}/parts`, body);

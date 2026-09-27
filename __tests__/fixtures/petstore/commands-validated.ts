@@ -8,19 +8,22 @@ import * as commands from "./commands.js";
 import * as schemas from "./valibot.js";
 
 export class FindPetsCommand extends commands.FindPetsCommand {
-	static responseSchema = schemas.findPetsCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.findPetsCommandResponseSchema;
 }
 
 export class AddPetCommand extends commands.AddPetCommand {
-	static responseSchema = schemas.addPetCommandResponseSchema;
+	public override readonly responseSchema = schemas.addPetCommandResponseSchema;
 }
 
 export class FindPetByIdCommand extends commands.FindPetByIdCommand {
-	static responseSchema = schemas.findPetByIdCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.findPetByIdCommandResponseSchema;
 }
 
 export class FindPetWrappedCommand extends commands.FindPetWrappedCommand {
-	static responseSchema = schemas.findPetWrappedCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.findPetWrappedCommandResponseSchema;
 }
 
 export { DeletePetCommand } from "./commands.js";

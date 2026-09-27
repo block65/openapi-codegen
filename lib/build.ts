@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { oas31 } from "openapi3-ts";
+import type { oas32 } from "openapi3-ts";
 import { firedExemptions, withDirectives } from "./oxlint.ts";
 import {
 	type CodegenOptions,
@@ -16,7 +16,7 @@ const BANNER = `/**
  */`;
 
 // A JSON import is typed `any`, so the document is checked before it is used
-function isOpenApiDocument(value: unknown): value is oas31.OpenAPIObject {
+function isOpenApiDocument(value: unknown): value is oas32.OpenAPIObject {
 	return (
 		typeof value === "object" &&
 		value !== null &&

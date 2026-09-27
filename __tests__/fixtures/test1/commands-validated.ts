@@ -10,89 +10,108 @@ import * as schemas from "./valibot.js";
 export class ImportBillingDataCommand
 	extends commands.ImportBillingDataCommand
 {
-	static responseSchema = schemas.importBillingDataCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.importBillingDataCommandResponseSchema;
 }
 
 export class GetOperationCommand extends commands.GetOperationCommand {
-	static responseSchema = schemas.getOperationCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.getOperationCommandResponseSchema;
+}
+
+export class StreamOperationEventsCommand
+	extends commands.StreamOperationEventsCommand
+{
+	public override readonly dataSchema =
+		schemas.streamOperationEventsCommandDataSchema;
 }
 
 export class ListBillingAccountsCommand
 	extends commands.ListBillingAccountsCommand
 {
-	static responseSchema = schemas.listBillingAccountsCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.listBillingAccountsCommandResponseSchema;
 }
 
 export class CreateBillingAccountCommand
 	extends commands.CreateBillingAccountCommand
 {
-	static responseSchema = schemas.createBillingAccountCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.createBillingAccountCommandResponseSchema;
 }
 
 export class GetBillingAccountCommand
 	extends commands.GetBillingAccountCommand
 {
-	static responseSchema = schemas.getBillingAccountCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.getBillingAccountCommandResponseSchema;
 }
 
 export class UpdateBillingAccountCommand
 	extends commands.UpdateBillingAccountCommand
 {
-	static responseSchema = schemas.updateBillingAccountCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.updateBillingAccountCommandResponseSchema;
 }
 
 export class GetBillingAccountPortalCommand
 	extends commands.GetBillingAccountPortalCommand
 {
-	static responseSchema = schemas.getBillingAccountPortalCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.getBillingAccountPortalCommandResponseSchema;
 }
 
 export class ListPaymentMethodsCommand
 	extends commands.ListPaymentMethodsCommand
 {
-	static responseSchema = schemas.listPaymentMethodsCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.listPaymentMethodsCommandResponseSchema;
 }
 
 export class CreatePaymentMethodCommand
 	extends commands.CreatePaymentMethodCommand
 {
-	static responseSchema = schemas.createPaymentMethodCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.createPaymentMethodCommandResponseSchema;
 }
 
 export class GetPaymentMethodFromStripeCommand
 	extends commands.GetPaymentMethodFromStripeCommand
 {
-	static responseSchema =
+	public override readonly responseSchema =
 		schemas.getPaymentMethodFromStripeCommandResponseSchema;
 }
 
 export class GetPaymentMethodCommand extends commands.GetPaymentMethodCommand {
-	static responseSchema = schemas.getPaymentMethodCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.getPaymentMethodCommandResponseSchema;
 }
 
 export class DeletePaymentMethodCommand
 	extends commands.DeletePaymentMethodCommand
 {
-	static responseSchema = schemas.deletePaymentMethodCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.deletePaymentMethodCommandResponseSchema;
 }
 
 export class ListBillingSubscriptionsCommand
 	extends commands.ListBillingSubscriptionsCommand
 {
-	static responseSchema = schemas.listBillingSubscriptionsCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.listBillingSubscriptionsCommandResponseSchema;
 }
 
 export class CreateBillingSubscriptionCommand
 	extends commands.CreateBillingSubscriptionCommand
 {
-	static responseSchema =
+	public override readonly responseSchema =
 		schemas.createBillingSubscriptionCommandResponseSchema;
 }
 
 export class UpdateBillingSubscriptionPromoCodeCommand
 	extends commands.UpdateBillingSubscriptionPromoCodeCommand
 {
-	static responseSchema =
+	public override readonly responseSchema =
 		schemas.updateBillingSubscriptionPromoCodeCommandResponseSchema;
 }
 

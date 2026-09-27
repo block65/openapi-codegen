@@ -93,6 +93,7 @@ export function createHonoMiddleware(
 	schemas: {
 		json?: string;
 		response?: string;
+		data?: string;
 		param?: string;
 		query?: string;
 		header?: string;
@@ -127,10 +128,10 @@ export function createHonoMiddleware(
 					writer.write("[");
 					writer.indent(() => {
 						// Hono validators run on inbound request data alone. Response
-						// schemas are emitted for client-side consumption, and `header`
-						// is skipped so extra HTTP headers pass
+						// and event data schemas are emitted for client-side
+						// consumption, and `header` is skipped so extra HTTP headers pass
 						for (const [target, schemaName] of typedEntries(schemas).filter(
-							([t]) => t !== "header" && t !== "response",
+							([t]) => t !== "header" && t !== "response" && t !== "data",
 						)) {
 							writer.writeLine(
 								`validate(${JSON.stringify(target)}, ${schemaName}),`,

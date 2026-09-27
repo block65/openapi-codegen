@@ -1,4 +1,4 @@
-import type { oas31 } from "openapi3-ts";
+import type { oas32 } from "openapi3-ts";
 import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
@@ -9,7 +9,7 @@ const baseDoc = {
 };
 
 test("x-typescript-hint on top-level string schema", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		...baseDoc,
 		components: {
 			schemas: {
@@ -30,7 +30,7 @@ test("x-typescript-hint on top-level string schema", async () => {
 });
 
 test("x-typescript-hint honored inside oneOf branches", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		...baseDoc,
 		components: {
 			schemas: {
@@ -54,7 +54,7 @@ test("x-typescript-hint honored inside oneOf branches", async () => {
 });
 
 test("x-typescript-hint honored inside anyOf branches", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		...baseDoc,
 		components: {
 			schemas: {

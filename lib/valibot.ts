@@ -1,6 +1,6 @@
 import path from "node:path";
 import camelcase from "camelcase";
-import type { oas30, oas31 } from "openapi3-ts";
+import type { oas30, oas32 } from "openapi3-ts";
 import {
 	type CodeBlockWriter,
 	type Project,
@@ -12,7 +12,13 @@ import {
 } from "ts-morph";
 import type { Primitive } from "type-fest";
 import type * as v from "valibot";
-import { typedEntries, wordWrap } from "./utils.ts";
+import {
+	type SchemaNode,
+	type SchemaObject,
+	isSchemaObject,
+	typedEntries,
+	wordWrap,
+} from "./utils.ts";
 
 // input uses `v.optional` and skips coercion, wire uses `v.exactOptional`
 type SchemaMode = "input" | "wire";
@@ -92,7 +98,7 @@ function vcall(
 	};
 }
 
-function schemaIsNullable(schema: oas30.SchemaObject | oas31.SchemaObject) {
+function schemaIsNullable(schema: SchemaObject) {
 	return (
 		schema.type === "null" ||
 		("nullable" in schema && schema.nullable) ||
@@ -115,7 +121,7 @@ function maybePipe(
 	return valid.length > 0 ? vcall("pipe", base, ...valid) : base;
 }
 
-function minMaxProperties(schema: oas30.SchemaObject | oas31.SchemaObject) {
+function minMaxProperties(schema: SchemaObject) {
 	return [
 		schema.minProperties === undefined
 			? undefined
@@ -190,7 +196,7 @@ function temporalHintSchema(format: string | undefined) {
 	return type ? `v.custom<${type}>(() => true)` : undefined;
 }
 
-function shouldCoerceString(schema: oas30.SchemaObject | oas31.SchemaObject) {
+function shouldCoerceString(schema: SchemaObject) {
 	return (
 		!schema.enum &&
 		!schema.pattern &&
@@ -198,9 +204,7 @@ function shouldCoerceString(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	);
 }
 
-function propertiesNeedCoercion(
-	schema: oas30.SchemaObject | oas31.SchemaObject,
-) {
+function propertiesNeedCoercion(schema: SchemaObject) {
 	const properties = schema.properties ?? {};
 	const required = new Set(schema.required);
 	const hasOptional = Object.keys(properties).some((k) => !required.has(k));
@@ -210,10 +214,8 @@ function propertiesNeedCoercion(
 	);
 }
 
-function shouldCoerceSchema(
-	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
-): boolean {
-	if ("$ref" in schema || "const" in schema) {
+function shouldCoerceSchema(schema: SchemaNode): boolean {
+	if (!isSchemaObject(schema) || "const" in schema) {
 		return false;
 	}
 
@@ -229,7 +231,7 @@ function shouldCoerceSchema(
 		return propertiesNeedCoercion(schema);
 	}
 
-	if (schema.items && !("$ref" in schema.items)) {
+	if (schema.items) {
 		return shouldCoerceSchema(schema.items);
 	}
 
@@ -256,21 +258,15 @@ function resolveRef(
 	return mode === "input" ? entry.input : entry.wire;
 }
 
-type AnySchemaOrRef =
-	| oas30.SchemaObject
-	| oas30.ReferenceObject
-	| oas31.SchemaObject
-	| oas31.ReferenceObject;
-
 function writeStrictObjectEntries(
 	writer: CodeBlockWriter,
 	validators: Map<string, ValidatorEntry>,
-	properties: Record<string, AnySchemaOrRef>,
+	properties: Record<string, SchemaNode>,
 	requiredProps: ReadonlySet<string>,
 	mode: SchemaMode,
 	toValidator: (
 		validators: Map<string, ValidatorEntry>,
-		schema: AnySchemaOrRef,
+		schema: SchemaNode,
 		mode: SchemaMode,
 	) => WriterFunction | string = schemaToValidator,
 ) {
@@ -285,7 +281,7 @@ function writeStrictObjectEntries(
 			? validator
 			: vcall(optionalWrapper, validator);
 
-		if (!("$ref" in s) && s.description) {
+		if (isSchemaObject(s) && s.description) {
 			writer.writeLine("/**");
 			writer.writeLine(
 				` * ${wordWrap(s.description).split("\n").join("\n * ")}`,
@@ -305,10 +301,8 @@ function writeStrictObjectEntries(
 	});
 }
 
-type AnySchema = oas30.SchemaObject | oas31.SchemaObject;
-
 // Narrows the inferred output to the `x-typescript-hint` type
-function extensionHintSchema(schema: AnySchema) {
+function extensionHintSchema(schema: SchemaObject) {
 	const typescriptHint =
 		"x-typescript-hint" in schema &&
 		typeof schema["x-typescript-hint"] === "string"
@@ -362,8 +356,8 @@ function enumValidator(values: unknown[], isNullable: boolean) {
 // Handle type arrays, added in OpenAPI 3.1
 function typeArrayValidator(
 	validators: Map<string, ValidatorEntry>,
-	schema: AnySchema,
-	types: oas31.SchemaObjectType[],
+	schema: SchemaObject,
+	types: oas32.SchemaObjectType[],
 	mode: SchemaMode,
 	isNullable: boolean,
 ) {
@@ -402,7 +396,7 @@ function typeArrayValidator(
 }
 
 function stringValidator(
-	schema: AnySchema,
+	schema: SchemaObject,
 	mode: SchemaMode,
 	isNullable: boolean,
 	typescriptHintSchema: string | undefined,
@@ -438,7 +432,7 @@ function stringValidator(
 }
 
 function int64Validator(
-	schema: AnySchema,
+	schema: SchemaObject,
 	mode: SchemaMode,
 	isNullable: boolean,
 	typescriptHintSchema: string | undefined,
@@ -481,7 +475,7 @@ function int64Validator(
 }
 
 function numberValidator(
-	schema: AnySchema,
+	schema: SchemaObject,
 	isNullable: boolean,
 	typescriptHintSchema: string | undefined,
 ) {
@@ -521,9 +515,18 @@ function writeSpreadEntries(
 function writeAllOfMember(
 	writer: CodeBlockWriter,
 	validators: Map<string, ValidatorEntry>,
-	member: AnySchemaOrRef,
+	member: SchemaNode,
 	mode: SchemaMode,
 ) {
+	// the true schema constrains nothing, so it contributes zero entries
+	if (member === true) {
+		return;
+	}
+
+	if (member === false) {
+		throw new TypeError("an allOf member of false admits no value");
+	}
+
 	if ("$ref" in member) {
 		writeSpreadEntries(writer, resolveRef(validators, member.$ref, mode));
 
@@ -554,8 +557,8 @@ function writeAllOfMember(
 
 function allOfObjectValidator(
 	validators: Map<string, ValidatorEntry>,
-	schema: AnySchema,
-	allOfMembers: AnySchemaOrRef[],
+	schema: SchemaObject,
+	allOfMembers: SchemaNode[],
 	mode: SchemaMode,
 	isNullable: boolean,
 ) {
@@ -588,8 +591,8 @@ function allOfObjectValidator(
 
 function combinatorValidator(
 	validators: Map<string, ValidatorEntry>,
-	schema: AnySchema,
-	combinator: AnySchemaOrRef[],
+	schema: SchemaObject,
+	combinator: SchemaNode[],
 	mode: SchemaMode,
 	isNullable: boolean,
 ) {
@@ -637,7 +640,7 @@ function combinatorValidator(
 
 function objectValidator(
 	validators: Map<string, ValidatorEntry>,
-	schema: AnySchema,
+	schema: SchemaObject,
 	mode: SchemaMode,
 	isNullable: boolean,
 ) {
@@ -692,13 +695,27 @@ function objectValidator(
 
 function schemaToValidator(
 	validators: Map<string, ValidatorEntry>,
-	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	schema: SchemaNode,
 	mode: SchemaMode,
+	// oxlint-disable-next-line block65/no-explicit-return-type -- the validators recurse through here, and inference cannot type a cycle
 ): WriterFunction | string {
+	// the true schema admits any value, as the empty schema does, and false none
+	if (typeof schema === "boolean") {
+		return schema ? jsonValueSchema : vcall("never");
+	}
+
 	if ("$ref" in schema) {
 		return resolveRef(validators, schema.$ref, mode);
 	}
 
+	return schemaObjectToValidator(validators, schema, mode);
+}
+
+function schemaObjectToValidator(
+	validators: Map<string, ValidatorEntry>,
+	schema: SchemaObject,
+	mode: SchemaMode,
+) {
 	const isNullable = schemaIsNullable(schema);
 	const typescriptHintSchema = extensionHintSchema(schema);
 
@@ -786,23 +803,36 @@ function schemaToValidator(
 }
 
 /**
- * Removes the JSON value schema when no validator uses it. The recursion
- * inside it refers to it, so fixUnusedIdentifiers keeps it otherwise
+ * Declares the JSON value schema once a validator refers to it, after the
+ * imports, and leaves a module that needs none without it
  */
-export function removeUnusedJsonValueSchema(file: SourceFile) {
-	const declaration = file.getVariableDeclaration(jsonValueSchema);
-
-	const usedOutside = file
+export function addJsonValueSchemaWhenUsed(file: SourceFile) {
+	const used = file
 		.getDescendantsOfKind(SyntaxKind.Identifier)
-		.some(
-			(identifier) =>
-				identifier.getText() === jsonValueSchema &&
-				!identifier.getAncestors().includes(declaration ?? identifier),
-		);
+		.some((identifier) => identifier.getText() === jsonValueSchema);
 
-	if (declaration && !usedOutside) {
-		declaration.getVariableStatementOrThrow().remove();
+	if (!used) {
+		return;
 	}
+
+	file.addImportDeclaration({
+		moduleSpecifier: "type-fest",
+		namedImports: ["JsonValue"],
+		isTypeOnly: true,
+	});
+
+	// A value a schema leaves open is checked as JSON, recursively, so both
+	// sides type it as JsonValue
+	file.insertVariableStatement(file.getImportDeclarations().length, {
+		declarationKind: VariableDeclarationKind.Const,
+		declarations: [
+			{
+				name: jsonValueSchema,
+				type: "v.GenericSchema<JsonValue>",
+				initializer: `v.lazy(() => v.union([v.string(), v.number(), v.boolean(), v.null(), v.record(v.string(), ${jsonValueSchema}), v.array(${jsonValueSchema})]))`,
+			},
+		],
+	});
 }
 
 export function createValibotFile(project: Project, outputDir: string) {
@@ -820,25 +850,6 @@ export function createValibotFile(project: Project, outputDir: string) {
 		namespaceImport: "v",
 	});
 
-	file.addImportDeclaration({
-		moduleSpecifier: "type-fest",
-		namedImports: ["JsonValue"],
-		isTypeOnly: true,
-	});
-
-	// A value a schema leaves open is checked as JSON, recursively, so both
-	// sides type it as JsonValue
-	file.addVariableStatement({
-		declarationKind: VariableDeclarationKind.Const,
-		declarations: [
-			{
-				name: jsonValueSchema,
-				type: "v.GenericSchema<JsonValue>",
-				initializer: `v.lazy(() => v.union([v.string(), v.number(), v.boolean(), v.null(), v.record(v.string(), ${jsonValueSchema}), v.array(${jsonValueSchema})]))`,
-			},
-		],
-	});
-
 	return file;
 }
 
@@ -846,7 +857,7 @@ export function registerValidatorFromSchema(
 	validators: Map<string, ValidatorEntry>,
 	valibotFile: SourceFile,
 	schemaName: string,
-	schemaObject: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	schemaObject: SchemaNode,
 	inputOnly?: boolean,
 ) {
 	const inputName = camelcase(["input", schemaName, "schema"]);
@@ -858,7 +869,7 @@ export function registerValidatorFromSchema(
 	});
 
 	const docs =
-		!("$ref" in schemaObject) && schemaObject.description
+		isSchemaObject(schemaObject) && schemaObject.description
 			? [
 					{
 						description: wordWrap(schemaObject.description),
@@ -938,8 +949,13 @@ export function registerValidatorFromSchema(
 // Coerces HTTP param strings to native values, leaving other types alone
 function asHttpParamValidator(
 	validatorSchemas: Map<string, ValidatorEntry>,
-	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	schema: SchemaNode,
 ): WriterFunction | string {
+	// coercion follows a declared type, which a boolean schema lacks
+	if (typeof schema === "boolean") {
+		return schemaToValidator(validatorSchemas, schema, "wire");
+	}
+
 	if ("$ref" in schema) {
 		return resolveRef(validatorSchemas, schema.$ref, "wire");
 	}
@@ -1042,6 +1058,7 @@ type SchemaNamePair = { inputName: string; wireName: string };
 type OperationSchemaNames = {
 	json?: string;
 	response?: string;
+	data?: string;
 	param?: string;
 	query?: string;
 	header?: string;
@@ -1093,8 +1110,8 @@ function emitNamePair(
 
 function emitSchemaPair(
 	target: OperationTarget,
-	segment: "body" | "response",
-	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
+	segment: "body" | "response" | "data",
+	schema: SchemaNode,
 ) {
 	return emitNamePair(target, segment, (mode) =>
 		schemaToValidator(target.validatorSchemas, schema, mode),
@@ -1176,8 +1193,9 @@ export function createValidatorForOperationInput(
 	valibotFile: SourceFile,
 	commandName: string,
 	input: {
-		body?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
-		response?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
+		body?: SchemaNode;
+		response?: SchemaNode;
+		data?: SchemaNode;
 		params: oas30.ParameterObject[];
 		query: oas30.ParameterObject[];
 		header: oas30.ParameterObject[];
@@ -1191,6 +1209,7 @@ export function createValidatorForOperationInput(
 		response: input.response
 			? emitSchemaPair(target, "response", input.response)
 			: undefined,
+		data: input.data ? emitSchemaPair(target, "data", input.data) : undefined,
 		param:
 			input.params.length > 0
 				? addParams(target, "params", input.params)

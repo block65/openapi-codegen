@@ -27,6 +27,7 @@ import {
 	linkBillingAccountCommandParamsSchema,
 	listBillingSubscriptionsCommandParamsSchema,
 	listPaymentMethodsCommandParamsSchema,
+	streamOperationEventsCommandParamsSchema,
 	updateBillingAccountCommandBodySchema,
 	updateBillingAccountCommandParamsSchema,
 	updateBillingSubscriptionCommandBodySchema,
@@ -61,6 +62,9 @@ export const importBillingData = [
 ] as const;
 export const getOperation = [
 	validate("param", getOperationCommandParamsSchema),
+] as const;
+export const streamOperationEvents = [
+	validate("param", streamOperationEventsCommandParamsSchema),
 ] as const;
 export const listBillingAccounts = [] as const;
 export const createBillingAccount = [

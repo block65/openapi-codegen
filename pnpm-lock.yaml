@@ -190,8 +190,8 @@ importers:
         version: 18.2.0
     devDependencies:
       '@block65/rest-client':
-        specifier: ^15.0.1
-        version: 15.0.1(valibot@1.5.0(typescript@7.0.2))
+        specifier: ^16.0.0
+        version: 16.0.0(valibot@1.5.0(typescript@7.0.2))
       '@block65/shared-config':
         specifier: ^0.6.0
         version: 0.6.0(@block65/oxlint-tsgolint@7.0.200300)(@block65/oxlint@1.83.0(@block65/oxlint-tsgolint@7.0.200300))(eslint@10.11.0)(fallow@3.29.0)(oxfmt@0.70.0)
@@ -308,8 +308,8 @@ packages:
       vite-plus:
         optional: true
 
-  '@block65/rest-client@15.0.1':
-    resolution: {integrity: sha512-XL2ke0VAvmDv2Y23xNegWU2h9BRCKzxKGnCure4ae/w6MQV8TTqmyDfcXIgSUiPSb9j1FJUYX8uqHeZWM6YpeA==}
+  '@block65/rest-client@16.0.0':
+    resolution: {integrity: sha512-pQ6Tr1MGIwH4AsF8Y9zc/ITqILHZdEnnFy4yK592Q4fQZpJNAVCJcWyRfh1ya1Z3cerii+XNVxY+cmOh0pRYRw==}
     peerDependencies:
       valibot: ^1.5.0
     peerDependenciesMeta:
@@ -1354,6 +1354,10 @@ packages:
     resolution: {integrity: sha512-MyIV3ZA/PmyBN/ud8vV9XzwTrNtR4jFrObymZYnZqMmW0zA8Z17vnT0rBgFE/TlohB+YCHqXMgZzb3Csp49vqg==}
     engines: {node: '>=14.16'}
 
+  parse-sse@0.1.0:
+    resolution: {integrity: sha512-8bObUwtEuLp2Z1gP6iRVMBzmEqaU5ohmofa3WmZVFfFZFKRP/+c03y8NVYzzXmQMotQ6mDS5Mnyk6tT1gKOTcQ==}
+    engines: {node: '>=20'}
+
   path-browserify@1.0.1:
     resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
 
@@ -1701,11 +1705,12 @@ snapshots:
       '@block65/oxlint-binding-linux-x64-gnu': 1.83.0
       oxlint-tsgolint: '@block65/oxlint-tsgolint@7.0.200300'
 
-  '@block65/rest-client@15.0.1(valibot@1.5.0(typescript@7.0.2))':
+  '@block65/rest-client@16.0.0(valibot@1.5.0(typescript@7.0.2))':
     dependencies:
       '@block65/custom-error': 14.1.0
       '@standard-schema/spec': 1.1.0
       p-retry: 8.0.1
+      parse-sse: 0.1.0
       query-string: 9.5.1
     optionalDependencies:
       valibot: 1.5.0(typescript@7.0.2)
@@ -2502,6 +2507,8 @@ snapshots:
       is-network-error: 1.3.2
 
   p-timeout@6.1.4: {}
+
+  parse-sse@0.1.0: {}
 
   path-browserify@1.0.1: {}
 

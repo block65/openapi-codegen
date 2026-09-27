@@ -6,9 +6,10 @@
 
 import {
 	RestServiceClient,
+	type ParsedStreamEvent,
 	type RestServiceClientConfig,
 } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	BillingAccount,
 	BillingAccountList,
@@ -25,7 +26,8 @@ import type {
 	GetOperationCommandInput,
 	GetPaymentMethodCommandInput,
 	GetPaymentMethodFromStripeCommandInput,
-	ImportBillingDataCommandInput,
+	ImportBillingDataCommandBodyNonJson,
+	ImportBillingDataCommandParams,
 	LinkBillingAccountCommandInput,
 	ListBillingSubscriptionsCommandInput,
 	ListPaymentMethodsCommandInput,
@@ -34,6 +36,8 @@ import type {
 	PaymentMethodDeletedLro,
 	PaymentMethodIntendedLro,
 	PaymentMethods,
+	StreamOperationEventsCommandInput,
+	StreamOperationEventsCommandOutput,
 	UpdateBillingAccountCommandInput,
 	UpdateBillingSubscriptionCommandInput,
 	UpdateBillingSubscriptionPromoCodeCommandInput,
@@ -43,13 +47,13 @@ import type {
 export { ResponseValidationError } from "@block65/rest-client";
 
 type AllInputs =
+	| (ImportBillingDataCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImportBillingDataCommandParams>)
 	| UndefinedOnPartialDeep<CancelSubscriptionCommandInput>
 	| UndefinedOnPartialDeep<CreateBillingAccountCommandInput>
 	| UndefinedOnPartialDeep<CreateBillingSubscriptionCommandInput>
 	| UndefinedOnPartialDeep<CreatePaymentMethodCommandInput>
 	| UndefinedOnPartialDeep<DeletePaymentMethodCommandInput>
-	| (UndefinedOnPartialDeep<Except<ImportBillingDataCommandInput, "body">> &
-			Pick<ImportBillingDataCommandInput, "body">)
 	| UndefinedOnPartialDeep<GetBillingAccountCommandInput>
 	| UndefinedOnPartialDeep<GetBillingAccountPortalCommandInput>
 	| UndefinedOnPartialDeep<GetOperationCommandInput>
@@ -58,6 +62,7 @@ type AllInputs =
 	| UndefinedOnPartialDeep<LinkBillingAccountCommandInput>
 	| UndefinedOnPartialDeep<ListBillingSubscriptionsCommandInput>
 	| UndefinedOnPartialDeep<ListPaymentMethodsCommandInput>
+	| UndefinedOnPartialDeep<StreamOperationEventsCommandInput>
 	| UndefinedOnPartialDeep<UpdateBillingAccountCommandInput>
 	| UndefinedOnPartialDeep<UpdateBillingSubscriptionCommandInput>
 	| UndefinedOnPartialDeep<UpdateBillingSubscriptionPromoCodeCommandInput>
@@ -69,6 +74,7 @@ type AllOutputs =
 	| BillingSubscriptionLro
 	| BillingSubscriptions
 	| LongRunningOperation
+	| ParsedStreamEvent<StreamOperationEventsCommandOutput>
 	| PaymentMethod
 	| PaymentMethodDeletedLro
 	| PaymentMethodIntendedLro

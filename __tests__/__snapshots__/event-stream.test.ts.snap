@@ -1,0 +1,190 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`JSON data variants make the output a union > commands.ts 1`] = `
+"import { EventStreamCommand } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { StreamEventsCommandInput, StreamEventsCommandOutput } from "./types.js";
+
+
+/**
+ * StreamEventsCommand
+ *
+ */
+export class StreamEventsCommand extends EventStreamCommand<UndefinedOnPartialDeep<StreamEventsCommandInput>, StreamEventsCommandOutput> {
+    public override method = "get" as const;
+
+    constructor() {
+        super("/events");
+    }
+}
+"
+`;
+
+exports[`JSON data variants make the output a union > commands-validated.ts 1`] = `
+"import * as commands from "./commands.js";
+import * as schemas from "./valibot.js";
+
+export class StreamEventsCommand extends commands.StreamEventsCommand {
+    public override readonly dataSchema = schemas.streamEventsCommandDataSchema;
+}
+"
+`;
+
+exports[`JSON data variants make the output a union > main.ts 1`] = `
+"import { RestServiceClient, type ParsedStreamEvent, type RestServiceClientConfig } from "@block65/rest-client";
+import type { StreamEventsCommandOutput } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
+
+type AllOutputs = ParsedStreamEvent<StreamEventsCommandOutput>;
+
+export class TestRestClient extends RestServiceClient<unknown, AllOutputs> {
+    constructor(baseUrl: string | URL = new URL('https://api.example.com/'), config?: RestServiceClientConfig) {
+        super(baseUrl, config);
+    }
+}
+"
+`;
+
+exports[`JSON data variants make the output a union > types.ts 1`] = `
+"export type Thing = {
+        "id": string;
+    };
+export type StreamEventsCommandInput = never;
+export type StreamEventsCommandOutput = Thing | {
+        "sequence": number;
+    };
+"
+`;
+
+exports[`JSON data variants make the output a union > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputThingSchema = v.strictObject(
+    {
+        "id": v.string()
+        ,
+    });
+export const thingSchema = v.strictObject(
+    {
+        "id": v.pipe(v.string(), v.trim())
+        ,
+    });
+export const inputStreamEventsCommandDataSchema = v.union([inputThingSchema, v.strictObject(
+    {
+        "sequence": v.pipe(v.number(), v.integer())
+        ,
+    })]);
+export const streamEventsCommandDataSchema = v.union([thingSchema, v.strictObject(
+    {
+        "sequence": v.pipe(v.number(), v.integer())
+        ,
+    })]);
+"
+`;
+
+exports[`data with no contentMediaType is text > commands.ts 1`] = `
+"import { EventStreamCommand, textDataTransformer } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { StreamEventsCommandInput, StreamEventsCommandOutput } from "./types.js";
+
+
+/**
+ * StreamEventsCommand
+ *
+ */
+export class StreamEventsCommand extends EventStreamCommand<UndefinedOnPartialDeep<StreamEventsCommandInput>, StreamEventsCommandOutput> {
+    public override method = "get" as const;
+    public override readonly dataTransformer = textDataTransformer;
+
+    constructor() {
+        super("/events");
+    }
+}
+"
+`;
+
+exports[`data with no contentMediaType is text > commands-validated.ts 1`] = `
+"import * as commands from "./commands.js";
+import * as schemas from "./valibot.js";
+
+export class StreamEventsCommand extends commands.StreamEventsCommand {
+    public override readonly dataSchema = schemas.streamEventsCommandDataSchema;
+}
+"
+`;
+
+exports[`data with no contentMediaType is text > main.ts 1`] = `
+"import { RestServiceClient, type ParsedStreamEvent, type RestServiceClientConfig } from "@block65/rest-client";
+import type { StreamEventsCommandOutput } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
+
+type AllOutputs = ParsedStreamEvent<StreamEventsCommandOutput>;
+
+export class TestRestClient extends RestServiceClient<unknown, AllOutputs> {
+    constructor(baseUrl: string | URL = new URL('https://api.example.com/'), config?: RestServiceClientConfig) {
+        super(baseUrl, config);
+    }
+}
+"
+`;
+
+exports[`data with no contentMediaType is text > types.ts 1`] = `
+"export type StreamEventsCommandInput = never;
+export type StreamEventsCommandOutput = string;
+"
+`;
+
+exports[`data with no contentMediaType is text > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputStreamEventsCommandDataSchema = v.string();
+export const streamEventsCommandDataSchema = v.pipe(v.string(), v.trim());
+"
+`;
+
+exports[`without an itemSchema, a plain command > commands.ts 1`] = `
+"import { Command } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { StreamEventsCommandInput } from "./types.js";
+
+
+/**
+ * StreamEventsCommand
+ *
+ */
+export class StreamEventsCommand extends Command<UndefinedOnPartialDeep<StreamEventsCommandInput>> {
+    public override method = "get" as const;
+
+    constructor() {
+        super("/events");
+    }
+}
+"
+`;
+
+exports[`without an itemSchema, a plain command > commands-validated.ts 1`] = `
+"export { StreamEventsCommand } from "./commands.js";
+"
+`;
+
+exports[`without an itemSchema, a plain command > main.ts 1`] = `
+"import { RestServiceClient, type RestServiceClientConfig } from "@block65/rest-client";
+
+export { ResponseValidationError } from "@block65/rest-client";
+
+export class TestRestClient extends RestServiceClient<unknown, unknown> {
+    constructor(baseUrl: string | URL = new URL('https://api.example.com/'), config?: RestServiceClientConfig) {
+        super(baseUrl, config);
+    }
+}
+"
+`;
+
+exports[`without an itemSchema, a plain command > types.ts 1`] = `
+"export type StreamEventsCommandInput = never;
+"
+`;
+
+exports[`without an itemSchema, a plain command > valibot.ts 1`] = `""`;

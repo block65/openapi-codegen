@@ -8,9 +8,10 @@ import {
 	RestServiceClient,
 	type RestServiceClientConfig,
 } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
-	AddUploadPartCommandInput,
+	AddUploadPartCommandBodyNonJson,
+	AddUploadPartCommandParams,
 	ArchiveProjectCommandInput,
 	AssistantObject,
 	Batch,
@@ -168,6 +169,13 @@ import type {
 export { ResponseValidationError } from "@block65/rest-client";
 
 type AllInputs =
+	| (AddUploadPartCommandBodyNonJson &
+			UndefinedOnPartialDeep<AddUploadPartCommandParams>)
+	| CreateFileCommandInput
+	| CreateImageEditCommandInput
+	| CreateImageVariationCommandInput
+	| CreateTranscriptionCommandInput
+	| CreateTranslationCommandInput
 	| UndefinedOnPartialDeep<ArchiveProjectCommandInput>
 	| UndefinedOnPartialDeep<CancelBatchCommandInput>
 	| UndefinedOnPartialDeep<CancelFineTuningJobCommandInput>
@@ -208,18 +216,6 @@ type AllInputs =
 	| UndefinedOnPartialDeep<DeleteVectorStoreCommandInput>
 	| UndefinedOnPartialDeep<DeleteVectorStoreFileCommandInput>
 	| UndefinedOnPartialDeep<DownloadFileCommandInput>
-	| (UndefinedOnPartialDeep<Except<AddUploadPartCommandInput, "body">> &
-			Pick<AddUploadPartCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<CreateFileCommandInput, "body">> &
-			Pick<CreateFileCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<CreateImageEditCommandInput, "body">> &
-			Pick<CreateImageEditCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<CreateImageVariationCommandInput, "body">> &
-			Pick<CreateImageVariationCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<CreateTranscriptionCommandInput, "body">> &
-			Pick<CreateTranscriptionCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<CreateTranslationCommandInput, "body">> &
-			Pick<CreateTranslationCommandInput, "body">)
 	| UndefinedOnPartialDeep<GetAssistantCommandInput>
 	| UndefinedOnPartialDeep<GetMessageCommandInput>
 	| UndefinedOnPartialDeep<GetRunCommandInput>

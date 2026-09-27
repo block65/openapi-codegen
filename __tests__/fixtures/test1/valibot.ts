@@ -556,6 +556,24 @@ export const inputGetOperationCommandParamsSchema = v.strictObject({
 export const getOperationCommandParamsSchema = v.strictObject({
 	operationId: uuidSchema,
 });
+export const inputStreamOperationEventsCommandDataSchema = v.union([
+	inputLongRunningOperationSchema,
+	v.strictObject({
+		sequence: v.pipe(v.number(), v.integer()),
+	}),
+]);
+export const streamOperationEventsCommandDataSchema = v.union([
+	longRunningOperationSchema,
+	v.strictObject({
+		sequence: v.pipe(v.number(), v.integer()),
+	}),
+]);
+export const inputStreamOperationEventsCommandParamsSchema = v.strictObject({
+	operationId: inputUuidSchema,
+});
+export const streamOperationEventsCommandParamsSchema = v.strictObject({
+	operationId: uuidSchema,
+});
 export const inputListBillingAccountsCommandResponseSchema =
 	inputBillingAccountListSchema;
 export const listBillingAccountsCommandResponseSchema =

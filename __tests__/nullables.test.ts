@@ -1,4 +1,4 @@
-import type { oas31 } from "openapi3-ts";
+import type { oas32 } from "openapi3-ts";
 import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
@@ -120,7 +120,7 @@ test("3.0 nullable objects, arrays, strings and combinator members admit null", 
 				},
 			},
 		},
-	} as oas31.OpenAPIObject);
+	});
 
 	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
@@ -228,7 +228,7 @@ test("oneOf with type null generates v.null()", async () => {
 });
 
 test("query and header integer params coerce strings to numbers", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: {
 			title: "Test",
@@ -304,7 +304,7 @@ test("query and header integer params coerce strings to numbers", async () => {
 });
 
 test("header parameters", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: {
 			title: "Test",

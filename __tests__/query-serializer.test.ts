@@ -1,17 +1,20 @@
 import { RestServiceClient } from "@block65/rest-client";
-import type { oas31 } from "openapi3-ts";
+import type { oas32 } from "openapi3-ts";
 import { assert, expect, test, vi } from "vitest";
 import { ImageCreateCommand } from "./fixtures/docker/commands.ts";
 import { FindPetsCommand } from "./fixtures/petstore/commands.ts";
 import { SwaggerPetstoreRestClient } from "./fixtures/petstore/main.ts";
-import { commandsFor, generateFor, type TestParameter } from "./generate.ts";
+import {
+	generateCommandsText,
+	generateWithQueryParameters,
+} from "./helpers.ts";
 
-const arrayOfStrings: oas31.SchemaObject = {
+const arrayOfStrings: oas32.SchemaObject = {
 	type: "array",
 	items: { type: "string" },
 };
 
-const rangeSchema: oas31.SchemaObject = {
+const rangeSchema: oas32.SchemaObject = {
 	type: "object",
 	properties: {
 		gt: { type: "integer" },
@@ -22,7 +25,7 @@ const rangeSchema: oas31.SchemaObject = {
 // What a serializer writes is rest-client's to test, from the spec's own
 // examples. What is tested here is which one a command names
 test("a departure from the default encoding names a serializer", async () => {
-	const commands = await commandsFor([
+	const commands = await generateCommandsText([
 		{
 			name: "names",
 			in: "query",
@@ -42,7 +45,7 @@ test("a departure from the default encoding names a serializer", async () => {
 
 // An unnamed serializer is form with explode, so naming it would be noise
 test("the default encoding names nothing", async () => {
-	const commands = await commandsFor([
+	const commands = await generateCommandsText([
 		{
 			name: "tags",
 			in: "query",
@@ -59,7 +62,7 @@ test("the default encoding names nothing", async () => {
 // style, and deepObject writes an array as form with explode, so deepObject
 // is the serializer all three parameters share
 test("a deepObject parameter sets the serializer for its operation", async () => {
-	const commands = await commandsFor([
+	const commands = await generateCommandsText([
 		{ name: "limit", in: "query", schema: { type: "integer" } },
 		{ name: "tags", in: "query", schema: arrayOfStrings },
 		{ name: "filter", in: "query", style: "deepObject", schema: rangeSchema },
@@ -74,7 +77,7 @@ test("a deepObject parameter sets the serializer for its operation", async () =>
 // ones stop generation
 test("query parameters needing different serializers stop generation", async () => {
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{
 				name: "tags",
 				in: "query",
@@ -88,8 +91,10 @@ test("query parameters needing different serializers stop generation", async () 
 });
 
 // A consumer compiles against the import and the property
-async function commandSourceFor(parameters: readonly TestParameter[]) {
-	const { commandsFile } = await generateFor(parameters);
+async function extractCommandSource(
+	parameters: readonly oas32.ParameterObject[],
+) {
+	const { commandsFile } = await generateWithQueryParameters(parameters);
 
 	const restClientImport = commandsFile.getImportDeclarationOrThrow(
 		(declaration) =>
@@ -105,7 +110,7 @@ async function commandSourceFor(parameters: readonly TestParameter[]) {
 
 test("the source of a command that names a serializer", async () => {
 	await expect(
-		commandSourceFor([
+		extractCommandSource([
 			{ name: "limit", in: "query", schema: { type: "integer" } },
 			{ name: "filter", in: "query", style: "deepObject", schema: rangeSchema },
 		]),
@@ -114,7 +119,7 @@ test("the source of a command that names a serializer", async () => {
 
 test("the source of a command that names none", async () => {
 	await expect(
-		commandSourceFor([
+		extractCommandSource([
 			{ name: "limit", in: "query", schema: { type: "integer" } },
 			{ name: "tags", in: "query", schema: arrayOfStrings },
 		]),

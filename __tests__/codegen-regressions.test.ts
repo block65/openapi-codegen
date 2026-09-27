@@ -1,4 +1,4 @@
-import type { oas31 } from "openapi3-ts";
+import type { oas32 } from "openapi3-ts";
 import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
@@ -10,7 +10,7 @@ const respOk = {
 } as const;
 
 test("main.ts emits file-level `import type` for type-only imports", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -39,7 +39,7 @@ test("main.ts emits file-level `import type` for type-only imports", async () =>
 });
 
 test("optional query params do not carry `| undefined` in their property type", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -72,7 +72,7 @@ test("optional query params do not carry `| undefined` in their property type", 
 });
 
 test("AllInputs union carries every command that takes an input", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -148,7 +148,7 @@ test.for([
 
 // A one-member `anyOf` or `oneOf` is that member. `v.union` of one option
 // only wraps its issues, and the block65 valibot rules reject it
-test.for<[string, oas31.SchemaObject]>([
+test.for<[string, oas32.SchemaObject]>([
 	["anyOf", { anyOf: [{ type: "string" }] }],
 	["oneOf", { oneOf: [{ type: "string" }] }],
 	["two-member oneOf", { oneOf: [{ type: "string" }, { type: "number" }] }],
@@ -164,7 +164,7 @@ test.for<[string, oas31.SchemaObject]>([
 	},
 );
 
-function docWithSchema(name: string, schema: oas31.SchemaObject) {
+function docWithSchema(name: string, schema: oas32.SchemaObject) {
 	return {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
@@ -238,7 +238,7 @@ test("an empty properties bag is a record, not an empty object type", async () =
 });
 
 test("the generated JSON body type is PascalCase", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -267,7 +267,7 @@ test("the generated JSON body type is PascalCase", async () => {
 });
 
 test("an operation with both a 200 and a 204 emits one output type argument", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -299,7 +299,7 @@ test("an operation with both a 200 and a 204 emits one output type argument", as
 });
 
 test("an array request body with parameters stays readable as both", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -334,7 +334,7 @@ test("an array request body with parameters stays readable as both", async () =>
 });
 
 test("nested query param members get the same stringish treatment as top-level ones", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -381,7 +381,7 @@ test("nested query param members get the same stringish treatment as top-level o
 });
 
 test("json request body members keep their real JSON types, nested included", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -423,7 +423,7 @@ test("json request body members keep their real JSON types, nested included", as
 // Composition has to forward the codegen options the same way the array and
 // object branches do, or a oneOf collapses back to the JSON types
 test("a oneOf query param keeps the stringish wire types in every branch", async () => {
-	const schema: oas31.OpenAPIObject = {
+	const schema: oas32.OpenAPIObject = {
 		openapi: "3.1.0",
 		info: { title: "Test", version: "1.0.0" },
 		paths: {
@@ -550,4 +550,48 @@ test("a value the schema leaves open is a JsonValue on both sides", async () => 
 
 	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
+});
+
+test("a bodiless success is undefined, and no documented success is never", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {
+			"/no-content": {
+				delete: {
+					operationId: "noContentCommand",
+					responses: { "204": { description: "No Content" } },
+				},
+			},
+			"/ok-without-body": {
+				post: {
+					operationId: "okWithoutBodyCommand",
+					responses: { "200": { description: "OK" } },
+				},
+			},
+			"/failures-only": {
+				post: {
+					operationId: "failuresOnlyCommand",
+					responses: { "400": { description: "Bad Request" } },
+				},
+			},
+			"/nothing-documented": {
+				post: { operationId: "nothingDocumentedCommand", responses: {} },
+			},
+			"/bytes": {
+				get: {
+					operationId: "bytesCommand",
+					responses: {
+						"200": {
+							description: "OK",
+							content: { "application/octet-stream": {} },
+						},
+					},
+				},
+			},
+		},
+	});
+
+	expect(result.commandsFile.getText()).toMatchSnapshot("commands.ts");
+	expect(result.mainFile.getText()).toMatchSnapshot("main.ts");
 });

@@ -8,7 +8,7 @@ import {
 	RestServiceClient,
 	type RestServiceClientConfig,
 } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	BuildPruneCommandInput,
 	BuildPruneCommandOutput,
@@ -63,10 +63,12 @@ import type {
 	ExecStartCommandInput,
 	GetPluginPrivilegesCommandInput,
 	GetPluginPrivilegesCommandOutput,
-	ImageBuildCommandInput,
+	ImageBuildCommandBodyNonJson,
+	ImageBuildCommandQuery,
 	ImageCommitCommandInput,
 	ImageCommitCommandOutput,
-	ImageCreateCommandInput,
+	ImageCreateCommandBodyNonJson,
+	ImageCreateCommandQuery,
 	ImageDeleteCommandInput,
 	ImageDeleteCommandOutput,
 	ImageGetAllCommandInput,
@@ -77,7 +79,8 @@ import type {
 	ImageInspectCommandOutput,
 	ImageListCommandInput,
 	ImageListCommandOutput,
-	ImageLoadCommandInput,
+	ImageLoadCommandBodyNonJson,
+	ImageLoadCommandQuery,
 	ImagePruneCommandInput,
 	ImagePruneCommandOutput,
 	ImagePushCommandInput,
@@ -101,7 +104,8 @@ import type {
 	NodeListCommandInput,
 	NodeListCommandOutput,
 	NodeUpdateCommandInput,
-	PluginCreateCommandInput,
+	PluginCreateCommandBodyNonJson,
+	PluginCreateCommandQuery,
 	PluginDeleteCommandInput,
 	PluginDeleteCommandOutput,
 	PluginDisableCommandInput,
@@ -114,7 +118,9 @@ import type {
 	PluginPushCommandInput,
 	PluginSetCommandInput,
 	PluginUpgradeCommandInput,
-	PutContainerArchiveCommandInput,
+	PutContainerArchiveCommandBodyNonJson,
+	PutContainerArchiveCommandParams,
+	PutContainerArchiveCommandQuery,
 	SecretCreateCommandInput,
 	SecretCreateCommandOutput,
 	SecretDeleteCommandInput,
@@ -169,6 +175,18 @@ import type {
 export { ResponseValidationError } from "@block65/rest-client";
 
 type AllInputs =
+	| (ImageBuildCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageBuildCommandQuery>)
+	| (ImageCreateCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageCreateCommandQuery>)
+	| (ImageLoadCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageLoadCommandQuery>)
+	| (PluginCreateCommandBodyNonJson &
+			UndefinedOnPartialDeep<PluginCreateCommandQuery>)
+	| (PutContainerArchiveCommandBodyNonJson &
+			UndefinedOnPartialDeep<
+				PutContainerArchiveCommandParams & PutContainerArchiveCommandQuery
+			>)
 	| UndefinedOnPartialDeep<BuildPruneCommandInput>
 	| UndefinedOnPartialDeep<ConfigCreateCommandInput>
 	| UndefinedOnPartialDeep<ConfigDeleteCommandInput>
@@ -201,16 +219,6 @@ type AllInputs =
 	| UndefinedOnPartialDeep<ContainerUpdateCommandInput>
 	| UndefinedOnPartialDeep<ContainerWaitCommandInput>
 	| UndefinedOnPartialDeep<DistributionInspectCommandInput>
-	| (UndefinedOnPartialDeep<Except<ImageBuildCommandInput, "body">> &
-			Pick<ImageBuildCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
-			Pick<ImageCreateCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<ImageLoadCommandInput, "body">> &
-			Pick<ImageLoadCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<PluginCreateCommandInput, "body">> &
-			Pick<PluginCreateCommandInput, "body">)
-	| (UndefinedOnPartialDeep<Except<PutContainerArchiveCommandInput, "body">> &
-			Pick<PutContainerArchiveCommandInput, "body">)
 	| UndefinedOnPartialDeep<ExecInspectCommandInput>
 	| UndefinedOnPartialDeep<ExecResizeCommandInput>
 	| UndefinedOnPartialDeep<ExecStartCommandInput>

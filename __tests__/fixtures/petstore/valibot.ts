@@ -7,6 +7,7 @@
 // oxlint-disable block65/prefer-exact-optional
 
 import * as v from "valibot";
+
 export const inputErrorSchema = v.looseObject({
 	code: v.pipe(v.number(), v.integer()),
 	message: v.string(),
