@@ -28,7 +28,7 @@
 	},
 	"devDependencies": {
 		"@block65/rest-client": "^16.0.0",
-		"@block65/shared-config": "^0.6.0",
+		"@block65/shared-config": "^0.7.0",
 		"@block65/tsconfig": "^0.3.1",
 		"@hono/standard-validator": "^0.4.0",
 		"@types/node": "^26.6.3",
