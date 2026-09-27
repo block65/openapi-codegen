@@ -36,7 +36,7 @@ test("main.ts emits file-level `import type` for type-only imports", async () =>
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.mainFile]);
+	expectGenerated([result.mainFile]);
 });
 
 test("optional query params do not carry `| undefined` in their property type", async () => {
@@ -69,7 +69,7 @@ test("optional query params do not carry `| undefined` in their property type", 
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("AllInputs union carries every command that takes an input", async () => {
@@ -121,7 +121,7 @@ test("AllInputs union carries every command that takes an input", async () => {
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.mainFile]);
+	expectGenerated([result.mainFile]);
 });
 
 // An empty schema permits any value, so the keys outside `properties` are
@@ -143,7 +143,7 @@ test.for([
 			}),
 		);
 
-		await expectGenerated([result.valibotFile]);
+		expectGenerated([result.valibotFile]);
 	},
 );
 
@@ -161,7 +161,7 @@ test.for<[string, oas31.SchemaObject]>([
 			docWithSchema("Only", schema),
 		);
 
-		await expectGenerated([result.valibotFile]);
+		expectGenerated([result.valibotFile]);
 	},
 );
 
@@ -199,7 +199,7 @@ test("additionalProperties is a string-keyed record of the value type", async ()
 		}),
 	);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("additionalProperties alongside properties keeps the extra keys valid", async () => {
@@ -212,7 +212,7 @@ test("additionalProperties alongside properties keeps the extra keys valid", asy
 		}),
 	);
 
-	await expectGenerated([result.valibotFile]);
+	expectGenerated([result.valibotFile]);
 });
 
 test("additionalProperties true accepts any key", async () => {
@@ -225,7 +225,7 @@ test("additionalProperties true accepts any key", async () => {
 		}),
 	);
 
-	await expectGenerated([result.valibotFile]);
+	expectGenerated([result.valibotFile]);
 });
 
 test("an empty properties bag is a record, not an empty object type", async () => {
@@ -234,7 +234,7 @@ test("an empty properties bag is a record, not an empty object type", async () =
 		docWithSchema("Empty", { type: "object", properties: {} }),
 	);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("the generated JSON body type is PascalCase", async () => {
@@ -263,7 +263,7 @@ test("the generated JSON body type is PascalCase", async () => {
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("an operation with both a 200 and a 204 emits one output type argument", async () => {
@@ -295,7 +295,7 @@ test("an operation with both a 200 and a 204 emits one output type argument", as
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.commandsFile]);
+	expectGenerated([result.commandsFile]);
 });
 
 test("an array request body with parameters stays readable as both", async () => {
@@ -329,7 +329,7 @@ test("an array request body with parameters stays readable as both", async () =>
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.typesFile, result.commandsFile]);
+	expectGenerated([result.typesFile, result.commandsFile]);
 });
 
 test("nested query param members get the same stringish treatment as top-level ones", async () => {
@@ -376,7 +376,7 @@ test("nested query param members get the same stringish treatment as top-level o
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("json request body members keep their real JSON types, nested included", async () => {
@@ -416,7 +416,7 @@ test("json request body members keep their real JSON types, nested included", as
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 // Composition has to forward the codegen options the same way the array and
@@ -468,7 +468,7 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("an object schema that omits `type` still honours `required`", async () => {
@@ -486,7 +486,7 @@ test("an object schema that omits `type` still honours `required`", async () => 
 		},
 	});
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("a $ref nested past the top level registers after its target", async () => {
@@ -522,7 +522,7 @@ test("a $ref nested past the top level registers after its target", async () => 
 		},
 	});
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("a value the schema leaves open is a JsonValue on both sides", async () => {
@@ -546,5 +546,5 @@ test("a value the schema leaves open is a JsonValue on both sides", async () => 
 		},
 	});
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });

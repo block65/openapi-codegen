@@ -29,7 +29,7 @@ test("nullables", async () => {
 		[],
 	);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("top-level type array with null", async () => {
@@ -63,11 +63,7 @@ test("top-level type array with null", async () => {
 		[],
 	);
 
-	await expectGenerated([
-		result.typesFile,
-		result.valibotFile,
-		result.enumsFile,
-	]);
+	expectGenerated([result.typesFile, result.valibotFile, result.enumsFile]);
 });
 
 test("3.0 nullable objects, arrays, strings and combinator members admit null", async () => {
@@ -125,7 +121,7 @@ test("3.0 nullable objects, arrays, strings and combinator members admit null", 
 		},
 	} as oas31.OpenAPIObject);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("const values", async () => {
@@ -161,7 +157,7 @@ test("const values", async () => {
 		[],
 	);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("RFC 3339 temporal formats", async () => {
@@ -179,7 +175,7 @@ test("RFC 3339 temporal formats", async () => {
 		},
 	});
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("enums short-circuit type constraints (picklist only)", async () => {
@@ -207,7 +203,7 @@ test("enums short-circuit type constraints (picklist only)", async () => {
 		},
 	});
 
-	await expectGenerated([result.valibotFile]);
+	expectGenerated([result.valibotFile]);
 });
 
 test("oneOf with type null generates v.null()", async () => {
@@ -224,7 +220,7 @@ test("oneOf with type null generates v.null()", async () => {
 		},
 	});
 
-	await expectGenerated([result.valibotFile]);
+	expectGenerated([result.valibotFile]);
 });
 
 test("query and header integer params coerce strings to numbers", async () => {
@@ -299,7 +295,7 @@ test("query and header integer params coerce strings to numbers", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("header parameters", async () => {
@@ -378,7 +374,7 @@ test("header parameters", async () => {
 		schema,
 	);
 
-	await expectGenerated([
+	expectGenerated([
 		result.typesFile,
 		result.commandsFile,
 		result.commandsValidatedFile,
@@ -436,5 +432,5 @@ test("input-only mode omits wire schemas", async () => {
 		{ inputOnly: true },
 	);
 
-	await expectGenerated([result.valibotFile]);
+	expectGenerated([result.valibotFile]);
 });

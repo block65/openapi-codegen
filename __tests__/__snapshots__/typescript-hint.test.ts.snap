@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`x-typescript-hint honored inside anyOf branches > types.ts 1`] = `
+"export type MaybeUrl = AbsoluteUrl | RelativeUrl;
+"
+`;
+
+exports[`x-typescript-hint honored inside oneOf branches > types.ts 1`] = `
+"export type EventSource = "native" | EmbedUrl | SyndicatedUrl;
+"
+`;
+
+exports[`x-typescript-hint on top-level string schema > types.ts 1`] = `
+"export type EmbedUrl = \`https://embed.example.com/\${string}\`;
+"
+`;

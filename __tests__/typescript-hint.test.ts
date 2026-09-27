@@ -27,7 +27,7 @@ test("x-typescript-hint on top-level string schema", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("x-typescript-hint honored inside oneOf branches", async () => {
@@ -51,7 +51,7 @@ test("x-typescript-hint honored inside oneOf branches", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
 
 test("x-typescript-hint honored inside anyOf branches", async () => {
@@ -74,5 +74,5 @@ test("x-typescript-hint honored inside anyOf branches", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile]);
+	expectGenerated([result.typesFile]);
 });
