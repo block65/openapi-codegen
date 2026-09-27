@@ -175,3 +175,16 @@ describe("event-stream refusals", () => {
 		).rejects.toThrow(message);
 	});
 });
+
+test("an itemSchema in a document older than OAS 3.2 is refused", async () => {
+	const document = documentWith({
+		type: "object",
+		properties: { data: { type: "string" } },
+	});
+
+	await expect(
+		processOpenApiDocument("/tmp/whatever", { ...document, openapi: "3.1.0" }),
+	).rejects.toThrow(
+		"streamEventsCommand: itemSchema is OAS 3.2, and the document declares openapi 3.1.0",
+	);
+});

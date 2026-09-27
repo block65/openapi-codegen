@@ -390,6 +390,7 @@ type OutputFiles = ReturnType<typeof createOutputFiles>;
 
 type DocumentContext = OutputFiles & {
 	refs: $Refs;
+	openapiVersion: string;
 	typesImportDecl: ImportDeclaration;
 	typesAndInterfaces: Map<string, NamedDeclaration>;
 	validators: Map<string, { input: string; wire: string }>;
@@ -1404,7 +1405,18 @@ function resolveSchema(refs: $Refs, operationId: string, schema: SchemaNode) {
 	return resolveObject(refs, schema);
 }
 
-function sequentialContent(refs: $Refs, operationObject: OperationWithId) {
+// itemSchema arrived in OAS 3.2
+function canStateItemSchema(openapiVersion: string) {
+	const [major = 0, minor = 0] = openapiVersion.split(".").map(Number);
+
+	return major > 3 || (major === 3 && minor >= 2);
+}
+
+function sequentialContent(
+	refs: $Refs,
+	openapiVersion: string,
+	operationObject: OperationWithId,
+) {
 	const { operationId } = operationObject;
 	const responseContent = resolveContent(
 		refs,
@@ -1424,6 +1436,12 @@ function sequentialContent(refs: $Refs, operationObject: OperationWithId) {
 
 	if (!found?.[1].itemSchema || !media) {
 		return;
+	}
+
+	if (!canStateItemSchema(openapiVersion)) {
+		throw new Error(
+			`${operationId}: itemSchema is OAS 3.2, and the document declares openapi ${openapiVersion}`,
+		);
 	}
 
 	const { contentProperty } = media;
@@ -1944,7 +1962,11 @@ function processOperation(
 		...input,
 	};
 
-	const sequential = sequentialContent(documentCtx.refs, operationObject);
+	const sequential = sequentialContent(
+		documentCtx.refs,
+		documentCtx.openapiVersion,
+		operationObject,
+	);
 
 	const wireSchemas = registerOperationValidators(
 		documentCtx,
@@ -2247,6 +2269,7 @@ export async function processOpenApiDocument(
 	const documentCtx: DocumentContext = {
 		...files,
 		refs,
+		openapiVersion: schema.openapi,
 		typesImportDecl,
 		typesAndInterfaces: new Map(),
 		validators: new Map(),
