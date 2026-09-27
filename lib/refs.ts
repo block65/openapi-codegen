@@ -1,3 +1,5 @@
+import type { oas32 } from "openapi3-ts";
+
 const componentSchemas = "#/components/schemas/";
 
 /**
@@ -5,7 +7,11 @@ const componentSchemas = "#/components/schemas/";
  * `/` is escaped the way a JSON pointer writes it
  */
 export function schemaRef(schemaName: string) {
-	return `${componentSchemas}${schemaName.replaceAll("~", "~0").replaceAll("/", "~1")}`;
+	return `${componentSchemas}${escapeToken(schemaName)}`;
+}
+
+function escapeToken(token: string) {
+	return token.replaceAll("~", "~0").replaceAll("/", "~1");
 }
 
 // a `$ref` key inside these is data, unless the key names a property
@@ -34,11 +40,15 @@ function decodeFragment(ref: string) {
 	}
 }
 
+function unescapeToken(token: string) {
+	return token.replaceAll("~1", "/").replaceAll("~0", "~");
+}
+
 function pointerTokens(ref: string) {
 	return ref
 		.slice(2)
 		.split("/")
-		.map((token) => token.replaceAll("~1", "/").replaceAll("~0", "~"));
+		.map((token) => unescapeToken(token));
 }
 
 function lookup(document: unknown, ref: string) {
@@ -64,14 +74,19 @@ function lookup(document: unknown, ref: string) {
  * decoded. A ref into part of a component schema is replaced by that
  * subschema, so each schema ref left names a whole component
  */
-export function normalizeRefs<T>(document: T): T {
+export function normalizeRefs(document: oas32.OpenAPIObject) {
+	const schemas = document.components?.schemas ?? {};
+
 	const visit = (
 		node: unknown,
 		inNameMap: boolean,
 		inlining: string[],
+		at: string,
 	): unknown => {
 		if (Array.isArray(node)) {
-			return node.map((item) => visit(item, false, inlining));
+			return node.map((item, index) =>
+				visit(item, false, inlining, `${at}/${index}`),
+			);
 		}
 
 		if (typeof node !== "object" || node === null) {
@@ -86,6 +101,21 @@ export function normalizeRefs<T>(document: T): T {
 				ref.startsWith(componentSchemas) &&
 				ref.slice(componentSchemas.length).includes("/");
 
+			const defined =
+				!ref.startsWith(componentSchemas) ||
+				intoComponent ||
+				Object.hasOwn(
+					schemas,
+					unescapeToken(ref.slice(componentSchemas.length)),
+				);
+
+			// the generator looks the name up much later, and far from here
+			if (!defined) {
+				throw new Error(
+					`${at} refers to ${ref}, which is not a schema in components.schemas`,
+				);
+			}
+
 			if (!intoComponent) {
 				return { ...node, $ref: ref };
 			}
@@ -96,7 +126,7 @@ export function normalizeRefs<T>(document: T): T {
 
 			const target = lookup(document, ref);
 
-			const inlined = visit(target, false, [...inlining, ref]);
+			const inlined = visit(target, false, [...inlining, ref], ref);
 			const { $ref: _, ...siblings } = node;
 
 			// OAS 3.1 allows keywords such as description beside a $ref
@@ -108,7 +138,7 @@ export function normalizeRefs<T>(document: T): T {
 						...Object.fromEntries(
 							Object.entries(siblings).map(([key, value]) => [
 								key,
-								visit(value, false, inlining),
+								visit(value, false, inlining, `${at}/${escapeToken(key)}`),
 							]),
 						),
 					}
@@ -120,11 +150,16 @@ export function normalizeRefs<T>(document: T): T {
 				key,
 				!inNameMap && dataKeywords.has(key)
 					? value
-					: visit(value, !inNameMap && nameMapKeywords.has(key), inlining),
+					: visit(
+							value,
+							!inNameMap && nameMapKeywords.has(key),
+							inlining,
+							`${at}/${escapeToken(key)}`,
+						),
 			]),
 		);
 	};
 
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- visit rebuilds the same shape and changes only $ref values
-	return visit(document, false, []) as T;
+	return visit(document, false, [], "#") as oas32.OpenAPIObject;
 }

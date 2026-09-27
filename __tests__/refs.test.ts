@@ -45,7 +45,7 @@ test("a property named after a keyword still orders by its $ref", async () => {
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
-test("a $ref to an undefined schema names the schema and the ref", async () => {
+test("a $ref to an undefined schema names where it is made", async () => {
 	await expect(
 		generateSchemas({
 			Order: {
@@ -54,7 +54,38 @@ test("a $ref to an undefined schema names the schema and the ref", async () => {
 			},
 		}),
 	).rejects.toThrow(
-		"Order refers to #/components/schemas/Customer, which is not a schema in components.schemas",
+		"#/components/schemas/Order/properties/customer refers to #/components/schemas/Customer, which is not a schema in components.schemas",
+	);
+});
+
+test("an operation's $ref to an undefined schema names where it is made", async () => {
+	await expect(
+		processOpenApiDocument("/tmp/refs", {
+			openapi: "3.1.0",
+			info: { title: "Test", version: "1.0.0" },
+			paths: {
+				"/orders": {
+					get: {
+						operationId: "listOrdersCommand",
+						responses: {
+							"200": {
+								description: "OK",
+								content: {
+									"application/json": {
+										schema: {
+											type: "array",
+											items: { $ref: "#/components/schemas/Order" },
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		}),
+	).rejects.toThrow(
+		"#/paths/~1orders/get/responses/200/content/application~1json/schema/items refers to #/components/schemas/Order, which is not a schema in components.schemas",
 	);
 });
 
