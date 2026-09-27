@@ -1,45 +1,14 @@
-import { createIsomorphicNativeFetcher } from "@block65/rest-client";
-import { MockAgent, fetch as undiciFetch } from "undici";
-import { describe, expect, test } from "vitest";
+import { expect, test } from "vitest";
 import { CreateModerationCommand } from "./fixtures/openai/commands.ts";
-import { OpenAiApiRestClient } from "./fixtures/openai/main.ts";
 
-const mockAgent = new MockAgent();
-mockAgent.disableNetConnect();
+// the input is the whole body, so none of it moves to the query or path
+test("createModeration sends its input as a JSON body", () => {
+	const command = new CreateModerationCommand({ input: "This is a test" });
 
-const apiUrl = "http://192.2.0.1";
-
-describe("OpenAI", () => {
-	const pool = mockAgent.get(apiUrl);
-
-	pool
-		.intercept({
-			path: "/moderations",
-			method: "POST",
-		})
-		.reply(200, {
-			id: "modr-123",
-			model: "text-moderation-latest",
-			results: [],
-		})
-		.times(1);
-
-	test("CreateModeration", async () => {
-		const openAiClient = new OpenAiApiRestClient(apiUrl, {
-			logger: console.debug,
-			fetcher: createIsomorphicNativeFetcher({
-				retry: { retries: 0 },
-				fetch: (input, init) =>
-					undiciFetch(input, { ...init, dispatcher: mockAgent }),
-			}),
-		});
-
-		const command = new CreateModerationCommand({
-			input: "This is a test",
-		});
-
-		const result = await openAiClient.json(command);
-
-		expect(result).toBeTruthy();
+	expect(command.toJSON()).toStrictEqual({
+		method: "post",
+		pathname: "/moderations",
+		body: JSON.stringify({ input: "This is a test" }),
+		query: undefined,
 	});
 });

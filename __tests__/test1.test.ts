@@ -3,7 +3,7 @@ import {
 	type ParsedStreamEvent,
 } from "@block65/rest-client";
 import { MockAgent, fetch as undiciFetch } from "undici";
-import { describe, expect, expectTypeOf, test, vi } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import {
 	GetBillingAccountCommand,
 	ListBillingAccountsCommand,
@@ -20,22 +20,6 @@ const apiUrl = "http://192.2.0.1";
 describe("Test1", () => {
 	const pool = mockAgent.get(apiUrl);
 
-	const bodySpy = vi.fn<(body: string) => { ok: boolean }>(() => ({
-		ok: true,
-	}));
-
-	pool
-		.intercept({
-			path: "/billing-accounts/1234",
-			method: "GET",
-			body(body) {
-				bodySpy(body);
-				return true;
-			},
-		})
-		.reply(200, { ok: 1 })
-		.times(1);
-
 	const operationId = "00000000-0000-4000-8000-000000000000";
 
 	pool
@@ -50,22 +34,13 @@ describe("Test1", () => {
 		expect(command.pathname).toBe("/billing-accounts");
 	});
 
-	test("get billing account", async () => {
-		const client = new BillingServiceRestApiRestClient(apiUrl, {
-			logger: console.debug,
-			fetcher: createIsomorphicNativeFetcher({
-				retry: { retries: 0 },
-				fetch: (input, init) =>
-					undiciFetch(input, { ...init, dispatcher: mockAgent }),
-			}),
-		});
+	test("a path parameter fills its segment", () => {
 		const command = new GetBillingAccountCommand({
 			billingAccountId: "1234",
 		});
 
-		await client.json(command);
-
-		expect(bodySpy).toBeTruthy();
+		expect(command.method).toBe("get");
+		expect(command.pathname).toBe("/billing-accounts/1234");
 	});
 
 	test("event stream yields each event with its data decoded", async () => {
