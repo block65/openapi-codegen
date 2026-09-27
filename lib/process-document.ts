@@ -47,6 +47,9 @@ import {
 import {
 	createValibotFile,
 	createValidatorForOperationInput,
+	declareValidator,
+	importLazyTypes,
+	type ValidatorEntry,
 	registerValidatorFromSchema,
 	addJsonValueSchemaWhenUsed,
 } from "./valibot.ts";
@@ -395,7 +398,7 @@ type DocumentContext = OutputFiles & {
 	openapiVersion: string;
 	typesImportDecl: ImportDeclaration;
 	typesAndInterfaces: Map<string, NamedDeclaration>;
-	validators: Map<string, { input: string; wire: string }>;
+	validators: Map<string, ValidatorEntry>;
 	allOperations: OperationMiddlewareInfo[];
 	outputTypes: Set<NamedDeclaration | string>;
 	inputTypeArgs: Set<string>;
@@ -499,6 +502,37 @@ function ensureTypeImport(
 	}
 }
 
+// a ref that closes a loop is emitted lazily, so it drops out of the order
+function withoutCycles(edges: [string, string][]) {
+	const next = Map.groupBy(edges, ([from]) => from);
+	const open = new Set<string>();
+	const done = new Set<string>();
+	const closing = new Set<[string, string]>();
+
+	const visit = (node: string) => {
+		open.add(node);
+
+		for (const edge of next.get(node) ?? []) {
+			if (open.has(edge[1])) {
+				closing.add(edge);
+			} else if (!done.has(edge[1])) {
+				visit(edge[1]);
+			}
+		}
+
+		open.delete(node);
+		done.add(node);
+	};
+
+	for (const [from] of edges) {
+		if (!done.has(from)) {
+			visit(from);
+		}
+	}
+
+	return edges.filter((edge) => !closing.has(edge));
+}
+
 function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 	const schemas = Object.entries(schema.components?.schemas || {});
 	const defined = new Set(schemas.map(([schemaName]) => schemaRef(schemaName)));
@@ -517,7 +551,7 @@ function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 		return deps.map((dep): [string, string] => [schemaRef(schemaName), dep]);
 	});
 
-	const sorted = toposort(schemaGraph).toReversed();
+	const sorted = toposort(withoutCycles(schemaGraph)).toReversed();
 
 	return schemas.toSorted(
 		([a], [b]) => sorted.indexOf(schemaRef(a)) - sorted.indexOf(schemaRef(b)),
@@ -580,7 +614,13 @@ function registerComponentSchemas(
 	documentCtx: DocumentContext,
 	schema: oas32.OpenAPIObject,
 ) {
-	for (const [schemaName, schemaObject] of sortedComponentSchemas(schema)) {
+	const sorted = sortedComponentSchemas(schema);
+
+	for (const [schemaName, schemaObject] of sorted) {
+		declareValidator(documentCtx.validators, schemaName, schemaObject);
+	}
+
+	for (const [schemaName, schemaObject] of sorted) {
 		registerTypesFromSchema(
 			documentCtx.typesAndInterfaces,
 			documentCtx.typesFile,
@@ -2305,6 +2345,11 @@ export async function processOpenApiDocument(
 	files.typesFile.fixUnusedIdentifiers();
 	files.commandsFile.fixUnusedIdentifiers();
 	files.commandsValidatedFile.fixUnusedIdentifiers();
+	importLazyTypes(
+		files.valibotFile,
+		documentCtx.validators,
+		typesModuleSpecifierOf(files.typesFile),
+	);
 	addJsonValueSchemaWhenUsed(files.valibotFile);
 	files.valibotFile.fixUnusedIdentifiers();
 

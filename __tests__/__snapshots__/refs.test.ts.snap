@@ -168,3 +168,76 @@ export const petSchema = v.looseObject(
     });
 "
 `;
+
+exports[`a schema that contains itself reads itself lazily > types.ts 1`] = `
+"export type Category = {
+        "name": string;
+        "children"?: readonly (Category)[];
+    };
+"
+`;
+
+exports[`a schema that contains itself reads itself lazily > valibot.ts 1`] = `
+"import * as v from "valibot";
+import type { Category } from "./types.js";
+import type { UndefinedOnPartialDeep } from "type-fest";
+
+export const inputCategorySchema = v.looseObject(
+    {
+        "name": v.string()
+        ,
+        "children": v.optional(v.array(v.lazy((): v.GenericSchema<unknown, UndefinedOnPartialDeep<Category>> => inputCategorySchema)))
+        ,
+    });
+export const categorySchema = v.looseObject(
+    {
+        "name": v.pipe(v.string(), v.trim())
+        ,
+        "children": v.exactOptional(v.array(v.lazy((): v.GenericSchema<unknown, Category> => categorySchema)))
+        ,
+    });
+"
+`;
+
+exports[`schemas that refer to each other read the later one lazily > types.ts 1`] = `
+"export type Post = {
+        "author"?: Author;
+        "words"?: bigint;
+    };
+export type Author = {
+        "posts"?: readonly (Post)[];
+    };
+"
+`;
+
+exports[`schemas that refer to each other read the later one lazily > valibot.ts 1`] = `
+"import * as v from "valibot";
+import type { Author } from "./types.js";
+import type { UndefinedOnPartialDeep } from "type-fest";
+
+export const inputPostSchema = v.looseObject(
+    {
+        "author": v.optional(v.lazy((): v.GenericSchema<unknown, UndefinedOnPartialDeep<Author>> => inputAuthorSchema))
+        ,
+        "words": v.optional(v.bigint())
+        ,
+    });
+export const postSchema = v.looseObject(
+    {
+        "author": v.exactOptional(v.lazy((): v.GenericSchema<unknown, Author> => authorSchema))
+        ,
+        "words": v.exactOptional(v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]))
+        ,
+    });
+export const inputAuthorSchema = v.looseObject(
+    {
+        "posts": v.optional(v.array(inputPostSchema))
+        ,
+    });
+export const authorSchema = v.looseObject(
+    {
+        "posts": v.exactOptional(v.array(postSchema))
+        ,
+    });
+"
+`;

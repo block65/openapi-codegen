@@ -173,3 +173,43 @@ test("a $ref into a part a schema lacks is refused", async () => {
 		"#/components/schemas/Address/properties/postcode does not point at a schema in the document",
 	);
 });
+
+test("a schema that contains itself reads itself lazily", async () => {
+	const result = await generateSchemas({
+		Category: {
+			type: "object",
+			required: ["name"],
+			properties: {
+				name: { type: "string" },
+				children: {
+					type: "array",
+					items: { $ref: "#/components/schemas/Category" },
+				},
+			},
+		},
+	});
+
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
+});
+
+test("schemas that refer to each other read the later one lazily", async () => {
+	const result = await generateSchemas({
+		Author: {
+			type: "object",
+			properties: {
+				posts: { type: "array", items: { $ref: "#/components/schemas/Post" } },
+			},
+		},
+		Post: {
+			type: "object",
+			properties: {
+				author: { $ref: "#/components/schemas/Author" },
+				words: { type: "integer", format: "int64" },
+			},
+		},
+	});
+
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
+});

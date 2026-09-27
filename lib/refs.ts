@@ -10,6 +10,14 @@ export function schemaRef(schemaName: string) {
 	return `${componentSchemas}${escapeToken(schemaName)}`;
 }
 
+/**
+ * Recovers a component's name from a whole-component $ref, once refs are
+ * normalized
+ */
+export function schemaNameOf(ref: string) {
+	return unescapeToken(ref.slice(componentSchemas.length));
+}
+
 function escapeToken(token: string) {
 	return token.replaceAll("~", "~0").replaceAll("/", "~1");
 }

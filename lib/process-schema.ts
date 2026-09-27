@@ -12,7 +12,7 @@ import {
 	Writers,
 } from "ts-morph";
 import { chunkOf } from "./chunks.ts";
-import { schemaRef } from "./refs.ts";
+import { schemaNameOf, schemaRef } from "./refs.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -225,19 +225,13 @@ function refType(
 	schemaObject: oas32.ReferenceObject,
 ) {
 	const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
-
-	// components register in dependency order, so a miss is a codegen bug
-	if (!existingSchema) {
-		throw new Error(`ref used before available: ${schemaObject.$ref}`);
-	}
-
-	const docs = refPropertyDocs(existingSchema);
+	const docs = existingSchema ? refPropertyDocs(existingSchema) : [];
 
 	const property: Pick<
 		OptionalKind<PropertySignatureStructure>,
 		"type" | "docs"
 	> = {
-		type: existingSchema.getName(),
+		type: typeNameOf(typesAndInterfaces, schemaObject.$ref),
 		...(docs.length > 0 && { docs }),
 	};
 
@@ -700,14 +694,11 @@ export function schemaToType(
 	return property;
 }
 
-function resolveRef(typesAndInterfaces: TypesAndInterfaces, ref: string) {
-	const declaration = typesAndInterfaces.get(ref);
-
-	if (!declaration) {
-		throw new Error(`ref used before available: ${ref}`);
-	}
-
-	return declaration;
+// a recursive schema names an alias that is declared later
+function typeNameOf(typesAndInterfaces: TypesAndInterfaces, ref: string) {
+	return (
+		typesAndInterfaces.get(ref)?.getName() ?? pascalCase(schemaNameOf(ref))
+	);
 }
 
 function registerAlias(
@@ -744,7 +735,7 @@ function combinatorAliasType(
 
 	const typeAliases = schemaItems
 		.filter((value) => isReferenceObject(value))
-		.map((s) => resolveRef(typesAndInterfaces, s.$ref));
+		.map((s) => typeNameOf(typesAndInterfaces, s.$ref));
 
 	const objectTypesFromNonRefSchemas = schemaItems
 		.filter((value) => isSchemaObject(value))
@@ -780,7 +771,7 @@ function combinatorAliasType(
 	// concat and dedupe
 	const typeArgs = [
 		...new Set([
-			...typeAliases.map((t) => t.getName()),
+			...typeAliases,
 			...objectTypesFromNonRefSchemas,
 			...nonObjectTypesFromNonRefSchemas
 				.map((t) =>
@@ -839,7 +830,7 @@ export function registerTypesFromSchema(
 
 	// deal with refs
 	if ("$ref" in schemaObject) {
-		register(resolveRef(typesAndInterfaces, schemaObject.$ref).getName());
+		register(typeNameOf(typesAndInterfaces, schemaObject.$ref));
 	}
 
 	// deal with unions and intersections
@@ -930,7 +921,7 @@ export function registerTypesFromSchema(
 		isReferenceObject(schemaObject.items)
 	) {
 		register(
-			`${resolveRef(typesAndInterfaces, schemaObject.items.$ref).getName()}[]`,
+			`${typeNameOf(typesAndInterfaces, schemaObject.items.$ref)}[]`,
 			schemaObject.description,
 		);
 	} else {

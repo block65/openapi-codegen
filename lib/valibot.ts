@@ -17,6 +17,7 @@ import {
 	type SchemaNode,
 	type SchemaObject,
 	camelCase,
+	pascalCase,
 	isSchemaObject,
 	typedEntries,
 	wordWrap,
@@ -25,10 +26,17 @@ import {
 // input uses `v.optional` and skips coercion, wire uses `v.exactOptional`
 type SchemaMode = "input" | "wire";
 
-type ValidatorEntry = {
+export type ValidatorEntry = {
 	input: string;
 	wire: string;
+
+	// the generated type, which annotates a lazy ref
+	type: string;
+	wireIsInput: boolean;
+	emitted: boolean;
 };
+
+const lazilyTyped = new WeakMap<Map<string, ValidatorEntry>, Set<string>>();
 
 // oxlint groups integer digits in threes once a literal reaches five digits
 function numericLiteral(value: number) {
@@ -252,12 +260,86 @@ function resolveRef(
 ) {
 	const entry = validators.get(ref);
 
-	// components register in dependency order, so a miss is a codegen bug
+	// every component is declared before any is emitted
 	if (!entry) {
 		throw new Error(`ref used before available: ${ref}`);
 	}
 
-	return mode === "input" ? entry.input : entry.wire;
+	const name = mode === "input" ? entry.input : entry.wire;
+
+	if (entry.emitted) {
+		return name;
+	}
+
+	// A recursive schema refers to one that is not declared yet. The
+	// annotation stops TypeScript inferring its type from itself
+	const types = lazilyTyped.get(validators) ?? new Set();
+	types.add(entry.type);
+	lazilyTyped.set(validators, types);
+
+	const type =
+		mode === "input" || entry.wireIsInput
+			? `UndefinedOnPartialDeep<${entry.type}>`
+			: entry.type;
+
+	// a wire schema coerces its input, so only the output type is given
+	return `v.lazy((): v.GenericSchema<unknown, ${type}> => ${name})`;
+}
+
+/**
+ * Imports the types that annotate lazy refs. Call it once every validator
+ * is emitted
+ */
+export function importLazyTypes(
+	file: SourceFile,
+	validators: Map<string, ValidatorEntry>,
+	typesModuleSpecifier: string,
+) {
+	const types = lazilyTyped.get(validators);
+
+	if (!types) {
+		return;
+	}
+
+	file.addImportDeclaration({
+		moduleSpecifier: typesModuleSpecifier,
+		namedImports: [...types],
+		isTypeOnly: true,
+	});
+
+	importFromTypeFest(file, "UndefinedOnPartialDeep");
+}
+
+function importFromTypeFest(file: SourceFile, name: string) {
+	const existing = file.getImportDeclaration("type-fest");
+
+	if (existing) {
+		existing.addNamedImport(name);
+	} else {
+		file.addImportDeclaration({
+			moduleSpecifier: "type-fest",
+			namedImports: [name],
+			isTypeOnly: true,
+		});
+	}
+}
+
+/**
+ * Names the validators of every component before any is emitted, so a
+ * recursive schema can refer to one emitted after it
+ */
+export function declareValidator(
+	validators: Map<string, ValidatorEntry>,
+	schemaName: string,
+	schemaObject: SchemaNode,
+) {
+	validators.set(schemaRef(schemaName), {
+		input: camelCase("input", schemaName, "schema"),
+		wire: camelCase(schemaName, "schema"),
+		type: pascalCase(schemaName),
+		wireIsInput: !shouldCoerceSchema(schemaObject),
+		emitted: false,
+	});
 }
 
 function writeStrictObjectEntries(
@@ -817,11 +899,7 @@ export function addJsonValueSchemaWhenUsed(file: SourceFile) {
 		return;
 	}
 
-	file.addImportDeclaration({
-		moduleSpecifier: "type-fest",
-		namedImports: ["JsonValue"],
-		isTypeOnly: true,
-	});
+	importFromTypeFest(file, "JsonValue");
 
 	// A value a schema leaves open is checked as JSON, recursively, so both
 	// sides type it as JsonValue
@@ -862,13 +940,13 @@ export function registerValidatorFromSchema(
 	schemaObject: SchemaNode,
 	inputOnly?: boolean,
 ) {
-	const inputName = camelCase("input", schemaName, "schema");
-	const wireName = camelCase(schemaName, "schema");
+	const entry = validators.get(schemaRef(schemaName));
 
-	validators.set(schemaRef(schemaName), {
-		input: inputName,
-		wire: wireName,
-	});
+	if (!entry) {
+		throw new Error(`${schemaName} is emitted before it is declared`);
+	}
+
+	const { input: inputName, wire: wireName } = entry;
 
 	const docs =
 		isSchemaObject(schemaObject) && schemaObject.description
@@ -946,6 +1024,8 @@ export function registerValidatorFromSchema(
 			});
 		}
 	}
+
+	entry.emitted = true;
 }
 
 // Coerces HTTP param strings to native values, leaving other types alone
