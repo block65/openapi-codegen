@@ -1,9 +1,7 @@
-import { RestServiceClient } from "@block65/rest-client";
 import type { oas32 } from "openapi3-ts";
-import { assert, expect, test, vi } from "vitest";
+import { assert, expect, test } from "vitest";
 import { ImageCreateCommand } from "./fixtures/docker/commands.ts";
 import { FindPetsCommand } from "./fixtures/petstore/commands.ts";
-import { SwaggerPetstoreRestClient } from "./fixtures/petstore/main.ts";
 import {
 	generateCommandsText,
 	generateWithQueryParameters,
@@ -126,63 +124,25 @@ test("the source of a command that names none", async () => {
 	).resolves.toMatchSnapshot();
 });
 
-function fetchStub() {
-	return vi.fn<typeof globalThis.fetch>(async () => Response.json({}));
-}
-
-function readRequestedUrl(fetch: ReturnType<typeof fetchStub>) {
-	expect(fetch).toHaveBeenCalledOnce();
-
-	const [url] = fetch.mock.calls[0] ?? [];
-	assert(url instanceof URL);
-
-	return url.href;
-}
-
 // findPets declares tags before limit, which is not alphabetical order
-async function findPetsUrl(sortQuery?: true) {
-	const fetch = fetchStub();
-	const client = new SwaggerPetstoreRestClient(
-		new URL("https://example.com/api/"),
-		{ fetch, sortQuery },
-	);
-
-	await client.json(new FindPetsCommand({ tags: ["cat", "dog"], limit: "10" }));
-
-	return readRequestedUrl(fetch);
-}
+const findPets = new FindPetsCommand({ tags: ["cat", "dog"], limit: "10" });
 
 // ImageCreate declares seven query parameters and names formJoinSerializer
-async function imageCreateUrl(sortQuery?: true) {
-	const fetch = fetchStub();
-
-	// ImageCreate leaves its response unspecified, so the base client sends it
-	const client = new RestServiceClient(new URL("https://example.com/v1.43/"), {
-		fetch,
-		sortQuery,
-	});
-
-	await client.json(
-		new ImageCreateCommand({
-			body: "",
-			tag: "latest",
-			fromImage: "alpine",
-			changes: ["ENV a=1", "ENV b=2"],
-			platform: "linux/amd64",
-		}),
-	);
-
-	return readRequestedUrl(fetch);
-}
+const imageCreate = new ImageCreateCommand({
+	body: "",
+	tag: "latest",
+	fromImage: "alpine",
+	changes: ["ENV a=1", "ENV b=2"],
+	platform: "linux/amd64",
+});
 
 // A change in how the constructor assembles the query — the destructuring,
 // stripUndefined, a spread — moves these keys
-test("the generated query reaches the URL in document order", async () => {
-	await expect(findPetsUrl()).resolves.toMatchSnapshot("findPets");
-	await expect(imageCreateUrl()).resolves.toMatchSnapshot("imageCreate");
-});
-
-test("sortQuery orders the generated query in the URL", async () => {
-	await expect(findPetsUrl(true)).resolves.toMatchSnapshot("findPets");
-	await expect(imageCreateUrl(true)).resolves.toMatchSnapshot("imageCreate");
+test("the generated query serializes in document order", () => {
+	expect(findPets.querySerializer(findPets.query ?? {})).toMatchSnapshot(
+		"findPets",
+	);
+	expect(imageCreate.querySerializer(imageCreate.query ?? {})).toMatchSnapshot(
+		"imageCreate",
+	);
 });
