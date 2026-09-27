@@ -680,7 +680,7 @@ export function schemaToType(
 ): OptionalKind<PropertySignatureStructure> {
 	const name = `"${propertyName}"`;
 	const hasQuestionToken =
-		parentSchema.type === "object" &&
+		isObjectSchema(parentSchema) &&
 		!parentSchema.required?.includes(propertyName);
 
 	if (isReferenceObject(schemaObject)) {

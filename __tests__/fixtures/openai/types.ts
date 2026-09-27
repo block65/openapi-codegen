@@ -3100,7 +3100,7 @@ export type OpenAiFile = {
 	 * validation, see the `error` field on `fine_tuning.job`.
 	 * @deprecated
 	 */
-	status_details: string;
+	status_details?: string;
 };
 /** The Upload object can accept byte chunks in the form of Parts. */
 export type Upload = {

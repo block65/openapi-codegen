@@ -470,3 +470,21 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 
 	await expectGenerated([result.typesFile]);
 });
+
+test("an object schema that omits `type` still honours `required`", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				Untyped: {
+					required: ["id"],
+					properties: { id: { type: "string" }, note: { type: "string" } },
+				},
+			},
+		},
+	});
+
+	await expectGenerated([result.typesFile]);
+});
