@@ -1,0 +1,5 @@
+# Generator output is rebuilt, never merged. `-merge` keeps our side of a
+# clash without conflict markers, so the fix is `make` and `vitest -u`, and
+# linguist-generated collapses these files in pull request diffs
+__tests__/fixtures/*/** -merge linguist-generated
+__tests__/__snapshots__/** -merge linguist-generated
