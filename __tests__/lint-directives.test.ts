@@ -98,9 +98,9 @@ async function strictObjectErrors(dir: string) {
 	);
 	const stdout = await promisify(execFile)(oxlint, ["--format=json", dir]).then(
 		(result) => result.stdout,
-		(error: unknown) =>
-			typeof error === "object" && error !== null && "stdout" in error
-				? String(error.stdout)
+		(err: unknown) =>
+			typeof err === "object" && err !== null && "stdout" in err
+				? String(err.stdout)
 				: "",
 	);
 	const report: unknown = JSON.parse(stdout);
