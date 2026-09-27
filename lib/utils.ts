@@ -83,13 +83,16 @@ export function getDependents(schema: unknown): string[] {
 	];
 }
 
+// a schema name can hold `/`, `~` or other characters an identifier cannot
+const nonIdentifier = /[^\p{L}\p{N}_$]+/u;
+
 export function camelCase(...str: string[]): string {
-	return camelcase(str.flatMap((s) => s.split("/")));
+	return camelcase(str.flatMap((s) => s.split(nonIdentifier)));
 }
 
 export function pascalCase(...str: string[]): string {
 	return camelcase(
-		str.flatMap((s) => s.split("/")),
+		str.flatMap((s) => s.split(nonIdentifier)),
 		{ pascalCase: true },
 	);
 }

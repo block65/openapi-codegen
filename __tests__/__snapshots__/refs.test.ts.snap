@@ -36,6 +36,74 @@ export const parentSchema = v.looseObject(
 "
 `;
 
+exports[`a $ref into part of a schema inlines that subschema > types.ts 1`] = `
+"export type Address = {
+        "postcode"?: string;
+    };
+export type Parcel = {
+        "to"?: string;
+    };
+"
+`;
+
+exports[`a $ref into part of a schema inlines that subschema > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputAddressSchema = v.looseObject(
+    {
+        "postcode": v.optional(v.pipe(v.string(), v.regex(new RegExp("^[0-9]{4}$"))))
+        ,
+    });
+export const addressSchema = v.looseObject(
+    {
+        "postcode": v.exactOptional(v.pipe(v.string(), v.regex(new RegExp("^[0-9]{4}$"))))
+        ,
+    });
+export const inputParcelSchema = v.looseObject(
+    {
+        /**
+         * Where the parcel goes
+         */
+        "to": v.optional(v.pipe(v.string(), v.regex(new RegExp("^[0-9]{4}$"))))
+        ,
+    });
+export const parcelSchema = v.looseObject(
+    {
+        /**
+         * Where the parcel goes
+         */
+        "to": v.exactOptional(v.pipe(v.string(), v.regex(new RegExp("^[0-9]{4}$"))))
+        ,
+    });
+"
+`;
+
+exports[`a percent-encoded $ref finds its schema > types.ts 1`] = `
+"export type PetKind = "cat" | "dog";
+export type Pet = {
+        "kind"?: PetKind;
+    };
+"
+`;
+
+exports[`a percent-encoded $ref finds its schema > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputPetKindSchema = v.picklist(["cat", "dog"]);
+export const petKindSchema = inputPetKindSchema;
+export const inputPetSchema = v.looseObject(
+    {
+        "kind": v.optional(inputPetKindSchema)
+        ,
+    });
+export const petSchema = v.looseObject(
+    {
+        "kind": v.exactOptional(petKindSchema)
+        ,
+    });
+"
+`;
+
 exports[`a property named after a keyword still orders by its $ref > types.ts 1`] = `
 "export type Preset = "low" | "high";
 export type Settings = {
@@ -62,6 +130,40 @@ export const settingsSchema = v.looseObject(
         "default": v.exactOptional(presetSchema)
         ,
         "example": v.exactOptional(presetSchema)
+        ,
+    });
+"
+`;
+
+exports[`a schema name with a slash or tilde is found through its escaped $ref > types.ts 1`] = `
+"export type PetTag = string;
+export type PetKind = "cat" | "dog";
+export type Pet = {
+        "kind"?: PetKind;
+        "tag"?: PetTag;
+    };
+"
+`;
+
+exports[`a schema name with a slash or tilde is found through its escaped $ref > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputPetTagSchema = v.string();
+export const petTagSchema = v.pipe(v.string(), v.trim());
+export const inputPetKindSchema = v.picklist(["cat", "dog"]);
+export const petKindSchema = inputPetKindSchema;
+export const inputPetSchema = v.looseObject(
+    {
+        "kind": v.optional(inputPetKindSchema)
+        ,
+        "tag": v.optional(inputPetTagSchema)
+        ,
+    });
+export const petSchema = v.looseObject(
+    {
+        "kind": v.exactOptional(petKindSchema)
+        ,
+        "tag": v.exactOptional(petTagSchema)
         ,
     });
 "

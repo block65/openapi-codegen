@@ -29,6 +29,7 @@ import {
 	queryStyles,
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
+import { normalizeRefs, schemaRef } from "./refs.ts";
 import {
 	type ReferenceObject,
 	type SchemaNode,
@@ -500,9 +501,7 @@ function ensureTypeImport(
 
 function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 	const schemas = Object.entries(schema.components?.schemas || {});
-	const defined = new Set(
-		schemas.map(([schemaName]) => `#/components/schemas/${schemaName}`),
-	);
+	const defined = new Set(schemas.map(([schemaName]) => schemaRef(schemaName)));
 
 	const schemaGraph = schemas.flatMap(([schemaName, schemaObject]) => {
 		const deps = getDependents(schemaObject);
@@ -515,18 +514,13 @@ function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 		}
 
 		// oxlint-disable-next-line block65/no-explicit-return-type -- inference widens the pair to string[], and toposort takes a mutable tuple
-		return deps.map((dep): [string, string] => [
-			`#/components/schemas/${schemaName}`,
-			dep,
-		]);
+		return deps.map((dep): [string, string] => [schemaRef(schemaName), dep]);
 	});
 
 	const sorted = toposort(schemaGraph).toReversed();
 
 	return schemas.toSorted(
-		([a], [b]) =>
-			sorted.indexOf(`#/components/schemas/${a}`) -
-			sorted.indexOf(`#/components/schemas/${b}`),
+		([a], [b]) => sorted.indexOf(schemaRef(a)) - sorted.indexOf(schemaRef(b)),
 	);
 }
 
@@ -2270,10 +2264,11 @@ function trimDefaultOutputArgument(commandClass: ClassDeclaration) {
 
 export async function processOpenApiDocument(
 	outputDir: string,
-	schema: Simplify<oas32.OpenAPIObject>,
+	document: Simplify<oas32.OpenAPIObject>,
 	tags?: string[],
 	options?: CodegenOptions,
 ) {
+	const schema = normalizeRefs(document);
 	const project = new Project();
 	const files = createOutputFiles(project, outputDir);
 	const refs = await $RefParser.resolve(schema);

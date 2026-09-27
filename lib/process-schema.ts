@@ -12,6 +12,7 @@ import {
 	Writers,
 } from "ts-morph";
 import { chunkOf } from "./chunks.ts";
+import { schemaRef } from "./refs.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -728,7 +729,7 @@ function registerAlias(
 		});
 	}
 
-	typesAndInterfaces.set(`#/components/schemas/${schemaName}`, typeAlias);
+	typesAndInterfaces.set(schemaRef(schemaName), typeAlias);
 }
 
 function combinatorAliasType(
@@ -896,7 +897,7 @@ export function registerTypesFromSchema(
 			docs,
 		});
 
-		typesAndInterfaces.set(`#/components/schemas/${schemaName}`, stringUnion);
+		typesAndInterfaces.set(schemaRef(schemaName), stringUnion);
 	}
 
 	// deal with non-enum strings

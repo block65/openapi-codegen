@@ -1,5 +1,4 @@
 import path from "node:path";
-import camelcase from "camelcase";
 import type { oas30, oas32 } from "openapi3-ts";
 import {
 	type CodeBlockWriter,
@@ -13,9 +12,11 @@ import {
 import type { Primitive } from "type-fest";
 import type * as v from "valibot";
 import { chunkOf } from "./chunks.ts";
+import { schemaRef } from "./refs.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
+	camelCase,
 	isSchemaObject,
 	typedEntries,
 	wordWrap,
@@ -861,10 +862,10 @@ export function registerValidatorFromSchema(
 	schemaObject: SchemaNode,
 	inputOnly?: boolean,
 ) {
-	const inputName = camelcase(["input", schemaName, "schema"]);
-	const wireName = camelcase([schemaName, "schema"]);
+	const inputName = camelCase("input", schemaName, "schema");
+	const wireName = camelCase(schemaName, "schema");
 
-	validators.set(`#/components/schemas/${schemaName}`, {
+	validators.set(schemaRef(schemaName), {
 		input: inputName,
 		wire: wireName,
 	});
@@ -1079,8 +1080,8 @@ function emitNamePair(
 	initializer: (mode: SchemaMode) => WriterFunction | string,
 ): SchemaNamePair {
 	const { valibotFile, commandName, inputOnly } = target;
-	const inputName = camelcase(["input", commandName, segment, "schema"]);
-	const wireName = camelcase([commandName, segment, "schema"]);
+	const inputName = camelCase("input", commandName, segment, "schema");
+	const wireName = camelCase(commandName, segment, "schema");
 
 	chunkOf(valibotFile).addVariableStatement({
 		isExported: true,
