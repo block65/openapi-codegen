@@ -1,5 +1,5 @@
 import type { oas31 } from "openapi3-ts";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 import { expectGenerated } from "./generated-snapshot.ts";
 
@@ -190,7 +190,7 @@ function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	};
 }
 
-test("additionalProperties types the record value instead of widening to unknown", async () => {
+test("additionalProperties is a string-keyed record of the value type", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/whatever",
 		docWithSchema("Labels", {

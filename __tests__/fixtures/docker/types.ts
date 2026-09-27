@@ -97,7 +97,7 @@ export type DeviceRequest = {
 	 * @example gpu,nvidia,compute
 	 */
 	Capabilities?: readonly (readonly string[])[];
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 };
 export type ThrottleDevice = {
 	Path?: string;
@@ -141,10 +141,10 @@ export type Mount = {
 	};
 	VolumeOptions?: {
 		NoCopy?: boolean;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		DriverConfig?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	TmpfsOptions?: {
@@ -223,7 +223,7 @@ export type Resources = {
 		 * @example gpu,nvidia,compute
 		 */
 		Capabilities?: readonly (readonly string[])[];
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	}[];
 	KernelMemoryTCP?: bigint;
 	MemoryReservation?: bigint;
@@ -408,7 +408,7 @@ export type HostConfig = {
 		 * @example gpu,nvidia,compute
 		 */
 		Capabilities?: readonly (readonly string[])[];
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	}[];
 	KernelMemoryTCP?: bigint;
 	MemoryReservation?: bigint;
@@ -441,7 +441,7 @@ export type HostConfig = {
 			| "splunk"
 			| "etwlogs"
 			| "none";
-		Config?: Record<string | number, string>;
+		Config?: Record<string, string>;
 	};
 	NetworkMode?: string;
 	/**
@@ -455,7 +455,7 @@ export type HostConfig = {
 	 * @example [object Object]
 	 */
 	PortBindings?: Record<
-		string | number,
+		string,
 		readonly {
 			/**
 			 * Host IP address that the container's port is mapped to.
@@ -523,10 +523,10 @@ export type HostConfig = {
 		};
 		VolumeOptions?: {
 			NoCopy?: boolean;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			DriverConfig?: {
 				Name?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 		TmpfsOptions?: {
@@ -535,7 +535,7 @@ export type HostConfig = {
 		};
 	}[];
 	ConsoleSize?: readonly number[];
-	Annotations?: Record<string | number, string>;
+	Annotations?: Record<string, string>;
 	CapAdd?: readonly string[];
 	CapDrop?: readonly string[];
 	/**
@@ -569,12 +569,12 @@ export type HostConfig = {
 	PublishAllPorts?: boolean;
 	ReadonlyRootfs?: boolean;
 	SecurityOpt?: readonly string[];
-	StorageOpt?: Record<string | number, string>;
-	Tmpfs?: Record<string | number, string>;
+	StorageOpt?: Record<string, string>;
+	Tmpfs?: Record<string, string>;
 	UTSMode?: string;
 	UsernsMode?: string;
 	ShmSize?: bigint;
-	Sysctls?: Record<string | number, string>;
+	Sysctls?: Record<string, string>;
 	Runtime?: string;
 	/**
 	 * Isolation technology of the container. (Windows only)
@@ -619,7 +619,7 @@ export type ContainerConfig = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string | number, Record<string | number, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -653,7 +653,7 @@ export type ContainerConfig = {
 	 * @example example-image:1.0
 	 */
 	Image?: string;
-	Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -679,7 +679,7 @@ export type ContainerConfig = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
@@ -753,7 +753,7 @@ export type ImageConfig = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string | number, Record<string | number, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 	 *
@@ -820,7 +820,7 @@ export type ImageConfig = {
 	 * objects.
 	 * @example [object Object]
 	 */
-	Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -862,7 +862,7 @@ export type ImageConfig = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
@@ -883,7 +883,7 @@ export type ImageConfig = {
  */
 export type NetworkingConfig = {
 	EndpointsConfig?: Record<
-		string | number,
+		string,
 		{
 			IPAMConfig?: {
 				IPv4Address?: string;
@@ -942,7 +942,7 @@ export type NetworkingConfig = {
 			 * are passed directly to the driver and are driver specific.
 			 * @example [object Object]
 			 */
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}
 	>;
 };
@@ -984,7 +984,7 @@ export type NetworkSettings = {
 	 * @example [object Object]
 	 */
 	Ports?: Record<
-		string | number,
+		string,
 		readonly {
 			/**
 			 * Host IP address that the container's port is mapped to.
@@ -1116,7 +1116,7 @@ export type NetworkSettings = {
 	 */
 	MacAddress?: string;
 	Networks?: Record<
-		string | number,
+		string,
 		{
 			IPAMConfig?: {
 				IPv4Address?: string;
@@ -1175,7 +1175,7 @@ export type NetworkSettings = {
 			 * are passed directly to the driver and are driver specific.
 			 * @example [object Object]
 			 */
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}
 	>;
 };
@@ -1194,7 +1194,7 @@ export type Address = {
  * are added to the mapping table.
  */
 export type PortMap = Record<
-	string | number,
+	string,
 	readonly {
 		/**
 		 * Host IP address that the container's port is mapped to.
@@ -1241,7 +1241,7 @@ export type GraphDriverData = {
 	 * in use, and should be used for informational purposes only.
 	 * @example [object Object]
 	 */
-	Data: Record<string | number, string>;
+	Data: Record<string, string>;
 };
 /** Change in the container's filesystem. */
 export type FilesystemChange = {
@@ -1355,10 +1355,7 @@ export type ImageInspect = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<
-			string | number,
-			Record<string | number, Jsonifiable>
-		>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -1392,7 +1389,7 @@ export type ImageInspect = {
 		 * @example example-image:1.0
 		 */
 		Image?: string;
-		Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -1418,7 +1415,7 @@ export type ImageInspect = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
@@ -1506,10 +1503,7 @@ export type ImageInspect = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<
-			string | number,
-			Record<string | number, Jsonifiable>
-		>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 		 *
@@ -1576,7 +1570,7 @@ export type ImageInspect = {
 		 * objects.
 		 * @example [object Object]
 		 */
-		Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -1618,7 +1612,7 @@ export type ImageInspect = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
@@ -1683,7 +1677,7 @@ export type ImageInspect = {
 		 * in use, and should be used for informational purposes only.
 		 * @example [object Object]
 		 */
-		Data: Record<string | number, string>;
+		Data: Record<string, string>;
 	};
 	RootFS?: {
 		Type: string;
@@ -1781,7 +1775,7 @@ export type ImageSummary = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels: Record<string | number, string>;
+	Labels: Record<string, string>;
 	/**
 	 * Number of containers using this image. Includes both stopped and running
 	 * containers.
@@ -1835,12 +1829,12 @@ export type Volume = {
 	 * does not support this feature.
 	 * @example [object Object]
 	 */
-	Status?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Status?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels: Record<string | number, string>;
+	Labels: Record<string, string>;
 	/**
 	 * The level at which the volume exists. Either `global` for cluster-wide,
 	 * or `local` for machine level.
@@ -1881,14 +1875,14 @@ export type Volume = {
 				 * @enum none,readonly,onewriter,all
 				 */
 				Sharing?: "none" | "readonly" | "onewriter" | "all";
-				MountVolume?: Record<string | number, Jsonifiable>;
+				MountVolume?: Record<string, Jsonifiable>;
 				Secrets?: readonly {
 					Key?: string;
 					Secret?: string;
 				}[];
 				AccessibilityRequirements?: {
-					Requisite?: readonly Record<string | number, string>[];
-					Preferred?: readonly Record<string | number, string>[];
+					Requisite?: readonly Record<string, string>[];
+					Preferred?: readonly Record<string, string>[];
 				};
 				CapacityRange?: {
 					RequiredBytes?: bigint;
@@ -1909,9 +1903,9 @@ export type Volume = {
 		};
 		Info?: {
 			CapacityBytes?: bigint;
-			VolumeContext?: Record<string | number, string>;
+			VolumeContext?: Record<string, string>;
 			VolumeID?: string;
-			AccessibleTopology?: readonly Record<string | number, string>[];
+			AccessibleTopology?: readonly Record<string, string>[];
 		};
 		PublishStatus?: readonly {
 			NodeID?: string;
@@ -1934,14 +1928,14 @@ export type Volume = {
 				| "published"
 				| "pending-node-unpublish"
 				| "pending-controller-unpublish";
-			PublishContext?: Record<string | number, string>;
+			PublishContext?: Record<string, string>;
 		}[];
 	};
 	/**
 	 * The driver specific options used when creating the volume.
 	 * @example [object Object]
 	 */
-	Options: Record<string | number, string>;
+	Options: Record<string, string>;
 	UsageData?: {
 		/**
 		 * Amount of disk space used by the volume (in bytes). This information
@@ -1977,12 +1971,12 @@ export type VolumeCreateOptions = {
 	 * passed directly to the driver and are driver specific.
 	 * @example [object Object]
 	 */
-	DriverOpts?: Record<string | number, string>;
+	DriverOpts?: Record<string, string>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	ClusterVolumeSpec?: {
 		Group?: string;
 		AccessMode?: {
@@ -2008,14 +2002,14 @@ export type VolumeCreateOptions = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string | number, Jsonifiable>;
+			MountVolume?: Record<string, Jsonifiable>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
 			}[];
 			AccessibilityRequirements?: {
-				Requisite?: readonly Record<string | number, string>[];
-				Preferred?: readonly Record<string | number, string>[];
+				Requisite?: readonly Record<string, string>[];
+				Preferred?: readonly Record<string, string>[];
 			};
 			CapacityRange?: {
 				RequiredBytes?: bigint;
@@ -2067,12 +2061,12 @@ export type VolumeListResponse = {
 		 * does not support this feature.
 		 * @example [object Object]
 		 */
-		Status?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Status?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels: Record<string | number, string>;
+		Labels: Record<string, string>;
 		/**
 		 * The level at which the volume exists. Either `global` for cluster-wide,
 		 * or `local` for machine level.
@@ -2113,14 +2107,14 @@ export type VolumeListResponse = {
 					 * @enum none,readonly,onewriter,all
 					 */
 					Sharing?: "none" | "readonly" | "onewriter" | "all";
-					MountVolume?: Record<string | number, Jsonifiable>;
+					MountVolume?: Record<string, Jsonifiable>;
 					Secrets?: readonly {
 						Key?: string;
 						Secret?: string;
 					}[];
 					AccessibilityRequirements?: {
-						Requisite?: readonly Record<string | number, string>[];
-						Preferred?: readonly Record<string | number, string>[];
+						Requisite?: readonly Record<string, string>[];
+						Preferred?: readonly Record<string, string>[];
 					};
 					CapacityRange?: {
 						RequiredBytes?: bigint;
@@ -2141,9 +2135,9 @@ export type VolumeListResponse = {
 			};
 			Info?: {
 				CapacityBytes?: bigint;
-				VolumeContext?: Record<string | number, string>;
+				VolumeContext?: Record<string, string>;
 				VolumeID?: string;
-				AccessibleTopology?: readonly Record<string | number, string>[];
+				AccessibleTopology?: readonly Record<string, string>[];
 			};
 			PublishStatus?: readonly {
 				NodeID?: string;
@@ -2166,14 +2160,14 @@ export type VolumeListResponse = {
 					| "published"
 					| "pending-node-unpublish"
 					| "pending-controller-unpublish";
-				PublishContext?: Record<string | number, string>;
+				PublishContext?: Record<string, string>;
 			}[];
 		};
 		/**
 		 * The driver specific options used when creating the volume.
 		 * @example [object Object]
 		 */
-		Options: Record<string | number, string>;
+		Options: Record<string, string>;
 		UsageData?: {
 			/**
 			 * Amount of disk space used by the volume (in bytes). This information
@@ -2242,13 +2236,13 @@ export type Network = {
 			Subnet?: string;
 			IPRange?: string;
 			Gateway?: string;
-			AuxiliaryAddresses?: Record<string | number, string>;
+			AuxiliaryAddresses?: Record<string, string>;
 		}[];
 		/**
 		 * Driver-specific options, specified as a map.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	/**
 	 * Whether the network is created to only allow internal networking
@@ -2282,7 +2276,7 @@ export type Network = {
 	 * @example [object Object]
 	 */
 	Containers?: Record<
-		string | number,
+		string,
 		{
 			Name?: string;
 			EndpointID?: string;
@@ -2295,12 +2289,12 @@ export type Network = {
 	 * Network-specific options uses when creating the network.
 	 * @example [object Object]
 	 */
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Peers?: readonly {
 		/**
 		 * ID of the peer-node in the Swarm cluster.
@@ -2338,19 +2332,19 @@ export type Ipam = {
 		Subnet?: string;
 		IPRange?: string;
 		Gateway?: string;
-		AuxiliaryAddresses?: Record<string | number, string>;
+		AuxiliaryAddresses?: Record<string, string>;
 	}[];
 	/**
 	 * Driver-specific options, specified as a map.
 	 * @example [object Object]
 	 */
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 };
 export type IpamConfig = {
 	Subnet?: string;
 	IPRange?: string;
 	Gateway?: string;
-	AuxiliaryAddresses?: Record<string | number, string>;
+	AuxiliaryAddresses?: Record<string, string>;
 };
 export type NetworkContainer = {
 	Name?: string;
@@ -2561,7 +2555,7 @@ export type EndpointSettings = {
 	 * are passed directly to the driver and are driver specific.
 	 * @example [object Object]
 	 */
-	DriverOpts?: Record<string | number, string>;
+	DriverOpts?: Record<string, string>;
 };
 /** EndpointIPAMConfig represents an endpoint's IPAM configuration. */
 export type EndpointIpamConfig = {
@@ -2730,7 +2724,7 @@ export type NodeSpec = {
 	 * @example my-node
 	 */
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Role of the node.
 	 * @enum worker,manager
@@ -2767,7 +2761,7 @@ export type Node = {
 		 * @example my-node
 		 */
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Role of the node.
 		 * @enum worker,manager
@@ -2817,7 +2811,7 @@ export type Node = {
 		};
 		Engine?: {
 			EngineVersion?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Plugins?: readonly {
 				Type?: string;
 				Name?: string;
@@ -2903,7 +2897,7 @@ export type NodeDescription = {
 	};
 	Engine?: {
 		EngineVersion?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Plugins?: readonly {
 			Type?: string;
 			Name?: string;
@@ -2937,7 +2931,7 @@ export type Platform = {
 /** EngineDescription provides information about an engine. */
 export type EngineDescription = {
 	EngineVersion?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Plugins?: readonly {
 		Type?: string;
 		Name?: string;
@@ -3006,7 +3000,7 @@ export type SwarmSpec = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Orchestration?: {
 		/**
 		 * The number of historic tasks to keep per instance or node. If
@@ -3070,7 +3064,7 @@ export type SwarmSpec = {
 			 */
 			Protocol?: "cfssl";
 			URL?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 			CACert?: string;
 		}[];
 		SigningCACert?: string;
@@ -3097,7 +3091,7 @@ export type SwarmSpec = {
 			 * as key/value pairs.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 };
@@ -3136,7 +3130,7 @@ export type ClusterInfo = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Orchestration?: {
 			/**
 			 * The number of historic tasks to keep per instance or node. If
@@ -3200,7 +3194,7 @@ export type ClusterInfo = {
 				 */
 				Protocol?: "cfssl";
 				URL?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 				CACert?: string;
 			}[];
 			SigningCACert?: string;
@@ -3227,7 +3221,7 @@ export type ClusterInfo = {
 				 * as key/value pairs.
 				 * @example [object Object]
 				 */
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 	};
@@ -3305,7 +3299,7 @@ export type Swarm = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Orchestration?: {
 			/**
 			 * The number of historic tasks to keep per instance or node. If
@@ -3369,7 +3363,7 @@ export type Swarm = {
 				 */
 				Protocol?: "cfssl";
 				URL?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 				CACert?: string;
 			}[];
 			SigningCACert?: string;
@@ -3396,7 +3390,7 @@ export type Swarm = {
 				 * as key/value pairs.
 				 * @example [object Object]
 				 */
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 	};
@@ -3457,7 +3451,7 @@ export type TaskSpec = {
 	};
 	ContainerSpec?: {
 		Image?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Command?: readonly string[];
 		Args?: readonly string[];
 		Hostname?: string;
@@ -3547,10 +3541,10 @@ export type TaskSpec = {
 			};
 			VolumeOptions?: {
 				NoCopy?: boolean;
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				DriverConfig?: {
 					Name?: string;
-					Options?: Record<string | number, string>;
+					Options?: Record<string, string>;
 				};
 			};
 			TmpfsOptions?: {
@@ -3590,7 +3584,7 @@ export type TaskSpec = {
 				GID?: string;
 				Mode?: number;
 			};
-			Runtime?: Record<string | number, Jsonifiable>;
+			Runtime?: Record<string, Jsonifiable>;
 			ConfigID?: string;
 			ConfigName?: string;
 		}[];
@@ -3601,7 +3595,7 @@ export type TaskSpec = {
 		 */
 		Isolation?: "default" | "process" | "hyperv" | "";
 		Init?: boolean | null;
-		Sysctls?: Record<string | number, string>;
+		Sysctls?: Record<string, string>;
 		/**
 		 * A list of kernel capabilities to add to the default set
 		 * for the container.
@@ -3725,11 +3719,11 @@ export type TaskSpec = {
 	Networks?: readonly {
 		Target?: string;
 		Aliases?: readonly string[];
-		DriverOpts?: Record<string | number, string>;
+		DriverOpts?: Record<string, string>;
 	}[];
 	LogDriver?: {
 		Name?: string;
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 };
 export type TaskState =
@@ -3756,7 +3750,7 @@ export type Task = {
 	CreatedAt?: string;
 	UpdatedAt?: string;
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Spec?: {
 		PluginSpec?: {
 			Name?: string;
@@ -3770,7 +3764,7 @@ export type Task = {
 		};
 		ContainerSpec?: {
 			Image?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Command?: readonly string[];
 			Args?: readonly string[];
 			Hostname?: string;
@@ -3860,10 +3854,10 @@ export type Task = {
 				};
 				VolumeOptions?: {
 					NoCopy?: boolean;
-					Labels?: Record<string | number, string>;
+					Labels?: Record<string, string>;
 					DriverConfig?: {
 						Name?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 				TmpfsOptions?: {
@@ -3903,7 +3897,7 @@ export type Task = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string | number, Jsonifiable>;
+				Runtime?: Record<string, Jsonifiable>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -3914,7 +3908,7 @@ export type Task = {
 			 */
 			Isolation?: "default" | "process" | "hyperv" | "";
 			Init?: boolean | null;
-			Sysctls?: Record<string | number, string>;
+			Sysctls?: Record<string, string>;
 			/**
 			 * A list of kernel capabilities to add to the default set
 			 * for the container.
@@ -4038,11 +4032,11 @@ export type Task = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		LogDriver?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	ServiceID?: string;
@@ -4112,7 +4106,7 @@ export type Task = {
 /** User modifiable configuration for a service. */
 export type ServiceSpec = {
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	TaskTemplate?: {
 		PluginSpec?: {
 			Name?: string;
@@ -4126,7 +4120,7 @@ export type ServiceSpec = {
 		};
 		ContainerSpec?: {
 			Image?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Command?: readonly string[];
 			Args?: readonly string[];
 			Hostname?: string;
@@ -4216,10 +4210,10 @@ export type ServiceSpec = {
 				};
 				VolumeOptions?: {
 					NoCopy?: boolean;
-					Labels?: Record<string | number, string>;
+					Labels?: Record<string, string>;
 					DriverConfig?: {
 						Name?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 				TmpfsOptions?: {
@@ -4259,7 +4253,7 @@ export type ServiceSpec = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string | number, Jsonifiable>;
+				Runtime?: Record<string, Jsonifiable>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -4270,7 +4264,7 @@ export type ServiceSpec = {
 			 */
 			Isolation?: "default" | "process" | "hyperv" | "";
 			Init?: boolean | null;
-			Sysctls?: Record<string | number, string>;
+			Sysctls?: Record<string, string>;
 			/**
 			 * A list of kernel capabilities to add to the default set
 			 * for the container.
@@ -4394,18 +4388,18 @@ export type ServiceSpec = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		LogDriver?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	Mode?: {
 		Replicated?: {
 			Replicas?: bigint;
 		};
-		Global?: Record<string | number, Jsonifiable>;
+		Global?: Record<string, Jsonifiable>;
 		ReplicatedJob?: {
 			/**
 			 * The maximum number of replicas to run simultaneously.
@@ -4414,7 +4408,7 @@ export type ServiceSpec = {
 			MaxConcurrent?: bigint;
 			TotalCompletions?: bigint;
 		};
-		GlobalJob?: Record<string | number, Jsonifiable>;
+		GlobalJob?: Record<string, Jsonifiable>;
 	};
 	UpdateConfig?: {
 		Parallelism?: bigint;
@@ -4457,7 +4451,7 @@ export type ServiceSpec = {
 	Networks?: readonly {
 		Target?: string;
 		Aliases?: readonly string[];
-		DriverOpts?: Record<string | number, string>;
+		DriverOpts?: Record<string, string>;
 	}[];
 	EndpointSpec?: {
 		/**
@@ -4558,7 +4552,7 @@ export type Service = {
 	UpdatedAt?: string;
 	Spec?: {
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		TaskTemplate?: {
 			PluginSpec?: {
 				Name?: string;
@@ -4572,7 +4566,7 @@ export type Service = {
 			};
 			ContainerSpec?: {
 				Image?: string;
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				Command?: readonly string[];
 				Args?: readonly string[];
 				Hostname?: string;
@@ -4662,10 +4656,10 @@ export type Service = {
 					};
 					VolumeOptions?: {
 						NoCopy?: boolean;
-						Labels?: Record<string | number, string>;
+						Labels?: Record<string, string>;
 						DriverConfig?: {
 							Name?: string;
-							Options?: Record<string | number, string>;
+							Options?: Record<string, string>;
 						};
 					};
 					TmpfsOptions?: {
@@ -4705,7 +4699,7 @@ export type Service = {
 						GID?: string;
 						Mode?: number;
 					};
-					Runtime?: Record<string | number, Jsonifiable>;
+					Runtime?: Record<string, Jsonifiable>;
 					ConfigID?: string;
 					ConfigName?: string;
 				}[];
@@ -4716,7 +4710,7 @@ export type Service = {
 				 */
 				Isolation?: "default" | "process" | "hyperv" | "";
 				Init?: boolean | null;
-				Sysctls?: Record<string | number, string>;
+				Sysctls?: Record<string, string>;
 				/**
 				 * A list of kernel capabilities to add to the default set
 				 * for the container.
@@ -4840,18 +4834,18 @@ export type Service = {
 			Networks?: readonly {
 				Target?: string;
 				Aliases?: readonly string[];
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}[];
 			LogDriver?: {
 				Name?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 		Mode?: {
 			Replicated?: {
 				Replicas?: bigint;
 			};
-			Global?: Record<string | number, Jsonifiable>;
+			Global?: Record<string, Jsonifiable>;
 			ReplicatedJob?: {
 				/**
 				 * The maximum number of replicas to run simultaneously.
@@ -4860,7 +4854,7 @@ export type Service = {
 				MaxConcurrent?: bigint;
 				TotalCompletions?: bigint;
 			};
-			GlobalJob?: Record<string | number, Jsonifiable>;
+			GlobalJob?: Record<string, Jsonifiable>;
 		};
 		UpdateConfig?: {
 			Parallelism?: bigint;
@@ -4903,7 +4897,7 @@ export type Service = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		EndpointSpec?: {
 			/**
@@ -5052,7 +5046,7 @@ export type ContainerSummary = {
 	}[];
 	SizeRw?: bigint;
 	SizeRootFs?: bigint;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	State?: string;
 	Status?: string;
 	HostConfig?: {
@@ -5060,7 +5054,7 @@ export type ContainerSummary = {
 	};
 	NetworkSettings?: {
 		Networks?: Record<
-			string | number,
+			string,
 			{
 				IPAMConfig?: {
 					IPv4Address?: string;
@@ -5119,7 +5113,7 @@ export type ContainerSummary = {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}
 		>;
 	};
@@ -5197,7 +5191,7 @@ export type Driver = {
 	 * Key/value map of driver-specific options.
 	 * @example [object Object]
 	 */
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 };
 export type SecretSpec = {
 	Name?: string;
@@ -5205,7 +5199,7 @@ export type SecretSpec = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Base64-url-safe-encoded ([RFC
 	 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
@@ -5226,7 +5220,7 @@ export type SecretSpec = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	Templating?: {
 		/**
@@ -5238,7 +5232,7 @@ export type SecretSpec = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 };
 export type Secret = {
@@ -5254,7 +5248,7 @@ export type Secret = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Base64-url-safe-encoded ([RFC
 		 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
@@ -5275,7 +5269,7 @@ export type Secret = {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 		Templating?: {
 			/**
@@ -5287,13 +5281,13 @@ export type Secret = {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 };
 export type ConfigSpec = {
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Data?: string;
 	Templating?: {
 		/**
@@ -5305,7 +5299,7 @@ export type ConfigSpec = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 };
 export type Config = {
@@ -5317,7 +5311,7 @@ export type Config = {
 	UpdatedAt?: string;
 	Spec?: {
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Data?: string;
 		Templating?: {
 			/**
@@ -5329,7 +5323,7 @@ export type Config = {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 };
@@ -5492,7 +5486,7 @@ export type SystemVersion = {
 		 * @example 19.03.12
 		 */
 		Version: string;
-		Details?: Record<string | number, Jsonifiable>;
+		Details?: Record<string, Jsonifiable>;
 	}[];
 	/**
 	 * The version of the daemon
@@ -5897,7 +5891,7 @@ export type SystemInfo = {
 		 */
 		InsecureRegistryCIDRs?: readonly string[];
 		IndexConfigs?: Record<
-			string | number,
+			string,
 			{
 				/**
 				 * Name of the registry, such as "docker.io".
@@ -6033,7 +6027,7 @@ export type SystemInfo = {
 	 * @example [object Object]
 	 */
 	Runtimes?: Record<
-		string | number,
+		string,
 		{
 			/**
 			 * Name and, optional, path, of the OCI executable binary.
@@ -6133,7 +6127,7 @@ export type SystemInfo = {
 				 * User-defined key/value metadata.
 				 * @example [object Object]
 				 */
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				Orchestration?: {
 					/**
 					 * The number of historic tasks to keep per instance or node. If
@@ -6197,7 +6191,7 @@ export type SystemInfo = {
 						 */
 						Protocol?: "cfssl";
 						URL?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 						CACert?: string;
 					}[];
 					SigningCACert?: string;
@@ -6224,7 +6218,7 @@ export type SystemInfo = {
 						 * as key/value pairs.
 						 * @example [object Object]
 						 */
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 			};
@@ -6473,7 +6467,7 @@ export type RegistryServiceConfig = {
 	 */
 	InsecureRegistryCIDRs?: readonly string[];
 	IndexConfigs?: Record<
-		string | number,
+		string,
 		{
 			/**
 			 * Name of the registry, such as "docker.io".
@@ -6662,7 +6656,7 @@ export type SwarmInfo = {
 			 * User-defined key/value metadata.
 			 * @example [object Object]
 			 */
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Orchestration?: {
 				/**
 				 * The number of historic tasks to keep per instance or node. If
@@ -6726,7 +6720,7 @@ export type SwarmInfo = {
 					 */
 					Protocol?: "cfssl";
 					URL?: string;
-					Options?: Record<string | number, string>;
+					Options?: Record<string, string>;
 					CACert?: string;
 				}[];
 				SigningCACert?: string;
@@ -6753,7 +6747,7 @@ export type SwarmInfo = {
 					 * as key/value pairs.
 					 * @example [object Object]
 					 */
-					Options?: Record<string | number, string>;
+					Options?: Record<string, string>;
 				};
 			};
 		};
@@ -6805,7 +6799,7 @@ export type PeerNode = {
 export type NetworkAttachmentConfig = {
 	Target?: string;
 	Aliases?: readonly string[];
-	DriverOpts?: Record<string | number, string>;
+	DriverOpts?: Record<string, string>;
 };
 /**
  * Actor describes something that generates events, like a container, network,
@@ -6821,7 +6815,7 @@ export type EventActor = {
 	 * Various key/value attributes of the object, depending on its type.
 	 * @example [object Object]
 	 */
-	Attributes?: Record<string | number, string>;
+	Attributes?: Record<string, string>;
 };
 /** EventMessage represents the information an event contains. */
 export type EventMessage = {
@@ -6857,7 +6851,7 @@ export type EventMessage = {
 		 * Various key/value attributes of the object, depending on its type.
 		 * @example [object Object]
 		 */
-		Attributes?: Record<string | number, string>;
+		Attributes?: Record<string, string>;
 	};
 	/**
 	 * Scope of the event. Engine events are `local` scope. Cluster (Swarm)
@@ -7022,14 +7016,14 @@ export type ClusterVolume = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string | number, Jsonifiable>;
+			MountVolume?: Record<string, Jsonifiable>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
 			}[];
 			AccessibilityRequirements?: {
-				Requisite?: readonly Record<string | number, string>[];
-				Preferred?: readonly Record<string | number, string>[];
+				Requisite?: readonly Record<string, string>[];
+				Preferred?: readonly Record<string, string>[];
 			};
 			CapacityRange?: {
 				RequiredBytes?: bigint;
@@ -7050,9 +7044,9 @@ export type ClusterVolume = {
 	};
 	Info?: {
 		CapacityBytes?: bigint;
-		VolumeContext?: Record<string | number, string>;
+		VolumeContext?: Record<string, string>;
 		VolumeID?: string;
-		AccessibleTopology?: readonly Record<string | number, string>[];
+		AccessibleTopology?: readonly Record<string, string>[];
 	};
 	PublishStatus?: readonly {
 		NodeID?: string;
@@ -7075,7 +7069,7 @@ export type ClusterVolume = {
 			| "published"
 			| "pending-node-unpublish"
 			| "pending-controller-unpublish";
-		PublishContext?: Record<string | number, string>;
+		PublishContext?: Record<string, string>;
 	}[];
 };
 /** Cluster-specific options used to create the volume. */
@@ -7104,14 +7098,14 @@ export type ClusterVolumeSpec = {
 		 * @enum none,readonly,onewriter,all
 		 */
 		Sharing?: "none" | "readonly" | "onewriter" | "all";
-		MountVolume?: Record<string | number, Jsonifiable>;
+		MountVolume?: Record<string, Jsonifiable>;
 		Secrets?: readonly {
 			Key?: string;
 			Secret?: string;
 		}[];
 		AccessibilityRequirements?: {
-			Requisite?: readonly Record<string | number, string>[];
-			Preferred?: readonly Record<string | number, string>[];
+			Requisite?: readonly Record<string, string>[];
+			Preferred?: readonly Record<string, string>[];
 		};
 		CapacityRange?: {
 			RequiredBytes?: bigint;
@@ -7135,7 +7129,7 @@ export type ClusterVolumeSpec = {
  * details, see documentation for the Topology object in the CSI
  * specification.
  */
-export type Topology = Record<string | number, string>;
+export type Topology = Record<string, string>;
 export type ContainerListCommandQuery = {
 	all?: "true" | "false";
 	limit?: `${number}`;
@@ -7158,7 +7152,7 @@ export type ContainerListCommandOutput = readonly {
 	}[];
 	SizeRw?: bigint;
 	SizeRootFs?: bigint;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	State?: string;
 	Status?: string;
 	HostConfig?: {
@@ -7166,7 +7160,7 @@ export type ContainerListCommandOutput = readonly {
 	};
 	NetworkSettings?: {
 		Networks?: Record<
-			string | number,
+			string,
 			{
 				IPAMConfig?: {
 					IPv4Address?: string;
@@ -7225,7 +7219,7 @@ export type ContainerListCommandOutput = readonly {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}
 		>;
 	};
@@ -7323,7 +7317,7 @@ type ContainerCreateJsonBody = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string | number, Record<string | number, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -7357,7 +7351,7 @@ type ContainerCreateJsonBody = {
 	 * @example example-image:1.0
 	 */
 	Image?: string;
-	Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -7383,7 +7377,7 @@ type ContainerCreateJsonBody = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
@@ -7446,7 +7440,7 @@ type ContainerCreateJsonBody = {
 			 * @example gpu,nvidia,compute
 			 */
 			Capabilities?: readonly (readonly string[])[];
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		}[];
 		KernelMemoryTCP?: bigint;
 		MemoryReservation?: bigint;
@@ -7479,7 +7473,7 @@ type ContainerCreateJsonBody = {
 				| "splunk"
 				| "etwlogs"
 				| "none";
-			Config?: Record<string | number, string>;
+			Config?: Record<string, string>;
 		};
 		NetworkMode?: string;
 		/**
@@ -7493,7 +7487,7 @@ type ContainerCreateJsonBody = {
 		 * @example [object Object]
 		 */
 		PortBindings?: Record<
-			string | number,
+			string,
 			readonly {
 				/**
 				 * Host IP address that the container's port is mapped to.
@@ -7561,10 +7555,10 @@ type ContainerCreateJsonBody = {
 			};
 			VolumeOptions?: {
 				NoCopy?: boolean;
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				DriverConfig?: {
 					Name?: string;
-					Options?: Record<string | number, string>;
+					Options?: Record<string, string>;
 				};
 			};
 			TmpfsOptions?: {
@@ -7573,7 +7567,7 @@ type ContainerCreateJsonBody = {
 			};
 		}[];
 		ConsoleSize?: readonly number[];
-		Annotations?: Record<string | number, string>;
+		Annotations?: Record<string, string>;
 		CapAdd?: readonly string[];
 		CapDrop?: readonly string[];
 		/**
@@ -7607,12 +7601,12 @@ type ContainerCreateJsonBody = {
 		PublishAllPorts?: boolean;
 		ReadonlyRootfs?: boolean;
 		SecurityOpt?: readonly string[];
-		StorageOpt?: Record<string | number, string>;
-		Tmpfs?: Record<string | number, string>;
+		StorageOpt?: Record<string, string>;
+		Tmpfs?: Record<string, string>;
 		UTSMode?: string;
 		UsernsMode?: string;
 		ShmSize?: bigint;
-		Sysctls?: Record<string | number, string>;
+		Sysctls?: Record<string, string>;
 		Runtime?: string;
 		/**
 		 * Isolation technology of the container. (Windows only)
@@ -7631,7 +7625,7 @@ type ContainerCreateJsonBody = {
 	 */
 	NetworkingConfig?: {
 		EndpointsConfig?: Record<
-			string | number,
+			string,
 			{
 				IPAMConfig?: {
 					IPv4Address?: string;
@@ -7690,7 +7684,7 @@ type ContainerCreateJsonBody = {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}
 		>;
 	};
@@ -7902,7 +7896,7 @@ export type ContainerInspectCommandOutput = {
 			 * @example gpu,nvidia,compute
 			 */
 			Capabilities?: readonly (readonly string[])[];
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		}[];
 		KernelMemoryTCP?: bigint;
 		MemoryReservation?: bigint;
@@ -7935,7 +7929,7 @@ export type ContainerInspectCommandOutput = {
 				| "splunk"
 				| "etwlogs"
 				| "none";
-			Config?: Record<string | number, string>;
+			Config?: Record<string, string>;
 		};
 		NetworkMode?: string;
 		/**
@@ -7949,7 +7943,7 @@ export type ContainerInspectCommandOutput = {
 		 * @example [object Object]
 		 */
 		PortBindings?: Record<
-			string | number,
+			string,
 			readonly {
 				/**
 				 * Host IP address that the container's port is mapped to.
@@ -8017,10 +8011,10 @@ export type ContainerInspectCommandOutput = {
 			};
 			VolumeOptions?: {
 				NoCopy?: boolean;
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				DriverConfig?: {
 					Name?: string;
-					Options?: Record<string | number, string>;
+					Options?: Record<string, string>;
 				};
 			};
 			TmpfsOptions?: {
@@ -8029,7 +8023,7 @@ export type ContainerInspectCommandOutput = {
 			};
 		}[];
 		ConsoleSize?: readonly number[];
-		Annotations?: Record<string | number, string>;
+		Annotations?: Record<string, string>;
 		CapAdd?: readonly string[];
 		CapDrop?: readonly string[];
 		/**
@@ -8063,12 +8057,12 @@ export type ContainerInspectCommandOutput = {
 		PublishAllPorts?: boolean;
 		ReadonlyRootfs?: boolean;
 		SecurityOpt?: readonly string[];
-		StorageOpt?: Record<string | number, string>;
-		Tmpfs?: Record<string | number, string>;
+		StorageOpt?: Record<string, string>;
+		Tmpfs?: Record<string, string>;
 		UTSMode?: string;
 		UsernsMode?: string;
 		ShmSize?: bigint;
-		Sysctls?: Record<string | number, string>;
+		Sysctls?: Record<string, string>;
 		Runtime?: string;
 		/**
 		 * Isolation technology of the container. (Windows only)
@@ -8091,7 +8085,7 @@ export type ContainerInspectCommandOutput = {
 		 * in use, and should be used for informational purposes only.
 		 * @example [object Object]
 		 */
-		Data: Record<string | number, string>;
+		Data: Record<string, string>;
 	};
 	SizeRw?: bigint;
 	SizeRootFs?: bigint;
@@ -8182,10 +8176,7 @@ export type ContainerInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<
-			string | number,
-			Record<string | number, Jsonifiable>
-		>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -8219,7 +8210,7 @@ export type ContainerInspectCommandOutput = {
 		 * @example example-image:1.0
 		 */
 		Image?: string;
-		Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -8245,7 +8236,7 @@ export type ContainerInspectCommandOutput = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
@@ -8295,7 +8286,7 @@ export type ContainerInspectCommandOutput = {
 		 * @example [object Object]
 		 */
 		Ports?: Record<
-			string | number,
+			string,
 			readonly {
 				/**
 				 * Host IP address that the container's port is mapped to.
@@ -8427,7 +8418,7 @@ export type ContainerInspectCommandOutput = {
 		 */
 		MacAddress?: string;
 		Networks?: Record<
-			string | number,
+			string,
 			{
 				IPAMConfig?: {
 					IPv4Address?: string;
@@ -8486,7 +8477,7 @@ export type ContainerInspectCommandOutput = {
 				 * are passed directly to the driver and are driver specific.
 				 * @example [object Object]
 				 */
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}
 		>;
 	};
@@ -8555,7 +8546,7 @@ export type ContainerStatsCommandParams = {
 export type ContainerStatsCommandInput = ContainerStatsCommandParams &
 	ContainerStatsCommandQuery;
 export type ContainerStatsCommandOutput =
-	| Record<string | number, Jsonifiable>
+	| Record<string, Jsonifiable>
 	| undefined;
 export type InputContainerStatsCommandResponse =
 	UndefinedOnPartialDeep<ContainerStatsCommandOutput>;
@@ -8652,7 +8643,7 @@ type ContainerUpdateJsonBody = {
 		 * @example gpu,nvidia,compute
 		 */
 		Capabilities?: readonly (readonly string[])[];
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	}[];
 	KernelMemoryTCP?: bigint;
 	MemoryReservation?: bigint;
@@ -8901,7 +8892,7 @@ export type ImageListCommandOutput = readonly {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels: Record<string | number, string>;
+	Labels: Record<string, string>;
 	/**
 	 * Number of containers using this image. Includes both stopped and running
 	 * containers.
@@ -9078,10 +9069,7 @@ export type ImageInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<
-			string | number,
-			Record<string | number, Jsonifiable>
-		>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -9115,7 +9103,7 @@ export type ImageInspectCommandOutput = {
 		 * @example example-image:1.0
 		 */
 		Image?: string;
-		Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -9141,7 +9129,7 @@ export type ImageInspectCommandOutput = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
@@ -9229,10 +9217,7 @@ export type ImageInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<
-			string | number,
-			Record<string | number, Jsonifiable>
-		>;
+		ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 		 *
@@ -9299,7 +9284,7 @@ export type ImageInspectCommandOutput = {
 		 * objects.
 		 * @example [object Object]
 		 */
-		Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -9341,7 +9326,7 @@ export type ImageInspectCommandOutput = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Signal to stop a container as a string or unsigned integer.
 		 * @example SIGTERM
@@ -9406,7 +9391,7 @@ export type ImageInspectCommandOutput = {
 		 * in use, and should be used for informational purposes only.
 		 * @example [object Object]
 		 */
-		Data: Record<string | number, string>;
+		Data: Record<string, string>;
 	};
 	RootFS?: {
 		Type: string;
@@ -9864,7 +9849,7 @@ export type SystemInfoCommandOutput = {
 		 */
 		InsecureRegistryCIDRs?: readonly string[];
 		IndexConfigs?: Record<
-			string | number,
+			string,
 			{
 				/**
 				 * Name of the registry, such as "docker.io".
@@ -10000,7 +9985,7 @@ export type SystemInfoCommandOutput = {
 	 * @example [object Object]
 	 */
 	Runtimes?: Record<
-		string | number,
+		string,
 		{
 			/**
 			 * Name and, optional, path, of the OCI executable binary.
@@ -10100,7 +10085,7 @@ export type SystemInfoCommandOutput = {
 				 * User-defined key/value metadata.
 				 * @example [object Object]
 				 */
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				Orchestration?: {
 					/**
 					 * The number of historic tasks to keep per instance or node. If
@@ -10164,7 +10149,7 @@ export type SystemInfoCommandOutput = {
 						 */
 						Protocol?: "cfssl";
 						URL?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 						CACert?: string;
 					}[];
 					SigningCACert?: string;
@@ -10191,7 +10176,7 @@ export type SystemInfoCommandOutput = {
 						 * as key/value pairs.
 						 * @example [object Object]
 						 */
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 			};
@@ -10348,7 +10333,7 @@ export type SystemVersionCommandOutput = {
 		 * @example 19.03.12
 		 */
 		Version: string;
-		Details?: Record<string | number, Jsonifiable>;
+		Details?: Record<string, Jsonifiable>;
 	}[];
 	/**
 	 * The version of the daemon
@@ -10444,7 +10429,7 @@ type ImageCommitJsonBody = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string | number, Record<string | number, Jsonifiable>>;
+	ExposedPorts?: Record<string, Record<string, Jsonifiable>>;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -10478,7 +10463,7 @@ type ImageCommitJsonBody = {
 	 * @example example-image:1.0
 	 */
 	Image?: string;
-	Volumes?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -10504,7 +10489,7 @@ type ImageCommitJsonBody = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Signal to stop a container as a string or unsigned integer.
 	 * @example SIGTERM
@@ -10564,7 +10549,7 @@ export type SystemEventsCommandOutput = {
 		 * Various key/value attributes of the object, depending on its type.
 		 * @example [object Object]
 		 */
-		Attributes?: Record<string | number, string>;
+		Attributes?: Record<string, string>;
 	};
 	/**
 	 * Scope of the event. Engine events are `local` scope. Cluster (Swarm)
@@ -10671,7 +10656,7 @@ export type SystemDataUsageCommandOutput = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels: Record<string | number, string>;
+		Labels: Record<string, string>;
 		/**
 		 * Number of containers using this image. Includes both stopped and running
 		 * containers.
@@ -10697,7 +10682,7 @@ export type SystemDataUsageCommandOutput = {
 		}[];
 		SizeRw?: bigint;
 		SizeRootFs?: bigint;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		State?: string;
 		Status?: string;
 		HostConfig?: {
@@ -10705,7 +10690,7 @@ export type SystemDataUsageCommandOutput = {
 		};
 		NetworkSettings?: {
 			Networks?: Record<
-				string | number,
+				string,
 				{
 					IPAMConfig?: {
 						IPv4Address?: string;
@@ -10764,7 +10749,7 @@ export type SystemDataUsageCommandOutput = {
 					 * are passed directly to the driver and are driver specific.
 					 * @example [object Object]
 					 */
-					DriverOpts?: Record<string | number, string>;
+					DriverOpts?: Record<string, string>;
 				}
 			>;
 		};
@@ -10861,12 +10846,12 @@ export type SystemDataUsageCommandOutput = {
 		 * does not support this feature.
 		 * @example [object Object]
 		 */
-		Status?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Status?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels: Record<string | number, string>;
+		Labels: Record<string, string>;
 		/**
 		 * The level at which the volume exists. Either `global` for cluster-wide,
 		 * or `local` for machine level.
@@ -10907,14 +10892,14 @@ export type SystemDataUsageCommandOutput = {
 					 * @enum none,readonly,onewriter,all
 					 */
 					Sharing?: "none" | "readonly" | "onewriter" | "all";
-					MountVolume?: Record<string | number, Jsonifiable>;
+					MountVolume?: Record<string, Jsonifiable>;
 					Secrets?: readonly {
 						Key?: string;
 						Secret?: string;
 					}[];
 					AccessibilityRequirements?: {
-						Requisite?: readonly Record<string | number, string>[];
-						Preferred?: readonly Record<string | number, string>[];
+						Requisite?: readonly Record<string, string>[];
+						Preferred?: readonly Record<string, string>[];
 					};
 					CapacityRange?: {
 						RequiredBytes?: bigint;
@@ -10935,9 +10920,9 @@ export type SystemDataUsageCommandOutput = {
 			};
 			Info?: {
 				CapacityBytes?: bigint;
-				VolumeContext?: Record<string | number, string>;
+				VolumeContext?: Record<string, string>;
 				VolumeID?: string;
-				AccessibleTopology?: readonly Record<string | number, string>[];
+				AccessibleTopology?: readonly Record<string, string>[];
 			};
 			PublishStatus?: readonly {
 				NodeID?: string;
@@ -10960,14 +10945,14 @@ export type SystemDataUsageCommandOutput = {
 					| "published"
 					| "pending-node-unpublish"
 					| "pending-controller-unpublish";
-				PublishContext?: Record<string | number, string>;
+				PublishContext?: Record<string, string>;
 			}[];
 		};
 		/**
 		 * The driver specific options used when creating the volume.
 		 * @example [object Object]
 		 */
-		Options: Record<string | number, string>;
+		Options: Record<string, string>;
 		UsageData?: {
 			/**
 			 * Amount of disk space used by the volume (in bytes). This information
@@ -11172,12 +11157,12 @@ export type VolumeListCommandOutput = {
 		 * does not support this feature.
 		 * @example [object Object]
 		 */
-		Status?: Record<string | number, Record<string | number, Jsonifiable>>;
+		Status?: Record<string, Record<string, Jsonifiable>>;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels: Record<string | number, string>;
+		Labels: Record<string, string>;
 		/**
 		 * The level at which the volume exists. Either `global` for cluster-wide,
 		 * or `local` for machine level.
@@ -11218,14 +11203,14 @@ export type VolumeListCommandOutput = {
 					 * @enum none,readonly,onewriter,all
 					 */
 					Sharing?: "none" | "readonly" | "onewriter" | "all";
-					MountVolume?: Record<string | number, Jsonifiable>;
+					MountVolume?: Record<string, Jsonifiable>;
 					Secrets?: readonly {
 						Key?: string;
 						Secret?: string;
 					}[];
 					AccessibilityRequirements?: {
-						Requisite?: readonly Record<string | number, string>[];
-						Preferred?: readonly Record<string | number, string>[];
+						Requisite?: readonly Record<string, string>[];
+						Preferred?: readonly Record<string, string>[];
 					};
 					CapacityRange?: {
 						RequiredBytes?: bigint;
@@ -11246,9 +11231,9 @@ export type VolumeListCommandOutput = {
 			};
 			Info?: {
 				CapacityBytes?: bigint;
-				VolumeContext?: Record<string | number, string>;
+				VolumeContext?: Record<string, string>;
 				VolumeID?: string;
-				AccessibleTopology?: readonly Record<string | number, string>[];
+				AccessibleTopology?: readonly Record<string, string>[];
 			};
 			PublishStatus?: readonly {
 				NodeID?: string;
@@ -11271,14 +11256,14 @@ export type VolumeListCommandOutput = {
 					| "published"
 					| "pending-node-unpublish"
 					| "pending-controller-unpublish";
-				PublishContext?: Record<string | number, string>;
+				PublishContext?: Record<string, string>;
 			}[];
 		};
 		/**
 		 * The driver specific options used when creating the volume.
 		 * @example [object Object]
 		 */
-		Options: Record<string | number, string>;
+		Options: Record<string, string>;
 		UsageData?: {
 			/**
 			 * Amount of disk space used by the volume (in bytes). This information
@@ -11321,12 +11306,12 @@ type VolumeCreateJsonBody = {
 	 * passed directly to the driver and are driver specific.
 	 * @example [object Object]
 	 */
-	DriverOpts?: Record<string | number, string>;
+	DriverOpts?: Record<string, string>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	ClusterVolumeSpec?: {
 		Group?: string;
 		AccessMode?: {
@@ -11352,14 +11337,14 @@ type VolumeCreateJsonBody = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string | number, Jsonifiable>;
+			MountVolume?: Record<string, Jsonifiable>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
 			}[];
 			AccessibilityRequirements?: {
-				Requisite?: readonly Record<string | number, string>[];
-				Preferred?: readonly Record<string | number, string>[];
+				Requisite?: readonly Record<string, string>[];
+				Preferred?: readonly Record<string, string>[];
 			};
 			CapacityRange?: {
 				RequiredBytes?: bigint;
@@ -11411,12 +11396,12 @@ export type VolumeCreateCommandOutput = {
 	 * does not support this feature.
 	 * @example [object Object]
 	 */
-	Status?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Status?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels: Record<string | number, string>;
+	Labels: Record<string, string>;
 	/**
 	 * The level at which the volume exists. Either `global` for cluster-wide,
 	 * or `local` for machine level.
@@ -11457,14 +11442,14 @@ export type VolumeCreateCommandOutput = {
 				 * @enum none,readonly,onewriter,all
 				 */
 				Sharing?: "none" | "readonly" | "onewriter" | "all";
-				MountVolume?: Record<string | number, Jsonifiable>;
+				MountVolume?: Record<string, Jsonifiable>;
 				Secrets?: readonly {
 					Key?: string;
 					Secret?: string;
 				}[];
 				AccessibilityRequirements?: {
-					Requisite?: readonly Record<string | number, string>[];
-					Preferred?: readonly Record<string | number, string>[];
+					Requisite?: readonly Record<string, string>[];
+					Preferred?: readonly Record<string, string>[];
 				};
 				CapacityRange?: {
 					RequiredBytes?: bigint;
@@ -11485,9 +11470,9 @@ export type VolumeCreateCommandOutput = {
 		};
 		Info?: {
 			CapacityBytes?: bigint;
-			VolumeContext?: Record<string | number, string>;
+			VolumeContext?: Record<string, string>;
 			VolumeID?: string;
-			AccessibleTopology?: readonly Record<string | number, string>[];
+			AccessibleTopology?: readonly Record<string, string>[];
 		};
 		PublishStatus?: readonly {
 			NodeID?: string;
@@ -11510,14 +11495,14 @@ export type VolumeCreateCommandOutput = {
 				| "published"
 				| "pending-node-unpublish"
 				| "pending-controller-unpublish";
-			PublishContext?: Record<string | number, string>;
+			PublishContext?: Record<string, string>;
 		}[];
 	};
 	/**
 	 * The driver specific options used when creating the volume.
 	 * @example [object Object]
 	 */
-	Options: Record<string | number, string>;
+	Options: Record<string, string>;
 	UsageData?: {
 		/**
 		 * Amount of disk space used by the volume (in bytes). This information
@@ -11571,12 +11556,12 @@ export type VolumeInspectCommandOutput = {
 	 * does not support this feature.
 	 * @example [object Object]
 	 */
-	Status?: Record<string | number, Record<string | number, Jsonifiable>>;
+	Status?: Record<string, Record<string, Jsonifiable>>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels: Record<string | number, string>;
+	Labels: Record<string, string>;
 	/**
 	 * The level at which the volume exists. Either `global` for cluster-wide,
 	 * or `local` for machine level.
@@ -11617,14 +11602,14 @@ export type VolumeInspectCommandOutput = {
 				 * @enum none,readonly,onewriter,all
 				 */
 				Sharing?: "none" | "readonly" | "onewriter" | "all";
-				MountVolume?: Record<string | number, Jsonifiable>;
+				MountVolume?: Record<string, Jsonifiable>;
 				Secrets?: readonly {
 					Key?: string;
 					Secret?: string;
 				}[];
 				AccessibilityRequirements?: {
-					Requisite?: readonly Record<string | number, string>[];
-					Preferred?: readonly Record<string | number, string>[];
+					Requisite?: readonly Record<string, string>[];
+					Preferred?: readonly Record<string, string>[];
 				};
 				CapacityRange?: {
 					RequiredBytes?: bigint;
@@ -11645,9 +11630,9 @@ export type VolumeInspectCommandOutput = {
 		};
 		Info?: {
 			CapacityBytes?: bigint;
-			VolumeContext?: Record<string | number, string>;
+			VolumeContext?: Record<string, string>;
 			VolumeID?: string;
-			AccessibleTopology?: readonly Record<string | number, string>[];
+			AccessibleTopology?: readonly Record<string, string>[];
 		};
 		PublishStatus?: readonly {
 			NodeID?: string;
@@ -11670,14 +11655,14 @@ export type VolumeInspectCommandOutput = {
 				| "published"
 				| "pending-node-unpublish"
 				| "pending-controller-unpublish";
-			PublishContext?: Record<string | number, string>;
+			PublishContext?: Record<string, string>;
 		}[];
 	};
 	/**
 	 * The driver specific options used when creating the volume.
 	 * @example [object Object]
 	 */
-	Options: Record<string | number, string>;
+	Options: Record<string, string>;
 	UsageData?: {
 		/**
 		 * Amount of disk space used by the volume (in bytes). This information
@@ -11726,14 +11711,14 @@ type VolumeUpdateJsonBody = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string | number, Jsonifiable>;
+			MountVolume?: Record<string, Jsonifiable>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
 			}[];
 			AccessibilityRequirements?: {
-				Requisite?: readonly Record<string | number, string>[];
-				Preferred?: readonly Record<string | number, string>[];
+				Requisite?: readonly Record<string, string>[];
+				Preferred?: readonly Record<string, string>[];
 			};
 			CapacityRange?: {
 				RequiredBytes?: bigint;
@@ -11827,13 +11812,13 @@ export type NetworkListCommandOutput = readonly {
 			Subnet?: string;
 			IPRange?: string;
 			Gateway?: string;
-			AuxiliaryAddresses?: Record<string | number, string>;
+			AuxiliaryAddresses?: Record<string, string>;
 		}[];
 		/**
 		 * Driver-specific options, specified as a map.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	/**
 	 * Whether the network is created to only allow internal networking
@@ -11867,7 +11852,7 @@ export type NetworkListCommandOutput = readonly {
 	 * @example [object Object]
 	 */
 	Containers?: Record<
-		string | number,
+		string,
 		{
 			Name?: string;
 			EndpointID?: string;
@@ -11880,12 +11865,12 @@ export type NetworkListCommandOutput = readonly {
 	 * Network-specific options uses when creating the network.
 	 * @example [object Object]
 	 */
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Peers?: readonly {
 		/**
 		 * ID of the peer-node in the Swarm cluster.
@@ -11955,13 +11940,13 @@ export type NetworkInspectCommandOutput = {
 			Subnet?: string;
 			IPRange?: string;
 			Gateway?: string;
-			AuxiliaryAddresses?: Record<string | number, string>;
+			AuxiliaryAddresses?: Record<string, string>;
 		}[];
 		/**
 		 * Driver-specific options, specified as a map.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	/**
 	 * Whether the network is created to only allow internal networking
@@ -11995,7 +11980,7 @@ export type NetworkInspectCommandOutput = {
 	 * @example [object Object]
 	 */
 	Containers?: Record<
-		string | number,
+		string,
 		{
 			Name?: string;
 			EndpointID?: string;
@@ -12008,12 +11993,12 @@ export type NetworkInspectCommandOutput = {
 	 * Network-specific options uses when creating the network.
 	 * @example [object Object]
 	 */
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Peers?: readonly {
 		/**
 		 * ID of the peer-node in the Swarm cluster.
@@ -12098,13 +12083,13 @@ type NetworkCreateJsonBody = {
 			Subnet?: string;
 			IPRange?: string;
 			Gateway?: string;
-			AuxiliaryAddresses?: Record<string | number, string>;
+			AuxiliaryAddresses?: Record<string, string>;
 		}[];
 		/**
 		 * Driver-specific options, specified as a map.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	/**
 	 * Enable IPv6 on the network.
@@ -12115,12 +12100,12 @@ type NetworkCreateJsonBody = {
 	 * Network specific options to be used by the drivers.
 	 * @example [object Object]
 	 */
-	Options?: Record<string | number, string>;
+	Options?: Record<string, string>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 };
 export type NetworkCreateCommandBody = NetworkCreateJsonBody;
 export type NetworkCreateCommandInput = NetworkCreateJsonBody;
@@ -12190,7 +12175,7 @@ type NetworkConnectJsonBody = {
 		 * are passed directly to the driver and are driver specific.
 		 * @example [object Object]
 		 */
-		DriverOpts?: Record<string | number, string>;
+		DriverOpts?: Record<string, string>;
 	};
 };
 export type NetworkConnectCommandParams = {
@@ -12668,7 +12653,7 @@ export type NodeListCommandOutput = readonly {
 		 * @example my-node
 		 */
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Role of the node.
 		 * @enum worker,manager
@@ -12718,7 +12703,7 @@ export type NodeListCommandOutput = readonly {
 		};
 		Engine?: {
 			EngineVersion?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Plugins?: readonly {
 				Type?: string;
 				Name?: string;
@@ -12793,7 +12778,7 @@ export type NodeInspectCommandOutput = {
 		 * @example my-node
 		 */
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Role of the node.
 		 * @enum worker,manager
@@ -12843,7 +12828,7 @@ export type NodeInspectCommandOutput = {
 		};
 		Engine?: {
 			EngineVersion?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Plugins?: readonly {
 				Type?: string;
 				Name?: string;
@@ -12908,7 +12893,7 @@ type NodeUpdateJsonBody = {
 	 * @example my-node
 	 */
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Role of the node.
 	 * @enum worker,manager
@@ -12961,7 +12946,7 @@ export type SwarmInspectCommandOutput = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Orchestration?: {
 			/**
 			 * The number of historic tasks to keep per instance or node. If
@@ -13025,7 +13010,7 @@ export type SwarmInspectCommandOutput = {
 				 */
 				Protocol?: "cfssl";
 				URL?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 				CACert?: string;
 			}[];
 			SigningCACert?: string;
@@ -13052,7 +13037,7 @@ export type SwarmInspectCommandOutput = {
 				 * as key/value pairs.
 				 * @example [object Object]
 				 */
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 	};
@@ -13119,7 +13104,7 @@ type SwarmInitJsonBody = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Orchestration?: {
 			/**
 			 * The number of historic tasks to keep per instance or node. If
@@ -13183,7 +13168,7 @@ type SwarmInitJsonBody = {
 				 */
 				Protocol?: "cfssl";
 				URL?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 				CACert?: string;
 			}[];
 			SigningCACert?: string;
@@ -13210,7 +13195,7 @@ type SwarmInitJsonBody = {
 				 * as key/value pairs.
 				 * @example [object Object]
 				 */
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 	};
@@ -13249,7 +13234,7 @@ type SwarmUpdateJsonBody = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Orchestration?: {
 		/**
 		 * The number of historic tasks to keep per instance or node. If
@@ -13313,7 +13298,7 @@ type SwarmUpdateJsonBody = {
 			 */
 			Protocol?: "cfssl";
 			URL?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 			CACert?: string;
 		}[];
 		SigningCACert?: string;
@@ -13340,7 +13325,7 @@ type SwarmUpdateJsonBody = {
 			 * as key/value pairs.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 };
@@ -13372,7 +13357,7 @@ export type ServiceListCommandOutput = readonly {
 	UpdatedAt?: string;
 	Spec?: {
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		TaskTemplate?: {
 			PluginSpec?: {
 				Name?: string;
@@ -13386,7 +13371,7 @@ export type ServiceListCommandOutput = readonly {
 			};
 			ContainerSpec?: {
 				Image?: string;
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				Command?: readonly string[];
 				Args?: readonly string[];
 				Hostname?: string;
@@ -13476,10 +13461,10 @@ export type ServiceListCommandOutput = readonly {
 					};
 					VolumeOptions?: {
 						NoCopy?: boolean;
-						Labels?: Record<string | number, string>;
+						Labels?: Record<string, string>;
 						DriverConfig?: {
 							Name?: string;
-							Options?: Record<string | number, string>;
+							Options?: Record<string, string>;
 						};
 					};
 					TmpfsOptions?: {
@@ -13519,7 +13504,7 @@ export type ServiceListCommandOutput = readonly {
 						GID?: string;
 						Mode?: number;
 					};
-					Runtime?: Record<string | number, Jsonifiable>;
+					Runtime?: Record<string, Jsonifiable>;
 					ConfigID?: string;
 					ConfigName?: string;
 				}[];
@@ -13530,7 +13515,7 @@ export type ServiceListCommandOutput = readonly {
 				 */
 				Isolation?: "default" | "process" | "hyperv" | "";
 				Init?: boolean | null;
-				Sysctls?: Record<string | number, string>;
+				Sysctls?: Record<string, string>;
 				/**
 				 * A list of kernel capabilities to add to the default set
 				 * for the container.
@@ -13654,18 +13639,18 @@ export type ServiceListCommandOutput = readonly {
 			Networks?: readonly {
 				Target?: string;
 				Aliases?: readonly string[];
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}[];
 			LogDriver?: {
 				Name?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 		Mode?: {
 			Replicated?: {
 				Replicas?: bigint;
 			};
-			Global?: Record<string | number, Jsonifiable>;
+			Global?: Record<string, Jsonifiable>;
 			ReplicatedJob?: {
 				/**
 				 * The maximum number of replicas to run simultaneously.
@@ -13674,7 +13659,7 @@ export type ServiceListCommandOutput = readonly {
 				MaxConcurrent?: bigint;
 				TotalCompletions?: bigint;
 			};
-			GlobalJob?: Record<string | number, Jsonifiable>;
+			GlobalJob?: Record<string, Jsonifiable>;
 		};
 		UpdateConfig?: {
 			Parallelism?: bigint;
@@ -13717,7 +13702,7 @@ export type ServiceListCommandOutput = readonly {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		EndpointSpec?: {
 			/**
@@ -13851,7 +13836,7 @@ export type ServiceCreateCommandHeader = {
 };
 type ServiceCreateJsonBody = {
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	TaskTemplate?: {
 		PluginSpec?: {
 			Name?: string;
@@ -13865,7 +13850,7 @@ type ServiceCreateJsonBody = {
 		};
 		ContainerSpec?: {
 			Image?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Command?: readonly string[];
 			Args?: readonly string[];
 			Hostname?: string;
@@ -13955,10 +13940,10 @@ type ServiceCreateJsonBody = {
 				};
 				VolumeOptions?: {
 					NoCopy?: boolean;
-					Labels?: Record<string | number, string>;
+					Labels?: Record<string, string>;
 					DriverConfig?: {
 						Name?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 				TmpfsOptions?: {
@@ -13998,7 +13983,7 @@ type ServiceCreateJsonBody = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string | number, Jsonifiable>;
+				Runtime?: Record<string, Jsonifiable>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -14009,7 +13994,7 @@ type ServiceCreateJsonBody = {
 			 */
 			Isolation?: "default" | "process" | "hyperv" | "";
 			Init?: boolean | null;
-			Sysctls?: Record<string | number, string>;
+			Sysctls?: Record<string, string>;
 			/**
 			 * A list of kernel capabilities to add to the default set
 			 * for the container.
@@ -14133,18 +14118,18 @@ type ServiceCreateJsonBody = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		LogDriver?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	Mode?: {
 		Replicated?: {
 			Replicas?: bigint;
 		};
-		Global?: Record<string | number, Jsonifiable>;
+		Global?: Record<string, Jsonifiable>;
 		ReplicatedJob?: {
 			/**
 			 * The maximum number of replicas to run simultaneously.
@@ -14153,7 +14138,7 @@ type ServiceCreateJsonBody = {
 			MaxConcurrent?: bigint;
 			TotalCompletions?: bigint;
 		};
-		GlobalJob?: Record<string | number, Jsonifiable>;
+		GlobalJob?: Record<string, Jsonifiable>;
 	};
 	UpdateConfig?: {
 		Parallelism?: bigint;
@@ -14196,7 +14181,7 @@ type ServiceCreateJsonBody = {
 	Networks?: readonly {
 		Target?: string;
 		Aliases?: readonly string[];
-		DriverOpts?: Record<string | number, string>;
+		DriverOpts?: Record<string, string>;
 	}[];
 	EndpointSpec?: {
 		/**
@@ -14230,7 +14215,7 @@ type ServiceCreateJsonBody = {
 			PublishMode?: "ingress" | "host";
 		}[];
 	};
-} & Record<string | number, Jsonifiable>;
+} & Record<string, Jsonifiable>;
 export type ServiceCreateCommandBody = ServiceCreateJsonBody;
 export type ServiceCreateCommandInput = ServiceCreateJsonBody;
 export type ServiceCreateCommandOutput = {
@@ -14256,7 +14241,7 @@ export type ServiceInspectCommandOutput = {
 	UpdatedAt?: string;
 	Spec?: {
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		TaskTemplate?: {
 			PluginSpec?: {
 				Name?: string;
@@ -14270,7 +14255,7 @@ export type ServiceInspectCommandOutput = {
 			};
 			ContainerSpec?: {
 				Image?: string;
-				Labels?: Record<string | number, string>;
+				Labels?: Record<string, string>;
 				Command?: readonly string[];
 				Args?: readonly string[];
 				Hostname?: string;
@@ -14360,10 +14345,10 @@ export type ServiceInspectCommandOutput = {
 					};
 					VolumeOptions?: {
 						NoCopy?: boolean;
-						Labels?: Record<string | number, string>;
+						Labels?: Record<string, string>;
 						DriverConfig?: {
 							Name?: string;
-							Options?: Record<string | number, string>;
+							Options?: Record<string, string>;
 						};
 					};
 					TmpfsOptions?: {
@@ -14403,7 +14388,7 @@ export type ServiceInspectCommandOutput = {
 						GID?: string;
 						Mode?: number;
 					};
-					Runtime?: Record<string | number, Jsonifiable>;
+					Runtime?: Record<string, Jsonifiable>;
 					ConfigID?: string;
 					ConfigName?: string;
 				}[];
@@ -14414,7 +14399,7 @@ export type ServiceInspectCommandOutput = {
 				 */
 				Isolation?: "default" | "process" | "hyperv" | "";
 				Init?: boolean | null;
-				Sysctls?: Record<string | number, string>;
+				Sysctls?: Record<string, string>;
 				/**
 				 * A list of kernel capabilities to add to the default set
 				 * for the container.
@@ -14538,18 +14523,18 @@ export type ServiceInspectCommandOutput = {
 			Networks?: readonly {
 				Target?: string;
 				Aliases?: readonly string[];
-				DriverOpts?: Record<string | number, string>;
+				DriverOpts?: Record<string, string>;
 			}[];
 			LogDriver?: {
 				Name?: string;
-				Options?: Record<string | number, string>;
+				Options?: Record<string, string>;
 			};
 		};
 		Mode?: {
 			Replicated?: {
 				Replicas?: bigint;
 			};
-			Global?: Record<string | number, Jsonifiable>;
+			Global?: Record<string, Jsonifiable>;
 			ReplicatedJob?: {
 				/**
 				 * The maximum number of replicas to run simultaneously.
@@ -14558,7 +14543,7 @@ export type ServiceInspectCommandOutput = {
 				MaxConcurrent?: bigint;
 				TotalCompletions?: bigint;
 			};
-			GlobalJob?: Record<string | number, Jsonifiable>;
+			GlobalJob?: Record<string, Jsonifiable>;
 		};
 		UpdateConfig?: {
 			Parallelism?: bigint;
@@ -14601,7 +14586,7 @@ export type ServiceInspectCommandOutput = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		EndpointSpec?: {
 			/**
@@ -14744,7 +14729,7 @@ export type ServiceUpdateCommandHeader = {
 };
 type ServiceUpdateJsonBody = {
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	TaskTemplate?: {
 		PluginSpec?: {
 			Name?: string;
@@ -14758,7 +14743,7 @@ type ServiceUpdateJsonBody = {
 		};
 		ContainerSpec?: {
 			Image?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Command?: readonly string[];
 			Args?: readonly string[];
 			Hostname?: string;
@@ -14848,10 +14833,10 @@ type ServiceUpdateJsonBody = {
 				};
 				VolumeOptions?: {
 					NoCopy?: boolean;
-					Labels?: Record<string | number, string>;
+					Labels?: Record<string, string>;
 					DriverConfig?: {
 						Name?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 				TmpfsOptions?: {
@@ -14891,7 +14876,7 @@ type ServiceUpdateJsonBody = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string | number, Jsonifiable>;
+				Runtime?: Record<string, Jsonifiable>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -14902,7 +14887,7 @@ type ServiceUpdateJsonBody = {
 			 */
 			Isolation?: "default" | "process" | "hyperv" | "";
 			Init?: boolean | null;
-			Sysctls?: Record<string | number, string>;
+			Sysctls?: Record<string, string>;
 			/**
 			 * A list of kernel capabilities to add to the default set
 			 * for the container.
@@ -15026,18 +15011,18 @@ type ServiceUpdateJsonBody = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		LogDriver?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	Mode?: {
 		Replicated?: {
 			Replicas?: bigint;
 		};
-		Global?: Record<string | number, Jsonifiable>;
+		Global?: Record<string, Jsonifiable>;
 		ReplicatedJob?: {
 			/**
 			 * The maximum number of replicas to run simultaneously.
@@ -15046,7 +15031,7 @@ type ServiceUpdateJsonBody = {
 			MaxConcurrent?: bigint;
 			TotalCompletions?: bigint;
 		};
-		GlobalJob?: Record<string | number, Jsonifiable>;
+		GlobalJob?: Record<string, Jsonifiable>;
 	};
 	UpdateConfig?: {
 		Parallelism?: bigint;
@@ -15089,7 +15074,7 @@ type ServiceUpdateJsonBody = {
 	Networks?: readonly {
 		Target?: string;
 		Aliases?: readonly string[];
-		DriverOpts?: Record<string | number, string>;
+		DriverOpts?: Record<string, string>;
 	}[];
 	EndpointSpec?: {
 		/**
@@ -15123,7 +15108,7 @@ type ServiceUpdateJsonBody = {
 			PublishMode?: "ingress" | "host";
 		}[];
 	};
-} & Record<string | number, Jsonifiable>;
+} & Record<string, Jsonifiable>;
 export type ServiceUpdateCommandParams = {
 	id: string;
 };
@@ -15162,7 +15147,7 @@ export type TaskListCommandOutput = readonly {
 	CreatedAt?: string;
 	UpdatedAt?: string;
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Spec?: {
 		PluginSpec?: {
 			Name?: string;
@@ -15176,7 +15161,7 @@ export type TaskListCommandOutput = readonly {
 		};
 		ContainerSpec?: {
 			Image?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Command?: readonly string[];
 			Args?: readonly string[];
 			Hostname?: string;
@@ -15266,10 +15251,10 @@ export type TaskListCommandOutput = readonly {
 				};
 				VolumeOptions?: {
 					NoCopy?: boolean;
-					Labels?: Record<string | number, string>;
+					Labels?: Record<string, string>;
 					DriverConfig?: {
 						Name?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 				TmpfsOptions?: {
@@ -15309,7 +15294,7 @@ export type TaskListCommandOutput = readonly {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string | number, Jsonifiable>;
+				Runtime?: Record<string, Jsonifiable>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -15320,7 +15305,7 @@ export type TaskListCommandOutput = readonly {
 			 */
 			Isolation?: "default" | "process" | "hyperv" | "";
 			Init?: boolean | null;
-			Sysctls?: Record<string | number, string>;
+			Sysctls?: Record<string, string>;
 			/**
 			 * A list of kernel capabilities to add to the default set
 			 * for the container.
@@ -15444,11 +15429,11 @@ export type TaskListCommandOutput = readonly {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		LogDriver?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	ServiceID?: string;
@@ -15529,7 +15514,7 @@ export type TaskInspectCommandOutput = {
 	CreatedAt?: string;
 	UpdatedAt?: string;
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Spec?: {
 		PluginSpec?: {
 			Name?: string;
@@ -15543,7 +15528,7 @@ export type TaskInspectCommandOutput = {
 		};
 		ContainerSpec?: {
 			Image?: string;
-			Labels?: Record<string | number, string>;
+			Labels?: Record<string, string>;
 			Command?: readonly string[];
 			Args?: readonly string[];
 			Hostname?: string;
@@ -15633,10 +15618,10 @@ export type TaskInspectCommandOutput = {
 				};
 				VolumeOptions?: {
 					NoCopy?: boolean;
-					Labels?: Record<string | number, string>;
+					Labels?: Record<string, string>;
 					DriverConfig?: {
 						Name?: string;
-						Options?: Record<string | number, string>;
+						Options?: Record<string, string>;
 					};
 				};
 				TmpfsOptions?: {
@@ -15676,7 +15661,7 @@ export type TaskInspectCommandOutput = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string | number, Jsonifiable>;
+				Runtime?: Record<string, Jsonifiable>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -15687,7 +15672,7 @@ export type TaskInspectCommandOutput = {
 			 */
 			Isolation?: "default" | "process" | "hyperv" | "";
 			Init?: boolean | null;
-			Sysctls?: Record<string | number, string>;
+			Sysctls?: Record<string, string>;
 			/**
 			 * A list of kernel capabilities to add to the default set
 			 * for the container.
@@ -15811,11 +15796,11 @@ export type TaskInspectCommandOutput = {
 		Networks?: readonly {
 			Target?: string;
 			Aliases?: readonly string[];
-			DriverOpts?: Record<string | number, string>;
+			DriverOpts?: Record<string, string>;
 		}[];
 		LogDriver?: {
 			Name?: string;
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 	ServiceID?: string;
@@ -15914,7 +15899,7 @@ export type SecretListCommandOutput = readonly {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Base64-url-safe-encoded ([RFC
 		 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
@@ -15935,7 +15920,7 @@ export type SecretListCommandOutput = readonly {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 		Templating?: {
 			/**
@@ -15947,7 +15932,7 @@ export type SecretListCommandOutput = readonly {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 }[];
@@ -15959,7 +15944,7 @@ type SecretCreateJsonBody = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Base64-url-safe-encoded ([RFC
 	 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
@@ -15980,7 +15965,7 @@ type SecretCreateJsonBody = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	Templating?: {
 		/**
@@ -15992,9 +15977,9 @@ type SecretCreateJsonBody = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
-} & Record<string | number, Jsonifiable>;
+} & Record<string, Jsonifiable>;
 export type SecretCreateCommandBody = SecretCreateJsonBody;
 export type SecretCreateCommandInput = SecretCreateJsonBody;
 export type SecretCreateCommandOutput = {
@@ -16019,7 +16004,7 @@ export type SecretInspectCommandOutput = {
 		 * User-defined key/value metadata.
 		 * @example [object Object]
 		 */
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		/**
 		 * Base64-url-safe-encoded ([RFC
 		 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
@@ -16040,7 +16025,7 @@ export type SecretInspectCommandOutput = {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 		Templating?: {
 			/**
@@ -16052,7 +16037,7 @@ export type SecretInspectCommandOutput = {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 };
@@ -16071,7 +16056,7 @@ type SecretUpdateJsonBody = {
 	 * User-defined key/value metadata.
 	 * @example [object Object]
 	 */
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	/**
 	 * Base64-url-safe-encoded ([RFC
 	 * 4648](https://tools.ietf.org/html/rfc4648#section-5))
@@ -16092,7 +16077,7 @@ type SecretUpdateJsonBody = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 	Templating?: {
 		/**
@@ -16104,7 +16089,7 @@ type SecretUpdateJsonBody = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 };
 export type SecretUpdateCommandParams = {
@@ -16127,7 +16112,7 @@ export type ConfigListCommandOutput = readonly {
 	UpdatedAt?: string;
 	Spec?: {
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Data?: string;
 		Templating?: {
 			/**
@@ -16139,7 +16124,7 @@ export type ConfigListCommandOutput = readonly {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 }[];
@@ -16147,7 +16132,7 @@ export type InputConfigListCommandResponse =
 	UndefinedOnPartialDeep<ConfigListCommandOutput>;
 type ConfigCreateJsonBody = {
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Data?: string;
 	Templating?: {
 		/**
@@ -16159,9 +16144,9 @@ type ConfigCreateJsonBody = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
-} & Record<string | number, Jsonifiable>;
+} & Record<string, Jsonifiable>;
 export type ConfigCreateCommandBody = ConfigCreateJsonBody;
 export type ConfigCreateCommandInput = ConfigCreateJsonBody;
 export type ConfigCreateCommandOutput = {
@@ -16182,7 +16167,7 @@ export type ConfigInspectCommandOutput = {
 	UpdatedAt?: string;
 	Spec?: {
 		Name?: string;
-		Labels?: Record<string | number, string>;
+		Labels?: Record<string, string>;
 		Data?: string;
 		Templating?: {
 			/**
@@ -16194,7 +16179,7 @@ export type ConfigInspectCommandOutput = {
 			 * Key/value map of driver-specific options.
 			 * @example [object Object]
 			 */
-			Options?: Record<string | number, string>;
+			Options?: Record<string, string>;
 		};
 	};
 };
@@ -16209,7 +16194,7 @@ export type ConfigUpdateCommandQuery = {
 };
 type ConfigUpdateJsonBody = {
 	Name?: string;
-	Labels?: Record<string | number, string>;
+	Labels?: Record<string, string>;
 	Data?: string;
 	Templating?: {
 		/**
@@ -16221,7 +16206,7 @@ type ConfigUpdateJsonBody = {
 		 * Key/value map of driver-specific options.
 		 * @example [object Object]
 		 */
-		Options?: Record<string | number, string>;
+		Options?: Record<string, string>;
 	};
 };
 export type ConfigUpdateCommandParams = {

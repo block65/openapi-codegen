@@ -107,7 +107,7 @@ function maybeUnion(...types: (string | WriterFunction)[]) {
 
 function recordType(value: string | WriterFunction) {
 	return (writer: CodeBlockWriter) => {
-		writer.write("Record<string | number, ");
+		writer.write("Record<string, ");
 
 		if (typeof value === "function") {
 			value(writer);
@@ -509,7 +509,7 @@ function objectType(
 	}
 
 	return {
-		type: "Record<string | number, Jsonifiable>",
+		type: "Record<string, Jsonifiable>",
 	};
 }
 
@@ -855,7 +855,7 @@ export function registerTypesFromSchema(
 		// in TypeScript, since JSON Schema names such as `integer` differ
 		register(
 			schemaToType(typesAndInterfaces, {}, schemaName, schemaObject).type ??
-				"Record<string | number, Jsonifiable>",
+				"Record<string, Jsonifiable>",
 			schemaObject.description,
 		);
 	}

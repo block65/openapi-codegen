@@ -213,7 +213,7 @@ export type LongRunningOperationSuccess = {
 	operationId: Uuid;
 	done: boolean;
 	result: {
-		response: Record<string | number, Jsonifiable>;
+		response: Record<string, Jsonifiable>;
 	};
 };
 export type LongRunningOperation =
