@@ -1,4 +1,5 @@
 import type { oas32 } from "openapi3-ts";
+import type { SchemaKeyword } from "./utils.ts";
 
 const componentSchemas = "#/components/schemas/";
 
@@ -23,22 +24,22 @@ function escapeToken(token: string) {
 }
 
 // a `$ref` key inside these is data, unless the key names a property
-const dataKeywords = new Set([
+const dataKeywords: ReadonlySet<string> = new Set([
 	"example",
 	"examples",
 	"default",
 	"const",
 	"enum",
-]);
+] as const satisfies readonly SchemaKeyword[]);
 
-const nameMapKeywords = new Set([
+// components.schemas, and the schema keywords that map names to subschemas
+const nameMapKeywords: ReadonlySet<string> = new Set([
 	"schemas",
 	"properties",
 	"patternProperties",
 	"dependentSchemas",
 	"$defs",
-	"definitions",
-]);
+] as const satisfies readonly (keyof oas32.ComponentsObject | SchemaKeyword)[]);
 
 function decodeFragment(ref: string) {
 	try {

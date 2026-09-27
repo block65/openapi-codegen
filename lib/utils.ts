@@ -1,5 +1,6 @@
 import camelcase from "camelcase";
 import type { oas30, oas32 } from "openapi3-ts";
+import type { OmitIndexSignature } from "type-fest";
 import wrap from "word-wrap";
 
 export type SchemaObject = oas30.SchemaObject | oas32.SchemaObjectValue;
@@ -21,16 +22,20 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && obj !== undefined;
 }
 
+// the keywords OAS 3.2 names, without the index signature that admits any
+// string
+export type SchemaKeyword = keyof OmitIndexSignature<oas32.SchemaObjectValue>;
+
 // each keyword holds a subschema, or an array of them
-const subschemaKeywords = new Set([
+const subschemaKeywords = [
 	"items",
 	"prefixItems",
-	"additionalItems",
 	"additionalProperties",
 	"unevaluatedItems",
 	"unevaluatedProperties",
 	"propertyNames",
 	"contains",
+	"contentSchema",
 	"not",
 	"if",
 	"then",
@@ -38,48 +43,41 @@ const subschemaKeywords = new Set([
 	"allOf",
 	"anyOf",
 	"oneOf",
-]);
+] as const satisfies readonly SchemaKeyword[];
 
 // each keyword maps names to subschemas
-const subschemaMapKeywords = new Set([
+const subschemaMapKeywords = [
 	"properties",
 	"patternProperties",
 	"dependentSchemas",
 	"$defs",
-	"definitions",
-]);
+] as const satisfies readonly SchemaKeyword[];
 
 /**
  * Every $ref a schema depends on, at any depth. Only subschemas count. An
  * example, default, const or enum is data, and a `$ref` key inside it is not
  * a reference
  */
-export function getDependents(schema: unknown): string[] {
+export function getDependents(
+	schema: oas32.SchemaObject | oas32.ReferenceObject,
+): string[] {
+	if (typeof schema === "boolean") {
+		return [];
+	}
+
 	if (isReferenceObject(schema)) {
 		return [schema.$ref];
 	}
 
-	if (typeof schema !== "object" || schema === null) {
-		return [];
-	}
-
-	const entries = Object.entries(schema);
-
 	return [
-		...entries
-			.filter(([keyword]) => subschemaKeywords.has(keyword))
-			.flatMap(([, value]) =>
-				Array.isArray(value)
-					? value.flatMap((item) => getDependents(item))
-					: getDependents(value),
+		...subschemaKeywords.flatMap((keyword) =>
+			[schema[keyword] ?? []].flat().flatMap((item) => getDependents(item)),
+		),
+		...subschemaMapKeywords.flatMap((keyword) =>
+			Object.values(schema[keyword] ?? {}).flatMap((item) =>
+				getDependents(item),
 			),
-		...entries
-			.filter(([keyword]) => subschemaMapKeywords.has(keyword))
-			.flatMap(([, value]) =>
-				typeof value === "object" && value !== null
-					? Object.values(value).flatMap((item) => getDependents(item))
-					: [],
-			),
+		),
 	];
 }
 
