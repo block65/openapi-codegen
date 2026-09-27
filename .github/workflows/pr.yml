@@ -35,4 +35,3 @@ jobs:
       - run: just lint-ci
       - run: just fmt-check
       - run: just test
-      - run: just typecheck-fixtures

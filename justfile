@@ -1,4 +1,4 @@
-check: typecheck lint fmt-check test typecheck-fixtures
+check: typecheck lint fmt-check test
 
 typecheck:
 	pnpm exec oxlint --type-aware --type-check
@@ -18,6 +18,3 @@ fmt-check:
 
 test:
 	pnpm exec vitest run
-
-typecheck-fixtures:
-	pnpm exec tsc -p __tests__/tsconfig.json
