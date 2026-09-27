@@ -1,52 +1,13 @@
-import { createIsomorphicNativeFetcher } from "@block65/rest-client";
-import { MockAgent, fetch as undiciFetch } from "undici";
-import { describe, expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
 import { FindPetsCommand } from "./fixtures/petstore/commands.ts";
-import { SwaggerPetstoreRestClient } from "./fixtures/petstore/main.ts";
 
-const mockAgent = new MockAgent();
-mockAgent.disableNetConnect();
+test("findPets carries its method, path and query", () => {
+	const command = new FindPetsCommand({ limit: "10", tags: ["tag1", "tag2"] });
 
-const apiUrl = "http://192.2.0.1";
-
-describe("Petstore", () => {
-	const pool = mockAgent.get(apiUrl);
-
-	const bodySpy = vi.fn<(body: string) => { ok: boolean }>(() => ({
-		ok: true,
-	}));
-
-	pool
-		.intercept({
-			// `style: form` + default `explode: true` → repeated keys
-			path: "/pets?tags=tag1&tags=tag2&limit=10",
-			method: "GET",
-			body(body) {
-				bodySpy(body);
-				return true;
-			},
-		})
-		.reply(200, { ok: 1 })
-		.times(1);
-
-	test("find pets", async () => {
-		const petStoreClient = new SwaggerPetstoreRestClient(apiUrl, {
-			logger: console.log,
-			fetcher: createIsomorphicNativeFetcher({
-				retry: { retries: 0 },
-				fetch: (input, init) =>
-					undiciFetch(input, { ...init, dispatcher: mockAgent }),
-			}),
-		});
-		const command = new FindPetsCommand({
-			limit: "10",
-			tags: ["tag1", "tag2"],
-		});
-
-		const result = await petStoreClient
-			.json(command)
-			.catch((err: unknown) => err);
-
-		expect(result).toBeTruthy();
+	expect(command.toJSON()).toStrictEqual({
+		method: "get",
+		pathname: "/pets",
+		body: undefined,
+		query: { tags: ["tag1", "tag2"], limit: "10" },
 	});
 });
