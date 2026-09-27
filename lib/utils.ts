@@ -1,5 +1,6 @@
 import camelcase from "camelcase";
 import type { oas30, oas32 } from "openapi3-ts";
+import type { OmitIndexSignature } from "type-fest";
 import wrap from "word-wrap";
 
 export type SchemaObject = oas30.SchemaObject | oas32.SchemaObjectValue;
@@ -21,29 +22,75 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && obj !== undefined;
 }
 
-/**
- * Every $ref anywhere under a schema. Items, additionalProperties and
- * combinators nest them at any depth, and a schema registers after all of them
- */
-export function getDependents(obj: unknown): string[] {
-	if (isReferenceObject(obj)) {
-		return [obj.$ref];
-	}
+// the keywords OAS 3.2 names, without the index signature that admits any
+// string
+export type SchemaKeyword = keyof OmitIndexSignature<oas32.SchemaObjectValue>;
 
-	if (typeof obj !== "object" || obj === null) {
+// each keyword holds a subschema, or an array of them
+const subschemaKeywords = [
+	"items",
+	"prefixItems",
+	"additionalProperties",
+	"unevaluatedItems",
+	"unevaluatedProperties",
+	"propertyNames",
+	"contains",
+	"contentSchema",
+	"not",
+	"if",
+	"then",
+	"else",
+	"allOf",
+	"anyOf",
+	"oneOf",
+] as const satisfies readonly SchemaKeyword[];
+
+// each keyword maps names to subschemas
+const subschemaMapKeywords = [
+	"properties",
+	"patternProperties",
+	"dependentSchemas",
+	"$defs",
+] as const satisfies readonly SchemaKeyword[];
+
+/**
+ * Every $ref a schema depends on, at any depth. Only subschemas count. An
+ * example, default, const or enum is data, and a `$ref` key inside it is not
+ * a reference
+ */
+export function getDependents(
+	schema: oas32.SchemaObject | oas32.ReferenceObject,
+): string[] {
+	if (typeof schema === "boolean") {
 		return [];
 	}
 
-	return Object.values(obj).flatMap((value) => getDependents(value));
+	if (isReferenceObject(schema)) {
+		return [schema.$ref];
+	}
+
+	return [
+		...subschemaKeywords.flatMap((keyword) =>
+			[schema[keyword] ?? []].flat().flatMap((item) => getDependents(item)),
+		),
+		...subschemaMapKeywords.flatMap((keyword) =>
+			Object.values(schema[keyword] ?? {}).flatMap((item) =>
+				getDependents(item),
+			),
+		),
+	];
 }
 
+// a schema name can hold `/`, `~` or other characters an identifier cannot
+const nonIdentifier = /[^\p{L}\p{N}_$]+/u;
+
 export function camelCase(...str: string[]): string {
-	return camelcase(str.flatMap((s) => s.split("/")));
+	return camelcase(str.flatMap((s) => s.split(nonIdentifier)));
 }
 
 export function pascalCase(...str: string[]): string {
 	return camelcase(
-		str.flatMap((s) => s.split("/")),
+		str.flatMap((s) => s.split(nonIdentifier)),
 		{ pascalCase: true },
 	);
 }

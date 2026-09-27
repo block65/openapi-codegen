@@ -20,7 +20,6 @@
 		"preversion": "just check"
 	},
 	"dependencies": {
-		"@apidevtools/json-schema-ref-parser": "^16.0.3",
 		"camelcase": "^9.0.0",
 		"toposort": "^2.0.2",
 		"ts-morph": "^28.0.0",

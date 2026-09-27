@@ -1,5 +1,4 @@
 import nodePath from "node:path";
-import { $RefParser, type $Refs } from "@apidevtools/json-schema-ref-parser";
 import type { oas30, oas32 } from "openapi3-ts";
 import toposort from "toposort";
 import {
@@ -20,6 +19,7 @@ import {
 	Writers,
 } from "ts-morph";
 import type { Simplify } from "type-fest";
+import { chunkOf, joinChunks } from "./chunks.ts";
 import {
 	addSchemaImportsToHonoFile,
 	createHonoFile,
@@ -28,6 +28,7 @@ import {
 	queryStyles,
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
+import { localRefs, normalizeRefs, type Refs, schemaRef } from "./refs.ts";
 import {
 	type ReferenceObject,
 	type SchemaNode,
@@ -45,6 +46,9 @@ import {
 import {
 	createValibotFile,
 	createValidatorForOperationInput,
+	declareValidator,
+	importLazyTypes,
+	type ValidatorEntry,
 	registerValidatorFromSchema,
 	addJsonValueSchemaWhenUsed,
 } from "./valibot.ts";
@@ -307,7 +311,7 @@ const sequentialMediaTypes: Readonly<Record<string, SequentialMedia>> = {
 
 // a $ref resolves to the object it names, which the document must hold
 function resolveObject<T extends object>(
-	refs: $Refs,
+	refs: Refs,
 	node: T | ReferenceObject,
 ) {
 	if (!isReferenceObject(node)) {
@@ -325,7 +329,7 @@ function resolveObject<T extends object>(
 }
 
 // OAS 3.2 lets a media type be a $ref, so a content map resolves before use
-function resolveContent(refs: $Refs, content: oas32.ContentObject | undefined) {
+function resolveContent(refs: Refs, content: oas32.ContentObject | undefined) {
 	return Object.fromEntries(
 		Object.entries(content ?? {}).map(([mediaType, media]) => [
 			mediaType,
@@ -389,11 +393,11 @@ function createOutputFiles(project: Project, outputDir: string) {
 type OutputFiles = ReturnType<typeof createOutputFiles>;
 
 type DocumentContext = OutputFiles & {
-	refs: $Refs;
+	refs: Refs;
 	openapiVersion: string;
 	typesImportDecl: ImportDeclaration;
 	typesAndInterfaces: Map<string, NamedDeclaration>;
-	validators: Map<string, { input: string; wire: string }>;
+	validators: Map<string, ValidatorEntry>;
 	allOperations: OperationMiddlewareInfo[];
 	outputTypes: Set<NamedDeclaration | string>;
 	inputTypeArgs: Set<string>;
@@ -497,24 +501,59 @@ function ensureTypeImport(
 	}
 }
 
+// a ref that closes a loop is emitted lazily, so it drops out of the order
+function withoutCycles(edges: [string, string][]) {
+	const next = Map.groupBy(edges, ([from]) => from);
+	const open = new Set<string>();
+	const done = new Set<string>();
+	const closing = new Set<[string, string]>();
+
+	const visit = (node: string) => {
+		open.add(node);
+
+		for (const edge of next.get(node) ?? []) {
+			if (open.has(edge[1])) {
+				closing.add(edge);
+			} else if (!done.has(edge[1])) {
+				visit(edge[1]);
+			}
+		}
+
+		open.delete(node);
+		done.add(node);
+	};
+
+	for (const [from] of edges) {
+		if (!done.has(from)) {
+			visit(from);
+		}
+	}
+
+	return edges.filter((edge) => !closing.has(edge));
+}
+
 function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 	const schemas = Object.entries(schema.components?.schemas || {});
+	const defined = new Set(schemas.map(([schemaName]) => schemaRef(schemaName)));
 
 	const schemaGraph = schemas.flatMap(([schemaName, schemaObject]) => {
 		const deps = getDependents(schemaObject);
+		const missing = deps.find((dep) => !defined.has(dep));
+
+		if (missing) {
+			throw new Error(
+				`${schemaName} refers to ${missing}, which is not a schema in components.schemas`,
+			);
+		}
+
 		// oxlint-disable-next-line block65/no-explicit-return-type -- inference widens the pair to string[], and toposort takes a mutable tuple
-		return deps.map((dep): [string, string] => [
-			`#/components/schemas/${schemaName}`,
-			dep,
-		]);
+		return deps.map((dep): [string, string] => [schemaRef(schemaName), dep]);
 	});
 
-	const sorted = toposort(schemaGraph).toReversed();
+	const sorted = toposort(withoutCycles(schemaGraph)).toReversed();
 
 	return schemas.toSorted(
-		([a], [b]) =>
-			sorted.indexOf(`#/components/schemas/${a}`) -
-			sorted.indexOf(`#/components/schemas/${b}`),
+		([a], [b]) => sorted.indexOf(schemaRef(a)) - sorted.indexOf(schemaRef(b)),
 	);
 }
 
@@ -574,7 +613,13 @@ function registerComponentSchemas(
 	documentCtx: DocumentContext,
 	schema: oas32.OpenAPIObject,
 ) {
-	for (const [schemaName, schemaObject] of sortedComponentSchemas(schema)) {
+	const sorted = sortedComponentSchemas(schema);
+
+	for (const [schemaName, schemaObject] of sorted) {
+		declareValidator(documentCtx.validators, schemaName, schemaObject);
+	}
+
+	for (const [schemaName, schemaObject] of sorted) {
 		registerTypesFromSchema(
 			documentCtx.typesAndInterfaces,
 			documentCtx.typesFile,
@@ -618,7 +663,7 @@ function declareCommandClass(
 		"Command",
 	);
 
-	const commandClass = commandsFile.addClass({
+	const commandClass = chunkOf(commandsFile).addClass({
 		name: commandName,
 		isExported: true,
 		extends: "Command",
@@ -655,8 +700,12 @@ function declareCommandClass(
 	return { commandName, commandClass, deprecationDocs };
 }
 
+function isObjectSchema(value: unknown): value is oas30.SchemaObject {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 // valibot coercion inspects the schema, so a $ref has to go first
-function withResolvedSchema(refs: $Refs, parameter: oas30.ParameterObject) {
+function withResolvedSchema(refs: Refs, parameter: oas30.ParameterObject) {
 	const resolvedSchema =
 		parameter.schema && "$ref" in parameter.schema
 			? (refs.get(parameter.schema.$ref) ?? undefined)
@@ -664,18 +713,14 @@ function withResolvedSchema(refs: $Refs, parameter: oas30.ParameterObject) {
 
 	const paramWithResolvedSchema: oas30.ParameterObject = {
 		...parameter,
-		...(resolvedSchema &&
-			typeof resolvedSchema === "object" &&
-			!Array.isArray(resolvedSchema) && {
-				schema: resolvedSchema,
-			}),
+		...(isObjectSchema(resolvedSchema) && { schema: resolvedSchema }),
 	};
 
 	return paramWithResolvedSchema;
 }
 
 function collectParameters(
-	refs: $Refs,
+	refs: Refs,
 	path: string,
 	pathItemObject: oas32.PathItemObject,
 	operationObject: OperationWithId,
@@ -903,7 +948,7 @@ function addQueryType(
 ) {
 	const queryType =
 		queryParameters.length > 0
-			? documentCtx.typesFile.addTypeAlias({
+			? chunkOf(documentCtx.typesFile).addTypeAlias({
 					name: pascalCase(commandClass.getName() || "INVALID", "Query"),
 					docs: deprecationDocs,
 					isExported: true,
@@ -934,7 +979,7 @@ function addHeaderType(
 ) {
 	const headerType =
 		headerParameters.length > 0
-			? documentCtx.typesFile.addTypeAlias({
+			? chunkOf(documentCtx.typesFile).addTypeAlias({
 					name: pascalCase(commandClass.getName() || "INVALID", "Header"),
 					docs: deprecationDocs,
 					isExported: true,
@@ -997,7 +1042,7 @@ function jsonBodyTypeOf(
 		schema,
 	);
 
-	return documentCtx.typesFile.addTypeAlias({
+	return chunkOf(documentCtx.typesFile).addTypeAlias({
 		name,
 		docs: deprecationDocs,
 		type: typeof type.type === "function" ? type.type : String(type.type),
@@ -1035,35 +1080,37 @@ function resolveBodyTypes(
 		);
 	}
 
-	const nonJsonBodyType =
-		!jsonBodyType && nonJsonBodyEntries.length > 0
-			? documentCtx.typesFile.addTypeAlias({
-					docs: deprecationDocs,
-					name: pascalCase(
-						`${commandClass.getName() || "INVALID"} Body NonJson`,
-					),
-					isExported: true,
-					type: Writers.objectType({
-						properties: [
-							{
-								name: nonJsonBodyPropName,
-								type: createUnion(
-									...nonJsonBodyEntries.map(([contentType, _mediaTypeObj]) => {
-										const nonJsonBody = documentCtx.typesFile.addTypeAlias({
-											name: pascalCase(
-												`${commandClass.getName() || "INVALID"} Body ${contentType}`,
-											),
-											type: "NonNullable<RequestInit['body']>",
-										});
+	const hasNonJsonBody = !jsonBodyType && nonJsonBodyEntries.length > 0;
 
-										return nonJsonBody.getName();
-									}),
-								),
-							},
-						],
-					}),
-				})
-			: undefined;
+	// declared before the alias that unions them, as chunkOf requires
+	const nonJsonBodyNames = hasNonJsonBody
+		? nonJsonBodyEntries.map(([contentType]) =>
+				chunkOf(documentCtx.typesFile)
+					.addTypeAlias({
+						name: pascalCase(
+							`${commandClass.getName() || "INVALID"} Body ${contentType}`,
+						),
+						type: "NonNullable<RequestInit['body']>",
+					})
+					.getName(),
+			)
+		: [];
+
+	const nonJsonBodyType = hasNonJsonBody
+		? chunkOf(documentCtx.typesFile).addTypeAlias({
+				docs: deprecationDocs,
+				name: pascalCase(`${commandClass.getName() || "INVALID"} Body NonJson`),
+				isExported: true,
+				type: Writers.objectType({
+					properties: [
+						{
+							name: nonJsonBodyPropName,
+							type: createUnion(...nonJsonBodyNames),
+						},
+					],
+				}),
+			})
+		: undefined;
 
 	return { jsonRequestBodyObject, jsonBodyType, nonJsonBodyType };
 }
@@ -1074,7 +1121,7 @@ function addParamsType(
 	pathParameters: oas30.ParameterObject[],
 ) {
 	return pathParameters.length > 0
-		? documentCtx.typesFile.addTypeAlias({
+		? chunkOf(documentCtx.typesFile).addTypeAlias({
 				name: pascalCase(`${commandClass.getName() || "INVALID"}Params`),
 				docs: deprecationDocs,
 				type: Writers.objectType({
@@ -1126,7 +1173,7 @@ function addInputType(
 ) {
 	const bodyType =
 		(jsonBodyType &&
-			documentCtx.typesFile.addTypeAlias({
+			chunkOf(documentCtx.typesFile).addTypeAlias({
 				name: pascalCase(commandClass.getName() || "", "Body"),
 				type: jsonBodyType.getName(),
 				isExported: true,
@@ -1149,7 +1196,7 @@ function addInputType(
 
 	const wrappedJsonBodyType =
 		wrapJsonBody && jsonBodyType
-			? documentCtx.typesFile.addTypeAlias({
+			? chunkOf(documentCtx.typesFile).addTypeAlias({
 					name: pascalCase(commandClass.getName() || "", "BodyWrapper"),
 					type: Writers.objectType({
 						properties: [{ name: inputBodyName, type: jsonBodyType.getName() }],
@@ -1165,7 +1212,7 @@ function addInputType(
 		queryType?.getName(),
 	);
 
-	const inputType = documentCtx.typesFile.addTypeAlias({
+	const inputType = chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase(commandClass.getName() || "", "Input"),
 		type: inputTypeNode,
 		isExported: true,
@@ -1194,10 +1241,7 @@ function firstSuccessResponse(operationObject: OperationWithId) {
 	return response;
 }
 
-function firstJsonResponseSchema(
-	refs: $Refs,
-	operationObject: OperationWithId,
-) {
+function firstJsonResponseSchema(refs: Refs, operationObject: OperationWithId) {
 	// Resolve the first 2xx JSON response schema (inline or $ref) so the
 	// validator pipeline treats responses the same as request bodies
 	return resolveContent(refs, firstSuccessResponse(operationObject)?.content)[
@@ -1355,7 +1399,7 @@ function addReferencedOutput(
 	// The value is JSON.stringified, which drops `undefined`, so
 	// optional fields may hold `undefined`. Mirrors the `input*`
 	// prefix used for the lax variant in the valibot module
-	documentCtx.typesFile.addTypeAlias({
+	chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase("Input", commandClass.getName() || "INVALID", "Response"),
 		type: `UndefinedOnPartialDeep<${outputTypeName}>`,
 		isExported: true,
@@ -1374,7 +1418,7 @@ function addInlineOutput(
 		schema,
 	);
 
-	const responseTypeAlias = documentCtx.typesFile.addTypeAlias({
+	const responseTypeAlias = chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase(commandClass.getName() || "INVALID", "Output"),
 		type:
 			typeof outputType.type === "function"
@@ -1388,14 +1432,14 @@ function addInlineOutput(
 	commandClass.getExtends()?.addTypeArgument(responseTypeAlias.getName());
 	documentCtx.outputTypes.add(responseTypeAlias);
 
-	documentCtx.typesFile.addTypeAlias({
+	chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase("Input", commandClass.getName() || "INVALID", "Response"),
 		type: `UndefinedOnPartialDeep<${responseTypeAlias.getName()}>`,
 		isExported: true,
 	});
 }
 
-function resolveSchema(refs: $Refs, operationId: string, schema: SchemaNode) {
+function resolveSchema(refs: Refs, operationId: string, schema: SchemaNode) {
 	if (typeof schema === "boolean") {
 		throw new TypeError(
 			`${operationId}: a boolean item schema has no content to decode`,
@@ -1413,7 +1457,7 @@ function canStateItemSchema(openapiVersion: string) {
 }
 
 function sequentialContent(
-	refs: $Refs,
+	refs: Refs,
 	openapiVersion: string,
 	operationObject: OperationWithId,
 ) {
@@ -1529,7 +1573,7 @@ function addSequentialOutput(
 		schema,
 	);
 
-	const outputTypeAlias = documentCtx.typesFile.addTypeAlias({
+	const outputTypeAlias = chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase(commandClass.getName() || "INVALID", "Output"),
 		type: outputType.type ?? unspecifiedKeyword,
 		isExported: true,
@@ -1980,6 +2024,7 @@ function processOperation(
 	registerValidatedCommand(documentCtx, operationCtx.commandName, wireSchemas);
 	addQueryAndHeaderTypeArguments(operationCtx);
 	addCommandConstructor(operationCtx, path);
+	trimDefaultOutputArgument(command.commandClass);
 }
 
 function emitOperations(
@@ -2240,30 +2285,29 @@ function emitHonoModule(
 	return honoFile;
 }
 
-function trimDefaultOutputArguments(commandsFile: SourceFile) {
+function trimDefaultOutputArgument(commandClass: ClassDeclaration) {
 	// `Command` defaults its output to `unknown`, so an explicit `unknown`
 	// repeats the default. A trailing argument can go, while an earlier one
 	// holds the position of the arguments after it
-	for (const commandClass of commandsFile.getClasses()) {
-		const base = commandClass.getExtends();
-		const typeArguments = base?.getTypeArguments() ?? [];
-		const last = typeArguments.at(-1);
+	const base = commandClass.getExtends();
+	const typeArguments = base?.getTypeArguments() ?? [];
+	const last = typeArguments.at(-1);
 
-		if (base && typeArguments.length > 1 && last?.getText() === "unknown") {
-			base.removeTypeArgument(last);
-		}
+	if (base && typeArguments.length > 1 && last?.getText() === "unknown") {
+		base.removeTypeArgument(last);
 	}
 }
 
 export async function processOpenApiDocument(
 	outputDir: string,
-	schema: Simplify<oas32.OpenAPIObject>,
+	document: Simplify<oas32.OpenAPIObject>,
 	tags?: string[],
 	options?: CodegenOptions,
 ) {
+	const schema = normalizeRefs(document);
 	const project = new Project();
 	const files = createOutputFiles(project, outputDir);
-	const refs = await $RefParser.resolve(schema);
+	const refs = localRefs(schema);
 	const typesImportDecl = addModulePreambles(files);
 
 	const documentCtx: DocumentContext = {
@@ -2287,6 +2331,9 @@ export async function processOpenApiDocument(
 	emitOperations(documentCtx, schema, tags);
 	emitClientModule(documentCtx, schema);
 	emitValidatedModule(documentCtx);
+	joinChunks(files.typesFile);
+	joinChunks(files.commandsFile);
+	joinChunks(files.valibotFile);
 
 	files.mainFile.organizeImports();
 
@@ -2294,6 +2341,11 @@ export async function processOpenApiDocument(
 	files.typesFile.fixUnusedIdentifiers();
 	files.commandsFile.fixUnusedIdentifiers();
 	files.commandsValidatedFile.fixUnusedIdentifiers();
+	importLazyTypes(
+		files.valibotFile,
+		documentCtx.validators,
+		typesModuleSpecifierOf(files.typesFile),
+	);
 	addJsonValueSchemaWhenUsed(files.valibotFile);
 	files.valibotFile.fixUnusedIdentifiers();
 
@@ -2302,8 +2354,6 @@ export async function processOpenApiDocument(
 		outputDir,
 		documentCtx.allOperations,
 	);
-
-	trimDefaultOutputArguments(files.commandsFile);
 
 	return { ...files, honoFile };
 }
