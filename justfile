@@ -1,4 +1,4 @@
-check: typecheck lint fmt-check test dead-code
+check: typecheck lint fmt-check test dead-code dupes
 
 typecheck:
 	pnpm exec oxlint --type-aware --type-check
@@ -21,3 +21,6 @@ test:
 
 dead-code:
 	pnpm exec fallow dead-code
+
+dupes:
+	pnpm exec fallow dupes

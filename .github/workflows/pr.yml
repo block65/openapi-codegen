@@ -36,3 +36,4 @@ jobs:
       - run: just fmt-check
       - run: just test
       - run: just dead-code
+      - run: just dupes

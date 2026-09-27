@@ -2,7 +2,7 @@ import type { oas32 } from "openapi3-ts";
 import { describe, expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
-function documentWith(
+function buildEventStreamDocument(
 	itemSchema: oas32.SchemaObject | oas32.ReferenceObject | undefined,
 	schemas: Record<string, oas32.SchemaObject> = {},
 ) {
@@ -43,7 +43,7 @@ function jsonData(contentSchema: oas32.SchemaObject | oas32.ReferenceObject) {
 test("without an itemSchema, a plain command", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/whatever",
-		documentWith(undefined),
+		buildEventStreamDocument(undefined),
 	);
 
 	expect(result.commandsFile.getText()).toMatchSnapshot("commands.ts");
@@ -58,7 +58,7 @@ test("without an itemSchema, a plain command", async () => {
 test("JSON data variants make the output a union", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/whatever",
-		documentWith(
+		buildEventStreamDocument(
 			{
 				oneOf: [
 					{
@@ -105,7 +105,7 @@ test("JSON data variants make the output a union", async () => {
 test("data with no contentMediaType is text", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/whatever",
-		documentWith({
+		buildEventStreamDocument({
 			type: "object",
 			properties: { data: { type: "string" } },
 		}),
@@ -171,13 +171,16 @@ describe("event-stream refusals", () => {
 		],
 	])("%s", async (_, itemSchema, message) => {
 		await expect(
-			processOpenApiDocument("/tmp/whatever", documentWith(itemSchema)),
+			processOpenApiDocument(
+				"/tmp/whatever",
+				buildEventStreamDocument(itemSchema),
+			),
 		).rejects.toThrow(message);
 	});
 });
 
 test("an itemSchema in a document older than OAS 3.2 is refused", async () => {
-	const document = documentWith({
+	const document = buildEventStreamDocument({
 		type: "object",
 		properties: { data: { type: "string" } },
 	});
