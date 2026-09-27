@@ -6,7 +6,7 @@
 
 // oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-comment-history, block65/no-comment-list, block65/no-comment-overclaim, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, unicorn-unported/comment-content
 
-import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
+import type { JsonValue, UndefinedOnPartialDeep } from "type-fest";
 
 /** An open port on a container */
 export type Port = {
@@ -620,7 +620,7 @@ export type ContainerConfig = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+	ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -654,7 +654,7 @@ export type ContainerConfig = {
 	 * @example example-image:1.0
 	 */
 	Image?: string;
-	Volumes?: Record<string, Record<string, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -754,7 +754,7 @@ export type ImageConfig = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+	ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 	 *
@@ -821,7 +821,7 @@ export type ImageConfig = {
 	 * objects.
 	 * @example [object Object]
 	 */
-	Volumes?: Record<string, Record<string, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -1362,7 +1362,7 @@ export type ImageInspect = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+		ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -1396,7 +1396,7 @@ export type ImageInspect = {
 		 * @example example-image:1.0
 		 */
 		Image?: string;
-		Volumes?: Record<string, Record<string, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -1510,7 +1510,7 @@ export type ImageInspect = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+		ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 		/**
 		 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 		 *
@@ -1577,7 +1577,7 @@ export type ImageInspect = {
 		 * objects.
 		 * @example [object Object]
 		 */
-		Volumes?: Record<string, Record<string, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -1836,7 +1836,7 @@ export type Volume = {
 	 * does not support this feature.
 	 * @example [object Object]
 	 */
-	Status?: Record<string, Record<string, Jsonifiable>>;
+	Status?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -1882,7 +1882,7 @@ export type Volume = {
 				 * @enum none,readonly,onewriter,all
 				 */
 				Sharing?: "none" | "readonly" | "onewriter" | "all";
-				MountVolume?: Record<string, Jsonifiable>;
+				MountVolume?: Record<string, JsonValue>;
 				Secrets?: readonly {
 					Key?: string;
 					Secret?: string;
@@ -2009,7 +2009,7 @@ export type VolumeCreateOptions = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string, Jsonifiable>;
+			MountVolume?: Record<string, JsonValue>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
@@ -2068,7 +2068,7 @@ export type VolumeListResponse = {
 		 * does not support this feature.
 		 * @example [object Object]
 		 */
-		Status?: Record<string, Record<string, Jsonifiable>>;
+		Status?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -2114,7 +2114,7 @@ export type VolumeListResponse = {
 					 * @enum none,readonly,onewriter,all
 					 */
 					Sharing?: "none" | "readonly" | "onewriter" | "all";
-					MountVolume?: Record<string, Jsonifiable>;
+					MountVolume?: Record<string, JsonValue>;
 					Secrets?: readonly {
 						Key?: string;
 						Secret?: string;
@@ -3593,7 +3593,7 @@ export type TaskSpec = {
 				GID?: string;
 				Mode?: number;
 			};
-			Runtime?: Record<string, Jsonifiable>;
+			Runtime?: Record<string, JsonValue>;
 			ConfigID?: string;
 			ConfigName?: string;
 		}[];
@@ -3906,7 +3906,7 @@ export type Task = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string, Jsonifiable>;
+				Runtime?: Record<string, JsonValue>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -4262,7 +4262,7 @@ export type ServiceSpec = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string, Jsonifiable>;
+				Runtime?: Record<string, JsonValue>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -4408,7 +4408,7 @@ export type ServiceSpec = {
 		Replicated?: {
 			Replicas?: bigint;
 		};
-		Global?: Record<string, Jsonifiable>;
+		Global?: Record<string, JsonValue>;
 		ReplicatedJob?: {
 			/**
 			 * The maximum number of replicas to run simultaneously.
@@ -4417,7 +4417,7 @@ export type ServiceSpec = {
 			MaxConcurrent?: bigint;
 			TotalCompletions?: bigint;
 		};
-		GlobalJob?: Record<string, Jsonifiable>;
+		GlobalJob?: Record<string, JsonValue>;
 	};
 	UpdateConfig?: {
 		Parallelism?: bigint;
@@ -4708,7 +4708,7 @@ export type Service = {
 						GID?: string;
 						Mode?: number;
 					};
-					Runtime?: Record<string, Jsonifiable>;
+					Runtime?: Record<string, JsonValue>;
 					ConfigID?: string;
 					ConfigName?: string;
 				}[];
@@ -4854,7 +4854,7 @@ export type Service = {
 			Replicated?: {
 				Replicas?: bigint;
 			};
-			Global?: Record<string, Jsonifiable>;
+			Global?: Record<string, JsonValue>;
 			ReplicatedJob?: {
 				/**
 				 * The maximum number of replicas to run simultaneously.
@@ -4863,7 +4863,7 @@ export type Service = {
 				MaxConcurrent?: bigint;
 				TotalCompletions?: bigint;
 			};
-			GlobalJob?: Record<string, Jsonifiable>;
+			GlobalJob?: Record<string, JsonValue>;
 		};
 		UpdateConfig?: {
 			Parallelism?: bigint;
@@ -5495,7 +5495,7 @@ export type SystemVersion = {
 		 * @example 19.03.12
 		 */
 		Version: string;
-		Details?: Record<string, Jsonifiable> | null;
+		Details?: Record<string, JsonValue> | null;
 	}[];
 	/**
 	 * The version of the daemon
@@ -7029,7 +7029,7 @@ export type ClusterVolume = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string, Jsonifiable>;
+			MountVolume?: Record<string, JsonValue>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
@@ -7111,7 +7111,7 @@ export type ClusterVolumeSpec = {
 		 * @enum none,readonly,onewriter,all
 		 */
 		Sharing?: "none" | "readonly" | "onewriter" | "all";
-		MountVolume?: Record<string, Jsonifiable>;
+		MountVolume?: Record<string, JsonValue>;
 		Secrets?: readonly {
 			Key?: string;
 			Secret?: string;
@@ -7330,7 +7330,7 @@ type ContainerCreateJsonBody = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+	ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -7364,7 +7364,7 @@ type ContainerCreateJsonBody = {
 	 * @example example-image:1.0
 	 */
 	Image?: string;
-	Volumes?: Record<string, Record<string, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -8191,7 +8191,7 @@ export type ContainerInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+		ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -8225,7 +8225,7 @@ export type ContainerInspectCommandOutput = {
 		 * @example example-image:1.0
 		 */
 		Image?: string;
-		Volumes?: Record<string, Record<string, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -8565,9 +8565,7 @@ export type ContainerStatsCommandParams = {
 };
 export type ContainerStatsCommandInput = ContainerStatsCommandParams &
 	ContainerStatsCommandQuery;
-export type ContainerStatsCommandOutput =
-	| Record<string, Jsonifiable>
-	| undefined;
+export type ContainerStatsCommandOutput = Record<string, JsonValue> | undefined;
 export type InputContainerStatsCommandResponse =
 	UndefinedOnPartialDeep<ContainerStatsCommandOutput>;
 export type ContainerResizeCommandQuery = {
@@ -9089,7 +9087,7 @@ export type ImageInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+		ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 		Tty?: boolean;
 		OpenStdin?: boolean;
 		StdinOnce?: boolean;
@@ -9123,7 +9121,7 @@ export type ImageInspectCommandOutput = {
 		 * @example example-image:1.0
 		 */
 		Image?: string;
-		Volumes?: Record<string, Record<string, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -9237,7 +9235,7 @@ export type ImageInspectCommandOutput = {
 		 * `{"<port>/<tcp|udp|sctp>": {}}`
 		 * @example [object Object]
 		 */
-		ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+		ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 		/**
 		 * Attach standard streams to a TTY, including `stdin` if it is not closed.
 		 *
@@ -9304,7 +9302,7 @@ export type ImageInspectCommandOutput = {
 		 * objects.
 		 * @example [object Object]
 		 */
-		Volumes?: Record<string, Record<string, Jsonifiable>>;
+		Volumes?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * The working directory for commands to run in.
 		 * @example /public/
@@ -10355,7 +10353,7 @@ export type SystemVersionCommandOutput = {
 		 * @example 19.03.12
 		 */
 		Version: string;
-		Details?: Record<string, Jsonifiable> | null;
+		Details?: Record<string, JsonValue> | null;
 	}[];
 	/**
 	 * The version of the daemon
@@ -10451,7 +10449,7 @@ type ImageCommitJsonBody = {
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 * @example [object Object]
 	 */
-	ExposedPorts?: Record<string, Record<string, Jsonifiable>> | null;
+	ExposedPorts?: Record<string, Record<string, JsonValue>> | null;
 	Tty?: boolean;
 	OpenStdin?: boolean;
 	StdinOnce?: boolean;
@@ -10485,7 +10483,7 @@ type ImageCommitJsonBody = {
 	 * @example example-image:1.0
 	 */
 	Image?: string;
-	Volumes?: Record<string, Record<string, Jsonifiable>>;
+	Volumes?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * The working directory for commands to run in.
 	 * @example /public/
@@ -10868,7 +10866,7 @@ export type SystemDataUsageCommandOutput = {
 		 * does not support this feature.
 		 * @example [object Object]
 		 */
-		Status?: Record<string, Record<string, Jsonifiable>>;
+		Status?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -10914,7 +10912,7 @@ export type SystemDataUsageCommandOutput = {
 					 * @enum none,readonly,onewriter,all
 					 */
 					Sharing?: "none" | "readonly" | "onewriter" | "all";
-					MountVolume?: Record<string, Jsonifiable>;
+					MountVolume?: Record<string, JsonValue>;
 					Secrets?: readonly {
 						Key?: string;
 						Secret?: string;
@@ -11179,7 +11177,7 @@ export type VolumeListCommandOutput = {
 		 * does not support this feature.
 		 * @example [object Object]
 		 */
-		Status?: Record<string, Record<string, Jsonifiable>>;
+		Status?: Record<string, Record<string, JsonValue>>;
 		/**
 		 * User-defined key/value metadata.
 		 * @example [object Object]
@@ -11225,7 +11223,7 @@ export type VolumeListCommandOutput = {
 					 * @enum none,readonly,onewriter,all
 					 */
 					Sharing?: "none" | "readonly" | "onewriter" | "all";
-					MountVolume?: Record<string, Jsonifiable>;
+					MountVolume?: Record<string, JsonValue>;
 					Secrets?: readonly {
 						Key?: string;
 						Secret?: string;
@@ -11359,7 +11357,7 @@ type VolumeCreateJsonBody = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string, Jsonifiable>;
+			MountVolume?: Record<string, JsonValue>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
@@ -11418,7 +11416,7 @@ export type VolumeCreateCommandOutput = {
 	 * does not support this feature.
 	 * @example [object Object]
 	 */
-	Status?: Record<string, Record<string, Jsonifiable>>;
+	Status?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -11464,7 +11462,7 @@ export type VolumeCreateCommandOutput = {
 				 * @enum none,readonly,onewriter,all
 				 */
 				Sharing?: "none" | "readonly" | "onewriter" | "all";
-				MountVolume?: Record<string, Jsonifiable>;
+				MountVolume?: Record<string, JsonValue>;
 				Secrets?: readonly {
 					Key?: string;
 					Secret?: string;
@@ -11578,7 +11576,7 @@ export type VolumeInspectCommandOutput = {
 	 * does not support this feature.
 	 * @example [object Object]
 	 */
-	Status?: Record<string, Record<string, Jsonifiable>>;
+	Status?: Record<string, Record<string, JsonValue>>;
 	/**
 	 * User-defined key/value metadata.
 	 * @example [object Object]
@@ -11624,7 +11622,7 @@ export type VolumeInspectCommandOutput = {
 				 * @enum none,readonly,onewriter,all
 				 */
 				Sharing?: "none" | "readonly" | "onewriter" | "all";
-				MountVolume?: Record<string, Jsonifiable>;
+				MountVolume?: Record<string, JsonValue>;
 				Secrets?: readonly {
 					Key?: string;
 					Secret?: string;
@@ -11733,7 +11731,7 @@ type VolumeUpdateJsonBody = {
 			 * @enum none,readonly,onewriter,all
 			 */
 			Sharing?: "none" | "readonly" | "onewriter" | "all";
-			MountVolume?: Record<string, Jsonifiable>;
+			MountVolume?: Record<string, JsonValue>;
 			Secrets?: readonly {
 				Key?: string;
 				Secret?: string;
@@ -13530,7 +13528,7 @@ export type ServiceListCommandOutput = readonly {
 						GID?: string;
 						Mode?: number;
 					};
-					Runtime?: Record<string, Jsonifiable>;
+					Runtime?: Record<string, JsonValue>;
 					ConfigID?: string;
 					ConfigName?: string;
 				}[];
@@ -13676,7 +13674,7 @@ export type ServiceListCommandOutput = readonly {
 			Replicated?: {
 				Replicas?: bigint;
 			};
-			Global?: Record<string, Jsonifiable>;
+			Global?: Record<string, JsonValue>;
 			ReplicatedJob?: {
 				/**
 				 * The maximum number of replicas to run simultaneously.
@@ -13685,7 +13683,7 @@ export type ServiceListCommandOutput = readonly {
 				MaxConcurrent?: bigint;
 				TotalCompletions?: bigint;
 			};
-			GlobalJob?: Record<string, Jsonifiable>;
+			GlobalJob?: Record<string, JsonValue>;
 		};
 		UpdateConfig?: {
 			Parallelism?: bigint;
@@ -14009,7 +14007,7 @@ type ServiceCreateJsonBody = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string, Jsonifiable>;
+				Runtime?: Record<string, JsonValue>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -14155,7 +14153,7 @@ type ServiceCreateJsonBody = {
 		Replicated?: {
 			Replicas?: bigint;
 		};
-		Global?: Record<string, Jsonifiable>;
+		Global?: Record<string, JsonValue>;
 		ReplicatedJob?: {
 			/**
 			 * The maximum number of replicas to run simultaneously.
@@ -14164,7 +14162,7 @@ type ServiceCreateJsonBody = {
 			MaxConcurrent?: bigint;
 			TotalCompletions?: bigint;
 		};
-		GlobalJob?: Record<string, Jsonifiable>;
+		GlobalJob?: Record<string, JsonValue>;
 	};
 	UpdateConfig?: {
 		Parallelism?: bigint;
@@ -14241,7 +14239,7 @@ type ServiceCreateJsonBody = {
 			PublishMode?: "ingress" | "host";
 		}[];
 	};
-} & Record<string, Jsonifiable>;
+} & Record<string, JsonValue>;
 export type ServiceCreateCommandBody = ServiceCreateJsonBody;
 export type ServiceCreateCommandInput = ServiceCreateJsonBody;
 export type ServiceCreateCommandOutput = {
@@ -14414,7 +14412,7 @@ export type ServiceInspectCommandOutput = {
 						GID?: string;
 						Mode?: number;
 					};
-					Runtime?: Record<string, Jsonifiable>;
+					Runtime?: Record<string, JsonValue>;
 					ConfigID?: string;
 					ConfigName?: string;
 				}[];
@@ -14560,7 +14558,7 @@ export type ServiceInspectCommandOutput = {
 			Replicated?: {
 				Replicas?: bigint;
 			};
-			Global?: Record<string, Jsonifiable>;
+			Global?: Record<string, JsonValue>;
 			ReplicatedJob?: {
 				/**
 				 * The maximum number of replicas to run simultaneously.
@@ -14569,7 +14567,7 @@ export type ServiceInspectCommandOutput = {
 				MaxConcurrent?: bigint;
 				TotalCompletions?: bigint;
 			};
-			GlobalJob?: Record<string, Jsonifiable>;
+			GlobalJob?: Record<string, JsonValue>;
 		};
 		UpdateConfig?: {
 			Parallelism?: bigint;
@@ -14902,7 +14900,7 @@ type ServiceUpdateJsonBody = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string, Jsonifiable>;
+				Runtime?: Record<string, JsonValue>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -15048,7 +15046,7 @@ type ServiceUpdateJsonBody = {
 		Replicated?: {
 			Replicas?: bigint;
 		};
-		Global?: Record<string, Jsonifiable>;
+		Global?: Record<string, JsonValue>;
 		ReplicatedJob?: {
 			/**
 			 * The maximum number of replicas to run simultaneously.
@@ -15057,7 +15055,7 @@ type ServiceUpdateJsonBody = {
 			MaxConcurrent?: bigint;
 			TotalCompletions?: bigint;
 		};
-		GlobalJob?: Record<string, Jsonifiable>;
+		GlobalJob?: Record<string, JsonValue>;
 	};
 	UpdateConfig?: {
 		Parallelism?: bigint;
@@ -15134,7 +15132,7 @@ type ServiceUpdateJsonBody = {
 			PublishMode?: "ingress" | "host";
 		}[];
 	};
-} & Record<string, Jsonifiable>;
+} & Record<string, JsonValue>;
 export type ServiceUpdateCommandParams = {
 	id: string;
 };
@@ -15320,7 +15318,7 @@ export type TaskListCommandOutput = readonly {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string, Jsonifiable>;
+				Runtime?: Record<string, JsonValue>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -15687,7 +15685,7 @@ export type TaskInspectCommandOutput = {
 					GID?: string;
 					Mode?: number;
 				};
-				Runtime?: Record<string, Jsonifiable>;
+				Runtime?: Record<string, JsonValue>;
 				ConfigID?: string;
 				ConfigName?: string;
 			}[];
@@ -16005,7 +16003,7 @@ type SecretCreateJsonBody = {
 		 */
 		Options?: Record<string, string>;
 	};
-} & Record<string, Jsonifiable>;
+} & Record<string, JsonValue>;
 export type SecretCreateCommandBody = SecretCreateJsonBody;
 export type SecretCreateCommandInput = SecretCreateJsonBody;
 export type SecretCreateCommandOutput = {
@@ -16172,7 +16170,7 @@ type ConfigCreateJsonBody = {
 		 */
 		Options?: Record<string, string>;
 	};
-} & Record<string, Jsonifiable>;
+} & Record<string, JsonValue>;
 export type ConfigCreateCommandBody = ConfigCreateJsonBody;
 export type ConfigCreateCommandInput = ConfigCreateJsonBody;
 export type ConfigCreateCommandOutput = {

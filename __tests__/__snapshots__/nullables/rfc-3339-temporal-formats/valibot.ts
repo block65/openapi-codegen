@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputMyDateSchema = v.pipe(v.string(), v.regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u, "date"), v.custom<`${number}-${number}-${number}`>(() => true));
 export const myDateSchema = v.pipe(v.string(), v.trim(), v.regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u, "date"), v.custom<`${number}-${number}-${number}`>(() => true));
 export const inputMyTimeSchema = v.pipe(v.string(), v.regex(/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u, "time"), v.custom<`${number}:${number}:${number}${string}`>(() => true));

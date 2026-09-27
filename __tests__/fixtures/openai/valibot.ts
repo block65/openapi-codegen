@@ -6,8 +6,19 @@
 
 // oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-comment-list, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-hedging-comment, block65/no-jargon-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, block65/prefer-exact-optional, unicorn-unported/comment-content
 
+import type { JsonValue } from "type-fest";
 import * as v from "valibot";
 
+const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
+	v.union([
+		v.string(),
+		v.number(),
+		v.boolean(),
+		v.null(),
+		v.record(v.string(), jsonValueSchema),
+		v.array(jsonValueSchema),
+	]),
+);
 export const inputDeleteModelResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
@@ -33,7 +44,7 @@ export const chatCompletionRoleSchema = inputChatCompletionRoleSchema;
  */
 export const inputCreateChatCompletionImageResponseSchema = v.record(
 	v.string(),
-	v.unknown(),
+	jsonValueSchema,
 );
 export const createChatCompletionImageResponseSchema =
 	inputCreateChatCompletionImageResponseSchema;
@@ -974,7 +985,10 @@ export const completeUploadRequestSchema = v.strictObject({
 	 */
 	md5: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputCancelUploadRequestSchema = v.record(v.string(), v.unknown());
+export const inputCancelUploadRequestSchema = v.record(
+	v.string(),
+	jsonValueSchema,
+);
 export const cancelUploadRequestSchema = inputCancelUploadRequestSchema;
 export const inputCreateFineTuningJobRequestSchema = v.looseObject({
 	/**
@@ -1552,7 +1566,7 @@ export const inputModifyRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const modifyRunRequestSchema = v.strictObject({
 	/**
@@ -1561,7 +1575,7 @@ export const modifyRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputSubmitToolOutputsRunRequestSchema = v.strictObject({
 	/**
@@ -1652,7 +1666,7 @@ export const inputModifyThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const modifyThreadRequestSchema = v.strictObject({
 	/**
@@ -1697,7 +1711,7 @@ export const modifyThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputDeleteThreadResponseSchema = v.looseObject({
 	id: v.string(),
@@ -1716,7 +1730,7 @@ export const inputModifyMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const modifyMessageRequestSchema = v.strictObject({
 	/**
@@ -1725,7 +1739,7 @@ export const modifyMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputDeleteMessageResponseSchema = v.looseObject({
 	id: v.string(),
@@ -1915,7 +1929,7 @@ export const inputBatchRequestOutputSchema = v.looseObject({
 				/**
 				 * The JSON body of the response
 				 */
-				body: v.optional(v.record(v.string(), v.unknown())),
+				body: v.optional(v.record(v.string(), jsonValueSchema)),
 			}),
 		),
 	),
@@ -1960,7 +1974,7 @@ export const batchRequestOutputSchema = v.looseObject({
 				/**
 				 * The JSON body of the response
 				 */
-				body: v.exactOptional(v.record(v.string(), v.unknown())),
+				body: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 			}),
 		),
 	),
@@ -3705,7 +3719,7 @@ export const inputBatchSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const batchSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
@@ -3838,7 +3852,7 @@ export const batchSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputListBatchesResponseSchema = v.looseObject({
 	data: v.array(inputBatchSchema),
@@ -4612,7 +4626,7 @@ export const inputMessageObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const messageObjectSchema = v.looseObject({
 	/**
@@ -4718,7 +4732,7 @@ export const messageObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const inputMessageStreamEventSchema = v.union([
 	v.looseObject({
@@ -4833,7 +4847,7 @@ export const inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		/**
 		 * For now, this is always going to be an empty object.
 		 */
-		file_search: v.record(v.string(), v.unknown()),
+		file_search: v.record(v.string(), jsonValueSchema),
 	});
 export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 	v.looseObject({
@@ -4853,7 +4867,7 @@ export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
 		/**
 		 * For now, this is always going to be an empty object.
 		 */
-		file_search: v.record(v.string(), v.unknown()),
+		file_search: v.record(v.string(), jsonValueSchema),
 	});
 export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
 	v.looseObject({
@@ -5626,7 +5640,7 @@ export const inputRunStepObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: inputRunStepCompletionUsageSchema,
 });
 export const runStepObjectSchema = v.looseObject({
@@ -5718,7 +5732,7 @@ export const runStepObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: runStepCompletionUsageSchema,
 });
 export const inputRunStepStreamEventSchema = v.union([
@@ -5755,7 +5769,7 @@ export const runStepStreamEventSchema = inputRunStepStreamEventSchema;
 /** The schema for the response format, described as a JSON Schema object. */
 export const inputResponseFormatJsonSchemaSchemaSchema = v.record(
 	v.string(),
-	v.unknown(),
+	jsonValueSchema,
 );
 export const responseFormatJsonSchemaSchemaSchema =
 	inputResponseFormatJsonSchemaSchemaSchema;
@@ -5983,7 +5997,10 @@ export const runCompletionUsageSchema = inputRunCompletionUsageSchema;
  *
  * Omitting `parameters` defines a function with an empty parameter list.
  */
-export const inputFunctionParametersSchema = v.record(v.string(), v.unknown());
+export const inputFunctionParametersSchema = v.record(
+	v.string(),
+	jsonValueSchema,
+);
 export const functionParametersSchema = inputFunctionParametersSchema;
 export const inputFunctionObjectSchema = v.looseObject({
 	/**
@@ -6324,7 +6341,7 @@ export const inputRunObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: inputRunCompletionUsageSchema,
 	/**
 	 * The sampling temperature used for this run. If not set, defaults to 1.
@@ -6498,7 +6515,7 @@ export const runObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: runCompletionUsageSchema,
 	/**
 	 * The sampling temperature used for this run. If not set, defaults to 1.
@@ -6625,7 +6642,7 @@ export const inputThreadObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const threadObjectSchema = v.looseObject({
 	/**
@@ -6680,7 +6697,7 @@ export const threadObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const inputThreadStreamEventSchema = v.looseObject({
 	event: v.picklist(["thread.created"]),
@@ -7050,7 +7067,7 @@ export const inputVectorStoreObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const vectorStoreObjectSchema = v.looseObject({
 	/**
@@ -7116,7 +7133,7 @@ export const vectorStoreObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const inputListVectorStoresResponseSchema = v.looseObject({
 	object: v.string(),
@@ -7144,7 +7161,7 @@ export const inputUpdateVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const updateVectorStoreRequestSchema = v.strictObject({
 	/**
@@ -7158,7 +7175,7 @@ export const updateVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputCreateVectorStoreRequestSchema = v.strictObject({
 	/**
@@ -7187,7 +7204,7 @@ export const inputCreateVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const createVectorStoreRequestSchema = v.strictObject({
 	/**
@@ -7218,7 +7235,7 @@ export const createVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputListRunStepsResponseSchema = v.looseObject({
 	object: v.string(),
@@ -7342,7 +7359,7 @@ export const inputCreateMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const createMessageRequestSchema = v.strictObject({
 	/**
@@ -7400,7 +7417,7 @@ export const createMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputCreateThreadRequestSchema = v.strictObject({
 	/**
@@ -7429,8 +7446,8 @@ export const inputCreateThreadRequestSchema = v.strictObject({
 				),
 				file_search: v.optional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -7442,7 +7459,7 @@ export const inputCreateThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const createThreadRequestSchema = v.strictObject({
 	/**
@@ -7473,8 +7490,8 @@ export const createThreadRequestSchema = v.strictObject({
 				),
 				file_search: v.exactOptional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -7486,7 +7503,7 @@ export const createThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 	/**
@@ -7597,7 +7614,7 @@ export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -7759,7 +7776,7 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -7911,7 +7928,7 @@ export const inputCreateRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8051,7 +8068,7 @@ export const createRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8194,7 +8211,7 @@ export const inputAssistantObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8306,7 +8323,7 @@ export const assistantObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8422,7 +8439,7 @@ export const inputModifyAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8530,7 +8547,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8641,8 +8658,8 @@ export const inputCreateAssistantRequestSchema = v.strictObject({
 				),
 				file_search: v.optional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -8654,7 +8671,7 @@ export const inputCreateAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8771,8 +8788,8 @@ export const createAssistantRequestSchema = v.strictObject({
 				),
 				file_search: v.exactOptional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -8784,7 +8801,7 @@ export const createAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it

@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputOpenSchema = v.strictObject(
     {
         "a": v.optional(v.string())

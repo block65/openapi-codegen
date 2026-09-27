@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputBaseSchema = v.looseObject(
     {
         "id": v.optional(v.string())

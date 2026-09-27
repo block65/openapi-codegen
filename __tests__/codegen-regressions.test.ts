@@ -1,5 +1,5 @@
 import type { oas31 } from "openapi3-ts";
-import { expect, test } from "vitest";
+import { test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 import { expectGenerated } from "./generated-snapshot.ts";
 
@@ -516,6 +516,30 @@ test("a $ref nested past the top level registers after its target", async () => 
 				Leaf: {
 					type: "object",
 					properties: { name: { type: "string" } },
+					additionalProperties: false,
+				},
+			},
+		},
+	});
+
+	await expectGenerated([result.typesFile, result.valibotFile]);
+});
+
+test("a value the schema leaves open is a JsonValue on both sides", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				Open: {
+					type: "object",
+					required: ["anything", "record", "list"],
+					properties: {
+						anything: {},
+						record: { type: "object", additionalProperties: true },
+						list: { type: "array" },
+					},
 					additionalProperties: false,
 				},
 			},

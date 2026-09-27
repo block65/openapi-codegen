@@ -5,6 +5,7 @@ import {
 	type CodeBlockWriter,
 	type Project,
 	type SourceFile,
+	SyntaxKind,
 	VariableDeclarationKind,
 	type WriterFunction,
 	Writers,
@@ -238,6 +239,9 @@ function shouldCoerceSchema(
 
 	return combinator ? combinator.some((s) => shouldCoerceSchema(s)) : false;
 }
+
+// the generated passthrough for a value a schema leaves open
+const jsonValueSchema = "jsonValueSchema";
 
 function resolveRef(
 	validators: Map<string, ValidatorEntry>,
@@ -660,7 +664,7 @@ function objectValidator(
 	if (Object.keys(props).length === 0) {
 		return maybeNullable(
 			maybePipe(
-				vcall("record", vcall("string"), rest ?? vcall("unknown")),
+				vcall("record", vcall("string"), rest ?? jsonValueSchema),
 				...minMaxProperties(schema),
 			),
 			isNullable,
@@ -743,7 +747,7 @@ function schemaToValidator(
 	if (schema.type === "array") {
 		const items = schema.items
 			? schemaToValidator(validators, schema.items, mode)
-			: vcall("unknown");
+			: jsonValueSchema;
 
 		return maybeNullable(
 			maybePipe(
@@ -771,11 +775,36 @@ function schemaToValidator(
 		);
 	}
 
+	// an empty schema admits any JSON value, as the TS side types it
+	if (Object.keys(schema).length === 0) {
+		return jsonValueSchema;
+	}
+
 	if (schema.type === "object" || schema.properties || !schema.type) {
 		return objectValidator(validators, schema, mode, isNullable);
 	}
 
 	return schema.type === "null" ? vcall("null") : vcall("unknown");
+}
+
+/**
+ * Removes the JSON value schema when no validator uses it. The recursion
+ * inside it refers to it, so fixUnusedIdentifiers keeps it otherwise
+ */
+export function removeUnusedJsonValueSchema(file: SourceFile) {
+	const declaration = file.getVariableDeclaration(jsonValueSchema);
+
+	const usedOutside = file
+		.getDescendantsOfKind(SyntaxKind.Identifier)
+		.some(
+			(identifier) =>
+				identifier.getText() === jsonValueSchema &&
+				!identifier.getAncestors().includes(declaration ?? identifier),
+		);
+
+	if (declaration && !usedOutside) {
+		declaration.getVariableStatementOrThrow().remove();
+	}
 }
 
 export function createValibotFile(project: Project, outputDir: string) {
@@ -791,6 +820,25 @@ export function createValibotFile(project: Project, outputDir: string) {
 	file.addImportDeclaration({
 		moduleSpecifier: "valibot",
 		namespaceImport: "v",
+	});
+
+	file.addImportDeclaration({
+		moduleSpecifier: "type-fest",
+		namedImports: ["JsonValue"],
+		isTypeOnly: true,
+	});
+
+	// A value a schema leaves open is checked as JSON, recursively, so both
+	// sides type it as JsonValue
+	file.addVariableStatement({
+		declarationKind: VariableDeclarationKind.Const,
+		declarations: [
+			{
+				name: jsonValueSchema,
+				type: "v.GenericSchema<JsonValue>",
+				initializer: `v.lazy(() => v.union([v.string(), v.number(), v.boolean(), v.null(), v.record(v.string(), ${jsonValueSchema}), v.array(${jsonValueSchema})]))`,
+			},
+		],
 	});
 
 	return file;

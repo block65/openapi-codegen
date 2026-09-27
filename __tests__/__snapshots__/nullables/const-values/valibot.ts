@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputStringConstSchema = v.literal("hello");
 export const stringConstSchema = inputStringConstSchema;
 export const inputNumberConstSchema = v.literal(42);

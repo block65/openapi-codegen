@@ -517,13 +517,13 @@ function objectType(
 		);
 
 		return {
-			type: recordType(value.type ?? "Jsonifiable"),
+			type: recordType(value.type ?? "JsonValue"),
 			isReadonly: !!schemaObject.readOnly,
 		};
 	}
 
 	return {
-		type: "Record<string, Jsonifiable>",
+		type: "Record<string, JsonValue>",
 	};
 }
 
@@ -628,7 +628,7 @@ function schemaObjectType(
 	// empty schemaObject
 	if (Object.keys(schemaObject).length === 0) {
 		return {
-			type: maybeWithNullUnion("Jsonifiable", schemaTypeIsNull(schemaObject)),
+			type: maybeWithNullUnion("JsonValue", schemaTypeIsNull(schemaObject)),
 			isReadonly: !!schemaObject.readOnly,
 		};
 	}
@@ -871,7 +871,7 @@ export function registerTypesFromSchema(
 		// in TypeScript, since JSON Schema names such as `integer` differ
 		register(
 			schemaToType(typesAndInterfaces, {}, schemaName, schemaObject).type ??
-				"Record<string, Jsonifiable>",
+				"Record<string, JsonValue>",
 			schemaObject.description,
 		);
 	}

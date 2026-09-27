@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputLeafSchema = v.strictObject(
     {
         "name": v.optional(v.string())

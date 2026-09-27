@@ -7,7 +7,7 @@
 // oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-comment-list, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-hedging-comment, block65/no-jargon-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, unicorn-unported/comment-content
 
 import type {
-	Jsonifiable,
+	JsonValue,
 	LiteralUnion,
 	UndefinedOnPartialDeep,
 } from "type-fest";
@@ -28,7 +28,7 @@ export type ChatCompletionRole =
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export type CreateChatCompletionImageResponse = Record<string, Jsonifiable>;
+export type CreateChatCompletionImageResponse = Record<string, JsonValue>;
 export type CreateImageRequest = {
 	/**
 	 * A text description of the desired image(s). The maximum length is 1000
@@ -320,7 +320,7 @@ export type CompleteUploadRequest = {
 	part_ids: readonly string[];
 	md5?: string;
 };
-export type CancelUploadRequest = Record<string, Jsonifiable>;
+export type CancelUploadRequest = Record<string, JsonValue>;
 export type CreateFineTuningJobRequest = {
 	/**
 	 * The name of the model to fine-tune. You can select one of the
@@ -518,7 +518,7 @@ export type DeleteAssistantResponse = {
 	object: "assistant.deleted";
 };
 export type ModifyRunRequest = {
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type SubmitToolOutputsRunRequest = {
 	tool_outputs: readonly {
@@ -542,7 +542,7 @@ export type ModifyThreadRequest = {
 			vector_store_ids?: readonly string[];
 		};
 	} | null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type DeleteThreadResponse = {
 	id: string;
@@ -550,7 +550,7 @@ export type DeleteThreadResponse = {
 	object: "thread.deleted";
 };
 export type ModifyMessageRequest = {
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type DeleteMessageResponse = {
 	id: string;
@@ -609,7 +609,7 @@ export type BatchRequestOutput = {
 	response?: {
 		status_code?: number;
 		request_id?: string;
-		body?: Record<string, Jsonifiable>;
+		body?: Record<string, JsonValue>;
 	} | null;
 	error?: {
 		code?: string;
@@ -1101,7 +1101,7 @@ export type Batch = {
 		completed: number;
 		failed: number;
 	};
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type ListBatchesResponse = {
 	data: readonly Batch[];
@@ -1423,7 +1423,7 @@ export type MessageObject = {
 				)[];
 		  }[]
 		| null;
-	metadata: Record<string, Jsonifiable> | null;
+	metadata: Record<string, JsonValue> | null;
 };
 export type MessageStreamEvent =
 	| {
@@ -1478,7 +1478,7 @@ export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
 	 * @enum file_search
 	 */
 	type: "file_search";
-	file_search: Record<string, Jsonifiable>;
+	file_search: Record<string, JsonValue>;
 };
 export type RunStepDeltaStepDetailsToolCallsCodeOutputImageObject = {
 	index: number;
@@ -1719,7 +1719,7 @@ export type RunStepObject = {
 	cancelled_at: number | null;
 	failed_at: number | null;
 	completed_at: number | null;
-	metadata: Record<string, Jsonifiable> | null;
+	metadata: Record<string, JsonValue> | null;
 	/**
 	 * Usage statistics related to the run step. This value will be `null` while
 	 * the run step's status is `in_progress`.
@@ -1766,7 +1766,7 @@ export type RunStepStreamEvent =
 			data: RunStepObject;
 	  };
 /** The schema for the response format, described as a JSON Schema object. */
-export type ResponseFormatJsonSchemaSchema = Record<string, Jsonifiable>;
+export type ResponseFormatJsonSchemaSchema = Record<string, JsonValue>;
 export type ResponseFormatJsonSchema = {
 	/**
 	 * The type of response format being defined: `json_schema`
@@ -1892,7 +1892,7 @@ export type RunCompletionUsage = {
  *
  * Omitting `parameters` defines a function with an empty parameter list.
  */
-export type FunctionParameters = Record<string, Jsonifiable>;
+export type FunctionParameters = Record<string, JsonValue>;
 export type FunctionObject = {
 	description?: string;
 	name: string;
@@ -2035,7 +2035,7 @@ export type RunObject = {
 		| AssistantToolsFileSearch
 		| AssistantToolsFunction
 	)[];
-	metadata: Record<string, Jsonifiable> | null;
+	metadata: Record<string, JsonValue> | null;
 	/**
 	 * Usage statistics related to the run. This value will be `null` if the run
 	 * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
@@ -2167,7 +2167,7 @@ export type ThreadObject = {
 			vector_store_ids?: readonly string[];
 		};
 	} | null;
-	metadata: Record<string, Jsonifiable> | null;
+	metadata: Record<string, JsonValue> | null;
 };
 export type ThreadStreamEvent = {
 	event: "thread.created";
@@ -2355,7 +2355,7 @@ export type VectorStoreObject = {
 	expires_after?: VectorStoreExpirationAfter;
 	expires_at?: number | null;
 	last_active_at: number | null;
-	metadata: Record<string, Jsonifiable> | null;
+	metadata: Record<string, JsonValue> | null;
 };
 export type ListVectorStoresResponse = {
 	object: string;
@@ -2368,7 +2368,7 @@ export type UpdateVectorStoreRequest = {
 	name?: string | null;
 	/** The expiration policy for a vector store. */
 	expires_after?: VectorStoreExpirationAfter;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type CreateVectorStoreRequest = {
 	file_ids?: readonly string[];
@@ -2378,7 +2378,7 @@ export type CreateVectorStoreRequest = {
 	chunking_strategy?:
 		| AutoChunkingStrategyRequestParam
 		| StaticChunkingStrategyRequestParam;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type ListRunStepsResponse = {
 	object: string;
@@ -2437,7 +2437,7 @@ export type CreateMessageRequest = {
 				)[];
 		  }[]
 		| null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type CreateThreadRequest = {
 	messages?: readonly CreateMessageRequest[];
@@ -2453,7 +2453,7 @@ export type CreateThreadRequest = {
 		};
 		file_search?: unknown;
 	} | null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type CreateThreadAndRunRequest = {
 	assistant_id: string;
@@ -2513,7 +2513,7 @@ export type CreateThreadAndRunRequest = {
 			vector_store_ids?: readonly string[];
 		};
 	} | null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2636,7 +2636,7 @@ export type CreateRunRequest = {
 				| AssistantToolsFunction
 		  )[]
 		| null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2745,7 +2745,7 @@ export type AssistantObject = {
 			vector_store_ids?: readonly string[];
 		};
 	} | null;
-	metadata: Record<string, Jsonifiable> | null;
+	metadata: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2826,7 +2826,7 @@ export type ModifyAssistantRequest = {
 			vector_store_ids?: readonly string[];
 		};
 	} | null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2930,7 +2930,7 @@ export type CreateAssistantRequest = {
 		};
 		file_search?: unknown;
 	} | null;
-	metadata?: Record<string, Jsonifiable> | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it

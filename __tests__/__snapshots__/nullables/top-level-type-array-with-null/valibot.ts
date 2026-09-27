@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputNullableStringSchema = v.nullable(v.string());
 export const nullableStringSchema = inputNullableStringSchema;
 export const inputNullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));

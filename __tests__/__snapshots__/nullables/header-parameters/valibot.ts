@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputUploadStatusSchema = v.picklist(["pending", "complete"]);
 export const uploadStatusSchema = inputUploadStatusSchema;
 export const inputUploadDataCommandResponseSchema = inputUploadStatusSchema;
