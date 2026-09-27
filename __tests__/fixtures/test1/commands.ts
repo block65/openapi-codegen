@@ -212,7 +212,8 @@ export class GetBillingAccountPortalCommand extends Command<
  *
  */
 export class LinkBillingAccountCommand extends Command<
-	UndefinedOnPartialDeep<LinkBillingAccountCommandInput>
+	UndefinedOnPartialDeep<LinkBillingAccountCommandInput>,
+	never
 > {
 	public override method = "post" as const;
 

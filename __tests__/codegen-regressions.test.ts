@@ -551,3 +551,47 @@ test("a value the schema leaves open is a JsonValue on both sides", async () => 
 	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
+
+test("a bodiless success is undefined, and no documented success is never", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {
+			"/no-content": {
+				delete: {
+					operationId: "noContentCommand",
+					responses: { "204": { description: "No Content" } },
+				},
+			},
+			"/ok-without-body": {
+				post: {
+					operationId: "okWithoutBodyCommand",
+					responses: { "200": { description: "OK" } },
+				},
+			},
+			"/failures-only": {
+				post: {
+					operationId: "failuresOnlyCommand",
+					responses: { "400": { description: "Bad Request" } },
+				},
+			},
+			"/nothing-documented": {
+				post: { operationId: "nothingDocumentedCommand", responses: {} },
+			},
+			"/bytes": {
+				get: {
+					operationId: "bytesCommand",
+					responses: {
+						"200": {
+							description: "OK",
+							content: { "application/octet-stream": {} },
+						},
+					},
+				},
+			},
+		},
+	});
+
+	expect(result.commandsFile.getText()).toMatchSnapshot("commands.ts");
+	expect(result.mainFile.getText()).toMatchSnapshot("main.ts");
+});

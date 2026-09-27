@@ -1529,6 +1529,17 @@ function jsonOutputRef(jsonResponse: oas31.MediaTypeObject) {
 	return outputRef ? { ref: outputRef, isArray: !!arrayRef } : undefined;
 }
 
+// rest-client resolves a bodiless success, a 204 included, with undefined
+function isBodiless(
+	statusCode: string,
+	res: oas31.ResponseObject | oas31.ReferenceObject,
+) {
+	return (
+		statusCode === "204" ||
+		(!("$ref" in res) && Object.keys(res.content ?? {}).length === 0)
+	);
+}
+
 function addOutputTypeArgument(
 	documentCtx: DocumentContext,
 	operationCtx: OperationContext,
@@ -1537,20 +1548,19 @@ function addOutputTypeArgument(
 ) {
 	const { commandClass } = operationCtx;
 
-	// this is just like a 204 response
 	let hasOutputType = false;
 
-	if (
-		!operationObject.responses ||
-		Object.keys(operationObject.responses).length === 0
-	) {
-		commandClass.getExtends()?.addTypeArgument(unspecifiedKeyword);
+	const successResponses = Object.entries({
+		...operationObject.responses,
+	}).filter(([s]) => s.startsWith("2"));
+
+	// with only failures documented, json() and send() only ever reject
+	if (successResponses.length === 0) {
+		commandClass.getExtends()?.addTypeArgument(neverKeyword);
 		hasOutputType = true;
 	}
 
-	for (const [statusCode, response] of Object.entries({
-		...operationObject.responses,
-	}).filter(([s]) => s.startsWith("2"))) {
+	for (const [statusCode, response] of successResponses) {
 		// Output is one type argument, so the first usable 2xx response
 		// settles it. An operation documenting both a 200 and a 204 would
 		// otherwise add a second argument, which lands in the query slot
@@ -1559,8 +1569,7 @@ function addOutputTypeArgument(
 			break;
 		}
 
-		// early out if response is 204
-		if (statusCode === "204") {
+		if (isBodiless(statusCode, response)) {
 			commandClass.getExtends()?.addTypeArgument(emptyKeyword);
 
 			documentCtx.outputTypes.add(emptyKeyword);

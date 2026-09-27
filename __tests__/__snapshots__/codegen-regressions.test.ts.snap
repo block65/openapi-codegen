@@ -64,6 +64,89 @@ export const inArrayItemSchema = v.array(v.looseObject(
 "
 `;
 
+exports[`a bodiless success is undefined, and no documented success is never > commands.ts 1`] = `
+"import { Command } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { NoContentCommandInput, OkWithoutBodyCommandInput, FailuresOnlyCommandInput, NothingDocumentedCommandInput, BytesCommandInput } from "./types.js";
+
+
+/**
+ * NoContentCommand
+ *
+ */
+export class NoContentCommand extends Command<UndefinedOnPartialDeep<NoContentCommandInput>, undefined> {
+    public override method = "delete" as const;
+
+    constructor() {
+        super("/no-content");
+    }
+}
+
+/**
+ * OkWithoutBodyCommand
+ *
+ */
+export class OkWithoutBodyCommand extends Command<UndefinedOnPartialDeep<OkWithoutBodyCommandInput>, undefined> {
+    public override method = "post" as const;
+
+    constructor() {
+        super("/ok-without-body");
+    }
+}
+
+/**
+ * FailuresOnlyCommand
+ *
+ */
+export class FailuresOnlyCommand extends Command<UndefinedOnPartialDeep<FailuresOnlyCommandInput>, never> {
+    public override method = "post" as const;
+
+    constructor() {
+        super("/failures-only");
+    }
+}
+
+/**
+ * NothingDocumentedCommand
+ *
+ */
+export class NothingDocumentedCommand extends Command<UndefinedOnPartialDeep<NothingDocumentedCommandInput>, never> {
+    public override method = "post" as const;
+
+    constructor() {
+        super("/nothing-documented");
+    }
+}
+
+/**
+ * BytesCommand
+ *
+ */
+export class BytesCommand extends Command<UndefinedOnPartialDeep<BytesCommandInput>> {
+    public override method = "get" as const;
+
+    constructor() {
+        super("/bytes");
+    }
+}
+"
+`;
+
+exports[`a bodiless success is undefined, and no documented success is never > main.ts 1`] = `
+"import { RestServiceClient, type RestServiceClientConfig } from "@block65/rest-client";
+
+export { ResponseValidationError } from "@block65/rest-client";
+
+type AllOutputs = undefined;
+
+export class TestRestClient extends RestServiceClient<unknown, AllOutputs> {
+    constructor(baseUrl: string | URL = new URL('https://api.example.com/'), config?: RestServiceClientConfig) {
+        super(baseUrl, config);
+    }
+}
+"
+`;
+
 exports[`a oneOf query param keeps the stringish wire types in every branch > types.ts 1`] = `
 "import type { UndefinedOnPartialDeep } from "type-fest";
 
