@@ -20,34 +20,34 @@
 		"preversion": "just check"
 	},
 	"dependencies": {
-		"@apidevtools/json-schema-ref-parser": "^16.0.2",
+		"@apidevtools/json-schema-ref-parser": "^16.0.3",
 		"camelcase": "^9.0.0",
 		"toposort": "^2.0.2",
 		"ts-morph": "^28.0.0",
 		"word-wrap": "^1.2.5",
-		"yargs": "^18.1.0"
+		"yargs": "^18.2.0"
 	},
 	"devDependencies": {
-		"@block65/rest-client": "^15.0.0",
+		"@block65/rest-client": "^15.0.1",
 		"@block65/shared-config": "^0.6.0",
 		"@block65/tsconfig": "^0.3.1",
 		"@hono/standard-validator": "^0.4.0",
-		"@types/node": "^26.6.2",
+		"@types/node": "^26.6.3",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
-		"fallow": "^3.28.0",
-		"hono": "^4.13.8",
+		"fallow": "^3.29.0",
+		"hono": "^4.13.9",
 		"js-yaml": "^5.4.2",
 		"openapi3-ts": "^4.6.1",
-		"oxfmt": "^0.68.0",
+		"oxfmt": "^0.70.0",
 		"oxlint": "^1.83.0",
 		"oxlint-tsgolint": "^7.0.2003",
 		"type-fest": "^5.10.0",
 		"typescript": "^7.0.2",
-		"undici": "^8.10.2",
+		"undici": "^8.11.2",
 		"valibot": "^1.5.0",
-		"vite": "^8.3.0",
-		"vitest": "^5.0.1"
+		"vite": "^8.3.1",
+		"vitest": "^5.0.2"
 	},
 	"peerDependencies": {
 		"@block65/rest-client": "^15.0.0",
