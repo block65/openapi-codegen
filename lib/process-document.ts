@@ -500,9 +500,20 @@ function ensureTypeImport(
 
 function sortedComponentSchemas(schema: oas32.OpenAPIObject) {
 	const schemas = Object.entries(schema.components?.schemas || {});
+	const defined = new Set(
+		schemas.map(([schemaName]) => `#/components/schemas/${schemaName}`),
+	);
 
 	const schemaGraph = schemas.flatMap(([schemaName, schemaObject]) => {
 		const deps = getDependents(schemaObject);
+		const missing = deps.find((dep) => !defined.has(dep));
+
+		if (missing) {
+			throw new Error(
+				`${schemaName} refers to ${missing}, which is not a schema in components.schemas`,
+			);
+		}
+
 		// oxlint-disable-next-line block65/no-explicit-return-type -- inference widens the pair to string[], and toposort takes a mutable tuple
 		return deps.map((dep): [string, string] => [
 			`#/components/schemas/${schemaName}`,

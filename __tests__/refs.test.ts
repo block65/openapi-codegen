@@ -44,3 +44,16 @@ test("a property named after a keyword still orders by its $ref", async () => {
 	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
+
+test("a $ref to an undefined schema names the schema and the ref", async () => {
+	await expect(
+		generateSchemas({
+			Order: {
+				type: "object",
+				properties: { customer: { $ref: "#/components/schemas/Customer" } },
+			},
+		}),
+	).rejects.toThrow(
+		"Order refers to #/components/schemas/Customer, which is not a schema in components.schemas",
+	);
+});
