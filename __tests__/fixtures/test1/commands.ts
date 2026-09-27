@@ -4,13 +4,20 @@
  * Do not edit directly
  */
 
-import { Command, jsonStringify } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import {
+	Command,
+	EventStreamCommand,
+	jsonStringify,
+} from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	ImportBillingDataCommandHeader,
-	ImportBillingDataCommandInput,
+	ImportBillingDataCommandBodyNonJson,
+	ImportBillingDataCommandParams,
 	LongRunningOperation,
 	GetOperationCommandInput,
+	StreamOperationEventsCommandInput,
+	StreamOperationEventsCommandOutput,
 	ListBillingAccountsCommandInput,
 	BillingAccountList,
 	CreateBillingAccountCommandInput,
@@ -56,8 +63,8 @@ function encodePath(strings: TemplateStringsArray, ...values: string[]) {
  *
  */
 export class ImportBillingDataCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImportBillingDataCommandInput, "body">> &
-		Pick<ImportBillingDataCommandInput, "body">,
+	ImportBillingDataCommandBodyNonJson &
+		UndefinedOnPartialDeep<ImportBillingDataCommandParams>,
 	LongRunningOperation,
 	never,
 	ImportBillingDataCommandHeader
@@ -65,10 +72,8 @@ export class ImportBillingDataCommand extends Command<
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<
-			Except<ImportBillingDataCommandInput, "body">
-		> &
-			Pick<ImportBillingDataCommandInput, "body">,
+		input: ImportBillingDataCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImportBillingDataCommandParams>,
 		headers: ImportBillingDataCommandHeader,
 	) {
 		const { billingAccountId, body } = input;
@@ -94,6 +99,24 @@ export class GetOperationCommand extends Command<
 	constructor(input: UndefinedOnPartialDeep<GetOperationCommandInput>) {
 		const { operationId } = input;
 		super(encodePath`/operations/${operationId}`);
+	}
+}
+
+/**
+ * StreamOperationEventsCommand
+ *
+ */
+export class StreamOperationEventsCommand extends EventStreamCommand<
+	UndefinedOnPartialDeep<StreamOperationEventsCommandInput>,
+	StreamOperationEventsCommandOutput
+> {
+	public override method = "get" as const;
+
+	constructor(
+		input: UndefinedOnPartialDeep<StreamOperationEventsCommandInput>,
+	) {
+		const { operationId } = input;
+		super(encodePath`/operations/${operationId}/events`);
 	}
 }
 

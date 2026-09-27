@@ -169,7 +169,7 @@ exports[`header parameters > commands-validated.ts 1`] = `
 import * as schemas from "./valibot.js";
 
 export class UploadDataCommand extends commands.UploadDataCommand {
-    static responseSchema = schemas.uploadDataCommandResponseSchema;
+    public override readonly responseSchema = schemas.uploadDataCommandResponseSchema;
 }
 "
 `;

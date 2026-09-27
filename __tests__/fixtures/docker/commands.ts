@@ -12,7 +12,7 @@ import {
 	jsonStringify,
 	formJoinSerializer,
 } from "@block65/rest-client";
-import type { Except, UndefinedOnPartialDeep } from "type-fest";
+import type { UndefinedOnPartialDeep } from "type-fest";
 import type {
 	ContainerListCommandQuery,
 	ContainerListCommandInput,
@@ -62,7 +62,8 @@ import type {
 	ContainerArchiveCommandQuery,
 	ContainerArchiveCommandInput,
 	PutContainerArchiveCommandQuery,
-	PutContainerArchiveCommandInput,
+	PutContainerArchiveCommandBodyNonJson,
+	PutContainerArchiveCommandParams,
 	ContainerArchiveInfoCommandQuery,
 	ContainerArchiveInfoCommandInput,
 	ContainerPruneCommandQuery,
@@ -73,13 +74,13 @@ import type {
 	ImageListCommandOutput,
 	ImageBuildCommandQuery,
 	ImageBuildCommandHeader,
-	ImageBuildCommandInput,
+	ImageBuildCommandBodyNonJson,
 	BuildPruneCommandQuery,
 	BuildPruneCommandInput,
 	BuildPruneCommandOutput,
 	ImageCreateCommandQuery,
 	ImageCreateCommandHeader,
-	ImageCreateCommandInput,
+	ImageCreateCommandBodyNonJson,
 	ImageInspectCommandInput,
 	ImageInspectCommandOutput,
 	ImageHistoryCommandInput,
@@ -119,7 +120,7 @@ import type {
 	ImageGetAllCommandQuery,
 	ImageGetAllCommandInput,
 	ImageLoadCommandQuery,
-	ImageLoadCommandInput,
+	ImageLoadCommandBodyNonJson,
 	ContainerExecCommandInput,
 	ContainerExecCommandOutput,
 	ExecStartCommandInput,
@@ -177,7 +178,7 @@ import type {
 	PluginUpgradeCommandHeader,
 	PluginUpgradeCommandInput,
 	PluginCreateCommandQuery,
-	PluginCreateCommandInput,
+	PluginCreateCommandBodyNonJson,
 	PluginPushCommandInput,
 	PluginSetCommandInput,
 	NodeListCommandQuery,
@@ -886,18 +887,20 @@ export class ContainerArchiveCommand extends Command<
  * @summary Extract an archive of files or folders to a directory in a container
  */
 export class PutContainerArchiveCommand extends Command<
-	UndefinedOnPartialDeep<Except<PutContainerArchiveCommandInput, "body">> &
-		Pick<PutContainerArchiveCommandInput, "body">,
+	PutContainerArchiveCommandBodyNonJson &
+		UndefinedOnPartialDeep<
+			PutContainerArchiveCommandParams & PutContainerArchiveCommandQuery
+		>,
 	unknown,
 	PutContainerArchiveCommandQuery
 > {
 	public override method = "put" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<
-			Except<PutContainerArchiveCommandInput, "body">
-		> &
-			Pick<PutContainerArchiveCommandInput, "body">,
+		input: PutContainerArchiveCommandBodyNonJson &
+			UndefinedOnPartialDeep<
+				PutContainerArchiveCommandParams & PutContainerArchiveCommandQuery
+			>,
 	) {
 		const { id, path, noOverwriteDirNonDir, copyUIDGID, body } = input;
 		super(
@@ -993,8 +996,7 @@ export class ImageListCommand extends Command<
  * @summary Build an image
  */
 export class ImageBuildCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImageBuildCommandInput, "body">> &
-		Pick<ImageBuildCommandInput, "body">,
+	ImageBuildCommandBodyNonJson & UndefinedOnPartialDeep<ImageBuildCommandQuery>,
 	unknown,
 	ImageBuildCommandQuery,
 	ImageBuildCommandHeader
@@ -1002,8 +1004,8 @@ export class ImageBuildCommand extends Command<
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<ImageBuildCommandInput, "body">> &
-			Pick<ImageBuildCommandInput, "body">,
+		input: ImageBuildCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageBuildCommandQuery>,
 		headers?: ImageBuildCommandHeader,
 	) {
 		const {
@@ -1097,8 +1099,8 @@ export class BuildPruneCommand extends Command<
  * @summary Create an image
  */
 export class ImageCreateCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
-		Pick<ImageCreateCommandInput, "body">,
+	ImageCreateCommandBodyNonJson &
+		UndefinedOnPartialDeep<ImageCreateCommandQuery>,
 	unknown,
 	ImageCreateCommandQuery,
 	ImageCreateCommandHeader
@@ -1107,8 +1109,8 @@ export class ImageCreateCommand extends Command<
 	public override querySerializer = formJoinSerializer;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<ImageCreateCommandInput, "body">> &
-			Pick<ImageCreateCommandInput, "body">,
+		input: ImageCreateCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageCreateCommandQuery>,
 		headers?: ImageCreateCommandHeader,
 	) {
 		const { fromImage, fromSrc, repo, tag, message, changes, platform, body } =
@@ -1542,16 +1544,15 @@ export class ImageGetAllCommand extends Command<
  * @summary Import images
  */
 export class ImageLoadCommand extends Command<
-	UndefinedOnPartialDeep<Except<ImageLoadCommandInput, "body">> &
-		Pick<ImageLoadCommandInput, "body">,
+	ImageLoadCommandBodyNonJson & UndefinedOnPartialDeep<ImageLoadCommandQuery>,
 	unknown,
 	ImageLoadCommandQuery
 > {
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<ImageLoadCommandInput, "body">> &
-			Pick<ImageLoadCommandInput, "body">,
+		input: ImageLoadCommandBodyNonJson &
+			UndefinedOnPartialDeep<ImageLoadCommandQuery>,
 	) {
 		const { quiet, body } = input;
 		super("/images/load", body, stripUndefined({ quiet }));
@@ -2045,16 +2046,16 @@ export class PluginUpgradeCommand extends Command<
  * @summary Create a plugin
  */
 export class PluginCreateCommand extends Command<
-	UndefinedOnPartialDeep<Except<PluginCreateCommandInput, "body">> &
-		Pick<PluginCreateCommandInput, "body">,
+	PluginCreateCommandBodyNonJson &
+		UndefinedOnPartialDeep<PluginCreateCommandQuery>,
 	undefined,
 	PluginCreateCommandQuery
 > {
 	public override method = "post" as const;
 
 	constructor(
-		input: UndefinedOnPartialDeep<Except<PluginCreateCommandInput, "body">> &
-			Pick<PluginCreateCommandInput, "body">,
+		input: PluginCreateCommandBodyNonJson &
+			UndefinedOnPartialDeep<PluginCreateCommandQuery>,
 	) {
 		const { name, body } = input;
 		super("/plugins/create", body, stripUndefined({ name }));

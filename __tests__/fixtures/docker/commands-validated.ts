@@ -8,223 +8,277 @@ import * as commands from "./commands.js";
 import * as schemas from "./valibot.js";
 
 export class ContainerListCommand extends commands.ContainerListCommand {
-	static responseSchema = schemas.containerListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerListCommandResponseSchema;
 }
 
 export class ContainerCreateCommand extends commands.ContainerCreateCommand {
-	static responseSchema = schemas.containerCreateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerCreateCommandResponseSchema;
 }
 
 export class ContainerInspectCommand extends commands.ContainerInspectCommand {
-	static responseSchema = schemas.containerInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerInspectCommandResponseSchema;
 }
 
 export class ContainerTopCommand extends commands.ContainerTopCommand {
-	static responseSchema = schemas.containerTopCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerTopCommandResponseSchema;
 }
 
 export class ContainerChangesCommand extends commands.ContainerChangesCommand {
-	static responseSchema = schemas.containerChangesCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerChangesCommandResponseSchema;
 }
 
 export class ContainerStatsCommand extends commands.ContainerStatsCommand {
-	static responseSchema = schemas.containerStatsCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerStatsCommandResponseSchema;
 }
 
 export class ContainerUpdateCommand extends commands.ContainerUpdateCommand {
-	static responseSchema = schemas.containerUpdateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerUpdateCommandResponseSchema;
 }
 
 export class ContainerWaitCommand extends commands.ContainerWaitCommand {
-	static responseSchema = schemas.containerWaitCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerWaitCommandResponseSchema;
 }
 
 export class ContainerPruneCommand extends commands.ContainerPruneCommand {
-	static responseSchema = schemas.containerPruneCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerPruneCommandResponseSchema;
 }
 
 export class ImageListCommand extends commands.ImageListCommand {
-	static responseSchema = schemas.imageListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imageListCommandResponseSchema;
 }
 
 export class BuildPruneCommand extends commands.BuildPruneCommand {
-	static responseSchema = schemas.buildPruneCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.buildPruneCommandResponseSchema;
 }
 
 export class ImageInspectCommand extends commands.ImageInspectCommand {
-	static responseSchema = schemas.imageInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imageInspectCommandResponseSchema;
 }
 
 export class ImageHistoryCommand extends commands.ImageHistoryCommand {
-	static responseSchema = schemas.imageHistoryCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imageHistoryCommandResponseSchema;
 }
 
 export class ImageDeleteCommand extends commands.ImageDeleteCommand {
-	static responseSchema = schemas.imageDeleteCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imageDeleteCommandResponseSchema;
 }
 
 export class ImageSearchCommand extends commands.ImageSearchCommand {
-	static responseSchema = schemas.imageSearchCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imageSearchCommandResponseSchema;
 }
 
 export class ImagePruneCommand extends commands.ImagePruneCommand {
-	static responseSchema = schemas.imagePruneCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imagePruneCommandResponseSchema;
 }
 
 export class SystemAuthCommand extends commands.SystemAuthCommand {
-	static responseSchema = schemas.systemAuthCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.systemAuthCommandResponseSchema;
 }
 
 export class SystemInfoCommand extends commands.SystemInfoCommand {
-	static responseSchema = schemas.systemInfoCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.systemInfoCommandResponseSchema;
 }
 
 export class SystemVersionCommand extends commands.SystemVersionCommand {
-	static responseSchema = schemas.systemVersionCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.systemVersionCommandResponseSchema;
 }
 
 export class ImageCommitCommand extends commands.ImageCommitCommand {
-	static responseSchema = schemas.imageCommitCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.imageCommitCommandResponseSchema;
 }
 
 export class SystemEventsCommand extends commands.SystemEventsCommand {
-	static responseSchema = schemas.systemEventsCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.systemEventsCommandResponseSchema;
 }
 
 export class SystemDataUsageCommand extends commands.SystemDataUsageCommand {
-	static responseSchema = schemas.systemDataUsageCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.systemDataUsageCommandResponseSchema;
 }
 
 export class ContainerExecCommand extends commands.ContainerExecCommand {
-	static responseSchema = schemas.containerExecCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.containerExecCommandResponseSchema;
 }
 
 export class ExecInspectCommand extends commands.ExecInspectCommand {
-	static responseSchema = schemas.execInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.execInspectCommandResponseSchema;
 }
 
 export class VolumeListCommand extends commands.VolumeListCommand {
-	static responseSchema = schemas.volumeListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.volumeListCommandResponseSchema;
 }
 
 export class VolumeCreateCommand extends commands.VolumeCreateCommand {
-	static responseSchema = schemas.volumeCreateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.volumeCreateCommandResponseSchema;
 }
 
 export class VolumeInspectCommand extends commands.VolumeInspectCommand {
-	static responseSchema = schemas.volumeInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.volumeInspectCommandResponseSchema;
 }
 
 export class VolumePruneCommand extends commands.VolumePruneCommand {
-	static responseSchema = schemas.volumePruneCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.volumePruneCommandResponseSchema;
 }
 
 export class NetworkListCommand extends commands.NetworkListCommand {
-	static responseSchema = schemas.networkListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.networkListCommandResponseSchema;
 }
 
 export class NetworkInspectCommand extends commands.NetworkInspectCommand {
-	static responseSchema = schemas.networkInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.networkInspectCommandResponseSchema;
 }
 
 export class NetworkCreateCommand extends commands.NetworkCreateCommand {
-	static responseSchema = schemas.networkCreateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.networkCreateCommandResponseSchema;
 }
 
 export class NetworkPruneCommand extends commands.NetworkPruneCommand {
-	static responseSchema = schemas.networkPruneCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.networkPruneCommandResponseSchema;
 }
 
 export class PluginListCommand extends commands.PluginListCommand {
-	static responseSchema = schemas.pluginListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.pluginListCommandResponseSchema;
 }
 
 export class GetPluginPrivilegesCommand
 	extends commands.GetPluginPrivilegesCommand
 {
-	static responseSchema = schemas.getPluginPrivilegesCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.getPluginPrivilegesCommandResponseSchema;
 }
 
 export class PluginInspectCommand extends commands.PluginInspectCommand {
-	static responseSchema = schemas.pluginInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.pluginInspectCommandResponseSchema;
 }
 
 export class PluginDeleteCommand extends commands.PluginDeleteCommand {
-	static responseSchema = schemas.pluginDeleteCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.pluginDeleteCommandResponseSchema;
 }
 
 export class NodeListCommand extends commands.NodeListCommand {
-	static responseSchema = schemas.nodeListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.nodeListCommandResponseSchema;
 }
 
 export class NodeInspectCommand extends commands.NodeInspectCommand {
-	static responseSchema = schemas.nodeInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.nodeInspectCommandResponseSchema;
 }
 
 export class SwarmInspectCommand extends commands.SwarmInspectCommand {
-	static responseSchema = schemas.swarmInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.swarmInspectCommandResponseSchema;
 }
 
 export class SwarmInitCommand extends commands.SwarmInitCommand {
-	static responseSchema = schemas.swarmInitCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.swarmInitCommandResponseSchema;
 }
 
 export class SwarmUnlockkeyCommand extends commands.SwarmUnlockkeyCommand {
-	static responseSchema = schemas.swarmUnlockkeyCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.swarmUnlockkeyCommandResponseSchema;
 }
 
 export class ServiceListCommand extends commands.ServiceListCommand {
-	static responseSchema = schemas.serviceListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.serviceListCommandResponseSchema;
 }
 
 export class ServiceCreateCommand extends commands.ServiceCreateCommand {
-	static responseSchema = schemas.serviceCreateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.serviceCreateCommandResponseSchema;
 }
 
 export class ServiceInspectCommand extends commands.ServiceInspectCommand {
-	static responseSchema = schemas.serviceInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.serviceInspectCommandResponseSchema;
 }
 
 export class ServiceUpdateCommand extends commands.ServiceUpdateCommand {
-	static responseSchema = schemas.serviceUpdateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.serviceUpdateCommandResponseSchema;
 }
 
 export class TaskListCommand extends commands.TaskListCommand {
-	static responseSchema = schemas.taskListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.taskListCommandResponseSchema;
 }
 
 export class TaskInspectCommand extends commands.TaskInspectCommand {
-	static responseSchema = schemas.taskInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.taskInspectCommandResponseSchema;
 }
 
 export class SecretListCommand extends commands.SecretListCommand {
-	static responseSchema = schemas.secretListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.secretListCommandResponseSchema;
 }
 
 export class SecretCreateCommand extends commands.SecretCreateCommand {
-	static responseSchema = schemas.secretCreateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.secretCreateCommandResponseSchema;
 }
 
 export class SecretInspectCommand extends commands.SecretInspectCommand {
-	static responseSchema = schemas.secretInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.secretInspectCommandResponseSchema;
 }
 
 export class ConfigListCommand extends commands.ConfigListCommand {
-	static responseSchema = schemas.configListCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.configListCommandResponseSchema;
 }
 
 export class ConfigCreateCommand extends commands.ConfigCreateCommand {
-	static responseSchema = schemas.configCreateCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.configCreateCommandResponseSchema;
 }
 
 export class ConfigInspectCommand extends commands.ConfigInspectCommand {
-	static responseSchema = schemas.configInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.configInspectCommandResponseSchema;
 }
 
 export class DistributionInspectCommand
 	extends commands.DistributionInspectCommand
 {
-	static responseSchema = schemas.distributionInspectCommandResponseSchema;
+	public override readonly responseSchema =
+		schemas.distributionInspectCommandResponseSchema;
 }
 
 export {

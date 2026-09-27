@@ -1042,6 +1042,7 @@ type SchemaNamePair = { inputName: string; wireName: string };
 type OperationSchemaNames = {
 	json?: string;
 	response?: string;
+	data?: string;
 	param?: string;
 	query?: string;
 	header?: string;
@@ -1093,7 +1094,7 @@ function emitNamePair(
 
 function emitSchemaPair(
 	target: OperationTarget,
-	segment: "body" | "response",
+	segment: "body" | "response" | "data",
 	schema: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject,
 ) {
 	return emitNamePair(target, segment, (mode) =>
@@ -1178,6 +1179,7 @@ export function createValidatorForOperationInput(
 	input: {
 		body?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
 		response?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
+		data?: oas30.SchemaObject | oas31.SchemaObject | oas31.ReferenceObject;
 		params: oas30.ParameterObject[];
 		query: oas30.ParameterObject[];
 		header: oas30.ParameterObject[];
@@ -1191,6 +1193,7 @@ export function createValidatorForOperationInput(
 		response: input.response
 			? emitSchemaPair(target, "response", input.response)
 			: undefined,
+		data: input.data ? emitSchemaPair(target, "data", input.data) : undefined,
 		param:
 			input.params.length > 0
 				? addParams(target, "params", input.params)
