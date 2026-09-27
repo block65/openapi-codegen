@@ -28,7 +28,6 @@
 		"yargs": "^18.1.0"
 	},
 	"devDependencies": {
-		"@block65/custom-error": "^14.1.0",
 		"@block65/rest-client": "^15.0.0",
 		"@block65/shared-config": "^0.5.0",
 		"@block65/tsconfig": "^0.3.1",
@@ -36,6 +35,7 @@
 		"@types/node": "^26.6.2",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
+		"fallow": "^3.28.0",
 		"hono": "^4.13.8",
 		"js-yaml": "^5.4.2",
 		"openapi3-ts": "^4.6.1",
