@@ -7,7 +7,7 @@
 // oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-comment-list, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-hedging-comment, block65/no-jargon-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, unicorn-unported/comment-content
 
 import type {
-	Jsonifiable,
+	JsonValue,
 	LiteralUnion,
 	UndefinedOnPartialDeep,
 } from "type-fest";
@@ -24,77 +24,11 @@ export type ChatCompletionRole =
 	| "assistant"
 	| "tool"
 	| "function";
-export type ChatCompletionTokenLogprob = {
-	token: string;
-	logprob: number;
-	bytes: readonly number[];
-	top_logprobs: readonly {
-		token: string;
-		logprob: number;
-		bytes: readonly number[];
-	}[];
-};
 /**
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
-export type CreateChatCompletionStreamResponse = {
-	id: string;
-	choices: readonly {
-		/** WARN: $ref used before available - schema={"$ref":"#/components/schemas/ChatCompletionStreamResponseDelta"} */
-		delta: never;
-		logprobs?: {
-			content: readonly ChatCompletionTokenLogprob[];
-			refusal: readonly ChatCompletionTokenLogprob[];
-		};
-		/**
-		 * The reason the model stopped generating tokens. This will be `stop` if the
-		 * model hit a natural stop point or a provided stop sequence,
-		 * `length` if the maximum number of tokens specified in the request was
-		 * reached,
-		 * `content_filter` if content was omitted due to a flag from our content
-		 * filters,
-		 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
-		 * the model called a function.
-		 * @enum stop,length,tool_calls,content_filter,function_call
-		 */
-		finish_reason:
-			| "stop"
-			| "length"
-			| "tool_calls"
-			| "content_filter"
-			| "function_call";
-		index: number;
-	}[];
-	created: number;
-	model: string;
-	/**
-	 * The service tier used for processing the request. This field is only
-	 * included if the `service_tier` parameter is specified in the request.
-	 * @enum scale,default
-	 * @example scale
-	 */
-	service_tier?: "scale" | "default";
-	system_fingerprint?: string;
-	/**
-	 * The object type, which is always `chat.completion.chunk`.
-	 * @enum chat.completion.chunk
-	 */
-	object: "chat.completion.chunk";
-	usage?: {
-		completion_tokens: number;
-		prompt_tokens: number;
-		total_tokens: number;
-	};
-};
-/**
- * Represents a streamed chunk of a chat completion response returned by
- * model, based on the provided input.
- */
-export type CreateChatCompletionImageResponse = Record<
-	string | number,
-	Jsonifiable
->;
+export type CreateChatCompletionImageResponse = Record<string, JsonValue>;
 export type CreateImageRequest = {
 	/**
 	 * A text description of the desired image(s). The maximum length is 1000
@@ -132,7 +66,7 @@ export type CreateImageRequest = {
 	 * @enum url,b64_json
 	 * @example url
 	 */
-	response_format?: "url" | "b64_json";
+	response_format?: "url" | "b64_json" | null;
 	/**
 	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
 	 * `1024x1024` for `dall-e-2`. Must be one of `1024x1024`, `1792x1024`, or
@@ -141,7 +75,7 @@ export type CreateImageRequest = {
 	 * @enum 256x256,512x512,1024x1024,1792x1024,1024x1792
 	 * @example 1024x1024
 	 */
-	size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792";
+	size?: "256x256" | "512x512" | "1024x1024" | "1792x1024" | "1024x1792" | null;
 	/**
 	 * The style of the generated images. Must be one of `vivid` or `natural`.
 	 * Vivid causes the model to lean towards generating hyper-real and dramatic
@@ -151,7 +85,7 @@ export type CreateImageRequest = {
 	 * @enum vivid,natural
 	 * @example vivid
 	 */
-	style?: "vivid" | "natural";
+	style?: "vivid" | "natural" | null;
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
@@ -189,7 +123,7 @@ export type CreateImageEditRequest = {
 	 * @enum 256x256,512x512,1024x1024
 	 * @example 1024x1024
 	 */
-	size?: "256x256" | "512x512" | "1024x1024";
+	size?: "256x256" | "512x512" | "1024x1024" | null;
 	/**
 	 * The format in which the generated images are returned. Must be one of `url`
 	 * or `b64_json`. URLs are only valid for 60 minutes after the image has been
@@ -198,7 +132,7 @@ export type CreateImageEditRequest = {
 	 * @enum url,b64_json
 	 * @example url
 	 */
-	response_format?: "url" | "b64_json";
+	response_format?: "url" | "b64_json" | null;
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
@@ -231,7 +165,7 @@ export type CreateImageVariationRequest = {
 	 * @enum url,b64_json
 	 * @example url
 	 */
-	response_format?: "url" | "b64_json";
+	response_format?: "url" | "b64_json" | null;
 	/**
 	 * The size of the generated images. Must be one of `256x256`, `512x512`, or
 	 * `1024x1024`.
@@ -239,7 +173,7 @@ export type CreateImageVariationRequest = {
 	 * @enum 256x256,512x512,1024x1024
 	 * @example 1024x1024
 	 */
-	size?: "256x256" | "512x512" | "1024x1024";
+	size?: "256x256" | "512x512" | "1024x1024" | null;
 	/**
 	 * A unique identifier representing your end-user, which can help OpenAI to
 	 * monitor and detect abuse. [Learn
@@ -386,7 +320,7 @@ export type CompleteUploadRequest = {
 	part_ids: readonly string[];
 	md5?: string;
 };
-export type CancelUploadRequest = Record<string | number, Jsonifiable>;
+export type CancelUploadRequest = Record<string, JsonValue>;
 export type CreateFineTuningJobRequest = {
 	/**
 	 * The name of the model to fine-tune. You can select one of the
@@ -438,7 +372,7 @@ export type CreateFineTuningJobRequest = {
 		 */
 		n_epochs?: "auto" | number;
 	};
-	suffix?: string;
+	suffix?: string | null;
 	/**
 	 * The ID of an uploaded file that contains validation data.
 	 *
@@ -453,20 +387,22 @@ export type CreateFineTuningJobRequest = {
 	 * See the [fine-tuning guide](/docs/guides/fine-tuning) for more details.
 	 * @example file-abc123
 	 */
-	validation_file?: string;
-	integrations?: readonly {
-		type: "wandb";
-		wandb: {
-			/**
-			 * The name of the project that the new run will be created under.
-			 * @example my-wandb-project
-			 */
-			project: string;
-			name?: string;
-			entity?: string;
-			tags?: readonly string[];
-		};
-	}[];
+	validation_file?: string | null;
+	integrations?:
+		| readonly {
+				type: "wandb";
+				wandb: {
+					/**
+					 * The name of the project that the new run will be created under.
+					 * @example my-wandb-project
+					 */
+					project: string;
+					name?: string | null;
+					entity?: string | null;
+					tags?: readonly string[];
+				};
+		  }[]
+		| null;
 	/**
 	 * The seed controls the reproducibility of the job. Passing in the same seed
 	 * and job parameters should produce the same results, but may differ in rare
@@ -568,23 +504,6 @@ export type UploadPart = {
 	 */
 	object: "upload.part";
 };
-export type FineTuningIntegration = {
-	/**
-	 * The type of the integration being enabled for the fine-tuning job
-	 * @enum wandb
-	 */
-	type: "wandb";
-	wandb: {
-		/**
-		 * The name of the project that the new run will be created under.
-		 * @example my-wandb-project
-		 */
-		project: string;
-		name?: string;
-		entity?: string;
-		tags?: readonly string[];
-	};
-};
 /**
  * The per-line training example of a fine-tuning input file for completions
  * models
@@ -598,22 +517,8 @@ export type DeleteAssistantResponse = {
 	deleted: boolean;
 	object: "assistant.deleted";
 };
-export type AssistantToolsCode = {
-	/**
-	 * The type of tool being defined: `code_interpreter`
-	 * @enum code_interpreter
-	 */
-	type: "code_interpreter";
-};
-export type AssistantToolsFileSearchTypeOnly = {
-	/**
-	 * The type of tool being defined: `file_search`
-	 * @enum file_search
-	 */
-	type: "file_search";
-};
 export type ModifyRunRequest = {
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type SubmitToolOutputsRunRequest = {
 	tool_outputs: readonly {
@@ -636,8 +541,8 @@ export type ModifyThreadRequest = {
 		file_search?: {
 			vector_store_ids?: readonly string[];
 		};
-	};
-	metadata?: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type DeleteThreadResponse = {
 	id: string;
@@ -645,327 +550,12 @@ export type DeleteThreadResponse = {
 	object: "thread.deleted";
 };
 export type ModifyMessageRequest = {
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type DeleteMessageResponse = {
 	id: string;
 	deleted: boolean;
 	object: "thread.message.deleted";
-};
-/**
- * References an image [File](/docs/api-reference/files) in the content of a
- * message.
- */
-export type MessageContentImageFileObject = {
-	/**
-	 * Always `image_file`.
-	 * @enum image_file
-	 */
-	type: "image_file";
-	image_file: {
-		file_id: string;
-		/**
-		 * Specifies the detail level of the image if specified by the user. `low`
-		 * uses fewer tokens, you can opt in to high resolution using `high`.
-		 * @default auto
-		 * @enum auto,low,high
-		 */
-		detail?: "auto" | "low" | "high";
-	};
-};
-/**
- * References an image [File](/docs/api-reference/files) in the content of a
- * message.
- */
-export type MessageDeltaContentImageFileObject = {
-	index: number;
-	/**
-	 * Always `image_file`.
-	 * @enum image_file
-	 */
-	type: "image_file";
-	image_file?: {
-		file_id?: string;
-		/**
-		 * Specifies the detail level of the image if specified by the user. `low`
-		 * uses fewer tokens, you can opt in to high resolution using `high`.
-		 * @default auto
-		 * @enum auto,low,high
-		 */
-		detail?: "auto" | "low" | "high";
-	};
-};
-/** References an image URL in the content of a message. */
-export type MessageContentImageUrlObject = {
-	/**
-	 * The type of the content part.
-	 * @enum image_url
-	 */
-	type: "image_url";
-	image_url: {
-		url: string;
-		/**
-		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-		 * opt in to high resolution using `high`. Default value is `auto`
-		 * @default auto
-		 * @enum auto,low,high
-		 */
-		detail?: "auto" | "low" | "high";
-	};
-};
-/** References an image URL in the content of a message. */
-export type MessageDeltaContentImageUrlObject = {
-	index: number;
-	/**
-	 * Always `image_url`.
-	 * @enum image_url
-	 */
-	type: "image_url";
-	image_url?: {
-		url?: string;
-		/**
-		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-		 * opt in to high resolution using `high`.
-		 * @default auto
-		 * @enum auto,low,high
-		 */
-		detail?: "auto" | "low" | "high";
-	};
-};
-/** The text content that is part of a message. */
-export type MessageContentTextObject = {
-	/**
-	 * Always `text`.
-	 * @enum text
-	 */
-	type: "text";
-	text: {
-		value: string;
-		annotations: readonly never[];
-	};
-};
-/** The refusal content generated by the assistant. */
-export type MessageContentRefusalObject = {
-	/**
-	 * Always `refusal`.
-	 * @enum refusal
-	 */
-	type: "refusal";
-	refusal: string;
-};
-/** The text content that is part of a message. */
-export type MessageRequestContentTextObject = {
-	/**
-	 * Always `text`.
-	 * @enum text
-	 */
-	type: "text";
-	text: string;
-};
-/**
- * A citation within the message that points to a specific quote from a
- * specific File associated with the assistant or the message. Generated when
- * the assistant uses the "file_search" tool to search files.
- */
-export type MessageContentTextAnnotationsFileCitationObject = {
-	/**
-	 * Always `file_citation`.
-	 * @enum file_citation
-	 */
-	type: "file_citation";
-	text: string;
-	file_citation: {
-		file_id: string;
-	};
-	start_index: number;
-	end_index: number;
-};
-/**
- * A URL for the file that's generated when the assistant used the
- * `code_interpreter` tool to generate a file.
- */
-export type MessageContentTextAnnotationsFilePathObject = {
-	/**
-	 * Always `file_path`.
-	 * @enum file_path
-	 */
-	type: "file_path";
-	text: string;
-	file_path: {
-		file_id: string;
-	};
-	start_index: number;
-	end_index: number;
-};
-/** The text content that is part of a message. */
-export type MessageDeltaContentTextObject = {
-	index: number;
-	/**
-	 * Always `text`.
-	 * @enum text
-	 */
-	type: "text";
-	text?: {
-		value?: string;
-		annotations?: readonly never[];
-	};
-};
-/** The refusal content that is part of a message. */
-export type MessageDeltaContentRefusalObject = {
-	index: number;
-	/**
-	 * Always `refusal`.
-	 * @enum refusal
-	 */
-	type: "refusal";
-	refusal?: string;
-};
-/**
- * A citation within the message that points to a specific quote from a
- * specific File associated with the assistant or the message. Generated when
- * the assistant uses the "file_search" tool to search files.
- */
-export type MessageDeltaContentTextAnnotationsFileCitationObject = {
-	index: number;
-	/**
-	 * Always `file_citation`.
-	 * @enum file_citation
-	 */
-	type: "file_citation";
-	text?: string;
-	file_citation?: {
-		file_id?: string;
-		quote?: string;
-	};
-	start_index?: number;
-	end_index?: number;
-};
-/**
- * A URL for the file that's generated when the assistant used the
- * `code_interpreter` tool to generate a file.
- */
-export type MessageDeltaContentTextAnnotationsFilePathObject = {
-	index: number;
-	/**
-	 * Always `file_path`.
-	 * @enum file_path
-	 */
-	type: "file_path";
-	text?: string;
-	file_path?: {
-		file_id?: string;
-	};
-	start_index?: number;
-	end_index?: number;
-};
-/** Details of the Code Interpreter tool call the run step was involved in. */
-export type RunStepDetailsToolCallsCodeObject = {
-	id: string;
-	/**
-	 * The type of tool call. This is always going to be `code_interpreter` for
-	 * this type of tool call.
-	 * @enum code_interpreter
-	 */
-	type: "code_interpreter";
-	code_interpreter: {
-		input: string;
-		outputs: readonly never[];
-	};
-};
-/** Details of the Code Interpreter tool call the run step was involved in. */
-export type RunStepDeltaStepDetailsToolCallsCodeObject = {
-	index: number;
-	id?: string;
-	/**
-	 * The type of tool call. This is always going to be `code_interpreter` for
-	 * this type of tool call.
-	 * @enum code_interpreter
-	 */
-	type: "code_interpreter";
-	code_interpreter?: {
-		input?: string;
-		outputs?: readonly never[];
-	};
-};
-/** Text output from the Code Interpreter tool call as part of a run step. */
-export type RunStepDetailsToolCallsCodeOutputLogsObject = {
-	/**
-	 * Always `logs`.
-	 * @enum logs
-	 */
-	type: "logs";
-	logs: string;
-};
-/** Text output from the Code Interpreter tool call as part of a run step. */
-export type RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject = {
-	index: number;
-	/**
-	 * Always `logs`.
-	 * @enum logs
-	 */
-	type: "logs";
-	logs?: string;
-};
-export type RunStepDetailsToolCallsCodeOutputImageObject = {
-	/**
-	 * Always `image`.
-	 * @enum image
-	 */
-	type: "image";
-	image: {
-		file_id: string;
-	};
-};
-export type RunStepDeltaStepDetailsToolCallsCodeOutputImageObject = {
-	index: number;
-	/**
-	 * Always `image`.
-	 * @enum image
-	 */
-	type: "image";
-	image?: {
-		file_id?: string;
-	};
-};
-export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
-	index: number;
-	id?: string;
-	/**
-	 * The type of tool call. This is always going to be `file_search` for this
-	 * type of tool call.
-	 * @enum file_search
-	 */
-	type: "file_search";
-	file_search: Record<string | number, Jsonifiable>;
-};
-export type RunStepDetailsToolCallsFunctionObject = {
-	id: string;
-	/**
-	 * The type of tool call. This is always going to be `function` for this type
-	 * of tool call.
-	 * @enum function
-	 */
-	type: "function";
-	function: {
-		name: string;
-		arguments: string;
-		output: string;
-	};
-};
-export type RunStepDeltaStepDetailsToolCallsFunctionObject = {
-	index: number;
-	id?: string;
-	/**
-	 * The type of tool call. This is always going to be `function` for this type
-	 * of tool call.
-	 * @enum function
-	 */
-	type: "function";
-	function?: {
-		name?: string;
-		arguments?: string;
-		output?: string;
-	};
 };
 export type DeleteVectorStoreResponse = {
 	id: string;
@@ -1019,12 +609,12 @@ export type BatchRequestOutput = {
 	response?: {
 		status_code?: number;
 		request_id?: string;
-		body?: Record<string | number, Jsonifiable>;
-	};
+		body?: Record<string, JsonValue>;
+	} | null;
 	error?: {
 		code?: string;
 		message?: string;
-	};
+	} | null;
 };
 export type InviteRequest = {
 	email: string;
@@ -1476,7 +1066,7 @@ export type Batch = {
 		data?: readonly {
 			code?: string;
 			message?: string;
-			param?: string;
+			param?: string | null;
 			line?: number | null;
 		}[];
 	};
@@ -1511,7 +1101,7 @@ export type Batch = {
 		completed: number;
 		failed: number;
 	};
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type ListBatchesResponse = {
 	data: readonly Batch[];
@@ -1519,6 +1109,130 @@ export type ListBatchesResponse = {
 	last_id?: string;
 	has_more: boolean;
 	object: "list";
+};
+/** Occurs when a stream ends. */
+export type DoneEvent = {
+	event: "done";
+	data: "[DONE]";
+};
+export type Error = {
+	code: string | null;
+	message: string;
+	param: string | null;
+	type: string;
+};
+/**
+ * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
+ * can happen due to an internal server error or a timeout.
+ */
+export type ErrorEvent = {
+	event: "error";
+	data: Error;
+};
+/** References an image URL in the content of a message. */
+export type MessageDeltaContentImageUrlObject = {
+	index: number;
+	/**
+	 * Always `image_url`.
+	 * @enum image_url
+	 */
+	type: "image_url";
+	image_url?: {
+		url?: string;
+		/**
+		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+		 * opt in to high resolution using `high`.
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
+};
+/** The refusal content that is part of a message. */
+export type MessageDeltaContentRefusalObject = {
+	index: number;
+	/**
+	 * Always `refusal`.
+	 * @enum refusal
+	 */
+	type: "refusal";
+	refusal?: string;
+};
+/**
+ * A URL for the file that's generated when the assistant used the
+ * `code_interpreter` tool to generate a file.
+ */
+export type MessageDeltaContentTextAnnotationsFilePathObject = {
+	index: number;
+	/**
+	 * Always `file_path`.
+	 * @enum file_path
+	 */
+	type: "file_path";
+	text?: string;
+	file_path?: {
+		file_id?: string;
+	};
+	start_index?: number;
+	end_index?: number;
+};
+/**
+ * A citation within the message that points to a specific quote from a
+ * specific File associated with the assistant or the message. Generated when
+ * the assistant uses the "file_search" tool to search files.
+ */
+export type MessageDeltaContentTextAnnotationsFileCitationObject = {
+	index: number;
+	/**
+	 * Always `file_citation`.
+	 * @enum file_citation
+	 */
+	type: "file_citation";
+	text?: string;
+	file_citation?: {
+		file_id?: string;
+		quote?: string;
+	};
+	start_index?: number;
+	end_index?: number;
+};
+/** The text content that is part of a message. */
+export type MessageDeltaContentTextObject = {
+	index: number;
+	/**
+	 * Always `text`.
+	 * @enum text
+	 */
+	type: "text";
+	text?: {
+		value?: string;
+		annotations?: readonly (
+			| MessageDeltaContentTextAnnotationsFileCitationObject
+			| MessageDeltaContentTextAnnotationsFilePathObject
+		)[];
+	};
+};
+/**
+ * References an image [File](/docs/api-reference/files) in the content of a
+ * message.
+ */
+export type MessageDeltaContentImageFileObject = {
+	index: number;
+	/**
+	 * Always `image_file`.
+	 * @enum image_file
+	 */
+	type: "image_file";
+	image_file?: {
+		file_id?: string;
+		/**
+		 * Specifies the detail level of the image if specified by the user. `low`
+		 * uses fewer tokens, you can opt in to high resolution using `high`.
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 /**
  * Represents a message delta i.e. any changed fields on a message during
@@ -1545,24 +1259,117 @@ export type MessageDeltaObject = {
 		)[];
 	};
 };
-/** Occurs when a stream ends. */
-export type DoneEvent = {
-	event: "done";
-	data: "[DONE]";
+export type AssistantToolsFileSearchTypeOnly = {
+	/**
+	 * The type of tool being defined: `file_search`
+	 * @enum file_search
+	 */
+	type: "file_search";
 };
-export type Error = {
-	code: string;
-	message: string;
-	param: string;
-	type: string;
+export type AssistantToolsCode = {
+	/**
+	 * The type of tool being defined: `code_interpreter`
+	 * @enum code_interpreter
+	 */
+	type: "code_interpreter";
+};
+/** The refusal content generated by the assistant. */
+export type MessageContentRefusalObject = {
+	/**
+	 * Always `refusal`.
+	 * @enum refusal
+	 */
+	type: "refusal";
+	refusal: string;
 };
 /**
- * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
- * can happen due to an internal server error or a timeout.
+ * A URL for the file that's generated when the assistant used the
+ * `code_interpreter` tool to generate a file.
  */
-export type ErrorEvent = {
-	event: "error";
-	data: Error;
+export type MessageContentTextAnnotationsFilePathObject = {
+	/**
+	 * Always `file_path`.
+	 * @enum file_path
+	 */
+	type: "file_path";
+	text: string;
+	file_path: {
+		file_id: string;
+	};
+	start_index: number;
+	end_index: number;
+};
+/**
+ * A citation within the message that points to a specific quote from a
+ * specific File associated with the assistant or the message. Generated when
+ * the assistant uses the "file_search" tool to search files.
+ */
+export type MessageContentTextAnnotationsFileCitationObject = {
+	/**
+	 * Always `file_citation`.
+	 * @enum file_citation
+	 */
+	type: "file_citation";
+	text: string;
+	file_citation: {
+		file_id: string;
+	};
+	start_index: number;
+	end_index: number;
+};
+/** The text content that is part of a message. */
+export type MessageContentTextObject = {
+	/**
+	 * Always `text`.
+	 * @enum text
+	 */
+	type: "text";
+	text: {
+		value: string;
+		annotations: readonly (
+			| MessageContentTextAnnotationsFileCitationObject
+			| MessageContentTextAnnotationsFilePathObject
+		)[];
+	};
+};
+/** References an image URL in the content of a message. */
+export type MessageContentImageUrlObject = {
+	/**
+	 * The type of the content part.
+	 * @enum image_url
+	 */
+	type: "image_url";
+	image_url: {
+		url: string;
+		/**
+		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+		 * opt in to high resolution using `high`. Default value is `auto`
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
+};
+/**
+ * References an image [File](/docs/api-reference/files) in the content of a
+ * message.
+ */
+export type MessageContentImageFileObject = {
+	/**
+	 * Always `image_file`.
+	 * @enum image_file
+	 */
+	type: "image_file";
+	image_file: {
+		file_id: string;
+		/**
+		 * Specifies the detail level of the image if specified by the user. `low`
+		 * uses fewer tokens, you can opt in to high resolution using `high`.
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
 };
 /** Represents a message within a [thread](/docs/api-reference/threads). */
 export type MessageObject = {
@@ -1591,7 +1398,7 @@ export type MessageObject = {
 			| "run_cancelled"
 			| "run_expired"
 			| "run_failed";
-	};
+	} | null;
 	completed_at: number | null;
 	incomplete_at: number | null;
 	/**
@@ -1605,13 +1412,18 @@ export type MessageObject = {
 		| MessageContentTextObject
 		| MessageContentRefusalObject
 	)[];
-	assistant_id: string;
-	run_id: string;
-	attachments: readonly {
-		file_id?: string;
-		tools?: readonly (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
-	}[];
-	metadata: Record<string | number, Jsonifiable>;
+	assistant_id: string | null;
+	run_id: string | null;
+	attachments:
+		| readonly {
+				file_id?: string;
+				tools?: readonly (
+					| AssistantToolsCode
+					| AssistantToolsFileSearchTypeOnly
+				)[];
+		  }[]
+		| null;
+	metadata: Record<string, JsonValue> | null;
 };
 export type MessageStreamEvent =
 	| {
@@ -1642,6 +1454,71 @@ export type MessageStreamEvent =
 			/** Represents a message within a [thread](/docs/api-reference/threads). */
 			data: MessageObject;
 	  };
+export type RunStepDeltaStepDetailsToolCallsFunctionObject = {
+	index: number;
+	id?: string;
+	/**
+	 * The type of tool call. This is always going to be `function` for this type
+	 * of tool call.
+	 * @enum function
+	 */
+	type: "function";
+	function?: {
+		name?: string;
+		arguments?: string;
+		output?: string | null;
+	};
+};
+export type RunStepDeltaStepDetailsToolCallsFileSearchObject = {
+	index: number;
+	id?: string;
+	/**
+	 * The type of tool call. This is always going to be `file_search` for this
+	 * type of tool call.
+	 * @enum file_search
+	 */
+	type: "file_search";
+	file_search: Record<string, JsonValue>;
+};
+export type RunStepDeltaStepDetailsToolCallsCodeOutputImageObject = {
+	index: number;
+	/**
+	 * Always `image`.
+	 * @enum image
+	 */
+	type: "image";
+	image?: {
+		file_id?: string;
+	};
+};
+/** Text output from the Code Interpreter tool call as part of a run step. */
+export type RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject = {
+	index: number;
+	/**
+	 * Always `logs`.
+	 * @enum logs
+	 */
+	type: "logs";
+	logs?: string;
+};
+/** Details of the Code Interpreter tool call the run step was involved in. */
+export type RunStepDeltaStepDetailsToolCallsCodeObject = {
+	index: number;
+	id?: string;
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 * @enum code_interpreter
+	 */
+	type: "code_interpreter";
+	code_interpreter?: {
+		input?: string;
+		outputs?: readonly (
+			| RunStepDeltaStepDetailsToolCallsCodeOutputLogsObject
+			| RunStepDeltaStepDetailsToolCallsCodeOutputImageObject
+		)[];
+	};
+};
 /** Details of the tool call. */
 export type RunStepDeltaStepDetailsToolCallsObject = {
 	/**
@@ -1691,6 +1568,93 @@ export type RunStepCompletionUsage = {
 	completion_tokens: number;
 	prompt_tokens: number;
 	total_tokens: number;
+} | null;
+export type RunStepDetailsToolCallsFunctionObject = {
+	id: string;
+	/**
+	 * The type of tool call. This is always going to be `function` for this type
+	 * of tool call.
+	 * @enum function
+	 */
+	type: "function";
+	function: {
+		name: string;
+		arguments: string;
+		output: string | null;
+	};
+};
+/** A result instance of the file search. */
+export type RunStepDetailsToolCallsFileSearchResultObject = {
+	file_id: string;
+	file_name: string;
+	score: number;
+	content?: readonly {
+		/**
+		 * The type of the content.
+		 * @enum text
+		 */
+		type?: "text";
+		text?: string;
+	}[];
+};
+/** The ranking options for the file search. */
+export type RunStepDetailsToolCallsFileSearchRankingOptionsObject = {
+	/**
+	 * The ranker used for the file search.
+	 * @enum default_2024_08_21
+	 */
+	ranker: "default_2024_08_21";
+	score_threshold: number;
+};
+export type RunStepDetailsToolCallsFileSearchObject = {
+	id: string;
+	/**
+	 * The type of tool call. This is always going to be `file_search` for this
+	 * type of tool call.
+	 * @enum file_search
+	 */
+	type: "file_search";
+	file_search: {
+		/** The ranking options for the file search. */
+		ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
+		results?: readonly RunStepDetailsToolCallsFileSearchResultObject[];
+	};
+};
+export type RunStepDetailsToolCallsCodeOutputImageObject = {
+	/**
+	 * Always `image`.
+	 * @enum image
+	 */
+	type: "image";
+	image: {
+		file_id: string;
+	};
+};
+/** Text output from the Code Interpreter tool call as part of a run step. */
+export type RunStepDetailsToolCallsCodeOutputLogsObject = {
+	/**
+	 * Always `logs`.
+	 * @enum logs
+	 */
+	type: "logs";
+	logs: string;
+};
+/** Details of the Code Interpreter tool call the run step was involved in. */
+export type RunStepDetailsToolCallsCodeObject = {
+	id: string;
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 * @enum code_interpreter
+	 */
+	type: "code_interpreter";
+	code_interpreter: {
+		input: string;
+		outputs: readonly (
+			| RunStepDetailsToolCallsCodeOutputLogsObject
+			| RunStepDetailsToolCallsCodeOutputImageObject
+		)[];
+	};
 };
 /** Details of the tool call. */
 export type RunStepDetailsToolCallsObject = {
@@ -1701,6 +1665,7 @@ export type RunStepDetailsToolCallsObject = {
 	type: "tool_calls";
 	tool_calls: readonly (
 		| RunStepDetailsToolCallsCodeObject
+		| RunStepDetailsToolCallsFileSearchObject
 		| RunStepDetailsToolCallsFunctionObject
 	)[];
 };
@@ -1749,12 +1714,12 @@ export type RunStepObject = {
 		 */
 		code: "server_error" | "rate_limit_exceeded";
 		message: string;
-	};
+	} | null;
 	expired_at: number | null;
 	cancelled_at: number | null;
 	failed_at: number | null;
 	completed_at: number | null;
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, JsonValue> | null;
 	/**
 	 * Usage statistics related to the run step. This value will be `null` while
 	 * the run step's status is `in_progress`.
@@ -1801,10 +1766,7 @@ export type RunStepStreamEvent =
 			data: RunStepObject;
 	  };
 /** The schema for the response format, described as a JSON Schema object. */
-export type ResponseFormatJsonSchemaSchema = Record<
-	string | number,
-	Jsonifiable
->;
+export type ResponseFormatJsonSchemaSchema = Record<string, JsonValue>;
 export type ResponseFormatJsonSchema = {
 	/**
 	 * The type of response format being defined: `json_schema`
@@ -1921,6 +1883,73 @@ export type RunCompletionUsage = {
 	completion_tokens: number;
 	prompt_tokens: number;
 	total_tokens: number;
+} | null;
+/**
+ * The parameters the functions accepts, described as a JSON Schema object.
+ * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+ * Schema reference](https://json-schema.org/understanding-json-schema/) for
+ * documentation about the format.
+ *
+ * Omitting `parameters` defines a function with an empty parameter list.
+ */
+export type FunctionParameters = Record<string, JsonValue>;
+export type FunctionObject = {
+	description?: string;
+	name: string;
+	/**
+	 * The parameters the functions accepts, described as a JSON Schema object.
+	 * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+	 * Schema reference](https://json-schema.org/understanding-json-schema/) for
+	 * documentation about the format.
+	 *
+	 * Omitting `parameters` defines a function with an empty parameter list.
+	 */
+	parameters?: FunctionParameters;
+	strict?: boolean | null;
+};
+export type AssistantToolsFunction = {
+	/**
+	 * The type of tool being defined: `function`
+	 * @enum function
+	 */
+	type: "function";
+	function: FunctionObject;
+};
+/**
+ * The ranking options for the file search. If not specified, the file search
+ * tool will use the `auto` ranker and a score_threshold of 0.
+ *
+ * See the [file search tool
+ * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+ * for more information.
+ */
+export type FileSearchRankingOptions = {
+	/**
+	 * The ranker to use for the file search. If not specified will use the `auto`
+	 * ranker.
+	 * @enum auto,default_2024_08_21
+	 */
+	ranker?: "auto" | "default_2024_08_21";
+	score_threshold: number;
+};
+export type AssistantToolsFileSearch = {
+	/**
+	 * The type of tool being defined: `file_search`
+	 * @enum file_search
+	 */
+	type: "file_search";
+	file_search?: {
+		max_num_results?: number;
+		/**
+		 * The ranking options for the file search. If not specified, the file search
+		 * tool will use the `auto` ranker and a score_threshold of 0.
+		 *
+		 * See the [file search tool
+		 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+		 * for more information.
+		 */
+		ranking_options?: FileSearchRankingOptions;
+	};
 };
 /** Tool call objects */
 export type RunToolCallObject = {
@@ -1972,7 +2001,7 @@ export type RunObject = {
 		submit_tool_outputs: {
 			tool_calls: readonly RunToolCallObject[];
 		};
-	};
+	} | null;
 	last_error: {
 		/**
 		 * One of `server_error`, `rate_limit_exceeded`, or `invalid_prompt`.
@@ -1980,7 +2009,7 @@ export type RunObject = {
 		 */
 		code: "server_error" | "rate_limit_exceeded" | "invalid_prompt";
 		message: string;
-	};
+	} | null;
 	expires_at: number | null;
 	started_at: number | null;
 	cancelled_at: number | null;
@@ -1993,7 +2022,7 @@ export type RunObject = {
 		 * @enum max_completion_tokens,max_prompt_tokens
 		 */
 		reason?: "max_completion_tokens" | "max_prompt_tokens";
-	};
+	} | null;
 	model: string;
 	instructions: string;
 	/**
@@ -2001,8 +2030,12 @@ export type RunObject = {
 	 * for this run.
 	 * @default
 	 */
-	tools: readonly AssistantToolsCode[];
-	metadata: Record<string | number, Jsonifiable>;
+	tools: readonly (
+		| AssistantToolsCode
+		| AssistantToolsFileSearch
+		| AssistantToolsFunction
+	)[];
+	metadata: Record<string, JsonValue> | null;
 	/**
 	 * Usage statistics related to the run. This value will be `null` if the run
 	 * is not in a terminal state (i.e. `in_progress`, `queued`, etc.).
@@ -2133,8 +2166,8 @@ export type ThreadObject = {
 		file_search?: {
 			vector_store_ids?: readonly string[];
 		};
-	};
-	metadata: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata: Record<string, JsonValue> | null;
 };
 export type ThreadStreamEvent = {
 	event: "thread.created";
@@ -2260,7 +2293,7 @@ export type VectorStoreFileObject = {
 		 */
 		code: "server_error" | "unsupported_file" | "invalid_file";
 		message: string;
-	};
+	} | null;
 	chunking_strategy?:
 		| StaticChunkingStrategyResponseParam
 		| OtherChunkingStrategyResponseParam;
@@ -2322,7 +2355,7 @@ export type VectorStoreObject = {
 	expires_after?: VectorStoreExpirationAfter;
 	expires_at?: number | null;
 	last_active_at: number | null;
-	metadata: Record<string | number, Jsonifiable>;
+	metadata: Record<string, JsonValue> | null;
 };
 export type ListVectorStoresResponse = {
 	object: string;
@@ -2332,10 +2365,10 @@ export type ListVectorStoresResponse = {
 	has_more: boolean;
 };
 export type UpdateVectorStoreRequest = {
-	name?: string;
+	name?: string | null;
 	/** The expiration policy for a vector store. */
 	expires_after?: VectorStoreExpirationAfter;
-	metadata?: Record<string | number, Jsonifiable>;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type CreateVectorStoreRequest = {
 	file_ids?: readonly string[];
@@ -2345,44 +2378,7 @@ export type CreateVectorStoreRequest = {
 	chunking_strategy?:
 		| AutoChunkingStrategyRequestParam
 		| StaticChunkingStrategyRequestParam;
-	metadata?: Record<string | number, Jsonifiable>;
-};
-/** A result instance of the file search. */
-export type RunStepDetailsToolCallsFileSearchResultObject = {
-	file_id: string;
-	file_name: string;
-	score: number;
-	content?: readonly {
-		/**
-		 * The type of the content.
-		 * @enum text
-		 */
-		type?: "text";
-		text?: string;
-	}[];
-};
-/** The ranking options for the file search. */
-export type RunStepDetailsToolCallsFileSearchRankingOptionsObject = {
-	/**
-	 * The ranker used for the file search.
-	 * @enum default_2024_08_21
-	 */
-	ranker: "default_2024_08_21";
-	score_threshold: number;
-};
-export type RunStepDetailsToolCallsFileSearchObject = {
-	id: string;
-	/**
-	 * The type of tool call. This is always going to be `file_search` for this
-	 * type of tool call.
-	 * @enum file_search
-	 */
-	type: "file_search";
-	file_search: {
-		/** The ranking options for the file search. */
-		ranking_options?: RunStepDetailsToolCallsFileSearchRankingOptionsObject;
-		results?: readonly RunStepDetailsToolCallsFileSearchResultObject[];
-	};
+	metadata?: Record<string, JsonValue> | null;
 };
 export type ListRunStepsResponse = {
 	object: string;
@@ -2397,6 +2393,15 @@ export type ListMessagesResponse = {
 	first_id: string;
 	last_id: string;
 	has_more: boolean;
+};
+/** The text content that is part of a message. */
+export type MessageRequestContentTextObject = {
+	/**
+	 * Always `text`.
+	 * @enum text
+	 */
+	type: "text";
+	text: string;
 };
 export type ListThreadsResponse = {
 	object: string;
@@ -2423,11 +2428,16 @@ export type CreateMessageRequest = {
 				| MessageContentImageUrlObject
 				| MessageRequestContentTextObject
 		  )[];
-	attachments?: readonly {
-		file_id?: string;
-		tools?: readonly (AssistantToolsCode | AssistantToolsFileSearchTypeOnly)[];
-	}[];
-	metadata?: Record<string | number, Jsonifiable>;
+	attachments?:
+		| readonly {
+				file_id?: string;
+				tools?: readonly (
+					| AssistantToolsCode
+					| AssistantToolsFileSearchTypeOnly
+				)[];
+		  }[]
+		| null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type CreateThreadRequest = {
 	messages?: readonly CreateMessageRequest[];
@@ -2442,8 +2452,8 @@ export type CreateThreadRequest = {
 			file_ids?: readonly string[];
 		};
 		file_search?: unknown;
-	};
-	metadata?: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata?: Record<string, JsonValue> | null;
 };
 export type CreateThreadAndRunRequest = {
 	assistant_id: string;
@@ -2481,8 +2491,14 @@ export type CreateThreadAndRunRequest = {
 		| "gpt-3.5-turbo-16k-0613",
 		string
 	> | null;
-	instructions?: string;
-	tools?: readonly AssistantToolsCode[];
+	instructions?: string | null;
+	tools?:
+		| readonly (
+				| AssistantToolsCode
+				| AssistantToolsFileSearch
+				| AssistantToolsFunction
+		  )[]
+		| null;
 	tool_resources?: {
 		code_interpreter?: {
 			/**
@@ -2496,8 +2512,8 @@ export type CreateThreadAndRunRequest = {
 		file_search?: {
 			vector_store_ids?: readonly string[];
 		};
-	};
-	metadata?: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2610,11 +2626,17 @@ export type CreateRunRequest = {
 		| "gpt-3.5-turbo-16k-0613",
 		string
 	> | null;
-	instructions?: string;
-	additional_instructions?: string;
-	additional_messages?: readonly CreateMessageRequest[];
-	tools?: readonly AssistantToolsCode[];
-	metadata?: Record<string | number, Jsonifiable>;
+	instructions?: string | null;
+	additional_instructions?: string | null;
+	additional_messages?: readonly CreateMessageRequest[] | null;
+	tools?:
+		| readonly (
+				| AssistantToolsCode
+				| AssistantToolsFileSearch
+				| AssistantToolsFunction
+		  )[]
+		| null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2685,73 +2707,6 @@ export type CreateRunRequest = {
 	 */
 	response_format?: AssistantsApiResponseFormatOption;
 };
-/**
- * The parameters the functions accepts, described as a JSON Schema object.
- * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
- * Schema reference](https://json-schema.org/understanding-json-schema/) for
- * documentation about the format.
- *
- * Omitting `parameters` defines a function with an empty parameter list.
- */
-export type FunctionParameters = Record<string | number, Jsonifiable>;
-export type FunctionObject = {
-	description?: string;
-	name: string;
-	/**
-	 * The parameters the functions accepts, described as a JSON Schema object.
-	 * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
-	 * Schema reference](https://json-schema.org/understanding-json-schema/) for
-	 * documentation about the format.
-	 *
-	 * Omitting `parameters` defines a function with an empty parameter list.
-	 */
-	parameters?: FunctionParameters;
-	strict?: boolean | null;
-};
-export type AssistantToolsFunction = {
-	/**
-	 * The type of tool being defined: `function`
-	 * @enum function
-	 */
-	type: "function";
-	function: FunctionObject;
-};
-/**
- * The ranking options for the file search. If not specified, the file search
- * tool will use the `auto` ranker and a score_threshold of 0.
- *
- * See the [file search tool
- * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
- * for more information.
- */
-export type FileSearchRankingOptions = {
-	/**
-	 * The ranker to use for the file search. If not specified will use the `auto`
-	 * ranker.
-	 * @enum auto,default_2024_08_21
-	 */
-	ranker?: "auto" | "default_2024_08_21";
-	score_threshold: number;
-};
-export type AssistantToolsFileSearch = {
-	/**
-	 * The type of tool being defined: `file_search`
-	 * @enum file_search
-	 */
-	type: "file_search";
-	file_search?: {
-		max_num_results?: number;
-		/**
-		 * The ranking options for the file search. If not specified, the file search
-		 * tool will use the `auto` ranker and a score_threshold of 0.
-		 *
-		 * See the [file search tool
-		 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-		 * for more information.
-		 */
-		ranking_options?: FileSearchRankingOptions;
-	};
-};
 /** Represents an `assistant` that can call the model and use tools. */
 export type AssistantObject = {
 	id: string;
@@ -2761,10 +2716,10 @@ export type AssistantObject = {
 	 */
 	object: "assistant";
 	created_at: number;
-	name: string;
-	description: string;
+	name: string | null;
+	description: string | null;
 	model: string;
-	instructions: string;
+	instructions: string | null;
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -2789,8 +2744,8 @@ export type AssistantObject = {
 		file_search?: {
 			vector_store_ids?: readonly string[];
 		};
-	};
-	metadata: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2843,9 +2798,9 @@ export type ListAssistantsResponse = {
 };
 export type ModifyAssistantRequest = {
 	model?: string;
-	name?: string;
-	description?: string;
-	instructions?: string;
+	name?: string | null;
+	description?: string | null;
+	instructions?: string | null;
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -2870,8 +2825,8 @@ export type ModifyAssistantRequest = {
 		file_search?: {
 			vector_store_ids?: readonly string[];
 		};
-	};
-	metadata?: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -2949,9 +2904,9 @@ export type CreateAssistantRequest = {
 		| "gpt-3.5-turbo-16k-0613",
 		string
 	>;
-	name?: string;
-	description?: string;
-	instructions?: string;
+	name?: string | null;
+	description?: string | null;
+	instructions?: string | null;
 	/**
 	 * A list of tool enabled on the assistant. There can be a maximum of 128
 	 * tools per assistant. Tools can be of types `code_interpreter`,
@@ -2974,8 +2929,8 @@ export type CreateAssistantRequest = {
 			file_ids?: readonly string[];
 		};
 		file_search?: unknown;
-	};
-	metadata?: Record<string | number, Jsonifiable>;
+	} | null;
+	metadata?: Record<string, JsonValue> | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -3040,9 +2995,140 @@ export type ChatCompletionTool = {
 	type: "function";
 	function: FunctionObject;
 };
+export type ChatCompletionRequestFunctionMessage = {
+	/**
+	 * The role of the messages author, in this case `function`.
+	 * @enum function
+	 */
+	role: "function";
+	content: string | null;
+	name: string;
+};
+export type ChatCompletionRequestMessageContentPartText = {
+	/**
+	 * The type of the content part.
+	 * @enum text
+	 */
+	type: "text";
+	text: string;
+};
+export type ChatCompletionRequestToolMessageContentPart =
+	ChatCompletionRequestMessageContentPartText;
+export type ChatCompletionRequestToolMessage = {
+	/**
+	 * The role of the messages author, in this case `tool`.
+	 * @enum tool
+	 */
+	role: "tool";
+	content: string | readonly ChatCompletionRequestToolMessageContentPart[];
+	tool_call_id: string;
+};
+export type ChatCompletionMessageToolCall = {
+	id: string;
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 * @enum function
+	 */
+	type: "function";
+	function: {
+		name: string;
+		arguments: string;
+	};
+};
+/** The tool calls generated by the model, such as function calls. */
+export type ChatCompletionMessageToolCalls = ChatCompletionMessageToolCall[];
+export type ChatCompletionRequestMessageContentPartRefusal = {
+	/**
+	 * The type of the content part.
+	 * @enum refusal
+	 */
+	type: "refusal";
+	refusal: string;
+};
+export type ChatCompletionRequestAssistantMessageContentPart =
+	| ChatCompletionRequestMessageContentPartText
+	| ChatCompletionRequestMessageContentPartRefusal;
+export type ChatCompletionRequestAssistantMessage = {
+	content?:
+		| string
+		| readonly ChatCompletionRequestAssistantMessageContentPart[]
+		| null;
+	refusal?: string | null;
+	/**
+	 * The role of the messages author, in this case `assistant`.
+	 * @enum assistant
+	 */
+	role: "assistant";
+	name?: string;
+	/** The tool calls generated by the model, such as function calls. */
+	tool_calls?: ChatCompletionMessageToolCalls;
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 * @deprecated
+	 */
+	function_call?: {
+		arguments: string;
+		name: string;
+	} | null;
+};
+export type FineTuneChatCompletionRequestAssistantMessage =
+	ChatCompletionRequestAssistantMessage & {
+		/**
+		 * Controls whether the assistant message is trained against (0 or 1)
+		 * @enum 0,1
+		 */
+		weight?: number;
+	};
+export type ChatCompletionRequestMessageContentPartImage = {
+	/**
+	 * The type of the content part.
+	 * @enum image_url
+	 */
+	type: "image_url";
+	image_url: {
+		url: string;
+		/**
+		 * Specifies the detail level of the image. Learn more in the [Vision
+		 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+		 * @default auto
+		 * @enum auto,low,high
+		 */
+		detail?: "auto" | "low" | "high";
+	};
+};
+export type ChatCompletionRequestUserMessageContentPart =
+	| ChatCompletionRequestMessageContentPartText
+	| ChatCompletionRequestMessageContentPartImage;
+export type ChatCompletionRequestUserMessage = {
+	content: string | readonly ChatCompletionRequestUserMessageContentPart[];
+	/**
+	 * The role of the messages author, in this case `user`.
+	 * @enum user
+	 */
+	role: "user";
+	name?: string;
+};
+export type ChatCompletionRequestSystemMessageContentPart =
+	ChatCompletionRequestMessageContentPartText;
+export type ChatCompletionRequestSystemMessage = {
+	content: string | readonly ChatCompletionRequestSystemMessageContentPart[];
+	/**
+	 * The role of the messages author, in this case `system`.
+	 * @enum system
+	 */
+	role: "system";
+	name?: string;
+};
 /** The per-line training example of a fine-tuning input file for chat models */
 export type FinetuneChatRequestInput = {
-	messages?: readonly never[];
+	messages?: readonly (
+		| ChatCompletionRequestSystemMessage
+		| ChatCompletionRequestUserMessage
+		| FineTuneChatCompletionRequestAssistantMessage
+		| ChatCompletionRequestToolMessage
+		| ChatCompletionRequestFunctionMessage
+	)[];
 	tools?: readonly ChatCompletionTool[];
 	/**
 	 * Whether to enable [parallel function
@@ -3055,6 +3141,23 @@ export type FinetuneChatRequestInput = {
 	 * @deprecated
 	 */
 	functions?: readonly ChatCompletionFunctions[];
+};
+export type FineTuningIntegration = {
+	/**
+	 * The type of the integration being enabled for the fine-tuning job
+	 * @enum wandb
+	 */
+	type: "wandb";
+	wandb: {
+		/**
+		 * The name of the project that the new run will be created under.
+		 * @example my-wandb-project
+		 */
+		project: string;
+		name?: string | null;
+		entity?: string | null;
+		tags?: readonly string[];
+	};
 };
 /** The `File` object represents a document that has been uploaded to OpenAI. */
 export type OpenAiFile = {
@@ -3093,7 +3196,7 @@ export type OpenAiFile = {
 	 * validation, see the `error` field on `fine_tuning.job`.
 	 * @deprecated
 	 */
-	status_details: string;
+	status_details?: string;
 };
 /** The Upload object can accept byte chunks in the form of Parts. */
 export type Upload = {
@@ -3253,8 +3356,8 @@ export type FineTuningJobCheckpoint = {
 export type ListFineTuningJobCheckpointsResponse = {
 	data: readonly FineTuningJobCheckpoint[];
 	object: "list";
-	first_id?: string;
-	last_id?: string;
+	first_id?: string | null;
+	last_id?: string | null;
 	has_more: boolean;
 };
 /** Fine-tuning job event object */
@@ -3283,6 +3386,103 @@ export type ImagesResponse = {
 	created: number;
 	data: readonly Image[];
 };
+export type ChatCompletionTokenLogprob = {
+	token: string;
+	logprob: number;
+	bytes: readonly number[] | null;
+	top_logprobs: readonly {
+		token: string;
+		logprob: number;
+		bytes: readonly number[] | null;
+	}[];
+};
+export type ChatCompletionMessageToolCallChunk = {
+	index: number;
+	id?: string;
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 * @enum function
+	 */
+	type?: "function";
+	function?: {
+		name?: string;
+		arguments?: string;
+	};
+};
+/** A chat completion delta generated by streamed model responses. */
+export type ChatCompletionStreamResponseDelta = {
+	content?: string | null;
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 * @deprecated
+	 */
+	function_call?: {
+		arguments?: string;
+		name?: string;
+	};
+	tool_calls?: readonly ChatCompletionMessageToolCallChunk[];
+	/**
+	 * The role of the author of this message.
+	 * @enum system,user,assistant,tool
+	 */
+	role?: "system" | "user" | "assistant" | "tool";
+	refusal?: string | null;
+};
+/**
+ * Represents a streamed chunk of a chat completion response returned by
+ * model, based on the provided input.
+ */
+export type CreateChatCompletionStreamResponse = {
+	id: string;
+	choices: readonly {
+		/** A chat completion delta generated by streamed model responses. */
+		delta: ChatCompletionStreamResponseDelta;
+		logprobs?: {
+			content: readonly ChatCompletionTokenLogprob[] | null;
+			refusal: readonly ChatCompletionTokenLogprob[] | null;
+		} | null;
+		/**
+		 * The reason the model stopped generating tokens. This will be `stop` if the
+		 * model hit a natural stop point or a provided stop sequence,
+		 * `length` if the maximum number of tokens specified in the request was
+		 * reached,
+		 * `content_filter` if content was omitted due to a flag from our content
+		 * filters,
+		 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+		 * the model called a function.
+		 * @enum stop,length,tool_calls,content_filter,function_call
+		 */
+		finish_reason:
+			| "stop"
+			| "length"
+			| "tool_calls"
+			| "content_filter"
+			| "function_call"
+			| null;
+		index: number;
+	}[];
+	created: number;
+	model: string;
+	/**
+	 * The service tier used for processing the request. This field is only
+	 * included if the `service_tier` parameter is specified in the request.
+	 * @enum scale,default
+	 * @example scale
+	 */
+	service_tier?: "scale" | "default" | null;
+	system_fingerprint?: string;
+	/**
+	 * The object type, which is always `chat.completion.chunk`.
+	 * @enum chat.completion.chunk
+	 */
+	object: "chat.completion.chunk";
+	usage?: {
+		completion_tokens: number;
+		prompt_tokens: number;
+		total_tokens: number;
+	};
+};
 /**
  * The `fine_tuning.job` object represents a fine-tuning job that has been
  * created through the API.
@@ -3293,9 +3493,9 @@ export type FineTuningJob = {
 	error: {
 		code: string;
 		message: string;
-		param: string;
-	};
-	fine_tuned_model: string;
+		param: string | null;
+	} | null;
+	fine_tuned_model: string | null;
 	finished_at: number | null;
 	hyperparameters: {
 		/**
@@ -3331,8 +3531,8 @@ export type FineTuningJob = {
 		| "cancelled";
 	trained_tokens: number | null;
 	training_file: string;
-	validation_file: string;
-	integrations?: readonly FineTuningIntegration[];
+	validation_file: string | null;
+	integrations?: readonly FineTuningIntegration[] | null;
 	seed: number;
 	estimated_finish?: number | null;
 };
@@ -3348,6 +3548,27 @@ export type CompletionUsage = {
 	total_tokens: number;
 	completion_tokens_details?: {
 		reasoning_tokens?: number;
+	};
+};
+/** A chat completion message generated by the model. */
+export type ChatCompletionResponseMessage = {
+	content: string | null;
+	refusal: string | null;
+	/** The tool calls generated by the model, such as function calls. */
+	tool_calls?: ChatCompletionMessageToolCalls;
+	/**
+	 * The role of the author of this message.
+	 * @enum assistant
+	 */
+	role: "assistant";
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 * @deprecated
+	 */
+	function_call?: {
+		arguments: string;
+		name: string;
 	};
 };
 /**
@@ -3367,8 +3588,8 @@ export type CreateChatCompletionFunctionResponse = {
 		 */
 		finish_reason: "stop" | "length" | "function_call" | "content_filter";
 		index: number;
-		/** WARN: $ref used before available - schema={"$ref":"#/components/schemas/ChatCompletionResponseMessage"} */
-		message: never;
+		/** A chat completion message generated by the model. */
+		message: ChatCompletionResponseMessage;
 	}[];
 	created: number;
 	model: string;
@@ -3406,12 +3627,12 @@ export type CreateChatCompletionResponse = {
 			| "content_filter"
 			| "function_call";
 		index: number;
-		/** WARN: $ref used before available - schema={"$ref":"#/components/schemas/ChatCompletionResponseMessage"} */
-		message: never;
+		/** A chat completion message generated by the model. */
+		message: ChatCompletionResponseMessage;
 		logprobs: {
-			content: readonly ChatCompletionTokenLogprob[];
-			refusal: readonly ChatCompletionTokenLogprob[];
-		};
+			content: readonly ChatCompletionTokenLogprob[] | null;
+			refusal: readonly ChatCompletionTokenLogprob[] | null;
+		} | null;
 	}[];
 	created: number;
 	model: string;
@@ -3421,7 +3642,7 @@ export type CreateChatCompletionResponse = {
 	 * @enum scale,default
 	 * @example scale
 	 */
-	service_tier?: "scale" | "default";
+	service_tier?: "scale" | "default" | null;
 	system_fingerprint?: string;
 	/**
 	 * The object type, which is always `chat.completion`.
@@ -3473,124 +3694,7 @@ export type ChatCompletionToolChoiceOption =
 /** Options for streaming response. Only set this when you set `stream: true`. */
 export type ChatCompletionStreamOptions = {
 	include_usage?: boolean;
-};
-export type ChatCompletionRequestFunctionMessage = {
-	/**
-	 * The role of the messages author, in this case `function`.
-	 * @enum function
-	 */
-	role: "function";
-	content: string;
-	name: string;
-};
-export type ChatCompletionRequestMessageContentPartText = {
-	/**
-	 * The type of the content part.
-	 * @enum text
-	 */
-	type: "text";
-	text: string;
-};
-export type ChatCompletionRequestToolMessageContentPart =
-	ChatCompletionRequestMessageContentPartText;
-export type ChatCompletionRequestToolMessage = {
-	/**
-	 * The role of the messages author, in this case `tool`.
-	 * @enum tool
-	 */
-	role: "tool";
-	content: string | readonly ChatCompletionRequestToolMessageContentPart[];
-	tool_call_id: string;
-};
-export type ChatCompletionMessageToolCall = {
-	id: string;
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 * @enum function
-	 */
-	type: "function";
-	function: {
-		name: string;
-		arguments: string;
-	};
-};
-/** The tool calls generated by the model, such as function calls. */
-export type ChatCompletionMessageToolCalls = ChatCompletionMessageToolCall[];
-export type ChatCompletionRequestMessageContentPartRefusal = {
-	/**
-	 * The type of the content part.
-	 * @enum refusal
-	 */
-	type: "refusal";
-	refusal: string;
-};
-export type ChatCompletionRequestAssistantMessageContentPart =
-	| ChatCompletionRequestMessageContentPartText
-	| ChatCompletionRequestMessageContentPartRefusal;
-export type ChatCompletionRequestAssistantMessage = {
-	content?:
-		| string
-		| readonly ChatCompletionRequestAssistantMessageContentPart[]
-		| null;
-	refusal?: string;
-	/**
-	 * The role of the messages author, in this case `assistant`.
-	 * @enum assistant
-	 */
-	role: "assistant";
-	name?: string;
-	/** The tool calls generated by the model, such as function calls. */
-	tool_calls?: ChatCompletionMessageToolCalls;
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 * @deprecated
-	 */
-	function_call?: {
-		arguments: string;
-		name: string;
-	};
-};
-export type ChatCompletionRequestMessageContentPartImage = {
-	/**
-	 * The type of the content part.
-	 * @enum image_url
-	 */
-	type: "image_url";
-	image_url: {
-		url: string;
-		/**
-		 * Specifies the detail level of the image. Learn more in the [Vision
-		 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-		 * @default auto
-		 * @enum auto,low,high
-		 */
-		detail?: "auto" | "low" | "high";
-	};
-};
-export type ChatCompletionRequestUserMessageContentPart =
-	| ChatCompletionRequestMessageContentPartText
-	| ChatCompletionRequestMessageContentPartImage;
-export type ChatCompletionRequestUserMessage = {
-	content: string | readonly ChatCompletionRequestUserMessageContentPart[];
-	/**
-	 * The role of the messages author, in this case `user`.
-	 * @enum user
-	 */
-	role: "user";
-	name?: string;
-};
-export type ChatCompletionRequestSystemMessageContentPart =
-	ChatCompletionRequestMessageContentPartText;
-export type ChatCompletionRequestSystemMessage = {
-	content: string | readonly ChatCompletionRequestSystemMessageContentPart[];
-	/**
-	 * The role of the messages author, in this case `system`.
-	 * @enum system
-	 */
-	role: "system";
-	name?: string;
-};
+} | null;
 export type ChatCompletionRequestMessage =
 	| ChatCompletionRequestSystemMessage
 	| ChatCompletionRequestUserMessage
@@ -3638,7 +3742,7 @@ export type CreateChatCompletionRequest = {
 		string
 	>;
 	frequency_penalty?: number | null;
-	logit_bias?: Record<string | number, number>;
+	logit_bias?: Record<string, number> | null;
 	logprobs?: boolean | null;
 	top_logprobs?: number | null;
 	/**
@@ -3687,8 +3791,8 @@ export type CreateChatCompletionRequest = {
 	 * `service_tier` utilized.
 	 * @enum auto,default
 	 */
-	service_tier?: "auto" | "default";
-	stop?: string | readonly string[];
+	service_tier?: "auto" | "default" | null;
+	stop?: string | readonly string[] | null;
 	stream?: boolean | null;
 	/** Options for streaming response. Only set this when you set `stream: true`. */
 	stream_options?: ChatCompletionStreamOptions;
@@ -3765,68 +3869,6 @@ export type CreateChatCompletionRequest = {
 	 */
 	functions?: readonly ChatCompletionFunctions[];
 };
-export type ChatCompletionMessageToolCallChunk = {
-	index: number;
-	id?: string;
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 * @enum function
-	 */
-	type?: "function";
-	function?: {
-		name?: string;
-		arguments?: string;
-	};
-};
-/** A chat completion delta generated by streamed model responses. */
-export type ChatCompletionStreamResponseDelta = {
-	content?: string;
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 * @deprecated
-	 */
-	function_call?: {
-		arguments?: string;
-		name?: string;
-	};
-	tool_calls?: readonly ChatCompletionMessageToolCallChunk[];
-	/**
-	 * The role of the author of this message.
-	 * @enum system,user,assistant,tool
-	 */
-	role?: "system" | "user" | "assistant" | "tool";
-	refusal?: string;
-};
-/** A chat completion message generated by the model. */
-export type ChatCompletionResponseMessage = {
-	content: string;
-	refusal: string;
-	/** The tool calls generated by the model, such as function calls. */
-	tool_calls?: ChatCompletionMessageToolCalls;
-	/**
-	 * The role of the author of this message.
-	 * @enum assistant
-	 */
-	role: "assistant";
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 * @deprecated
-	 */
-	function_call?: {
-		arguments: string;
-		name: string;
-	};
-};
-export type FineTuneChatCompletionRequestAssistantMessage =
-	ChatCompletionRequestAssistantMessage & {
-		/**
-		 * Controls whether the assistant message is trained against (0 or 1)
-		 * @enum 0,1
-		 */
-		weight?: number;
-	};
 /**
  * Represents a completion response from the API. Note: both the streamed and
  * non-streamed response objects share the same shape (unlike the chat
@@ -3850,8 +3892,8 @@ export type CreateCompletionResponse = {
 			text_offset?: readonly number[];
 			token_logprobs?: readonly number[];
 			tokens?: readonly string[];
-			top_logprobs?: readonly Record<string | number, number>[];
-		};
+			top_logprobs?: readonly Record<string, number>[];
+		} | null;
 		text: string;
 	}[];
 	created: number;
@@ -3900,7 +3942,7 @@ export type CreateCompletionRequest = {
 	best_of?: number | null;
 	echo?: boolean | null;
 	frequency_penalty?: number | null;
-	logit_bias?: Record<string | number, number>;
+	logit_bias?: Record<string, number> | null;
 	logprobs?: number | null;
 	/**
 	 * The maximum number of [tokens](/tokenizer) that can be generated in the
@@ -3936,7 +3978,7 @@ export type CreateCompletionRequest = {
 	 * This parameter is only supported for `gpt-3.5-turbo-instruct`.
 	 * @example test.
 	 */
-	suffix?: string;
+	suffix?: string | null;
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -4482,7 +4524,7 @@ type CreateBatchJsonBody = {
 	 * @enum 24h
 	 */
 	completion_window: "24h";
-	metadata?: Record<string | number, string>;
+	metadata?: Record<string, string> | null;
 };
 export type CreateBatchCommandBody = CreateBatchJsonBody;
 export type CreateBatchCommandInput = CreateBatchJsonBody;

@@ -6,8 +6,19 @@
 
 // oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-comment-list, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-hedging-comment, block65/no-jargon-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, block65/prefer-exact-optional, unicorn-unported/comment-content
 
+import type { JsonValue } from "type-fest";
 import * as v from "valibot";
 
+const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
+	v.union([
+		v.string(),
+		v.number(),
+		v.boolean(),
+		v.null(),
+		v.record(v.string(), jsonValueSchema),
+		v.array(jsonValueSchema),
+	]),
+);
 export const inputDeleteModelResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
@@ -27,317 +38,13 @@ export const inputChatCompletionRoleSchema = v.picklist([
 	"function",
 ]);
 export const chatCompletionRoleSchema = inputChatCompletionRoleSchema;
-export const inputChatCompletionTokenLogprobSchema = v.looseObject({
-	/**
-	 * The token.
-	 */
-	token: v.string(),
-	/**
-	 * The log probability of this token, if it is within the top 20 most likely
-	 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
-	 * very unlikely.
-	 */
-	logprob: v.number(),
-	/**
-	 * A list of integers representing the UTF-8 bytes representation of the
-	 * token. Useful in instances where characters are represented by multiple
-	 * tokens and their byte representations must be combined to generate the
-	 * correct text representation. Can be `null` if there is no bytes
-	 * representation for the token.
-	 */
-	bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
-	/**
-	 * List of the most likely tokens and their log probability, at this token
-	 * position. In rare cases, there may be fewer than the number of requested
-	 * `top_logprobs` returned.
-	 */
-	top_logprobs: v.array(
-		v.looseObject({
-			/**
-			 * The token.
-			 */
-			token: v.string(),
-			/**
-			 * The log probability of this token, if it is within the top 20 most likely
-			 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
-			 * very unlikely.
-			 */
-			logprob: v.number(),
-			/**
-			 * A list of integers representing the UTF-8 bytes representation of the
-			 * token. Useful in instances where characters are represented by multiple
-			 * tokens and their byte representations must be combined to generate the
-			 * correct text representation. Can be `null` if there is no bytes
-			 * representation for the token.
-			 */
-			bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
-		}),
-	),
-});
-export const chatCompletionTokenLogprobSchema = v.looseObject({
-	/**
-	 * The token.
-	 */
-	token: v.pipe(v.string(), v.trim()),
-	/**
-	 * The log probability of this token, if it is within the top 20 most likely
-	 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
-	 * very unlikely.
-	 */
-	logprob: v.number(),
-	/**
-	 * A list of integers representing the UTF-8 bytes representation of the
-	 * token. Useful in instances where characters are represented by multiple
-	 * tokens and their byte representations must be combined to generate the
-	 * correct text representation. Can be `null` if there is no bytes
-	 * representation for the token.
-	 */
-	bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
-	/**
-	 * List of the most likely tokens and their log probability, at this token
-	 * position. In rare cases, there may be fewer than the number of requested
-	 * `top_logprobs` returned.
-	 */
-	top_logprobs: v.array(
-		v.looseObject({
-			/**
-			 * The token.
-			 */
-			token: v.pipe(v.string(), v.trim()),
-			/**
-			 * The log probability of this token, if it is within the top 20 most likely
-			 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
-			 * very unlikely.
-			 */
-			logprob: v.number(),
-			/**
-			 * A list of integers representing the UTF-8 bytes representation of the
-			 * token. Useful in instances where characters are represented by multiple
-			 * tokens and their byte representations must be combined to generate the
-			 * correct text representation. Can be `null` if there is no bytes
-			 * representation for the token.
-			 */
-			bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
-		}),
-	),
-});
-/**
- * Represents a streamed chunk of a chat completion response returned by
- * model, based on the provided input.
- */
-export const inputCreateChatCompletionStreamResponseSchema = v.looseObject({
-	/**
-	 * A unique identifier for the chat completion. Each chunk has the same ID.
-	 */
-	id: v.string(),
-	/**
-	 * A list of chat completion choices. Can contain more than one elements if
-	 * `n` is greater than 1. Can also be empty for the
-	 * last chunk if you set `stream_options: {"include_usage": true}`.
-	 */
-	choices: v.array(
-		v.looseObject({
-			delta: v.unknown(),
-			/**
-			 * Log probability information for the choice.
-			 */
-			logprobs: v.optional(
-				v.nullable(
-					v.looseObject({
-						/**
-						 * A list of message content tokens with log probability information.
-						 */
-						content: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
-						/**
-						 * A list of message refusal tokens with log probability information.
-						 */
-						refusal: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
-					}),
-				),
-			),
-			/**
-			 * The reason the model stopped generating tokens. This will be `stop` if the
-			 * model hit a natural stop point or a provided stop sequence,
-			 * `length` if the maximum number of tokens specified in the request was
-			 * reached,
-			 * `content_filter` if content was omitted due to a flag from our content
-			 * filters,
-			 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
-			 * the model called a function.
-			 */
-			finish_reason: v.nullable(
-				v.picklist([
-					"stop",
-					"length",
-					"tool_calls",
-					"content_filter",
-					"function_call",
-				]),
-			),
-			/**
-			 * The index of the choice in the list of choices.
-			 */
-			index: v.pipe(v.number(), v.integer()),
-		}),
-	),
-	/**
-	 * The Unix timestamp (in seconds) of when the chat completion was created.
-	 * Each chunk has the same timestamp.
-	 */
-	created: v.pipe(v.number(), v.integer()),
-	/**
-	 * The model to generate the completion.
-	 */
-	model: v.string(),
-	/**
-	 * The service tier used for processing the request. This field is only
-	 * included if the `service_tier` parameter is specified in the request.
-	 */
-	service_tier: v.optional(v.nullable(v.picklist(["scale", "default"]))),
-	/**
-	 * This fingerprint represents the backend configuration that the model runs
-	 * with.
-	 * Can be used in conjunction with the `seed` request parameter to understand
-	 * when backend changes have been made that might impact determinism.
-	 */
-	system_fingerprint: v.optional(v.string()),
-	/**
-	 * The object type, which is always `chat.completion.chunk`.
-	 */
-	object: v.picklist(["chat.completion.chunk"]),
-	/**
-	 * An optional field that will only be present when you set `stream_options:
-	 * {"include_usage": true}` in your request.
-	 * When present, it contains a null value except for the last chunk which
-	 * contains the token usage statistics for the entire request.
-	 */
-	usage: v.optional(
-		v.looseObject({
-			/**
-			 * Number of tokens in the generated completion.
-			 */
-			completion_tokens: v.pipe(v.number(), v.integer()),
-			/**
-			 * Number of tokens in the prompt.
-			 */
-			prompt_tokens: v.pipe(v.number(), v.integer()),
-			/**
-			 * Total number of tokens used in the request (prompt + completion).
-			 */
-			total_tokens: v.pipe(v.number(), v.integer()),
-		}),
-	),
-});
-export const createChatCompletionStreamResponseSchema = v.looseObject({
-	/**
-	 * A unique identifier for the chat completion. Each chunk has the same ID.
-	 */
-	id: v.pipe(v.string(), v.trim()),
-	/**
-	 * A list of chat completion choices. Can contain more than one elements if
-	 * `n` is greater than 1. Can also be empty for the
-	 * last chunk if you set `stream_options: {"include_usage": true}`.
-	 */
-	choices: v.array(
-		v.looseObject({
-			delta: v.unknown(),
-			/**
-			 * Log probability information for the choice.
-			 */
-			logprobs: v.exactOptional(
-				v.nullable(
-					v.looseObject({
-						/**
-						 * A list of message content tokens with log probability information.
-						 */
-						content: v.nullable(v.array(chatCompletionTokenLogprobSchema)),
-						/**
-						 * A list of message refusal tokens with log probability information.
-						 */
-						refusal: v.nullable(v.array(chatCompletionTokenLogprobSchema)),
-					}),
-				),
-			),
-			/**
-			 * The reason the model stopped generating tokens. This will be `stop` if the
-			 * model hit a natural stop point or a provided stop sequence,
-			 * `length` if the maximum number of tokens specified in the request was
-			 * reached,
-			 * `content_filter` if content was omitted due to a flag from our content
-			 * filters,
-			 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
-			 * the model called a function.
-			 */
-			finish_reason: v.nullable(
-				v.picklist([
-					"stop",
-					"length",
-					"tool_calls",
-					"content_filter",
-					"function_call",
-				]),
-			),
-			/**
-			 * The index of the choice in the list of choices.
-			 */
-			index: v.pipe(v.number(), v.integer()),
-		}),
-	),
-	/**
-	 * The Unix timestamp (in seconds) of when the chat completion was created.
-	 * Each chunk has the same timestamp.
-	 */
-	created: v.pipe(v.number(), v.integer()),
-	/**
-	 * The model to generate the completion.
-	 */
-	model: v.pipe(v.string(), v.trim()),
-	/**
-	 * The service tier used for processing the request. This field is only
-	 * included if the `service_tier` parameter is specified in the request.
-	 */
-	service_tier: v.exactOptional(v.nullable(v.picklist(["scale", "default"]))),
-	/**
-	 * This fingerprint represents the backend configuration that the model runs
-	 * with.
-	 * Can be used in conjunction with the `seed` request parameter to understand
-	 * when backend changes have been made that might impact determinism.
-	 */
-	system_fingerprint: v.exactOptional(v.pipe(v.string(), v.trim())),
-	/**
-	 * The object type, which is always `chat.completion.chunk`.
-	 */
-	object: v.picklist(["chat.completion.chunk"]),
-	/**
-	 * An optional field that will only be present when you set `stream_options:
-	 * {"include_usage": true}` in your request.
-	 * When present, it contains a null value except for the last chunk which
-	 * contains the token usage statistics for the entire request.
-	 */
-	usage: v.exactOptional(
-		v.looseObject({
-			/**
-			 * Number of tokens in the generated completion.
-			 */
-			completion_tokens: v.pipe(v.number(), v.integer()),
-			/**
-			 * Number of tokens in the prompt.
-			 */
-			prompt_tokens: v.pipe(v.number(), v.integer()),
-			/**
-			 * Total number of tokens used in the request (prompt + completion).
-			 */
-			total_tokens: v.pipe(v.number(), v.integer()),
-		}),
-	),
-});
 /**
  * Represents a streamed chunk of a chat completion response returned by
  * model, based on the provided input.
  */
 export const inputCreateChatCompletionImageResponseSchema = v.record(
 	v.string(),
-	v.unknown(),
+	jsonValueSchema,
 );
 export const createChatCompletionImageResponseSchema =
 	inputCreateChatCompletionImageResponseSchema;
@@ -1278,7 +985,10 @@ export const completeUploadRequestSchema = v.strictObject({
 	 */
 	md5: v.exactOptional(v.pipe(v.string(), v.trim())),
 });
-export const inputCancelUploadRequestSchema = v.record(v.string(), v.unknown());
+export const inputCancelUploadRequestSchema = v.record(
+	v.string(),
+	jsonValueSchema,
+);
 export const cancelUploadRequestSchema = inputCancelUploadRequestSchema;
 export const inputCreateFineTuningJobRequestSchema = v.looseObject({
 	/**
@@ -1815,84 +1525,6 @@ export const uploadPartSchema = v.looseObject({
 	 */
 	object: v.picklist(["upload.part"]),
 });
-export const inputFineTuningIntegrationSchema = v.looseObject({
-	/**
-	 * The type of the integration being enabled for the fine-tuning job
-	 */
-	type: v.picklist(["wandb"]),
-	/**
-	 * The settings for your integration with Weights and Biases. This payload
-	 * specifies the project that
-	 * metrics will be sent to. Optionally, you can set an explicit display name
-	 * for your run, add tags
-	 * to your run, and set a default entity (team, username, etc) to be
-	 * associated with your run.
-	 */
-	wandb: v.looseObject({
-		/**
-		 * The name of the project that the new run will be created under.
-		 */
-		project: v.string(),
-		/**
-		 * A display name to set for the run. If not set, we will use the Job ID as
-		 * the name.
-		 */
-		name: v.optional(v.nullable(v.string())),
-		/**
-		 * The entity to use for the run. This allows you to set the team or username
-		 * of the WandB user that you would
-		 * like associated with the run. If not set, the default entity for the
-		 * registered WandB API key is used.
-		 */
-		entity: v.optional(v.nullable(v.string())),
-		/**
-		 * A list of tags to be attached to the newly created run. These tags are
-		 * passed through directly to WandB. Some
-		 * default tags are generated by OpenAI: "openai/finetune",
-		 * "openai/{base-model}", "openai/{ftjob-abcdef}".
-		 */
-		tags: v.optional(v.array(v.string())),
-	}),
-});
-export const fineTuningIntegrationSchema = v.looseObject({
-	/**
-	 * The type of the integration being enabled for the fine-tuning job
-	 */
-	type: v.picklist(["wandb"]),
-	/**
-	 * The settings for your integration with Weights and Biases. This payload
-	 * specifies the project that
-	 * metrics will be sent to. Optionally, you can set an explicit display name
-	 * for your run, add tags
-	 * to your run, and set a default entity (team, username, etc) to be
-	 * associated with your run.
-	 */
-	wandb: v.looseObject({
-		/**
-		 * The name of the project that the new run will be created under.
-		 */
-		project: v.pipe(v.string(), v.trim()),
-		/**
-		 * A display name to set for the run. If not set, we will use the Job ID as
-		 * the name.
-		 */
-		name: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
-		/**
-		 * The entity to use for the run. This allows you to set the team or username
-		 * of the WandB user that you would
-		 * like associated with the run. If not set, the default entity for the
-		 * registered WandB API key is used.
-		 */
-		entity: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
-		/**
-		 * A list of tags to be attached to the newly created run. These tags are
-		 * passed through directly to WandB. Some
-		 * default tags are generated by OpenAI: "openai/finetune",
-		 * "openai/{base-model}", "openai/{ftjob-abcdef}".
-		 */
-		tags: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
-	}),
-});
 /**
  * The per-line training example of a fine-tuning input file for completions
  * models
@@ -1927,21 +1559,6 @@ export const deleteAssistantResponseSchema = v.looseObject({
 	deleted: v.boolean(),
 	object: v.picklist(["assistant.deleted"]),
 });
-export const inputAssistantToolsCodeSchema = v.looseObject({
-	/**
-	 * The type of tool being defined: `code_interpreter`
-	 */
-	type: v.picklist(["code_interpreter"]),
-});
-export const assistantToolsCodeSchema = inputAssistantToolsCodeSchema;
-export const inputAssistantToolsFileSearchTypeOnlySchema = v.looseObject({
-	/**
-	 * The type of tool being defined: `file_search`
-	 */
-	type: v.picklist(["file_search"]),
-});
-export const assistantToolsFileSearchTypeOnlySchema =
-	inputAssistantToolsFileSearchTypeOnlySchema;
 export const inputModifyRunRequestSchema = v.strictObject({
 	/**
 	 * Set of 16 key-value pairs that can be attached to an object. This can be
@@ -1949,7 +1566,7 @@ export const inputModifyRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const modifyRunRequestSchema = v.strictObject({
 	/**
@@ -1958,7 +1575,7 @@ export const modifyRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputSubmitToolOutputsRunRequestSchema = v.strictObject({
 	/**
@@ -2049,7 +1666,7 @@ export const inputModifyThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const modifyThreadRequestSchema = v.strictObject({
 	/**
@@ -2094,7 +1711,7 @@ export const modifyThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputDeleteThreadResponseSchema = v.looseObject({
 	id: v.string(),
@@ -2113,7 +1730,7 @@ export const inputModifyMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const modifyMessageRequestSchema = v.strictObject({
 	/**
@@ -2122,7 +1739,7 @@ export const modifyMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputDeleteMessageResponseSchema = v.looseObject({
 	id: v.string(),
@@ -2134,966 +1751,6 @@ export const deleteMessageResponseSchema = v.looseObject({
 	deleted: v.boolean(),
 	object: v.picklist(["thread.message.deleted"]),
 });
-/**
- * References an image [File](/docs/api-reference/files) in the content of a
- * message.
- * @title Image file
- */
-export const inputMessageContentImageFileObjectSchema = v.looseObject({
-	/**
-	 * Always `image_file`.
-	 */
-	type: v.picklist(["image_file"]),
-	image_file: v.looseObject({
-		/**
-		 * The [File](/docs/api-reference/files) ID of the image in the message
-		 * content. Set `purpose="vision"` when uploading the File if you need to
-		 * later display the file content.
-		 */
-		file_id: v.string(),
-		/**
-		 * Specifies the detail level of the image if specified by the user. `low`
-		 * uses fewer tokens, you can opt in to high resolution using `high`.
-		 */
-		detail: v.optional(v.picklist(["auto", "low", "high"])),
-	}),
-});
-export const messageContentImageFileObjectSchema = v.looseObject({
-	/**
-	 * Always `image_file`.
-	 */
-	type: v.picklist(["image_file"]),
-	image_file: v.looseObject({
-		/**
-		 * The [File](/docs/api-reference/files) ID of the image in the message
-		 * content. Set `purpose="vision"` when uploading the File if you need to
-		 * later display the file content.
-		 */
-		file_id: v.pipe(v.string(), v.trim()),
-		/**
-		 * Specifies the detail level of the image if specified by the user. `low`
-		 * uses fewer tokens, you can opt in to high resolution using `high`.
-		 */
-		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-	}),
-});
-/**
- * References an image [File](/docs/api-reference/files) in the content of a
- * message.
- * @title Image file
- */
-export const inputMessageDeltaContentImageFileObjectSchema = v.looseObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `image_file`.
-	 */
-	type: v.picklist(["image_file"]),
-	image_file: v.optional(
-		v.looseObject({
-			/**
-			 * The [File](/docs/api-reference/files) ID of the image in the message
-			 * content. Set `purpose="vision"` when uploading the File if you need to
-			 * later display the file content.
-			 */
-			file_id: v.optional(v.string()),
-			/**
-			 * Specifies the detail level of the image if specified by the user. `low`
-			 * uses fewer tokens, you can opt in to high resolution using `high`.
-			 */
-			detail: v.optional(v.picklist(["auto", "low", "high"])),
-		}),
-	),
-});
-export const messageDeltaContentImageFileObjectSchema = v.looseObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `image_file`.
-	 */
-	type: v.picklist(["image_file"]),
-	image_file: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The [File](/docs/api-reference/files) ID of the image in the message
-			 * content. Set `purpose="vision"` when uploading the File if you need to
-			 * later display the file content.
-			 */
-			file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
-			/**
-			 * Specifies the detail level of the image if specified by the user. `low`
-			 * uses fewer tokens, you can opt in to high resolution using `high`.
-			 */
-			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-		}),
-	),
-});
-/**
- * References an image URL in the content of a message.
- * @title Image URL
- */
-export const inputMessageContentImageUrlObjectSchema = v.looseObject({
-	/**
-	 * The type of the content part.
-	 */
-	type: v.picklist(["image_url"]),
-	image_url: v.looseObject({
-		/**
-		 * The external URL of the image, must be a supported image types: jpeg, jpg,
-		 * png, gif, webp.
-		 */
-		url: v.string(),
-		/**
-		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-		 * opt in to high resolution using `high`. Default value is `auto`
-		 */
-		detail: v.optional(v.picklist(["auto", "low", "high"])),
-	}),
-});
-export const messageContentImageUrlObjectSchema = v.looseObject({
-	/**
-	 * The type of the content part.
-	 */
-	type: v.picklist(["image_url"]),
-	image_url: v.looseObject({
-		/**
-		 * The external URL of the image, must be a supported image types: jpeg, jpg,
-		 * png, gif, webp.
-		 */
-		url: v.pipe(v.string(), v.trim()),
-		/**
-		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-		 * opt in to high resolution using `high`. Default value is `auto`
-		 */
-		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-	}),
-});
-/**
- * References an image URL in the content of a message.
- * @title Image URL
- */
-export const inputMessageDeltaContentImageUrlObjectSchema = v.looseObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `image_url`.
-	 */
-	type: v.picklist(["image_url"]),
-	image_url: v.optional(
-		v.looseObject({
-			/**
-			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
-			 * webp.
-			 */
-			url: v.optional(v.string()),
-			/**
-			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-			 * opt in to high resolution using `high`.
-			 */
-			detail: v.optional(v.picklist(["auto", "low", "high"])),
-		}),
-	),
-});
-export const messageDeltaContentImageUrlObjectSchema = v.looseObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `image_url`.
-	 */
-	type: v.picklist(["image_url"]),
-	image_url: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
-			 * webp.
-			 */
-			url: v.exactOptional(v.pipe(v.string(), v.trim())),
-			/**
-			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
-			 * opt in to high resolution using `high`.
-			 */
-			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-		}),
-	),
-});
-/**
- * The text content that is part of a message.
- * @title Text
- */
-export const inputMessageContentTextObjectSchema = v.looseObject({
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	text: v.looseObject({
-		/**
-		 * The data that makes up the text.
-		 */
-		value: v.string(),
-		annotations: v.array(v.union([v.unknown(), v.unknown()])),
-	}),
-});
-export const messageContentTextObjectSchema = v.looseObject({
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	text: v.looseObject({
-		/**
-		 * The data that makes up the text.
-		 */
-		value: v.pipe(v.string(), v.trim()),
-		annotations: v.array(v.union([v.unknown(), v.unknown()])),
-	}),
-});
-/**
- * The refusal content generated by the assistant.
- * @title Refusal
- */
-export const inputMessageContentRefusalObjectSchema = v.looseObject({
-	/**
-	 * Always `refusal`.
-	 */
-	type: v.picklist(["refusal"]),
-	refusal: v.string(),
-});
-export const messageContentRefusalObjectSchema = v.looseObject({
-	/**
-	 * Always `refusal`.
-	 */
-	type: v.picklist(["refusal"]),
-	refusal: v.pipe(v.string(), v.trim()),
-});
-/**
- * The text content that is part of a message.
- * @title Text
- */
-export const inputMessageRequestContentTextObjectSchema = v.looseObject({
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	/**
-	 * Text content to be sent to the model
-	 */
-	text: v.string(),
-});
-export const messageRequestContentTextObjectSchema = v.looseObject({
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	/**
-	 * Text content to be sent to the model
-	 */
-	text: v.pipe(v.string(), v.trim()),
-});
-/**
- * A citation within the message that points to a specific quote from a
- * specific File associated with the assistant or the message. Generated when
- * the assistant uses the "file_search" tool to search files.
- * @title File citation
- */
-export const inputMessageContentTextAnnotationsFileCitationObjectSchema =
-	v.looseObject({
-		/**
-		 * Always `file_citation`.
-		 */
-		type: v.picklist(["file_citation"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.string(),
-		file_citation: v.looseObject({
-			/**
-			 * The ID of the specific File the citation is from.
-			 */
-			file_id: v.string(),
-		}),
-		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	});
-export const messageContentTextAnnotationsFileCitationObjectSchema =
-	v.looseObject({
-		/**
-		 * Always `file_citation`.
-		 */
-		type: v.picklist(["file_citation"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.pipe(v.string(), v.trim()),
-		file_citation: v.looseObject({
-			/**
-			 * The ID of the specific File the citation is from.
-			 */
-			file_id: v.pipe(v.string(), v.trim()),
-		}),
-		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	});
-/**
- * A URL for the file that's generated when the assistant used the
- * `code_interpreter` tool to generate a file.
- * @title File path
- */
-export const inputMessageContentTextAnnotationsFilePathObjectSchema =
-	v.looseObject({
-		/**
-		 * Always `file_path`.
-		 */
-		type: v.picklist(["file_path"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.string(),
-		file_path: v.looseObject({
-			/**
-			 * The ID of the file that was generated.
-			 */
-			file_id: v.string(),
-		}),
-		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	});
-export const messageContentTextAnnotationsFilePathObjectSchema = v.looseObject({
-	/**
-	 * Always `file_path`.
-	 */
-	type: v.picklist(["file_path"]),
-	/**
-	 * The text in the message content that needs to be replaced.
-	 */
-	text: v.pipe(v.string(), v.trim()),
-	file_path: v.looseObject({
-		/**
-		 * The ID of the file that was generated.
-		 */
-		file_id: v.pipe(v.string(), v.trim()),
-	}),
-	start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-	end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
-});
-/**
- * The text content that is part of a message.
- * @title Text
- */
-export const inputMessageDeltaContentTextObjectSchema = v.looseObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	text: v.optional(
-		v.looseObject({
-			/**
-			 * The data that makes up the text.
-			 */
-			value: v.optional(v.string()),
-			annotations: v.optional(v.array(v.union([v.unknown(), v.unknown()]))),
-		}),
-	),
-});
-export const messageDeltaContentTextObjectSchema = v.looseObject({
-	/**
-	 * The index of the content part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `text`.
-	 */
-	type: v.picklist(["text"]),
-	text: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The data that makes up the text.
-			 */
-			value: v.exactOptional(v.pipe(v.string(), v.trim())),
-			annotations: v.exactOptional(
-				v.array(v.union([v.unknown(), v.unknown()])),
-			),
-		}),
-	),
-});
-/**
- * The refusal content that is part of a message.
- * @title Refusal
- */
-export const inputMessageDeltaContentRefusalObjectSchema = v.looseObject({
-	/**
-	 * The index of the refusal part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `refusal`.
-	 */
-	type: v.picklist(["refusal"]),
-	refusal: v.optional(v.string()),
-});
-export const messageDeltaContentRefusalObjectSchema = v.looseObject({
-	/**
-	 * The index of the refusal part in the message.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * Always `refusal`.
-	 */
-	type: v.picklist(["refusal"]),
-	refusal: v.exactOptional(v.pipe(v.string(), v.trim())),
-});
-/**
- * A citation within the message that points to a specific quote from a
- * specific File associated with the assistant or the message. Generated when
- * the assistant uses the "file_search" tool to search files.
- * @title File citation
- */
-export const inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the annotation in the text content part.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `file_citation`.
-		 */
-		type: v.picklist(["file_citation"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.optional(v.string()),
-		file_citation: v.optional(
-			v.looseObject({
-				/**
-				 * The ID of the specific File the citation is from.
-				 */
-				file_id: v.optional(v.string()),
-				/**
-				 * The specific quote in the file.
-				 */
-				quote: v.optional(v.string()),
-			}),
-		),
-		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-	});
-export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the annotation in the text content part.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `file_citation`.
-		 */
-		type: v.picklist(["file_citation"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.exactOptional(v.pipe(v.string(), v.trim())),
-		file_citation: v.exactOptional(
-			v.looseObject({
-				/**
-				 * The ID of the specific File the citation is from.
-				 */
-				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
-				/**
-				 * The specific quote in the file.
-				 */
-				quote: v.exactOptional(v.pipe(v.string(), v.trim())),
-			}),
-		),
-		start_index: v.exactOptional(
-			v.pipe(v.number(), v.integer(), v.minValue(0)),
-		),
-		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-	});
-/**
- * A URL for the file that's generated when the assistant used the
- * `code_interpreter` tool to generate a file.
- * @title File path
- */
-export const inputMessageDeltaContentTextAnnotationsFilePathObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the annotation in the text content part.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `file_path`.
-		 */
-		type: v.picklist(["file_path"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.optional(v.string()),
-		file_path: v.optional(
-			v.looseObject({
-				/**
-				 * The ID of the file that was generated.
-				 */
-				file_id: v.optional(v.string()),
-			}),
-		),
-		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-	});
-export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the annotation in the text content part.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `file_path`.
-		 */
-		type: v.picklist(["file_path"]),
-		/**
-		 * The text in the message content that needs to be replaced.
-		 */
-		text: v.exactOptional(v.pipe(v.string(), v.trim())),
-		file_path: v.exactOptional(
-			v.looseObject({
-				/**
-				 * The ID of the file that was generated.
-				 */
-				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
-			}),
-		),
-		start_index: v.exactOptional(
-			v.pipe(v.number(), v.integer(), v.minValue(0)),
-		),
-		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
-	});
-/**
- * Details of the Code Interpreter tool call the run step was involved in.
- * @title Code Interpreter tool call
- */
-export const inputRunStepDetailsToolCallsCodeObjectSchema = v.looseObject({
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.string(),
-	/**
-	 * The type of tool call. This is always going to be `code_interpreter` for
-	 * this type of tool call.
-	 */
-	type: v.picklist(["code_interpreter"]),
-	/**
-	 * The Code Interpreter tool call definition.
-	 */
-	code_interpreter: v.looseObject({
-		/**
-		 * The input to the Code Interpreter tool call.
-		 */
-		input: v.string(),
-		/**
-		 * The outputs from the Code Interpreter tool call. Code Interpreter can
-		 * output one or more items, including text (`logs`) or images (`image`). Each
-		 * of these are represented by a different object type.
-		 */
-		outputs: v.array(v.union([v.unknown(), v.unknown()])),
-	}),
-});
-export const runStepDetailsToolCallsCodeObjectSchema = v.looseObject({
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The type of tool call. This is always going to be `code_interpreter` for
-	 * this type of tool call.
-	 */
-	type: v.picklist(["code_interpreter"]),
-	/**
-	 * The Code Interpreter tool call definition.
-	 */
-	code_interpreter: v.looseObject({
-		/**
-		 * The input to the Code Interpreter tool call.
-		 */
-		input: v.pipe(v.string(), v.trim()),
-		/**
-		 * The outputs from the Code Interpreter tool call. Code Interpreter can
-		 * output one or more items, including text (`logs`) or images (`image`). Each
-		 * of these are represented by a different object type.
-		 */
-		outputs: v.array(v.union([v.unknown(), v.unknown()])),
-	}),
-});
-/**
- * Details of the Code Interpreter tool call the run step was involved in.
- * @title Code interpreter tool call
- */
-export const inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the tool call in the tool calls array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * The ID of the tool call.
-		 */
-		id: v.optional(v.string()),
-		/**
-		 * The type of tool call. This is always going to be `code_interpreter` for
-		 * this type of tool call.
-		 */
-		type: v.picklist(["code_interpreter"]),
-		/**
-		 * The Code Interpreter tool call definition.
-		 */
-		code_interpreter: v.optional(
-			v.looseObject({
-				/**
-				 * The input to the Code Interpreter tool call.
-				 */
-				input: v.optional(v.string()),
-				/**
-				 * The outputs from the Code Interpreter tool call. Code Interpreter can
-				 * output one or more items, including text (`logs`) or images (`image`). Each
-				 * of these are represented by a different object type.
-				 */
-				outputs: v.optional(v.array(v.union([v.unknown(), v.unknown()]))),
-			}),
-		),
-	});
-export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.looseObject({
-	/**
-	 * The index of the tool call in the tool calls array.
-	 */
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.exactOptional(v.pipe(v.string(), v.trim())),
-	/**
-	 * The type of tool call. This is always going to be `code_interpreter` for
-	 * this type of tool call.
-	 */
-	type: v.picklist(["code_interpreter"]),
-	/**
-	 * The Code Interpreter tool call definition.
-	 */
-	code_interpreter: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The input to the Code Interpreter tool call.
-			 */
-			input: v.exactOptional(v.pipe(v.string(), v.trim())),
-			/**
-			 * The outputs from the Code Interpreter tool call. Code Interpreter can
-			 * output one or more items, including text (`logs`) or images (`image`). Each
-			 * of these are represented by a different object type.
-			 */
-			outputs: v.exactOptional(v.array(v.union([v.unknown(), v.unknown()]))),
-		}),
-	),
-});
-/**
- * Text output from the Code Interpreter tool call as part of a run step.
- * @title Code Interpreter log output
- */
-export const inputRunStepDetailsToolCallsCodeOutputLogsObjectSchema =
-	v.looseObject({
-		/**
-		 * Always `logs`.
-		 */
-		type: v.picklist(["logs"]),
-		/**
-		 * The text output from the Code Interpreter tool call.
-		 */
-		logs: v.string(),
-	});
-export const runStepDetailsToolCallsCodeOutputLogsObjectSchema = v.looseObject({
-	/**
-	 * Always `logs`.
-	 */
-	type: v.picklist(["logs"]),
-	/**
-	 * The text output from the Code Interpreter tool call.
-	 */
-	logs: v.pipe(v.string(), v.trim()),
-});
-/**
- * Text output from the Code Interpreter tool call as part of a run step.
- * @title Code interpreter log output
- */
-export const inputRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the output in the outputs array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `logs`.
-		 */
-		type: v.picklist(["logs"]),
-		/**
-		 * The text output from the Code Interpreter tool call.
-		 */
-		logs: v.optional(v.string()),
-	});
-export const runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the output in the outputs array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `logs`.
-		 */
-		type: v.picklist(["logs"]),
-		/**
-		 * The text output from the Code Interpreter tool call.
-		 */
-		logs: v.exactOptional(v.pipe(v.string(), v.trim())),
-	});
-export const inputRunStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.looseObject({
-		/**
-		 * Always `image`.
-		 */
-		type: v.picklist(["image"]),
-		image: v.looseObject({
-			/**
-			 * The [file](/docs/api-reference/files) ID of the image.
-			 */
-			file_id: v.string(),
-		}),
-	});
-export const runStepDetailsToolCallsCodeOutputImageObjectSchema = v.looseObject(
-	{
-		/**
-		 * Always `image`.
-		 */
-		type: v.picklist(["image"]),
-		image: v.looseObject({
-			/**
-			 * The [file](/docs/api-reference/files) ID of the image.
-			 */
-			file_id: v.pipe(v.string(), v.trim()),
-		}),
-	},
-);
-export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the output in the outputs array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `image`.
-		 */
-		type: v.picklist(["image"]),
-		image: v.optional(
-			v.looseObject({
-				/**
-				 * The [file](/docs/api-reference/files) ID of the image.
-				 */
-				file_id: v.optional(v.string()),
-			}),
-		),
-	});
-export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the output in the outputs array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * Always `image`.
-		 */
-		type: v.picklist(["image"]),
-		image: v.exactOptional(
-			v.looseObject({
-				/**
-				 * The [file](/docs/api-reference/files) ID of the image.
-				 */
-				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
-			}),
-		),
-	});
-export const inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the tool call in the tool calls array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * The ID of the tool call object.
-		 */
-		id: v.optional(v.string()),
-		/**
-		 * The type of tool call. This is always going to be `file_search` for this
-		 * type of tool call.
-		 */
-		type: v.picklist(["file_search"]),
-		/**
-		 * For now, this is always going to be an empty object.
-		 */
-		file_search: v.record(v.string(), v.unknown()),
-	});
-export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the tool call in the tool calls array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * The ID of the tool call object.
-		 */
-		id: v.exactOptional(v.pipe(v.string(), v.trim())),
-		/**
-		 * The type of tool call. This is always going to be `file_search` for this
-		 * type of tool call.
-		 */
-		type: v.picklist(["file_search"]),
-		/**
-		 * For now, this is always going to be an empty object.
-		 */
-		file_search: v.record(v.string(), v.unknown()),
-	});
-export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.looseObject({
-	/**
-	 * The ID of the tool call object.
-	 */
-	id: v.string(),
-	/**
-	 * The type of tool call. This is always going to be `function` for this type
-	 * of tool call.
-	 */
-	type: v.picklist(["function"]),
-	/**
-	 * The definition of the function that was called.
-	 */
-	function: v.looseObject({
-		/**
-		 * The name of the function.
-		 */
-		name: v.string(),
-		/**
-		 * The arguments passed to the function.
-		 */
-		arguments: v.string(),
-		/**
-		 * The output of the function. This will be `null` if the outputs have not
-		 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-		 */
-		output: v.nullable(v.string()),
-	}),
-});
-export const runStepDetailsToolCallsFunctionObjectSchema = v.looseObject({
-	/**
-	 * The ID of the tool call object.
-	 */
-	id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The type of tool call. This is always going to be `function` for this type
-	 * of tool call.
-	 */
-	type: v.picklist(["function"]),
-	/**
-	 * The definition of the function that was called.
-	 */
-	function: v.looseObject({
-		/**
-		 * The name of the function.
-		 */
-		name: v.pipe(v.string(), v.trim()),
-		/**
-		 * The arguments passed to the function.
-		 */
-		arguments: v.pipe(v.string(), v.trim()),
-		/**
-		 * The output of the function. This will be `null` if the outputs have not
-		 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-		 */
-		output: v.nullable(v.pipe(v.string(), v.trim())),
-	}),
-});
-export const inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the tool call in the tool calls array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * The ID of the tool call object.
-		 */
-		id: v.optional(v.string()),
-		/**
-		 * The type of tool call. This is always going to be `function` for this type
-		 * of tool call.
-		 */
-		type: v.picklist(["function"]),
-		/**
-		 * The definition of the function that was called.
-		 */
-		function: v.optional(
-			v.looseObject({
-				/**
-				 * The name of the function.
-				 */
-				name: v.optional(v.string()),
-				/**
-				 * The arguments passed to the function.
-				 */
-				arguments: v.optional(v.string()),
-				/**
-				 * The output of the function. This will be `null` if the outputs have not
-				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-				 */
-				output: v.optional(v.nullable(v.string())),
-			}),
-		),
-	});
-export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
-	v.looseObject({
-		/**
-		 * The index of the tool call in the tool calls array.
-		 */
-		index: v.pipe(v.number(), v.integer()),
-		/**
-		 * The ID of the tool call object.
-		 */
-		id: v.exactOptional(v.pipe(v.string(), v.trim())),
-		/**
-		 * The type of tool call. This is always going to be `function` for this type
-		 * of tool call.
-		 */
-		type: v.picklist(["function"]),
-		/**
-		 * The definition of the function that was called.
-		 */
-		function: v.exactOptional(
-			v.looseObject({
-				/**
-				 * The name of the function.
-				 */
-				name: v.exactOptional(v.pipe(v.string(), v.trim())),
-				/**
-				 * The arguments passed to the function.
-				 */
-				arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
-				/**
-				 * The output of the function. This will be `null` if the outputs have not
-				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
-				 */
-				output: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
-			}),
-		),
-	});
 export const inputDeleteVectorStoreResponseSchema = v.looseObject({
 	id: v.string(),
 	deleted: v.boolean(),
@@ -3272,7 +1929,7 @@ export const inputBatchRequestOutputSchema = v.looseObject({
 				/**
 				 * The JSON body of the response
 				 */
-				body: v.optional(v.record(v.string(), v.unknown())),
+				body: v.optional(v.record(v.string(), jsonValueSchema)),
 			}),
 		),
 	),
@@ -3317,7 +1974,7 @@ export const batchRequestOutputSchema = v.looseObject({
 				/**
 				 * The JSON body of the response
 				 */
-				body: v.exactOptional(v.record(v.string(), v.unknown())),
+				body: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 			}),
 		),
 	),
@@ -5062,7 +3719,7 @@ export const inputBatchSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const batchSchema = v.looseObject({
 	id: v.pipe(v.string(), v.trim()),
@@ -5195,7 +3852,7 @@ export const batchSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputListBatchesResponseSchema = v.looseObject({
 	data: v.array(inputBatchSchema),
@@ -5210,6 +3867,345 @@ export const listBatchesResponseSchema = v.looseObject({
 	last_id: v.exactOptional(v.pipe(v.string(), v.trim())),
 	has_more: v.boolean(),
 	object: v.picklist(["list"]),
+});
+/** Occurs when a stream ends. */
+export const inputDoneEventSchema = v.looseObject({
+	event: v.picklist(["done"]),
+	data: v.picklist(["[DONE]"]),
+});
+export const doneEventSchema = inputDoneEventSchema;
+export const inputErrorSchema = v.looseObject({
+	code: v.nullable(v.string()),
+	message: v.string(),
+	param: v.nullable(v.string()),
+	type: v.string(),
+});
+export const errorSchema = v.looseObject({
+	code: v.nullable(v.pipe(v.string(), v.trim())),
+	message: v.pipe(v.string(), v.trim()),
+	param: v.nullable(v.pipe(v.string(), v.trim())),
+	type: v.pipe(v.string(), v.trim()),
+});
+/**
+ * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
+ * can happen due to an internal server error or a timeout.
+ */
+export const inputErrorEventSchema = v.looseObject({
+	event: v.picklist(["error"]),
+	data: inputErrorSchema,
+});
+export const errorEventSchema = inputErrorEventSchema;
+/**
+ * References an image URL in the content of a message.
+ * @title Image URL
+ */
+export const inputMessageDeltaContentImageUrlObjectSchema = v.looseObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `image_url`.
+	 */
+	type: v.picklist(["image_url"]),
+	image_url: v.optional(
+		v.looseObject({
+			/**
+			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
+			 * webp.
+			 */
+			url: v.optional(v.string()),
+			/**
+			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+			 * opt in to high resolution using `high`.
+			 */
+			detail: v.optional(v.picklist(["auto", "low", "high"])),
+		}),
+	),
+});
+export const messageDeltaContentImageUrlObjectSchema = v.looseObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `image_url`.
+	 */
+	type: v.picklist(["image_url"]),
+	image_url: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The URL of the image, must be a supported image types: jpeg, jpg, png, gif,
+			 * webp.
+			 */
+			url: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+			 * opt in to high resolution using `high`.
+			 */
+			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		}),
+	),
+});
+/**
+ * The refusal content that is part of a message.
+ * @title Refusal
+ */
+export const inputMessageDeltaContentRefusalObjectSchema = v.looseObject({
+	/**
+	 * The index of the refusal part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `refusal`.
+	 */
+	type: v.picklist(["refusal"]),
+	refusal: v.optional(v.string()),
+});
+export const messageDeltaContentRefusalObjectSchema = v.looseObject({
+	/**
+	 * The index of the refusal part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `refusal`.
+	 */
+	type: v.picklist(["refusal"]),
+	refusal: v.exactOptional(v.pipe(v.string(), v.trim())),
+});
+/**
+ * A URL for the file that's generated when the assistant used the
+ * `code_interpreter` tool to generate a file.
+ * @title File path
+ */
+export const inputMessageDeltaContentTextAnnotationsFilePathObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the annotation in the text content part.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `file_path`.
+		 */
+		type: v.picklist(["file_path"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.optional(v.string()),
+		file_path: v.optional(
+			v.looseObject({
+				/**
+				 * The ID of the file that was generated.
+				 */
+				file_id: v.optional(v.string()),
+			}),
+		),
+		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+	});
+export const messageDeltaContentTextAnnotationsFilePathObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the annotation in the text content part.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `file_path`.
+		 */
+		type: v.picklist(["file_path"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.exactOptional(v.pipe(v.string(), v.trim())),
+		file_path: v.exactOptional(
+			v.looseObject({
+				/**
+				 * The ID of the file that was generated.
+				 */
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		start_index: v.exactOptional(
+			v.pipe(v.number(), v.integer(), v.minValue(0)),
+		),
+		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+	});
+/**
+ * A citation within the message that points to a specific quote from a
+ * specific File associated with the assistant or the message. Generated when
+ * the assistant uses the "file_search" tool to search files.
+ * @title File citation
+ */
+export const inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the annotation in the text content part.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `file_citation`.
+		 */
+		type: v.picklist(["file_citation"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.optional(v.string()),
+		file_citation: v.optional(
+			v.looseObject({
+				/**
+				 * The ID of the specific File the citation is from.
+				 */
+				file_id: v.optional(v.string()),
+				/**
+				 * The specific quote in the file.
+				 */
+				quote: v.optional(v.string()),
+			}),
+		),
+		start_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+		end_index: v.optional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+	});
+export const messageDeltaContentTextAnnotationsFileCitationObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the annotation in the text content part.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `file_citation`.
+		 */
+		type: v.picklist(["file_citation"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.exactOptional(v.pipe(v.string(), v.trim())),
+		file_citation: v.exactOptional(
+			v.looseObject({
+				/**
+				 * The ID of the specific File the citation is from.
+				 */
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The specific quote in the file.
+				 */
+				quote: v.exactOptional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+		start_index: v.exactOptional(
+			v.pipe(v.number(), v.integer(), v.minValue(0)),
+		),
+		end_index: v.exactOptional(v.pipe(v.number(), v.integer(), v.minValue(0))),
+	});
+/**
+ * The text content that is part of a message.
+ * @title Text
+ */
+export const inputMessageDeltaContentTextObjectSchema = v.looseObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	text: v.optional(
+		v.looseObject({
+			/**
+			 * The data that makes up the text.
+			 */
+			value: v.optional(v.string()),
+			annotations: v.optional(
+				v.array(
+					v.union([
+						inputMessageDeltaContentTextAnnotationsFileCitationObjectSchema,
+						inputMessageDeltaContentTextAnnotationsFilePathObjectSchema,
+					]),
+				),
+			),
+		}),
+	),
+});
+export const messageDeltaContentTextObjectSchema = v.looseObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	text: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The data that makes up the text.
+			 */
+			value: v.exactOptional(v.pipe(v.string(), v.trim())),
+			annotations: v.exactOptional(
+				v.array(
+					v.union([
+						messageDeltaContentTextAnnotationsFileCitationObjectSchema,
+						messageDeltaContentTextAnnotationsFilePathObjectSchema,
+					]),
+				),
+			),
+		}),
+	),
+});
+/**
+ * References an image [File](/docs/api-reference/files) in the content of a
+ * message.
+ * @title Image file
+ */
+export const inputMessageDeltaContentImageFileObjectSchema = v.looseObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `image_file`.
+	 */
+	type: v.picklist(["image_file"]),
+	image_file: v.optional(
+		v.looseObject({
+			/**
+			 * The [File](/docs/api-reference/files) ID of the image in the message
+			 * content. Set `purpose="vision"` when uploading the File if you need to
+			 * later display the file content.
+			 */
+			file_id: v.optional(v.string()),
+			/**
+			 * Specifies the detail level of the image if specified by the user. `low`
+			 * uses fewer tokens, you can opt in to high resolution using `high`.
+			 */
+			detail: v.optional(v.picklist(["auto", "low", "high"])),
+		}),
+	),
+});
+export const messageDeltaContentImageFileObjectSchema = v.looseObject({
+	/**
+	 * The index of the content part in the message.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * Always `image_file`.
+	 */
+	type: v.picklist(["image_file"]),
+	image_file: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The [File](/docs/api-reference/files) ID of the image in the message
+			 * content. Set `purpose="vision"` when uploading the File if you need to
+			 * later display the file content.
+			 */
+			file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * Specifies the detail level of the image if specified by the user. `low`
+			 * uses fewer tokens, you can opt in to high resolution using `high`.
+			 */
+			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		}),
+	),
 });
 /**
  * Represents a message delta i.e. any changed fields on a message during
@@ -5280,33 +4276,248 @@ export const messageDeltaObjectSchema = v.looseObject({
 		),
 	}),
 });
-/** Occurs when a stream ends. */
-export const inputDoneEventSchema = v.looseObject({
-	event: v.picklist(["done"]),
-	data: v.picklist(["[DONE]"]),
+export const inputAssistantToolsFileSearchTypeOnlySchema = v.looseObject({
+	/**
+	 * The type of tool being defined: `file_search`
+	 */
+	type: v.picklist(["file_search"]),
 });
-export const doneEventSchema = inputDoneEventSchema;
-export const inputErrorSchema = v.looseObject({
-	code: v.nullable(v.string()),
-	message: v.string(),
-	param: v.nullable(v.string()),
-	type: v.string(),
+export const assistantToolsFileSearchTypeOnlySchema =
+	inputAssistantToolsFileSearchTypeOnlySchema;
+export const inputAssistantToolsCodeSchema = v.looseObject({
+	/**
+	 * The type of tool being defined: `code_interpreter`
+	 */
+	type: v.picklist(["code_interpreter"]),
 });
-export const errorSchema = v.looseObject({
-	code: v.nullable(v.pipe(v.string(), v.trim())),
-	message: v.pipe(v.string(), v.trim()),
-	param: v.nullable(v.pipe(v.string(), v.trim())),
-	type: v.pipe(v.string(), v.trim()),
+export const assistantToolsCodeSchema = inputAssistantToolsCodeSchema;
+/**
+ * The refusal content generated by the assistant.
+ * @title Refusal
+ */
+export const inputMessageContentRefusalObjectSchema = v.looseObject({
+	/**
+	 * Always `refusal`.
+	 */
+	type: v.picklist(["refusal"]),
+	refusal: v.string(),
+});
+export const messageContentRefusalObjectSchema = v.looseObject({
+	/**
+	 * Always `refusal`.
+	 */
+	type: v.picklist(["refusal"]),
+	refusal: v.pipe(v.string(), v.trim()),
 });
 /**
- * Occurs when an [error](/docs/guides/error-codes/api-errors) occurs. This
- * can happen due to an internal server error or a timeout.
+ * A URL for the file that's generated when the assistant used the
+ * `code_interpreter` tool to generate a file.
+ * @title File path
  */
-export const inputErrorEventSchema = v.looseObject({
-	event: v.picklist(["error"]),
-	data: inputErrorSchema,
+export const inputMessageContentTextAnnotationsFilePathObjectSchema =
+	v.looseObject({
+		/**
+		 * Always `file_path`.
+		 */
+		type: v.picklist(["file_path"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.string(),
+		file_path: v.looseObject({
+			/**
+			 * The ID of the file that was generated.
+			 */
+			file_id: v.string(),
+		}),
+		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	});
+export const messageContentTextAnnotationsFilePathObjectSchema = v.looseObject({
+	/**
+	 * Always `file_path`.
+	 */
+	type: v.picklist(["file_path"]),
+	/**
+	 * The text in the message content that needs to be replaced.
+	 */
+	text: v.pipe(v.string(), v.trim()),
+	file_path: v.looseObject({
+		/**
+		 * The ID of the file that was generated.
+		 */
+		file_id: v.pipe(v.string(), v.trim()),
+	}),
+	start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
 });
-export const errorEventSchema = inputErrorEventSchema;
+/**
+ * A citation within the message that points to a specific quote from a
+ * specific File associated with the assistant or the message. Generated when
+ * the assistant uses the "file_search" tool to search files.
+ * @title File citation
+ */
+export const inputMessageContentTextAnnotationsFileCitationObjectSchema =
+	v.looseObject({
+		/**
+		 * Always `file_citation`.
+		 */
+		type: v.picklist(["file_citation"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.string(),
+		file_citation: v.looseObject({
+			/**
+			 * The ID of the specific File the citation is from.
+			 */
+			file_id: v.string(),
+		}),
+		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	});
+export const messageContentTextAnnotationsFileCitationObjectSchema =
+	v.looseObject({
+		/**
+		 * Always `file_citation`.
+		 */
+		type: v.picklist(["file_citation"]),
+		/**
+		 * The text in the message content that needs to be replaced.
+		 */
+		text: v.pipe(v.string(), v.trim()),
+		file_citation: v.looseObject({
+			/**
+			 * The ID of the specific File the citation is from.
+			 */
+			file_id: v.pipe(v.string(), v.trim()),
+		}),
+		start_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+		end_index: v.pipe(v.number(), v.integer(), v.minValue(0)),
+	});
+/**
+ * The text content that is part of a message.
+ * @title Text
+ */
+export const inputMessageContentTextObjectSchema = v.looseObject({
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	text: v.looseObject({
+		/**
+		 * The data that makes up the text.
+		 */
+		value: v.string(),
+		annotations: v.array(
+			v.union([
+				inputMessageContentTextAnnotationsFileCitationObjectSchema,
+				inputMessageContentTextAnnotationsFilePathObjectSchema,
+			]),
+		),
+	}),
+});
+export const messageContentTextObjectSchema = v.looseObject({
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	text: v.looseObject({
+		/**
+		 * The data that makes up the text.
+		 */
+		value: v.pipe(v.string(), v.trim()),
+		annotations: v.array(
+			v.union([
+				messageContentTextAnnotationsFileCitationObjectSchema,
+				messageContentTextAnnotationsFilePathObjectSchema,
+			]),
+		),
+	}),
+});
+/**
+ * References an image URL in the content of a message.
+ * @title Image URL
+ */
+export const inputMessageContentImageUrlObjectSchema = v.looseObject({
+	/**
+	 * The type of the content part.
+	 */
+	type: v.picklist(["image_url"]),
+	image_url: v.looseObject({
+		/**
+		 * The external URL of the image, must be a supported image types: jpeg, jpg,
+		 * png, gif, webp.
+		 */
+		url: v.string(),
+		/**
+		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+		 * opt in to high resolution using `high`. Default value is `auto`
+		 */
+		detail: v.optional(v.picklist(["auto", "low", "high"])),
+	}),
+});
+export const messageContentImageUrlObjectSchema = v.looseObject({
+	/**
+	 * The type of the content part.
+	 */
+	type: v.picklist(["image_url"]),
+	image_url: v.looseObject({
+		/**
+		 * The external URL of the image, must be a supported image types: jpeg, jpg,
+		 * png, gif, webp.
+		 */
+		url: v.pipe(v.string(), v.trim()),
+		/**
+		 * Specifies the detail level of the image. `low` uses fewer tokens, you can
+		 * opt in to high resolution using `high`. Default value is `auto`
+		 */
+		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+	}),
+});
+/**
+ * References an image [File](/docs/api-reference/files) in the content of a
+ * message.
+ * @title Image file
+ */
+export const inputMessageContentImageFileObjectSchema = v.looseObject({
+	/**
+	 * Always `image_file`.
+	 */
+	type: v.picklist(["image_file"]),
+	image_file: v.looseObject({
+		/**
+		 * The [File](/docs/api-reference/files) ID of the image in the message
+		 * content. Set `purpose="vision"` when uploading the File if you need to
+		 * later display the file content.
+		 */
+		file_id: v.string(),
+		/**
+		 * Specifies the detail level of the image if specified by the user. `low`
+		 * uses fewer tokens, you can opt in to high resolution using `high`.
+		 */
+		detail: v.optional(v.picklist(["auto", "low", "high"])),
+	}),
+});
+export const messageContentImageFileObjectSchema = v.looseObject({
+	/**
+	 * Always `image_file`.
+	 */
+	type: v.picklist(["image_file"]),
+	image_file: v.looseObject({
+		/**
+		 * The [File](/docs/api-reference/files) ID of the image in the message
+		 * content. Set `purpose="vision"` when uploading the File if you need to
+		 * later display the file content.
+		 */
+		file_id: v.pipe(v.string(), v.trim()),
+		/**
+		 * Specifies the detail level of the image if specified by the user. `low`
+		 * uses fewer tokens, you can opt in to high resolution using `high`.
+		 */
+		detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+	}),
+});
 /**
  * Represents a message within a [thread](/docs/api-reference/threads).
  * @title The message object
@@ -5415,7 +4626,7 @@ export const inputMessageObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const messageObjectSchema = v.looseObject({
 	/**
@@ -5521,7 +4732,7 @@ export const messageObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const inputMessageStreamEventSchema = v.union([
 	v.looseObject({
@@ -5546,6 +4757,273 @@ export const inputMessageStreamEventSchema = v.union([
 	}),
 ]);
 export const messageStreamEventSchema = inputMessageStreamEventSchema;
+export const inputRunStepDeltaStepDetailsToolCallsFunctionObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the tool call in the tool calls array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * The ID of the tool call object.
+		 */
+		id: v.optional(v.string()),
+		/**
+		 * The type of tool call. This is always going to be `function` for this type
+		 * of tool call.
+		 */
+		type: v.picklist(["function"]),
+		/**
+		 * The definition of the function that was called.
+		 */
+		function: v.optional(
+			v.looseObject({
+				/**
+				 * The name of the function.
+				 */
+				name: v.optional(v.string()),
+				/**
+				 * The arguments passed to the function.
+				 */
+				arguments: v.optional(v.string()),
+				/**
+				 * The output of the function. This will be `null` if the outputs have not
+				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+				 */
+				output: v.optional(v.nullable(v.string())),
+			}),
+		),
+	});
+export const runStepDeltaStepDetailsToolCallsFunctionObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the tool call in the tool calls array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * The ID of the tool call object.
+		 */
+		id: v.exactOptional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The type of tool call. This is always going to be `function` for this type
+		 * of tool call.
+		 */
+		type: v.picklist(["function"]),
+		/**
+		 * The definition of the function that was called.
+		 */
+		function: v.exactOptional(
+			v.looseObject({
+				/**
+				 * The name of the function.
+				 */
+				name: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The arguments passed to the function.
+				 */
+				arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
+				/**
+				 * The output of the function. This will be `null` if the outputs have not
+				 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+				 */
+				output: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+			}),
+		),
+	});
+export const inputRunStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the tool call in the tool calls array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * The ID of the tool call object.
+		 */
+		id: v.optional(v.string()),
+		/**
+		 * The type of tool call. This is always going to be `file_search` for this
+		 * type of tool call.
+		 */
+		type: v.picklist(["file_search"]),
+		/**
+		 * For now, this is always going to be an empty object.
+		 */
+		file_search: v.record(v.string(), jsonValueSchema),
+	});
+export const runStepDeltaStepDetailsToolCallsFileSearchObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the tool call in the tool calls array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * The ID of the tool call object.
+		 */
+		id: v.exactOptional(v.pipe(v.string(), v.trim())),
+		/**
+		 * The type of tool call. This is always going to be `file_search` for this
+		 * type of tool call.
+		 */
+		type: v.picklist(["file_search"]),
+		/**
+		 * For now, this is always going to be an empty object.
+		 */
+		file_search: v.record(v.string(), jsonValueSchema),
+	});
+export const inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the output in the outputs array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `image`.
+		 */
+		type: v.picklist(["image"]),
+		image: v.optional(
+			v.looseObject({
+				/**
+				 * The [file](/docs/api-reference/files) ID of the image.
+				 */
+				file_id: v.optional(v.string()),
+			}),
+		),
+	});
+export const runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the output in the outputs array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `image`.
+		 */
+		type: v.picklist(["image"]),
+		image: v.exactOptional(
+			v.looseObject({
+				/**
+				 * The [file](/docs/api-reference/files) ID of the image.
+				 */
+				file_id: v.exactOptional(v.pipe(v.string(), v.trim())),
+			}),
+		),
+	});
+/**
+ * Text output from the Code Interpreter tool call as part of a run step.
+ * @title Code interpreter log output
+ */
+export const inputRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the output in the outputs array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `logs`.
+		 */
+		type: v.picklist(["logs"]),
+		/**
+		 * The text output from the Code Interpreter tool call.
+		 */
+		logs: v.optional(v.string()),
+	});
+export const runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the output in the outputs array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * Always `logs`.
+		 */
+		type: v.picklist(["logs"]),
+		/**
+		 * The text output from the Code Interpreter tool call.
+		 */
+		logs: v.exactOptional(v.pipe(v.string(), v.trim())),
+	});
+/**
+ * Details of the Code Interpreter tool call the run step was involved in.
+ * @title Code interpreter tool call
+ */
+export const inputRunStepDeltaStepDetailsToolCallsCodeObjectSchema =
+	v.looseObject({
+		/**
+		 * The index of the tool call in the tool calls array.
+		 */
+		index: v.pipe(v.number(), v.integer()),
+		/**
+		 * The ID of the tool call.
+		 */
+		id: v.optional(v.string()),
+		/**
+		 * The type of tool call. This is always going to be `code_interpreter` for
+		 * this type of tool call.
+		 */
+		type: v.picklist(["code_interpreter"]),
+		/**
+		 * The Code Interpreter tool call definition.
+		 */
+		code_interpreter: v.optional(
+			v.looseObject({
+				/**
+				 * The input to the Code Interpreter tool call.
+				 */
+				input: v.optional(v.string()),
+				/**
+				 * The outputs from the Code Interpreter tool call. Code Interpreter can
+				 * output one or more items, including text (`logs`) or images (`image`). Each
+				 * of these are represented by a different object type.
+				 */
+				outputs: v.optional(
+					v.array(
+						v.union([
+							inputRunStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema,
+							inputRunStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema,
+						]),
+					),
+				),
+			}),
+		),
+	});
+export const runStepDeltaStepDetailsToolCallsCodeObjectSchema = v.looseObject({
+	/**
+	 * The index of the tool call in the tool calls array.
+	 */
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 */
+	type: v.picklist(["code_interpreter"]),
+	/**
+	 * The Code Interpreter tool call definition.
+	 */
+	code_interpreter: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The input to the Code Interpreter tool call.
+			 */
+			input: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The outputs from the Code Interpreter tool call. Code Interpreter can
+			 * output one or more items, including text (`logs`) or images (`image`). Each
+			 * of these are represented by a different object type.
+			 */
+			outputs: v.exactOptional(
+				v.array(
+					v.union([
+						runStepDeltaStepDetailsToolCallsCodeOutputLogsObjectSchema,
+						runStepDeltaStepDetailsToolCallsCodeOutputImageObjectSchema,
+					]),
+				),
+			),
+		}),
+	),
+});
 /**
  * Details of the tool call.
  * @title Tool calls
@@ -5699,6 +5177,324 @@ export const inputRunStepCompletionUsageSchema = v.nullable(
 	}),
 );
 export const runStepCompletionUsageSchema = inputRunStepCompletionUsageSchema;
+export const inputRunStepDetailsToolCallsFunctionObjectSchema = v.looseObject({
+	/**
+	 * The ID of the tool call object.
+	 */
+	id: v.string(),
+	/**
+	 * The type of tool call. This is always going to be `function` for this type
+	 * of tool call.
+	 */
+	type: v.picklist(["function"]),
+	/**
+	 * The definition of the function that was called.
+	 */
+	function: v.looseObject({
+		/**
+		 * The name of the function.
+		 */
+		name: v.string(),
+		/**
+		 * The arguments passed to the function.
+		 */
+		arguments: v.string(),
+		/**
+		 * The output of the function. This will be `null` if the outputs have not
+		 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+		 */
+		output: v.nullable(v.string()),
+	}),
+});
+export const runStepDetailsToolCallsFunctionObjectSchema = v.looseObject({
+	/**
+	 * The ID of the tool call object.
+	 */
+	id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The type of tool call. This is always going to be `function` for this type
+	 * of tool call.
+	 */
+	type: v.picklist(["function"]),
+	/**
+	 * The definition of the function that was called.
+	 */
+	function: v.looseObject({
+		/**
+		 * The name of the function.
+		 */
+		name: v.pipe(v.string(), v.trim()),
+		/**
+		 * The arguments passed to the function.
+		 */
+		arguments: v.pipe(v.string(), v.trim()),
+		/**
+		 * The output of the function. This will be `null` if the outputs have not
+		 * been [submitted](/docs/api-reference/runs/submitToolOutputs) yet.
+		 */
+		output: v.nullable(v.pipe(v.string(), v.trim())),
+	}),
+});
+/**
+ * A result instance of the file search.
+ * @title File search tool call result
+ */
+export const inputRunStepDetailsToolCallsFileSearchResultObjectSchema =
+	v.looseObject({
+		/**
+		 * The ID of the file that result was found in.
+		 */
+		file_id: v.string(),
+		/**
+		 * The name of the file that result was found in.
+		 */
+		file_name: v.string(),
+		/**
+		 * The score of the result. All values must be a floating point number between
+		 * 0 and 1.
+		 */
+		score: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+		/**
+		 * The content of the result that was found. The content is only included if
+		 * requested via the include query parameter.
+		 */
+		content: v.optional(
+			v.array(
+				v.looseObject({
+					/**
+					 * The type of the content.
+					 */
+					type: v.optional(v.picklist(["text"])),
+					/**
+					 * The text content of the file.
+					 */
+					text: v.optional(v.string()),
+				}),
+			),
+		),
+	});
+export const runStepDetailsToolCallsFileSearchResultObjectSchema =
+	v.looseObject({
+		/**
+		 * The ID of the file that result was found in.
+		 */
+		file_id: v.pipe(v.string(), v.trim()),
+		/**
+		 * The name of the file that result was found in.
+		 */
+		file_name: v.pipe(v.string(), v.trim()),
+		/**
+		 * The score of the result. All values must be a floating point number between
+		 * 0 and 1.
+		 */
+		score: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+		/**
+		 * The content of the result that was found. The content is only included if
+		 * requested via the include query parameter.
+		 */
+		content: v.exactOptional(
+			v.array(
+				v.looseObject({
+					/**
+					 * The type of the content.
+					 */
+					type: v.exactOptional(v.picklist(["text"])),
+					/**
+					 * The text content of the file.
+					 */
+					text: v.exactOptional(v.pipe(v.string(), v.trim())),
+				}),
+			),
+		),
+	});
+/**
+ * The ranking options for the file search.
+ * @title File search tool call ranking options
+ */
+export const inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
+	v.looseObject({
+		/**
+		 * The ranker used for the file search.
+		 */
+		ranker: v.picklist(["default_2024_08_21"]),
+		/**
+		 * The score threshold for the file search. All values must be a floating
+		 * point number between 0 and 1.
+		 */
+		score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+	});
+export const runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
+	inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema;
+export const inputRunStepDetailsToolCallsFileSearchObjectSchema = v.looseObject(
+	{
+		/**
+		 * The ID of the tool call object.
+		 */
+		id: v.string(),
+		/**
+		 * The type of tool call. This is always going to be `file_search` for this
+		 * type of tool call.
+		 */
+		type: v.picklist(["file_search"]),
+		/**
+		 * For now, this is always going to be an empty object.
+		 */
+		file_search: v.looseObject({
+			ranking_options: v.optional(
+				inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
+			),
+			/**
+			 * The results of the file search.
+			 */
+			results: v.optional(
+				v.array(inputRunStepDetailsToolCallsFileSearchResultObjectSchema),
+			),
+		}),
+	},
+);
+export const runStepDetailsToolCallsFileSearchObjectSchema = v.looseObject({
+	/**
+	 * The ID of the tool call object.
+	 */
+	id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The type of tool call. This is always going to be `file_search` for this
+	 * type of tool call.
+	 */
+	type: v.picklist(["file_search"]),
+	/**
+	 * For now, this is always going to be an empty object.
+	 */
+	file_search: v.looseObject({
+		ranking_options: v.exactOptional(
+			runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
+		),
+		/**
+		 * The results of the file search.
+		 */
+		results: v.exactOptional(
+			v.array(runStepDetailsToolCallsFileSearchResultObjectSchema),
+		),
+	}),
+});
+export const inputRunStepDetailsToolCallsCodeOutputImageObjectSchema =
+	v.looseObject({
+		/**
+		 * Always `image`.
+		 */
+		type: v.picklist(["image"]),
+		image: v.looseObject({
+			/**
+			 * The [file](/docs/api-reference/files) ID of the image.
+			 */
+			file_id: v.string(),
+		}),
+	});
+export const runStepDetailsToolCallsCodeOutputImageObjectSchema = v.looseObject(
+	{
+		/**
+		 * Always `image`.
+		 */
+		type: v.picklist(["image"]),
+		image: v.looseObject({
+			/**
+			 * The [file](/docs/api-reference/files) ID of the image.
+			 */
+			file_id: v.pipe(v.string(), v.trim()),
+		}),
+	},
+);
+/**
+ * Text output from the Code Interpreter tool call as part of a run step.
+ * @title Code Interpreter log output
+ */
+export const inputRunStepDetailsToolCallsCodeOutputLogsObjectSchema =
+	v.looseObject({
+		/**
+		 * Always `logs`.
+		 */
+		type: v.picklist(["logs"]),
+		/**
+		 * The text output from the Code Interpreter tool call.
+		 */
+		logs: v.string(),
+	});
+export const runStepDetailsToolCallsCodeOutputLogsObjectSchema = v.looseObject({
+	/**
+	 * Always `logs`.
+	 */
+	type: v.picklist(["logs"]),
+	/**
+	 * The text output from the Code Interpreter tool call.
+	 */
+	logs: v.pipe(v.string(), v.trim()),
+});
+/**
+ * Details of the Code Interpreter tool call the run step was involved in.
+ * @title Code Interpreter tool call
+ */
+export const inputRunStepDetailsToolCallsCodeObjectSchema = v.looseObject({
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.string(),
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 */
+	type: v.picklist(["code_interpreter"]),
+	/**
+	 * The Code Interpreter tool call definition.
+	 */
+	code_interpreter: v.looseObject({
+		/**
+		 * The input to the Code Interpreter tool call.
+		 */
+		input: v.string(),
+		/**
+		 * The outputs from the Code Interpreter tool call. Code Interpreter can
+		 * output one or more items, including text (`logs`) or images (`image`). Each
+		 * of these are represented by a different object type.
+		 */
+		outputs: v.array(
+			v.union([
+				inputRunStepDetailsToolCallsCodeOutputLogsObjectSchema,
+				inputRunStepDetailsToolCallsCodeOutputImageObjectSchema,
+			]),
+		),
+	}),
+});
+export const runStepDetailsToolCallsCodeObjectSchema = v.looseObject({
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The type of tool call. This is always going to be `code_interpreter` for
+	 * this type of tool call.
+	 */
+	type: v.picklist(["code_interpreter"]),
+	/**
+	 * The Code Interpreter tool call definition.
+	 */
+	code_interpreter: v.looseObject({
+		/**
+		 * The input to the Code Interpreter tool call.
+		 */
+		input: v.pipe(v.string(), v.trim()),
+		/**
+		 * The outputs from the Code Interpreter tool call. Code Interpreter can
+		 * output one or more items, including text (`logs`) or images (`image`). Each
+		 * of these are represented by a different object type.
+		 */
+		outputs: v.array(
+			v.union([
+				runStepDetailsToolCallsCodeOutputLogsObjectSchema,
+				runStepDetailsToolCallsCodeOutputImageObjectSchema,
+			]),
+		),
+	}),
+});
 /**
  * Details of the tool call.
  * @title Tool calls
@@ -5716,7 +5512,7 @@ export const inputRunStepDetailsToolCallsObjectSchema = v.looseObject({
 	tool_calls: v.array(
 		v.union([
 			inputRunStepDetailsToolCallsCodeObjectSchema,
-			v.unknown(),
+			inputRunStepDetailsToolCallsFileSearchObjectSchema,
 			inputRunStepDetailsToolCallsFunctionObjectSchema,
 		]),
 	),
@@ -5844,7 +5640,7 @@ export const inputRunStepObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: inputRunStepCompletionUsageSchema,
 });
 export const runStepObjectSchema = v.looseObject({
@@ -5936,7 +5732,7 @@ export const runStepObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: runStepCompletionUsageSchema,
 });
 export const inputRunStepStreamEventSchema = v.union([
@@ -5973,7 +5769,7 @@ export const runStepStreamEventSchema = inputRunStepStreamEventSchema;
 /** The schema for the response format, described as a JSON Schema object. */
 export const inputResponseFormatJsonSchemaSchemaSchema = v.record(
 	v.string(),
-	v.unknown(),
+	jsonValueSchema,
 );
 export const responseFormatJsonSchemaSchemaSchema =
 	inputResponseFormatJsonSchemaSchemaSchema;
@@ -6193,6 +5989,156 @@ export const inputRunCompletionUsageSchema = v.nullable(
 	}),
 );
 export const runCompletionUsageSchema = inputRunCompletionUsageSchema;
+/**
+ * The parameters the functions accepts, described as a JSON Schema object.
+ * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
+ * Schema reference](https://json-schema.org/understanding-json-schema/) for
+ * documentation about the format.
+ *
+ * Omitting `parameters` defines a function with an empty parameter list.
+ */
+export const inputFunctionParametersSchema = v.record(
+	v.string(),
+	jsonValueSchema,
+);
+export const functionParametersSchema = inputFunctionParametersSchema;
+export const inputFunctionObjectSchema = v.looseObject({
+	/**
+	 * A description of what the function does, used by the model to choose when
+	 * and how to call the function.
+	 */
+	description: v.optional(v.string()),
+	/**
+	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
+	 * underscores and dashes, with a maximum length of 64.
+	 */
+	name: v.string(),
+	parameters: v.optional(inputFunctionParametersSchema),
+	/**
+	 * Whether to enable strict schema adherence when generating the function
+	 * call. If set to true, the model will follow the exact schema defined in the
+	 * `parameters` field. Only a subset of JSON Schema is supported when `strict`
+	 * is `true`. Learn more about Structured Outputs in the [function calling
+	 * guide](docs/guides/function-calling).
+	 */
+	strict: v.optional(v.nullable(v.boolean())),
+});
+export const functionObjectSchema = v.looseObject({
+	/**
+	 * A description of what the function does, used by the model to choose when
+	 * and how to call the function.
+	 */
+	description: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
+	 * underscores and dashes, with a maximum length of 64.
+	 */
+	name: v.pipe(v.string(), v.trim()),
+	parameters: v.exactOptional(functionParametersSchema),
+	/**
+	 * Whether to enable strict schema adherence when generating the function
+	 * call. If set to true, the model will follow the exact schema defined in the
+	 * `parameters` field. Only a subset of JSON Schema is supported when `strict`
+	 * is `true`. Learn more about Structured Outputs in the [function calling
+	 * guide](docs/guides/function-calling).
+	 */
+	strict: v.exactOptional(v.nullable(v.boolean())),
+});
+export const inputAssistantToolsFunctionSchema = v.looseObject({
+	/**
+	 * The type of tool being defined: `function`
+	 */
+	type: v.picklist(["function"]),
+	function: inputFunctionObjectSchema,
+});
+export const assistantToolsFunctionSchema = inputAssistantToolsFunctionSchema;
+/**
+ * The ranking options for the file search. If not specified, the file search
+ * tool will use the `auto` ranker and a score_threshold of 0.
+ *
+ * See the [file search tool
+ * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+ * for more information.
+ * @title File search tool call ranking options
+ */
+export const inputFileSearchRankingOptionsSchema = v.looseObject({
+	/**
+	 * The ranker to use for the file search. If not specified will use the `auto`
+	 * ranker.
+	 */
+	ranker: v.optional(v.picklist(["auto", "default_2024_08_21"])),
+	/**
+	 * The score threshold for the file search. All values must be a floating
+	 * point number between 0 and 1.
+	 */
+	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+});
+export const fileSearchRankingOptionsSchema = v.looseObject({
+	/**
+	 * The ranker to use for the file search. If not specified will use the `auto`
+	 * ranker.
+	 */
+	ranker: v.exactOptional(v.picklist(["auto", "default_2024_08_21"])),
+	/**
+	 * The score threshold for the file search. All values must be a floating
+	 * point number between 0 and 1.
+	 */
+	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
+});
+export const inputAssistantToolsFileSearchSchema = v.looseObject({
+	/**
+	 * The type of tool being defined: `file_search`
+	 */
+	type: v.picklist(["file_search"]),
+	/**
+	 * Overrides for the file search tool.
+	 */
+	file_search: v.optional(
+		v.looseObject({
+			/**
+			 * The maximum number of results the file search tool should output. The
+			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
+			 * should be between 1 and 50 inclusive.
+			 *
+			 * Note that the file search tool may output fewer than `max_num_results`
+			 * results. See the [file search tool
+			 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+			 * for more information.
+			 */
+			max_num_results: v.optional(
+				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
+			),
+			ranking_options: v.optional(inputFileSearchRankingOptionsSchema),
+		}),
+	),
+});
+export const assistantToolsFileSearchSchema = v.looseObject({
+	/**
+	 * The type of tool being defined: `file_search`
+	 */
+	type: v.picklist(["file_search"]),
+	/**
+	 * Overrides for the file search tool.
+	 */
+	file_search: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The maximum number of results the file search tool should output. The
+			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
+			 * should be between 1 and 50 inclusive.
+			 *
+			 * Note that the file search tool may output fewer than `max_num_results`
+			 * results. See the [file search tool
+			 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
+			 * for more information.
+			 */
+			max_num_results: v.exactOptional(
+				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
+			),
+			ranking_options: v.exactOptional(fileSearchRankingOptionsSchema),
+		}),
+	),
+});
 /** Tool call objects */
 export const inputRunToolCallObjectSchema = v.looseObject({
 	/**
@@ -6380,7 +6326,13 @@ export const inputRunObjectSchema = v.looseObject({
 	 * for this run.
 	 */
 	tools: v.pipe(
-		v.array(v.union([inputAssistantToolsCodeSchema, v.unknown(), v.unknown()])),
+		v.array(
+			v.union([
+				inputAssistantToolsCodeSchema,
+				inputAssistantToolsFileSearchSchema,
+				inputAssistantToolsFunctionSchema,
+			]),
+		),
 		v.maxLength(20),
 	),
 	/**
@@ -6389,7 +6341,7 @@ export const inputRunObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: inputRunCompletionUsageSchema,
 	/**
 	 * The sampling temperature used for this run. If not set, defaults to 1.
@@ -6548,7 +6500,13 @@ export const runObjectSchema = v.looseObject({
 	 * for this run.
 	 */
 	tools: v.pipe(
-		v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
+		v.array(
+			v.union([
+				assistantToolsCodeSchema,
+				assistantToolsFileSearchSchema,
+				assistantToolsFunctionSchema,
+			]),
+		),
 		v.maxLength(20),
 	),
 	/**
@@ -6557,7 +6515,7 @@ export const runObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	usage: runCompletionUsageSchema,
 	/**
 	 * The sampling temperature used for this run. If not set, defaults to 1.
@@ -6684,7 +6642,7 @@ export const inputThreadObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const threadObjectSchema = v.looseObject({
 	/**
@@ -6739,7 +6697,7 @@ export const threadObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const inputThreadStreamEventSchema = v.looseObject({
 	event: v.picklist(["thread.created"]),
@@ -7109,7 +7067,7 @@ export const inputVectorStoreObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const vectorStoreObjectSchema = v.looseObject({
 	/**
@@ -7175,7 +7133,7 @@ export const vectorStoreObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 });
 export const inputListVectorStoresResponseSchema = v.looseObject({
 	object: v.string(),
@@ -7203,7 +7161,7 @@ export const inputUpdateVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const updateVectorStoreRequestSchema = v.strictObject({
 	/**
@@ -7217,7 +7175,7 @@ export const updateVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputCreateVectorStoreRequestSchema = v.strictObject({
 	/**
@@ -7246,7 +7204,7 @@ export const inputCreateVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const createVectorStoreRequestSchema = v.strictObject({
 	/**
@@ -7277,149 +7235,7 @@ export const createVectorStoreRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
-});
-/**
- * A result instance of the file search.
- * @title File search tool call result
- */
-export const inputRunStepDetailsToolCallsFileSearchResultObjectSchema =
-	v.looseObject({
-		/**
-		 * The ID of the file that result was found in.
-		 */
-		file_id: v.string(),
-		/**
-		 * The name of the file that result was found in.
-		 */
-		file_name: v.string(),
-		/**
-		 * The score of the result. All values must be a floating point number between
-		 * 0 and 1.
-		 */
-		score: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-		/**
-		 * The content of the result that was found. The content is only included if
-		 * requested via the include query parameter.
-		 */
-		content: v.optional(
-			v.array(
-				v.looseObject({
-					/**
-					 * The type of the content.
-					 */
-					type: v.optional(v.picklist(["text"])),
-					/**
-					 * The text content of the file.
-					 */
-					text: v.optional(v.string()),
-				}),
-			),
-		),
-	});
-export const runStepDetailsToolCallsFileSearchResultObjectSchema =
-	v.looseObject({
-		/**
-		 * The ID of the file that result was found in.
-		 */
-		file_id: v.pipe(v.string(), v.trim()),
-		/**
-		 * The name of the file that result was found in.
-		 */
-		file_name: v.pipe(v.string(), v.trim()),
-		/**
-		 * The score of the result. All values must be a floating point number between
-		 * 0 and 1.
-		 */
-		score: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-		/**
-		 * The content of the result that was found. The content is only included if
-		 * requested via the include query parameter.
-		 */
-		content: v.exactOptional(
-			v.array(
-				v.looseObject({
-					/**
-					 * The type of the content.
-					 */
-					type: v.exactOptional(v.picklist(["text"])),
-					/**
-					 * The text content of the file.
-					 */
-					text: v.exactOptional(v.pipe(v.string(), v.trim())),
-				}),
-			),
-		),
-	});
-/**
- * The ranking options for the file search.
- * @title File search tool call ranking options
- */
-export const inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
-	v.looseObject({
-		/**
-		 * The ranker used for the file search.
-		 */
-		ranker: v.picklist(["default_2024_08_21"]),
-		/**
-		 * The score threshold for the file search. All values must be a floating
-		 * point number between 0 and 1.
-		 */
-		score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-	});
-export const runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema =
-	inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema;
-export const inputRunStepDetailsToolCallsFileSearchObjectSchema = v.looseObject(
-	{
-		/**
-		 * The ID of the tool call object.
-		 */
-		id: v.string(),
-		/**
-		 * The type of tool call. This is always going to be `file_search` for this
-		 * type of tool call.
-		 */
-		type: v.picklist(["file_search"]),
-		/**
-		 * For now, this is always going to be an empty object.
-		 */
-		file_search: v.looseObject({
-			ranking_options: v.optional(
-				inputRunStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
-			),
-			/**
-			 * The results of the file search.
-			 */
-			results: v.optional(
-				v.array(inputRunStepDetailsToolCallsFileSearchResultObjectSchema),
-			),
-		}),
-	},
-);
-export const runStepDetailsToolCallsFileSearchObjectSchema = v.looseObject({
-	/**
-	 * The ID of the tool call object.
-	 */
-	id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The type of tool call. This is always going to be `file_search` for this
-	 * type of tool call.
-	 */
-	type: v.picklist(["file_search"]),
-	/**
-	 * For now, this is always going to be an empty object.
-	 */
-	file_search: v.looseObject({
-		ranking_options: v.exactOptional(
-			runStepDetailsToolCallsFileSearchRankingOptionsObjectSchema,
-		),
-		/**
-		 * The results of the file search.
-		 */
-		results: v.exactOptional(
-			v.array(runStepDetailsToolCallsFileSearchResultObjectSchema),
-		),
-	}),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputListRunStepsResponseSchema = v.looseObject({
 	object: v.string(),
@@ -7448,6 +7264,30 @@ export const listMessagesResponseSchema = v.looseObject({
 	first_id: v.pipe(v.string(), v.trim()),
 	last_id: v.pipe(v.string(), v.trim()),
 	has_more: v.boolean(),
+});
+/**
+ * The text content that is part of a message.
+ * @title Text
+ */
+export const inputMessageRequestContentTextObjectSchema = v.looseObject({
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	/**
+	 * Text content to be sent to the model
+	 */
+	text: v.string(),
+});
+export const messageRequestContentTextObjectSchema = v.looseObject({
+	/**
+	 * Always `text`.
+	 */
+	type: v.picklist(["text"]),
+	/**
+	 * Text content to be sent to the model
+	 */
+	text: v.pipe(v.string(), v.trim()),
 });
 export const inputListThreadsResponseSchema = v.looseObject({
 	object: v.string(),
@@ -7519,7 +7359,7 @@ export const inputCreateMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const createMessageRequestSchema = v.strictObject({
 	/**
@@ -7577,7 +7417,7 @@ export const createMessageRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputCreateThreadRequestSchema = v.strictObject({
 	/**
@@ -7606,8 +7446,8 @@ export const inputCreateThreadRequestSchema = v.strictObject({
 				),
 				file_search: v.optional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -7619,7 +7459,7 @@ export const inputCreateThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const createThreadRequestSchema = v.strictObject({
 	/**
@@ -7650,8 +7490,8 @@ export const createThreadRequestSchema = v.strictObject({
 				),
 				file_search: v.exactOptional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -7663,7 +7503,7 @@ export const createThreadRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 });
 export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 	/**
@@ -7724,7 +7564,11 @@ export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 		v.nullable(
 			v.pipe(
 				v.array(
-					v.union([inputAssistantToolsCodeSchema, v.unknown(), v.unknown()]),
+					v.union([
+						inputAssistantToolsCodeSchema,
+						inputAssistantToolsFileSearchSchema,
+						inputAssistantToolsFunctionSchema,
+					]),
 				),
 				v.maxLength(20),
 			),
@@ -7770,7 +7614,7 @@ export const inputCreateThreadAndRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -7879,7 +7723,13 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 	tools: v.exactOptional(
 		v.nullable(
 			v.pipe(
-				v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
+				v.array(
+					v.union([
+						assistantToolsCodeSchema,
+						assistantToolsFileSearchSchema,
+						assistantToolsFunctionSchema,
+					]),
+				),
 				v.maxLength(20),
 			),
 		),
@@ -7926,7 +7776,7 @@ export const createThreadAndRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8062,7 +7912,11 @@ export const inputCreateRunRequestSchema = v.strictObject({
 		v.nullable(
 			v.pipe(
 				v.array(
-					v.union([inputAssistantToolsCodeSchema, v.unknown(), v.unknown()]),
+					v.union([
+						inputAssistantToolsCodeSchema,
+						inputAssistantToolsFileSearchSchema,
+						inputAssistantToolsFunctionSchema,
+					]),
 				),
 				v.maxLength(20),
 			),
@@ -8074,7 +7928,7 @@ export const inputCreateRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8197,7 +8051,13 @@ export const createRunRequestSchema = v.strictObject({
 	tools: v.exactOptional(
 		v.nullable(
 			v.pipe(
-				v.array(v.union([assistantToolsCodeSchema, v.unknown(), v.unknown()])),
+				v.array(
+					v.union([
+						assistantToolsCodeSchema,
+						assistantToolsFileSearchSchema,
+						assistantToolsFunctionSchema,
+					]),
+				),
 				v.maxLength(20),
 			),
 		),
@@ -8208,7 +8068,7 @@ export const createRunRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8258,153 +8118,6 @@ export const createRunRequestSchema = v.strictObject({
 	tool_choice: v.exactOptional(assistantsApiToolChoiceOptionSchema),
 	parallel_tool_calls: v.exactOptional(parallelToolCallsSchema),
 	response_format: v.exactOptional(assistantsApiResponseFormatOptionSchema),
-});
-/**
- * The parameters the functions accepts, described as a JSON Schema object.
- * See the [guide](/docs/guides/function-calling) for examples, and the [JSON
- * Schema reference](https://json-schema.org/understanding-json-schema/) for
- * documentation about the format.
- *
- * Omitting `parameters` defines a function with an empty parameter list.
- */
-export const inputFunctionParametersSchema = v.record(v.string(), v.unknown());
-export const functionParametersSchema = inputFunctionParametersSchema;
-export const inputFunctionObjectSchema = v.looseObject({
-	/**
-	 * A description of what the function does, used by the model to choose when
-	 * and how to call the function.
-	 */
-	description: v.optional(v.string()),
-	/**
-	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
-	 * underscores and dashes, with a maximum length of 64.
-	 */
-	name: v.string(),
-	parameters: v.optional(inputFunctionParametersSchema),
-	/**
-	 * Whether to enable strict schema adherence when generating the function
-	 * call. If set to true, the model will follow the exact schema defined in the
-	 * `parameters` field. Only a subset of JSON Schema is supported when `strict`
-	 * is `true`. Learn more about Structured Outputs in the [function calling
-	 * guide](docs/guides/function-calling).
-	 */
-	strict: v.optional(v.nullable(v.boolean())),
-});
-export const functionObjectSchema = v.looseObject({
-	/**
-	 * A description of what the function does, used by the model to choose when
-	 * and how to call the function.
-	 */
-	description: v.exactOptional(v.pipe(v.string(), v.trim())),
-	/**
-	 * The name of the function to be called. Must be a-z, A-Z, 0-9, or contain
-	 * underscores and dashes, with a maximum length of 64.
-	 */
-	name: v.pipe(v.string(), v.trim()),
-	parameters: v.exactOptional(functionParametersSchema),
-	/**
-	 * Whether to enable strict schema adherence when generating the function
-	 * call. If set to true, the model will follow the exact schema defined in the
-	 * `parameters` field. Only a subset of JSON Schema is supported when `strict`
-	 * is `true`. Learn more about Structured Outputs in the [function calling
-	 * guide](docs/guides/function-calling).
-	 */
-	strict: v.exactOptional(v.nullable(v.boolean())),
-});
-export const inputAssistantToolsFunctionSchema = v.looseObject({
-	/**
-	 * The type of tool being defined: `function`
-	 */
-	type: v.picklist(["function"]),
-	function: inputFunctionObjectSchema,
-});
-export const assistantToolsFunctionSchema = inputAssistantToolsFunctionSchema;
-/**
- * The ranking options for the file search. If not specified, the file search
- * tool will use the `auto` ranker and a score_threshold of 0.
- *
- * See the [file search tool
- * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
- * for more information.
- * @title File search tool call ranking options
- */
-export const inputFileSearchRankingOptionsSchema = v.looseObject({
-	/**
-	 * The ranker to use for the file search. If not specified will use the `auto`
-	 * ranker.
-	 */
-	ranker: v.optional(v.picklist(["auto", "default_2024_08_21"])),
-	/**
-	 * The score threshold for the file search. All values must be a floating
-	 * point number between 0 and 1.
-	 */
-	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-});
-export const fileSearchRankingOptionsSchema = v.looseObject({
-	/**
-	 * The ranker to use for the file search. If not specified will use the `auto`
-	 * ranker.
-	 */
-	ranker: v.exactOptional(v.picklist(["auto", "default_2024_08_21"])),
-	/**
-	 * The score threshold for the file search. All values must be a floating
-	 * point number between 0 and 1.
-	 */
-	score_threshold: v.pipe(v.number(), v.minValue(0), v.maxValue(1)),
-});
-export const inputAssistantToolsFileSearchSchema = v.looseObject({
-	/**
-	 * The type of tool being defined: `file_search`
-	 */
-	type: v.picklist(["file_search"]),
-	/**
-	 * Overrides for the file search tool.
-	 */
-	file_search: v.optional(
-		v.looseObject({
-			/**
-			 * The maximum number of results the file search tool should output. The
-			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
-			 * should be between 1 and 50 inclusive.
-			 *
-			 * Note that the file search tool may output fewer than `max_num_results`
-			 * results. See the [file search tool
-			 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-			 * for more information.
-			 */
-			max_num_results: v.optional(
-				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
-			),
-			ranking_options: v.optional(inputFileSearchRankingOptionsSchema),
-		}),
-	),
-});
-export const assistantToolsFileSearchSchema = v.looseObject({
-	/**
-	 * The type of tool being defined: `file_search`
-	 */
-	type: v.picklist(["file_search"]),
-	/**
-	 * Overrides for the file search tool.
-	 */
-	file_search: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The maximum number of results the file search tool should output. The
-			 * default is 20 for `gpt-4*` models and 5 for `gpt-3.5-turbo`. This number
-			 * should be between 1 and 50 inclusive.
-			 *
-			 * Note that the file search tool may output fewer than `max_num_results`
-			 * results. See the [file search tool
-			 * documentation](/docs/assistants/tools/file-search/customizing-file-search-settings)
-			 * for more information.
-			 */
-			max_num_results: v.exactOptional(
-				v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(50)),
-			),
-			ranking_options: v.exactOptional(fileSearchRankingOptionsSchema),
-		}),
-	),
 });
 /**
  * Represents an `assistant` that can call the model and use tools.
@@ -8498,7 +8211,7 @@ export const inputAssistantObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8610,7 +8323,7 @@ export const assistantObjectSchema = v.looseObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.nullable(v.record(v.string(), v.unknown())),
+	metadata: v.nullable(v.record(v.string(), jsonValueSchema)),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8726,7 +8439,7 @@ export const inputModifyAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8834,7 +8547,7 @@ export const modifyAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -8945,8 +8658,8 @@ export const inputCreateAssistantRequestSchema = v.strictObject({
 				),
 				file_search: v.optional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -8958,7 +8671,7 @@ export const inputCreateAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -9075,8 +8788,8 @@ export const createAssistantRequestSchema = v.strictObject({
 				),
 				file_search: v.exactOptional(
 					v.union([
-						v.record(v.string(), v.unknown()),
-						v.record(v.string(), v.unknown()),
+						v.record(v.string(), jsonValueSchema),
+						v.record(v.string(), jsonValueSchema),
 					]),
 				),
 			}),
@@ -9088,7 +8801,7 @@ export const createAssistantRequestSchema = v.strictObject({
 	 * format. Keys can be a maximum of 64 characters long and values can be a
 	 * maximum of 512 characters long.
 	 */
-	metadata: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+	metadata: v.exactOptional(v.nullable(v.record(v.string(), jsonValueSchema))),
 	/**
 	 * What sampling temperature to use, between 0 and 2. Higher values like 0.8
 	 * will make the output more random, while lower values like 0.2 will make it
@@ -9144,17 +8857,448 @@ export const inputChatCompletionToolSchema = v.looseObject({
 	function: inputFunctionObjectSchema,
 });
 export const chatCompletionToolSchema = inputChatCompletionToolSchema;
+export const inputChatCompletionRequestFunctionMessageSchema = v.looseObject({
+	/**
+	 * The role of the messages author, in this case `function`.
+	 */
+	role: v.picklist(["function"]),
+	/**
+	 * The contents of the function message.
+	 */
+	content: v.nullable(v.string()),
+	/**
+	 * The name of the function to call.
+	 */
+	name: v.string(),
+});
+export const chatCompletionRequestFunctionMessageSchema = v.looseObject({
+	/**
+	 * The role of the messages author, in this case `function`.
+	 */
+	role: v.picklist(["function"]),
+	/**
+	 * The contents of the function message.
+	 */
+	content: v.nullable(v.pipe(v.string(), v.trim())),
+	/**
+	 * The name of the function to call.
+	 */
+	name: v.pipe(v.string(), v.trim()),
+});
+export const inputChatCompletionRequestMessageContentPartTextSchema =
+	v.looseObject({
+		/**
+		 * The type of the content part.
+		 */
+		type: v.picklist(["text"]),
+		/**
+		 * The text content.
+		 */
+		text: v.string(),
+	});
+export const chatCompletionRequestMessageContentPartTextSchema = v.looseObject({
+	/**
+	 * The type of the content part.
+	 */
+	type: v.picklist(["text"]),
+	/**
+	 * The text content.
+	 */
+	text: v.pipe(v.string(), v.trim()),
+});
+export const inputChatCompletionRequestToolMessageContentPartSchema =
+	inputChatCompletionRequestMessageContentPartTextSchema;
+export const chatCompletionRequestToolMessageContentPartSchema =
+	inputChatCompletionRequestToolMessageContentPartSchema;
+export const inputChatCompletionRequestToolMessageSchema = v.looseObject({
+	/**
+	 * The role of the messages author, in this case `tool`.
+	 */
+	role: v.picklist(["tool"]),
+	/**
+	 * The contents of the tool message.
+	 */
+	content: v.union([
+		v.string(),
+		v.pipe(
+			v.array(inputChatCompletionRequestToolMessageContentPartSchema),
+			v.minLength(1),
+		),
+	]),
+	/**
+	 * Tool call that this message is responding to.
+	 */
+	tool_call_id: v.string(),
+});
+export const chatCompletionRequestToolMessageSchema = v.looseObject({
+	/**
+	 * The role of the messages author, in this case `tool`.
+	 */
+	role: v.picklist(["tool"]),
+	/**
+	 * The contents of the tool message.
+	 */
+	content: v.union([
+		v.pipe(v.string(), v.trim()),
+		v.pipe(
+			v.array(chatCompletionRequestToolMessageContentPartSchema),
+			v.minLength(1),
+		),
+	]),
+	/**
+	 * Tool call that this message is responding to.
+	 */
+	tool_call_id: v.pipe(v.string(), v.trim()),
+});
+export const inputChatCompletionMessageToolCallSchema = v.looseObject({
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.string(),
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 */
+	type: v.picklist(["function"]),
+	/**
+	 * The function that the model called.
+	 */
+	function: v.looseObject({
+		/**
+		 * The name of the function to call.
+		 */
+		name: v.string(),
+		/**
+		 * The arguments to call the function with, as generated by the model in JSON
+		 * format. Note that the model does not always generate valid JSON, and may
+		 * hallucinate parameters not defined by your function schema. Validate the
+		 * arguments in your code before calling your function.
+		 */
+		arguments: v.string(),
+	}),
+});
+export const chatCompletionMessageToolCallSchema = v.looseObject({
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.pipe(v.string(), v.trim()),
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 */
+	type: v.picklist(["function"]),
+	/**
+	 * The function that the model called.
+	 */
+	function: v.looseObject({
+		/**
+		 * The name of the function to call.
+		 */
+		name: v.pipe(v.string(), v.trim()),
+		/**
+		 * The arguments to call the function with, as generated by the model in JSON
+		 * format. Note that the model does not always generate valid JSON, and may
+		 * hallucinate parameters not defined by your function schema. Validate the
+		 * arguments in your code before calling your function.
+		 */
+		arguments: v.pipe(v.string(), v.trim()),
+	}),
+});
+/** The tool calls generated by the model, such as function calls. */
+export const inputChatCompletionMessageToolCallsSchema = v.array(
+	inputChatCompletionMessageToolCallSchema,
+);
+export const chatCompletionMessageToolCallsSchema =
+	inputChatCompletionMessageToolCallsSchema;
+export const inputChatCompletionRequestMessageContentPartRefusalSchema =
+	v.looseObject({
+		/**
+		 * The type of the content part.
+		 */
+		type: v.picklist(["refusal"]),
+		/**
+		 * The refusal message generated by the model.
+		 */
+		refusal: v.string(),
+	});
+export const chatCompletionRequestMessageContentPartRefusalSchema =
+	v.looseObject({
+		/**
+		 * The type of the content part.
+		 */
+		type: v.picklist(["refusal"]),
+		/**
+		 * The refusal message generated by the model.
+		 */
+		refusal: v.pipe(v.string(), v.trim()),
+	});
+export const inputChatCompletionRequestAssistantMessageContentPartSchema =
+	v.union([
+		inputChatCompletionRequestMessageContentPartTextSchema,
+		inputChatCompletionRequestMessageContentPartRefusalSchema,
+	]);
+export const chatCompletionRequestAssistantMessageContentPartSchema =
+	inputChatCompletionRequestAssistantMessageContentPartSchema;
+export const inputChatCompletionRequestAssistantMessageSchema = v.looseObject({
+	/**
+	 * The contents of the assistant message. Required unless `tool_calls` or
+	 * `function_call` is specified.
+	 */
+	content: v.optional(
+		v.nullable(
+			v.union([
+				v.string(),
+				v.pipe(
+					v.array(inputChatCompletionRequestAssistantMessageContentPartSchema),
+					v.minLength(1),
+				),
+			]),
+		),
+	),
+	/**
+	 * The refusal message by the assistant.
+	 */
+	refusal: v.optional(v.nullable(v.string())),
+	/**
+	 * The role of the messages author, in this case `assistant`.
+	 */
+	role: v.picklist(["assistant"]),
+	/**
+	 * An optional name for the participant. Provides the model information to
+	 * differentiate between participants of the same role.
+	 */
+	name: v.optional(v.string()),
+	tool_calls: v.optional(inputChatCompletionMessageToolCallsSchema),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.optional(
+		v.nullable(
+			v.looseObject({
+				/**
+				 * The arguments to call the function with, as generated by the model in JSON
+				 * format. Note that the model does not always generate valid JSON, and may
+				 * hallucinate parameters not defined by your function schema. Validate the
+				 * arguments in your code before calling your function.
+				 */
+				arguments: v.string(),
+				/**
+				 * The name of the function to call.
+				 */
+				name: v.string(),
+			}),
+		),
+	),
+});
+export const chatCompletionRequestAssistantMessageSchema = v.looseObject({
+	/**
+	 * The contents of the assistant message. Required unless `tool_calls` or
+	 * `function_call` is specified.
+	 */
+	content: v.exactOptional(
+		v.nullable(
+			v.union([
+				v.pipe(v.string(), v.trim()),
+				v.pipe(
+					v.array(chatCompletionRequestAssistantMessageContentPartSchema),
+					v.minLength(1),
+				),
+			]),
+		),
+	),
+	/**
+	 * The refusal message by the assistant.
+	 */
+	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * The role of the messages author, in this case `assistant`.
+	 */
+	role: v.picklist(["assistant"]),
+	/**
+	 * An optional name for the participant. Provides the model information to
+	 * differentiate between participants of the same role.
+	 */
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
+	tool_calls: v.exactOptional(chatCompletionMessageToolCallsSchema),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.exactOptional(
+		v.nullable(
+			v.looseObject({
+				/**
+				 * The arguments to call the function with, as generated by the model in JSON
+				 * format. Note that the model does not always generate valid JSON, and may
+				 * hallucinate parameters not defined by your function schema. Validate the
+				 * arguments in your code before calling your function.
+				 */
+				arguments: v.pipe(v.string(), v.trim()),
+				/**
+				 * The name of the function to call.
+				 */
+				name: v.pipe(v.string(), v.trim()),
+			}),
+		),
+	),
+});
+export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
+	v.looseObject({
+		/**
+		 * Controls whether the assistant message is trained against (0 or 1)
+		 */
+		weight: v.optional(v.picklist([0, 1])),
+		...inputChatCompletionRequestAssistantMessageSchema.entries,
+	});
+export const fineTuneChatCompletionRequestAssistantMessageSchema =
+	v.looseObject({
+		/**
+		 * Controls whether the assistant message is trained against (0 or 1)
+		 */
+		weight: v.exactOptional(v.picklist([0, 1])),
+		...chatCompletionRequestAssistantMessageSchema.entries,
+	});
+export const inputChatCompletionRequestMessageContentPartImageSchema =
+	v.looseObject({
+		/**
+		 * The type of the content part.
+		 */
+		type: v.picklist(["image_url"]),
+		image_url: v.looseObject({
+			/**
+			 * Either a URL of the image or the base64 encoded image data.
+			 */
+			url: v.string(),
+			/**
+			 * Specifies the detail level of the image. Learn more in the [Vision
+			 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+			 */
+			detail: v.optional(v.picklist(["auto", "low", "high"])),
+		}),
+	});
+export const chatCompletionRequestMessageContentPartImageSchema = v.looseObject(
+	{
+		/**
+		 * The type of the content part.
+		 */
+		type: v.picklist(["image_url"]),
+		image_url: v.looseObject({
+			/**
+			 * Either a URL of the image or the base64 encoded image data.
+			 */
+			url: v.pipe(v.string(), v.trim()),
+			/**
+			 * Specifies the detail level of the image. Learn more in the [Vision
+			 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
+			 */
+			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
+		}),
+	},
+);
+export const inputChatCompletionRequestUserMessageContentPartSchema = v.union([
+	inputChatCompletionRequestMessageContentPartTextSchema,
+	inputChatCompletionRequestMessageContentPartImageSchema,
+]);
+export const chatCompletionRequestUserMessageContentPartSchema =
+	inputChatCompletionRequestUserMessageContentPartSchema;
+export const inputChatCompletionRequestUserMessageSchema = v.looseObject({
+	/**
+	 * The contents of the user message.
+	 */
+	content: v.union([
+		v.string(),
+		v.pipe(
+			v.array(inputChatCompletionRequestUserMessageContentPartSchema),
+			v.minLength(1),
+		),
+	]),
+	/**
+	 * The role of the messages author, in this case `user`.
+	 */
+	role: v.picklist(["user"]),
+	/**
+	 * An optional name for the participant. Provides the model information to
+	 * differentiate between participants of the same role.
+	 */
+	name: v.optional(v.string()),
+});
+export const chatCompletionRequestUserMessageSchema = v.looseObject({
+	/**
+	 * The contents of the user message.
+	 */
+	content: v.union([
+		v.pipe(v.string(), v.trim()),
+		v.pipe(
+			v.array(chatCompletionRequestUserMessageContentPartSchema),
+			v.minLength(1),
+		),
+	]),
+	/**
+	 * The role of the messages author, in this case `user`.
+	 */
+	role: v.picklist(["user"]),
+	/**
+	 * An optional name for the participant. Provides the model information to
+	 * differentiate between participants of the same role.
+	 */
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
+});
+export const inputChatCompletionRequestSystemMessageContentPartSchema =
+	inputChatCompletionRequestMessageContentPartTextSchema;
+export const chatCompletionRequestSystemMessageContentPartSchema =
+	inputChatCompletionRequestSystemMessageContentPartSchema;
+export const inputChatCompletionRequestSystemMessageSchema = v.looseObject({
+	/**
+	 * The contents of the system message.
+	 */
+	content: v.union([
+		v.string(),
+		v.pipe(
+			v.array(inputChatCompletionRequestSystemMessageContentPartSchema),
+			v.minLength(1),
+		),
+	]),
+	/**
+	 * The role of the messages author, in this case `system`.
+	 */
+	role: v.picklist(["system"]),
+	/**
+	 * An optional name for the participant. Provides the model information to
+	 * differentiate between participants of the same role.
+	 */
+	name: v.optional(v.string()),
+});
+export const chatCompletionRequestSystemMessageSchema = v.looseObject({
+	/**
+	 * The contents of the system message.
+	 */
+	content: v.union([
+		v.pipe(v.string(), v.trim()),
+		v.pipe(
+			v.array(chatCompletionRequestSystemMessageContentPartSchema),
+			v.minLength(1),
+		),
+	]),
+	/**
+	 * The role of the messages author, in this case `system`.
+	 */
+	role: v.picklist(["system"]),
+	/**
+	 * An optional name for the participant. Provides the model information to
+	 * differentiate between participants of the same role.
+	 */
+	name: v.exactOptional(v.pipe(v.string(), v.trim())),
+});
 /** The per-line training example of a fine-tuning input file for chat models */
 export const inputFinetuneChatRequestInputSchema = v.looseObject({
 	messages: v.optional(
 		v.pipe(
 			v.array(
 				v.union([
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
+					inputChatCompletionRequestSystemMessageSchema,
+					inputChatCompletionRequestUserMessageSchema,
+					inputFineTuneChatCompletionRequestAssistantMessageSchema,
+					inputChatCompletionRequestToolMessageSchema,
+					inputChatCompletionRequestFunctionMessageSchema,
 				]),
 			),
 			v.minLength(1),
@@ -9181,11 +9325,11 @@ export const finetuneChatRequestInputSchema = v.looseObject({
 		v.pipe(
 			v.array(
 				v.union([
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
-					v.unknown(),
+					chatCompletionRequestSystemMessageSchema,
+					chatCompletionRequestUserMessageSchema,
+					fineTuneChatCompletionRequestAssistantMessageSchema,
+					chatCompletionRequestToolMessageSchema,
+					chatCompletionRequestFunctionMessageSchema,
 				]),
 			),
 			v.minLength(1),
@@ -9206,6 +9350,84 @@ export const finetuneChatRequestInputSchema = v.looseObject({
 			v.maxLength(128),
 		),
 	),
+});
+export const inputFineTuningIntegrationSchema = v.looseObject({
+	/**
+	 * The type of the integration being enabled for the fine-tuning job
+	 */
+	type: v.picklist(["wandb"]),
+	/**
+	 * The settings for your integration with Weights and Biases. This payload
+	 * specifies the project that
+	 * metrics will be sent to. Optionally, you can set an explicit display name
+	 * for your run, add tags
+	 * to your run, and set a default entity (team, username, etc) to be
+	 * associated with your run.
+	 */
+	wandb: v.looseObject({
+		/**
+		 * The name of the project that the new run will be created under.
+		 */
+		project: v.string(),
+		/**
+		 * A display name to set for the run. If not set, we will use the Job ID as
+		 * the name.
+		 */
+		name: v.optional(v.nullable(v.string())),
+		/**
+		 * The entity to use for the run. This allows you to set the team or username
+		 * of the WandB user that you would
+		 * like associated with the run. If not set, the default entity for the
+		 * registered WandB API key is used.
+		 */
+		entity: v.optional(v.nullable(v.string())),
+		/**
+		 * A list of tags to be attached to the newly created run. These tags are
+		 * passed through directly to WandB. Some
+		 * default tags are generated by OpenAI: "openai/finetune",
+		 * "openai/{base-model}", "openai/{ftjob-abcdef}".
+		 */
+		tags: v.optional(v.array(v.string())),
+	}),
+});
+export const fineTuningIntegrationSchema = v.looseObject({
+	/**
+	 * The type of the integration being enabled for the fine-tuning job
+	 */
+	type: v.picklist(["wandb"]),
+	/**
+	 * The settings for your integration with Weights and Biases. This payload
+	 * specifies the project that
+	 * metrics will be sent to. Optionally, you can set an explicit display name
+	 * for your run, add tags
+	 * to your run, and set a default entity (team, username, etc) to be
+	 * associated with your run.
+	 */
+	wandb: v.looseObject({
+		/**
+		 * The name of the project that the new run will be created under.
+		 */
+		project: v.pipe(v.string(), v.trim()),
+		/**
+		 * A display name to set for the run. If not set, we will use the Job ID as
+		 * the name.
+		 */
+		name: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+		/**
+		 * The entity to use for the run. This allows you to set the team or username
+		 * of the WandB user that you would
+		 * like associated with the run. If not set, the default entity for the
+		 * registered WandB API key is used.
+		 */
+		entity: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+		/**
+		 * A list of tags to be attached to the newly created run. These tags are
+		 * passed through directly to WandB. Some
+		 * default tags are generated by OpenAI: "openai/finetune",
+		 * "openai/{base-model}", "openai/{ftjob-abcdef}".
+		 */
+		tags: v.exactOptional(v.array(v.pipe(v.string(), v.trim()))),
+	}),
 });
 /**
  * The `File` object represents a document that has been uploaded to OpenAI.
@@ -9966,6 +10188,435 @@ export const inputImagesResponseSchema = v.looseObject({
 	data: v.array(inputImageSchema),
 });
 export const imagesResponseSchema = inputImagesResponseSchema;
+export const inputChatCompletionTokenLogprobSchema = v.looseObject({
+	/**
+	 * The token.
+	 */
+	token: v.string(),
+	/**
+	 * The log probability of this token, if it is within the top 20 most likely
+	 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
+	 * very unlikely.
+	 */
+	logprob: v.number(),
+	/**
+	 * A list of integers representing the UTF-8 bytes representation of the
+	 * token. Useful in instances where characters are represented by multiple
+	 * tokens and their byte representations must be combined to generate the
+	 * correct text representation. Can be `null` if there is no bytes
+	 * representation for the token.
+	 */
+	bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
+	/**
+	 * List of the most likely tokens and their log probability, at this token
+	 * position. In rare cases, there may be fewer than the number of requested
+	 * `top_logprobs` returned.
+	 */
+	top_logprobs: v.array(
+		v.looseObject({
+			/**
+			 * The token.
+			 */
+			token: v.string(),
+			/**
+			 * The log probability of this token, if it is within the top 20 most likely
+			 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
+			 * very unlikely.
+			 */
+			logprob: v.number(),
+			/**
+			 * A list of integers representing the UTF-8 bytes representation of the
+			 * token. Useful in instances where characters are represented by multiple
+			 * tokens and their byte representations must be combined to generate the
+			 * correct text representation. Can be `null` if there is no bytes
+			 * representation for the token.
+			 */
+			bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
+		}),
+	),
+});
+export const chatCompletionTokenLogprobSchema = v.looseObject({
+	/**
+	 * The token.
+	 */
+	token: v.pipe(v.string(), v.trim()),
+	/**
+	 * The log probability of this token, if it is within the top 20 most likely
+	 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
+	 * very unlikely.
+	 */
+	logprob: v.number(),
+	/**
+	 * A list of integers representing the UTF-8 bytes representation of the
+	 * token. Useful in instances where characters are represented by multiple
+	 * tokens and their byte representations must be combined to generate the
+	 * correct text representation. Can be `null` if there is no bytes
+	 * representation for the token.
+	 */
+	bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
+	/**
+	 * List of the most likely tokens and their log probability, at this token
+	 * position. In rare cases, there may be fewer than the number of requested
+	 * `top_logprobs` returned.
+	 */
+	top_logprobs: v.array(
+		v.looseObject({
+			/**
+			 * The token.
+			 */
+			token: v.pipe(v.string(), v.trim()),
+			/**
+			 * The log probability of this token, if it is within the top 20 most likely
+			 * tokens. Otherwise, the value `-9999.0` is used to signify that the token is
+			 * very unlikely.
+			 */
+			logprob: v.number(),
+			/**
+			 * A list of integers representing the UTF-8 bytes representation of the
+			 * token. Useful in instances where characters are represented by multiple
+			 * tokens and their byte representations must be combined to generate the
+			 * correct text representation. Can be `null` if there is no bytes
+			 * representation for the token.
+			 */
+			bytes: v.nullable(v.array(v.pipe(v.number(), v.integer()))),
+		}),
+	),
+});
+export const inputChatCompletionMessageToolCallChunkSchema = v.looseObject({
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.optional(v.string()),
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 */
+	type: v.optional(v.picklist(["function"])),
+	function: v.optional(
+		v.looseObject({
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.optional(v.string()),
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.optional(v.string()),
+		}),
+	),
+});
+export const chatCompletionMessageToolCallChunkSchema = v.looseObject({
+	index: v.pipe(v.number(), v.integer()),
+	/**
+	 * The ID of the tool call.
+	 */
+	id: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The type of the tool. Currently, only `function` is supported.
+	 */
+	type: v.exactOptional(v.picklist(["function"])),
+	function: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+});
+/** A chat completion delta generated by streamed model responses. */
+export const inputChatCompletionStreamResponseDeltaSchema = v.looseObject({
+	/**
+	 * The contents of the chunk message.
+	 */
+	content: v.optional(v.nullable(v.string())),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.optional(
+		v.looseObject({
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.optional(v.string()),
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.optional(v.string()),
+		}),
+	),
+	tool_calls: v.optional(
+		v.array(inputChatCompletionMessageToolCallChunkSchema),
+	),
+	/**
+	 * The role of the author of this message.
+	 */
+	role: v.optional(v.picklist(["system", "user", "assistant", "tool"])),
+	/**
+	 * The refusal message generated by the model.
+	 */
+	refusal: v.optional(v.nullable(v.string())),
+});
+export const chatCompletionStreamResponseDeltaSchema = v.looseObject({
+	/**
+	 * The contents of the chunk message.
+	 */
+	content: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.exactOptional(v.pipe(v.string(), v.trim())),
+		}),
+	),
+	tool_calls: v.exactOptional(
+		v.array(chatCompletionMessageToolCallChunkSchema),
+	),
+	/**
+	 * The role of the author of this message.
+	 */
+	role: v.exactOptional(v.picklist(["system", "user", "assistant", "tool"])),
+	/**
+	 * The refusal message generated by the model.
+	 */
+	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
+});
+/**
+ * Represents a streamed chunk of a chat completion response returned by
+ * model, based on the provided input.
+ */
+export const inputCreateChatCompletionStreamResponseSchema = v.looseObject({
+	/**
+	 * A unique identifier for the chat completion. Each chunk has the same ID.
+	 */
+	id: v.string(),
+	/**
+	 * A list of chat completion choices. Can contain more than one elements if
+	 * `n` is greater than 1. Can also be empty for the
+	 * last chunk if you set `stream_options: {"include_usage": true}`.
+	 */
+	choices: v.array(
+		v.looseObject({
+			delta: inputChatCompletionStreamResponseDeltaSchema,
+			/**
+			 * Log probability information for the choice.
+			 */
+			logprobs: v.optional(
+				v.nullable(
+					v.looseObject({
+						/**
+						 * A list of message content tokens with log probability information.
+						 */
+						content: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
+						/**
+						 * A list of message refusal tokens with log probability information.
+						 */
+						refusal: v.nullable(v.array(inputChatCompletionTokenLogprobSchema)),
+					}),
+				),
+			),
+			/**
+			 * The reason the model stopped generating tokens. This will be `stop` if the
+			 * model hit a natural stop point or a provided stop sequence,
+			 * `length` if the maximum number of tokens specified in the request was
+			 * reached,
+			 * `content_filter` if content was omitted due to a flag from our content
+			 * filters,
+			 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+			 * the model called a function.
+			 */
+			finish_reason: v.nullable(
+				v.picklist([
+					"stop",
+					"length",
+					"tool_calls",
+					"content_filter",
+					"function_call",
+				]),
+			),
+			/**
+			 * The index of the choice in the list of choices.
+			 */
+			index: v.pipe(v.number(), v.integer()),
+		}),
+	),
+	/**
+	 * The Unix timestamp (in seconds) of when the chat completion was created.
+	 * Each chunk has the same timestamp.
+	 */
+	created: v.pipe(v.number(), v.integer()),
+	/**
+	 * The model to generate the completion.
+	 */
+	model: v.string(),
+	/**
+	 * The service tier used for processing the request. This field is only
+	 * included if the `service_tier` parameter is specified in the request.
+	 */
+	service_tier: v.optional(v.nullable(v.picklist(["scale", "default"]))),
+	/**
+	 * This fingerprint represents the backend configuration that the model runs
+	 * with.
+	 * Can be used in conjunction with the `seed` request parameter to understand
+	 * when backend changes have been made that might impact determinism.
+	 */
+	system_fingerprint: v.optional(v.string()),
+	/**
+	 * The object type, which is always `chat.completion.chunk`.
+	 */
+	object: v.picklist(["chat.completion.chunk"]),
+	/**
+	 * An optional field that will only be present when you set `stream_options:
+	 * {"include_usage": true}` in your request.
+	 * When present, it contains a null value except for the last chunk which
+	 * contains the token usage statistics for the entire request.
+	 */
+	usage: v.optional(
+		v.looseObject({
+			/**
+			 * Number of tokens in the generated completion.
+			 */
+			completion_tokens: v.pipe(v.number(), v.integer()),
+			/**
+			 * Number of tokens in the prompt.
+			 */
+			prompt_tokens: v.pipe(v.number(), v.integer()),
+			/**
+			 * Total number of tokens used in the request (prompt + completion).
+			 */
+			total_tokens: v.pipe(v.number(), v.integer()),
+		}),
+	),
+});
+export const createChatCompletionStreamResponseSchema = v.looseObject({
+	/**
+	 * A unique identifier for the chat completion. Each chunk has the same ID.
+	 */
+	id: v.pipe(v.string(), v.trim()),
+	/**
+	 * A list of chat completion choices. Can contain more than one elements if
+	 * `n` is greater than 1. Can also be empty for the
+	 * last chunk if you set `stream_options: {"include_usage": true}`.
+	 */
+	choices: v.array(
+		v.looseObject({
+			delta: chatCompletionStreamResponseDeltaSchema,
+			/**
+			 * Log probability information for the choice.
+			 */
+			logprobs: v.exactOptional(
+				v.nullable(
+					v.looseObject({
+						/**
+						 * A list of message content tokens with log probability information.
+						 */
+						content: v.nullable(v.array(chatCompletionTokenLogprobSchema)),
+						/**
+						 * A list of message refusal tokens with log probability information.
+						 */
+						refusal: v.nullable(v.array(chatCompletionTokenLogprobSchema)),
+					}),
+				),
+			),
+			/**
+			 * The reason the model stopped generating tokens. This will be `stop` if the
+			 * model hit a natural stop point or a provided stop sequence,
+			 * `length` if the maximum number of tokens specified in the request was
+			 * reached,
+			 * `content_filter` if content was omitted due to a flag from our content
+			 * filters,
+			 * `tool_calls` if the model called a tool, or `function_call` (deprecated) if
+			 * the model called a function.
+			 */
+			finish_reason: v.nullable(
+				v.picklist([
+					"stop",
+					"length",
+					"tool_calls",
+					"content_filter",
+					"function_call",
+				]),
+			),
+			/**
+			 * The index of the choice in the list of choices.
+			 */
+			index: v.pipe(v.number(), v.integer()),
+		}),
+	),
+	/**
+	 * The Unix timestamp (in seconds) of when the chat completion was created.
+	 * Each chunk has the same timestamp.
+	 */
+	created: v.pipe(v.number(), v.integer()),
+	/**
+	 * The model to generate the completion.
+	 */
+	model: v.pipe(v.string(), v.trim()),
+	/**
+	 * The service tier used for processing the request. This field is only
+	 * included if the `service_tier` parameter is specified in the request.
+	 */
+	service_tier: v.exactOptional(v.nullable(v.picklist(["scale", "default"]))),
+	/**
+	 * This fingerprint represents the backend configuration that the model runs
+	 * with.
+	 * Can be used in conjunction with the `seed` request parameter to understand
+	 * when backend changes have been made that might impact determinism.
+	 */
+	system_fingerprint: v.exactOptional(v.pipe(v.string(), v.trim())),
+	/**
+	 * The object type, which is always `chat.completion.chunk`.
+	 */
+	object: v.picklist(["chat.completion.chunk"]),
+	/**
+	 * An optional field that will only be present when you set `stream_options:
+	 * {"include_usage": true}` in your request.
+	 * When present, it contains a null value except for the last chunk which
+	 * contains the token usage statistics for the entire request.
+	 */
+	usage: v.exactOptional(
+		v.looseObject({
+			/**
+			 * Number of tokens in the generated completion.
+			 */
+			completion_tokens: v.pipe(v.number(), v.integer()),
+			/**
+			 * Number of tokens in the prompt.
+			 */
+			prompt_tokens: v.pipe(v.number(), v.integer()),
+			/**
+			 * Total number of tokens used in the request (prompt + completion).
+			 */
+			total_tokens: v.pipe(v.number(), v.integer()),
+		}),
+	),
+});
 /**
  * The `fine_tuning.job` object represents a fine-tuning job that has been
  * created through the API.
@@ -10273,6 +10924,75 @@ export const completionUsageSchema = v.looseObject({
 		}),
 	),
 });
+/** A chat completion message generated by the model. */
+export const inputChatCompletionResponseMessageSchema = v.looseObject({
+	/**
+	 * The contents of the message.
+	 */
+	content: v.nullable(v.string()),
+	/**
+	 * The refusal message generated by the model.
+	 */
+	refusal: v.nullable(v.string()),
+	tool_calls: v.optional(inputChatCompletionMessageToolCallsSchema),
+	/**
+	 * The role of the author of this message.
+	 */
+	role: v.picklist(["assistant"]),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.optional(
+		v.looseObject({
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.string(),
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.string(),
+		}),
+	),
+});
+export const chatCompletionResponseMessageSchema = v.looseObject({
+	/**
+	 * The contents of the message.
+	 */
+	content: v.nullable(v.pipe(v.string(), v.trim())),
+	/**
+	 * The refusal message generated by the model.
+	 */
+	refusal: v.nullable(v.pipe(v.string(), v.trim())),
+	tool_calls: v.exactOptional(chatCompletionMessageToolCallsSchema),
+	/**
+	 * The role of the author of this message.
+	 */
+	role: v.picklist(["assistant"]),
+	/**
+	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
+	 * function that should be called, as generated by the model.
+	 */
+	function_call: v.exactOptional(
+		v.looseObject({
+			/**
+			 * The arguments to call the function with, as generated by the model in JSON
+			 * format. Note that the model does not always generate valid JSON, and may
+			 * hallucinate parameters not defined by your function schema. Validate the
+			 * arguments in your code before calling your function.
+			 */
+			arguments: v.pipe(v.string(), v.trim()),
+			/**
+			 * The name of the function to call.
+			 */
+			name: v.pipe(v.string(), v.trim()),
+		}),
+	),
+});
 /**
  * Represents a chat completion response returned by model, based on the
  * provided input.
@@ -10305,7 +11025,7 @@ export const inputCreateChatCompletionFunctionResponseSchema = v.looseObject({
 			 * The index of the choice in the list of choices.
 			 */
 			index: v.pipe(v.number(), v.integer()),
-			message: v.unknown(),
+			message: inputChatCompletionResponseMessageSchema,
 		}),
 	),
 	/**
@@ -10358,7 +11078,7 @@ export const createChatCompletionFunctionResponseSchema = v.looseObject({
 			 * The index of the choice in the list of choices.
 			 */
 			index: v.pipe(v.number(), v.integer()),
-			message: v.unknown(),
+			message: chatCompletionResponseMessageSchema,
 		}),
 	),
 	/**
@@ -10419,7 +11139,7 @@ export const inputCreateChatCompletionResponseSchema = v.looseObject({
 			 * The index of the choice in the list of choices.
 			 */
 			index: v.pipe(v.number(), v.integer()),
-			message: v.unknown(),
+			message: inputChatCompletionResponseMessageSchema,
 			/**
 			 * Log probability information for the choice.
 			 */
@@ -10496,7 +11216,7 @@ export const createChatCompletionResponseSchema = v.looseObject({
 			 * The index of the choice in the list of choices.
 			 */
 			index: v.pipe(v.number(), v.integer()),
-			message: v.unknown(),
+			message: chatCompletionResponseMessageSchema,
 			/**
 			 * Log probability information for the choice.
 			 */
@@ -10629,421 +11349,6 @@ export const chatCompletionStreamOptionsSchema = v.nullable(
 		include_usage: v.exactOptional(v.boolean()),
 	}),
 );
-export const inputChatCompletionRequestFunctionMessageSchema = v.looseObject({
-	/**
-	 * The role of the messages author, in this case `function`.
-	 */
-	role: v.picklist(["function"]),
-	/**
-	 * The contents of the function message.
-	 */
-	content: v.nullable(v.string()),
-	/**
-	 * The name of the function to call.
-	 */
-	name: v.string(),
-});
-export const chatCompletionRequestFunctionMessageSchema = v.looseObject({
-	/**
-	 * The role of the messages author, in this case `function`.
-	 */
-	role: v.picklist(["function"]),
-	/**
-	 * The contents of the function message.
-	 */
-	content: v.nullable(v.pipe(v.string(), v.trim())),
-	/**
-	 * The name of the function to call.
-	 */
-	name: v.pipe(v.string(), v.trim()),
-});
-export const inputChatCompletionRequestMessageContentPartTextSchema =
-	v.looseObject({
-		/**
-		 * The type of the content part.
-		 */
-		type: v.picklist(["text"]),
-		/**
-		 * The text content.
-		 */
-		text: v.string(),
-	});
-export const chatCompletionRequestMessageContentPartTextSchema = v.looseObject({
-	/**
-	 * The type of the content part.
-	 */
-	type: v.picklist(["text"]),
-	/**
-	 * The text content.
-	 */
-	text: v.pipe(v.string(), v.trim()),
-});
-export const inputChatCompletionRequestToolMessageContentPartSchema =
-	inputChatCompletionRequestMessageContentPartTextSchema;
-export const chatCompletionRequestToolMessageContentPartSchema =
-	inputChatCompletionRequestToolMessageContentPartSchema;
-export const inputChatCompletionRequestToolMessageSchema = v.looseObject({
-	/**
-	 * The role of the messages author, in this case `tool`.
-	 */
-	role: v.picklist(["tool"]),
-	/**
-	 * The contents of the tool message.
-	 */
-	content: v.union([
-		v.string(),
-		v.pipe(
-			v.array(inputChatCompletionRequestToolMessageContentPartSchema),
-			v.minLength(1),
-		),
-	]),
-	/**
-	 * Tool call that this message is responding to.
-	 */
-	tool_call_id: v.string(),
-});
-export const chatCompletionRequestToolMessageSchema = v.looseObject({
-	/**
-	 * The role of the messages author, in this case `tool`.
-	 */
-	role: v.picklist(["tool"]),
-	/**
-	 * The contents of the tool message.
-	 */
-	content: v.union([
-		v.pipe(v.string(), v.trim()),
-		v.pipe(
-			v.array(chatCompletionRequestToolMessageContentPartSchema),
-			v.minLength(1),
-		),
-	]),
-	/**
-	 * Tool call that this message is responding to.
-	 */
-	tool_call_id: v.pipe(v.string(), v.trim()),
-});
-export const inputChatCompletionMessageToolCallSchema = v.looseObject({
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.string(),
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 */
-	type: v.picklist(["function"]),
-	/**
-	 * The function that the model called.
-	 */
-	function: v.looseObject({
-		/**
-		 * The name of the function to call.
-		 */
-		name: v.string(),
-		/**
-		 * The arguments to call the function with, as generated by the model in JSON
-		 * format. Note that the model does not always generate valid JSON, and may
-		 * hallucinate parameters not defined by your function schema. Validate the
-		 * arguments in your code before calling your function.
-		 */
-		arguments: v.string(),
-	}),
-});
-export const chatCompletionMessageToolCallSchema = v.looseObject({
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.pipe(v.string(), v.trim()),
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 */
-	type: v.picklist(["function"]),
-	/**
-	 * The function that the model called.
-	 */
-	function: v.looseObject({
-		/**
-		 * The name of the function to call.
-		 */
-		name: v.pipe(v.string(), v.trim()),
-		/**
-		 * The arguments to call the function with, as generated by the model in JSON
-		 * format. Note that the model does not always generate valid JSON, and may
-		 * hallucinate parameters not defined by your function schema. Validate the
-		 * arguments in your code before calling your function.
-		 */
-		arguments: v.pipe(v.string(), v.trim()),
-	}),
-});
-/** The tool calls generated by the model, such as function calls. */
-export const inputChatCompletionMessageToolCallsSchema = v.array(
-	inputChatCompletionMessageToolCallSchema,
-);
-export const chatCompletionMessageToolCallsSchema =
-	inputChatCompletionMessageToolCallsSchema;
-export const inputChatCompletionRequestMessageContentPartRefusalSchema =
-	v.looseObject({
-		/**
-		 * The type of the content part.
-		 */
-		type: v.picklist(["refusal"]),
-		/**
-		 * The refusal message generated by the model.
-		 */
-		refusal: v.string(),
-	});
-export const chatCompletionRequestMessageContentPartRefusalSchema =
-	v.looseObject({
-		/**
-		 * The type of the content part.
-		 */
-		type: v.picklist(["refusal"]),
-		/**
-		 * The refusal message generated by the model.
-		 */
-		refusal: v.pipe(v.string(), v.trim()),
-	});
-export const inputChatCompletionRequestAssistantMessageContentPartSchema =
-	v.union([
-		inputChatCompletionRequestMessageContentPartTextSchema,
-		inputChatCompletionRequestMessageContentPartRefusalSchema,
-	]);
-export const chatCompletionRequestAssistantMessageContentPartSchema =
-	inputChatCompletionRequestAssistantMessageContentPartSchema;
-export const inputChatCompletionRequestAssistantMessageSchema = v.looseObject({
-	/**
-	 * The contents of the assistant message. Required unless `tool_calls` or
-	 * `function_call` is specified.
-	 */
-	content: v.optional(
-		v.nullable(
-			v.union([
-				v.string(),
-				v.pipe(
-					v.array(inputChatCompletionRequestAssistantMessageContentPartSchema),
-					v.minLength(1),
-				),
-			]),
-		),
-	),
-	/**
-	 * The refusal message by the assistant.
-	 */
-	refusal: v.optional(v.nullable(v.string())),
-	/**
-	 * The role of the messages author, in this case `assistant`.
-	 */
-	role: v.picklist(["assistant"]),
-	/**
-	 * An optional name for the participant. Provides the model information to
-	 * differentiate between participants of the same role.
-	 */
-	name: v.optional(v.string()),
-	tool_calls: v.optional(inputChatCompletionMessageToolCallsSchema),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.optional(
-		v.nullable(
-			v.looseObject({
-				/**
-				 * The arguments to call the function with, as generated by the model in JSON
-				 * format. Note that the model does not always generate valid JSON, and may
-				 * hallucinate parameters not defined by your function schema. Validate the
-				 * arguments in your code before calling your function.
-				 */
-				arguments: v.string(),
-				/**
-				 * The name of the function to call.
-				 */
-				name: v.string(),
-			}),
-		),
-	),
-});
-export const chatCompletionRequestAssistantMessageSchema = v.looseObject({
-	/**
-	 * The contents of the assistant message. Required unless `tool_calls` or
-	 * `function_call` is specified.
-	 */
-	content: v.exactOptional(
-		v.nullable(
-			v.union([
-				v.pipe(v.string(), v.trim()),
-				v.pipe(
-					v.array(chatCompletionRequestAssistantMessageContentPartSchema),
-					v.minLength(1),
-				),
-			]),
-		),
-	),
-	/**
-	 * The refusal message by the assistant.
-	 */
-	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
-	/**
-	 * The role of the messages author, in this case `assistant`.
-	 */
-	role: v.picklist(["assistant"]),
-	/**
-	 * An optional name for the participant. Provides the model information to
-	 * differentiate between participants of the same role.
-	 */
-	name: v.exactOptional(v.pipe(v.string(), v.trim())),
-	tool_calls: v.exactOptional(chatCompletionMessageToolCallsSchema),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.exactOptional(
-		v.nullable(
-			v.looseObject({
-				/**
-				 * The arguments to call the function with, as generated by the model in JSON
-				 * format. Note that the model does not always generate valid JSON, and may
-				 * hallucinate parameters not defined by your function schema. Validate the
-				 * arguments in your code before calling your function.
-				 */
-				arguments: v.pipe(v.string(), v.trim()),
-				/**
-				 * The name of the function to call.
-				 */
-				name: v.pipe(v.string(), v.trim()),
-			}),
-		),
-	),
-});
-export const inputChatCompletionRequestMessageContentPartImageSchema =
-	v.looseObject({
-		/**
-		 * The type of the content part.
-		 */
-		type: v.picklist(["image_url"]),
-		image_url: v.looseObject({
-			/**
-			 * Either a URL of the image or the base64 encoded image data.
-			 */
-			url: v.string(),
-			/**
-			 * Specifies the detail level of the image. Learn more in the [Vision
-			 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-			 */
-			detail: v.optional(v.picklist(["auto", "low", "high"])),
-		}),
-	});
-export const chatCompletionRequestMessageContentPartImageSchema = v.looseObject(
-	{
-		/**
-		 * The type of the content part.
-		 */
-		type: v.picklist(["image_url"]),
-		image_url: v.looseObject({
-			/**
-			 * Either a URL of the image or the base64 encoded image data.
-			 */
-			url: v.pipe(v.string(), v.trim()),
-			/**
-			 * Specifies the detail level of the image. Learn more in the [Vision
-			 * guide](/docs/guides/vision/low-or-high-fidelity-image-understanding).
-			 */
-			detail: v.exactOptional(v.picklist(["auto", "low", "high"])),
-		}),
-	},
-);
-export const inputChatCompletionRequestUserMessageContentPartSchema = v.union([
-	inputChatCompletionRequestMessageContentPartTextSchema,
-	inputChatCompletionRequestMessageContentPartImageSchema,
-]);
-export const chatCompletionRequestUserMessageContentPartSchema =
-	inputChatCompletionRequestUserMessageContentPartSchema;
-export const inputChatCompletionRequestUserMessageSchema = v.looseObject({
-	/**
-	 * The contents of the user message.
-	 */
-	content: v.union([
-		v.string(),
-		v.pipe(
-			v.array(inputChatCompletionRequestUserMessageContentPartSchema),
-			v.minLength(1),
-		),
-	]),
-	/**
-	 * The role of the messages author, in this case `user`.
-	 */
-	role: v.picklist(["user"]),
-	/**
-	 * An optional name for the participant. Provides the model information to
-	 * differentiate between participants of the same role.
-	 */
-	name: v.optional(v.string()),
-});
-export const chatCompletionRequestUserMessageSchema = v.looseObject({
-	/**
-	 * The contents of the user message.
-	 */
-	content: v.union([
-		v.pipe(v.string(), v.trim()),
-		v.pipe(
-			v.array(chatCompletionRequestUserMessageContentPartSchema),
-			v.minLength(1),
-		),
-	]),
-	/**
-	 * The role of the messages author, in this case `user`.
-	 */
-	role: v.picklist(["user"]),
-	/**
-	 * An optional name for the participant. Provides the model information to
-	 * differentiate between participants of the same role.
-	 */
-	name: v.exactOptional(v.pipe(v.string(), v.trim())),
-});
-export const inputChatCompletionRequestSystemMessageContentPartSchema =
-	inputChatCompletionRequestMessageContentPartTextSchema;
-export const chatCompletionRequestSystemMessageContentPartSchema =
-	inputChatCompletionRequestSystemMessageContentPartSchema;
-export const inputChatCompletionRequestSystemMessageSchema = v.looseObject({
-	/**
-	 * The contents of the system message.
-	 */
-	content: v.union([
-		v.string(),
-		v.pipe(
-			v.array(inputChatCompletionRequestSystemMessageContentPartSchema),
-			v.minLength(1),
-		),
-	]),
-	/**
-	 * The role of the messages author, in this case `system`.
-	 */
-	role: v.picklist(["system"]),
-	/**
-	 * An optional name for the participant. Provides the model information to
-	 * differentiate between participants of the same role.
-	 */
-	name: v.optional(v.string()),
-});
-export const chatCompletionRequestSystemMessageSchema = v.looseObject({
-	/**
-	 * The contents of the system message.
-	 */
-	content: v.union([
-		v.pipe(v.string(), v.trim()),
-		v.pipe(
-			v.array(chatCompletionRequestSystemMessageContentPartSchema),
-			v.minLength(1),
-		),
-	]),
-	/**
-	 * The role of the messages author, in this case `system`.
-	 */
-	role: v.picklist(["system"]),
-	/**
-	 * An optional name for the participant. Provides the model information to
-	 * differentiate between participants of the same role.
-	 */
-	name: v.exactOptional(v.pipe(v.string(), v.trim())),
-});
 export const inputChatCompletionRequestMessageSchema = v.union([
 	inputChatCompletionRequestSystemMessageSchema,
 	inputChatCompletionRequestUserMessageSchema,
@@ -11610,216 +11915,6 @@ export const createChatCompletionRequestSchema = v.looseObject({
 		),
 	),
 });
-export const inputChatCompletionMessageToolCallChunkSchema = v.looseObject({
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.optional(v.string()),
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 */
-	type: v.optional(v.picklist(["function"])),
-	function: v.optional(
-		v.looseObject({
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.optional(v.string()),
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.optional(v.string()),
-		}),
-	),
-});
-export const chatCompletionMessageToolCallChunkSchema = v.looseObject({
-	index: v.pipe(v.number(), v.integer()),
-	/**
-	 * The ID of the tool call.
-	 */
-	id: v.exactOptional(v.pipe(v.string(), v.trim())),
-	/**
-	 * The type of the tool. Currently, only `function` is supported.
-	 */
-	type: v.exactOptional(v.picklist(["function"])),
-	function: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.exactOptional(v.pipe(v.string(), v.trim())),
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
-		}),
-	),
-});
-/** A chat completion delta generated by streamed model responses. */
-export const inputChatCompletionStreamResponseDeltaSchema = v.looseObject({
-	/**
-	 * The contents of the chunk message.
-	 */
-	content: v.optional(v.nullable(v.string())),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.optional(
-		v.looseObject({
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.optional(v.string()),
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.optional(v.string()),
-		}),
-	),
-	tool_calls: v.optional(
-		v.array(inputChatCompletionMessageToolCallChunkSchema),
-	),
-	/**
-	 * The role of the author of this message.
-	 */
-	role: v.optional(v.picklist(["system", "user", "assistant", "tool"])),
-	/**
-	 * The refusal message generated by the model.
-	 */
-	refusal: v.optional(v.nullable(v.string())),
-});
-export const chatCompletionStreamResponseDeltaSchema = v.looseObject({
-	/**
-	 * The contents of the chunk message.
-	 */
-	content: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.exactOptional(v.pipe(v.string(), v.trim())),
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.exactOptional(v.pipe(v.string(), v.trim())),
-		}),
-	),
-	tool_calls: v.exactOptional(
-		v.array(chatCompletionMessageToolCallChunkSchema),
-	),
-	/**
-	 * The role of the author of this message.
-	 */
-	role: v.exactOptional(v.picklist(["system", "user", "assistant", "tool"])),
-	/**
-	 * The refusal message generated by the model.
-	 */
-	refusal: v.exactOptional(v.nullable(v.pipe(v.string(), v.trim()))),
-});
-/** A chat completion message generated by the model. */
-export const inputChatCompletionResponseMessageSchema = v.looseObject({
-	/**
-	 * The contents of the message.
-	 */
-	content: v.nullable(v.string()),
-	/**
-	 * The refusal message generated by the model.
-	 */
-	refusal: v.nullable(v.string()),
-	tool_calls: v.optional(inputChatCompletionMessageToolCallsSchema),
-	/**
-	 * The role of the author of this message.
-	 */
-	role: v.picklist(["assistant"]),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.optional(
-		v.looseObject({
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.string(),
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.string(),
-		}),
-	),
-});
-export const chatCompletionResponseMessageSchema = v.looseObject({
-	/**
-	 * The contents of the message.
-	 */
-	content: v.nullable(v.pipe(v.string(), v.trim())),
-	/**
-	 * The refusal message generated by the model.
-	 */
-	refusal: v.nullable(v.pipe(v.string(), v.trim())),
-	tool_calls: v.exactOptional(chatCompletionMessageToolCallsSchema),
-	/**
-	 * The role of the author of this message.
-	 */
-	role: v.picklist(["assistant"]),
-	/**
-	 * Deprecated and replaced by `tool_calls`. The name and arguments of a
-	 * function that should be called, as generated by the model.
-	 */
-	function_call: v.exactOptional(
-		v.looseObject({
-			/**
-			 * The arguments to call the function with, as generated by the model in JSON
-			 * format. Note that the model does not always generate valid JSON, and may
-			 * hallucinate parameters not defined by your function schema. Validate the
-			 * arguments in your code before calling your function.
-			 */
-			arguments: v.pipe(v.string(), v.trim()),
-			/**
-			 * The name of the function to call.
-			 */
-			name: v.pipe(v.string(), v.trim()),
-		}),
-	),
-});
-export const inputFineTuneChatCompletionRequestAssistantMessageSchema =
-	v.looseObject({
-		/**
-		 * Controls whether the assistant message is trained against (0 or 1)
-		 */
-		weight: v.optional(v.picklist([0, 1])),
-		...inputChatCompletionRequestAssistantMessageSchema.entries,
-	});
-export const fineTuneChatCompletionRequestAssistantMessageSchema =
-	v.looseObject({
-		/**
-		 * Controls whether the assistant message is trained against (0 or 1)
-		 */
-		weight: v.exactOptional(v.picklist([0, 1])),
-		...chatCompletionRequestAssistantMessageSchema.entries,
-	});
 /**
  * Represents a completion response from the API. Note: both the streamed and
  * non-streamed response objects share the same shape (unlike the chat

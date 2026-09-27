@@ -1,5 +1,5 @@
-import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
+import type { JsonValue, UndefinedOnPartialDeep } from "type-fest";
 
-export type Empty = Record<string | number, Jsonifiable>;
+export type Empty = Record<string, JsonValue>;
 export type GetThingCommandInput = never;
 export type InputGetThingCommandResponse = UndefinedOnPartialDeep<Empty>;

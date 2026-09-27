@@ -6,7 +6,7 @@
 
 // oxlint-disable block65/no-narrative-comment
 
-import type { Jsonifiable, UndefinedOnPartialDeep } from "type-fest";
+import type { JsonValue, UndefinedOnPartialDeep } from "type-fest";
 
 export type PromoCode = string;
 /** The API version */
@@ -213,7 +213,7 @@ export type LongRunningOperationSuccess = {
 	operationId: Uuid;
 	done: boolean;
 	result: {
-		response: Record<string | number, Jsonifiable>;
+		response: Record<string, JsonValue>;
 	};
 };
 export type LongRunningOperation =

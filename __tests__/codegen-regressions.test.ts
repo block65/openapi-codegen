@@ -190,7 +190,7 @@ function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	};
 }
 
-test("additionalProperties types the record value instead of widening to unknown", async () => {
+test("additionalProperties is a string-keyed record of the value type", async () => {
 	const result = await processOpenApiDocument(
 		"/tmp/whatever",
 		docWithSchema("Labels", {
@@ -469,4 +469,82 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
 	await expectGenerated([result.typesFile]);
+});
+
+test("an object schema that omits `type` still honours `required`", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				Untyped: {
+					required: ["id"],
+					properties: { id: { type: "string" }, note: { type: "string" } },
+				},
+			},
+		},
+	});
+
+	await expectGenerated([result.typesFile]);
+});
+
+test("a $ref nested past the top level registers after its target", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				// each refers to Leaf before it is declared
+				InArrayItem: {
+					type: "array",
+					items: {
+						type: "object",
+						properties: { leaf: { $ref: "#/components/schemas/Leaf" } },
+					},
+				},
+				InRecord: {
+					type: "object",
+					additionalProperties: { $ref: "#/components/schemas/Leaf" },
+				},
+				InUnionBesideProperties: {
+					type: "object",
+					properties: { id: { type: "string" } },
+					allOf: [{ $ref: "#/components/schemas/Leaf" }],
+				},
+				Leaf: {
+					type: "object",
+					properties: { name: { type: "string" } },
+					additionalProperties: false,
+				},
+			},
+		},
+	});
+
+	await expectGenerated([result.typesFile, result.valibotFile]);
+});
+
+test("a value the schema leaves open is a JsonValue on both sides", async () => {
+	const result = await processOpenApiDocument("/tmp/whatever", {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				Open: {
+					type: "object",
+					required: ["anything", "record", "list"],
+					properties: {
+						anything: {},
+						record: { type: "object", additionalProperties: true },
+						list: { type: "array" },
+					},
+					additionalProperties: false,
+				},
+			},
+		},
+	});
+
+	await expectGenerated([result.typesFile, result.valibotFile]);
 });

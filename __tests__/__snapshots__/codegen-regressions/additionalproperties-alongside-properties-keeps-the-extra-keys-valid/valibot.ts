@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputConfigSchema = v.objectWithRest(
     {
         "name": v.optional(v.string())

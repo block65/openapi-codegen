@@ -6,8 +6,19 @@
 
 // oxlint-disable block65/no-narrative-comment, block65/prefer-exact-optional
 
+import type { JsonValue } from "type-fest";
 import * as v from "valibot";
 
+const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
+	v.union([
+		v.string(),
+		v.number(),
+		v.boolean(),
+		v.null(),
+		v.record(v.string(), jsonValueSchema),
+		v.array(jsonValueSchema),
+	]),
+);
 export const inputPromoCodeSchema = v.pipe(
 	v.string(),
 	v.minLength(1),
@@ -489,7 +500,7 @@ export const inputLongRunningOperationSuccessSchema = v.strictObject({
 	operationId: inputUuidSchema,
 	done: v.literal(true),
 	result: v.strictObject({
-		response: v.record(v.string(), v.unknown()),
+		response: v.record(v.string(), jsonValueSchema),
 	}),
 });
 export const longRunningOperationSuccessSchema =

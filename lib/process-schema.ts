@@ -67,6 +67,17 @@ function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
 	);
 }
 
+// valibot wraps every nullable schema in v.nullable, so the type admits null
+function withNullable<T extends { type: string | WriterFunction }>(
+	schema: oas30.SchemaObject | oas31.SchemaObject,
+	result: T,
+) {
+	return {
+		...result,
+		type: maybeWithNullUnion(result.type, schemaTypeIsNull(schema)),
+	};
+}
+
 // Drops `unknown`, `never` and duplicate string members from a union
 function collapseUnion(types: (string | WriterFunction)[]) {
 	const seen = new Set<string>();
@@ -107,7 +118,7 @@ function maybeUnion(...types: (string | WriterFunction)[]) {
 
 function recordType(value: string | WriterFunction) {
 	return (writer: CodeBlockWriter) => {
-		writer.write("Record<string | number, ");
+		writer.write("Record<string, ");
 
 		if (typeof value === "function") {
 			value(writer);
@@ -219,22 +230,9 @@ function refType(
 ) {
 	const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
+	// components register in dependency order, so a miss is a codegen bug
 	if (!existingSchema) {
-		console.warn("ref used before available: schema=%j", schemaObject);
-
-		const property: Pick<
-			OptionalKind<PropertySignatureStructure>,
-			"type" | "docs"
-		> = {
-			type: "never",
-			docs: [
-				{
-					description: `WARN: $ref used before available - schema=${JSON.stringify(schemaObject)}`,
-				},
-			],
-		};
-
-		return property;
+		throw new Error(`ref used before available: ${schemaObject.$ref}`);
 	}
 
 	const docs = refPropertyDocs(existingSchema);
@@ -401,30 +399,46 @@ function combinatorType(
 		}
 	}
 
+	// a member's `nullable` joins the combinator's own null below, so the
+	// member types stay free of it
+	const nullableMembers = schemaItems.filter(
+		(schema) =>
+			!isReferenceObject(schema) && "nullable" in schema && schema.nullable,
+	);
+
 	const types = schemaItems
 		.map((schema) =>
 			schemaToType(
 				typesAndInterfaces,
 				parentSchema,
 				propertyName,
-				schema,
+				nullableMembers.includes(schema)
+					? { ...schema, nullable: false }
+					: schema,
 				options,
 			),
 		)
 		.map((t) => t.type);
 
 	const [onlyType] = types;
+	const intersect = "allOf" in schemaObject;
+
+	// an intersection admits null when every member does
+	const membersNullable = intersect
+		? nullableMembers.length === schemaItems.length
+		: nullableMembers.length > 0;
 
 	// only one type, so just return that type
 	if (types.length === 1 && onlyType !== undefined) {
-		return onlyType;
+		return maybeWithNullUnion(
+			onlyType,
+			membersNullable || schemaTypeIsNull(schemaObject),
+		);
 	}
-
-	const intersect = "allOf" in schemaObject;
 
 	const filteredTypes = types.filter((value) => isNotNullOrUndefined(value));
 	const hasNullType = types.some((t) => t === "null");
-	const isNullable = schemaTypeIsNull(schemaObject);
+	const isNullable = membersNullable || schemaTypeIsNull(schemaObject);
 
 	if (intersect) {
 		// For allOf, intersect the non-null types and add null when nullable
@@ -503,13 +517,13 @@ function objectType(
 		);
 
 		return {
-			type: recordType(value.type ?? "Jsonifiable"),
+			type: recordType(value.type ?? "JsonValue"),
 			isReadonly: !!schemaObject.readOnly,
 		};
 	}
 
 	return {
-		type: "Record<string | number, Jsonifiable>",
+		type: "Record<string, JsonValue>",
 	};
 }
 
@@ -527,11 +541,7 @@ function stringType(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
 
 	const temporal = temporalStringType(schemaObject.format);
 
-	if (temporal) {
-		return maybeWithNullUnion(temporal, schemaTypeIsNull(schemaObject));
-	}
-
-	return "string";
+	return temporal ?? "string";
 }
 
 function schemaObjectType(
@@ -562,7 +572,10 @@ function schemaObjectType(
 	}
 
 	if (schemaObject.type === "array") {
-		return arrayType(typesAndInterfaces, propertyName, schemaObject, options);
+		return withNullable(
+			schemaObject,
+			arrayType(typesAndInterfaces, propertyName, schemaObject, options),
+		);
 	}
 
 	if (
@@ -582,7 +595,10 @@ function schemaObjectType(
 	}
 
 	if (isObjectSchema(schemaObject)) {
-		return objectType(typesAndInterfaces, propertyName, schemaObject, options);
+		return withNullable(
+			schemaObject,
+			objectType(typesAndInterfaces, propertyName, schemaObject, options),
+		);
 	}
 
 	if (schemaObject.type === "integer" || schemaObject.type === "number") {
@@ -606,13 +622,13 @@ function schemaObjectType(
 	}
 
 	if (schemaObject.type === "string") {
-		return { type: stringType(schemaObject) };
+		return withNullable(schemaObject, { type: stringType(schemaObject) });
 	}
 
 	// empty schemaObject
 	if (Object.keys(schemaObject).length === 0) {
 		return {
-			type: maybeWithNullUnion("Jsonifiable", schemaTypeIsNull(schemaObject)),
+			type: maybeWithNullUnion("JsonValue", schemaTypeIsNull(schemaObject)),
 			isReadonly: !!schemaObject.readOnly,
 		};
 	}
@@ -651,7 +667,7 @@ export function schemaToType(
 ): OptionalKind<PropertySignatureStructure> {
 	const name = `"${propertyName}"`;
 	const hasQuestionToken =
-		parentSchema.type === "object" &&
+		isObjectSchema(parentSchema) &&
 		!parentSchema.required?.includes(propertyName);
 
 	if (isReferenceObject(schemaObject)) {
@@ -855,7 +871,7 @@ export function registerTypesFromSchema(
 		// in TypeScript, since JSON Schema names such as `integer` differ
 		register(
 			schemaToType(typesAndInterfaces, {}, schemaName, schemaObject).type ??
-				"Record<string | number, Jsonifiable>",
+				"Record<string, JsonValue>",
 			schemaObject.description,
 		);
 	}

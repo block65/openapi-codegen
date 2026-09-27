@@ -6,10 +6,6 @@ export function isReferenceObject(obj: unknown): obj is oas31.ReferenceObject {
 	return typeof obj === "object" && obj !== null && "$ref" in obj;
 }
 
-function getDependency(obj: unknown) {
-	return isReferenceObject(obj) ? obj.$ref : undefined;
-}
-
 export function isNotReferenceObject<T>(
 	obj: T,
 ): obj is Exclude<T, oas31.ReferenceObject> {
@@ -20,48 +16,20 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && obj !== undefined;
 }
 
-function isString(x: string | undefined): x is string {
-	return typeof x === "string";
-}
-
-export function getDependents(
-	obj: oas31.ReferenceObject | oas31.SchemaObject,
-): string[] {
+/**
+ * Every $ref anywhere under a schema. Items, additionalProperties and
+ * combinators nest them at any depth, and a schema registers after all of them
+ */
+export function getDependents(obj: unknown): string[] {
 	if (isReferenceObject(obj)) {
-		return [getDependency(obj)].filter((value) => isString(value));
+		return [obj.$ref];
 	}
 
-	if ("properties" in obj) {
-		const properties = Object.values(obj.properties);
-
-		return properties
-			.flatMap((value) => getDependents(value))
-			.filter((value) => isString(value));
+	if (typeof obj !== "object" || obj === null) {
+		return [];
 	}
 
-	if ("items" in obj && isReferenceObject(obj.items)) {
-		return [getDependency(obj.items)].filter((value) => isString(value));
-	}
-
-	if ("anyOf" in obj) {
-		return obj.anyOf
-			.flatMap((value) => getDependents(value))
-			.filter((value) => isString(value));
-	}
-
-	if ("allOf" in obj) {
-		return obj.allOf
-			.flatMap((value) => getDependents(value))
-			.filter((value) => isString(value));
-	}
-
-	if ("oneOf" in obj) {
-		return obj.oneOf
-			.flatMap((value) => getDependents(value))
-			.filter((value) => isString(value));
-	}
-
-	return [];
+	return Object.values(obj).flatMap((value) => getDependents(value));
 }
 
 export function camelCase(...str: string[]): string {

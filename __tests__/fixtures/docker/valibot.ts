@@ -6,8 +6,19 @@
 
 // oxlint-disable block65/max-comment-lines, block65/no-absence-comment, block65/no-assumption-comment, block65/no-banned-comment-words, block65/no-comment-history, block65/no-comment-list, block65/no-comment-overclaim, block65/no-comment-punctuation, block65/no-figurative-comment, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-trailing-comment-punctuation, block65/prefer-exact-optional, unicorn-unported/comment-content
 
+import type { JsonValue } from "type-fest";
 import * as v from "valibot";
 
+const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
+	v.union([
+		v.string(),
+		v.number(),
+		v.boolean(),
+		v.null(),
+		v.record(v.string(), jsonValueSchema),
+		v.array(jsonValueSchema),
+	]),
+);
 /**
  * An open port on a container
  * @example {
@@ -3420,7 +3431,7 @@ export const inputContainerConfigSchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.optional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -3494,7 +3505,9 @@ export const inputContainerConfigSchema = v.looseObject({
 	 * An object mapping mount point paths inside the container to empty
 	 * objects.
 	 */
-	Volumes: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Volumes: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * The working directory for commands to run in.
 	 */
@@ -3567,7 +3580,7 @@ export const containerConfigSchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.exactOptional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -3660,7 +3673,7 @@ export const containerConfigSchema = v.looseObject({
 	 * objects.
 	 */
 	Volumes: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * The working directory for commands to run in.
@@ -3807,7 +3820,7 @@ export const inputImageConfigSchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.optional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -3897,7 +3910,9 @@ export const inputImageConfigSchema = v.looseObject({
 	 * An object mapping mount point paths inside the container to empty
 	 * objects.
 	 */
-	Volumes: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Volumes: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * The working directory for commands to run in.
 	 */
@@ -4002,7 +4017,7 @@ export const imageConfigSchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.exactOptional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -4111,7 +4126,7 @@ export const imageConfigSchema = v.looseObject({
 	 * objects.
 	 */
 	Volumes: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * The working directory for commands to run in.
@@ -5116,7 +5131,7 @@ export const inputImageInspectSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.optional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -5191,7 +5206,7 @@ export const inputImageInspectSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.optional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -5302,7 +5317,7 @@ export const inputImageInspectSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.optional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -5393,7 +5408,7 @@ export const inputImageInspectSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.optional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -5623,7 +5638,7 @@ export const imageInspectSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.exactOptional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -5716,7 +5731,7 @@ export const imageInspectSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.exactOptional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -5831,7 +5846,7 @@ export const imageInspectSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.exactOptional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -5940,7 +5955,7 @@ export const imageInspectSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.exactOptional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -6317,7 +6332,9 @@ export const inputVolumeSchema = v.looseObject({
 	 * The `Status` field is optional, and is omitted if the volume driver
 	 * does not support this feature.
 	 */
-	Status: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Status: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * User-defined key/value metadata.
 	 */
@@ -6438,7 +6455,7 @@ export const inputVolumeSchema = v.looseObject({
 							 *
 							 * Intentionally empty.
 							 */
-							MountVolume: v.optional(v.record(v.string(), v.unknown())),
+							MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 							/**
 							 * Swarm Secrets that are passed to the CSI storage plugin when
 							 * operating on this volume.
@@ -6643,7 +6660,7 @@ export const volumeSchema = v.looseObject({
 	 * does not support this feature.
 	 */
 	Status: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * User-defined key/value metadata.
@@ -6765,7 +6782,9 @@ export const volumeSchema = v.looseObject({
 							 *
 							 * Intentionally empty.
 							 */
-							MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+							MountVolume: v.exactOptional(
+								v.record(v.string(), jsonValueSchema),
+							),
 							/**
 							 * Swarm Secrets that are passed to the CSI storage plugin when
 							 * operating on this volume.
@@ -7076,7 +7095,7 @@ export const inputVolumeCreateOptionsSchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.optional(v.record(v.string(), v.unknown())),
+					MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -7250,7 +7269,7 @@ export const volumeCreateOptionsSchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+					MountVolume: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -7378,7 +7397,7 @@ export const inputVolumeListResponseSchema = v.looseObject({
 				 * does not support this feature.
 				 */
 				Status: v.optional(
-					v.record(v.string(), v.record(v.string(), v.unknown())),
+					v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 				),
 				/**
 				 * User-defined key/value metadata.
@@ -7500,7 +7519,9 @@ export const inputVolumeListResponseSchema = v.looseObject({
 										 *
 										 * Intentionally empty.
 										 */
-										MountVolume: v.optional(v.record(v.string(), v.unknown())),
+										MountVolume: v.optional(
+											v.record(v.string(), jsonValueSchema),
+										),
 										/**
 										 * Swarm Secrets that are passed to the CSI storage plugin when
 										 * operating on this volume.
@@ -7718,7 +7739,7 @@ export const volumeListResponseSchema = v.looseObject({
 				 * does not support this feature.
 				 */
 				Status: v.exactOptional(
-					v.record(v.string(), v.record(v.string(), v.unknown())),
+					v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 				),
 				/**
 				 * User-defined key/value metadata.
@@ -7841,7 +7862,7 @@ export const volumeListResponseSchema = v.looseObject({
 										 * Intentionally empty.
 										 */
 										MountVolume: v.exactOptional(
-											v.record(v.string(), v.unknown()),
+											v.record(v.string(), jsonValueSchema),
 										),
 										/**
 										 * Swarm Secrets that are passed to the CSI storage plugin when
@@ -12012,7 +12033,7 @@ export const inputTaskSpecSchema = v.looseObject({
 						 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 						 * > exclusive
 						 */
-						Runtime: v.optional(v.record(v.string(), v.unknown())),
+						Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 						/**
 						 * ConfigID represents the ID of the specific config that we're
 						 * referencing.
@@ -12796,7 +12817,7 @@ export const taskSpecSchema = v.looseObject({
 						 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 						 * > exclusive
 						 */
-						Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+						Runtime: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 						/**
 						 * ConfigID represents the ID of the specific config that we're
 						 * referencing.
@@ -13676,7 +13697,7 @@ export const inputTaskSchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.optional(v.record(v.string(), v.unknown())),
+								Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -14612,7 +14633,7 @@ export const taskSchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+								Runtime: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -15564,7 +15585,7 @@ export const inputServiceSpecSchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.optional(v.record(v.string(), v.unknown())),
+								Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -15865,7 +15886,7 @@ export const inputServiceSpecSchema = v.looseObject({
 					Replicas: v.optional(v.bigint()),
 				}),
 			),
-			Global: v.optional(v.record(v.string(), v.unknown())),
+			Global: v.optional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * The mode used for services with a finite number of tasks that run
 			 * to a completed state.
@@ -15887,7 +15908,7 @@ export const inputServiceSpecSchema = v.looseObject({
 			 * The mode used for services which run a task to the completed state
 			 * on each valid node.
 			 */
-			GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+			GlobalJob: v.optional(v.record(v.string(), jsonValueSchema)),
 		}),
 	),
 	/**
@@ -16555,7 +16576,7 @@ export const serviceSpecSchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+								Runtime: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -16942,7 +16963,7 @@ export const serviceSpecSchema = v.looseObject({
 					),
 				}),
 			),
-			Global: v.exactOptional(v.record(v.string(), v.unknown())),
+			Global: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * The mode used for services with a finite number of tasks that run
 			 * to a completed state.
@@ -16976,7 +16997,7 @@ export const serviceSpecSchema = v.looseObject({
 			 * The mode used for services which run a task to the completed state
 			 * on each valid node.
 			 */
-			GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+			GlobalJob: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 		}),
 	),
 	/**
@@ -17806,7 +17827,7 @@ export const inputServiceSchema = v.looseObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 										 * > exclusive
 										 */
-										Runtime: v.optional(v.record(v.string(), v.unknown())),
+										Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 										/**
 										 * ConfigID represents the ID of the specific config that we're
 										 * referencing.
@@ -18107,7 +18128,7 @@ export const inputServiceSchema = v.looseObject({
 							Replicas: v.optional(v.bigint()),
 						}),
 					),
-					Global: v.optional(v.record(v.string(), v.unknown())),
+					Global: v.optional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * The mode used for services with a finite number of tasks that run
 					 * to a completed state.
@@ -18129,7 +18150,7 @@ export const inputServiceSchema = v.looseObject({
 					 * The mode used for services which run a task to the completed state
 					 * on each valid node.
 					 */
-					GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+					GlobalJob: v.optional(v.record(v.string(), jsonValueSchema)),
 				}),
 			),
 			/**
@@ -19002,7 +19023,9 @@ export const serviceSchema = v.looseObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 										 * > exclusive
 										 */
-										Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+										Runtime: v.exactOptional(
+											v.record(v.string(), jsonValueSchema),
+										),
 										/**
 										 * ConfigID represents the ID of the specific config that we're
 										 * referencing.
@@ -19397,7 +19420,7 @@ export const serviceSchema = v.looseObject({
 							),
 						}),
 					),
-					Global: v.exactOptional(v.record(v.string(), v.unknown())),
+					Global: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * The mode used for services with a finite number of tasks that run
 					 * to a completed state.
@@ -19431,7 +19454,7 @@ export const serviceSchema = v.looseObject({
 					 * The mode used for services which run a task to the completed state
 					 * on each valid node.
 					 */
-					GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+					GlobalJob: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 				}),
 			),
 			/**
@@ -21080,7 +21103,7 @@ export const inputSystemVersionSchema = v.looseObject({
 				 *
 				 * These messages can be printed by the client as information to the user.
 				 */
-				Details: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+				Details: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 			}),
 		),
 	),
@@ -21158,7 +21181,9 @@ export const systemVersionSchema = v.looseObject({
 				 *
 				 * These messages can be printed by the client as information to the user.
 				 */
-				Details: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+				Details: v.exactOptional(
+					v.nullable(v.record(v.string(), jsonValueSchema)),
+				),
 			}),
 		),
 	),
@@ -24741,7 +24766,7 @@ export const inputClusterVolumeSchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.optional(v.record(v.string(), v.unknown())),
+					MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -24990,7 +25015,7 @@ export const clusterVolumeSchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+					MountVolume: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -25238,7 +25263,7 @@ export const inputClusterVolumeSpecSchema = v.looseObject({
 			 *
 			 * Intentionally empty.
 			 */
-			MountVolume: v.optional(v.record(v.string(), v.unknown())),
+			MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * Swarm Secrets that are passed to the CSI storage plugin when
 			 * operating on this volume.
@@ -25386,7 +25411,7 @@ export const clusterVolumeSpecSchema = v.looseObject({
 			 *
 			 * Intentionally empty.
 			 */
-			MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+			MountVolume: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * Swarm Secrets that are passed to the CSI storage plugin when
 			 * operating on this volume.
@@ -25970,7 +25995,7 @@ export const inputContainerCreateCommandBodySchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.optional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -26044,7 +26069,9 @@ export const inputContainerCreateCommandBodySchema = v.looseObject({
 	 * An object mapping mount point paths inside the container to empty
 	 * objects.
 	 */
-	Volumes: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Volumes: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * The working directory for commands to run in.
 	 */
@@ -26937,7 +26964,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.exactOptional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -27030,7 +27057,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 	 * objects.
 	 */
 	Volumes: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * The working directory for commands to run in.
@@ -29191,7 +29218,7 @@ export const inputContainerInspectCommandResponseSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.optional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -29266,7 +29293,7 @@ export const inputContainerInspectCommandResponseSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.optional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -30838,7 +30865,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.exactOptional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -30931,7 +30958,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.exactOptional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -31382,11 +31409,11 @@ export const containerExportCommandParamsSchema = v.strictObject({
 });
 export const inputContainerStatsCommandResponseSchema = v.record(
 	v.string(),
-	v.unknown(),
+	jsonValueSchema,
 );
 export const containerStatsCommandResponseSchema = v.record(
 	v.string(),
-	v.unknown(),
+	jsonValueSchema,
 );
 export const inputContainerStatsCommandParamsSchema = v.strictObject({
 	id: v.string(),
@@ -32974,7 +33001,7 @@ export const inputImageInspectCommandResponseSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.optional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -33049,7 +33076,7 @@ export const inputImageInspectCommandResponseSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.optional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -33160,7 +33187,7 @@ export const inputImageInspectCommandResponseSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.optional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -33251,7 +33278,7 @@ export const inputImageInspectCommandResponseSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.optional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -33481,7 +33508,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.exactOptional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -33574,7 +33601,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.exactOptional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -33689,7 +33716,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 			 * `{"<port>/<tcp|udp|sctp>": {}}`
 			 */
 			ExposedPorts: v.exactOptional(
-				v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+				v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 			),
 			/**
 			 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -33798,7 +33825,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 			 * objects.
 			 */
 			Volumes: v.exactOptional(
-				v.record(v.string(), v.record(v.string(), v.unknown())),
+				v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 			),
 			/**
 			 * The working directory for commands to run in.
@@ -36153,7 +36180,7 @@ export const inputSystemVersionCommandResponseSchema = v.looseObject({
 				 *
 				 * These messages can be printed by the client as information to the user.
 				 */
-				Details: v.optional(v.nullable(v.record(v.string(), v.unknown()))),
+				Details: v.optional(v.nullable(v.record(v.string(), jsonValueSchema))),
 			}),
 		),
 	),
@@ -36231,7 +36258,9 @@ export const systemVersionCommandResponseSchema = v.looseObject({
 				 *
 				 * These messages can be printed by the client as information to the user.
 				 */
-				Details: v.exactOptional(v.nullable(v.record(v.string(), v.unknown()))),
+				Details: v.exactOptional(
+					v.nullable(v.record(v.string(), jsonValueSchema)),
+				),
 			}),
 		),
 	),
@@ -36312,7 +36341,7 @@ export const inputImageCommitCommandBodySchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.optional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -36386,7 +36415,9 @@ export const inputImageCommitCommandBodySchema = v.looseObject({
 	 * An object mapping mount point paths inside the container to empty
 	 * objects.
 	 */
-	Volumes: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Volumes: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * The working directory for commands to run in.
 	 */
@@ -36459,7 +36490,7 @@ export const imageCommitCommandBodySchema = v.looseObject({
 	 * `{"<port>/<tcp|udp|sctp>": {}}`
 	 */
 	ExposedPorts: v.exactOptional(
-		v.nullable(v.record(v.string(), v.record(v.string(), v.unknown()))),
+		v.nullable(v.record(v.string(), v.record(v.string(), jsonValueSchema))),
 	),
 	/**
 	 * Attach standard streams to a TTY, including `stdin` if it is not closed.
@@ -36552,7 +36583,7 @@ export const imageCommitCommandBodySchema = v.looseObject({
 	 * objects.
 	 */
 	Volumes: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * The working directory for commands to run in.
@@ -37077,7 +37108,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.looseObject({
 				 * does not support this feature.
 				 */
 				Status: v.optional(
-					v.record(v.string(), v.record(v.string(), v.unknown())),
+					v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 				),
 				/**
 				 * User-defined key/value metadata.
@@ -37199,7 +37230,9 @@ export const inputSystemDataUsageCommandResponseSchema = v.looseObject({
 										 *
 										 * Intentionally empty.
 										 */
-										MountVolume: v.optional(v.record(v.string(), v.unknown())),
+										MountVolume: v.optional(
+											v.record(v.string(), jsonValueSchema),
+										),
 										/**
 										 * Swarm Secrets that are passed to the CSI storage plugin when
 										 * operating on this volume.
@@ -37821,7 +37854,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 * does not support this feature.
 				 */
 				Status: v.exactOptional(
-					v.record(v.string(), v.record(v.string(), v.unknown())),
+					v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 				),
 				/**
 				 * User-defined key/value metadata.
@@ -37944,7 +37977,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 										 * Intentionally empty.
 										 */
 										MountVolume: v.exactOptional(
-											v.record(v.string(), v.unknown()),
+											v.record(v.string(), jsonValueSchema),
 										),
 										/**
 										 * Swarm Secrets that are passed to the CSI storage plugin when
@@ -38571,7 +38604,7 @@ export const inputVolumeListCommandResponseSchema = v.looseObject({
 				 * does not support this feature.
 				 */
 				Status: v.optional(
-					v.record(v.string(), v.record(v.string(), v.unknown())),
+					v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 				),
 				/**
 				 * User-defined key/value metadata.
@@ -38693,7 +38726,9 @@ export const inputVolumeListCommandResponseSchema = v.looseObject({
 										 *
 										 * Intentionally empty.
 										 */
-										MountVolume: v.optional(v.record(v.string(), v.unknown())),
+										MountVolume: v.optional(
+											v.record(v.string(), jsonValueSchema),
+										),
 										/**
 										 * Swarm Secrets that are passed to the CSI storage plugin when
 										 * operating on this volume.
@@ -38911,7 +38946,7 @@ export const volumeListCommandResponseSchema = v.looseObject({
 				 * does not support this feature.
 				 */
 				Status: v.exactOptional(
-					v.record(v.string(), v.record(v.string(), v.unknown())),
+					v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 				),
 				/**
 				 * User-defined key/value metadata.
@@ -39034,7 +39069,7 @@ export const volumeListCommandResponseSchema = v.looseObject({
 										 * Intentionally empty.
 										 */
 										MountVolume: v.exactOptional(
-											v.record(v.string(), v.unknown()),
+											v.record(v.string(), jsonValueSchema),
 										),
 										/**
 										 * Swarm Secrets that are passed to the CSI storage plugin when
@@ -39379,7 +39414,7 @@ export const inputVolumeCreateCommandBodySchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.optional(v.record(v.string(), v.unknown())),
+					MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -39553,7 +39588,7 @@ export const volumeCreateCommandBodySchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+					MountVolume: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -39670,7 +39705,9 @@ export const inputVolumeCreateCommandResponseSchema = v.looseObject({
 	 * The `Status` field is optional, and is omitted if the volume driver
 	 * does not support this feature.
 	 */
-	Status: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Status: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * User-defined key/value metadata.
 	 */
@@ -39791,7 +39828,7 @@ export const inputVolumeCreateCommandResponseSchema = v.looseObject({
 							 *
 							 * Intentionally empty.
 							 */
-							MountVolume: v.optional(v.record(v.string(), v.unknown())),
+							MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 							/**
 							 * Swarm Secrets that are passed to the CSI storage plugin when
 							 * operating on this volume.
@@ -39996,7 +40033,7 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 	 * does not support this feature.
 	 */
 	Status: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * User-defined key/value metadata.
@@ -40118,7 +40155,9 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 							 *
 							 * Intentionally empty.
 							 */
-							MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+							MountVolume: v.exactOptional(
+								v.record(v.string(), jsonValueSchema),
+							),
 							/**
 							 * Swarm Secrets that are passed to the CSI storage plugin when
 							 * operating on this volume.
@@ -40352,7 +40391,9 @@ export const inputVolumeInspectCommandResponseSchema = v.looseObject({
 	 * The `Status` field is optional, and is omitted if the volume driver
 	 * does not support this feature.
 	 */
-	Status: v.optional(v.record(v.string(), v.record(v.string(), v.unknown()))),
+	Status: v.optional(
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
+	),
 	/**
 	 * User-defined key/value metadata.
 	 */
@@ -40473,7 +40514,7 @@ export const inputVolumeInspectCommandResponseSchema = v.looseObject({
 							 *
 							 * Intentionally empty.
 							 */
-							MountVolume: v.optional(v.record(v.string(), v.unknown())),
+							MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 							/**
 							 * Swarm Secrets that are passed to the CSI storage plugin when
 							 * operating on this volume.
@@ -40678,7 +40719,7 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 	 * does not support this feature.
 	 */
 	Status: v.exactOptional(
-		v.record(v.string(), v.record(v.string(), v.unknown())),
+		v.record(v.string(), v.record(v.string(), jsonValueSchema)),
 	),
 	/**
 	 * User-defined key/value metadata.
@@ -40800,7 +40841,9 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 							 *
 							 * Intentionally empty.
 							 */
-							MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+							MountVolume: v.exactOptional(
+								v.record(v.string(), jsonValueSchema),
+							),
 							/**
 							 * Swarm Secrets that are passed to the CSI storage plugin when
 							 * operating on this volume.
@@ -41096,7 +41139,7 @@ export const inputVolumeUpdateCommandBodySchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.optional(v.record(v.string(), v.unknown())),
+					MountVolume: v.optional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -41251,7 +41294,7 @@ export const volumeUpdateCommandBodySchema = v.looseObject({
 					 *
 					 * Intentionally empty.
 					 */
-					MountVolume: v.exactOptional(v.record(v.string(), v.unknown())),
+					MountVolume: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * Swarm Secrets that are passed to the CSI storage plugin when
 					 * operating on this volume.
@@ -46260,7 +46303,9 @@ export const inputServiceListCommandResponseSchema = v.array(
 											 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 											 * > exclusive
 											 */
-											Runtime: v.optional(v.record(v.string(), v.unknown())),
+											Runtime: v.optional(
+												v.record(v.string(), jsonValueSchema),
+											),
 											/**
 											 * ConfigID represents the ID of the specific config that we're
 											 * referencing.
@@ -46563,7 +46608,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 								Replicas: v.optional(v.bigint()),
 							}),
 						),
-						Global: v.optional(v.record(v.string(), v.unknown())),
+						Global: v.optional(v.record(v.string(), jsonValueSchema)),
 						/**
 						 * The mode used for services with a finite number of tasks that run
 						 * to a completed state.
@@ -46585,7 +46630,7 @@ export const inputServiceListCommandResponseSchema = v.array(
 						 * The mode used for services which run a task to the completed state
 						 * on each valid node.
 						 */
-						GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+						GlobalJob: v.optional(v.record(v.string(), jsonValueSchema)),
 					}),
 				),
 				/**
@@ -47505,7 +47550,7 @@ export const serviceListCommandResponseSchema = v.array(
 											 * > exclusive
 											 */
 											Runtime: v.exactOptional(
-												v.record(v.string(), v.unknown()),
+												v.record(v.string(), jsonValueSchema),
 											),
 											/**
 											 * ConfigID represents the ID of the specific config that we're
@@ -47959,7 +48004,7 @@ export const serviceListCommandResponseSchema = v.array(
 								),
 							}),
 						),
-						Global: v.exactOptional(v.record(v.string(), v.unknown())),
+						Global: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 						/**
 						 * The mode used for services with a finite number of tasks that run
 						 * to a completed state.
@@ -47993,7 +48038,7 @@ export const serviceListCommandResponseSchema = v.array(
 						 * The mode used for services which run a task to the completed state
 						 * on each valid node.
 						 */
-						GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+						GlobalJob: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					}),
 				),
 				/**
@@ -48827,7 +48872,7 @@ export const inputServiceCreateCommandBodySchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.optional(v.record(v.string(), v.unknown())),
+								Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -49128,7 +49173,7 @@ export const inputServiceCreateCommandBodySchema = v.looseObject({
 					Replicas: v.optional(v.bigint()),
 				}),
 			),
-			Global: v.optional(v.record(v.string(), v.unknown())),
+			Global: v.optional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * The mode used for services with a finite number of tasks that run
 			 * to a completed state.
@@ -49150,7 +49195,7 @@ export const inputServiceCreateCommandBodySchema = v.looseObject({
 			 * The mode used for services which run a task to the completed state
 			 * on each valid node.
 			 */
-			GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+			GlobalJob: v.optional(v.record(v.string(), jsonValueSchema)),
 		}),
 	),
 	/**
@@ -49818,7 +49863,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+								Runtime: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -50205,7 +50250,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					),
 				}),
 			),
-			Global: v.exactOptional(v.record(v.string(), v.unknown())),
+			Global: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * The mode used for services with a finite number of tasks that run
 			 * to a completed state.
@@ -50239,7 +50284,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 * The mode used for services which run a task to the completed state
 			 * on each valid node.
 			 */
-			GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+			GlobalJob: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 		}),
 	),
 	/**
@@ -50958,7 +51003,7 @@ export const inputServiceInspectCommandResponseSchema = v.looseObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 										 * > exclusive
 										 */
-										Runtime: v.optional(v.record(v.string(), v.unknown())),
+										Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 										/**
 										 * ConfigID represents the ID of the specific config that we're
 										 * referencing.
@@ -51259,7 +51304,7 @@ export const inputServiceInspectCommandResponseSchema = v.looseObject({
 							Replicas: v.optional(v.bigint()),
 						}),
 					),
-					Global: v.optional(v.record(v.string(), v.unknown())),
+					Global: v.optional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * The mode used for services with a finite number of tasks that run
 					 * to a completed state.
@@ -51281,7 +51326,7 @@ export const inputServiceInspectCommandResponseSchema = v.looseObject({
 					 * The mode used for services which run a task to the completed state
 					 * on each valid node.
 					 */
-					GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+					GlobalJob: v.optional(v.record(v.string(), jsonValueSchema)),
 				}),
 			),
 			/**
@@ -52154,7 +52199,9 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 										 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 										 * > exclusive
 										 */
-										Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+										Runtime: v.exactOptional(
+											v.record(v.string(), jsonValueSchema),
+										),
 										/**
 										 * ConfigID represents the ID of the specific config that we're
 										 * referencing.
@@ -52549,7 +52596,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							),
 						}),
 					),
-					Global: v.exactOptional(v.record(v.string(), v.unknown())),
+					Global: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 					/**
 					 * The mode used for services with a finite number of tasks that run
 					 * to a completed state.
@@ -52583,7 +52630,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 * The mode used for services which run a task to the completed state
 					 * on each valid node.
 					 */
-					GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+					GlobalJob: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 				}),
 			),
 			/**
@@ -53422,7 +53469,7 @@ export const inputServiceUpdateCommandBodySchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.optional(v.record(v.string(), v.unknown())),
+								Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -53723,7 +53770,7 @@ export const inputServiceUpdateCommandBodySchema = v.looseObject({
 					Replicas: v.optional(v.bigint()),
 				}),
 			),
-			Global: v.optional(v.record(v.string(), v.unknown())),
+			Global: v.optional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * The mode used for services with a finite number of tasks that run
 			 * to a completed state.
@@ -53745,7 +53792,7 @@ export const inputServiceUpdateCommandBodySchema = v.looseObject({
 			 * The mode used for services which run a task to the completed state
 			 * on each valid node.
 			 */
-			GlobalJob: v.optional(v.record(v.string(), v.unknown())),
+			GlobalJob: v.optional(v.record(v.string(), jsonValueSchema)),
 		}),
 	),
 	/**
@@ -54413,7 +54460,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+								Runtime: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -54800,7 +54847,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					),
 				}),
 			),
-			Global: v.exactOptional(v.record(v.string(), v.unknown())),
+			Global: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 			/**
 			 * The mode used for services with a finite number of tasks that run
 			 * to a completed state.
@@ -54834,7 +54881,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 * The mode used for services which run a task to the completed state
 			 * on each valid node.
 			 */
-			GlobalJob: v.exactOptional(v.record(v.string(), v.unknown())),
+			GlobalJob: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 		}),
 	),
 	/**
@@ -55594,7 +55641,7 @@ export const inputTaskListCommandResponseSchema = v.array(
 									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 									 * > exclusive
 									 */
-									Runtime: v.optional(v.record(v.string(), v.unknown())),
+									Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 									/**
 									 * ConfigID represents the ID of the specific config that we're
 									 * referencing.
@@ -56532,7 +56579,9 @@ export const taskListCommandResponseSchema = v.array(
 									 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 									 * > exclusive
 									 */
-									Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+									Runtime: v.exactOptional(
+										v.record(v.string(), jsonValueSchema),
+									),
 									/**
 									 * ConfigID represents the ID of the specific config that we're
 									 * referencing.
@@ -57517,7 +57566,7 @@ export const inputTaskInspectCommandResponseSchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.optional(v.record(v.string(), v.unknown())),
+								Runtime: v.optional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.
@@ -58453,7 +58502,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 								 * > **Note**: `Configs.File` and `Configs.Runtime` are mutually
 								 * > exclusive
 								 */
-								Runtime: v.exactOptional(v.record(v.string(), v.unknown())),
+								Runtime: v.exactOptional(v.record(v.string(), jsonValueSchema)),
 								/**
 								 * ConfigID represents the ID of the specific config that we're
 								 * referencing.

@@ -1,5 +1,4 @@
 import * as v from "valibot";
-
 export const inputDummySchema = v.string();
 export const dummySchema = v.pipe(v.string(), v.trim());
 export const inputExpireTimeSchema = v.pipe(v.bigint(), v.minValue(0n));
