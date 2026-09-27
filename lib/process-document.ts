@@ -20,6 +20,7 @@ import {
 	Writers,
 } from "ts-morph";
 import type { Simplify } from "type-fest";
+import { chunkOf, joinChunks } from "./chunks.ts";
 import {
 	addSchemaImportsToHonoFile,
 	createHonoFile,
@@ -618,7 +619,7 @@ function declareCommandClass(
 		"Command",
 	);
 
-	const commandClass = commandsFile.addClass({
+	const commandClass = chunkOf(commandsFile).addClass({
 		name: commandName,
 		isExported: true,
 		extends: "Command",
@@ -903,7 +904,7 @@ function addQueryType(
 ) {
 	const queryType =
 		queryParameters.length > 0
-			? documentCtx.typesFile.addTypeAlias({
+			? chunkOf(documentCtx.typesFile).addTypeAlias({
 					name: pascalCase(commandClass.getName() || "INVALID", "Query"),
 					docs: deprecationDocs,
 					isExported: true,
@@ -934,7 +935,7 @@ function addHeaderType(
 ) {
 	const headerType =
 		headerParameters.length > 0
-			? documentCtx.typesFile.addTypeAlias({
+			? chunkOf(documentCtx.typesFile).addTypeAlias({
 					name: pascalCase(commandClass.getName() || "INVALID", "Header"),
 					docs: deprecationDocs,
 					isExported: true,
@@ -997,7 +998,7 @@ function jsonBodyTypeOf(
 		schema,
 	);
 
-	return documentCtx.typesFile.addTypeAlias({
+	return chunkOf(documentCtx.typesFile).addTypeAlias({
 		name,
 		docs: deprecationDocs,
 		type: typeof type.type === "function" ? type.type : String(type.type),
@@ -1035,35 +1036,37 @@ function resolveBodyTypes(
 		);
 	}
 
-	const nonJsonBodyType =
-		!jsonBodyType && nonJsonBodyEntries.length > 0
-			? documentCtx.typesFile.addTypeAlias({
-					docs: deprecationDocs,
-					name: pascalCase(
-						`${commandClass.getName() || "INVALID"} Body NonJson`,
-					),
-					isExported: true,
-					type: Writers.objectType({
-						properties: [
-							{
-								name: nonJsonBodyPropName,
-								type: createUnion(
-									...nonJsonBodyEntries.map(([contentType, _mediaTypeObj]) => {
-										const nonJsonBody = documentCtx.typesFile.addTypeAlias({
-											name: pascalCase(
-												`${commandClass.getName() || "INVALID"} Body ${contentType}`,
-											),
-											type: "NonNullable<RequestInit['body']>",
-										});
+	const hasNonJsonBody = !jsonBodyType && nonJsonBodyEntries.length > 0;
 
-										return nonJsonBody.getName();
-									}),
-								),
-							},
-						],
-					}),
-				})
-			: undefined;
+	// declared before the alias that unions them, as chunkOf requires
+	const nonJsonBodyNames = hasNonJsonBody
+		? nonJsonBodyEntries.map(([contentType]) =>
+				chunkOf(documentCtx.typesFile)
+					.addTypeAlias({
+						name: pascalCase(
+							`${commandClass.getName() || "INVALID"} Body ${contentType}`,
+						),
+						type: "NonNullable<RequestInit['body']>",
+					})
+					.getName(),
+			)
+		: [];
+
+	const nonJsonBodyType = hasNonJsonBody
+		? chunkOf(documentCtx.typesFile).addTypeAlias({
+				docs: deprecationDocs,
+				name: pascalCase(`${commandClass.getName() || "INVALID"} Body NonJson`),
+				isExported: true,
+				type: Writers.objectType({
+					properties: [
+						{
+							name: nonJsonBodyPropName,
+							type: createUnion(...nonJsonBodyNames),
+						},
+					],
+				}),
+			})
+		: undefined;
 
 	return { jsonRequestBodyObject, jsonBodyType, nonJsonBodyType };
 }
@@ -1074,7 +1077,7 @@ function addParamsType(
 	pathParameters: oas30.ParameterObject[],
 ) {
 	return pathParameters.length > 0
-		? documentCtx.typesFile.addTypeAlias({
+		? chunkOf(documentCtx.typesFile).addTypeAlias({
 				name: pascalCase(`${commandClass.getName() || "INVALID"}Params`),
 				docs: deprecationDocs,
 				type: Writers.objectType({
@@ -1126,7 +1129,7 @@ function addInputType(
 ) {
 	const bodyType =
 		(jsonBodyType &&
-			documentCtx.typesFile.addTypeAlias({
+			chunkOf(documentCtx.typesFile).addTypeAlias({
 				name: pascalCase(commandClass.getName() || "", "Body"),
 				type: jsonBodyType.getName(),
 				isExported: true,
@@ -1149,7 +1152,7 @@ function addInputType(
 
 	const wrappedJsonBodyType =
 		wrapJsonBody && jsonBodyType
-			? documentCtx.typesFile.addTypeAlias({
+			? chunkOf(documentCtx.typesFile).addTypeAlias({
 					name: pascalCase(commandClass.getName() || "", "BodyWrapper"),
 					type: Writers.objectType({
 						properties: [{ name: inputBodyName, type: jsonBodyType.getName() }],
@@ -1165,7 +1168,7 @@ function addInputType(
 		queryType?.getName(),
 	);
 
-	const inputType = documentCtx.typesFile.addTypeAlias({
+	const inputType = chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase(commandClass.getName() || "", "Input"),
 		type: inputTypeNode,
 		isExported: true,
@@ -1355,7 +1358,7 @@ function addReferencedOutput(
 	// The value is JSON.stringified, which drops `undefined`, so
 	// optional fields may hold `undefined`. Mirrors the `input*`
 	// prefix used for the lax variant in the valibot module
-	documentCtx.typesFile.addTypeAlias({
+	chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase("Input", commandClass.getName() || "INVALID", "Response"),
 		type: `UndefinedOnPartialDeep<${outputTypeName}>`,
 		isExported: true,
@@ -1374,7 +1377,7 @@ function addInlineOutput(
 		schema,
 	);
 
-	const responseTypeAlias = documentCtx.typesFile.addTypeAlias({
+	const responseTypeAlias = chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase(commandClass.getName() || "INVALID", "Output"),
 		type:
 			typeof outputType.type === "function"
@@ -1388,7 +1391,7 @@ function addInlineOutput(
 	commandClass.getExtends()?.addTypeArgument(responseTypeAlias.getName());
 	documentCtx.outputTypes.add(responseTypeAlias);
 
-	documentCtx.typesFile.addTypeAlias({
+	chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase("Input", commandClass.getName() || "INVALID", "Response"),
 		type: `UndefinedOnPartialDeep<${responseTypeAlias.getName()}>`,
 		isExported: true,
@@ -1529,7 +1532,7 @@ function addSequentialOutput(
 		schema,
 	);
 
-	const outputTypeAlias = documentCtx.typesFile.addTypeAlias({
+	const outputTypeAlias = chunkOf(documentCtx.typesFile).addTypeAlias({
 		name: pascalCase(commandClass.getName() || "INVALID", "Output"),
 		type: outputType.type ?? unspecifiedKeyword,
 		isExported: true,
@@ -1980,6 +1983,7 @@ function processOperation(
 	registerValidatedCommand(documentCtx, operationCtx.commandName, wireSchemas);
 	addQueryAndHeaderTypeArguments(operationCtx);
 	addCommandConstructor(operationCtx, path);
+	trimDefaultOutputArgument(command.commandClass);
 }
 
 function emitOperations(
@@ -2240,18 +2244,16 @@ function emitHonoModule(
 	return honoFile;
 }
 
-function trimDefaultOutputArguments(commandsFile: SourceFile) {
+function trimDefaultOutputArgument(commandClass: ClassDeclaration) {
 	// `Command` defaults its output to `unknown`, so an explicit `unknown`
 	// repeats the default. A trailing argument can go, while an earlier one
 	// holds the position of the arguments after it
-	for (const commandClass of commandsFile.getClasses()) {
-		const base = commandClass.getExtends();
-		const typeArguments = base?.getTypeArguments() ?? [];
-		const last = typeArguments.at(-1);
+	const base = commandClass.getExtends();
+	const typeArguments = base?.getTypeArguments() ?? [];
+	const last = typeArguments.at(-1);
 
-		if (base && typeArguments.length > 1 && last?.getText() === "unknown") {
-			base.removeTypeArgument(last);
-		}
+	if (base && typeArguments.length > 1 && last?.getText() === "unknown") {
+		base.removeTypeArgument(last);
 	}
 }
 
@@ -2287,6 +2289,9 @@ export async function processOpenApiDocument(
 	emitOperations(documentCtx, schema, tags);
 	emitClientModule(documentCtx, schema);
 	emitValidatedModule(documentCtx);
+	joinChunks(files.typesFile);
+	joinChunks(files.commandsFile);
+	joinChunks(files.valibotFile);
 
 	files.mainFile.organizeImports();
 
@@ -2302,8 +2307,6 @@ export async function processOpenApiDocument(
 		outputDir,
 		documentCtx.allOperations,
 	);
-
-	trimDefaultOutputArguments(files.commandsFile);
 
 	return { ...files, honoFile };
 }

@@ -11,6 +11,7 @@ import {
 	type WriterFunction,
 	Writers,
 } from "ts-morph";
+import { chunkOf } from "./chunks.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -715,7 +716,7 @@ function registerAlias(
 	type: string | WriterFunction,
 	description?: string,
 ) {
-	const typeAlias = typesFile.addTypeAlias({
+	const typeAlias = chunkOf(typesFile).addTypeAlias({
 		name: pascalCase(schemaName),
 		isExported: true,
 		type,
@@ -888,7 +889,7 @@ export function registerTypesFromSchema(
 				]
 			: [];
 
-		const stringUnion = typesFile.addTypeAlias({
+		const stringUnion = chunkOf(typesFile).addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
 			type: maybeUnion(...schemaObject.enum.map((e) => JSON.stringify(e))),

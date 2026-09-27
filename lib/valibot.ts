@@ -12,6 +12,7 @@ import {
 } from "ts-morph";
 import type { Primitive } from "type-fest";
 import type * as v from "valibot";
+import { chunkOf } from "./chunks.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -903,7 +904,7 @@ export function registerValidatorFromSchema(
 			: [];
 
 	// Input schema — always emitted (TS-side, allows undefined, no wire coercion)
-	valibotFile.addVariableStatement({
+	chunkOf(valibotFile).addVariableStatement({
 		isExported: true,
 		declarationKind: VariableDeclarationKind.Const,
 		docs,
@@ -921,7 +922,7 @@ export function registerValidatorFromSchema(
 	// exactOptional, which are equivalent on JSON-parsed data
 	if (!inputOnly) {
 		if (shouldCoerceSchema(schemaObject)) {
-			valibotFile.addVariableStatement({
+			chunkOf(valibotFile).addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
@@ -932,7 +933,7 @@ export function registerValidatorFromSchema(
 				],
 			});
 		} else {
-			valibotFile.addVariableStatement({
+			chunkOf(valibotFile).addVariableStatement({
 				isExported: true,
 				declarationKind: VariableDeclarationKind.Const,
 				declarations: [
@@ -1081,7 +1082,7 @@ function emitNamePair(
 	const inputName = camelcase(["input", commandName, segment, "schema"]);
 	const wireName = camelcase([commandName, segment, "schema"]);
 
-	valibotFile.addVariableStatement({
+	chunkOf(valibotFile).addVariableStatement({
 		isExported: true,
 		declarationKind: VariableDeclarationKind.Const,
 		declarations: [
@@ -1093,7 +1094,7 @@ function emitNamePair(
 	});
 
 	if (!inputOnly) {
-		valibotFile.addVariableStatement({
+		chunkOf(valibotFile).addVariableStatement({
 			isExported: true,
 			declarationKind: VariableDeclarationKind.Const,
 			declarations: [
