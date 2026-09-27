@@ -1,6 +1,7 @@
 import type { oas31 } from "openapi3-ts";
-import { assert, expect, test } from "vitest";
+import { test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
+import { expectGenerated } from "./generated-snapshot.ts";
 
 const respOk = {
 	"200": {
@@ -34,18 +35,8 @@ test("main.ts emits file-level `import type` for type-only imports", async () =>
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const mainText = result.mainFile.getText();
 
-	expect(mainText).toMatch(
-		/import type \{[^}]*OneCommandInput[^}]*\}\s+from\s+"\.\/types\.js"/,
-	);
-	expect(mainText).toMatch(
-		/import type \{[^}]*UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/,
-	);
-	expect(mainText).not.toMatch(/import \{[^}]*type\s+OneCommandInput/);
-	expect(mainText).not.toMatch(
-		/import \{[^}]*type\s+UndefinedOnPartialDeep[^}]*\}\s+from\s+"type-fest"/,
-	);
+	await expectGenerated([result.mainFile]);
 });
 
 test("optional query params do not carry `| undefined` in their property type", async () => {
@@ -77,15 +68,8 @@ test("optional query params do not carry `| undefined` in their property type", 
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const typesText = result.typesFile.getText();
-	const queryBlock = typesText.match(
-		/export type ListFilesCommandQuery = \{[\s\S]*?\};/,
-	)?.[0];
-	assert.isDefined(queryBlock, "ListFilesCommandQuery");
 
-	expect(queryBlock).toContain("purpose?: string");
-	expect(queryBlock).toContain("limit?: `${number}`");
-	expect(queryBlock).not.toContain("undefined");
+	await expectGenerated([result.typesFile]);
 });
 
 test("AllInputs union carries every command that takes an input", async () => {
@@ -136,113 +120,50 @@ test("AllInputs union carries every command that takes an input", async () => {
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const mainText = result.mainFile.getText();
-	const commandsText = result.commandsFile.getText();
-	const typesText = result.typesFile.getText();
 
-	const allInputsBlock = mainText.match(/type AllInputs =[\s\S]*?;/)?.[0];
-	assert.isDefined(allInputsBlock, "AllInputs");
-
-	const commandNames = [
-		...commandsText.matchAll(/^export class (\w+Command) extends Command</gm),
-	].map(([, name]) => {
-		assert.isDefined(name, "command name");
-
-		return name;
-	});
-
-	expect(commandNames.length).toBeGreaterThan(0);
-
-	// a command declaring only responses gets an input of `never`
-	const hasNeverInput = (name: string) =>
-		typesText.includes(`export type ${name}Input = never;`);
-
-	const missing = commandNames
-		.filter((name) => !hasNeverInput(name))
-		.filter((name) => !allInputsBlock.includes(`${name}Input`));
-
-	expect(missing).toEqual([]);
-
-	// `never` adds nothing to the union, and the three empty paths above put
-	// it on these three commands
-	const emptyCommands = commandNames.filter((name) => hasNeverInput(name));
-
-	expect(emptyCommands.toSorted()).toEqual([
-		"AlphaCommand",
-		"BetaCommand",
-		"GammaCommand",
-	]);
-
-	const carried = emptyCommands.filter((name) =>
-		allInputsBlock.includes(`${name}Input`),
-	);
-
-	expect(carried).toEqual([]);
+	await expectGenerated([result.mainFile]);
 });
 
 // An empty schema permits any value, so the keys outside `properties` are
 // unconstrained and the object is loose
-test("additionalProperties chooses the object schema", async () => {
-	const cases = [
-		[{}, "v.looseObject("],
-		[{ type: "string" }, "v.objectWithRest("],
-		[false, "v.strictObject("],
-		[true, "v.looseObject("],
-	] as const;
+test.for([
+	["empty schema", {}],
+	["string schema", { type: "string" }],
+	["false", false],
+	["true", true],
+] as const)(
+	"additionalProperties chooses the object schema: %s",
+	async ([, additionalProperties]) => {
+		const result = await processOpenApiDocument(
+			"/tmp/additional-properties",
+			docWithSchema("Open", {
+				type: "object",
+				properties: { a: { type: "string" } },
+				additionalProperties,
+			}),
+		);
 
-	const emitted = await Promise.all(
-		cases.map(async ([additionalProperties]) => {
-			const result = await processOpenApiDocument(
-				"/tmp/additional-properties",
-				docWithSchema("Open", {
-					type: "object",
-					properties: { a: { type: "string" } },
-					additionalProperties,
-				}),
-			);
-
-			const text = result.valibotFile.getText();
-
-			return text.slice(text.indexOf("export const openSchema"), -1);
-		}),
-	);
-
-	for (const [index, [, expected]] of cases.entries()) {
-		expect(emitted[index]).toContain(expected);
-	}
-});
+		await expectGenerated([result.valibotFile]);
+	},
+);
 
 // A one-member `anyOf` or `oneOf` is that member. `v.union` of one option
 // only wraps its issues, and the block65 valibot rules reject it
-test("a single-member combinator emits the member alone", async () => {
-	const cases: [oas31.SchemaObject, string][] = [
-		[{ anyOf: [{ type: "string" }] }, "v.string()"],
-		[{ oneOf: [{ type: "string" }] }, "v.string()"],
-		[
-			{ oneOf: [{ type: "string" }, { type: "number" }] },
-			"v.union([v.string(), v.number()])",
-		],
-	];
-
-	const emitted = await Promise.all(
-		cases.map(async ([schema]) => {
-			const result = await processOpenApiDocument(
-				"/tmp/single-member-combinator",
-				docWithSchema("Only", schema),
-			);
-
-			const text = result.valibotFile.getText();
-
-			return text.slice(text.indexOf("export const inputOnlySchema"), -1);
-		}),
-	);
-
-	for (const [index, [, expected]] of cases.entries()) {
-		expect(emitted[index]).toContain(
-			`export const inputOnlySchema = ${expected};`,
+test.for<[string, oas31.SchemaObject]>([
+	["anyOf", { anyOf: [{ type: "string" }] }],
+	["oneOf", { oneOf: [{ type: "string" }] }],
+	["two-member oneOf", { oneOf: [{ type: "string" }, { type: "number" }] }],
+])(
+	"a single-member combinator emits the member alone: %s",
+	async ([, schema]) => {
+		const result = await processOpenApiDocument(
+			"/tmp/single-member-combinator",
+			docWithSchema("Only", schema),
 		);
-	}
-});
+
+		await expectGenerated([result.valibotFile]);
+	},
+);
 
 function docWithSchema(name: string, schema: oas31.SchemaObject) {
 	return {
@@ -278,12 +199,7 @@ test("additionalProperties types the record value instead of widening to unknown
 		}),
 	);
 
-	expect(result.typesFile.getText()).toContain(
-		"Record<string | number, string>",
-	);
-	expect(result.valibotFile.getText()).toContain(
-		"v.record(v.string(), v.string())",
-	);
+	await expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("additionalProperties alongside properties keeps the extra keys valid", async () => {
@@ -296,10 +212,7 @@ test("additionalProperties alongside properties keeps the extra keys valid", asy
 		}),
 	);
 
-	const valibotText = result.valibotFile.getText();
-
-	expect(valibotText).toContain("v.objectWithRest(");
-	expect(valibotText).not.toMatch(/v\.strictObject\(\{\s*name:/);
+	await expectGenerated([result.valibotFile]);
 });
 
 test("additionalProperties true accepts any key", async () => {
@@ -312,7 +225,7 @@ test("additionalProperties true accepts any key", async () => {
 		}),
 	);
 
-	expect(result.valibotFile.getText()).toContain("v.looseObject(");
+	await expectGenerated([result.valibotFile]);
 });
 
 test("an empty properties bag is a record, not an empty object type", async () => {
@@ -321,10 +234,7 @@ test("an empty properties bag is a record, not an empty object type", async () =
 		docWithSchema("Empty", { type: "object", properties: {} }),
 	);
 
-	const typesText = result.typesFile.getText();
-
-	expect(typesText).toContain("Record<string | number, Jsonifiable>");
-	expect(typesText).not.toMatch(/=\s*\{\};/);
+	await expectGenerated([result.typesFile]);
 });
 
 test("the generated JSON body type is PascalCase", async () => {
@@ -353,7 +263,7 @@ test("the generated JSON body type is PascalCase", async () => {
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
 
-	expect(result.typesFile.getText()).toContain("type CreateBatchJsonBody");
+	await expectGenerated([result.typesFile]);
 });
 
 test("an operation with both a 200 and a 204 emits one output type argument", async () => {
@@ -384,15 +294,8 @@ test("an operation with both a 200 and a 204 emits one output type argument", as
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const extendsClause =
-		result.commandsFile
-			.getClass("SystemAuthCommand")
-			?.getExtends()
-			?.getTypeArguments()
-			.map((arg) => arg.getText()) ?? [];
 
-	expect(extendsClause).not.toContain("undefined");
-	expect(extendsClause.length).toBeLessThanOrEqual(2);
+	await expectGenerated([result.commandsFile]);
 });
 
 test("an array request body with parameters stays readable as both", async () => {
@@ -425,16 +328,8 @@ test("an array request body with parameters stays readable as both", async () =>
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const inputBlock = result.typesFile
-		.getTypeAlias("PluginPullCommandInput")
-		?.getTypeNode()
-		?.getText();
-	assert.isDefined(inputBlock, "PluginPullCommandInput");
 
-	expect(inputBlock).toContain("PluginPullCommandBodyWrapper");
-	expect(result.commandsFile.getText()).toMatch(
-		/const \{\s*remote,\s*body\s*\} = input/,
-	);
+	await expectGenerated([result.typesFile, result.commandsFile]);
 });
 
 test("nested query param members get the same stringish treatment as top-level ones", async () => {
@@ -480,19 +375,8 @@ test("nested query param members get the same stringish treatment as top-level o
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const queryBlock = result.typesFile
-		.getTypeAlias("SearchCommandQuery")
-		?.getTypeNode()
-		?.getText();
-	assert.isDefined(queryBlock, "SearchCommandQuery");
 
-	expect(queryBlock).toMatch(/limit\?: `\$\{number\}`/);
-	expect(queryBlock).toMatch(/"age"\?: `\$\{number\}`/);
-	expect(queryBlock).toMatch(/"big"\?: `\$\{bigint\}`/);
-	expect(queryBlock).toMatch(/"active"\?: "true" \| "false"/);
-	expect(queryBlock).toMatch(/"label"\?: string/);
-	expect(queryBlock).toMatch(/ids\?: readonly \(`\$\{number\}`\)\[\]/);
-	expect(queryBlock).not.toMatch(/"age"\?: number/);
+	await expectGenerated([result.typesFile]);
 });
 
 test("json request body members keep their real JSON types, nested included", async () => {
@@ -531,21 +415,12 @@ test("json request body members keep their real JSON types, nested included", as
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const bodyBlock = result.typesFile
-		.getTypeAlias("CreateContainerCommandJsonBody")
-		?.getTypeNode()
-		?.getText();
-	assert.isDefined(bodyBlock, "CreateContainerCommandJsonBody");
 
-	expect(bodyBlock).toMatch(/"tty"\?: boolean/);
-	expect(bodyBlock).toMatch(/"retries"\?: number/);
-	expect(bodyBlock).toMatch(/"interval"\?: bigint/);
-	expect(bodyBlock).toMatch(/"enabled"\?: boolean/);
-	expect(bodyBlock).toMatch(/"sizes"\?: readonly \(number\)\[\]/);
-	expect(bodyBlock).not.toContain('"true" | "false"');
-	expect(bodyBlock).not.toContain("`${number}`");
+	await expectGenerated([result.typesFile]);
 });
 
+// Composition has to forward the codegen options the same way the array and
+// object branches do, or a oneOf collapses back to the JSON types
 test("a oneOf query param keeps the stringish wire types in every branch", async () => {
 	const schema: oas31.OpenAPIObject = {
 		openapi: "3.1.0",
@@ -592,17 +467,6 @@ test("a oneOf query param keeps the stringish wire types in every branch", async
 	};
 
 	const result = await processOpenApiDocument("/tmp/whatever", schema);
-	const queryBlock = result.typesFile
-		.getTypeAlias("ListThingsCommandQuery")
-		?.getTypeNode()
-		?.getText();
-	assert.isDefined(queryBlock, "ListThingsCommandQuery");
 
-	// Composition has to forward the codegen options the same way the array
-	// and object branches do, or a oneOf collapses back to the JSON types
-	expect(queryBlock).toContain("`${number}`");
-	expect(queryBlock).toContain('"true" | "false"');
-	expect(queryBlock).not.toMatch(/size\?: number/);
-	expect(queryBlock).not.toMatch(/flag\?: boolean/);
-	expect(queryBlock).not.toMatch(/"count"\?: number/);
+	await expectGenerated([result.typesFile]);
 });

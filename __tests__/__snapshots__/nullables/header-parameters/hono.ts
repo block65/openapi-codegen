@@ -1,0 +1,26 @@
+import { sValidator } from "@hono/standard-validator";
+import type { ValidationTargets } from "hono";
+import { PublicValidationError } from "@block65/rest-client";
+import { uploadDataCommandParamsSchema } from "./valibot.js";
+
+type StandardSchema = Parameters<typeof sValidator>[1];
+
+// The query arrives here as Hono parsed it, and nothing below decodes
+// it. A lone value for a repeated-key array stays a string, comma,
+// space and pipe joined values stay joined, and a deepObject key stays
+// bracketed, so each of those fails validation. A caller sending them
+// decodes the query before this middleware or replaces it, reading the
+// style and explode from the query spec each operation exports below.
+function validate<TSchema extends StandardSchema, TTarget extends keyof ValidationTargets>(target: TTarget, schema: TSchema) {
+
+          return sValidator(target, schema, (result) => {
+            if (!result.success) {
+              throw PublicValidationError.fromIssues(result.error);
+            }
+          });
+        
+}
+
+export const uploadData = [
+        validate("param", uploadDataCommandParamsSchema),
+    ] as const;

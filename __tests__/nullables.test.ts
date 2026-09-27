@@ -1,6 +1,7 @@
 import type { oas31 } from "openapi3-ts";
-import { expect, test } from "vitest";
+import { test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
+import { expectGenerated } from "./generated-snapshot.ts";
 
 test("nullables", async () => {
 	const result = await processOpenApiDocument(
@@ -28,7 +29,7 @@ test("nullables", async () => {
 		[],
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot("types");
+	await expectGenerated([result.typesFile]);
 });
 
 test("top-level type array with null", async () => {
@@ -62,9 +63,11 @@ test("top-level type array with null", async () => {
 		[],
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot("types");
-	expect(result.valibotFile?.getText()).toMatchSnapshot("valibot");
-	expect(result.enumsFile.getText()).toMatchSnapshot("enums");
+	await expectGenerated([
+		result.typesFile,
+		result.valibotFile,
+		result.enumsFile,
+	]);
 });
 
 test("const values", async () => {
@@ -100,8 +103,7 @@ test("const values", async () => {
 		[],
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot("types");
-	expect(result.valibotFile?.getText()).toMatchSnapshot("valibot");
+	await expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("RFC 3339 temporal formats", async () => {
@@ -119,31 +121,7 @@ test("RFC 3339 temporal formats", async () => {
 		},
 	});
 
-	const types = result.typesFile.getText();
-
-	// Template-literal string types capture the digit shape for every format
-	expect(types).toContain(
-		"export type MyDate = `${number}-${number}-${number}`",
-	);
-	expect(types).toContain(
-		"export type MyTime = `${number}:${number}:${number}${string}`",
-	);
-	expect(types).toContain(
-		"export type MyDateTime = `${number}-${number}-${number}T${number}:${number}:${number}${string}`",
-	);
-	expect(types).toContain("export type MyDuration = `P${string}`");
-
-	const valibot = result.valibotFile.getText();
-
-	// Each format gets a runtime regex plus a v.custom<...> type hint, in both
-	// the input and wire schema (8 of each across the four formats)
-	expect(valibot.match(/v\.regex\(/g)?.length).toBe(8);
-	expect(valibot.match(/v\.custom</g)?.length).toBe(8);
-
-	// hint type matches the generated TS type, shown here for date
-	expect(valibot).toContain(
-		"v.custom<`${number}-${number}-${number}`>(() => true)",
-	);
+	await expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("enums short-circuit type constraints (picklist only)", async () => {
@@ -171,18 +149,7 @@ test("enums short-circuit type constraints (picklist only)", async () => {
 		},
 	});
 
-	const valibot = result.valibotFile.getText();
-	expect(valibot).toContain(
-		"export const inputIntegerEnumSchema = v.picklist([0, 1, 2])",
-	);
-	expect(valibot).toContain(
-		'export const inputStringEnumSchema = v.picklist(["a@example.com", "b@example.com"])',
-	);
-
-	// No leftover type-specific constraints leaked onto the enums
-	expect(valibot).not.toContain("v.minValue");
-	expect(valibot).not.toContain("v.minLength");
-	expect(valibot).not.toContain("v.email");
+	await expectGenerated([result.valibotFile]);
 });
 
 test("oneOf with type null generates v.null()", async () => {
@@ -199,7 +166,7 @@ test("oneOf with type null generates v.null()", async () => {
 		},
 	});
 
-	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
+	await expectGenerated([result.valibotFile]);
 });
 
 test("query and header integer params coerce strings to numbers", async () => {
@@ -274,8 +241,7 @@ test("query and header integer params coerce strings to numbers", async () => {
 		schema,
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot("types");
-	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
+	await expectGenerated([result.typesFile, result.valibotFile]);
 });
 
 test("header parameters", async () => {
@@ -354,13 +320,13 @@ test("header parameters", async () => {
 		schema,
 	);
 
-	expect(result.typesFile.getText()).toMatchSnapshot("types");
-	expect(result.commandsFile.getText()).toMatchSnapshot("commands");
-	expect(result.commandsValidatedFile.getText()).toMatchSnapshot(
-		"commands-validated",
-	);
-	expect(result.valibotFile.getText()).toMatchSnapshot("valibot");
-	expect(result.honoFile.getText()).toMatchSnapshot("hono");
+	await expectGenerated([
+		result.typesFile,
+		result.commandsFile,
+		result.commandsValidatedFile,
+		result.valibotFile,
+		result.honoFile,
+	]);
 });
 
 test("input-only mode omits wire schemas", async () => {
@@ -412,14 +378,5 @@ test("input-only mode omits wire schemas", async () => {
 		{ inputOnly: true },
 	);
 
-	const valibotText = result.valibotFile.getText();
-
-	expect(valibotText).toContain("inputNameSchema");
-	expect(valibotText).toContain("inputAmountSchema");
-	expect(valibotText).not.toMatch(/export const nameSchema\b/);
-	expect(valibotText).not.toMatch(/export const amountSchema\b/);
-	expect(valibotText).not.toContain("v.trim()");
-	expect(valibotText).not.toContain("v.toNumber()");
-	expect(valibotText).not.toContain("v.toBigint()");
-	expect(valibotText).not.toMatch(/export const listItemsCommandQuerySchema\b/);
+	await expectGenerated([result.valibotFile]);
 });

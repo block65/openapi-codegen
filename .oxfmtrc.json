@@ -2,7 +2,13 @@
 	"$schema": "./node_modules/oxfmt/configuration_schema.json",
 	"useTabs": true,
 	"printWidth": 80,
-	"ignorePatterns": ["**/dist", "**/build", "**/node_modules", "**/.claude"],
+	"ignorePatterns": [
+		"**/dist",
+		"**/build",
+		"**/node_modules",
+		"**/.claude",
+		"__tests__/__snapshots__"
+	],
 	"sortPackageJson": {
 		"sortScripts": true
 	},
