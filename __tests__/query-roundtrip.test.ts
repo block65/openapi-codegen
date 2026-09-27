@@ -85,7 +85,7 @@ function createHonoApp(middleware: readonly MiddlewareHandler[]) {
 }
 
 // Collects what the generator says while it walks a document
-async function warningsFrom(parameters: readonly oas32.ParameterObject[]) {
+async function collectWarnings(parameters: readonly oas32.ParameterObject[]) {
 	const warnings: string[] = [];
 	const original = console.warn;
 	console.warn = (message: string) => warnings.push(message);
@@ -141,7 +141,7 @@ const rangeSchema: oas32.SchemaObject = {
 // worth saying out loud
 test("an object query parameter with no declared style is warned about", async () => {
 	await expect(
-		warningsFrom([{ name: "at", in: "query", schema: rangeSchema }]),
+		collectWarnings([{ name: "at", in: "query", schema: rangeSchema }]),
 	).resolves.toContain(
 		'query parameter "at" is an object but declares no `style`',
 	);
@@ -151,7 +151,7 @@ test("an object query parameter with no declared style is warned about", async (
 // every encoding this generator could pick keeps them alike
 test("two default-style object parameters sharing a member name are warned about", async () => {
 	await expect(
-		warningsFrom([
+		collectWarnings([
 			{ name: "created", in: "query", schema: rangeSchema },
 			{ name: "updated", in: "query", schema: rangeSchema },
 		]),

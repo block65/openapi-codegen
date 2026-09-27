@@ -15,7 +15,7 @@ export function schemaRef(schemaName: string) {
  * Recovers a component's name from a whole-component $ref, once refs are
  * normalized
  */
-export function schemaNameOf(ref: string) {
+export function extractSchemaName(ref: string) {
 	return unescapeToken(ref.slice(componentSchemas.length));
 }
 

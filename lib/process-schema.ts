@@ -11,8 +11,8 @@ import {
 	type WriterFunction,
 	Writers,
 } from "ts-morph";
-import { chunkOf } from "./chunks.ts";
-import { schemaNameOf, schemaRef } from "./refs.ts";
+import { openChunk } from "./chunks.ts";
+import { extractSchemaName, schemaRef } from "./refs.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -231,7 +231,7 @@ function refType(
 		OptionalKind<PropertySignatureStructure>,
 		"type" | "docs"
 	> = {
-		type: typeNameOf(typesAndInterfaces, schemaObject.$ref),
+		type: resolveTypeName(typesAndInterfaces, schemaObject.$ref),
 		...(docs.length > 0 && { docs }),
 	};
 
@@ -695,9 +695,9 @@ export function schemaToType(
 }
 
 // a recursive schema names an alias that is declared later
-function typeNameOf(typesAndInterfaces: TypesAndInterfaces, ref: string) {
+function resolveTypeName(typesAndInterfaces: TypesAndInterfaces, ref: string) {
 	return (
-		typesAndInterfaces.get(ref)?.getName() ?? pascalCase(schemaNameOf(ref))
+		typesAndInterfaces.get(ref)?.getName() ?? pascalCase(extractSchemaName(ref))
 	);
 }
 
@@ -708,7 +708,7 @@ function registerAlias(
 	type: string | WriterFunction,
 	description?: string,
 ) {
-	const typeAlias = chunkOf(typesFile).addTypeAlias({
+	const typeAlias = openChunk(typesFile).addTypeAlias({
 		name: pascalCase(schemaName),
 		isExported: true,
 		type,
@@ -735,7 +735,7 @@ function combinatorAliasType(
 
 	const typeAliases = schemaItems
 		.filter((value) => isReferenceObject(value))
-		.map((s) => typeNameOf(typesAndInterfaces, s.$ref));
+		.map((s) => resolveTypeName(typesAndInterfaces, s.$ref));
 
 	const objectTypesFromNonRefSchemas = schemaItems
 		.filter((value) => isSchemaObject(value))
@@ -830,7 +830,7 @@ export function registerTypesFromSchema(
 
 	// deal with refs
 	if ("$ref" in schemaObject) {
-		register(typeNameOf(typesAndInterfaces, schemaObject.$ref));
+		register(resolveTypeName(typesAndInterfaces, schemaObject.$ref));
 	}
 
 	// deal with unions and intersections
@@ -881,7 +881,7 @@ export function registerTypesFromSchema(
 				]
 			: [];
 
-		const stringUnion = chunkOf(typesFile).addTypeAlias({
+		const stringUnion = openChunk(typesFile).addTypeAlias({
 			name: pascalCase(schemaName),
 			isExported: true,
 			type: maybeUnion(...schemaObject.enum.map((e) => JSON.stringify(e))),
@@ -921,7 +921,7 @@ export function registerTypesFromSchema(
 		isReferenceObject(schemaObject.items)
 	) {
 		register(
-			`${typeNameOf(typesAndInterfaces, schemaObject.items.$ref)}[]`,
+			`${resolveTypeName(typesAndInterfaces, schemaObject.items.$ref)}[]`,
 			schemaObject.description,
 		);
 	} else {

@@ -3,7 +3,7 @@ import type { SourceFile } from "ts-morph";
 // an insert re-parses its whole chunk, so a small chunk keeps inserts cheap
 const chunkSize = 10;
 
-const chunksOf = new WeakMap<SourceFile, SourceFile[]>();
+const chunksByFile = new WeakMap<SourceFile, SourceFile[]>();
 
 /**
  * ts-morph re-parses a whole file on every insert, so a module of thousands
@@ -12,8 +12,8 @@ const chunksOf = new WeakMap<SourceFile, SourceFile[]>();
  * A statement declared while building the arguments of another can start a
  * new chunk and land after it, so declare it first
  */
-export function chunkOf(file: SourceFile) {
-	const chunks = chunksOf.get(file) ?? [];
+export function openChunk(file: SourceFile) {
+	const chunks = chunksByFile.get(file) ?? [];
 	const last = chunks.at(-1);
 
 	if (last && last.getStatements().length < chunkSize) {
@@ -27,13 +27,13 @@ export function chunkOf(file: SourceFile) {
 		});
 
 	chunks.push(chunk);
-	chunksOf.set(file, chunks);
+	chunksByFile.set(file, chunks);
 
 	return chunk;
 }
 
 // the gap ts-morph left between statements, blank only between classes
-function separatorIn(chunk: SourceFile) {
+function readStatementSeparator(chunk: SourceFile) {
 	const [before, last] = chunk.getStatements().slice(-2);
 
 	return before && last
@@ -46,7 +46,7 @@ function separatorIn(chunk: SourceFile) {
  * before anything reads the module back
  */
 export function joinChunks(file: SourceFile) {
-	const chunks = chunksOf.get(file) ?? [];
+	const chunks = chunksByFile.get(file) ?? [];
 
 	if (chunks.length > 0) {
 		const text = chunks
@@ -54,7 +54,7 @@ export function joinChunks(file: SourceFile) {
 				const next = chunks[index + 1];
 				const body = chunk.getFullText().trim();
 
-				return next ? body + separatorIn(chunk) : body;
+				return next ? body + readStatementSeparator(chunk) : body;
 			})
 			.join("");
 
@@ -70,5 +70,5 @@ export function joinChunks(file: SourceFile) {
 		chunk.forget();
 	}
 
-	chunksOf.delete(file);
+	chunksByFile.delete(file);
 }
