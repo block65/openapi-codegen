@@ -51,7 +51,7 @@ const withHeader = {
 	},
 };
 
-async function buildIn(parent: string, source: object = document) {
+async function buildIntoTempDir(parent: string, source: object = document) {
 	const dir = await mkdtemp(path.join(parent, "lint-directives-"));
 	const input = path.join(dir, "document.json");
 
@@ -67,7 +67,7 @@ async function buildIn(parent: string, source: object = document) {
 
 // Output inside this repository finds its oxlint
 test("a file names the exempt rules that fire in it", async () => {
-	const { dir, valibot, main } = await buildIn(import.meta.dirname);
+	const { dir, valibot, main } = await buildIntoTempDir(import.meta.dirname);
 
 	await rm(dir, { recursive: true });
 
@@ -80,7 +80,7 @@ test("a file names the exempt rules that fire in it", async () => {
 // An open object can let a peer's unnamed keys through, so its error reaches
 // the consumer
 test("an open object schema stays a lint error", async () => {
-	const { dir, valibot } = await buildIn(import.meta.dirname);
+	const { dir, valibot } = await buildIntoTempDir(import.meta.dirname);
 
 	await rm(dir, { recursive: true });
 
@@ -124,7 +124,10 @@ async function strictObjectErrors(dir: string) {
 // Stripping undeclared headers is the point of a header schema, so only the
 // open body object reaches the consumer's lint
 test("a header schema is bracketed and an open body object still errors", async () => {
-	const { dir, valibot } = await buildIn(import.meta.dirname, withHeader);
+	const { dir, valibot } = await buildIntoTempDir(
+		import.meta.dirname,
+		withHeader,
+	);
 	const errors = await strictObjectErrors(dir);
 
 	await rm(dir, { recursive: true });
@@ -143,7 +146,7 @@ test("a header schema is bracketed and an open body object still errors", async 
 // An upgrade from 12, or a changed lint config, leaves a file its manifest
 // records as current without the directives it now needs
 test("a regeneration writes directives the recorded files lack", async () => {
-	const { dir } = await buildIn(import.meta.dirname);
+	const { dir } = await buildIntoTempDir(import.meta.dirname);
 	const manifestPath = path.join(dir, ".openapi-codegen-manifest.json");
 	const manifestText = await readFile(manifestPath, "utf8");
 	const manifest: unknown = JSON.parse(manifestText);
@@ -201,7 +204,7 @@ test("no fixture directive names snake-case-wire-keys", async () => {
 });
 
 test("output outside any oxlint project gets no directive", async () => {
-	const { dir, valibot } = await buildIn(tmpdir());
+	const { dir, valibot } = await buildIntoTempDir(tmpdir());
 
 	await rm(dir, { recursive: true });
 

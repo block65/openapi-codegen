@@ -130,7 +130,7 @@ function fetchStub() {
 	return vi.fn<typeof globalThis.fetch>(async () => Response.json({}));
 }
 
-function urlFrom(fetch: ReturnType<typeof fetchStub>) {
+function readRequestedUrl(fetch: ReturnType<typeof fetchStub>) {
 	expect(fetch).toHaveBeenCalledOnce();
 
 	const [url] = fetch.mock.calls[0] ?? [];
@@ -149,7 +149,7 @@ async function findPetsUrl(sortQuery?: true) {
 
 	await client.json(new FindPetsCommand({ tags: ["cat", "dog"], limit: "10" }));
 
-	return urlFrom(fetch);
+	return readRequestedUrl(fetch);
 }
 
 // ImageCreate declares seven query parameters and names formJoinSerializer
@@ -172,7 +172,7 @@ async function imageCreateUrl(sortQuery?: true) {
 		}),
 	);
 
-	return urlFrom(fetch);
+	return readRequestedUrl(fetch);
 }
 
 // A change in how the constructor assembles the query — the destructuring,
