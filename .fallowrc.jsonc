@@ -4,8 +4,5 @@
 	"entry": ["bin/index.ts", "oxfmt.config.ts", "oxlint.config.ts"],
 
 	// the Makefile runs its CLI to turn the openai document into JSON
-	"ignoreDependencies": ["js-yaml"],
-
-	// generated code under test, whose imports name files a snapshot may omit
-	"ignorePatterns": ["__tests__/__snapshots__/**"]
+	"ignoreDependencies": ["js-yaml"]
 }

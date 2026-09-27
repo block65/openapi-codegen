@@ -1,0 +1,414 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AllInputs union carries every command that takes an input > main.ts 1`] = `
+"import { RestServiceClient, type RestServiceClientConfig } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { AlphaCommandOutput, BetaCommandOutput, GammaCommandOutput, WithBodyCommandInput, WithBodyCommandOutput, WithQueryCommandInput, WithQueryCommandOutput } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
+
+type AllInputs = UndefinedOnPartialDeep<WithBodyCommandInput> | UndefinedOnPartialDeep<WithQueryCommandInput>;
+type AllOutputs = AlphaCommandOutput | BetaCommandOutput | GammaCommandOutput | WithBodyCommandOutput | WithQueryCommandOutput;
+
+export class TestRestClient extends RestServiceClient<AllInputs, AllOutputs> {
+    constructor(baseUrl: string | URL = new URL('https://api.example.com/'), config?: RestServiceClientConfig) {
+        super(baseUrl, config);
+    }
+}
+"
+`;
+
+exports[`a $ref nested past the top level registers after its target > types.ts 1`] = `
+"export type Leaf = {
+        "name"?: string;
+    };
+export type InUnionBesideProperties = Leaf;
+export type InRecord = Record<string, Leaf>;
+"
+`;
+
+exports[`a $ref nested past the top level registers after its target > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputLeafSchema = v.strictObject(
+    {
+        "name": v.optional(v.string())
+        ,
+    });
+export const leafSchema = v.strictObject(
+    {
+        "name": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    });
+export const inputInUnionBesidePropertiesSchema = v.looseObject(
+    {
+        ...inputLeafSchema
+        .entries,
+    });
+export const inUnionBesidePropertiesSchema = v.looseObject(
+    {
+        ...leafSchema
+        .entries,
+    });
+export const inputInRecordSchema = v.record(v.string(), inputLeafSchema);
+export const inRecordSchema = inputInRecordSchema;
+export const inputInArrayItemSchema = v.array(v.looseObject(
+    {
+        "leaf": v.optional(inputLeafSchema)
+        ,
+    }));
+export const inArrayItemSchema = v.array(v.looseObject(
+    {
+        "leaf": v.exactOptional(leafSchema)
+        ,
+    }));
+"
+`;
+
+exports[`a oneOf query param keeps the stringish wire types in every branch > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type ListThingsCommandQuery = {
+        size?: \`\${number}\` | string;
+        flag?: "true" | "false" | string;
+        nested?: {
+                "count"?: \`\${number}\` | string;
+            };
+    };
+export type ListThingsCommandInput = ListThingsCommandQuery;
+export type ListThingsCommandOutput = string | undefined;
+export type InputListThingsCommandResponse = UndefinedOnPartialDeep<ListThingsCommandOutput>;
+"
+`;
+
+exports[`a single-member combinator emits the member alone: anyOf > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOnlySchema = v.string();
+export const onlySchema = v.pipe(v.string(), v.trim());
+export const inputGetThingCommandResponseSchema = inputOnlySchema;
+export const getThingCommandResponseSchema = onlySchema;
+"
+`;
+
+exports[`a single-member combinator emits the member alone: oneOf > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOnlySchema = v.string();
+export const onlySchema = v.pipe(v.string(), v.trim());
+export const inputGetThingCommandResponseSchema = inputOnlySchema;
+export const getThingCommandResponseSchema = onlySchema;
+"
+`;
+
+exports[`a single-member combinator emits the member alone: two-member oneOf > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOnlySchema = v.union([v.string(), v.number()]);
+export const onlySchema = v.union([v.pipe(v.string(), v.trim()), v.number()]);
+export const inputGetThingCommandResponseSchema = inputOnlySchema;
+export const getThingCommandResponseSchema = onlySchema;
+"
+`;
+
+exports[`a value the schema leaves open is a JsonValue on both sides > types.ts 1`] = `
+"import type { JsonValue } from "type-fest";
+
+export type Open = {
+        "anything": JsonValue;
+        "record": Record<string, JsonValue>;
+        "list": readonly (JsonValue)[];
+    };
+"
+`;
+
+exports[`a value the schema leaves open is a JsonValue on both sides > valibot.ts 1`] = `
+"import * as v from "valibot";
+import type { JsonValue } from "type-fest";
+
+const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() => v.union([v.string(), v.number(), v.boolean(), v.null(), v.record(v.string(), jsonValueSchema), v.array(jsonValueSchema)]));
+export const inputOpenSchema = v.strictObject(
+    {
+        "anything": jsonValueSchema
+        ,
+        "record": v.record(v.string(), jsonValueSchema)
+        ,
+        "list": v.array(jsonValueSchema)
+        ,
+    });
+export const openSchema = inputOpenSchema;
+"
+`;
+
+exports[`additionalProperties alongside properties keeps the extra keys valid > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputConfigSchema = v.objectWithRest(
+    {
+        "name": v.optional(v.string())
+        ,
+    }, v.number());
+export const configSchema = v.objectWithRest(
+    {
+        "name": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    }, v.number());
+export const inputGetThingCommandResponseSchema = inputConfigSchema;
+export const getThingCommandResponseSchema = configSchema;
+"
+`;
+
+exports[`additionalProperties chooses the object schema: empty schema > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOpenSchema = v.looseObject(
+    {
+        "a": v.optional(v.string())
+        ,
+    });
+export const openSchema = v.looseObject(
+    {
+        "a": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    });
+export const inputGetThingCommandResponseSchema = inputOpenSchema;
+export const getThingCommandResponseSchema = openSchema;
+"
+`;
+
+exports[`additionalProperties chooses the object schema: false > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOpenSchema = v.strictObject(
+    {
+        "a": v.optional(v.string())
+        ,
+    });
+export const openSchema = v.strictObject(
+    {
+        "a": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    });
+export const inputGetThingCommandResponseSchema = inputOpenSchema;
+export const getThingCommandResponseSchema = openSchema;
+"
+`;
+
+exports[`additionalProperties chooses the object schema: string schema > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOpenSchema = v.objectWithRest(
+    {
+        "a": v.optional(v.string())
+        ,
+    }, v.string());
+export const openSchema = v.objectWithRest(
+    {
+        "a": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    }, v.pipe(v.string(), v.trim()));
+export const inputGetThingCommandResponseSchema = inputOpenSchema;
+export const getThingCommandResponseSchema = openSchema;
+"
+`;
+
+exports[`additionalProperties chooses the object schema: true > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOpenSchema = v.looseObject(
+    {
+        "a": v.optional(v.string())
+        ,
+    });
+export const openSchema = v.looseObject(
+    {
+        "a": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    });
+export const inputGetThingCommandResponseSchema = inputOpenSchema;
+export const getThingCommandResponseSchema = openSchema;
+"
+`;
+
+exports[`additionalProperties is a string-keyed record of the value type > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type Labels = Record<string, string>;
+export type GetThingCommandInput = never;
+export type InputGetThingCommandResponse = UndefinedOnPartialDeep<Labels>;
+"
+`;
+
+exports[`additionalProperties is a string-keyed record of the value type > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputLabelsSchema = v.record(v.string(), v.string());
+export const labelsSchema = inputLabelsSchema;
+export const inputGetThingCommandResponseSchema = inputLabelsSchema;
+export const getThingCommandResponseSchema = labelsSchema;
+"
+`;
+
+exports[`additionalProperties true accepts any key > valibot.ts 1`] = `
+"import * as v from "valibot";
+export const inputOpenSchema = v.looseObject(
+    {
+        "name": v.optional(v.string())
+        ,
+    });
+export const openSchema = v.looseObject(
+    {
+        "name": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    });
+export const inputGetThingCommandResponseSchema = inputOpenSchema;
+export const getThingCommandResponseSchema = openSchema;
+"
+`;
+
+exports[`an array request body with parameters stays readable as both > commands.ts 1`] = `
+"import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { PluginPullCommandQuery, PluginPullCommandInput, PluginPullCommandOutput } from "./types.js";
+
+
+/**
+ * PluginPullCommand
+ *
+ */
+export class PluginPullCommand extends Command<UndefinedOnPartialDeep<PluginPullCommandInput>, PluginPullCommandOutput, PluginPullCommandQuery> {
+    public override method = "post" as const;
+
+    constructor(input: UndefinedOnPartialDeep<PluginPullCommandInput>) {
+        const {remote, body } = input;
+        super("/plugins/pull", jsonStringify(body), stripUndefined({remote}));
+    }
+}
+"
+`;
+
+exports[`an array request body with parameters stays readable as both > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type PluginPullCommandQuery = {
+        remote: string;
+    };
+type PluginPullCommandJsonBody = readonly (string)[];
+export type PluginPullCommandBody = PluginPullCommandJsonBody;
+type PluginPullCommandBodyWrapper = {
+        body: PluginPullCommandJsonBody;
+    };
+export type PluginPullCommandInput = PluginPullCommandBodyWrapper & PluginPullCommandQuery;
+export type PluginPullCommandOutput = string | undefined;
+export type InputPluginPullCommandResponse = UndefinedOnPartialDeep<PluginPullCommandOutput>;
+"
+`;
+
+exports[`an empty properties bag is a record, not an empty object type > types.ts 1`] = `
+"import type { JsonValue, UndefinedOnPartialDeep } from "type-fest";
+
+export type Empty = Record<string, JsonValue>;
+export type GetThingCommandInput = never;
+export type InputGetThingCommandResponse = UndefinedOnPartialDeep<Empty>;
+"
+`;
+
+exports[`an object schema that omits \`type\` still honours \`required\` > types.ts 1`] = `
+"export type Untyped = {
+        "id": string;
+        "note"?: string;
+    };
+"
+`;
+
+exports[`an operation with both a 200 and a 204 emits one output type argument > commands.ts 1`] = `
+"import { Command } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { SystemAuthCommandInput, SystemAuthCommandOutput } from "./types.js";
+
+
+/**
+ * SystemAuthCommand
+ *
+ */
+export class SystemAuthCommand extends Command<UndefinedOnPartialDeep<SystemAuthCommandInput>, SystemAuthCommandOutput> {
+    public override method = "post" as const;
+
+    constructor() {
+        super("/auth");
+    }
+}
+"
+`;
+
+exports[`json request body members keep their real JSON types, nested included > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+type CreateContainerCommandJsonBody = {
+        "tty"?: boolean;
+        "retries"?: number;
+        "health"?: {
+                "interval"?: bigint;
+                "enabled"?: boolean;
+            };
+        "sizes"?: readonly (number)[];
+    };
+export type CreateContainerCommandBody = CreateContainerCommandJsonBody;
+export type CreateContainerCommandInput = CreateContainerCommandJsonBody;
+export type CreateContainerCommandOutput = string | undefined;
+export type InputCreateContainerCommandResponse = UndefinedOnPartialDeep<CreateContainerCommandOutput>;
+"
+`;
+
+exports[`main.ts emits file-level \`import type\` for type-only imports > main.ts 1`] = `
+"import { RestServiceClient, type RestServiceClientConfig } from "@block65/rest-client";
+import type { UndefinedOnPartialDeep } from "type-fest";
+import type { OneCommandInput, OneCommandOutput } from "./types.js";
+
+export { ResponseValidationError } from "@block65/rest-client";
+
+type AllInputs = UndefinedOnPartialDeep<OneCommandInput>;
+type AllOutputs = OneCommandOutput;
+
+export class TestRestClient extends RestServiceClient<AllInputs, AllOutputs> {
+    constructor(baseUrl: string | URL = new URL('https://api.example.com/'), config?: RestServiceClientConfig) {
+        super(baseUrl, config);
+    }
+}
+"
+`;
+
+exports[`nested query param members get the same stringish treatment as top-level ones > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type SearchCommandQuery = {
+        limit?: \`\${number}\`;
+        filter?: {
+                "age"?: \`\${number}\`;
+                "big"?: \`\${bigint}\`;
+                "active"?: "true" | "false";
+                "label"?: string;
+            };
+        ids?: readonly (\`\${number}\`)[];
+    };
+export type SearchCommandInput = SearchCommandQuery;
+export type SearchCommandOutput = string | undefined;
+export type InputSearchCommandResponse = UndefinedOnPartialDeep<SearchCommandOutput>;
+"
+`;
+
+exports[`optional query params do not carry \`| undefined\` in their property type > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+export type ListFilesCommandQuery = {
+        purpose?: string;
+        limit?: \`\${number}\`;
+    };
+export type ListFilesCommandInput = ListFilesCommandQuery;
+export type ListFilesCommandOutput = string | undefined;
+export type InputListFilesCommandResponse = UndefinedOnPartialDeep<ListFilesCommandOutput>;
+"
+`;
+
+exports[`the generated JSON body type is PascalCase > types.ts 1`] = `
+"import type { UndefinedOnPartialDeep } from "type-fest";
+
+type CreateBatchJsonBody = {
+        "input_file_id"?: string;
+    };
+export type CreateBatchCommandBody = CreateBatchJsonBody;
+export type CreateBatchCommandInput = CreateBatchJsonBody;
+export type CreateBatchCommandOutput = string | undefined;
+export type InputCreateBatchCommandResponse = UndefinedOnPartialDeep<CreateBatchCommandOutput>;
+"
+`;

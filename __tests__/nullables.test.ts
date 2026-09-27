@@ -1,7 +1,6 @@
 import type { oas31 } from "openapi3-ts";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
-import { expectGenerated } from "./generated-snapshot.ts";
 
 test("nullables", async () => {
 	const result = await processOpenApiDocument(
@@ -29,7 +28,7 @@ test("nullables", async () => {
 		[],
 	);
 
-	await expectGenerated([result.typesFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 });
 
 test("top-level type array with null", async () => {
@@ -63,11 +62,9 @@ test("top-level type array with null", async () => {
 		[],
 	);
 
-	await expectGenerated([
-		result.typesFile,
-		result.valibotFile,
-		result.enumsFile,
-	]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
+	expect(result.enumsFile.getText()).toMatchSnapshot("enums.ts");
 });
 
 test("3.0 nullable objects, arrays, strings and combinator members admit null", async () => {
@@ -125,7 +122,8 @@ test("3.0 nullable objects, arrays, strings and combinator members admit null", 
 		},
 	} as oas31.OpenAPIObject);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
 test("const values", async () => {
@@ -161,7 +159,8 @@ test("const values", async () => {
 		[],
 	);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
 test("RFC 3339 temporal formats", async () => {
@@ -179,7 +178,8 @@ test("RFC 3339 temporal formats", async () => {
 		},
 	});
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
 test("enums short-circuit type constraints (picklist only)", async () => {
@@ -207,7 +207,7 @@ test("enums short-circuit type constraints (picklist only)", async () => {
 		},
 	});
 
-	await expectGenerated([result.valibotFile]);
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
 test("oneOf with type null generates v.null()", async () => {
@@ -224,7 +224,7 @@ test("oneOf with type null generates v.null()", async () => {
 		},
 	});
 
-	await expectGenerated([result.valibotFile]);
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
 test("query and header integer params coerce strings to numbers", async () => {
@@ -299,7 +299,8 @@ test("query and header integer params coerce strings to numbers", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile, result.valibotFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
 
 test("header parameters", async () => {
@@ -378,13 +379,13 @@ test("header parameters", async () => {
 		schema,
 	);
 
-	await expectGenerated([
-		result.typesFile,
-		result.commandsFile,
-		result.commandsValidatedFile,
-		result.valibotFile,
-		result.honoFile,
-	]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
+	expect(result.commandsFile.getText()).toMatchSnapshot("commands.ts");
+	expect(result.commandsValidatedFile.getText()).toMatchSnapshot(
+		"commands-validated.ts",
+	);
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
+	expect(result.honoFile.getText()).toMatchSnapshot("hono.ts");
 });
 
 test("input-only mode omits wire schemas", async () => {
@@ -436,5 +437,5 @@ test("input-only mode omits wire schemas", async () => {
 		{ inputOnly: true },
 	);
 
-	await expectGenerated([result.valibotFile]);
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });

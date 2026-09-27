@@ -15,8 +15,5 @@
 		"oxfmt.config.ts",
 		"oxlint.config.ts",
 		"vitest.config.ts"
-	],
-
-	// generator output compared byte for byte, without its imports' modules
-	"exclude": ["__tests__/__snapshots__"]
+	]
 }

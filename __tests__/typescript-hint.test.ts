@@ -1,7 +1,6 @@
 import type { oas31 } from "openapi3-ts";
-import { test } from "vitest";
+import { expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
-import { expectGenerated } from "./generated-snapshot.ts";
 
 const baseDoc = {
 	openapi: "3.1.0" as const,
@@ -27,7 +26,7 @@ test("x-typescript-hint on top-level string schema", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 });
 
 test("x-typescript-hint honored inside oneOf branches", async () => {
@@ -51,7 +50,7 @@ test("x-typescript-hint honored inside oneOf branches", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 });
 
 test("x-typescript-hint honored inside anyOf branches", async () => {
@@ -74,5 +73,5 @@ test("x-typescript-hint honored inside anyOf branches", async () => {
 		schema,
 	);
 
-	await expectGenerated([result.typesFile]);
+	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 });
