@@ -1,10 +1,11 @@
 import { Hono } from "hono";
-import type { MiddlewareHandler } from "hono";
-import type { oas31 } from "openapi3-ts";
+import type { Context, MiddlewareHandler } from "hono";
+import type { BlankEnv } from "hono/types";
+import type { oas32 } from "openapi3-ts";
 import { expect, test } from "vitest";
 import { listauditlogs } from "./fixtures/openai/hono.ts";
 import { findPets } from "./fixtures/petstore/hono.ts";
-import { generateFor, type TestParameter } from "./generate.ts";
+import { generateWithQueryParameters } from "./helpers.ts";
 
 // Runs a real query string through the generated middleware and back out
 async function validatedQuery(
@@ -13,7 +14,7 @@ async function validatedQuery(
 ) {
 	// Coverage of the client half lives with the "query string building" tests
 	// in @block65/rest-client, so the wire strings here are written by hand
-	const res = await appFor(middleware).request(`/target?${search}`);
+	const res = await createHonoApp(middleware).request(`/target?${search}`);
 	const body = await res.clone().text();
 
 	// the body says why a route rejected the query, so the failure output
@@ -36,7 +37,7 @@ test("an absent object query parameter does not materialise", async () => {
 // encodings below reach the schema in a shape it turns down. The hook
 // throws PublicValidationError, and a bare app returns 500 for it
 test("a single value for an array parameter is rejected", async () => {
-	const res = await appFor(findPets).request("/target?tags=cat");
+	const res = await createHonoApp(findPets).request("/target?tags=cat");
 
 	expect(res.status).toBe(500);
 });
@@ -46,7 +47,7 @@ test("joined values for an array parameter are rejected", async () => {
 
 	const results = await Promise.all(
 		searches.map(async (search) => {
-			const res = await appFor(findPets).request(`/target?${search}`);
+			const res = await createHonoApp(findPets).request(`/target?${search}`);
 
 			return { search, status: res.status };
 		}),
@@ -64,28 +65,33 @@ test("repeated keys for an array parameter are accepted", async () => {
 	).resolves.toStrictEqual({ tags: ["cat", "dog"] });
 });
 
+type ValidatedQuery = { out: { query: Record<string, unknown> } };
+
 // Mounts the middleware on a Hono app, with an untyped handler reading it
-function appFor(middleware: readonly MiddlewareHandler[]) {
+function createHonoApp(middleware: readonly MiddlewareHandler[]) {
 	const app = new Hono();
 
 	for (const handler of middleware) {
 		app.use("/target", handler);
 	}
 
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- c.req.valid reads its key from the validator types a route was built with, and these middleware arrive as an opaque array, so the key is unreachable through the spread
-	app.get("/target", (c) => c.json(c.req.valid("query" as never)));
+	// the middleware arrive as an opaque array, so the handler names the
+	// validated input it reads
+	app.get("/target", (c: Context<BlankEnv, "/target", ValidatedQuery>) =>
+		c.json(c.req.valid("query")),
+	);
 
 	return app;
 }
 
 // Collects what the generator says while it walks a document
-async function warningsFrom(parameters: readonly TestParameter[]) {
+async function warningsFrom(parameters: readonly oas32.ParameterObject[]) {
 	const warnings: string[] = [];
 	const original = console.warn;
 	console.warn = (message: string) => warnings.push(message);
 
 	try {
-		await generateFor(parameters);
+		await generateWithQueryParameters(parameters);
 	} finally {
 		console.warn = original;
 	}
@@ -96,7 +102,7 @@ async function warningsFrom(parameters: readonly TestParameter[]) {
 // rest-client encodes only these four
 test("a style rest-client cannot encode stops generation", async () => {
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{
 				name: "id",
 				in: "query",
@@ -111,7 +117,7 @@ test("a style rest-client cannot encode stops generation", async () => {
 // n/a check through its encoding
 test("a scalar in an n/a style and explode stops generation", async () => {
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{
 				name: "id",
 				in: "query",
@@ -123,7 +129,7 @@ test("a scalar in an n/a style and explode stops generation", async () => {
 	).rejects.toThrow("which OpenAPI marks n/a and leaves undefined");
 });
 
-const rangeSchema: oas31.SchemaObject = {
+const rangeSchema: oas32.SchemaObject = {
 	type: "object",
 	properties: {
 		gt: { type: "integer" },
@@ -161,7 +167,7 @@ test("style and explode combinations the spec leaves undefined stop generation",
 	} as const;
 
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{
 				name: "ids",
 				in: "query",
@@ -173,7 +179,7 @@ test("style and explode combinations the spec leaves undefined stop generation",
 	).rejects.toThrow("`style: pipeDelimited` with `explode: true`");
 
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{
 				name: "ids",
 				in: "query",
@@ -188,7 +194,7 @@ test("style and explode combinations the spec leaves undefined stop generation",
 // the operation would lose its query in silence
 test("an in: querystring parameter stops generation", async () => {
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{
 				name: "whole",
 				in: "querystring",
@@ -200,7 +206,7 @@ test("an in: querystring parameter stops generation", async () => {
 
 test("an in: cookie parameter stops generation", async () => {
 	await expect(
-		generateFor([
+		generateWithQueryParameters([
 			{ name: "session", in: "cookie", schema: { type: "string" } },
 		]),
 	).rejects.toThrow('parameter "session" uses `in: cookie`');

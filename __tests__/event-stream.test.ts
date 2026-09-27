@@ -1,15 +1,12 @@
-import type { oas31 } from "openapi3-ts";
+import type { oas32 } from "openapi3-ts";
 import { describe, expect, test } from "vitest";
 import { processOpenApiDocument } from "../lib/process-document.ts";
 
-// OAS 3.2 added itemSchema, which the 3.1 types predate
-type ItemSchema = oas31.SchemaObject | oas31.ReferenceObject;
-
 function documentWith(
-	itemSchema: ItemSchema | undefined,
-	schemas: Record<string, oas31.SchemaObject> = {},
+	itemSchema: oas32.SchemaObject | oas32.ReferenceObject | undefined,
+	schemas: Record<string, oas32.SchemaObject> = {},
 ) {
-	const document: oas31.OpenAPIObject = {
+	const document: oas32.OpenAPIObject = {
 		openapi: "3.2.0",
 		info: { title: "Test", version: "1.0.0" },
 		components: { schemas },
@@ -22,7 +19,7 @@ function documentWith(
 							description: "OK",
 							content: {
 								"text/event-stream": itemSchema
-									? ({ itemSchema } as oas31.MediaTypeObject)
+									? { itemSchema }
 									: { schema: { type: "string", format: "binary" } },
 							},
 						},
@@ -35,7 +32,7 @@ function documentWith(
 	return document;
 }
 
-function jsonData(contentSchema: ItemSchema) {
+function jsonData(contentSchema: oas32.SchemaObject | oas32.ReferenceObject) {
 	return {
 		type: "string" as const,
 		contentMediaType: "application/json",
@@ -124,7 +121,7 @@ test("data with no contentMediaType is text", async () => {
 });
 
 describe("event-stream refusals", () => {
-	test.each<[string, ItemSchema, RegExp]>([
+	test.each<[string, oas32.SchemaObject, RegExp]>([
 		[
 			"variants with different content media types",
 			{

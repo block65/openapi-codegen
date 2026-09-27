@@ -1,15 +1,20 @@
 import camelcase from "camelcase";
-import type { oas31 } from "openapi3-ts";
+import type { oas30, oas32 } from "openapi3-ts";
 import wrap from "word-wrap";
 
-export function isReferenceObject(obj: unknown): obj is oas31.ReferenceObject {
+export type SchemaObject = oas30.SchemaObject | oas32.SchemaObjectValue;
+
+export type ReferenceObject = oas30.ReferenceObject | oas32.ReferenceObject;
+
+// JSON Schema 2020-12, which OAS 3.1 and 3.2 use, also allows true and false
+export type SchemaNode = SchemaObject | ReferenceObject | boolean;
+
+export function isReferenceObject(obj: unknown): obj is ReferenceObject {
 	return typeof obj === "object" && obj !== null && "$ref" in obj;
 }
 
-export function isNotReferenceObject<T>(
-	obj: T,
-): obj is Exclude<T, oas31.ReferenceObject> {
-	return !isReferenceObject(obj);
+export function isSchemaObject(node: SchemaNode): node is SchemaObject {
+	return typeof node === "object" && !isReferenceObject(node);
 }
 
 export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {

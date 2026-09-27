@@ -1,4 +1,4 @@
-import type { oas30, oas31 } from "openapi3-ts";
+import type { oas30, oas32 } from "openapi3-ts";
 import {
 	type CodeBlockWriter,
 	type EnumDeclaration,
@@ -12,9 +12,11 @@ import {
 	Writers,
 } from "ts-morph";
 import {
+	type SchemaNode,
+	type SchemaObject,
 	isNotNullOrUndefined,
-	isNotReferenceObject,
 	isReferenceObject,
+	isSchemaObject,
 	pascalCase,
 	wordWrap,
 } from "./utils.ts";
@@ -55,11 +57,11 @@ function numericType(isInt64: boolean, stringish: boolean | undefined) {
 	return stringish ? "`${number}`" : "number";
 }
 
-function isInt64Schema(schema: oas30.SchemaObject | oas31.SchemaObject) {
+function isInt64Schema(schema: SchemaObject) {
 	return schema.type === "integer" && schema.format === "int64";
 }
 
-function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
+function schemaTypeIsNull(schema: SchemaObject) {
 	return (
 		schema.type === "null" ||
 		("nullable" in schema && schema.nullable) ||
@@ -69,7 +71,7 @@ function schemaTypeIsNull(schema: oas30.SchemaObject | oas31.SchemaObject) {
 
 // valibot wraps every nullable schema in v.nullable, so the type admits null
 function withNullable<T extends { type: string | WriterFunction }>(
-	schema: oas30.SchemaObject | oas31.SchemaObject,
+	schema: SchemaObject,
 	result: T,
 ) {
 	return {
@@ -131,16 +133,8 @@ function recordType(value: string | WriterFunction) {
 }
 
 // LiteralUnion keeps known values in completion and accepts any other string
-function literalUnionType(
-	maybeSchemaObjects: (
-		| oas31.SchemaObject
-		| oas30.SchemaObject
-		| oas31.ReferenceObject
-	)[],
-) {
-	const schemaObjects = maybeSchemaObjects.filter((obj) =>
-		isNotReferenceObject(obj),
-	);
+function literalUnionType(maybeSchemaObjects: SchemaNode[]) {
+	const schemaObjects = maybeSchemaObjects.filter((obj) => isSchemaObject(obj));
 
 	if (
 		schemaObjects.length !== maybeSchemaObjects.length ||
@@ -226,7 +220,7 @@ function refPropertyDocs(
 
 function refType(
 	typesAndInterfaces: TypesAndInterfaces,
-	schemaObject: oas31.ReferenceObject,
+	schemaObject: oas32.ReferenceObject,
 ) {
 	const existingSchema = typesAndInterfaces.get(schemaObject.$ref);
 
@@ -248,9 +242,7 @@ function refType(
 	return property;
 }
 
-function schemaJsDocTags(
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject,
-) {
+function schemaJsDocTags(schemaObject: SchemaObject) {
 	return [
 		...(schemaObject.default
 			? [{ tagName: "default", text: String(schemaObject.default) }]
@@ -290,7 +282,7 @@ function schemaJsDocTags(
 	];
 }
 
-function schemaDocs(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
+function schemaDocs(schemaObject: SchemaObject) {
 	const jsdocTags = schemaJsDocTags(schemaObject);
 
 	const maybeJsDoc = {
@@ -308,9 +300,9 @@ function schemaDocs(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
 
 function typeArrayType(
 	typesAndInterfaces: TypesAndInterfaces,
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject,
+	schemaObject: SchemaObject,
 	propertyName: string,
-	types: (oas31.SchemaObjectType | oas30.SchemaObjectType)[],
+	types: (oas32.SchemaObjectType | oas30.SchemaObjectType)[],
 	options: SchemaToTypeOptions,
 ) {
 	if (types.length === 1) {
@@ -350,7 +342,7 @@ function typeArrayType(
 function arrayType(
 	typesAndInterfaces: TypesAndInterfaces,
 	propertyName: string,
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject,
+	schemaObject: SchemaObject,
 	options: SchemaToTypeOptions,
 ) {
 	const type = schemaToType(
@@ -383,9 +375,9 @@ function arrayType(
 
 function combinatorType(
 	typesAndInterfaces: TypesAndInterfaces,
-	parentSchema: oas31.SchemaObject | oas30.SchemaObject,
+	parentSchema: SchemaObject,
 	propertyName: string,
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject,
+	schemaObject: SchemaObject,
 	options: SchemaToTypeOptions,
 ) {
 	const schemaItems =
@@ -403,7 +395,7 @@ function combinatorType(
 	// member types stay free of it
 	const nullableMembers = schemaItems.filter(
 		(schema) =>
-			!isReferenceObject(schema) && "nullable" in schema && schema.nullable,
+			isSchemaObject(schema) && "nullable" in schema && schema.nullable,
 	);
 
 	const types = schemaItems
@@ -412,7 +404,7 @@ function combinatorType(
 				typesAndInterfaces,
 				parentSchema,
 				propertyName,
-				nullableMembers.includes(schema)
+				isSchemaObject(schema) && nullableMembers.includes(schema)
 					? { ...schema, nullable: false }
 					: schema,
 				options,
@@ -455,7 +447,7 @@ function combinatorType(
 }
 
 // Keys unique to objects stand in for the `type` a document often omits
-function isObjectSchema(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
+function isObjectSchema(schemaObject: SchemaObject) {
 	return (
 		schemaObject.type === "object" ||
 		(schemaObject.type === undefined &&
@@ -467,7 +459,7 @@ function isObjectSchema(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
 function objectType(
 	typesAndInterfaces: TypesAndInterfaces,
 	propertyName: string,
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject,
+	schemaObject: SchemaObject,
 	options: SchemaToTypeOptions,
 ) {
 	// type=object and enum null is common openapi workaround
@@ -527,7 +519,7 @@ function objectType(
 	};
 }
 
-function stringType(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
+function stringType(schemaObject: SchemaObject) {
 	if ("enum" in schemaObject) {
 		return maybeUnion(...schemaObject.enum.map((e) => JSON.stringify(e)));
 	}
@@ -546,9 +538,9 @@ function stringType(schemaObject: oas31.SchemaObject | oas30.SchemaObject) {
 
 function schemaObjectType(
 	typesAndInterfaces: TypesAndInterfaces,
-	parentSchema: oas31.SchemaObject | oas30.SchemaObject,
+	parentSchema: SchemaObject,
 	propertyName: string,
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject,
+	schemaObject: SchemaObject,
 	options: SchemaToTypeOptions,
 ) {
 	if (Array.isArray(schemaObject.type)) {
@@ -657,9 +649,9 @@ export function schemaToType(
 		string,
 		InterfaceDeclaration | TypeAliasDeclaration | EnumDeclaration
 	>,
-	parentSchema: oas31.SchemaObject | oas30.SchemaObject,
+	parentSchema: SchemaObject,
 	propertyName: string,
-	schemaObject: oas31.SchemaObject | oas30.SchemaObject | oas31.ReferenceObject,
+	schemaNode: SchemaNode,
 	options: {
 		booleanAsStringish?: boolean;
 		integerAsStringish?: boolean;
@@ -669,6 +661,14 @@ export function schemaToType(
 	const hasQuestionToken =
 		isObjectSchema(parentSchema) &&
 		!parentSchema.required?.includes(propertyName);
+
+	// the false schema admits no value
+	if (schemaNode === false) {
+		return { name, hasQuestionToken, type: "never" };
+	}
+
+	// the true schema admits any value, as the empty schema does
+	const schemaObject = schemaNode === true ? {} : schemaNode;
 
 	if (isReferenceObject(schemaObject)) {
 		const property: OptionalKind<PropertySignatureStructure> = {
@@ -733,7 +733,7 @@ function registerAlias(
 function combinatorAliasType(
 	typesAndInterfaces: TypesAndInterfaces,
 	schemaName: string,
-	schemaObject: oas30.SchemaObject | oas31.SchemaObject,
+	schemaObject: SchemaObject,
 ) {
 	const schemaItems =
 		schemaObject.allOf || schemaObject.oneOf || schemaObject.anyOf || [];
@@ -745,7 +745,7 @@ function combinatorAliasType(
 		.map((s) => resolveRef(typesAndInterfaces, s.$ref));
 
 	const objectTypesFromNonRefSchemas = schemaItems
-		.filter((value) => isNotReferenceObject(value))
+		.filter((value) => isSchemaObject(value))
 		.filter((schema) => schema.type === "object")
 		.map((subSchemaObject) =>
 			Writers.objectType({
@@ -763,7 +763,7 @@ function combinatorAliasType(
 		.filter((value) => isNotNullOrUndefined(value));
 
 	const nonObjectTypesFromNonRefSchemas = schemaItems
-		.filter((value) => isNotReferenceObject(value))
+		.filter((value) => isSchemaObject(value))
 		.filter((schema) => schema.type !== "object")
 		.map((subSchemaObject) =>
 			schemaToType(
@@ -794,9 +794,7 @@ function combinatorAliasType(
 	return intersect ? maybeIntersection(...typeArgs) : maybeUnion(...typeArgs);
 }
 
-function stringAliasType(
-	schemaObject: oas30.SchemaObject | oas31.SchemaObject,
-) {
+function stringAliasType(schemaObject: SchemaObject) {
 	// custom extension
 	if (
 		"x-typescript-hint" in schemaObject &&
@@ -824,14 +822,18 @@ export function registerTypesFromSchema(
 	>,
 	typesFile: SourceFile,
 	schemaName: string,
-	schemaObject:
-		| oas30.SchemaObject
-		| oas30.ReferenceObject
-		| oas31.SchemaObject
-		| oas31.ReferenceObject,
+	schemaNode: SchemaNode,
 ) {
 	const register = (type: string | WriterFunction, description?: string) =>
 		registerAlias(typesAndInterfaces, typesFile, schemaName, type, description);
+
+	if (typeof schemaNode === "boolean") {
+		register(schemaNode ? "JsonValue" : "never");
+
+		return;
+	}
+
+	const schemaObject = schemaNode;
 
 	// deal with refs
 	if ("$ref" in schemaObject) {
@@ -923,8 +925,7 @@ export function registerTypesFromSchema(
 	// deal with arrays of refs
 	else if (
 		schemaObject.type === "array" &&
-		schemaObject.items &&
-		"$ref" in schemaObject.items
+		isReferenceObject(schemaObject.items)
 	) {
 		register(
 			`${resolveRef(typesAndInterfaces, schemaObject.items.$ref).getName()}[]`,
