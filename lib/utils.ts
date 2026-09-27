@@ -21,20 +21,66 @@ export function isNotNullOrUndefined<T>(obj: T | null | undefined): obj is T {
 	return obj !== null && obj !== undefined;
 }
 
+// each keyword holds a subschema, or an array of them
+const subschemaKeywords = new Set([
+	"items",
+	"prefixItems",
+	"additionalItems",
+	"additionalProperties",
+	"unevaluatedItems",
+	"unevaluatedProperties",
+	"propertyNames",
+	"contains",
+	"not",
+	"if",
+	"then",
+	"else",
+	"allOf",
+	"anyOf",
+	"oneOf",
+]);
+
+// each keyword maps names to subschemas
+const subschemaMapKeywords = new Set([
+	"properties",
+	"patternProperties",
+	"dependentSchemas",
+	"$defs",
+	"definitions",
+]);
+
 /**
- * Every $ref anywhere under a schema. Items, additionalProperties and
- * combinators nest them at any depth, and a schema registers after all of them
+ * Every $ref a schema depends on, at any depth. Only subschemas count. An
+ * example, default, const or enum is data, and a `$ref` key inside it is not
+ * a reference
  */
-export function getDependents(obj: unknown): string[] {
-	if (isReferenceObject(obj)) {
-		return [obj.$ref];
+export function getDependents(schema: unknown): string[] {
+	if (isReferenceObject(schema)) {
+		return [schema.$ref];
 	}
 
-	if (typeof obj !== "object" || obj === null) {
+	if (typeof schema !== "object" || schema === null) {
 		return [];
 	}
 
-	return Object.values(obj).flatMap((value) => getDependents(value));
+	const entries = Object.entries(schema);
+
+	return [
+		...entries
+			.filter(([keyword]) => subschemaKeywords.has(keyword))
+			.flatMap(([, value]) =>
+				Array.isArray(value)
+					? value.flatMap((item) => getDependents(item))
+					: getDependents(value),
+			),
+		...entries
+			.filter(([keyword]) => subschemaMapKeywords.has(keyword))
+			.flatMap(([, value]) =>
+				typeof value === "object" && value !== null
+					? Object.values(value).flatMap((item) => getDependents(item))
+					: [],
+			),
+	];
 }
 
 export function camelCase(...str: string[]): string {

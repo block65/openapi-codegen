@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`a $ref inside example data is not a dependency > types.ts 1`] = `
+"export type Child = {
+        "name"?: string;
+    };
+export type Parent = {
+        "child"?: Child;
+    };
+"
+`;
+
+exports[`a $ref inside example data is not a dependency > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputChildSchema = v.looseObject(
+    {
+        "name": v.optional(v.string())
+        ,
+    });
+export const childSchema = v.looseObject(
+    {
+        "name": v.exactOptional(v.pipe(v.string(), v.trim()))
+        ,
+    });
+export const inputParentSchema = v.looseObject(
+    {
+        "child": v.optional(inputChildSchema)
+        ,
+    });
+export const parentSchema = v.looseObject(
+    {
+        "child": v.exactOptional(childSchema)
+        ,
+    });
+"
+`;
+
+exports[`a property named after a keyword still orders by its $ref > types.ts 1`] = `
+"export type Preset = "low" | "high";
+export type Settings = {
+        "default"?: Preset;
+        "example"?: Preset;
+    };
+"
+`;
+
+exports[`a property named after a keyword still orders by its $ref > valibot.ts 1`] = `
+"import * as v from "valibot";
+
+export const inputPresetSchema = v.picklist(["low", "high"]);
+export const presetSchema = inputPresetSchema;
+export const inputSettingsSchema = v.looseObject(
+    {
+        "default": v.optional(inputPresetSchema)
+        ,
+        "example": v.optional(inputPresetSchema)
+        ,
+    });
+export const settingsSchema = v.looseObject(
+    {
+        "default": v.exactOptional(presetSchema)
+        ,
+        "example": v.exactOptional(presetSchema)
+        ,
+    });
+"
+`;
