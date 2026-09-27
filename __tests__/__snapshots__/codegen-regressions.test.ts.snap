@@ -29,6 +29,7 @@ export type InRecord = Record<string, Leaf>;
 
 exports[`a $ref nested past the top level registers after its target > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputLeafSchema = v.strictObject(
     {
         "name": v.optional(v.string())
@@ -165,6 +166,7 @@ export type InputListThingsCommandResponse = UndefinedOnPartialDeep<ListThingsCo
 
 exports[`a single-member combinator emits the member alone: anyOf > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOnlySchema = v.string();
 export const onlySchema = v.pipe(v.string(), v.trim());
 export const inputGetThingCommandResponseSchema = inputOnlySchema;
@@ -174,6 +176,7 @@ export const getThingCommandResponseSchema = onlySchema;
 
 exports[`a single-member combinator emits the member alone: oneOf > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOnlySchema = v.string();
 export const onlySchema = v.pipe(v.string(), v.trim());
 export const inputGetThingCommandResponseSchema = inputOnlySchema;
@@ -183,6 +186,7 @@ export const getThingCommandResponseSchema = onlySchema;
 
 exports[`a single-member combinator emits the member alone: two-member oneOf > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOnlySchema = v.union([v.string(), v.number()]);
 export const onlySchema = v.union([v.pipe(v.string(), v.trim()), v.number()]);
 export const inputGetThingCommandResponseSchema = inputOnlySchema;
@@ -221,6 +225,7 @@ export const openSchema = inputOpenSchema;
 
 exports[`additionalProperties alongside properties keeps the extra keys valid > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputConfigSchema = v.objectWithRest(
     {
         "name": v.optional(v.string())
@@ -238,6 +243,7 @@ export const getThingCommandResponseSchema = configSchema;
 
 exports[`additionalProperties chooses the object schema: empty schema > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOpenSchema = v.looseObject(
     {
         "a": v.optional(v.string())
@@ -255,6 +261,7 @@ export const getThingCommandResponseSchema = openSchema;
 
 exports[`additionalProperties chooses the object schema: false > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOpenSchema = v.strictObject(
     {
         "a": v.optional(v.string())
@@ -272,6 +279,7 @@ export const getThingCommandResponseSchema = openSchema;
 
 exports[`additionalProperties chooses the object schema: string schema > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOpenSchema = v.objectWithRest(
     {
         "a": v.optional(v.string())
@@ -289,6 +297,7 @@ export const getThingCommandResponseSchema = openSchema;
 
 exports[`additionalProperties chooses the object schema: true > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOpenSchema = v.looseObject(
     {
         "a": v.optional(v.string())
@@ -315,6 +324,7 @@ export type InputGetThingCommandResponse = UndefinedOnPartialDeep<Labels>;
 
 exports[`additionalProperties is a string-keyed record of the value type > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputLabelsSchema = v.record(v.string(), v.string());
 export const labelsSchema = inputLabelsSchema;
 export const inputGetThingCommandResponseSchema = inputLabelsSchema;
@@ -324,6 +334,7 @@ export const getThingCommandResponseSchema = labelsSchema;
 
 exports[`additionalProperties true accepts any key > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputOpenSchema = v.looseObject(
     {
         "name": v.optional(v.string())

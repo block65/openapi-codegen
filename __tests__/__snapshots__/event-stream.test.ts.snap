@@ -59,6 +59,7 @@ export type StreamEventsCommandOutput = Thing | {
 
 exports[`JSON data variants make the output a union > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputThingSchema = v.strictObject(
     {
         "id": v.string()
@@ -137,6 +138,7 @@ export type StreamEventsCommandOutput = string;
 
 exports[`data with no contentMediaType is text > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputStreamEventsCommandDataSchema = v.string();
 export const streamEventsCommandDataSchema = v.pipe(v.string(), v.trim());
 "

@@ -803,23 +803,36 @@ function schemaObjectToValidator(
 }
 
 /**
- * Removes the JSON value schema when no validator uses it. The recursion
- * inside it refers to it, so fixUnusedIdentifiers keeps it otherwise
+ * Declares the JSON value schema once a validator refers to it, after the
+ * imports, and leaves a module that needs none without it
  */
-export function removeUnusedJsonValueSchema(file: SourceFile) {
-	const declaration = file.getVariableDeclaration(jsonValueSchema);
-
-	const usedOutside = file
+export function addJsonValueSchemaWhenUsed(file: SourceFile) {
+	const used = file
 		.getDescendantsOfKind(SyntaxKind.Identifier)
-		.some(
-			(identifier) =>
-				identifier.getText() === jsonValueSchema &&
-				!identifier.getAncestors().includes(declaration ?? identifier),
-		);
+		.some((identifier) => identifier.getText() === jsonValueSchema);
 
-	if (declaration && !usedOutside) {
-		declaration.getVariableStatementOrThrow().remove();
+	if (!used) {
+		return;
 	}
+
+	file.addImportDeclaration({
+		moduleSpecifier: "type-fest",
+		namedImports: ["JsonValue"],
+		isTypeOnly: true,
+	});
+
+	// A value a schema leaves open is checked as JSON, recursively, so both
+	// sides type it as JsonValue
+	file.insertVariableStatement(file.getImportDeclarations().length, {
+		declarationKind: VariableDeclarationKind.Const,
+		declarations: [
+			{
+				name: jsonValueSchema,
+				type: "v.GenericSchema<JsonValue>",
+				initializer: `v.lazy(() => v.union([v.string(), v.number(), v.boolean(), v.null(), v.record(v.string(), ${jsonValueSchema}), v.array(${jsonValueSchema})]))`,
+			},
+		],
+	});
 }
 
 export function createValibotFile(project: Project, outputDir: string) {
@@ -835,25 +848,6 @@ export function createValibotFile(project: Project, outputDir: string) {
 	file.addImportDeclaration({
 		moduleSpecifier: "valibot",
 		namespaceImport: "v",
-	});
-
-	file.addImportDeclaration({
-		moduleSpecifier: "type-fest",
-		namedImports: ["JsonValue"],
-		isTypeOnly: true,
-	});
-
-	// A value a schema leaves open is checked as JSON, recursively, so both
-	// sides type it as JsonValue
-	file.addVariableStatement({
-		declarationKind: VariableDeclarationKind.Const,
-		declarations: [
-			{
-				name: jsonValueSchema,
-				type: "v.GenericSchema<JsonValue>",
-				initializer: `v.lazy(() => v.union([v.string(), v.number(), v.boolean(), v.null(), v.record(v.string(), ${jsonValueSchema}), v.array(${jsonValueSchema})]))`,
-			},
-		],
 	});
 
 	return file;

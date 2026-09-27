@@ -21,6 +21,7 @@ export type Nullables = {
 
 exports[`3.0 nullable objects, arrays, strings and combinator members admit null > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputBaseSchema = v.looseObject(
     {
         "id": v.optional(v.string())
@@ -94,6 +95,7 @@ export type MyDuration = \`P\${string}\`;
 
 exports[`RFC 3339 temporal formats > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputMyDateSchema = v.pipe(v.string(), v.regex(/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$/u, "date"), v.custom<\`\${number}-\${number}-\${number}\`>(() => true));
 export const myDateSchema = v.pipe(v.string(), v.trim(), v.regex(/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$/u, "date"), v.custom<\`\${number}-\${number}-\${number}\`>(() => true));
 export const inputMyTimeSchema = v.pipe(v.string(), v.regex(/^([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u, "time"), v.custom<\`\${number}:\${number}:\${number}\${string}\`>(() => true));
@@ -115,6 +117,7 @@ export type NullConst = null;
 
 exports[`const values > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputStringConstSchema = v.literal("hello");
 export const stringConstSchema = inputStringConstSchema;
 export const inputNumberConstSchema = v.literal(42);
@@ -128,6 +131,7 @@ export const nullConstSchema = inputNullConstSchema;
 
 exports[`enums short-circuit type constraints (picklist only) > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputIntegerEnumSchema = v.picklist([0, 1, 2]);
 export const integerEnumSchema = inputIntegerEnumSchema;
 export const inputStringEnumSchema = v.picklist(["a@example.com", "b@example.com"]);
@@ -223,6 +227,7 @@ export type InputUploadDataCommandResponse = UndefinedOnPartialDeep<UploadStatus
 
 exports[`header parameters > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputUploadStatusSchema = v.picklist(["pending", "complete"]);
 export const uploadStatusSchema = inputUploadStatusSchema;
 export const inputUploadDataCommandResponseSchema = inputUploadStatusSchema;
@@ -248,6 +253,7 @@ export const uploadDataCommandHeaderSchema = v.object({
 
 exports[`input-only mode omits wire schemas > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputNameSchema = v.pipe(v.string(), v.minLength(1));
 export const inputAmountSchema = v.pipe(v.bigint(), v.minValue(0n));
 "
@@ -260,6 +266,7 @@ exports[`nullables > types.ts 1`] = `
 
 exports[`oneOf with type null generates v.null() > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputNullableImageSchema = v.union([v.string(), v.null()]);
 export const nullableImageSchema = v.union([v.pipe(v.string(), v.trim()), v.null()]);
 "
@@ -284,6 +291,7 @@ export type InputListFilesCommandResponse = UndefinedOnPartialDeep<Dummy>;
 
 exports[`query and header integer params coerce strings to numbers > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputDummySchema = v.string();
 export const dummySchema = v.pipe(v.string(), v.trim());
 export const inputExpireTimeSchema = v.pipe(v.bigint(), v.minValue(0n));
@@ -322,6 +330,7 @@ export type MultiType = string | number;
 
 exports[`top-level type array with null > valibot.ts 1`] = `
 "import * as v from "valibot";
+
 export const inputNullableStringSchema = v.nullable(v.string());
 export const nullableStringSchema = inputNullableStringSchema;
 export const inputNullableStringEnumSchema = v.nullable(v.picklist(["active", "inactive"]));

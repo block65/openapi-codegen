@@ -46,7 +46,7 @@ import {
 	createValibotFile,
 	createValidatorForOperationInput,
 	registerValidatorFromSchema,
-	removeUnusedJsonValueSchema,
+	addJsonValueSchemaWhenUsed,
 } from "./valibot.ts";
 
 export type CodegenOptions = {
@@ -2294,7 +2294,7 @@ export async function processOpenApiDocument(
 	files.typesFile.fixUnusedIdentifiers();
 	files.commandsFile.fixUnusedIdentifiers();
 	files.commandsValidatedFile.fixUnusedIdentifiers();
-	removeUnusedJsonValueSchema(files.valibotFile);
+	addJsonValueSchemaWhenUsed(files.valibotFile);
 	files.valibotFile.fixUnusedIdentifiers();
 
 	const honoFile = emitHonoModule(
