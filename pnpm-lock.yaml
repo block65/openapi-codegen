@@ -170,9 +170,6 @@ importers:
 
   .:
     dependencies:
-      '@apidevtools/json-schema-ref-parser':
-        specifier: ^16.0.3
-        version: 16.0.3(@types/json-schema@7.0.15)
       camelcase:
         specifier: ^9.0.0
         version: 9.0.0
@@ -251,12 +248,6 @@ importers:
         version: 5.0.2(@types/node@26.6.3)(vite@8.3.1(@types/node@26.6.3)(yaml@2.9.1))
 
 packages:
-
-  '@apidevtools/json-schema-ref-parser@16.0.3':
-    resolution: {integrity: sha512-7lZp4XCTZhU/AgiGpIG+j4uJeWPdGbpQ+8wqXrzuHy+tboKsjSacjGH9/kNThRDIFhMWHF3ba+ejS8J3PeSI1Q==}
-    engines: {node: '>=22.19.0'}
-    peerDependencies:
-      '@types/json-schema': ^7.0.15
 
   '@block65/custom-error@14.1.0':
     resolution: {integrity: sha512-smbcm4A4TwTwKDxJz639scvwCSVtU8qmk/Em2n9P5NT2JLGeK/beRI8acUS/yuAK04LYQrjfDqUFSva4472OcQ==}
@@ -1663,12 +1654,6 @@ packages:
     engines: {node: '>=10'}
 
 snapshots:
-
-  '@apidevtools/json-schema-ref-parser@16.0.3(@types/json-schema@7.0.15)':
-    dependencies:
-      '@types/json-schema': 7.0.15
-      js-yaml: 5.4.2
-      undici: 8.11.2
 
   '@block65/custom-error@14.1.0':
     dependencies:

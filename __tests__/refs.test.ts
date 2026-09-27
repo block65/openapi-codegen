@@ -213,3 +213,23 @@ test("schemas that refer to each other read the later one lazily", async () => {
 	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
+
+test("a $ref to another file is refused without reading it", async () => {
+	await expect(
+		processOpenApiDocument("/tmp/refs", {
+			openapi: "3.1.0",
+			info: { title: "Test", version: "1.0.0" },
+			paths: {
+				"/orders": {
+					get: {
+						operationId: "listOrdersCommand",
+						parameters: [{ $ref: "shared.yaml#/components/parameters/Page" }],
+						responses: { "204": { description: "No content" } },
+					},
+				},
+			},
+		}),
+	).rejects.toThrow(
+		"shared.yaml#/components/parameters/Page is not in the document, and only local refs are read",
+	);
+});

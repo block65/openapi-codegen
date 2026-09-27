@@ -1,5 +1,4 @@
 import nodePath from "node:path";
-import { $RefParser, type $Refs } from "@apidevtools/json-schema-ref-parser";
 import type { oas30, oas32 } from "openapi3-ts";
 import toposort from "toposort";
 import {
@@ -29,7 +28,7 @@ import {
 	queryStyles,
 } from "./hono.ts";
 import { registerTypesFromSchema, schemaToType } from "./process-schema.ts";
-import { normalizeRefs, schemaRef } from "./refs.ts";
+import { localRefs, normalizeRefs, type Refs, schemaRef } from "./refs.ts";
 import {
 	type ReferenceObject,
 	type SchemaNode,
@@ -312,7 +311,7 @@ const sequentialMediaTypes: Readonly<Record<string, SequentialMedia>> = {
 
 // a $ref resolves to the object it names, which the document must hold
 function resolveObject<T extends object>(
-	refs: $Refs,
+	refs: Refs,
 	node: T | ReferenceObject,
 ) {
 	if (!isReferenceObject(node)) {
@@ -330,7 +329,7 @@ function resolveObject<T extends object>(
 }
 
 // OAS 3.2 lets a media type be a $ref, so a content map resolves before use
-function resolveContent(refs: $Refs, content: oas32.ContentObject | undefined) {
+function resolveContent(refs: Refs, content: oas32.ContentObject | undefined) {
 	return Object.fromEntries(
 		Object.entries(content ?? {}).map(([mediaType, media]) => [
 			mediaType,
@@ -394,7 +393,7 @@ function createOutputFiles(project: Project, outputDir: string) {
 type OutputFiles = ReturnType<typeof createOutputFiles>;
 
 type DocumentContext = OutputFiles & {
-	refs: $Refs;
+	refs: Refs;
 	openapiVersion: string;
 	typesImportDecl: ImportDeclaration;
 	typesAndInterfaces: Map<string, NamedDeclaration>;
@@ -701,8 +700,12 @@ function declareCommandClass(
 	return { commandName, commandClass, deprecationDocs };
 }
 
+function isObjectSchema(value: unknown): value is oas30.SchemaObject {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 // valibot coercion inspects the schema, so a $ref has to go first
-function withResolvedSchema(refs: $Refs, parameter: oas30.ParameterObject) {
+function withResolvedSchema(refs: Refs, parameter: oas30.ParameterObject) {
 	const resolvedSchema =
 		parameter.schema && "$ref" in parameter.schema
 			? (refs.get(parameter.schema.$ref) ?? undefined)
@@ -710,18 +713,14 @@ function withResolvedSchema(refs: $Refs, parameter: oas30.ParameterObject) {
 
 	const paramWithResolvedSchema: oas30.ParameterObject = {
 		...parameter,
-		...(resolvedSchema &&
-			typeof resolvedSchema === "object" &&
-			!Array.isArray(resolvedSchema) && {
-				schema: resolvedSchema,
-			}),
+		...(isObjectSchema(resolvedSchema) && { schema: resolvedSchema }),
 	};
 
 	return paramWithResolvedSchema;
 }
 
 function collectParameters(
-	refs: $Refs,
+	refs: Refs,
 	path: string,
 	pathItemObject: oas32.PathItemObject,
 	operationObject: OperationWithId,
@@ -1242,10 +1241,7 @@ function firstSuccessResponse(operationObject: OperationWithId) {
 	return response;
 }
 
-function firstJsonResponseSchema(
-	refs: $Refs,
-	operationObject: OperationWithId,
-) {
+function firstJsonResponseSchema(refs: Refs, operationObject: OperationWithId) {
 	// Resolve the first 2xx JSON response schema (inline or $ref) so the
 	// validator pipeline treats responses the same as request bodies
 	return resolveContent(refs, firstSuccessResponse(operationObject)?.content)[
@@ -1443,7 +1439,7 @@ function addInlineOutput(
 	});
 }
 
-function resolveSchema(refs: $Refs, operationId: string, schema: SchemaNode) {
+function resolveSchema(refs: Refs, operationId: string, schema: SchemaNode) {
 	if (typeof schema === "boolean") {
 		throw new TypeError(
 			`${operationId}: a boolean item schema has no content to decode`,
@@ -1461,7 +1457,7 @@ function canStateItemSchema(openapiVersion: string) {
 }
 
 function sequentialContent(
-	refs: $Refs,
+	refs: Refs,
 	openapiVersion: string,
 	operationObject: OperationWithId,
 ) {
@@ -2311,7 +2307,7 @@ export async function processOpenApiDocument(
 	const schema = normalizeRefs(document);
 	const project = new Project();
 	const files = createOutputFiles(project, outputDir);
-	const refs = await $RefParser.resolve(schema);
+	const refs = localRefs(schema);
 	const typesImportDecl = addModulePreambles(files);
 
 	const documentCtx: DocumentContext = {

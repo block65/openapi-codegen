@@ -77,6 +77,26 @@ function lookup(document: unknown, ref: string) {
 	return node;
 }
 
+export type Refs = { get(ref: string): unknown };
+
+/**
+ * Looks up $refs inside the document. A ref to another file or a URL is
+ * refused, which keeps generation to the one document it is given
+ */
+export function localRefs(document: unknown): Refs {
+	return {
+		get: (ref) => {
+			if (!ref.startsWith("#")) {
+				throw new Error(
+					`${ref} is not in the document, and only local refs are read`,
+				);
+			}
+
+			return lookup(document, ref);
+		},
+	};
+}
+
 /**
  * Leaves only $refs the generator can look up. A percent-encoded ref is
  * decoded. A ref into part of a component schema is replaced by that
