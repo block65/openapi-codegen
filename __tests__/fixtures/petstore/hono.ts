@@ -15,7 +15,7 @@ import {
 	findPetByIdCommandParamsSchema,
 	findPetWrappedCommandParamsSchema,
 	findPetsCommandQuerySchema,
-} from "./valibot.js";
+} from "./valibot.ts";
 
 type StandardSchema = Parameters<typeof sValidator>[1];
 

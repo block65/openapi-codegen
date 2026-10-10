@@ -44,7 +44,7 @@ import type {
 	UpdateBillingSubscriptionCommandInput,
 	CancelSubscriptionCommandInput,
 	UpdateBillingSubscriptionPromoCodeCommandInput,
-} from "./types.js";
+} from "./types.ts";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated

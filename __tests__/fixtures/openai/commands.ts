@@ -185,7 +185,7 @@ import type {
 	ProjectApiKey,
 	DeleteProjectApiKeyCommandInput,
 	ProjectApiKeyDeleteResponse,
-} from "./types.js";
+} from "./types.ts";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated

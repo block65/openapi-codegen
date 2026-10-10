@@ -162,7 +162,7 @@ import {
 	volumeUpdateCommandBodySchema,
 	volumeUpdateCommandParamsSchema,
 	volumeUpdateCommandQuerySchema,
-} from "./valibot.js";
+} from "./valibot.ts";
 
 type StandardSchema = Parameters<typeof sValidator>[1];
 

@@ -1,5 +1,6 @@
 import camelcase from "camelcase";
 import type { oas30, oas32 } from "openapi3-ts";
+import type { SourceFile } from "ts-morph";
 import type { OmitIndexSignature } from "type-fest";
 import wrap from "word-wrap";
 
@@ -106,6 +107,14 @@ export function castToValidJsIdentifier(name: string) {
 
 export function iife<T>(fn: () => T): T {
 	return fn();
+}
+
+/**
+ * Generated files import each other by their real file names, `.ts` included,
+ * so compiling the output needs `allowImportingTsExtensions`
+ */
+export function siblingModuleSpecifier(file: SourceFile) {
+	return `./${file.getBaseName()}`;
 }
 
 /**

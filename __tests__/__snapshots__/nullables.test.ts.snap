@@ -142,7 +142,7 @@ export const stringEnumSchema = inputStringEnumSchema;
 exports[`header parameters > commands.ts 1`] = `
 "import { Command } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.js";
+import type { UploadDataCommandHeader, UploadDataCommandInput, UploadStatus } from "./types.ts";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated 
@@ -169,8 +169,8 @@ export class UploadDataCommand extends Command<UndefinedOnPartialDeep<UploadData
 `;
 
 exports[`header parameters > commands-validated.ts 1`] = `
-"import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+"import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class UploadDataCommand extends commands.UploadDataCommand {
     public override readonly responseSchema = schemas.uploadDataCommandResponseSchema;
@@ -182,7 +182,7 @@ exports[`header parameters > hono.ts 1`] = `
 "import { sValidator } from "@hono/standard-validator";
 import type { ValidationTargets } from "hono";
 import { PublicValidationError } from "@block65/rest-client";
-import { uploadDataCommandParamsSchema } from "./valibot.js";
+import { uploadDataCommandParamsSchema } from "./valibot.ts";
 
 type StandardSchema = Parameters<typeof sValidator>[1];
 

@@ -37,6 +37,7 @@ import {
 	castToValidJsIdentifier,
 	getDependents,
 	iife,
+	siblingModuleSpecifier,
 	isReferenceObject,
 	isSchemaObject,
 	pascalCase,
@@ -410,10 +411,6 @@ type DocumentContext = OutputFiles & {
 	inputOnly: boolean | undefined;
 };
 
-function buildTypesModuleSpecifier(typesFile: SourceFile) {
-	return `./${typesFile.getBaseNameWithoutExtension()}.js`;
-}
-
 function addModulePreambles({ commandsFile, typesFile }: OutputFiles) {
 	commandsFile.addImportDeclaration({
 		namedImports: [
@@ -470,7 +467,7 @@ function addModulePreambles({ commandsFile, typesFile }: OutputFiles) {
 		isTypeOnly: true,
 	});
 
-	const typesModuleSpecifier = buildTypesModuleSpecifier(typesFile);
+	const typesModuleSpecifier = siblingModuleSpecifier(typesFile);
 
 	return (
 		commandsFile
@@ -2174,7 +2171,7 @@ function emitClientModule(
 
 	if (importNames.size > 0) {
 		mainFile.addImportDeclaration({
-			moduleSpecifier: buildTypesModuleSpecifier(typesFile),
+			moduleSpecifier: siblingModuleSpecifier(typesFile),
 			namedImports: [...importNames].toSorted(),
 			isTypeOnly: true,
 		});
@@ -2207,7 +2204,7 @@ function emitValidatedModule({
 	// Build the validated module. Subclasses set a schema field, and commands
 	// lacking a schema are re-exported unchanged so the module keeps export
 	// parity with the base and stays alias-safe
-	const commandsModuleSpecifier = `./${commandsFile.getBaseNameWithoutExtension()}.js`;
+	const commandsModuleSpecifier = siblingModuleSpecifier(commandsFile);
 
 	if (validatedSubclasses.length > 0) {
 		// Namespace imports keep the generated file compact and stable across
@@ -2223,7 +2220,7 @@ function emitValidatedModule({
 		});
 
 		commandsValidatedFile.addImportDeclaration({
-			moduleSpecifier: `./${valibotFile.getBaseNameWithoutExtension()}.js`,
+			moduleSpecifier: siblingModuleSpecifier(valibotFile),
 			namespaceImport: schemasNs,
 		});
 
@@ -2257,6 +2254,7 @@ function emitValidatedModule({
 function emitHonoModule(
 	project: Project,
 	outputDir: string,
+	valibotFile: SourceFile,
 	allOperations: OperationMiddlewareInfo[],
 ) {
 	const honoFile = createHonoFile(project, outputDir);
@@ -2273,7 +2271,7 @@ function emitHonoModule(
 	}
 
 	// Add the schema imports
-	addSchemaImportsToHonoFile(honoFile, [...schemaImports]);
+	addSchemaImportsToHonoFile(honoFile, valibotFile, [...schemaImports]);
 
 	// Generate middleware exports for each operation
 	for (const op of allOperations) {
@@ -2344,7 +2342,7 @@ export async function processOpenApiDocument(
 	importLazyTypes(
 		files.valibotFile,
 		documentCtx.validators,
-		buildTypesModuleSpecifier(files.typesFile),
+		siblingModuleSpecifier(files.typesFile),
 	);
 	addJsonValueSchemaWhenUsed(files.valibotFile);
 	files.valibotFile.fixUnusedIdentifiers();
@@ -2352,6 +2350,7 @@ export async function processOpenApiDocument(
 	const honoFile = emitHonoModule(
 		project,
 		outputDir,
+		files.valibotFile,
 		documentCtx.allOperations,
 	);
 

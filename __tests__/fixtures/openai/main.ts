@@ -164,7 +164,7 @@ import type {
 	VectorStoreFileBatchObject,
 	VectorStoreFileObject,
 	VectorStoreObject,
-} from "./types.js";
+} from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 

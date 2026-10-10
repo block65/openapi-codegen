@@ -3,7 +3,7 @@
 exports[`JSON data variants make the output a union > commands.ts 1`] = `
 "import { EventStreamCommand } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { StreamEventsCommandInput, StreamEventsCommandOutput } from "./types.js";
+import type { StreamEventsCommandInput, StreamEventsCommandOutput } from "./types.ts";
 
 
 /**
@@ -21,8 +21,8 @@ export class StreamEventsCommand extends EventStreamCommand<UndefinedOnPartialDe
 `;
 
 exports[`JSON data variants make the output a union > commands-validated.ts 1`] = `
-"import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+"import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class StreamEventsCommand extends commands.StreamEventsCommand {
     public override readonly dataSchema = schemas.streamEventsCommandDataSchema;
@@ -32,7 +32,7 @@ export class StreamEventsCommand extends commands.StreamEventsCommand {
 
 exports[`JSON data variants make the output a union > main.ts 1`] = `
 "import { RestServiceClient, type ParsedStreamEvent, type RestServiceClientConfig } from "@block65/rest-client";
-import type { StreamEventsCommandOutput } from "./types.js";
+import type { StreamEventsCommandOutput } from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 
@@ -86,7 +86,7 @@ export const streamEventsCommandDataSchema = v.union([thingSchema, v.strictObjec
 exports[`data with no contentMediaType is text > commands.ts 1`] = `
 "import { EventStreamCommand, textDataTransformer } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { StreamEventsCommandInput, StreamEventsCommandOutput } from "./types.js";
+import type { StreamEventsCommandInput, StreamEventsCommandOutput } from "./types.ts";
 
 
 /**
@@ -105,8 +105,8 @@ export class StreamEventsCommand extends EventStreamCommand<UndefinedOnPartialDe
 `;
 
 exports[`data with no contentMediaType is text > commands-validated.ts 1`] = `
-"import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+"import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class StreamEventsCommand extends commands.StreamEventsCommand {
     public override readonly dataSchema = schemas.streamEventsCommandDataSchema;
@@ -116,7 +116,7 @@ export class StreamEventsCommand extends commands.StreamEventsCommand {
 
 exports[`data with no contentMediaType is text > main.ts 1`] = `
 "import { RestServiceClient, type ParsedStreamEvent, type RestServiceClientConfig } from "@block65/rest-client";
-import type { StreamEventsCommandOutput } from "./types.js";
+import type { StreamEventsCommandOutput } from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 
@@ -147,7 +147,7 @@ export const streamEventsCommandDataSchema = v.pipe(v.string(), v.trim());
 exports[`without an itemSchema, a plain command > commands.ts 1`] = `
 "import { Command } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { StreamEventsCommandInput } from "./types.js";
+import type { StreamEventsCommandInput } from "./types.ts";
 
 
 /**
@@ -165,7 +165,7 @@ export class StreamEventsCommand extends Command<UndefinedOnPartialDeep<StreamEv
 `;
 
 exports[`without an itemSchema, a plain command > commands-validated.ts 1`] = `
-"export { StreamEventsCommand } from "./commands.js";
+"export { StreamEventsCommand } from "./commands.ts";
 "
 `;
 

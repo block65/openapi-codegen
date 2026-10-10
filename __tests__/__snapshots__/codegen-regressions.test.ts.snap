@@ -3,7 +3,7 @@
 exports[`AllInputs union carries every command that takes an input > main.ts 1`] = `
 "import { RestServiceClient, type RestServiceClientConfig } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { AlphaCommandOutput, BetaCommandOutput, GammaCommandOutput, WithBodyCommandInput, WithBodyCommandOutput, WithQueryCommandInput, WithQueryCommandOutput } from "./types.js";
+import type { AlphaCommandOutput, BetaCommandOutput, GammaCommandOutput, WithBodyCommandInput, WithBodyCommandOutput, WithQueryCommandInput, WithQueryCommandOutput } from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 
@@ -68,7 +68,7 @@ export const inArrayItemSchema = v.array(v.looseObject(
 exports[`a bodiless success is undefined, and no documented success is never > commands.ts 1`] = `
 "import { Command } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { NoContentCommandInput, OkWithoutBodyCommandInput, FailuresOnlyCommandInput, NothingDocumentedCommandInput, BytesCommandInput } from "./types.js";
+import type { NoContentCommandInput, OkWithoutBodyCommandInput, FailuresOnlyCommandInput, NothingDocumentedCommandInput, BytesCommandInput } from "./types.ts";
 
 
 /**
@@ -353,7 +353,7 @@ export const getThingCommandResponseSchema = openSchema;
 exports[`an array request body with parameters stays readable as both > commands.ts 1`] = `
 "import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { PluginPullCommandQuery, PluginPullCommandInput, PluginPullCommandOutput } from "./types.js";
+import type { PluginPullCommandQuery, PluginPullCommandInput, PluginPullCommandOutput } from "./types.ts";
 
 
 /**
@@ -408,7 +408,7 @@ exports[`an object schema that omits \`type\` still honours \`required\` > types
 exports[`an operation with both a 200 and a 204 emits one output type argument > commands.ts 1`] = `
 "import { Command } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { SystemAuthCommandInput, SystemAuthCommandOutput } from "./types.js";
+import type { SystemAuthCommandInput, SystemAuthCommandOutput } from "./types.ts";
 
 
 /**
@@ -447,7 +447,7 @@ export type InputCreateContainerCommandResponse = UndefinedOnPartialDeep<CreateC
 exports[`main.ts emits file-level \`import type\` for type-only imports > main.ts 1`] = `
 "import { RestServiceClient, type RestServiceClientConfig } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";
-import type { OneCommandInput, OneCommandOutput } from "./types.js";
+import type { OneCommandInput, OneCommandOutput } from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 

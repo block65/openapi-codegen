@@ -4,8 +4,8 @@
  * Do not edit directly
  */
 
-import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class ImportBillingDataCommand
 	extends commands.ImportBillingDataCommand
@@ -120,4 +120,4 @@ export {
 	LinkBillingAccountCommand,
 	UpdateBillingSubscriptionCommand,
 	UpdatePaymentMethodCommand,
-} from "./commands.js";
+} from "./commands.ts";

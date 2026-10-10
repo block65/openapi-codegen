@@ -4,8 +4,8 @@
  * Do not edit directly
  */
 
-import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class FindPetsCommand extends commands.FindPetsCommand {
 	public override readonly responseSchema =
@@ -26,4 +26,4 @@ export class FindPetWrappedCommand extends commands.FindPetWrappedCommand {
 		schemas.findPetWrappedCommandResponseSchema;
 }
 
-export { DeletePetCommand } from "./commands.js";
+export { DeletePetCommand } from "./commands.ts";
