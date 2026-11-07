@@ -20,6 +20,51 @@ const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
 		v.array(jsonValueSchema),
 	]),
 );
+export const inputCalendarDateSchema = v.pipe(
+	v.string(),
+	v.regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u, "date"),
+	v.custom<`${number}-${number}-${number}`>(() => true),
+);
+export const calendarDateSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u, "date"),
+	v.custom<`${number}-${number}-${number}`>(() => true),
+);
+export const inputWallTimeSchema = v.pipe(
+	v.string(),
+	v.regex(
+		/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+		"time",
+	),
+	v.custom<`${number}:${number}:${number}${string}`>(() => true),
+);
+export const wallTimeSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.regex(
+		/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+		"time",
+	),
+	v.custom<`${number}:${number}:${number}${string}`>(() => true),
+);
+export const inputTrialLengthSchema = v.pipe(
+	v.string(),
+	v.regex(
+		/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u,
+		"duration",
+	),
+	v.custom<`P${string}`>(() => true),
+);
+export const trialLengthSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.regex(
+		/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u,
+		"duration",
+	),
+	v.custom<`P${string}`>(() => true),
+);
 export const inputPromoCodeSchema = v.pipe(
 	v.string(),
 	v.minLength(1),
@@ -104,7 +149,7 @@ export const inputDateTimeSchema = v.pipe(
 		/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 		"date-time",
 	),
-	v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+	v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 		() => true,
 	),
 );
@@ -115,7 +160,7 @@ export const dateTimeSchema = v.pipe(
 		/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 		"date-time",
 	),
-	v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+	v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 		() => true,
 	),
 );

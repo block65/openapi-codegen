@@ -1,6 +1,6 @@
 /**
  * Maps an RFC 3339 temporal format to the regex literal that checks a value,
- * and the template-literal type the generated code gives it
+ * and the template-literal type every match satisfies
  */
 export function temporalFormat(format: string | undefined) {
 	// RFC 3339 departs from ISO 8601 in ways these patterns encode. `date-time`
@@ -21,7 +21,7 @@ export function temporalFormat(format: string | undefined) {
 		case "date-time":
 			return {
 				regex: String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
-				type: "`${number}-${number}-${number}T${number}:${number}:${number}${string}`",
+				type: '`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`',
 			};
 		case "duration":
 			return {

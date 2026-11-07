@@ -8,6 +8,9 @@
 
 import type { JsonValue, UndefinedOnPartialDeep } from "type-fest";
 
+export type CalendarDate = `${number}-${number}-${number}`;
+export type WallTime = `${number}:${number}:${number}${string}`;
+export type TrialLength = `P${string}`;
 export type PromoCode = string;
 /** The API version */
 export type ApiVersion = "2024-01-01";
@@ -29,7 +32,7 @@ export type EventSource =
 	| `https://syndicated.example.com/${string}`;
 export type StripeId = string;
 export type DateTime =
-	`${number}-${number}-${number}T${number}:${number}:${number}${string}`;
+	`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`;
 export type BillingSubscriptionStatus = "active" | "inactive";
 export type BillingSubscriptionInterval = "monthly" | "yearly";
 export type PlanSku =

@@ -40,6 +40,18 @@
 				"type": "string",
 				"format": "date-time"
 			},
+			"CalendarDate": {
+				"type": "string",
+				"format": "date"
+			},
+			"WallTime": {
+				"type": "string",
+				"format": "time"
+			},
+			"TrialLength": {
+				"type": "string",
+				"format": "duration"
+			},
 			"Email": {
 				"description": "Valid email address with fully qualified public top-level domain",
 				"type": "string",

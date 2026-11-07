@@ -1538,7 +1538,7 @@ export const inputHealthSchema = v.nullable(
 									/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 									"date-time",
 								),
-								v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+								v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 									() => true,
 								),
 							),
@@ -1603,7 +1603,7 @@ export const healthSchema = v.nullable(
 									/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 									"date-time",
 								),
-								v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+								v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 									() => true,
 								),
 							),
@@ -1649,7 +1649,7 @@ export const inputHealthcheckResultSchema = v.nullable(
 					/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 					"date-time",
 				),
-				v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+				v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 					() => true,
 				),
 			),
@@ -1688,7 +1688,7 @@ export const healthcheckResultSchema = v.nullable(
 					/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 					"date-time",
 				),
-				v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+				v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 					() => true,
 				),
 			),
@@ -20827,7 +20827,7 @@ export const inputContainerStateSchema = v.nullable(
 												/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 												"date-time",
 											),
-											v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+											v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 												() => true,
 											),
 										),
@@ -20963,7 +20963,7 @@ export const containerStateSchema = v.nullable(
 												/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 												"date-time",
 											),
-											v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+											v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 												() => true,
 											),
 										),
@@ -28294,7 +28294,7 @@ export const inputContainerInspectCommandResponseSchema = v.looseObject({
 														/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 														"date-time",
 													),
-													v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+													v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 														() => true,
 													),
 												),
@@ -29719,7 +29719,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 														/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
 														"date-time",
 													),
-													v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
+													v.custom<`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`>(
 														() => true,
 													),
 												),
