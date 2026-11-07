@@ -47,7 +47,7 @@ import {
 	createValibotFile,
 	createValidatorForOperationInput,
 	declareValidator,
-	importLazyTypes,
+	importNamedTypes,
 	type ValidatorEntry,
 	registerValidatorFromSchema,
 	addJsonValueSchemaWhenUsed,
@@ -2341,9 +2341,9 @@ export async function processOpenApiDocument(
 	files.typesFile.fixUnusedIdentifiers();
 	files.commandsFile.fixUnusedIdentifiers();
 	files.commandsValidatedFile.fixUnusedIdentifiers();
-	importLazyTypes(
+	importNamedTypes(
 		files.valibotFile,
-		documentCtx.validators,
+		files.typesFile,
 		buildTypesModuleSpecifier(files.typesFile),
 	);
 	addJsonValueSchemaWhenUsed(files.valibotFile);

@@ -8,6 +8,7 @@
 
 import type { JsonValue } from "type-fest";
 import * as v from "valibot";
+import type { EmbedUrl } from "./types.js";
 
 const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
 	v.union([
@@ -50,6 +51,32 @@ export const inputEmbedUrlSchema = v.pipe(
 	v.custom<`https://embed.example.com/${string}`>(() => true),
 );
 export const embedUrlSchema = inputEmbedUrlSchema;
+export const inputEmbedLinkSchema = v.strictObject({
+	url: v.pipe(
+		v.string(),
+		v.custom<EmbedUrl>(() => true),
+	),
+	label: v.optional(
+		v.pipe(
+			v.string(),
+			v.custom<Capitalize<string>>(() => true),
+		),
+	),
+});
+export const embedLinkSchema = v.strictObject({
+	url: v.pipe(
+		v.string(),
+		v.trim(),
+		v.custom<EmbedUrl>(() => true),
+	),
+	label: v.exactOptional(
+		v.pipe(
+			v.string(),
+			v.trim(),
+			v.custom<Capitalize<string>>(() => true),
+		),
+	),
+});
 export const inputEventSourceSchema = v.union([
 	v.picklist(["native"]),
 	v.pipe(

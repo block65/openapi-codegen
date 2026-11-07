@@ -2,6 +2,7 @@ import path from "node:path";
 import type { oas30, oas32 } from "openapi3-ts";
 import {
 	type CodeBlockWriter,
+	Node,
 	type Project,
 	type SourceFile,
 	SyntaxKind,
@@ -35,8 +36,6 @@ export type ValidatorEntry = {
 	wireIsInput: boolean;
 	emitted: boolean;
 };
-
-const lazilyTyped = new WeakMap<Map<string, ValidatorEntry>, Set<string>>();
 
 // oxlint groups integer digits in threes once a literal reaches five digits
 function numericLiteral(value: number) {
@@ -273,10 +272,6 @@ function resolveRef(
 
 	// A recursive schema refers to one that is not declared yet. The
 	// annotation stops TypeScript inferring its type from itself
-	const types = lazilyTyped.get(validators) ?? new Set();
-	types.add(entry.type);
-	lazilyTyped.set(validators, types);
-
 	const type =
 		mode === "input" || entry.wireIsInput
 			? `UndefinedOnPartialDeep<${entry.type}>`
@@ -287,27 +282,38 @@ function resolveRef(
 }
 
 /**
- * Imports the types that annotate lazy refs. Call it once every validator
- * is emitted
+ * Imports each type the types module exports and a validator names, whether a
+ * lazy ref annotates it or an `x-typescript-hint` names it. Call it once every
+ * validator is emitted
  */
-export function importLazyTypes(
+export function importNamedTypes(
 	file: SourceFile,
-	validators: Map<string, ValidatorEntry>,
+	typesFile: SourceFile,
 	typesModuleSpecifier: string,
 ) {
-	const types = lazilyTyped.get(validators);
+	const exported = typesFile.getExportedDeclarations();
 
-	if (!types) {
-		return;
+	const named = new Set(
+		file
+			.getDescendantsOfKind(SyntaxKind.TypeReference)
+			.map((reference) => reference.getTypeName())
+			.filter((name) => Node.isIdentifier(name))
+			.map((name) => name.getText()),
+	);
+
+	const fromTypes = [...named].filter((name) => exported.has(name));
+
+	if (fromTypes.length > 0) {
+		file.addImportDeclaration({
+			moduleSpecifier: typesModuleSpecifier,
+			namedImports: fromTypes.toSorted(),
+			isTypeOnly: true,
+		});
 	}
 
-	file.addImportDeclaration({
-		moduleSpecifier: typesModuleSpecifier,
-		namedImports: [...types],
-		isTypeOnly: true,
-	});
-
-	importFromTypeFest(file, "UndefinedOnPartialDeep");
+	if (named.has("UndefinedOnPartialDeep")) {
+		importFromTypeFest(file, "UndefinedOnPartialDeep");
+	}
 }
 
 function importFromTypeFest(file: SourceFile, name: string) {

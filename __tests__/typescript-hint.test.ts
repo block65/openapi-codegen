@@ -75,3 +75,40 @@ test("x-typescript-hint honored inside anyOf branches", async () => {
 
 	expect(result.typesFile.getText()).toMatchSnapshot("types.ts");
 });
+
+test("x-typescript-hint naming a generated type imports it into the validators", async () => {
+	const schema: oas32.OpenAPIObject = {
+		...baseDoc,
+		components: {
+			schemas: {
+				EmbedUrl: {
+					type: "string",
+					"x-typescript-hint": "`https://embed.example.com/${string}`",
+				},
+				EmbedLink: {
+					type: "object",
+					properties: {
+						url: { type: "string", "x-typescript-hint": "EmbedUrl" },
+						label: {
+							type: "string",
+							"x-typescript-hint": "Capitalize<string>",
+						},
+					},
+				},
+			},
+		},
+	};
+
+	const result = await processOpenApiDocument(
+		"/tmp/like-you-know-whatever",
+		schema,
+	);
+
+	const imported = result.valibotFile
+		.getImportDeclarations()
+		.flatMap((declaration) => declaration.getNamedImports())
+		.map((specifier) => specifier.getName());
+
+	expect(imported).toContain("EmbedUrl");
+	expect(imported).not.toContain("Capitalize");
+});

@@ -19,6 +19,10 @@ export type NullableDiscount = number | null;
 export type NullableStatus = "active" | "paused" | "cancelled" | null;
 export type AccountTier = "free" | "pro" | "enterprise";
 export type EmbedUrl = `https://embed.example.com/${string}`;
+export type EmbedLink = {
+	url: EmbedUrl;
+	label?: Capitalize<string>;
+};
 export type EventSource =
 	| "native"
 	| `https://embed.example.com/${string}`
