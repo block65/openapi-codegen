@@ -1,5 +1,7 @@
+import type { oas32 } from "openapi3-ts";
 import * as v from "valibot";
-import { expect, test } from "vitest";
+import { expect, expectTypeOf, test } from "vitest";
+import { processOpenApiDocument } from "../lib/process-document.ts";
 import type {
 	CalendarDate,
 	DateTime,
@@ -9,6 +11,10 @@ import type {
 import {
 	calendarDateSchema,
 	dateTimeSchema,
+	inputCalendarDateSchema,
+	inputDateTimeSchema,
+	inputTrialLengthSchema,
+	inputWallTimeSchema,
 	trialLengthSchema,
 	wallTimeSchema,
 } from "./fixtures/test1/valibot.ts";
@@ -74,3 +80,76 @@ test.each(durations)(
 		});
 	},
 );
+
+test("a temporal format's schemas output its generated type", () => {
+	expectTypeOf<
+		v.InferOutput<typeof dateTimeSchema>
+	>().toEqualTypeOf<DateTime>();
+	expectTypeOf<
+		v.InferOutput<typeof inputDateTimeSchema>
+	>().toEqualTypeOf<DateTime>();
+	expectTypeOf<
+		v.InferOutput<typeof calendarDateSchema>
+	>().toEqualTypeOf<CalendarDate>();
+	expectTypeOf<
+		v.InferOutput<typeof inputCalendarDateSchema>
+	>().toEqualTypeOf<CalendarDate>();
+	expectTypeOf<
+		v.InferOutput<typeof wallTimeSchema>
+	>().toEqualTypeOf<WallTime>();
+	expectTypeOf<
+		v.InferOutput<typeof inputWallTimeSchema>
+	>().toEqualTypeOf<WallTime>();
+	expectTypeOf<
+		v.InferOutput<typeof trialLengthSchema>
+	>().toEqualTypeOf<TrialLength>();
+	expectTypeOf<
+		v.InferOutput<typeof inputTrialLengthSchema>
+	>().toEqualTypeOf<TrialLength>();
+});
+
+test.each([
+	["date-time", dateTimeSchema, "2024-13-01T00:00:00Z"],
+	["date-time", dateTimeSchema, "2024-01-01T00:00:00"],
+	["date-time", dateTimeSchema, "2024-01-01"],
+	["date-time", inputDateTimeSchema, "2024-01-01T24:00:00Z"],
+	["date", calendarDateSchema, "2024-1-01"],
+	["date", inputCalendarDateSchema, "2024-01-32"],
+	["time", wallTimeSchema, "12:00:00"],
+	["time", inputWallTimeSchema, "12:60:00Z"],
+	["duration", trialLengthSchema, "P"],
+	["duration", inputTrialLengthSchema, "PT"],
+	["duration", trialLengthSchema, "1D"],
+])("a malformed %s %j is rejected", (_format, schema, value) => {
+	expect(v.safeParse(schema, value).success).toBe(false);
+});
+
+test("a temporal schema names its alias, inlines a property's literal, and defers to a type hint", async () => {
+	const schema: oas32.OpenAPIObject = {
+		openapi: "3.1.0",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				Timestamp: { type: "string", format: "date-time" },
+				Window: {
+					type: "object",
+					additionalProperties: false,
+					required: ["opensAt"],
+					properties: {
+						opensAt: { type: "string", format: "date-time" },
+						closesAt: {
+							type: "string",
+							format: "date-time",
+							"x-typescript-hint": "Timestamp",
+						},
+					},
+				},
+			},
+		},
+	};
+
+	const result = await processOpenApiDocument("/tmp/whatever", schema);
+
+	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
+});

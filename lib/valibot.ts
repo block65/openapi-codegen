@@ -144,18 +144,25 @@ function minMaxProperties(schema: SchemaObject) {
 
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
-// RFC 3339 temporal formats, validated by regex at runtime
-function temporalRegexConstraint(format: string | undefined) {
+// Runs the format's regex in `v.custom` to type the output, or alone when a type hint names it
+function temporalConstraint(
+	format: string | undefined,
+	typeName: string | undefined,
+	hinted: boolean,
+) {
 	const temporal = temporalFormat(format);
-	return temporal
-		? vcall("regex", temporal.regex, JSON.stringify(format))
-		: undefined;
-}
 
-// Narrows the inferred output to the template-literal type, past the regex
-function temporalHintSchema(format: string | undefined) {
-	const type = temporalFormat(format)?.type;
-	return type ? `v.custom<${type}>(() => true)` : undefined;
+	if (!temporal) {
+		return;
+	}
+
+	const message = JSON.stringify(format);
+
+	if (hinted) {
+		return vcall("regex", temporal.regex, message);
+	}
+
+	return `v.custom<${typeName ?? temporal.type}>((input) => typeof input === "string" && ${temporal.regex}.test(input), ${message})`;
 }
 
 function shouldCoerceString(schema: SchemaObject) {
@@ -443,6 +450,7 @@ function stringValidator(
 	mode: SchemaMode,
 	isNullable: boolean,
 	typescriptHintSchema: string | undefined,
+	temporalTypeName?: string,
 ) {
 	const shouldTrim =
 		mode === "wire" &&
@@ -455,7 +463,11 @@ function stringValidator(
 			shouldTrim ? vcall("trim") : undefined,
 			schema.format === "email" ? vcall("email") : undefined,
 			schema.format === "uuid" ? vcall("uuid") : undefined,
-			temporalRegexConstraint(schema.format),
+			temporalConstraint(
+				schema.format,
+				temporalTypeName,
+				typescriptHintSchema !== undefined,
+			),
 
 			schema.minLength === undefined
 				? undefined
@@ -466,8 +478,6 @@ function stringValidator(
 			schema.pattern
 				? vcall("regex", `new RegExp(${regexSource(schema.pattern)})`)
 				: undefined,
-			// A hint set by the `x-typescript-hint` extension wins over the format
-			typescriptHintSchema ? undefined : temporalHintSchema(schema.format),
 			typescriptHintSchema,
 		),
 		isNullable,
@@ -892,6 +902,23 @@ export function createValibotFile(project: Project, outputDir: string) {
 	return file;
 }
 
+// Whether the schema's generated type alias is exactly its format's template literal
+function isTemporalAlias(schema: SchemaNode): schema is SchemaObject {
+	return (
+		isSchemaObject(schema) &&
+		schema.type === "string" &&
+		!("$ref" in schema) &&
+		!("const" in schema) &&
+		!schema.enum &&
+		!schema.oneOf &&
+		!schema.anyOf &&
+		!schema.allOf &&
+		!schemaIsNullable(schema) &&
+		!extensionHintSchema(schema) &&
+		temporalFormat(schema.format) !== undefined
+	);
+}
+
 export function registerValidatorFromSchema(
 	validators: Map<string, ValidatorEntry>,
 	valibotFile: SourceFile,
@@ -941,6 +968,13 @@ export function registerValidatorFromSchema(
 				]
 			: [];
 
+	// A temporal alias's schema outputs the alias by name, so the template
+	// literal is written out once, in the types module
+	const initializer = (mode: SchemaMode) =>
+		isTemporalAlias(schemaObject)
+			? stringValidator(schemaObject, mode, false, undefined, entry.type)
+			: schemaToValidator(validators, schemaObject, mode);
+
 	// Input schema — always emitted (TS-side, allows undefined, no wire coercion)
 	openChunk(valibotFile).addVariableStatement({
 		isExported: true,
@@ -949,7 +983,7 @@ export function registerValidatorFromSchema(
 		declarations: [
 			{
 				name: inputName,
-				initializer: schemaToValidator(validators, schemaObject, "input"),
+				initializer: initializer("input"),
 			},
 		],
 	});
@@ -966,7 +1000,7 @@ export function registerValidatorFromSchema(
 				declarations: [
 					{
 						name: wireName,
-						initializer: schemaToValidator(validators, schemaObject, "wire"),
+						initializer: initializer("wire"),
 					},
 				],
 			});
