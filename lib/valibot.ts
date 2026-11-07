@@ -14,6 +14,7 @@ import type { Primitive } from "type-fest";
 import type * as v from "valibot";
 import { openChunk } from "./chunks.ts";
 import { schemaRef } from "./refs.ts";
+import { temporalFormat } from "./temporal.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -145,63 +146,15 @@ const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
 // RFC 3339 temporal formats, validated by regex at runtime
 function temporalRegexConstraint(format: string | undefined) {
-	// RFC 3339 departs from ISO 8601 in ways these patterns encode. `date-time`
-	// and `time` require an offset. The seconds field admits a leap second of
-	// `60`. `T` and `Z` may be lower case, and a space may separate the date
-	// from the time. `duration` follows the ISO 8601 grammar in Appendix A
-	switch (format) {
-		case "date":
-			return vcall(
-				"regex",
-				String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u`,
-				JSON.stringify(format),
-			);
-		case "time":
-			return vcall(
-				"regex",
-				String.raw`/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
-				JSON.stringify(format),
-			);
-		case "date-time":
-			return vcall(
-				"regex",
-				String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
-				JSON.stringify(format),
-			);
-		case "duration":
-			return vcall(
-				"regex",
-				String.raw`/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u`,
-				JSON.stringify(format),
-			);
-		default:
-			return;
-	}
-}
-
-// Template-literal type per temporal format, mirrored in process-schema
-function temporalTypeHint(format: string | undefined) {
-	switch (format) {
-		case "date":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}-${number}-${number}`";
-		case "time":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}:${number}:${number}${string}`";
-		case "date-time":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}-${number}-${number}T${number}:${number}:${number}${string}`";
-		case "duration":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`P${string}`";
-		default:
-			return;
-	}
+	const temporal = temporalFormat(format);
+	return temporal
+		? vcall("regex", temporal.regex, JSON.stringify(format))
+		: undefined;
 }
 
 // Narrows the inferred output to the template-literal type, past the regex
 function temporalHintSchema(format: string | undefined) {
-	const type = temporalTypeHint(format);
+	const type = temporalFormat(format)?.type;
 	return type ? `v.custom<${type}>(() => true)` : undefined;
 }
 

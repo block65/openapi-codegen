@@ -13,6 +13,7 @@ import {
 } from "ts-morph";
 import { openChunk } from "./chunks.ts";
 import { extractSchemaName, schemaRef } from "./refs.ts";
+import { temporalFormat } from "./temporal.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -25,26 +26,6 @@ import {
 
 function maybeWithNullUnion(type: string | WriterFunction, withNull = false) {
 	return withNull && type !== "null" ? Writers.unionType(type, "null") : type;
-}
-
-// Template-literal type per RFC 3339 temporal format, mirrored in valibot
-function temporalStringType(format: string | undefined) {
-	switch (format) {
-		case "date":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}-${number}-${number}`";
-		case "time":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}:${number}:${number}${string}`";
-		case "date-time":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}-${number}-${number}T${number}:${number}:${number}${string}`";
-		case "duration":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`P${string}`";
-		default:
-			return;
-	}
 }
 
 // int64 maps to bigint, and every other integer or number maps to number
@@ -527,9 +508,7 @@ function stringType(schemaObject: SchemaObject) {
 		return schemaObject["x-typescript-hint"];
 	}
 
-	const temporal = temporalStringType(schemaObject.format);
-
-	return temporal ?? "string";
+	return temporalFormat(schemaObject.format)?.type ?? "string";
 }
 
 function schemaObjectType(
@@ -799,11 +778,8 @@ function stringAliasType(schemaObject: SchemaObject) {
 		);
 	}
 
-	// RFC 3339 temporal formats (date, date-time, time, duration)
-	const temporal = temporalStringType(schemaObject.format);
-
 	return maybeWithNullUnion(
-		temporal || "string",
+		temporalFormat(schemaObject.format)?.type ?? "string",
 		schemaTypeIsNull(schemaObject),
 	);
 }
