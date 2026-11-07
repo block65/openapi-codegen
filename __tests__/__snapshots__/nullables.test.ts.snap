@@ -88,22 +88,23 @@ export const nullablesSchema = v.looseObject(
 exports[`RFC 3339 temporal formats > types.ts 1`] = `
 "export type MyDate = \`\${number}-\${number}-\${number}\`;
 export type MyTime = \`\${number}:\${number}:\${number}\${string}\`;
-export type MyDateTime = \`\${number}-\${number}-\${number}T\${number}:\${number}:\${number}\${string}\`;
+export type MyDateTime = \`\${number}-\${number}-\${number}\${"T" | "t" | " "}\${number}:\${number}:\${number}\${string}\`;
 export type MyDuration = \`P\${string}\`;
 "
 `;
 
 exports[`RFC 3339 temporal formats > valibot.ts 1`] = `
 "import * as v from "valibot";
+import type { MyDate, MyDateTime, MyDuration, MyTime } from "./types.js";
 
-export const inputMyDateSchema = v.pipe(v.string(), v.regex(/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$/u, "date"), v.custom<\`\${number}-\${number}-\${number}\`>(() => true));
-export const myDateSchema = v.pipe(v.string(), v.trim(), v.regex(/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$/u, "date"), v.custom<\`\${number}-\${number}-\${number}\`>(() => true));
-export const inputMyTimeSchema = v.pipe(v.string(), v.regex(/^([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u, "time"), v.custom<\`\${number}:\${number}:\${number}\${string}\`>(() => true));
-export const myTimeSchema = v.pipe(v.string(), v.trim(), v.regex(/^([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u, "time"), v.custom<\`\${number}:\${number}:\${number}\${string}\`>(() => true));
-export const inputMyDateTimeSchema = v.pipe(v.string(), v.regex(/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt ]([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u, "date-time"), v.custom<\`\${number}-\${number}-\${number}T\${number}:\${number}:\${number}\${string}\`>(() => true));
-export const myDateTimeSchema = v.pipe(v.string(), v.trim(), v.regex(/^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt ]([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u, "date-time"), v.custom<\`\${number}-\${number}-\${number}T\${number}:\${number}:\${number}\${string}\`>(() => true));
-export const inputMyDurationSchema = v.pipe(v.string(), v.regex(/^P(?!$)((\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?)(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$/u, "duration"), v.custom<\`P\${string}\`>(() => true));
-export const myDurationSchema = v.pipe(v.string(), v.trim(), v.regex(/^P(?!$)((\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?)(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$/u, "duration"), v.custom<\`P\${string}\`>(() => true));
+export const inputMyDateSchema = v.pipe(v.string(), v.custom<MyDate>((input) => typeof input === "string" && /^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$/u.test(input), "date"));
+export const myDateSchema = v.pipe(v.string(), v.trim(), v.custom<MyDate>((input) => typeof input === "string" && /^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$/u.test(input), "date"));
+export const inputMyTimeSchema = v.pipe(v.string(), v.custom<MyTime>((input) => typeof input === "string" && /^([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u.test(input), "time"));
+export const myTimeSchema = v.pipe(v.string(), v.trim(), v.custom<MyTime>((input) => typeof input === "string" && /^([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u.test(input), "time"));
+export const inputMyDateTimeSchema = v.pipe(v.string(), v.custom<MyDateTime>((input) => typeof input === "string" && /^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt ]([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u.test(input), "date-time"));
+export const myDateTimeSchema = v.pipe(v.string(), v.trim(), v.custom<MyDateTime>((input) => typeof input === "string" && /^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt ]([01]\\d|2[0-3]):[0-5]\\d:([0-5]\\d|60)(\\.\\d+)?([Zz]|[+-]([01]\\d|2[0-3]):[0-5]\\d)$/u.test(input), "date-time"));
+export const inputMyDurationSchema = v.pipe(v.string(), v.custom<MyDuration>((input) => typeof input === "string" && /^P(?!$)((\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?)(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$/u.test(input), "duration"));
+export const myDurationSchema = v.pipe(v.string(), v.trim(), v.custom<MyDuration>((input) => typeof input === "string" && /^P(?!$)((\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?)(T(?=\\d)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$/u.test(input), "duration"));
 "
 `;
 

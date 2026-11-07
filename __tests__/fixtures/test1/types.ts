@@ -8,6 +8,9 @@
 
 import type { JsonValue, UndefinedOnPartialDeep } from "type-fest";
 
+export type CalendarDate = `${number}-${number}-${number}`;
+export type WallTime = `${number}:${number}:${number}${string}`;
+export type TrialLength = `P${string}`;
 export type PromoCode = string;
 /** The API version */
 export type ApiVersion = "2024-01-01";
@@ -19,13 +22,17 @@ export type NullableDiscount = number | null;
 export type NullableStatus = "active" | "paused" | "cancelled" | null;
 export type AccountTier = "free" | "pro" | "enterprise";
 export type EmbedUrl = `https://embed.example.com/${string}`;
+export type EmbedLink = {
+	url: EmbedUrl;
+	label?: Capitalize<string>;
+};
 export type EventSource =
 	| "native"
 	| `https://embed.example.com/${string}`
 	| `https://syndicated.example.com/${string}`;
 export type StripeId = string;
 export type DateTime =
-	`${number}-${number}-${number}T${number}:${number}:${number}${string}`;
+	`${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`;
 export type BillingSubscriptionStatus = "active" | "inactive";
 export type BillingSubscriptionInterval = "monthly" | "yearly";
 export type PlanSku =

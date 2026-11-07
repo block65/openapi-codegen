@@ -8,6 +8,13 @@
 
 import type { JsonValue } from "type-fest";
 import * as v from "valibot";
+import type {
+	CalendarDate,
+	DateTime,
+	EmbedUrl,
+	TrialLength,
+	WallTime,
+} from "./types.js";
 
 const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
 	v.union([
@@ -18,6 +25,71 @@ const jsonValueSchema: v.GenericSchema<JsonValue> = v.lazy(() =>
 		v.record(v.string(), jsonValueSchema),
 		v.array(jsonValueSchema),
 	]),
+);
+export const inputCalendarDateSchema = v.pipe(
+	v.string(),
+	v.custom<CalendarDate>(
+		(input) =>
+			typeof input === "string" &&
+			/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u.test(input),
+		"date",
+	),
+);
+export const calendarDateSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.custom<CalendarDate>(
+		(input) =>
+			typeof input === "string" &&
+			/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u.test(input),
+		"date",
+	),
+);
+export const inputWallTimeSchema = v.pipe(
+	v.string(),
+	v.custom<WallTime>(
+		(input) =>
+			typeof input === "string" &&
+			/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u.test(
+				input,
+			),
+		"time",
+	),
+);
+export const wallTimeSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.custom<WallTime>(
+		(input) =>
+			typeof input === "string" &&
+			/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u.test(
+				input,
+			),
+		"time",
+	),
+);
+export const inputTrialLengthSchema = v.pipe(
+	v.string(),
+	v.custom<TrialLength>(
+		(input) =>
+			typeof input === "string" &&
+			/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u.test(
+				input,
+			),
+		"duration",
+	),
+);
+export const trialLengthSchema = v.pipe(
+	v.string(),
+	v.trim(),
+	v.custom<TrialLength>(
+		(input) =>
+			typeof input === "string" &&
+			/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u.test(
+				input,
+			),
+		"duration",
+	),
 );
 export const inputPromoCodeSchema = v.pipe(
 	v.string(),
@@ -50,6 +122,32 @@ export const inputEmbedUrlSchema = v.pipe(
 	v.custom<`https://embed.example.com/${string}`>(() => true),
 );
 export const embedUrlSchema = inputEmbedUrlSchema;
+export const inputEmbedLinkSchema = v.strictObject({
+	url: v.pipe(
+		v.string(),
+		v.custom<EmbedUrl>(() => true),
+	),
+	label: v.optional(
+		v.pipe(
+			v.string(),
+			v.custom<Capitalize<string>>(() => true),
+		),
+	),
+});
+export const embedLinkSchema = v.strictObject({
+	url: v.pipe(
+		v.string(),
+		v.trim(),
+		v.custom<EmbedUrl>(() => true),
+	),
+	label: v.exactOptional(
+		v.pipe(
+			v.string(),
+			v.trim(),
+			v.custom<Capitalize<string>>(() => true),
+		),
+	),
+});
 export const inputEventSourceSchema = v.union([
 	v.picklist(["native"]),
 	v.pipe(
@@ -73,23 +171,25 @@ export const inputStripeIdSchema = v.pipe(
 export const stripeIdSchema = inputStripeIdSchema;
 export const inputDateTimeSchema = v.pipe(
 	v.string(),
-	v.regex(
-		/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+	v.custom<DateTime>(
+		(input) =>
+			typeof input === "string" &&
+			/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u.test(
+				input,
+			),
 		"date-time",
-	),
-	v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
-		() => true,
 	),
 );
 export const dateTimeSchema = v.pipe(
 	v.string(),
 	v.trim(),
-	v.regex(
-		/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u,
+	v.custom<DateTime>(
+		(input) =>
+			typeof input === "string" &&
+			/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u.test(
+				input,
+			),
 		"date-time",
-	),
-	v.custom<`${number}-${number}-${number}T${number}:${number}:${number}${string}`>(
-		() => true,
 	),
 );
 export const inputBillingSubscriptionStatusSchema = v.picklist([

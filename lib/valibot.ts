@@ -2,6 +2,7 @@ import path from "node:path";
 import type { oas30, oas32 } from "openapi3-ts";
 import {
 	type CodeBlockWriter,
+	Node,
 	type Project,
 	type SourceFile,
 	SyntaxKind,
@@ -13,6 +14,7 @@ import type { Primitive } from "type-fest";
 import type * as v from "valibot";
 import { openChunk } from "./chunks.ts";
 import { schemaRef } from "./refs.ts";
+import { temporalFormat } from "./temporal.ts";
 import {
 	type SchemaNode,
 	type SchemaObject,
@@ -35,8 +37,6 @@ export type ValidatorEntry = {
 	wireIsInput: boolean;
 	emitted: boolean;
 };
-
-const lazilyTyped = new WeakMap<Map<string, ValidatorEntry>, Set<string>>();
 
 // oxlint groups integer digits in threes once a literal reaches five digits
 function numericLiteral(value: number) {
@@ -144,66 +144,25 @@ function minMaxProperties(schema: SchemaObject) {
 
 const noTrimFormats = new Set(["uuid", "byte", "binary", "password"]);
 
-// RFC 3339 temporal formats, validated by regex at runtime
-function temporalRegexConstraint(format: string | undefined) {
-	// RFC 3339 departs from ISO 8601 in ways these patterns encode. `date-time`
-	// and `time` require an offset. The seconds field admits a leap second of
-	// `60`. `T` and `Z` may be lower case, and a space may separate the date
-	// from the time. `duration` follows the ISO 8601 grammar in Appendix A
-	switch (format) {
-		case "date":
-			return vcall(
-				"regex",
-				String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/u`,
-				JSON.stringify(format),
-			);
-		case "time":
-			return vcall(
-				"regex",
-				String.raw`/^([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
-				JSON.stringify(format),
-			);
-		case "date-time":
-			return vcall(
-				"regex",
-				String.raw`/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])[Tt ]([01]\d|2[0-3]):[0-5]\d:([0-5]\d|60)(\.\d+)?([Zz]|[+-]([01]\d|2[0-3]):[0-5]\d)$/u`,
-				JSON.stringify(format),
-			);
-		case "duration":
-			return vcall(
-				"regex",
-				String.raw`/^P(?!$)((\d+Y)?(\d+M)?(\d+W)?(\d+D)?)(T(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$/u`,
-				JSON.stringify(format),
-			);
-		default:
-			return;
-	}
-}
+// Runs the format's regex in `v.custom` to type the output, or alone when a type hint names it
+function temporalConstraint(
+	format: string | undefined,
+	typeName: string | undefined,
+	hinted: boolean,
+) {
+	const temporal = temporalFormat(format);
 
-// Template-literal type per temporal format, mirrored in process-schema
-function temporalTypeHint(format: string | undefined) {
-	switch (format) {
-		case "date":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}-${number}-${number}`";
-		case "time":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}:${number}:${number}${string}`";
-		case "date-time":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`${number}-${number}-${number}T${number}:${number}:${number}${string}`";
-		case "duration":
-			// biome-ignore lint/suspicious/noTemplateCurlyInString: template literal type
-			return "`P${string}`";
-		default:
-			return;
+	if (!temporal) {
+		return;
 	}
-}
 
-// Narrows the inferred output to the template-literal type, past the regex
-function temporalHintSchema(format: string | undefined) {
-	const type = temporalTypeHint(format);
-	return type ? `v.custom<${type}>(() => true)` : undefined;
+	const message = JSON.stringify(format);
+
+	if (hinted) {
+		return vcall("regex", temporal.regex, message);
+	}
+
+	return `v.custom<${typeName ?? temporal.type}>((input) => typeof input === "string" && ${temporal.regex}.test(input), ${message})`;
 }
 
 function shouldCoerceString(schema: SchemaObject) {
@@ -273,10 +232,6 @@ function resolveRef(
 
 	// A recursive schema refers to one that is not declared yet. The
 	// annotation stops TypeScript inferring its type from itself
-	const types = lazilyTyped.get(validators) ?? new Set();
-	types.add(entry.type);
-	lazilyTyped.set(validators, types);
-
 	const type =
 		mode === "input" || entry.wireIsInput
 			? `UndefinedOnPartialDeep<${entry.type}>`
@@ -287,27 +242,38 @@ function resolveRef(
 }
 
 /**
- * Imports the types that annotate lazy refs. Call it once every validator
- * is emitted
+ * Imports each type the types module exports and a validator names, whether a
+ * lazy ref annotates it or an `x-typescript-hint` names it. Call it once every
+ * validator is emitted
  */
-export function importLazyTypes(
+export function importNamedTypes(
 	file: SourceFile,
-	validators: Map<string, ValidatorEntry>,
+	typesFile: SourceFile,
 	typesModuleSpecifier: string,
 ) {
-	const types = lazilyTyped.get(validators);
+	const exported = typesFile.getExportedDeclarations();
 
-	if (!types) {
-		return;
+	const named = new Set(
+		file
+			.getDescendantsOfKind(SyntaxKind.TypeReference)
+			.map((reference) => reference.getTypeName())
+			.filter((name) => Node.isIdentifier(name))
+			.map((name) => name.getText()),
+	);
+
+	const fromTypes = [...named].filter((name) => exported.has(name));
+
+	if (fromTypes.length > 0) {
+		file.addImportDeclaration({
+			moduleSpecifier: typesModuleSpecifier,
+			namedImports: fromTypes.toSorted(),
+			isTypeOnly: true,
+		});
 	}
 
-	file.addImportDeclaration({
-		moduleSpecifier: typesModuleSpecifier,
-		namedImports: [...types],
-		isTypeOnly: true,
-	});
-
-	importFromTypeFest(file, "UndefinedOnPartialDeep");
+	if (named.has("UndefinedOnPartialDeep")) {
+		importFromTypeFest(file, "UndefinedOnPartialDeep");
+	}
 }
 
 function importFromTypeFest(file: SourceFile, name: string) {
@@ -484,6 +450,7 @@ function stringValidator(
 	mode: SchemaMode,
 	isNullable: boolean,
 	typescriptHintSchema: string | undefined,
+	temporalTypeName?: string,
 ) {
 	const shouldTrim =
 		mode === "wire" &&
@@ -496,7 +463,11 @@ function stringValidator(
 			shouldTrim ? vcall("trim") : undefined,
 			schema.format === "email" ? vcall("email") : undefined,
 			schema.format === "uuid" ? vcall("uuid") : undefined,
-			temporalRegexConstraint(schema.format),
+			temporalConstraint(
+				schema.format,
+				temporalTypeName,
+				typescriptHintSchema !== undefined,
+			),
 
 			schema.minLength === undefined
 				? undefined
@@ -507,8 +478,6 @@ function stringValidator(
 			schema.pattern
 				? vcall("regex", `new RegExp(${regexSource(schema.pattern)})`)
 				: undefined,
-			// A hint set by the `x-typescript-hint` extension wins over the format
-			typescriptHintSchema ? undefined : temporalHintSchema(schema.format),
 			typescriptHintSchema,
 		),
 		isNullable,
@@ -933,6 +902,23 @@ export function createValibotFile(project: Project, outputDir: string) {
 	return file;
 }
 
+// Whether the schema's generated type alias is exactly its format's template literal
+function isTemporalAlias(schema: SchemaNode): schema is SchemaObject {
+	return (
+		isSchemaObject(schema) &&
+		schema.type === "string" &&
+		!("$ref" in schema) &&
+		!("const" in schema) &&
+		!schema.enum &&
+		!schema.oneOf &&
+		!schema.anyOf &&
+		!schema.allOf &&
+		!schemaIsNullable(schema) &&
+		!extensionHintSchema(schema) &&
+		temporalFormat(schema.format) !== undefined
+	);
+}
+
 export function registerValidatorFromSchema(
 	validators: Map<string, ValidatorEntry>,
 	valibotFile: SourceFile,
@@ -982,6 +968,13 @@ export function registerValidatorFromSchema(
 				]
 			: [];
 
+	// A temporal alias's schema outputs the alias by name, so the template
+	// literal is written out once, in the types module
+	const initializer = (mode: SchemaMode) =>
+		isTemporalAlias(schemaObject)
+			? stringValidator(schemaObject, mode, false, undefined, entry.type)
+			: schemaToValidator(validators, schemaObject, mode);
+
 	// Input schema — always emitted (TS-side, allows undefined, no wire coercion)
 	openChunk(valibotFile).addVariableStatement({
 		isExported: true,
@@ -990,7 +983,7 @@ export function registerValidatorFromSchema(
 		declarations: [
 			{
 				name: inputName,
-				initializer: schemaToValidator(validators, schemaObject, "input"),
+				initializer: initializer("input"),
 			},
 		],
 	});
@@ -1007,7 +1000,7 @@ export function registerValidatorFromSchema(
 				declarations: [
 					{
 						name: wireName,
-						initializer: schemaToValidator(validators, schemaObject, "wire"),
+						initializer: initializer("wire"),
 					},
 				],
 			});

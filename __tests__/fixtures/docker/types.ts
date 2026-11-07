@@ -308,7 +308,7 @@ export type Health = {
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 		 * @example 2020-01-04T10:44:24.496525531Z
 		 */
-		Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
+		Start?: `${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`;
 		/**
 		 * Date and time at which this check ended in
 		 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -338,7 +338,7 @@ export type HealthcheckResult = {
 	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 	 * @example 2020-01-04T10:44:24.496525531Z
 	 */
-	Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
+	Start?: `${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`;
 	/**
 	 * Date and time at which this check ended in
 	 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -5434,7 +5434,7 @@ export type ContainerState = {
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 			 * @example 2020-01-04T10:44:24.496525531Z
 			 */
-			Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
+			Start?: `${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`;
 			/**
 			 * Date and time at which this check ended in
 			 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
@@ -7826,7 +7826,7 @@ export type ContainerInspectCommandOutput = {
 				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
 				 * @example 2020-01-04T10:44:24.496525531Z
 				 */
-				Start?: `${number}-${number}-${number}T${number}:${number}:${number}${string}`;
+				Start?: `${number}-${number}-${number}${"T" | "t" | " "}${number}:${number}:${number}${string}`;
 				/**
 				 * Date and time at which this check ended in
 				 * [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format with nano-seconds.
