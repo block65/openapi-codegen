@@ -4,7 +4,7 @@
  * Do not edit directly
  */
 
-// oxlint-disable block65/max-comment-lines, block65/no-comment-punctuation, block65/no-narrative-comment, block65/no-trailing-comment-punctuation
+// oxlint-disable block65/max-comment-colons-and-semicolons, block65/max-comment-lines, block65/no-narrative-comment, block65/no-trailing-comment-punctuation
 
 import { Command, stripUndefined, jsonStringify } from "@block65/rest-client";
 import type { UndefinedOnPartialDeep } from "type-fest";

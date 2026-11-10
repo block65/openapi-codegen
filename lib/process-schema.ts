@@ -505,6 +505,7 @@ function objectType(
 		);
 
 		return {
+			// oxlint-disable-next-line typescript/no-open-string-fallback -- `JsonValue` is the type of a record value the schema leaves unconstrained
 			type: recordType(value.type ?? "JsonValue"),
 			isReadonly: !!schemaObject.readOnly,
 		};
@@ -529,6 +530,7 @@ function stringType(schemaObject: SchemaObject) {
 
 	const temporal = temporalStringType(schemaObject.format);
 
+	// oxlint-disable-next-line typescript/no-open-string-fallback -- `string` is the type of a string schema without a temporal format
 	return temporal ?? "string";
 }
 
@@ -865,6 +867,7 @@ export function registerTypesFromSchema(
 		// inline one of the same shape agree. It also spells the value type
 		// in TypeScript, since JSON Schema names such as `integer` differ
 		register(
+			// oxlint-disable-next-line typescript/no-open-string-fallback -- an object schema with no type of its own is an open record
 			schemaToType(typesAndInterfaces, {}, schemaName, schemaObject).type ??
 				"Record<string, JsonValue>",
 			schemaObject.description,

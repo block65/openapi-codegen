@@ -1451,7 +1451,11 @@ function resolveSchema(refs: Refs, operationId: string, schema: SchemaNode) {
 
 // itemSchema arrived in OAS 3.2
 function canStateItemSchema(openapiVersion: string) {
-	const [major = 0, minor = 0] = openapiVersion.split(".").map(Number);
+	const [major, minor] = openapiVersion.split(".").map(Number);
+
+	if (major === undefined || minor === undefined) {
+		return false;
+	}
 
 	return major > 3 || (major === 3 && minor >= 2);
 }
@@ -1507,6 +1511,7 @@ function sequentialContent(
 			(variant !== itemSchema && (variant.oneOf || variant.anyOf))
 		) {
 			throw new Error(
+				// oxlint-disable-next-line typescript/no-open-string-fallback -- without a content property the variant is the payload, so the message names it generically
 				`${operationId}: each itemSchema variant needs its own ${contentProperty ?? "content"} schema`,
 			);
 		}

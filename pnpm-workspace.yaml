@@ -1,15 +1,15 @@
 minimumReleaseAgeExcludePrune: true
 minimumReleaseAgeExclude:
-  - "@block65/oxlint-binding-linux-arm64-gnu@1.83.0"
-  - "@block65/oxlint-binding-linux-x64-gnu@1.83.0"
-  - "@block65/oxlint-tsgolint-linux-arm64@7.0.200300"
-  - "@block65/oxlint-tsgolint-linux-x64@7.0.200300"
-  - "@block65/oxlint-tsgolint@7.0.200300"
-  - "@block65/oxlint@1.83.0"
-  - "@block65/shared-config@0.7.0"
-  - "@block65/oxlint-plugin@0.13.0"
+  - "@block65/oxlint@1.93.0"
+  - "@block65/oxlint-binding-linux-arm64-gnu@1.93.0"
+  - "@block65/oxlint-binding-linux-x64-gnu@1.93.0"
+  - "@block65/oxlint-tsgolint@7.0.200600"
+  - "@block65/oxlint-tsgolint-linux-arm64@7.0.200600"
+  - "@block65/oxlint-tsgolint-linux-x64@7.0.200600"
+  - "@block65/shared-config@0.13.0"
+  - "@block65/oxlint-plugin@0.18.0"
   - "@block65/rest-client@16.0.0"
 
 overrides:
-  oxlint: npm:@block65/oxlint@>=1.83.0
-  oxlint-tsgolint: npm:@block65/oxlint-tsgolint@>=7.0.200300
+  oxlint: npm:@block65/oxlint@>=1.93.0
+  oxlint-tsgolint: npm:@block65/oxlint-tsgolint@>=7.0.200600

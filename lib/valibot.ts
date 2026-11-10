@@ -41,7 +41,12 @@ const lazilyTyped = new WeakMap<Map<string, ValidatorEntry>, Set<string>>();
 // oxlint groups integer digits in threes once a literal reaches five digits
 function numericLiteral(value: number) {
 	const text = String(value);
-	const [integer = "", ...fraction] = text.split(".");
+	const [integer, ...fraction] = text.split(".");
+
+	if (integer === undefined) {
+		return text;
+	}
+
 	const digits = integer.replace("-", "");
 
 	if (digits.length < 5 || /\D/u.test(digits)) {
@@ -90,7 +95,7 @@ function vcall(
 					if (typeof item === "function") {
 						item(writer);
 					} else {
-						writer.write(item?.toString() ?? "undefined");
+						writer.write(String(item));
 					}
 					if (itemIndex < arg.length - 1) {
 						writer.write(", ");

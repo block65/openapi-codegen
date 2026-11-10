@@ -4,7 +4,7 @@
  * Do not edit directly
  */
 
-// oxlint-disable block65/max-comment-lines, block65/no-comment-history, block65/no-comment-list, block65/no-comment-punctuation, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-single-character-declaration, unicorn-unported/comment-content
+// oxlint-disable block65/max-comment-colons-and-semicolons, block65/max-comment-lines, block65/no-comment-history, block65/no-comment-list, block65/no-narrative-comment, block65/no-negated-comment, block65/no-padded-comment, block65/no-single-character-declaration, unicorn-unported/comment-content
 
 import {
 	Command,
