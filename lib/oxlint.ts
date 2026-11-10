@@ -25,7 +25,7 @@ const exemptRules = [
 	"block65/no-placeholder-comment",
 	"block65/no-banned-comment-words",
 	"block65/no-comment-list",
-	"block65/no-comment-punctuation",
+	"block65/max-comment-colons-and-semicolons",
 	"block65/no-trailing-comment-punctuation",
 	"block65/no-file-reference-in-comment",
 	"block65/no-file-header-comment",

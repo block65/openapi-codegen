@@ -60,8 +60,8 @@ async function buildIntoTempDir(parent: string, source: object = document) {
 
 	return {
 		dir,
-		valibot: await readFile(path.join(dir, "valibot.ts"), "utf8"),
-		main: await readFile(path.join(dir, "main.ts"), "utf8"),
+		valibot: await readFile(path.join(dir, "valibot.ts"), "utf-8"),
+		main: await readFile(path.join(dir, "main.ts"), "utf-8"),
 	};
 }
 
@@ -148,7 +148,7 @@ test("a header schema is bracketed and an open body object still errors", async 
 test("a regeneration writes directives the recorded files lack", async () => {
 	const { dir } = await buildIntoTempDir(import.meta.dirname);
 	const manifestPath = path.join(dir, ".openapi-codegen-manifest.json");
-	const manifestText = await readFile(manifestPath, "utf8");
+	const manifestText = await readFile(manifestPath, "utf-8");
 	const manifest: unknown = JSON.parse(manifestText);
 
 	assert(typeof manifest === "object" && manifest !== null);
@@ -157,7 +157,7 @@ test("a regeneration writes directives the recorded files lack", async () => {
 	const names = entries.filter((name) => name.endsWith(".ts"));
 	const revisions = await Promise.all(
 		names.map(async (name) => {
-			const text = await readFile(path.join(dir, name), "utf8");
+			const text = await readFile(path.join(dir, name), "utf-8");
 			const bare = text.replace(/^\/\/ oxlint-disable .*\n\n/mu, "");
 
 			await writeFile(path.join(dir, name), bare);
@@ -175,7 +175,7 @@ test("a regeneration writes directives the recorded files lack", async () => {
 	);
 	await build(path.join(dir, "document.json"), dir);
 
-	const valibot = await readFile(path.join(dir, "valibot.ts"), "utf8");
+	const valibot = await readFile(path.join(dir, "valibot.ts"), "utf-8");
 
 	await rm(dir, { recursive: true });
 
@@ -191,7 +191,7 @@ test("no fixture directive names snake-case-wire-keys", async () => {
 	const modules = entries.filter((entry) => entry.endsWith(".ts"));
 	const directives = await Promise.all(
 		modules.map(async (entry) => {
-			const text = await readFile(path.join(fixtures, entry), "utf8");
+			const text = await readFile(path.join(fixtures, entry), "utf-8");
 
 			const directive = text.match(/^\/\/ oxlint-disable .*$/mu);
 

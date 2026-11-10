@@ -39,7 +39,7 @@ async function buildOnce() {
 }
 
 async function readManifest(outputDir: string) {
-	const text = await readFile(path.join(outputDir, MANIFEST), "utf8");
+	const text = await readFile(path.join(outputDir, MANIFEST), "utf-8");
 
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion -- JSON.parse is typed any, and this reads back a manifest the build under test just wrote
 	return JSON.parse(text) as Record<string, string>;
@@ -61,7 +61,7 @@ test("a matching emitter revision leaves an unchanged file alone", async () => {
 	await writeFile(target, "// edited by hand\n");
 	await build(input, outputDir);
 
-	await expect(readFile(target, "utf8")).resolves.toBe("// edited by hand\n");
+	await expect(readFile(target, "utf-8")).resolves.toBe("// edited by hand\n");
 });
 
 // Guards a run that overlaps an edit, which stamps a manifest newer than
@@ -80,5 +80,5 @@ test("a stale emitter revision rewrites every file", async () => {
 
 	await build(input, outputDir);
 
-	await expect(readFile(target, "utf8")).resolves.toContain("@generated");
+	await expect(readFile(target, "utf-8")).resolves.toContain("@generated");
 });

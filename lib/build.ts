@@ -29,7 +29,7 @@ function isOpenApiDocument(value: unknown): value is oas32.OpenAPIObject {
 const MANIFEST = ".openapi-codegen-manifest.json";
 
 async function readManifest(manifestPath: string) {
-	const text = await readFile(manifestPath, "utf8").catch(() => {});
+	const text = await readFile(manifestPath, "utf-8").catch(() => {});
 
 	if (text === undefined) {
 		return {};
@@ -152,7 +152,7 @@ export async function build(
 			// the blank line detaches the banner from the first import, which
 			// oxfmt would otherwise move with that import when it sorts them
 			const contents = `${BANNER}\n\n${file.getFullText()}`;
-			const original = await readFile(file.getFilePath(), "utf8").catch(
+			const original = await readFile(file.getFilePath(), "utf-8").catch(
 				() => {},
 			);
 
