@@ -3,7 +3,7 @@ import camelcase from "camelcase";
 import type { ParameterStyle } from "openapi3-ts/oas32";
 import type { Project, SourceFile } from "ts-morph";
 import { VariableDeclarationKind } from "ts-morph";
-import { typedEntries } from "./utils.ts";
+import { siblingModuleSpecifier, typedEntries } from "./utils.ts";
 
 // OAS 3.2 §4.12.6 defines these four styles for a query parameter. `satisfies`
 // ties the keys to openapi3-ts, so a style it renames or drops fails here
@@ -147,6 +147,7 @@ export function createHonoMiddleware(
 
 export function addSchemaImportsToHonoFile(
 	honoFile: SourceFile,
+	valibotFile: SourceFile,
 	schemaNames: string[],
 ) {
 	if (schemaNames.length === 0) {
@@ -154,7 +155,7 @@ export function addSchemaImportsToHonoFile(
 	}
 
 	honoFile.addImportDeclaration({
-		moduleSpecifier: "./valibot.js",
+		moduleSpecifier: siblingModuleSpecifier(valibotFile),
 		namedImports: schemaNames.toSorted(),
 	});
 }

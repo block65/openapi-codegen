@@ -30,6 +30,13 @@ A client that never serves requests can skip `hono` and
 `@hono/standard-validator` by leaving `hono.ts` out of its build. A client that
 never validates responses can skip `valibot` the same way.
 
+## TypeScript settings for generated code
+
+The generated files import each other by their real names, such as
+`./types.ts`. The tsconfig that compiles them needs
+`allowImportingTsExtensions`, together with `noEmit`, `emitDeclarationOnly` or
+`rewriteRelativeImportExtensions`. The `@block65/tsconfig` presets set these.
+
 ## Query strings on the server
 
 Generated `hono.ts` validates the query exactly as Hono parsed it. It decodes

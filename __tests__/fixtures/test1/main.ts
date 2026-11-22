@@ -42,7 +42,7 @@ import type {
 	UpdateBillingSubscriptionCommandInput,
 	UpdateBillingSubscriptionPromoCodeCommandInput,
 	UpdatePaymentMethodCommandInput,
-} from "./types.js";
+} from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 

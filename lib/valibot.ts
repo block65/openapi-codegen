@@ -515,6 +515,32 @@ function stringValidator(
 	);
 }
 
+// JSON Schema converters copy this as `pattern`, and cannot see the bounds checked after it
+function integerStringCheck(schema: SchemaObject) {
+	return schema.minimum !== undefined && schema.minimum >= 0
+		? vcall("digits")
+		: vcall("regex", String.raw`/^-?\d+$/u`);
+}
+
+// Bounds go before the transform too, where JSON Schema converters can read them
+function int64NumberBranch(
+	schema: SchemaObject,
+	bigintValidator: WriterFunction | string,
+) {
+	return maybePipe(
+		vcall("number"),
+		vcall("integer"),
+		schema.minimum === undefined
+			? undefined
+			: vcall("minValue", numericLiteral(schema.minimum)),
+		schema.maximum === undefined
+			? undefined
+			: vcall("maxValue", numericLiteral(schema.maximum)),
+		vcall("toBigint"),
+		bigintValidator,
+	);
+}
+
 function int64Validator(
 	schema: SchemaObject,
 	mode: SchemaMode,
@@ -541,17 +567,11 @@ function int64Validator(
 			vcall(
 				"pipe",
 				vcall("string"),
-				vcall("decimal"),
+				integerStringCheck(schema),
 				vcall("toBigint"),
 				baseValidator,
 			),
-			vcall(
-				"pipe",
-				vcall("number"),
-				vcall("integer"),
-				vcall("toBigint"),
-				baseValidator,
-			),
+			int64NumberBranch(schema, baseValidator),
 			baseValidator,
 		]),
 		isNullable,
@@ -1091,17 +1111,11 @@ function asHttpParamValidator(
 			vcall(
 				"pipe",
 				vcall("string"),
-				vcall("decimal"),
+				integerStringCheck(schema),
 				vcall("toBigint"),
 				baseValidator,
 			),
-			vcall(
-				"pipe",
-				vcall("number"),
-				vcall("integer"),
-				vcall("toBigint"),
-				baseValidator,
-			),
+			int64NumberBranch(schema, baseValidator),
 			baseValidator,
 		]);
 	}
@@ -1111,7 +1125,7 @@ function asHttpParamValidator(
 			vcall(
 				"pipe",
 				vcall("string"),
-				vcall("decimal"),
+				integerStringCheck(schema),
 				vcall("toNumber"),
 				baseValidator,
 			),

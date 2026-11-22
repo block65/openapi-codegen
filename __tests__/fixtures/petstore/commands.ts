@@ -17,7 +17,7 @@ import type {
 	DeletePetCommandInput,
 	FindPetWrappedCommandInput,
 	FindPetWrappedCommandOutput,
-} from "./types.js";
+} from "./types.ts";
 
 /**
  * Tagged template literal that applies encodeURIComponent to all interpolated

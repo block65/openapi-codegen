@@ -540,7 +540,7 @@ export const importBillingDataCommandHeaderSchema = v.object({
 		"application/xml",
 	]),
 	"content-length": v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),

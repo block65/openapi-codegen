@@ -4,8 +4,8 @@
  * Do not edit directly
  */
 
-import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class ContainerListCommand extends commands.ContainerListCommand {
 	public override readonly responseSchema =
@@ -335,4 +335,4 @@ export {
 	TaskLogsCommand,
 	VolumeDeleteCommand,
 	VolumeUpdateCommand,
-} from "./commands.js";
+} from "./commands.ts";

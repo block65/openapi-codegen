@@ -4,8 +4,8 @@
  * Do not edit directly
  */
 
-import * as commands from "./commands.js";
-import * as schemas from "./valibot.js";
+import * as commands from "./commands.ts";
+import * as schemas from "./valibot.ts";
 
 export class CreateChatCompletionCommand
 	extends commands.CreateChatCompletionCommand
@@ -539,4 +539,4 @@ export class DeleteProjectApiKeyCommand
 		schemas.deleteProjectApiKeyCommandResponseSchema;
 }
 
-export { CreateSpeechCommand } from "./commands.js";
+export { CreateSpeechCommand } from "./commands.ts";

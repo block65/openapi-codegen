@@ -17,7 +17,7 @@ import type {
 	FindPetWrappedCommandOutput,
 	FindPetsCommandInput,
 	Pet,
-} from "./types.js";
+} from "./types.ts";
 
 export { ResponseValidationError } from "@block65/rest-client";
 

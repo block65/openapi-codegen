@@ -294,6 +294,22 @@ function schemaDocs(schemaObject: SchemaObject) {
 	return docs;
 }
 
+// Reads OpenAPI 3.0's `nullable` as 3.1's `type: [T, "null"]`
+function nullableAsTypeArray(schemaObject: SchemaObject): SchemaObject {
+	if (
+		!("nullable" in schemaObject) ||
+		schemaObject.nullable !== true ||
+		typeof schemaObject.type !== "string" ||
+		schemaObject.type === "null"
+	) {
+		return schemaObject;
+	}
+
+	const { nullable: _nullable, ...rest } = schemaObject;
+
+	return { ...rest, type: [schemaObject.type, "null"] };
+}
+
 function typeArrayType(
 	typesAndInterfaces: TypesAndInterfaces,
 	schemaObject: SchemaObject,
@@ -536,9 +552,11 @@ function schemaObjectType(
 	typesAndInterfaces: TypesAndInterfaces,
 	parentSchema: SchemaObject,
 	propertyName: string,
-	schemaObject: SchemaObject,
+	schemaNode: SchemaObject,
 	options: SchemaToTypeOptions,
 ) {
+	const schemaObject = nullableAsTypeArray(schemaNode);
+
 	if (Array.isArray(schemaObject.type)) {
 		return {
 			type: typeArrayType(
@@ -826,7 +844,9 @@ export function registerTypesFromSchema(
 		return;
 	}
 
-	const schemaObject = schemaNode;
+	const schemaObject = isReferenceObject(schemaNode)
+		? schemaNode
+		: nullableAsTypeArray(schemaNode);
 
 	// deal with refs
 	if ("$ref" in schemaObject) {
