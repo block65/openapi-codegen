@@ -245,7 +245,7 @@ export const inputUploadDataCommandHeaderSchema = v.object({
     });
 export const uploadDataCommandHeaderSchema = v.object({
         "content-type": v.picklist(["application/json", "text/csv", "application/xml"]),
-        "content-length": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]),
+        "content-length": v.union([v.pipe(v.string(), v.regex(/^-?\\d+$/u), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]),
         "x-idempotency-key": v.exactOptional(v.pipe(v.string(), v.uuid()))
     });
 "
@@ -295,7 +295,7 @@ exports[`query and header integer params coerce strings to numbers > valibot.ts 
 export const inputDummySchema = v.string();
 export const dummySchema = v.pipe(v.string(), v.trim());
 export const inputExpireTimeSchema = v.pipe(v.bigint(), v.minValue(0n));
-export const expireTimeSchema = v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.bigint(), v.minValue(0n))]);
+export const expireTimeSchema = v.union([v.pipe(v.string(), v.digits(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.number(), v.integer(), v.minValue(0), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.bigint(), v.minValue(0n))]);
 export const inputListFilesCommandResponseSchema = inputDummySchema;
 export const listFilesCommandResponseSchema = dummySchema;
 export const inputListFilesCommandQuerySchema = v.strictObject({
@@ -303,14 +303,14 @@ export const inputListFilesCommandQuerySchema = v.strictObject({
         "limit": v.optional(v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100)))
     });
 export const listFilesCommandQuerySchema = v.strictObject({
-        "exp": v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.number(), v.integer(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.bigint(), v.minValue(0n))]),
-        "limit": v.exactOptional(v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))]))
+        "exp": v.union([v.pipe(v.string(), v.digits(), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.number(), v.integer(), v.minValue(0), v.toBigint(), v.pipe(v.bigint(), v.minValue(0n))), v.pipe(v.bigint(), v.minValue(0n))]),
+        "limit": v.exactOptional(v.union([v.pipe(v.string(), v.digits(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))), v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(100))]))
     });
 export const inputListFilesCommandHeaderSchema = v.object({
         "x-rate-limit": v.pipe(v.number(), v.integer(), v.minValue(0))
     });
 export const listFilesCommandHeaderSchema = v.object({
-        "x-rate-limit": v.union([v.pipe(v.string(), v.decimal(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(0))), v.pipe(v.number(), v.integer(), v.minValue(0))])
+        "x-rate-limit": v.union([v.pipe(v.string(), v.digits(), v.toNumber(), v.pipe(v.number(), v.integer(), v.minValue(0))), v.pipe(v.number(), v.integer(), v.minValue(0))])
     });
 "
 `;

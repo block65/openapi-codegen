@@ -238,13 +238,14 @@ export const throttleDeviceSchema = v.looseObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.digits(),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
+				v.minValue(0),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n)),
 			),
@@ -466,7 +467,7 @@ export const mountSchema = v.looseObject({
 			 */
 			SizeBytes: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -811,7 +812,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	Memory: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -865,13 +866,14 @@ export const resourcesSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -902,13 +904,14 @@ export const resourcesSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -939,13 +942,14 @@ export const resourcesSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -976,13 +980,14 @@ export const resourcesSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -997,7 +1002,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	CpuPeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1007,7 +1012,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	CpuQuota: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1018,7 +1023,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	CpuRealtimePeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1029,7 +1034,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	CpuRealtimeRuntime: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1093,7 +1098,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	KernelMemoryTCP: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1103,7 +1108,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	MemoryReservation: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1114,7 +1119,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	MemorySwap: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1127,13 +1132,15 @@ export const resourcesSchema = v.looseObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.digits(),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
+				v.minValue(0),
+				v.maxValue(100),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
@@ -1145,7 +1152,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	NanoCpus: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1167,7 +1174,7 @@ export const resourcesSchema = v.looseObject({
 	PidsLimit: v.exactOptional(
 		v.nullable(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -1207,7 +1214,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	CpuCount: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1221,7 +1228,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	CpuPercent: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1231,7 +1238,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	IOMaximumIOps: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1242,7 +1249,7 @@ export const resourcesSchema = v.looseObject({
 	 */
 	IOMaximumBandwidth: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1260,14 +1267,14 @@ export const inputLimitSchema = v.looseObject({
 export const limitSchema = v.looseObject({
 	NanoCPUs: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
 	),
 	MemoryBytes: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1277,7 +1284,7 @@ export const limitSchema = v.looseObject({
 	 */
 	Pids: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1316,14 +1323,14 @@ export const inputResourceObjectSchema = v.looseObject({
 export const resourceObjectSchema = v.looseObject({
 	NanoCPUs: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
 	),
 	MemoryBytes: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1346,7 +1353,12 @@ export const resourceObjectSchema = v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -1410,7 +1422,7 @@ export const genericResourcesSchema = v.array(
 				Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 				Value: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -1468,7 +1480,7 @@ export const healthConfigSchema = v.looseObject({
 	 */
 	Interval: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1479,7 +1491,7 @@ export const healthConfigSchema = v.looseObject({
 	 */
 	Timeout: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -1496,7 +1508,7 @@ export const healthConfigSchema = v.looseObject({
 	 */
 	StartPeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2463,7 +2475,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	Memory: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2517,13 +2529,14 @@ export const hostConfigSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -2554,13 +2567,14 @@ export const hostConfigSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -2591,13 +2605,14 @@ export const hostConfigSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -2628,13 +2643,14 @@ export const hostConfigSchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -2649,7 +2665,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	CpuPeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2659,7 +2675,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	CpuQuota: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2670,7 +2686,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	CpuRealtimePeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2681,7 +2697,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	CpuRealtimeRuntime: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2745,7 +2761,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	KernelMemoryTCP: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2755,7 +2771,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	MemoryReservation: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2766,7 +2782,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	MemorySwap: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2779,13 +2795,15 @@ export const hostConfigSchema = v.looseObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.digits(),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
+				v.minValue(0),
+				v.maxValue(100),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
@@ -2797,7 +2815,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	NanoCpus: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2819,7 +2837,7 @@ export const hostConfigSchema = v.looseObject({
 	PidsLimit: v.exactOptional(
 		v.nullable(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -2859,7 +2877,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	CpuCount: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2873,7 +2891,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	CpuPercent: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2883,7 +2901,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	IOMaximumIOps: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -2894,7 +2912,7 @@ export const hostConfigSchema = v.looseObject({
 	 */
 	IOMaximumBandwidth: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -3181,7 +3199,12 @@ export const hostConfigSchema = v.looseObject({
 						 */
 						SizeBytes: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -3349,13 +3372,14 @@ export const hostConfigSchema = v.looseObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.digits(),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
+				v.minValue(0),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n)),
 			),
@@ -3624,7 +3648,7 @@ export const containerConfigSchema = v.looseObject({
 			 */
 			Interval: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -3635,7 +3659,7 @@ export const containerConfigSchema = v.looseObject({
 			 */
 			Timeout: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -3652,7 +3676,7 @@ export const containerConfigSchema = v.looseObject({
 			 */
 			StartPeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -4073,7 +4097,7 @@ export const imageConfigSchema = v.looseObject({
 			 */
 			Interval: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -4084,7 +4108,7 @@ export const imageConfigSchema = v.looseObject({
 			 */
 			Timeout: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -4101,7 +4125,7 @@ export const imageConfigSchema = v.looseObject({
 			 */
 			StartPeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -4333,7 +4357,7 @@ export const networkingConfigSchema = v.looseObject({
 				 */
 				GlobalIPv6PrefixLen: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -4838,7 +4862,7 @@ export const networkSettingsSchema = v.looseObject({
 				 */
 				GlobalIPv6PrefixLen: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -5682,7 +5706,7 @@ export const imageInspectSchema = v.looseObject({
 					 */
 					Interval: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -5693,7 +5717,7 @@ export const imageInspectSchema = v.looseObject({
 					 */
 					Timeout: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -5710,7 +5734,7 @@ export const imageInspectSchema = v.looseObject({
 					 */
 					StartPeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -5902,7 +5926,7 @@ export const imageInspectSchema = v.looseObject({
 					 */
 					Interval: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -5913,7 +5937,7 @@ export const imageInspectSchema = v.looseObject({
 					 */
 					Timeout: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -5930,7 +5954,7 @@ export const imageInspectSchema = v.looseObject({
 					 */
 					StartPeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -6037,7 +6061,7 @@ export const imageInspectSchema = v.looseObject({
 	 */
 	Size: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -6055,7 +6079,7 @@ export const imageInspectSchema = v.looseObject({
 	 */
 	VirtualSize: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -6234,7 +6258,7 @@ export const imageSummarySchema = v.looseObject({
 	 * Total size of the image including all layers it is composed of.
 	 */
 	Size: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -6246,7 +6270,7 @@ export const imageSummarySchema = v.looseObject({
 	 * has not been set / calculated.
 	 */
 	SharedSize: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -6263,7 +6287,7 @@ export const imageSummarySchema = v.looseObject({
 	 */
 	VirtualSize: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -6842,7 +6866,12 @@ export const volumeSchema = v.looseObject({
 									 */
 									RequiredBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -6853,7 +6882,12 @@ export const volumeSchema = v.looseObject({
 									 */
 									LimitBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -6886,7 +6920,7 @@ export const volumeSchema = v.looseObject({
 					 */
 					CapacityBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -6976,7 +7010,7 @@ export const volumeSchema = v.looseObject({
 				 * is set to `-1` ("not available")
 				 */
 				Size: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -6985,7 +7019,7 @@ export const volumeSchema = v.looseObject({
 				 * is set to `-1` if the reference-count is not available.
 				 */
 				RefCount: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -7327,7 +7361,12 @@ export const volumeCreateOptionsSchema = v.looseObject({
 							 */
 							RequiredBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -7338,7 +7377,12 @@ export const volumeCreateOptionsSchema = v.looseObject({
 							 */
 							LimitBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -7927,7 +7971,7 @@ export const volumeListResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -7948,7 +7992,7 @@ export const volumeListResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -7989,7 +8033,12 @@ export const volumeListResponseSchema = v.looseObject({
 								 */
 								CapacityBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -8079,7 +8128,12 @@ export const volumeListResponseSchema = v.looseObject({
 							 * is set to `-1` ("not available")
 							 */
 							Size: v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -8088,7 +8142,12 @@ export const volumeListResponseSchema = v.looseObject({
 							 * is set to `-1` if the reference-count is not available.
 							 */
 							RefCount: v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -8898,7 +8957,7 @@ export const endpointSettingsSchema = v.looseObject({
 	 */
 	GlobalIPv6PrefixLen: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -9569,14 +9628,14 @@ export const nodeSchema = v.looseObject({
 				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
 					),
 					MemoryBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -9601,7 +9660,7 @@ export const nodeSchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -9826,14 +9885,14 @@ export const nodeDescriptionSchema = v.looseObject({
 		v.looseObject({
 			NanoCPUs: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
 			),
 			MemoryBytes: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -9856,7 +9915,12 @@ export const nodeDescriptionSchema = v.looseObject({
 								Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 								Value: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -10276,7 +10340,7 @@ export const swarmSpecSchema = v.looseObject({
 				 */
 				TaskHistoryRetentionLimit: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -10334,7 +10398,7 @@ export const swarmSpecSchema = v.looseObject({
 				 */
 				HeartbeatPeriod: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -10353,7 +10417,7 @@ export const swarmSpecSchema = v.looseObject({
 				 */
 				NodeCertExpiry: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -10770,7 +10834,12 @@ export const clusterInfoSchema = v.nullable(
 							 */
 							TaskHistoryRetentionLimit: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -10828,7 +10897,12 @@ export const clusterInfoSchema = v.nullable(
 							 */
 							HeartbeatPeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -10847,7 +10921,12 @@ export const clusterInfoSchema = v.nullable(
 							 */
 							NodeCertExpiry: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -11339,7 +11418,12 @@ export const swarmSchema = v.looseObject({
 						 */
 						TaskHistoryRetentionLimit: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -11397,7 +11481,12 @@ export const swarmSchema = v.looseObject({
 						 */
 						HeartbeatPeriod: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -11416,7 +11505,12 @@ export const swarmSchema = v.looseObject({
 						 */
 						NodeCertExpiry: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -12615,7 +12709,12 @@ export const taskSpecSchema = v.looseObject({
 								 */
 								SizeBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -12639,7 +12738,7 @@ export const taskSpecSchema = v.looseObject({
 			 */
 			StopGracePeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -12664,7 +12763,7 @@ export const taskSpecSchema = v.looseObject({
 					 */
 					Interval: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -12675,7 +12774,7 @@ export const taskSpecSchema = v.looseObject({
 					 */
 					Timeout: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -12692,7 +12791,7 @@ export const taskSpecSchema = v.looseObject({
 					 */
 					StartPeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -12923,14 +13022,14 @@ export const taskSpecSchema = v.looseObject({
 				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
 					),
 					MemoryBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -12940,7 +13039,7 @@ export const taskSpecSchema = v.looseObject({
 					 */
 					Pids: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -12955,14 +13054,14 @@ export const taskSpecSchema = v.looseObject({
 				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
 					),
 					MemoryBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -12987,7 +13086,7 @@ export const taskSpecSchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -13024,7 +13123,7 @@ export const taskSpecSchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -13035,7 +13134,7 @@ export const taskSpecSchema = v.looseObject({
 			 */
 			MaxAttempts: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -13046,7 +13145,7 @@ export const taskSpecSchema = v.looseObject({
 			 */
 			Window: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -13109,7 +13208,7 @@ export const taskSpecSchema = v.looseObject({
 			 */
 			MaxReplicas: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -14421,7 +14520,7 @@ export const taskSchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -14453,7 +14552,7 @@ export const taskSchema = v.looseObject({
 					 */
 					StopGracePeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -14478,7 +14577,12 @@ export const taskSchema = v.looseObject({
 							 */
 							Interval: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -14489,7 +14593,12 @@ export const taskSchema = v.looseObject({
 							 */
 							Timeout: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -14506,7 +14615,12 @@ export const taskSchema = v.looseObject({
 							 */
 							StartPeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -14741,14 +14855,24 @@ export const taskSchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -14758,7 +14882,12 @@ export const taskSchema = v.looseObject({
 							 */
 							Pids: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -14773,14 +14902,24 @@ export const taskSchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -14805,7 +14944,7 @@ export const taskSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -14842,7 +14981,7 @@ export const taskSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -14853,7 +14992,7 @@ export const taskSchema = v.looseObject({
 					 */
 					MaxAttempts: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -14864,7 +15003,7 @@ export const taskSchema = v.looseObject({
 					 */
 					Window: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -14929,7 +15068,7 @@ export const taskSchema = v.looseObject({
 					 */
 					MaxReplicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -15031,7 +15170,12 @@ export const taskSchema = v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -16364,7 +16508,7 @@ export const serviceSpecSchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -16396,7 +16540,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					StopGracePeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16421,7 +16565,12 @@ export const serviceSpecSchema = v.looseObject({
 							 */
 							Interval: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -16432,7 +16581,12 @@ export const serviceSpecSchema = v.looseObject({
 							 */
 							Timeout: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -16449,7 +16603,12 @@ export const serviceSpecSchema = v.looseObject({
 							 */
 							StartPeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -16684,14 +16843,24 @@ export const serviceSpecSchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -16701,7 +16870,12 @@ export const serviceSpecSchema = v.looseObject({
 							 */
 							Pids: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -16716,14 +16890,24 @@ export const serviceSpecSchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -16748,7 +16932,7 @@ export const serviceSpecSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -16785,7 +16969,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16796,7 +16980,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					MaxAttempts: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16807,7 +16991,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					Window: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16872,7 +17056,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					MaxReplicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16956,7 +17140,7 @@ export const serviceSpecSchema = v.looseObject({
 				v.looseObject({
 					Replicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16975,7 +17159,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					MaxConcurrent: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -16986,7 +17170,7 @@ export const serviceSpecSchema = v.looseObject({
 					 */
 					TotalCompletions: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -17011,7 +17195,7 @@ export const serviceSpecSchema = v.looseObject({
 			 */
 			Parallelism: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -17021,7 +17205,7 @@ export const serviceSpecSchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -17039,7 +17223,7 @@ export const serviceSpecSchema = v.looseObject({
 			 */
 			Monitor: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -17069,7 +17253,7 @@ export const serviceSpecSchema = v.looseObject({
 			 */
 			Parallelism: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -17079,7 +17263,7 @@ export const serviceSpecSchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -17095,7 +17279,7 @@ export const serviceSpecSchema = v.looseObject({
 			 */
 			Monitor: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -18807,7 +18991,7 @@ export const serviceSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -18839,7 +19023,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							StopGracePeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -18864,7 +19053,12 @@ export const serviceSchema = v.looseObject({
 									 */
 									Interval: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -18875,7 +19069,12 @@ export const serviceSchema = v.looseObject({
 									 */
 									Timeout: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -18892,7 +19091,12 @@ export const serviceSchema = v.looseObject({
 									 */
 									StartPeriod: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -19135,14 +19339,24 @@ export const serviceSchema = v.looseObject({
 								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
 									),
 									MemoryBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -19152,7 +19366,12 @@ export const serviceSchema = v.looseObject({
 									 */
 									Pids: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -19167,14 +19386,24 @@ export const serviceSchema = v.looseObject({
 								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
 									),
 									MemoryBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -19201,7 +19430,7 @@ export const serviceSchema = v.looseObject({
 															v.union([
 																v.pipe(
 																	v.string(),
-																	v.decimal(),
+																	v.regex(/^-?\d+$/u),
 																	v.toBigint(),
 																	v.bigint(),
 																),
@@ -19240,7 +19469,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							Delay: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19251,7 +19485,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							MaxAttempts: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19262,7 +19501,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							Window: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19329,7 +19573,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							MaxReplicas: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19413,7 +19662,12 @@ export const serviceSchema = v.looseObject({
 						v.looseObject({
 							Replicas: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19432,7 +19686,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							MaxConcurrent: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19443,7 +19702,12 @@ export const serviceSchema = v.looseObject({
 							 */
 							TotalCompletions: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -19468,7 +19732,7 @@ export const serviceSchema = v.looseObject({
 					 */
 					Parallelism: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -19478,7 +19742,7 @@ export const serviceSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -19496,7 +19760,7 @@ export const serviceSchema = v.looseObject({
 					 */
 					Monitor: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -19526,7 +19790,7 @@ export const serviceSchema = v.looseObject({
 					 */
 					Parallelism: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -19536,7 +19800,7 @@ export const serviceSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -19552,7 +19816,7 @@ export const serviceSchema = v.looseObject({
 					 */
 					Monitor: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -20063,7 +20327,7 @@ export const containerSummarySchema = v.looseObject({
 	 */
 	Created: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -20095,7 +20359,7 @@ export const containerSummarySchema = v.looseObject({
 	 */
 	SizeRw: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -20105,7 +20369,7 @@ export const containerSummarySchema = v.looseObject({
 	 */
 	SizeRootFs: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -20185,7 +20449,12 @@ export const containerSummarySchema = v.looseObject({
 						 */
 						GlobalIPv6PrefixLen: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -21045,7 +21314,7 @@ export const containerWaitResponseSchema = v.looseObject({
 	 * Exit code of the container
 	 */
 	StatusCode: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -22395,7 +22664,7 @@ export const systemInfoSchema = v.looseObject({
 	 */
 	MemTotal: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -22553,7 +22822,12 @@ export const systemInfoSchema = v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -22774,7 +23048,7 @@ export const systemInfoSchema = v.looseObject({
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -22850,7 +23124,7 @@ export const systemInfoSchema = v.looseObject({
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -22879,7 +23153,7 @@ export const systemInfoSchema = v.looseObject({
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -24007,7 +24281,12 @@ export const swarmInfoSchema = v.looseObject({
 									 */
 									TaskHistoryRetentionLimit: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -24069,7 +24348,12 @@ export const swarmInfoSchema = v.looseObject({
 									 */
 									HeartbeatPeriod: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -24088,7 +24372,12 @@ export const swarmInfoSchema = v.looseObject({
 									 */
 									NodeCertExpiry: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -24433,7 +24722,7 @@ export const eventMessageSchema = v.looseObject({
 	 */
 	time: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -24443,7 +24732,7 @@ export const eventMessageSchema = v.looseObject({
 	 */
 	timeNano: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -24482,7 +24771,7 @@ export const ociDescriptorSchema = v.looseObject({
 	 */
 	size: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -24619,7 +24908,7 @@ export const distributionInspectSchema = v.looseObject({
 		 */
 		size: v.exactOptional(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -25073,7 +25362,12 @@ export const clusterVolumeSchema = v.looseObject({
 							 */
 							RequiredBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -25084,7 +25378,12 @@ export const clusterVolumeSchema = v.looseObject({
 							 */
 							LimitBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -25117,7 +25416,7 @@ export const clusterVolumeSchema = v.looseObject({
 			 */
 			CapacityBytes: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -25469,7 +25768,7 @@ export const clusterVolumeSpecSchema = v.looseObject({
 					 */
 					RequiredBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -25480,7 +25779,7 @@ export const clusterVolumeSpecSchema = v.looseObject({
 					 */
 					LimitBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -25738,7 +26037,7 @@ export const containerListCommandResponseSchema = v.array(
 		 */
 		Created: v.exactOptional(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -25770,7 +26069,7 @@ export const containerListCommandResponseSchema = v.array(
 		 */
 		SizeRw: v.exactOptional(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -25780,7 +26079,7 @@ export const containerListCommandResponseSchema = v.array(
 		 */
 		SizeRootFs: v.exactOptional(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -25860,7 +26159,12 @@ export const containerListCommandResponseSchema = v.array(
 							 */
 							GlobalIPv6PrefixLen: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -25954,7 +26258,7 @@ export const containerListCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -27008,7 +27312,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			Interval: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27019,7 +27323,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			Timeout: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27036,7 +27340,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			StartPeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27114,7 +27418,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			Memory: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27170,13 +27474,14 @@ export const containerCreateCommandBodySchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -27207,13 +27512,14 @@ export const containerCreateCommandBodySchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -27244,13 +27550,14 @@ export const containerCreateCommandBodySchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -27281,13 +27588,14 @@ export const containerCreateCommandBodySchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -27302,7 +27610,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			CpuPeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27312,7 +27620,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			CpuQuota: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27323,7 +27631,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			CpuRealtimePeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27334,7 +27642,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			CpuRealtimeRuntime: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27398,7 +27706,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			KernelMemoryTCP: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27408,7 +27716,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			MemoryReservation: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27419,7 +27727,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			MemorySwap: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27432,13 +27740,15 @@ export const containerCreateCommandBodySchema = v.looseObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.digits(),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
+						v.minValue(0),
+						v.maxValue(100),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
@@ -27450,7 +27760,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			NanoCpus: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27472,7 +27782,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			PidsLimit: v.exactOptional(
 				v.nullable(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -27512,7 +27822,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			CpuCount: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27526,7 +27836,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			CpuPercent: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27536,7 +27846,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			IOMaximumIOps: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27547,7 +27857,7 @@ export const containerCreateCommandBodySchema = v.looseObject({
 			 */
 			IOMaximumBandwidth: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -27834,7 +28144,12 @@ export const containerCreateCommandBodySchema = v.looseObject({
 								 */
 								SizeBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -28004,13 +28319,14 @@ export const containerCreateCommandBodySchema = v.looseObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.digits(),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
+						v.minValue(0),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n)),
 					),
@@ -28114,7 +28430,12 @@ export const containerCreateCommandBodySchema = v.looseObject({
 						 */
 						GlobalIPv6PrefixLen: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -29788,7 +30109,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			Memory: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -29844,13 +30165,14 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -29881,13 +30203,14 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -29918,13 +30241,14 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -29955,13 +30279,14 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 							v.union([
 								v.pipe(
 									v.string(),
-									v.decimal(),
+									v.digits(),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
 								v.pipe(
 									v.number(),
 									v.integer(),
+									v.minValue(0),
 									v.toBigint(),
 									v.pipe(v.bigint(), v.minValue(0n)),
 								),
@@ -29976,7 +30301,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			CpuPeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -29986,7 +30311,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			CpuQuota: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -29997,7 +30322,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			CpuRealtimePeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30008,7 +30333,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			CpuRealtimeRuntime: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30072,7 +30397,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			KernelMemoryTCP: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30082,7 +30407,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			MemoryReservation: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30093,7 +30418,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			MemorySwap: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30106,13 +30431,15 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.digits(),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
+						v.minValue(0),
+						v.maxValue(100),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 					),
@@ -30124,7 +30451,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			NanoCpus: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30146,7 +30473,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			PidsLimit: v.exactOptional(
 				v.nullable(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -30186,7 +30513,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			CpuCount: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30200,7 +30527,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			CpuPercent: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30210,7 +30537,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			IOMaximumIOps: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30221,7 +30548,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 			 */
 			IOMaximumBandwidth: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -30508,7 +30835,12 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 								 */
 								SizeBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -30678,13 +31010,14 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.digits(),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n)),
 					),
 					v.pipe(
 						v.number(),
 						v.integer(),
+						v.minValue(0),
 						v.toBigint(),
 						v.pipe(v.bigint(), v.minValue(0n)),
 					),
@@ -30749,7 +31082,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 	 */
 	SizeRw: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -30759,7 +31092,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 	 */
 	SizeRootFs: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -30909,7 +31242,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 					 */
 					Interval: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -30920,7 +31253,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 					 */
 					Timeout: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -30937,7 +31270,7 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 					 */
 					StartPeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -31247,7 +31580,12 @@ export const containerInspectCommandResponseSchema = v.looseObject({
 						 */
 						GlobalIPv6PrefixLen: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -31338,7 +31676,7 @@ export const containerLogsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -31349,7 +31687,7 @@ export const containerLogsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -31443,7 +31781,7 @@ export const containerResizeCommandQuerySchema = v.strictObject({
 	h: v.union([
 		v.pipe(
 			v.string(),
-			v.decimal(),
+			v.regex(/^-?\d+$/u),
 			v.toNumber(),
 			v.pipe(v.number(), v.integer()),
 		),
@@ -31452,7 +31790,7 @@ export const containerResizeCommandQuerySchema = v.strictObject({
 	w: v.union([
 		v.pipe(
 			v.string(),
-			v.decimal(),
+			v.regex(/^-?\d+$/u),
 			v.toNumber(),
 			v.pipe(v.number(), v.integer()),
 		),
@@ -31487,7 +31825,7 @@ export const containerStopCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -31511,7 +31849,7 @@ export const containerRestartCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -31848,7 +32186,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	Memory: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -31902,13 +32240,14 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -31939,13 +32278,14 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -31976,13 +32316,14 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -32013,13 +32354,14 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 					v.union([
 						v.pipe(
 							v.string(),
-							v.decimal(),
+							v.digits(),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
 						v.pipe(
 							v.number(),
 							v.integer(),
+							v.minValue(0),
 							v.toBigint(),
 							v.pipe(v.bigint(), v.minValue(0n)),
 						),
@@ -32034,7 +32376,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	CpuPeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32044,7 +32386,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	CpuQuota: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32055,7 +32397,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	CpuRealtimePeriod: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32066,7 +32408,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	CpuRealtimeRuntime: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32130,7 +32472,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	KernelMemoryTCP: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32140,7 +32482,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	MemoryReservation: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32151,7 +32493,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	MemorySwap: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32164,13 +32506,15 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.digits(),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
 			v.pipe(
 				v.number(),
 				v.integer(),
+				v.minValue(0),
+				v.maxValue(100),
 				v.toBigint(),
 				v.pipe(v.bigint(), v.minValue(0n), v.maxValue(100n)),
 			),
@@ -32182,7 +32526,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	NanoCpus: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32204,7 +32548,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	PidsLimit: v.exactOptional(
 		v.nullable(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -32244,7 +32588,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	CpuCount: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32258,7 +32602,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	CpuPercent: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32268,7 +32612,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	IOMaximumIOps: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32279,7 +32623,7 @@ export const containerUpdateCommandBodySchema = v.looseObject({
 	 */
 	IOMaximumBandwidth: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32413,7 +32757,7 @@ export const containerWaitCommandResponseSchema = v.looseObject({
 	 * Exit code of the container
 	 */
 	StatusCode: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -32519,7 +32863,7 @@ export const containerPruneCommandResponseSchema = v.looseObject({
 	 */
 	SpaceReclaimed: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32663,7 +33007,7 @@ export const imageListCommandResponseSchema = v.array(
 		 * Total size of the image including all layers it is composed of.
 		 */
 		Size: v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32675,7 +33019,7 @@ export const imageListCommandResponseSchema = v.array(
 		 * has not been set / calculated.
 		 */
 		SharedSize: v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32692,7 +33036,7 @@ export const imageListCommandResponseSchema = v.array(
 		 */
 		VirtualSize: v.exactOptional(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),
@@ -32765,7 +33109,7 @@ export const imageBuildCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -32776,7 +33120,7 @@ export const imageBuildCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -32787,7 +33131,7 @@ export const imageBuildCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -32799,7 +33143,7 @@ export const imageBuildCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -32810,7 +33154,7 @@ export const imageBuildCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -32822,7 +33166,7 @@ export const imageBuildCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -32859,7 +33203,7 @@ export const buildPruneCommandResponseSchema = v.looseObject({
 	 */
 	SpaceReclaimed: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -32873,7 +33217,7 @@ export const inputBuildPruneCommandQuerySchema = v.strictObject({
 export const buildPruneCommandQuerySchema = v.strictObject({
 	"keep-storage": v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -33552,7 +33896,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 					 */
 					Interval: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -33563,7 +33907,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 					 */
 					Timeout: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -33580,7 +33924,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 					 */
 					StartPeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -33772,7 +34116,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 					 */
 					Interval: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -33783,7 +34127,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 					 */
 					Timeout: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -33800,7 +34144,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 					 */
 					StartPeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -33907,7 +34251,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 	 */
 	Size: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -33925,7 +34269,7 @@ export const imageInspectCommandResponseSchema = v.looseObject({
 	 */
 	VirtualSize: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -33995,14 +34339,14 @@ export const imageHistoryCommandResponseSchema = v.array(
 	v.looseObject({
 		Id: v.pipe(v.string(), v.trim()),
 		Created: v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
 		CreatedBy: v.pipe(v.string(), v.trim()),
 		Tags: v.array(v.pipe(v.string(), v.trim())),
 		Size: v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -34114,7 +34458,7 @@ export const imageSearchCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -34169,7 +34513,7 @@ export const imagePruneCommandResponseSchema = v.looseObject({
 	 */
 	SpaceReclaimed: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -35375,7 +35719,7 @@ export const systemInfoCommandResponseSchema = v.looseObject({
 	 */
 	MemTotal: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -35533,7 +35877,12 @@ export const systemInfoCommandResponseSchema = v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -35754,7 +36103,7 @@ export const systemInfoCommandResponseSchema = v.looseObject({
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -35830,7 +36179,7 @@ export const systemInfoCommandResponseSchema = v.looseObject({
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -35859,7 +36208,7 @@ export const systemInfoCommandResponseSchema = v.looseObject({
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -36534,7 +36883,7 @@ export const imageCommitCommandBodySchema = v.looseObject({
 			 */
 			Interval: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -36545,7 +36894,7 @@ export const imageCommitCommandBodySchema = v.looseObject({
 			 */
 			Timeout: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -36562,7 +36911,7 @@ export const imageCommitCommandBodySchema = v.looseObject({
 			 */
 			StartPeriod: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -36760,7 +37109,7 @@ export const systemEventsCommandResponseSchema = v.looseObject({
 	 */
 	time: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -36770,7 +37119,7 @@ export const systemEventsCommandResponseSchema = v.looseObject({
 	 */
 	timeNano: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -37477,7 +37826,7 @@ export const inputSystemDataUsageCommandResponseSchema = v.looseObject({
 export const systemDataUsageCommandResponseSchema = v.looseObject({
 	LayersSize: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -37532,7 +37881,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 * Total size of the image including all layers it is composed of.
 				 */
 				Size: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -37544,7 +37893,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 * has not been set / calculated.
 				 */
 				SharedSize: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -37561,7 +37910,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 */
 				VirtualSize: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -37609,7 +37958,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 */
 				Created: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -37641,7 +37990,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 */
 				SizeRw: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -37651,7 +38000,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 				 */
 				SizeRootFs: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -37741,7 +38090,12 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 									 */
 									GlobalIPv6PrefixLen: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -38042,7 +38396,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -38063,7 +38417,7 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -38104,7 +38458,12 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 								 */
 								CapacityBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -38194,7 +38553,12 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 							 * is set to `-1` ("not available")
 							 */
 							Size: v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -38203,7 +38567,12 @@ export const systemDataUsageCommandResponseSchema = v.looseObject({
 							 * is set to `-1` if the reference-count is not available.
 							 */
 							RefCount: v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -38502,7 +38871,7 @@ export const execResizeCommandQuerySchema = v.strictObject({
 	h: v.union([
 		v.pipe(
 			v.string(),
-			v.decimal(),
+			v.regex(/^-?\d+$/u),
 			v.toNumber(),
 			v.pipe(v.number(), v.integer()),
 		),
@@ -38511,7 +38880,7 @@ export const execResizeCommandQuerySchema = v.strictObject({
 	w: v.union([
 		v.pipe(
 			v.string(),
-			v.decimal(),
+			v.regex(/^-?\d+$/u),
 			v.toNumber(),
 			v.pipe(v.number(), v.integer()),
 		),
@@ -39134,7 +39503,7 @@ export const volumeListCommandResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -39155,7 +39524,7 @@ export const volumeListCommandResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -39196,7 +39565,12 @@ export const volumeListCommandResponseSchema = v.looseObject({
 								 */
 								CapacityBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -39286,7 +39660,12 @@ export const volumeListCommandResponseSchema = v.looseObject({
 							 * is set to `-1` ("not available")
 							 */
 							Size: v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -39295,7 +39674,12 @@ export const volumeListCommandResponseSchema = v.looseObject({
 							 * is set to `-1` if the reference-count is not available.
 							 */
 							RefCount: v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -39646,7 +40030,12 @@ export const volumeCreateCommandBodySchema = v.looseObject({
 							 */
 							RequiredBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -39657,7 +40046,12 @@ export const volumeCreateCommandBodySchema = v.looseObject({
 							 */
 							LimitBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -40215,7 +40609,12 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 									 */
 									RequiredBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -40226,7 +40625,12 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 									 */
 									LimitBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -40259,7 +40663,7 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 					 */
 					CapacityBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -40349,7 +40753,7 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 				 * is set to `-1` ("not available")
 				 */
 				Size: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -40358,7 +40762,7 @@ export const volumeCreateCommandResponseSchema = v.looseObject({
 				 * is set to `-1` if the reference-count is not available.
 				 */
 				RefCount: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -40901,7 +41305,12 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 									 */
 									RequiredBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -40912,7 +41321,12 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 									 */
 									LimitBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -40945,7 +41359,7 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 					 */
 					CapacityBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -41035,7 +41449,7 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 				 * is set to `-1` ("not available")
 				 */
 				Size: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -41044,7 +41458,7 @@ export const volumeInspectCommandResponseSchema = v.looseObject({
 				 * is set to `-1` if the reference-count is not available.
 				 */
 				RefCount: v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -41352,7 +41766,12 @@ export const volumeUpdateCommandBodySchema = v.looseObject({
 							 */
 							RequiredBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -41363,7 +41782,12 @@ export const volumeUpdateCommandBodySchema = v.looseObject({
 							 */
 							LimitBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -41397,7 +41821,7 @@ export const inputVolumeUpdateCommandQuerySchema = v.strictObject({
 });
 export const volumeUpdateCommandQuerySchema = v.strictObject({
 	version: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -41434,7 +41858,7 @@ export const volumePruneCommandResponseSchema = v.looseObject({
 	 */
 	SpaceReclaimed: v.exactOptional(
 		v.union([
-			v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+			v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 			v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 			v.bigint(),
 		]),
@@ -42383,7 +42807,7 @@ export const networkConnectCommandBodySchema = v.looseObject({
 			 */
 			GlobalIPv6PrefixLen: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -43288,7 +43712,7 @@ export const pluginEnableCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -43633,14 +44057,24 @@ export const nodeListCommandResponseSchema = v.array(
 					v.looseObject({
 						NanoCPUs: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
 						),
 						MemoryBytes: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -43665,7 +44099,7 @@ export const nodeListCommandResponseSchema = v.array(
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -44048,14 +44482,14 @@ export const nodeInspectCommandResponseSchema = v.looseObject({
 				v.looseObject({
 					NanoCPUs: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
 					),
 					MemoryBytes: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -44080,7 +44514,7 @@ export const nodeInspectCommandResponseSchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -44251,7 +44685,7 @@ export const inputNodeUpdateCommandQuerySchema = v.strictObject({
 });
 export const nodeUpdateCommandQuerySchema = v.strictObject({
 	version: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -44583,7 +45017,12 @@ export const swarmInspectCommandResponseSchema = v.looseObject({
 						 */
 						TaskHistoryRetentionLimit: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -44641,7 +45080,12 @@ export const swarmInspectCommandResponseSchema = v.looseObject({
 						 */
 						HeartbeatPeriod: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -44660,7 +45104,12 @@ export const swarmInspectCommandResponseSchema = v.looseObject({
 						 */
 						NodeCertExpiry: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -45127,7 +45576,12 @@ export const swarmInitCommandBodySchema = v.looseObject({
 						 */
 						TaskHistoryRetentionLimit: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -45185,7 +45639,12 @@ export const swarmInitCommandBodySchema = v.looseObject({
 						 */
 						HeartbeatPeriod: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -45204,7 +45663,12 @@ export const swarmInitCommandBodySchema = v.looseObject({
 						 */
 						NodeCertExpiry: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -45581,7 +46045,7 @@ export const swarmUpdateCommandBodySchema = v.looseObject({
 				 */
 				TaskHistoryRetentionLimit: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -45639,7 +46103,7 @@ export const swarmUpdateCommandBodySchema = v.looseObject({
 				 */
 				HeartbeatPeriod: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -45658,7 +46122,7 @@ export const swarmUpdateCommandBodySchema = v.looseObject({
 				 */
 				NodeCertExpiry: v.exactOptional(
 					v.union([
-						v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+						v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 						v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 						v.bigint(),
 					]),
@@ -45764,7 +46228,7 @@ export const inputSwarmUpdateCommandQuerySchema = v.strictObject({
 });
 export const swarmUpdateCommandQuerySchema = v.strictObject({
 	version: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -47295,7 +47759,7 @@ export const serviceListCommandResponseSchema = v.array(
 														v.union([
 															v.pipe(
 																v.string(),
-																v.decimal(),
+																v.regex(/^-?\d+$/u),
 																v.toBigint(),
 																v.bigint(),
 															),
@@ -47329,7 +47793,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								StopGracePeriod: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -47358,7 +47827,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47379,7 +47848,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47406,7 +47875,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47663,7 +48132,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47680,7 +48149,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47700,7 +48169,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47725,7 +48194,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47742,7 +48211,7 @@ export const serviceListCommandResponseSchema = v.array(
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -47781,7 +48250,7 @@ export const serviceListCommandResponseSchema = v.array(
 																v.union([
 																	v.pipe(
 																		v.string(),
-																		v.decimal(),
+																		v.regex(/^-?\d+$/u),
 																		v.toBigint(),
 																		v.bigint(),
 																	),
@@ -47820,7 +48289,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Delay: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -47831,7 +48305,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								MaxAttempts: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -47842,7 +48321,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								Window: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -47909,7 +48393,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								MaxReplicas: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -47997,7 +48486,12 @@ export const serviceListCommandResponseSchema = v.array(
 							v.looseObject({
 								Replicas: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -48016,7 +48510,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								MaxConcurrent: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -48027,7 +48526,12 @@ export const serviceListCommandResponseSchema = v.array(
 								 */
 								TotalCompletions: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -48052,7 +48556,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Parallelism: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -48062,7 +48571,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Delay: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -48080,7 +48594,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Monitor: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -48110,7 +48629,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Parallelism: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -48120,7 +48644,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Delay: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -48136,7 +48665,12 @@ export const serviceListCommandResponseSchema = v.array(
 						 */
 						Monitor: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -49651,7 +50185,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -49683,7 +50217,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					StopGracePeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -49708,7 +50242,12 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 							 */
 							Interval: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -49719,7 +50258,12 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 							 */
 							Timeout: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -49736,7 +50280,12 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 							 */
 							StartPeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -49971,14 +50520,24 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -49988,7 +50547,12 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 							 */
 							Pids: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -50003,14 +50567,24 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -50035,7 +50609,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -50072,7 +50646,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50083,7 +50657,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					MaxAttempts: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50094,7 +50668,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					Window: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50159,7 +50733,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					MaxReplicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50243,7 +50817,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 				v.looseObject({
 					Replicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50262,7 +50836,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					MaxConcurrent: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50273,7 +50847,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 					 */
 					TotalCompletions: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -50298,7 +50872,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 */
 			Parallelism: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -50308,7 +50882,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -50326,7 +50900,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 */
 			Monitor: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -50356,7 +50930,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 */
 			Parallelism: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -50366,7 +50940,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -50382,7 +50956,7 @@ export const serviceCreateCommandBodySchema = v.looseObject({
 			 */
 			Monitor: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -51983,7 +52557,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -52015,7 +52589,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							StopGracePeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52040,7 +52619,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 									 */
 									Interval: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -52051,7 +52635,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 									 */
 									Timeout: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -52068,7 +52657,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 									 */
 									StartPeriod: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -52311,14 +52905,24 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
 									),
 									MemoryBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -52328,7 +52932,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 									 */
 									Pids: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -52343,14 +52952,24 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 								v.looseObject({
 									NanoCPUs: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
 									),
 									MemoryBytes: v.exactOptional(
 										v.union([
-											v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+											v.pipe(
+												v.string(),
+												v.regex(/^-?\d+$/u),
+												v.toBigint(),
+												v.bigint(),
+											),
 											v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 											v.bigint(),
 										]),
@@ -52377,7 +52996,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 															v.union([
 																v.pipe(
 																	v.string(),
-																	v.decimal(),
+																	v.regex(/^-?\d+$/u),
 																	v.toBigint(),
 																	v.bigint(),
 																),
@@ -52416,7 +53035,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							Delay: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52427,7 +53051,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							MaxAttempts: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52438,7 +53067,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							Window: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52505,7 +53139,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							MaxReplicas: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52589,7 +53228,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 						v.looseObject({
 							Replicas: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52608,7 +53252,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							MaxConcurrent: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52619,7 +53268,12 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 							 */
 							TotalCompletions: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -52644,7 +53298,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 */
 					Parallelism: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -52654,7 +53308,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -52672,7 +53326,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 */
 					Monitor: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -52702,7 +53356,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 */
 					Parallelism: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -52712,7 +53366,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -52728,7 +53382,7 @@ export const serviceInspectCommandResponseSchema = v.looseObject({
 					 */
 					Monitor: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54248,7 +54902,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -54280,7 +54934,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					StopGracePeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54305,7 +54959,12 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 							 */
 							Interval: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -54316,7 +54975,12 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 							 */
 							Timeout: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -54333,7 +54997,12 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 							 */
 							StartPeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -54568,14 +55237,24 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -54585,7 +55264,12 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 							 */
 							Pids: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -54600,14 +55284,24 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -54632,7 +55326,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -54669,7 +55363,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54680,7 +55374,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					MaxAttempts: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54691,7 +55385,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					Window: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54756,7 +55450,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					MaxReplicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54840,7 +55534,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 				v.looseObject({
 					Replicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54859,7 +55553,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					MaxConcurrent: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54870,7 +55564,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 					 */
 					TotalCompletions: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -54895,7 +55589,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 */
 			Parallelism: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -54905,7 +55599,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -54923,7 +55617,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 */
 			Monitor: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -54953,7 +55647,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 */
 			Parallelism: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -54963,7 +55657,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 */
 			Delay: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -54979,7 +55673,7 @@ export const serviceUpdateCommandBodySchema = v.looseObject({
 			 */
 			Monitor: v.exactOptional(
 				v.union([
-					v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+					v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 					v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 					v.bigint(),
 				]),
@@ -55095,7 +55789,7 @@ export const serviceUpdateCommandQuerySchema = v.strictObject({
 	version: v.union([
 		v.pipe(
 			v.string(),
-			v.decimal(),
+			v.regex(/^-?\d+$/u),
 			v.toNumber(),
 			v.pipe(v.number(), v.integer()),
 		),
@@ -55134,7 +55828,7 @@ export const serviceLogsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -56367,7 +57061,7 @@ export const taskListCommandResponseSchema = v.array(
 												v.union([
 													v.pipe(
 														v.string(),
-														v.decimal(),
+														v.regex(/^-?\d+$/u),
 														v.toBigint(),
 														v.bigint(),
 													),
@@ -56399,7 +57093,12 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						StopGracePeriod: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -56424,7 +57123,12 @@ export const taskListCommandResponseSchema = v.array(
 								 */
 								Interval: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -56435,7 +57139,12 @@ export const taskListCommandResponseSchema = v.array(
 								 */
 								Timeout: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -56452,7 +57161,12 @@ export const taskListCommandResponseSchema = v.array(
 								 */
 								StartPeriod: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -56691,14 +57405,24 @@ export const taskListCommandResponseSchema = v.array(
 							v.looseObject({
 								NanoCPUs: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
 								),
 								MemoryBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -56708,7 +57432,12 @@ export const taskListCommandResponseSchema = v.array(
 								 */
 								Pids: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -56723,14 +57452,24 @@ export const taskListCommandResponseSchema = v.array(
 							v.looseObject({
 								NanoCPUs: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
 								),
 								MemoryBytes: v.exactOptional(
 									v.union([
-										v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+										v.pipe(
+											v.string(),
+											v.regex(/^-?\d+$/u),
+											v.toBigint(),
+											v.bigint(),
+										),
 										v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 										v.bigint(),
 									]),
@@ -56755,7 +57494,7 @@ export const taskListCommandResponseSchema = v.array(
 														v.union([
 															v.pipe(
 																v.string(),
-																v.decimal(),
+																v.regex(/^-?\d+$/u),
 																v.toBigint(),
 																v.bigint(),
 															),
@@ -56794,7 +57533,12 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Delay: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -56805,7 +57549,12 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						MaxAttempts: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -56816,7 +57565,12 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						Window: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -56881,7 +57635,12 @@ export const taskListCommandResponseSchema = v.array(
 						 */
 						MaxReplicas: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -56983,7 +57742,12 @@ export const taskListCommandResponseSchema = v.array(
 							Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 							Value: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58290,7 +59054,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 											v.union([
 												v.pipe(
 													v.string(),
-													v.decimal(),
+													v.regex(/^-?\d+$/u),
 													v.toBigint(),
 													v.bigint(),
 												),
@@ -58322,7 +59086,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 					 */
 					StopGracePeriod: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -58347,7 +59111,12 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 							 */
 							Interval: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58358,7 +59127,12 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 							 */
 							Timeout: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58375,7 +59149,12 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 							 */
 							StartPeriod: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58610,14 +59389,24 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58627,7 +59416,12 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 							 */
 							Pids: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58642,14 +59436,24 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 						v.looseObject({
 							NanoCPUs: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
 							),
 							MemoryBytes: v.exactOptional(
 								v.union([
-									v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+									v.pipe(
+										v.string(),
+										v.regex(/^-?\d+$/u),
+										v.toBigint(),
+										v.bigint(),
+									),
 									v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 									v.bigint(),
 								]),
@@ -58674,7 +59478,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 													v.union([
 														v.pipe(
 															v.string(),
-															v.decimal(),
+															v.regex(/^-?\d+$/u),
 															v.toBigint(),
 															v.bigint(),
 														),
@@ -58711,7 +59515,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 					 */
 					Delay: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -58722,7 +59526,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 					 */
 					MaxAttempts: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -58733,7 +59537,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 					 */
 					Window: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -58798,7 +59602,7 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 					 */
 					MaxReplicas: v.exactOptional(
 						v.union([
-							v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+							v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 							v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 							v.bigint(),
 						]),
@@ -58900,7 +59704,12 @@ export const taskInspectCommandResponseSchema = v.looseObject({
 						Kind: v.exactOptional(v.pipe(v.string(), v.trim())),
 						Value: v.exactOptional(
 							v.union([
-								v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+								v.pipe(
+									v.string(),
+									v.regex(/^-?\d+$/u),
+									v.toBigint(),
+									v.bigint(),
+								),
 								v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 								v.bigint(),
 							]),
@@ -59010,7 +59819,7 @@ export const taskLogsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -59573,7 +60382,7 @@ export const inputSecretUpdateCommandQuerySchema = v.strictObject({
 });
 export const secretUpdateCommandQuerySchema = v.strictObject({
 	version: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -59979,7 +60788,7 @@ export const inputConfigUpdateCommandQuerySchema = v.strictObject({
 });
 export const configUpdateCommandQuerySchema = v.strictObject({
 	version: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -60055,7 +60864,7 @@ export const distributionInspectCommandResponseSchema = v.looseObject({
 		 */
 		size: v.exactOptional(
 			v.union([
-				v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+				v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 				v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 				v.bigint(),
 			]),

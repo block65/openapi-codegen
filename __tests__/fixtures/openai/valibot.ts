@@ -12619,7 +12619,7 @@ export const listPaginatedFineTuningJobsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -12656,7 +12656,7 @@ export const listFineTuningEventsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -12695,7 +12695,7 @@ export const listFineTuningJobCheckpointsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -12744,7 +12744,7 @@ export const listAssistantsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -12846,7 +12846,7 @@ export const listMessagesCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -12929,7 +12929,7 @@ export const listRunsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13038,7 +13038,7 @@ export const listRunStepsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13095,7 +13095,7 @@ export const listVectorStoresCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13169,7 +13169,7 @@ export const listVectorStoreFilesCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13289,7 +13289,7 @@ export const listFilesInVectorStoreBatchCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13388,7 +13388,7 @@ export const listBatchesCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13460,7 +13460,7 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.regex(/^-?\d+$/u),
 						v.toNumber(),
 						v.pipe(v.number(), v.integer()),
 					),
@@ -13475,7 +13475,7 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.regex(/^-?\d+$/u),
 						v.toNumber(),
 						v.pipe(v.number(), v.integer()),
 					),
@@ -13490,7 +13490,7 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.regex(/^-?\d+$/u),
 						v.toNumber(),
 						v.pipe(v.number(), v.integer()),
 					),
@@ -13505,7 +13505,7 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 				v.union([
 					v.pipe(
 						v.string(),
-						v.decimal(),
+						v.regex(/^-?\d+$/u),
 						v.toNumber(),
 						v.pipe(v.number(), v.integer()),
 					),
@@ -13523,7 +13523,7 @@ export const listAuditLogsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13545,7 +13545,7 @@ export const listInvitesCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13586,7 +13586,7 @@ export const listUsersCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13636,7 +13636,7 @@ export const listProjectsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13697,7 +13697,7 @@ export const listProjectUsersCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13779,7 +13779,7 @@ export const listProjectServiceAccountsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -13848,7 +13848,7 @@ export const listProjectApiKeysCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),

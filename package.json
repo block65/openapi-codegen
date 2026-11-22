@@ -34,6 +34,7 @@
 		"@types/node": "^26.6.3",
 		"@types/toposort": "^2.0.7",
 		"@types/yargs": "^17.0.35",
+		"@valibot/to-json-schema": "^1.8.0",
 		"fallow": "^3.29.0",
 		"hono": "^4.13.9",
 		"js-yaml": "^5.4.2",

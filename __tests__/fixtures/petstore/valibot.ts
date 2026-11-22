@@ -31,7 +31,7 @@ export const inputPetSchema = v.looseObject({
 export const petSchema = v.looseObject({
 	...newPetSchema.entries,
 	id: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -48,7 +48,7 @@ export const findPetsCommandQuerySchema = v.strictObject({
 		v.union([
 			v.pipe(
 				v.string(),
-				v.decimal(),
+				v.regex(/^-?\d+$/u),
 				v.toNumber(),
 				v.pipe(v.number(), v.integer()),
 			),
@@ -67,7 +67,7 @@ export const inputFindPetByIdCommandParamsSchema = v.strictObject({
 });
 export const findPetByIdCommandParamsSchema = v.strictObject({
 	id: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -77,7 +77,7 @@ export const inputDeletePetCommandParamsSchema = v.strictObject({
 });
 export const deletePetCommandParamsSchema = v.strictObject({
 	id: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),
@@ -93,7 +93,7 @@ export const inputFindPetWrappedCommandParamsSchema = v.strictObject({
 });
 export const findPetWrappedCommandParamsSchema = v.strictObject({
 	id: v.union([
-		v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()),
+		v.pipe(v.string(), v.regex(/^-?\d+$/u), v.toBigint(), v.bigint()),
 		v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()),
 		v.bigint(),
 	]),

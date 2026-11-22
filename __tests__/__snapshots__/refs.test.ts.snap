@@ -226,7 +226,7 @@ export const postSchema = v.looseObject(
     {
         "author": v.exactOptional(v.lazy((): v.GenericSchema<unknown, Author> => authorSchema))
         ,
-        "words": v.exactOptional(v.union([v.pipe(v.string(), v.decimal(), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]))
+        "words": v.exactOptional(v.union([v.pipe(v.string(), v.regex(/^-?\\d+$/u), v.toBigint(), v.bigint()), v.pipe(v.number(), v.integer(), v.toBigint(), v.bigint()), v.bigint()]))
         ,
     });
 export const inputAuthorSchema = v.looseObject(
