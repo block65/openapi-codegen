@@ -439,3 +439,31 @@ test("input-only mode omits wire schemas", async () => {
 
 	expect(result.valibotFile.getText()).toMatchSnapshot("valibot.ts");
 });
+
+test("3.0 nullable component aliases admit null", async () => {
+	const result = await processOpenApiDocument("/tmp/like-you-know-whatever", {
+		openapi: "3.0.3",
+		info: { title: "Test", version: "1.0.0" },
+		paths: {},
+		components: {
+			schemas: {
+				NullableString: { type: "string", nullable: true },
+				NullableEnum: { type: "string", enum: ["a", "b"], nullable: true },
+				NullableArray: {
+					type: "array",
+					items: { type: "string" },
+					nullable: true,
+				},
+				NullableInteger: { type: "integer", nullable: true },
+			},
+		},
+	});
+
+	const types = result.typesFile.getText();
+
+	expect(types).toContain('export type NullableEnum = "a" | "b" | null;');
+	expect(types).toContain(
+		"export type NullableArray = readonly (string)[] | null;",
+	);
+	expect(types).toMatchSnapshot("types.ts");
+});

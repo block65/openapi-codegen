@@ -1,5 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`3.0 nullable component aliases admit null > types.ts 1`] = `
+"export type NullableString = string | null;
+export type NullableEnum = "a" | "b" | null;
+export type NullableArray = readonly (string)[] | null;
+export type NullableInteger = number | null;
+"
+`;
+
 exports[`3.0 nullable objects, arrays, strings and combinator members admit null > types.ts 1`] = `
 "export type Base = {
         "id"?: string;
